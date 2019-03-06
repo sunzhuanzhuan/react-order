@@ -5,8 +5,49 @@
 
   .left {
     width: 400px;
+
+    & > .ant-checkbox-group {
+      display: block;
+    }
+
+    .card-container {
+      margin-bottom: 10px;
+
+      .card-content {
+        user-select: none;
+        cursor: pointer;
+        border: 1px dashed #dddddd;
+        border-radius: 4px;
+        height: 80px;
+      }
+
+      .ant-checkbox-wrapper {
+        display: block;
+
+        & > span {
+          display: block;
+          padding: 0;
+        }
+
+        .ant-checkbox {
+          display: none;
+        }
+      }
+
+      .ant-checkbox-wrapper-checked {
+        .card-content {
+          border-color: #1DA57A;
+        }
+      }
+      .ant-checkbox-wrapper-disabled {
+        .card-content {
+          border-color: red;
+        }
+      }
+    }
   }
-  .right{
+
+  .right {
     flex: 1;
     padding: 0 12px;
   }

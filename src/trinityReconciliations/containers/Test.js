@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { Card, Table } from 'antd';
+import { Card, Table, Checkbox } from 'antd';
 import AddInternalOrder from '../components/AddInternalOrder';
 
+const CheckboxGroup = Checkbox.Group;
 const columns = [{
   title: 'Name',
   dataIndex: 'name',
@@ -54,39 +55,35 @@ export default class Test extends Component {
     this.setState({
       selectedRowKeys: [],
       joinStore: this.state.selectedRowKeys,
-      list: this.state.list.filter(key => !this.state.selectedRowKeys.includes(key) )
+      list: this.state.list.filter(key => !this.state.selectedRowKeys.includes(key))
     });
   };
   disassociate = () => {
     this.setState({
       joinStore: [],
-      list: this.state.list.concat(this.state.joinStore)
+      selectedRowKeys: this.state.selectedRowKeys.concat(this.state.joinStore),
+      list: this.state.joinStore.concat(this.state.list)
     });
   };
 
   componentWillMount() {}
 
   render() {
-    const listDate = this.state.list.map(key => dataMap[key]);
-    const rowSelection = {
-      onChange: (selectedRowKeys, selectedRows) => {
-        this.setState({ selectedRowKeys });
-        console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-      },
-      selectedRowKeys: this.state.selectedRowKeys,
-      getCheckboxProps: record => ({
-        disabled: record.name === 'Disabled User',
-        name: record.name
-      })
-    };
     const { selectedRowKeys, joinStore } = this.state;
+    const listDate = this.state.list.map(key => dataMap[key]);
     let extra = joinStore.length ? <a href="#" onClick={this.disassociate}>解除关联</a> :
       selectedRowKeys.length ? <a href="#" onClick={this.joint}>关联</a> : null;
 
-
     return <div className='reconciliation-container'>
       <div className='left'>
-        <Table rowSelection={rowSelection} columns={columns} dataSource={listDate} pagination={false} bordered/>
+        <CheckboxGroup value={selectedRowKeys} onChange={(selectedRowKeys) => {
+          this.setState({ selectedRowKeys });
+        }}>
+          {listDate.map(item => <div key={item.key} className='card-container'>
+            <Checkbox value={item.key} checked={item.checked}>
+              <div className='card-content'>{item.name}</div>
+            </Checkbox></div>)}
+        </CheckboxGroup>
       </div>
       <div className='right'>
         <Card
@@ -95,7 +92,7 @@ export default class Test extends Component {
         >
           {joinStore.map(key => <p key={key}>{dataMap[key].name}</p>)}
         </Card>
-        <AddInternalOrder/>
+        <AddInternalOrder />
       </div>
     </div>;
   }

@@ -29,6 +29,9 @@ export default class AddInternalOrder extends Component {
   componentWillMount() {}
 
   render() {
+    let tableSummaryChild = <div>
+      已选择订单 <b>4</b> 条    共计 200000.00 元
+    </div>
     return <div className='module-page add-internal-order'>
       <section className='section'>
         <h2>三方对账单信息</h2>
@@ -64,9 +67,9 @@ export default class AddInternalOrder extends Component {
         <div>
           <ListFilterForm />
           <div className='table-summary'>
-            <Alert message="Info Text" type="info" />
+            <Alert message={tableSummaryChild} type="info" />
           </div>
-          <Table columns={columns} />
+          <Table columns={columns} bordered/>
         </div>
       </section>
     </div>;
