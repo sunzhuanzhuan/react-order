@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Form, Input, Row, Col, Select, Button, DatePicker, Icon } from 'antd';
+import SwitchRequiredInput from '../base/SwitchRequiredInput';
 
 const { RangePicker } = DatePicker;
 const InputGroup = Input.Group;
@@ -28,11 +29,17 @@ export default class OrderFilterForm extends Component {
     const { expand } = this.state;
     this.setState({ expand: !expand });
   };
-
+  checkSwitchInput = (rule, value, callback) => {
+    if (value.input || value.checked) {
+      callback();
+      return;
+    }
+    callback('必填!');
+  }
   componentWillMount() {}
 
   render() {
-    const { getFieldDecorator } = this.props.form;
+    const { getFieldDecorator, getFieldValue } = this.props.form;
     return <Form onSubmit={this.handleSubmit}>
       <Row>
         <Col span={6}>
@@ -116,6 +123,11 @@ export default class OrderFilterForm extends Component {
           </div>
         </Col>
       </Row>
+      <Form.Item {...formItemLayout(3, 21)} label="账号名称">
+        {getFieldDecorator(`username23233`, {
+          rules: [{ validator: this.checkSwitchInput }]
+        })(<SwitchRequiredInput />)}
+      </Form.Item>
     </Form>;
   }
 }

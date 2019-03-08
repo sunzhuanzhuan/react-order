@@ -3,6 +3,8 @@ import { Table, PageHeader, Button, Tabs, Divider } from 'antd';
 import OrderFilterForm from '../components/OrderFilterForm';
 import OrderCard from '../components/OrderCard';
 import { SH2 } from '@/base/SectionHeader';
+import DataModuleHeader from '../base/DataModuleHeader';
+import SwitchRequiredInput from '../base/SwitchRequiredInput';
 
 const TabPane = Tabs.TabPane;
 
@@ -81,7 +83,7 @@ export default class Test extends Component {
         </div>
         <SH2 />
       </PageHeader>
-      <Tabs defaultActiveKey="3" animated={{ tabPane: false }}>
+      <Tabs defaultActiveKey="2" animated={{ tabPane: false }}>
         <TabPane tab="全部 500" key="1">
           <div>
             <OrderCard />
@@ -93,7 +95,7 @@ export default class Test extends Component {
           <Table dataSource={data} rowSelection={rowSelection} pagination={pagination} columns={columns} />
         </TabPane>
         <TabPane tab="待提交内审 100" key="3">
-          ss
+          <DataModuleHeader/>
         </TabPane>
       </Tabs>
     </div>;
