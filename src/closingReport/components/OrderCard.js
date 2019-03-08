@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Badge, Icon } from 'antd';
+import { Badge, Icon,Divider } from 'antd';
 import { WBYPlatformIcon } from 'wbyui';
 import './OrderCard.less';
 
@@ -47,6 +47,7 @@ export default class OrderCard extends Component {
           </div>
           <div className='card-item-actions'>
             <a>修改</a>
+            <Divider type="vertical" />
             <a>删除</a>
           </div>
         </li>

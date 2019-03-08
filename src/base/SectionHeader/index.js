@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
+import './index.less';
 
-export class SH2 extends Component {
-  componentWillMount() {}
+export const SH2 = (props) => {
+  return <h2 className='section-header h2'>
+    <span>{props.text || '订单数据明细'}</span>
+  </h2>;
 
-  render() {
-    return <h2>
-      订单数据明细
-    </h2>;
-  }
-}
+};

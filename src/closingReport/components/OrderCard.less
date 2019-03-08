@@ -14,6 +14,7 @@
   }
 
   border: @border;
+  margin-bottom: 10px;
 
   .order-card-head {
     display: flex;
@@ -68,8 +69,12 @@
       align-items: center;
       .line-style();
       border-bottom: @border;
+      &:hover{
+        background: #fbfbfb;
+      }
       [class^=card-item-] {
         width: 140px;
+        user-select: none;
         color: #666;
       }
       .card-item-name{
