@@ -49,7 +49,7 @@ export default class SwitchRequiredInput extends Component {
     const { width = 420, placeholder = '请输入' } = this.props;
     return <div className='switch-required-input'>
       <Input style={{ width }} disabled={checked} value={input} onChange={this.handleInputChange} placeholder={placeholder} />
-      <Checkbox onChange={this.handleCheckChange}>无法提供该数据</Checkbox>
+      <Checkbox onChange={this.handleCheckChange} style={checked ? {opacity: 1} : {}}>无法提供该数据</Checkbox>
     </div>;
   }
 }

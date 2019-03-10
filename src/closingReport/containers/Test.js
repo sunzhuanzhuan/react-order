@@ -5,6 +5,7 @@ import OrderCard from '../components/OrderCard';
 import { SH2 } from '@/base/SectionHeader';
 import DataModuleHeader from '../base/DataModuleHeader';
 import SwitchRequiredInput from '../base/SwitchRequiredInput';
+import UploadViewImage from '@/closingReport/components/UploadViewImage';
 
 const TabPane = Tabs.TabPane;
 
@@ -83,7 +84,7 @@ export default class Test extends Component {
         </div>
         <SH2 />
       </PageHeader>
-      <Tabs defaultActiveKey="2" animated={{ tabPane: false }}>
+      <Tabs defaultActiveKey="3" animated={{ tabPane: false }}>
         <TabPane tab="全部 500" key="1">
           <div>
             <OrderCard />
@@ -96,6 +97,7 @@ export default class Test extends Component {
         </TabPane>
         <TabPane tab="待提交内审 100" key="3">
           <DataModuleHeader/>
+          <UploadViewImage/>
         </TabPane>
       </Tabs>
     </div>;
