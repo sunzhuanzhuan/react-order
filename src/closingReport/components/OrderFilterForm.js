@@ -2,7 +2,11 @@ import React, { Component } from 'react';
 import { Form, Input, Row, Col, Select, Button, DatePicker, Icon } from 'antd';
 import SwitchRequiredInput from '../base/SwitchRequiredInput';
 import RadioLink from '@/closingReport/base/RadioLink';
+import { Outline } from '../components/dataDetails';
+import { Review as OutlineReview } from '../components/dataDetails/Outline';
 
+const OutlineEdit = Outline.Edit;
+const OutlineView = Outline.View;
 const { RangePicker } = DatePicker;
 const InputGroup = Input.Group;
 const Option = Select.Option;
@@ -20,7 +24,7 @@ export default class OrderFilterForm extends Component {
   handleSubmit = (e) => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
-      if(!err){
+      if (!err) {
         console.log('Received values of form: ', values);
       }
     });
@@ -38,14 +42,16 @@ export default class OrderFilterForm extends Component {
       return;
     }
     callback('必填!');
-  }
+  };
   checkRadioLink = (rule, value = {}, callback) => {
+    console.log(value, '====');
     if (value.radio === 1 || value.link) {
       callback();
       return;
     }
     callback('必填!');
-  }
+  };
+
   componentWillMount() {}
 
   render() {
@@ -61,7 +67,7 @@ export default class OrderFilterForm extends Component {
         </Col>
         <Col span={6}>
           <Form.Item {...formItemLayout()} label="账号名称">
-            {getFieldDecorator('username1', {})(
+            {getFieldDecorator('accountName', {})(
               <Input placeholder="账号名称" />
             )}
           </Form.Item>
@@ -140,9 +146,11 @@ export default class OrderFilterForm extends Component {
       </Form.Item>
       <Form.Item {...formItemLayout(3, 21)} label="账号名称">
         {getFieldDecorator(`username90`, {
+          initialValue: { radio: 1 },
           rules: [{ validator: this.checkRadioLink }]
-        })(<RadioLink/>)}
+        })(<RadioLink />)}
       </Form.Item>
+      <OutlineReview form={this.props.form} />
     </Form>;
   }
 }

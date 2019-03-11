@@ -4,8 +4,8 @@ import OrderFilterForm from '../components/OrderFilterForm';
 import OrderCard from '../components/OrderCard';
 import { SH2 } from '@/base/SectionHeader';
 import DataModuleHeader from '../base/DataModuleHeader';
-import SwitchRequiredInput from '../base/SwitchRequiredInput';
-import UploadViewImage from '@/closingReport/components/UploadViewImage';
+import { Against } from '../base/ApprovalStatus';
+
 
 const TabPane = Tabs.TabPane;
 
@@ -84,7 +84,7 @@ export default class Test extends Component {
         </div>
         <SH2 />
       </PageHeader>
-      <Tabs defaultActiveKey="3" animated={{ tabPane: false }}>
+      <Tabs defaultActiveKey="2" animated={{ tabPane: false }}>
         <TabPane tab="全部 500" key="1">
           <div>
             <OrderCard />
@@ -92,12 +92,16 @@ export default class Test extends Component {
           </div>
         </TabPane>
         <TabPane tab="待提交内审 100" key="2">
-          <OrderFilterForm />
+          <div style={{margin: 'auto', width: 810}}>
+
+            <OrderFilterForm />
+          </div>
           <Table dataSource={data} rowSelection={rowSelection} pagination={pagination} columns={columns} />
         </TabPane>
         <TabPane tab="待提交内审 100" key="3">
-          <DataModuleHeader/>
-          <UploadViewImage/>
+          <div style={{margin: 'auto', width: 810}}>
+            <DataModuleHeader subTitle={'(手抄)'} extra={<Against reason={'这里显示审核诶通过原因，显示不下用截断，鼠标HOVER弹出tips这里显示审核诶通过原因，显示不下用截断，鼠标HOVER弹出tips这里显示审核诶通过原因，显示不下用截断，鼠标HOVER弹出tips这里显示审核诶通过原因，显示不下用截断，鼠标HOVER弹出tips'}/>}/>
+          </div>
         </TabPane>
       </Tabs>
     </div>;
