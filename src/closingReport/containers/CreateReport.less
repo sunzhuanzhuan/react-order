@@ -7,7 +7,6 @@
 
   }
   .create-page-content{
-    height: 1000px;
   }
   .content-statistic {
     color: #151515;
@@ -46,5 +45,18 @@
     text-align: right;
     z-index: 1;
     transition: all .2s;
+    .action-item{
+      margin-right: 20px;
+      & > b {
+        color: @primary-color;
+        font-weight: normal;
+      }
+      &.left{
+        float: left;
+      }
+      &.text{
+        color: #999999;
+      }
+    }
   }
 }

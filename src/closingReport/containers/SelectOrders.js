@@ -43,10 +43,11 @@ export default class SelectOrders extends Component {
 
   render() {
     const rowSelection = {
-      onChange: this.onSelectChange,
+      onChange: this.props.onSelectChange,
+      selectedRowKeys: this.props.selectedRowKeys,
       getCheckboxProps: record => {
         return {
-          disabled: true
+          disabled: false
         };
       }
     };
