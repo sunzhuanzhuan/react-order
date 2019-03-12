@@ -7,7 +7,7 @@ import './style.less'
 
 // 懒加载路由级组件
 const Test = lazyLoadComponent(() => import('./containers/Test'))
-
+const Export =lazyLoadComponent(()=>import('./containers/ExportOrder'))
 
 class AccountEnterIndex extends Component {
 	state = {}
@@ -16,6 +16,7 @@ class AccountEnterIndex extends Component {
 		return (
 			<div className='account-manage' id='account-manage-container'>
 				<Route path='/order/trinity/reconciliations/test' component={Test} />
+        <Route path='/order/trinity/reconciliations/exportOrder' component={Export} />
 			</div>
 		);
 	}
