@@ -36,7 +36,8 @@ export default class OrderFilterForm extends Component {
     const { expand } = this.state;
     this.setState({ expand: !expand });
   };
-  checkSwitchInput = (rule, value = {}, callback) => {
+
+  /*checkSwitchInput = (rule, value = {}, callback) => {
     if (value.input || value.checked) {
       callback();
       return;
@@ -50,46 +51,44 @@ export default class OrderFilterForm extends Component {
       return;
     }
     callback('必填!');
-  };
+  };*/
 
   componentWillMount() {}
 
   render() {
     const { getFieldDecorator, getFieldValue } = this.props.form;
-    return <Form onSubmit={this.handleSubmit}>
+    return <Form onSubmit={this.handleSubmit} layout="inline">
       <Row>
         <Col span={6}>
-          <Form.Item {...formItemLayout()} label="账号名称">
+          <Form.Item label="账号名称">
             {getFieldDecorator('username', {})(
-              <Input placeholder="账号名称" />
+              <Input placeholder="账号名称" style={{ width: '100%' }}/>
             )}
           </Form.Item>
         </Col>
         <Col span={6}>
-          <Form.Item {...formItemLayout()} label="账号名称">
+          <Form.Item label="账号名称">
             {getFieldDecorator('accountName', {})(
-              <Input placeholder="账号名称" />
+              <Input placeholder="账号名称" style={{ width: '100%' }}/>
             )}
           </Form.Item>
         </Col>
         <Col span={6}>
-          <Form.Item {...formItemLayout()} label="账号名称">
+          <Form.Item label="账号名称">
             {getFieldDecorator('username5', {})(
-              <Input placeholder="账号名称" />
+              <Input placeholder="账号名称" style={{ width: '100%' }}/>
             )}
           </Form.Item>
         </Col>
         <Col span={6}>
-          <Form.Item {...formItemLayout()} label="账号名称">
+          <Form.Item label="账号名称">
             {getFieldDecorator('username6', {})(
-              <Input placeholder="账号名称" />
+              <Input placeholder="账号名称" style={{ width: '100%' }}/>
             )}
           </Form.Item>
         </Col>
-      </Row>
-      <Row>
         <Col span={18}>
-          <Form.Item {...formItemLayout(3, 21)} label="账号名称">
+          <Form.Item label="账号名称">
             <InputGroup compact>
               <Select defaultValue="Zhejiang" style={{ width: '100px' }}>
                 <Option value="Zhejiang">Zhejiang</Option>
@@ -106,14 +105,14 @@ export default class OrderFilterForm extends Component {
           </Form.Item>
         </Col>
         {this.state.expand ? <Col span={6}>
-          <Form.Item {...formItemLayout()} label="订单执行状态">
+          <Form.Item label="订单执行状态">
             {getFieldDecorator('username3', {})(
               <Input placeholder="账号名称" />
             )}
           </Form.Item>
         </Col> : null}
-        {this.state.expand ? <Col span={18}>
-          <Form.Item {...formItemLayout(3, 21)} label="账号名称">
+        {this.state.expand ? <Col span={12}>
+          <Form.Item label="账号名称">
             <InputGroup compact>
               <Select defaultValue="Zhejiang" style={{ width: '100px' }}>
                 <Option value="Zhejiang">Zhejiang</Option>
@@ -129,9 +128,9 @@ export default class OrderFilterForm extends Component {
             </InputGroup>
           </Form.Item>
         </Col> : null}
-        <Col span={6}>
-          <div style={{ lineHeight: '40px', textAlign: 'right' }}>
-            <Button type='primary' htmlType='submit'>查询</Button>
+        <Col span={this.state.expand ? 12 : 6}>
+          <div style={{ lineHeight: '40px', textAlign: 'left' }}>
+            <Button type='primary' style={{ marginLeft: '20px' }} htmlType='submit'>查询</Button>
             <Button style={{ margin: '0 20px 0 10px' }} onClick={this.handleReset}>重置</Button>
             <a style={{ fontSize: 12 }} onClick={this.toggle}>
               更多 <Icon type={this.state.expand ? 'up' : 'down'} />
@@ -139,18 +138,18 @@ export default class OrderFilterForm extends Component {
           </div>
         </Col>
       </Row>
-      <Form.Item {...formItemLayout(3, 21)} label="账号名称">
+      {/*<Form.Item label="账号名称">
         {getFieldDecorator(`username23233`, {
           rules: [{ validator: this.checkSwitchInput }]
         })(<SwitchRequiredInput />)}
       </Form.Item>
-      <Form.Item {...formItemLayout(3, 21)} label="账号名称">
+      <Form.Item label="账号名称">
         {getFieldDecorator(`username90`, {
           initialValue: { radio: 1 },
           rules: [{ validator: this.checkRadioLink }]
         })(<RadioLink />)}
       </Form.Item>
-      <OutlineReview form={this.props.form} />
+      <OutlineReview form={this.props.form} />*/}
     </Form>;
   }
 }

@@ -7,6 +7,7 @@ import './style.less'
 
 // 懒加载路由级组件
 const Test = lazyLoadComponent(() => import('./containers/Test'))
+const CreateReport = lazyLoadComponent(() => import('./containers/CreateReport'))
 
 
 class ClosingReport extends Component {
@@ -14,8 +15,9 @@ class ClosingReport extends Component {
 
 	render() {
 		return (
-			<div>
+			<div className='closing-report-container'>
 				<Route path='/order/closing-report/test' component={Test} />
+				<Route path='/order/closing-report/create' component={CreateReport} />
 			</div>
 		);
 	}

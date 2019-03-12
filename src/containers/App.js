@@ -7,7 +7,7 @@ import { connect } from 'react-redux'
 import { Layout, Button, Icon } from 'antd';
 import SiderMenu from '../components/SiderMenu'
 import { getUserLoginInfo, getUserConfigKey } from '../login/actions'
-import { resetSiderAuth, getAuthorizations } from '../actions'
+import { resetSiderAuth, getAuthorizations, setSliderMenuCollapse } from '../actions'
 const { Header, Content } = Layout;
 const Cookies = require('js-cookie');
 window.Cookies = Cookies;
@@ -98,7 +98,7 @@ class App extends Component {
 				<Button type="primary" onClick={this.logout.bind(this)} style={btnStyle}>退出</Button>
 			</Header>
 			<Layout>
-				<SiderMenu assignments={siderMenuAuth} routing={this.props.routing}></SiderMenu>
+				<SiderMenu onCollapse={this.props.actions.setSliderMenuCollapse} assignments={siderMenuAuth} routing={this.props.routing}></SiderMenu>
 				<Content style={contentStyle} id='app-content-children-id'>
 					{this.state.isLoaded && this.props.children}
 				</Content>
@@ -118,7 +118,7 @@ const mapStateToProps = (state) => ({
 })
 const mapDispatchToProps = (dispatch) => ({
 	actions: bindActionCreators({
-		getUserLoginInfo, resetSiderAuth, getAuthorizations, getUserConfigKey
+		getUserLoginInfo, resetSiderAuth, getAuthorizations, getUserConfigKey,setSliderMenuCollapse
 	}, dispatch)
 })
 
