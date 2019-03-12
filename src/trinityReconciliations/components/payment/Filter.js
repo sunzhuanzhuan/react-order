@@ -49,27 +49,21 @@ class ListQuery extends Component {
      <Form>
 				<Row>
 					<Col span={4}>
-						<FormItem label='订单号' {...formItemLayout}>
+						<FormItem label='汇总单名称' {...formItemLayout}>
 							{getFieldDecorator('order_id')(
 					<Input style={{ width: 140 }} />
 							)}
 						</FormItem>
 					</Col>
-					<Col span={4}>
-						<FormItem label="账号名称" {...formItemLayout} >
-							{getFieldDecorator('weibo_name')(
-								<Input style={{ width: 140 }} />
-							)}
-						</FormItem>
-					</Col>
+				
 					<Col span={8} style={{textAlign:'left'}}>
-						<FormItem label='下单价' {...formItemLayout}>
-						{getFieldDecorator('public_order_price_start')(
-						<Input style={{ width: 150 }} />
+						<FormItem label='生成时间' {...formItemLayout}>
+            {getFieldDecorator('ttp_place_order_at_start')(
+						<DatePicker format={dataFormat} placeholder='开始日期' style={{ width: 150 }} />
 					)}
 					~
-						{getFieldDecorator('public_order_price_end')(
-						<Input style={{ width: 150 }} />
+						{getFieldDecorator('ttp_place_order_at_end')(
+						<DatePicker format={dataFormat} placeholder='结束日期' style={{ width: 150 }} />
 					)}
 						</FormItem>
 					</Col>
@@ -84,50 +78,14 @@ class ListQuery extends Component {
 					)}
 						</FormItem>
 					</Col>
-					</Row>
-					<Row type="flex" justify="space-between">
-					
-					
-					<Col span={4}>
-						<FormItem label='三方订单号' {...formItemLayout}>
-							{getFieldDecorator('public_order_id', { initialValue: '' })(
-								<Input style={{ width: 140 }} />
-							)}
-						</FormItem>
-					</Col>
-					<Col span={10}>
-						<FormItem label='对账状态' {...formItemLayout}>
-							{getFieldDecorator('public_order_id_1', { initialValue: ['1', '2'] })(
-								<Select
-                mode="multiple"
-                style={{ width: '300px' }}
-              >
-               <Option key={'1'} >未对账</Option>
-               <Option key={'2'}>对账完成</Option>
-               <Option key={'3'}>部分对账</Option>
-              </Select>
-							)}
-						</FormItem>
-					</Col>
-					<Col span={4}>
-						<FormItem label='打款状态' {...formItemLayout}>
-							{getFieldDecorator('payment_status', { initialValue: '' })(
-								<Select
-              >
-               <Option key={'1'} >打款成功</Option>
-               <Option key={'2'}>打款失败</Option>
-               <Option key={'3'}>未打款</Option>
-               <Option key={'4'}>打款撤销</Option>
-              </Select>
-							)}
-						</FormItem>
-					</Col>
-          <Col span={3}>
+          <Col span={4}>
 						<Button type="primary" className='left-gap' onClick={this.handleSearch}>查询</Button>
 						{/* <Button style={{ marginLeft: '20px' }} className='left-gap' type="primary" onClick={() => {
 							this.props.form.resetFields()
 						}}>重置</Button> */}
 					</Col>
+				
+          
 				</Row>
 			</Form>
     </div>;
