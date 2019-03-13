@@ -20,16 +20,21 @@ const steps = [{
 }];
 
 const mapStateToProps = (state) => ({
-  common: state.commonReducers
+  common: state.commonReducers,
+  closingReport: state.closingReportReducers
 });
-
+const mapDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators({
+    ...actions
+  }, dispatch)
+});
 const name = 'xcxzcz';
-@connect(mapStateToProps, actions)
+@connect(mapStateToProps, mapDispatchToProps)
 export default class CreateReport extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      current: 1,
+      current: 0,
       reportId: null,
       name: name,
       validateStatus: '',
@@ -82,11 +87,20 @@ export default class CreateReport extends Component {
     const { current, selectedRowKeys, name } = this.state;
     const C = steps[current].content;
     const footerWidth = this.props.common.ui.sliderMenuCollapse ? 40 : 200;
+    const store = {
+      common: this.props.common,
+      closingReport: this.props.closingReport,
+      actions: this.props.actions
+    };
+    const select = {
+      selectedRowKeys: selectedRowKeys,
+      onSelectChange: this.onSelectChange
+    };
     return (
       <div className='closing-report-pages create-page'>
         <header className='create-page-steps'>
           <Steps current={current}>
-            {steps.map(item => <Step key={item.title} title={item.title} />)}
+            {steps.map(item => <Step key={item.title} title={item.title}/>)}
           </Steps>
         </header>
         <main className='create-page-content'>
@@ -97,7 +111,7 @@ export default class CreateReport extends Component {
             <b>所属销售</b><span>保洁</span>
           </div>
           <div className="steps-content">
-            <C selectedRowKeys={selectedRowKeys} onSelectChange={this.onSelectChange} />
+            <C {...select} {...store}/>
           </div>
         </main>
         <footer className='create-page-action' style={{ width: `calc(100% - ${footerWidth}px)` }}>
@@ -115,7 +129,8 @@ export default class CreateReport extends Component {
               &&
               [
                 <span key={4} className='action-item text'>订单内数据完善后才能提交审核</span>,
-                <Button key={5} className='action-item' type="primary" onClick={() => message.success('Processing complete!')}>提交审核</Button>
+                <Button key={5} className='action-item' type="primary"
+                        onClick={() => message.success('Processing complete!')}>提交审核</Button>
               ]
             }
             {
@@ -142,7 +157,7 @@ export default class CreateReport extends Component {
             labelCol={{ span: 6 }}
             wrapperCol={{ span: 17 }}
           >
-            <Input placeholder='请填写投放数据汇总单的名称，不超过30个字' value={name} onChange={this.changeName} />
+            <Input placeholder='请填写投放数据汇总单的名称，不超过30个字' value={name} onChange={this.changeName}/>
           </Form.Item>
         </Modal>
       </div>

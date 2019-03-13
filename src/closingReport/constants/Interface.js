@@ -1,3 +1,7 @@
+const prefix = '/summaryData'
 export default {
-  test: '/operator-gateway/test',
+  salesManager: prefix + '/getSalesManager',
+  companyBrand: prefix + '/getCompanyBrand',
+  companyProject: prefix + '/getCompanyProject',
+  order: '/summary/getOrder',
 }

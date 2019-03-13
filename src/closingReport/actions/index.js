@@ -2,11 +2,35 @@ import Interface from '../constants/Interface'
 import { createHttpAction } from 'redux-action-extend'
 import { createAction } from 'redux-actions'
 
-// 更新页面抓取账号信息
+/**
+ * 订单列表选择
+ */
+// 获取执行人
 export const {
-	___Action___,
-	___Action____success
-} = createHttpAction('___Action___', Interface.test, {
+	getSalesManager,
+	getSalesManager_success
+} = createHttpAction('getSalesManager', Interface.salesManager, {
+	method: 'get',
+});
+// 获取公司品牌
+export const {
+	getCompanyBrand,
+	getCompanyBrand_success
+} = createHttpAction('getCompanyBrand', Interface.companyBrand, {
+	method: 'get',
+});
+// 获取公司项目
+export const {
+	getCompanyProject,
+	getCompanyProject_success
+} = createHttpAction('getCompanyProject', Interface.companyProject, {
+	method: 'get',
+});
+// 获取订单列表
+export const {
+	getOrder,
+	getOrder_success
+} = createHttpAction('getOrder', Interface.order, {
 	method: 'get',
 });
 
