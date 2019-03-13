@@ -38,21 +38,6 @@ export default class OrderFilterForm extends Component {
     this.setState({ expand: !expand });
   };
 
-  /*checkSwitchInput = (rule, value = {}, callback) => {
-    if (value.input || value.checked) {
-      callback();
-      return;
-    }
-    callback('必填!');
-  };
-  checkRadioLink = (rule, value = {}, callback) => {
-    console.log(value, '====');
-    if (value.radio === 1 || value.link) {
-      callback();
-      return;
-    }
-    callback('必填!');
-  };*/
 
   componentWillMount() {}
 
@@ -140,11 +125,7 @@ export default class OrderFilterForm extends Component {
           </div>
         </Col>
       </Row>
-      {/*<Form.Item label="账号名称">
-        {getFieldDecorator(`username23233`, {
-          rules: [{ validator: this.checkSwitchInput }]
-        })(<SwitchRequiredInput />)}
-      </Form.Item>
+      {/*
       <Form.Item label="账号名称">
         {getFieldDecorator(`username90`, {
           initialValue: { radio: 1 },

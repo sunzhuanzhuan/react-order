@@ -1,7 +1,24 @@
-.platform-data-detail-module{
+@import "../../style";
+.platform-data-detail-module {
   position: relative;
+  margin-bottom: 10px;
+  .upload-list-inline {
+    .ant-upload-list-item {
+      float: left;
+      width: 134px;
+      margin-right: 8px;
+    }
+    .ant-upload-animate-enter {
+      animation-name: ssin;
+    }
+    .ant-upload-animate-leave {
+      animation-name: ssout;
+    }
+  }
 }
+
 .platform-data-detail-module.outline {
+  margin-bottom: 0;
   font-size: 14px;
 
   .outline-title {
@@ -28,7 +45,8 @@
         user-select: none;
       }
     }
-    .view-value{
+
+    .view-value {
       span {
         width: 160px;
         display: inline-block;
@@ -40,13 +58,119 @@
     }
   }
 }
-.data-details-review-wrap{
+
+.platform-data-detail-module.read {
+  background: #F9F9F9;
+  padding: 10px;
+  display: flex;
+  color: #666;
+
+  .read-left-head {
+    line-height: 32px;
+    width: 126px;
+    text-align: center;
+    font-size: 14px;
+  }
+
+  .read-right-data {
+    line-height: 32px;
+    max-width: 480px;
+  }
+}
+
+.base-info.read, .execution-link.read {
+  .read-right-data {
+    p { margin: 0;}
+    .title{
+      display: inline-block;
+      width: 80px;
+      text-align: right;
+    }
+    .value {
+      width: 400px;
+      display: inline-block;
+      vertical-align: bottom;
+      .text-overflow-ellipsis();
+
+    }
+    span.value{
+      color: #151515;
+    }
+  }
+}
+
+.execution-pic.read {
+  .read-right-data {
+    max-width: unset;
+    display: flex;
+    flex-wrap: wrap;
+    .pic-list-item{
+      display: block;
+      width: 80px;
+      height: 80px;
+      margin: 0 10px 10px 0;
+      background: #dedede;
+      & > img{
+        display: block;
+        width: 100%;
+      }
+    }
+  }
+}
+
+.platform-data-detail-module.execution-pic{
+  .check-demo{
+    position: absolute;
+    z-index: 1;
+    line-height: 40px;
+    left: 140px;
+    & > a {
+      margin: 0 8px;
+    }
+  }
+}
+
+.data-details-review-wrap {
   border: 1px solid #e8e8e8;
-  .review-actions{
-    .ant-form-item { margin: 0;}
+
+  .review-actions {
+    .ant-form-item {
+      margin: 0;
+    }
+
     overflow: hidden;
     padding: 0 60px;
     line-height: 48px;
     background: #f6f6f6;
+  }
+}
+
+.closing-report-modal-pages.check-demo{
+  .ant-modal-body{
+    padding: 10px;
+  }
+  .ant-modal-confirm-btns{
+    margin-top: 12px;
+  }
+  .ant-modal-confirm-content{
+    margin: 0;}
+  .check-demo-pic-wrapper{
+    display: block;
+    width: 100%;
+    img {
+      display: block;
+      width: 100%;
+    }
+  }
+}
+
+@keyframes ssout {
+  to {
+    opacity: 0;
+  }
+}
+@keyframes ssin {
+  from {
+    opacity: 0;
   }
 }

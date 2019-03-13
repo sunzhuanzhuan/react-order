@@ -9,10 +9,31 @@ import { Against, Agree } from '../../base/ApprovalStatus';
  * 头部信息(编辑)
  */
 export class Edit extends Component {
-  state = {
-    editName: false,
-    inputValue: '这里是账号名称'
+  constructor(props, context) {
+    super(props, context);
+    const value = props.value || '';
+    this.state = {
+      editName: false,
+      inputValue: value
+    };
+  }
+
+  static getDerivedStateFromProps(nextProps) {
+    if ('value' in nextProps) {
+      return {
+        inputValue: nextProps.value || ''
+      };
+    }
+    return null;
+  }
+
+  triggerChange = (changedValue) => {
+    const onChange = this.props.onChange;
+    if (onChange) {
+      onChange(changedValue);
+    }
   };
+
   change = () => {
     this.setState({ editName: true });
   };
@@ -21,20 +42,21 @@ export class Edit extends Component {
     this.setState({ editName: false });
   };
   ok = () => {
-    const { fieldName = 'accountName' } = this.props;
-    const { setFieldsValue } = this.props.form;
     let val = this.input.state.value;
-    if (val) {
+    if (!('value' in this.props)) {
       this.setState({
         inputValue: val,
         editName: false
       });
-      setFieldsValue({ [fieldName]: val });
+    } else {
+      this.setState({
+        editName: false
+      });
+      this.triggerChange(val);
     }
   };
 
   render() {
-
     const titles = [
       '项目/品牌',
       '资源/项目媒介',
@@ -54,7 +76,7 @@ export class Edit extends Component {
         <a onClick={this.ok}>确定</a>
         <a onClick={this.cancel}>取消</a>
       </div> : <div className='view-value'>
-        <span>{this.state.inputValue}</span>
+        <span>{this.state.inputValue || '--'}</span>
         <a onClick={this.change}>修改</a>
       </div>
     ];
