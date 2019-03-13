@@ -52,7 +52,7 @@ class ListQuery extends Component {
 					<Col span={10}>
 						<FormItem label='回汇票方式' {...formItemLayout}>
 							{getFieldDecorator('summary_sheet_name',{
-                rules:[{required:true}]
+                rules:[{required:true,message:'请输入回票方式'}]
               })(
                 <RadioGroup onChange={this.onChange} value={this.state.value}>
                 <Radio value={1}>全部回票</Radio>
@@ -69,7 +69,7 @@ class ListQuery extends Component {
           <Col span={10} style={{textAlign:'left'}}>
 						<FormItem label='回票金额(元)' {...formItemLayout}>
             {getFieldDecorator('ttp_place_order_at_start',{
-               rules:[{required:true}]
+               rules:[{required:true,message:'请输入回票金额'}]
             })(
 					<Input style={{ width: 140 }} />
 					)}
