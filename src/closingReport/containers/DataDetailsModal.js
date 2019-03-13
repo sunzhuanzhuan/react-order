@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Modal, Form, Input } from 'antd';
-import { Outline, BaseInfo, ExecutionLink, ExecutionPic } from '../components/dataDetails';
+import { Outline, BaseInfo, ExecutionLink, ExecutionPic, ExecutionFetchData } from '../components/dataDetails';
 import './DataDetailsModal.less';
 import { Against, Agree } from '../base/ApprovalStatus';
 
@@ -45,13 +45,14 @@ export default class DataDetailsModal extends Component {
             rules: [{ required: true, message: '必填!' }]
           })(<Outline.Edit />)}
         </Form.Item>
-        {/*<Outline.View><Agree /></Outline.View>
+        {/*<Outline.View><Agree /></Outline.View>*/}
         <BaseInfo.Edit  {...props} />
-        <BaseInfo.View><Agree /></BaseInfo.View>
+        {/*<BaseInfo.View><Agree /></BaseInfo.View>
         <ExecutionLink.Edit {...props} />
-        <ExecutionLink.View><Agree top={10}/></ExecutionLink.View>*/}
+        <ExecutionLink.View><Agree top={10}/></ExecutionLink.View>
         <ExecutionPic.Edit  {...props} />
-        <ExecutionPic.View><Agree/></ExecutionPic.View>
+        <ExecutionPic.View><Agree/></ExecutionPic.View>*/}
+        <ExecutionFetchData.Edit  {...props}/>
       </Form>
     </Modal>;
   }
