@@ -48,9 +48,9 @@ class ListQuery extends Component {
     return <div>
      <Form>
 				<Row>
-					<Col span={4}>
+					<Col span={5}>
 						<FormItem label='汇总单名称' {...formItemLayout}>
-							{getFieldDecorator('order_id')(
+							{getFieldDecorator('summary_sheet_name')(
 					<Input style={{ width: 140 }} />
 							)}
 						</FormItem>
@@ -78,8 +78,8 @@ class ListQuery extends Component {
 					)}
 						</FormItem>
 					</Col>
-          <Col span={4}>
-						<Button type="primary" className='left-gap' onClick={this.handleSearch}>查询</Button>
+          <Col span={3}>
+						<Button type="primary" htmlType="submit" className='left-gap' onClick={this.handleSearch}>查询</Button>
 						{/* <Button style={{ marginLeft: '20px' }} className='left-gap' type="primary" onClick={() => {
 							this.props.form.resetFields()
 						}}>重置</Button> */}
