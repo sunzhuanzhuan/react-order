@@ -29,12 +29,23 @@ const columns = [{
 const data = [
   {
     name: '11',
+    key: '11',
     age: '11',
     address: '11',
     name1: '11',
     age1: '11',
     address2: '11',
     address3: '11'
+  },
+  {
+    name: '22',
+    age: '22',
+    key: '22',
+    address: '22',
+    name1: '22',
+    age1: '22',
+    address2: '22',
+    address3: '22'
   }
 ];
 

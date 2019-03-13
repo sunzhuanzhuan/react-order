@@ -4,6 +4,7 @@ import SwitchRequiredInput from '../base/SwitchRequiredInput';
 import RadioLink from '@/closingReport/base/RadioLink';
 import { Outline } from '../components/dataDetails';
 import { Review as OutlineReview } from '../components/dataDetails/Outline';
+import EmSpan from '../base/EmSpan';
 
 const OutlineEdit = Outline.Edit;
 const OutlineView = Outline.View;
@@ -57,7 +58,7 @@ export default class OrderFilterForm extends Component {
 
   render() {
     const { getFieldDecorator, getFieldValue } = this.props.form;
-    return <Form onSubmit={this.handleSubmit} layout="inline">
+    return <Form onSubmit={this.handleSubmit} layout="inline" autoComplete="off">
       <Row>
         <Col span={6}>
           <Form.Item label="账号名称">
@@ -67,32 +68,33 @@ export default class OrderFilterForm extends Component {
           </Form.Item>
         </Col>
         <Col span={6}>
-          <Form.Item label="账号名称">
+          <Form.Item label="所属项目">
             {getFieldDecorator('accountName', {})(
               <Input placeholder="账号名称" style={{ width: '100%' }}/>
             )}
           </Form.Item>
         </Col>
         <Col span={6}>
-          <Form.Item label="账号名称">
+          <Form.Item label="所属品牌">
             {getFieldDecorator('username5', {})(
               <Input placeholder="账号名称" style={{ width: '100%' }}/>
             )}
           </Form.Item>
         </Col>
         <Col span={6}>
-          <Form.Item label="账号名称">
+          <Form.Item label={<EmSpan length={this.state.expand ? 6 : 3}>执行人</EmSpan>}>
             {getFieldDecorator('username6', {})(
               <Input placeholder="账号名称" style={{ width: '100%' }}/>
             )}
           </Form.Item>
         </Col>
         <Col span={18}>
-          <Form.Item label="账号名称">
+          <Form.Item label="批量查询">
             <InputGroup compact>
-              <Select defaultValue="Zhejiang" style={{ width: '100px' }}>
-                <Option value="Zhejiang">Zhejiang</Option>
-                <Option value="Jiangsu">Jiangsu</Option>
+              <Select defaultValue="订单ID" style={{ width: '100px' }}>
+                <Option value="订单ID">订单ID</Option>
+                <Option value="PO单号">PO单号</Option>
+                <Option value="需求ID">需求ID</Option>
               </Select>
               {getFieldDecorator(`username2`, {
                 rules: [{
@@ -112,11 +114,11 @@ export default class OrderFilterForm extends Component {
           </Form.Item>
         </Col> : null}
         {this.state.expand ? <Col span={12}>
-          <Form.Item label="账号名称">
+          <Form.Item label={<EmSpan length={4}>时间</EmSpan>}>
             <InputGroup compact>
-              <Select defaultValue="Zhejiang" style={{ width: '100px' }}>
-                <Option value="Zhejiang">Zhejiang</Option>
-                <Option value="Jiangsu">Jiangsu</Option>
+              <Select defaultValue="订单ID" style={{ width: '100px' }}>
+                <Option value="订单ID">订单ID</Option>
+                <Option value="PO单号">PO单号</Option>
               </Select>
               {getFieldDecorator(`username232`, {
                 rules: [{

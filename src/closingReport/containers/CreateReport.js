@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as actions from '../actions';
 import { linkTo } from '../../util/linkTo';
+import OrderList from './OrderList';
 
 
 const Step = Steps.Step;
@@ -15,22 +16,25 @@ const steps = [{
   content: SelectOrders
 }, {
   title: '完善订单数据',
-  content: SelectOrders
+  content: OrderList
 }];
 
 const mapStateToProps = (state) => ({
   common: state.commonReducers
 });
+
+const name = 'xcxzcz';
 @connect(mapStateToProps, actions)
 export default class CreateReport extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      current: 0,
-      name: '',
+      current: 1,
+      reportId: null,
+      name: name,
       validateStatus: '',
       selectedRowKeys: [],
-      visible: true
+      visible: !name
     };
   }
 
@@ -53,8 +57,16 @@ export default class CreateReport extends Component {
   };
   handleCancel = () => {
     // linkTo()
-    window.location.replace('/')
+    window.location.replace('/');
   };
+
+  temporarySave = () => {
+
+  };
+
+  coreSave() {
+
+  }
 
   next() {
     const current = this.state.current + 1;
@@ -94,7 +106,7 @@ export default class CreateReport extends Component {
               current < steps.length - 1
               && [
                 <span className='action-item' key={1}>已选订单：<b>{selectedRowKeys.length}</b>个</span>,
-                <Button className='action-item' key={2} onClick={() => this.save()}>存草稿</Button>,
+                <Button className='action-item' key={2} onClick={() => this.temporarySave()}>存草稿</Button>,
                 <Button className='action-item' key={3} type="primary" onClick={() => this.next()}>下一步</Button>
               ]
             }
@@ -103,7 +115,7 @@ export default class CreateReport extends Component {
               &&
               [
                 <span key={4} className='action-item text'>订单内数据完善后才能提交审核</span>,
-                <Button key={5} className='action-item' type="primary" onClick={() => message.success('Processing complete!')}>完成</Button>
+                <Button key={5} className='action-item' type="primary" onClick={() => message.success('Processing complete!')}>提交审核</Button>
               ]
             }
             {
