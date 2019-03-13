@@ -9,6 +9,8 @@ import './style.less'
 const Test = lazyLoadComponent(() => import('./containers/Test'))
 const Export =lazyLoadComponent(()=>import('./containers/ExportOrder'))
 const Payment =lazyLoadComponent(()=>import('./containers/Payment'))
+const Summary= lazyLoadComponent(()=>import('./containers/Summary'))
+const SummaryDetail = lazyLoadComponent(()=>import('./containers/SummaryDetail'))
 
 
 class AccountEnterIndex extends Component {
@@ -20,6 +22,8 @@ class AccountEnterIndex extends Component {
 				<Route path='/order/trinity/reconciliations/test' component={Test} />
         <Route path='/order/trinity/reconciliations/exportOrder' component={Export} />
         <Route path='/order/trinity/reconciliations/payment' component={Payment} />
+        <Route path='/order/trinity/reconciliations/summary' component={Summary} />
+        <Route path='/order/trinity/reconciliations/detail' component={SummaryDetail} />
 			</div>
 		);
 	}

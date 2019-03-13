@@ -189,3 +189,154 @@ export const paymentListFunc = (handleSelectDetail) => {
 
 	];
 }
+
+// 汇总单列表
+export const summaryListFunc = (handleSelectDetail) => {
+	return [
+		{
+			title: '汇总单名称',
+			dataIndex: 'summary_sheet_name',
+			key: 'summary_sheet_name',
+			align: 'center',
+      width: 100,
+      render:(text, record)=>{
+        return <a href='javascript:;' className='left-gap' onClick={() => {
+          handleSelectDetail(record)
+        }}>{record.summary_sheet_name}</a>
+      }
+		},
+		{
+			title: '汇总单状态',
+			dataIndex: 'status',
+			key: 'status',
+			align: 'center',
+			width: 100
+    },
+		{
+			title: '汇总单总数',
+			dataIndex: 'total_order_amount',
+			key: 'total_order_amount',
+			align: 'center',
+			width: 100,
+		},
+		{
+			title: '应实付金额(元)',
+			dataIndex: 'total_pay_amount',
+			key: 'total_pay_amount',
+			align: 'center',
+			width: 100,
+		},
+		{
+			title: '调账订单',
+			dataIndex: 'adjustment_order',
+			key: 'adjustment_order',
+			align: 'center',
+			width: 100,
+		},
+		{
+			title: '调账总金额(元)',
+			dataIndex: 'adjustment_amount',
+			key: 'adjustment_amount',
+			align: 'center',
+			width: 100,
+		},
+		{
+			title: '扣减订单',
+			dataIndex: 'deduction_order',
+			key: 'deduction_order',
+			align: 'center',
+			width: 100,
+		},
+		{
+			title: '扣减金额(元)',
+			dataIndex: 'deduction_amount',
+			key: 'deduction_amount',
+			align: 'center',
+			width: 100,
+			render: (text) => {
+				return parseFloat(text).toFixed(2)
+			}
+    },
+    {
+			title: '操作',
+			dataIndex: 'ops',
+			key: 'ops',
+			align: 'center',
+			width: 100,
+			render: () => {
+				return null
+			}
+		}
+
+	];
+}
+
+
+export const summaryShiListFunc = (handleSelectDetail) => {
+	return [
+		{
+			title: '汇总单名称',
+			dataIndex: 'summary_sheet_name',
+			key: 'summary_sheet_name',
+			align: 'center',
+      width: 100,
+      render:(text, record)=>{
+        return <a href='javascript:;' className='left-gap' onClick={() => {
+          handleSelectDetail(record)
+        }}>{record.summary_sheet_name}</a>
+      }
+		},
+		{
+			title: '汇总单状态',
+			dataIndex: 'status',
+			key: 'status',
+			align: 'center',
+			width: 100
+    },
+		{
+			title: '汇总单总数',
+			dataIndex: 'total_order_amount',
+			key: 'total_order_amount',
+			align: 'center',
+			width: 100,
+		},
+		{
+			title: '应实付金额(元)',
+			dataIndex: 'total_pay_amount',
+			key: 'total_pay_amount',
+			align: 'center',
+			width: 100,
+		},
+		{
+			title: '调账订单',
+			dataIndex: 'adjustment_order',
+			key: 'adjustment_order',
+			align: 'center',
+			width: 100,
+		},
+		{
+			title: '调账总金额(元)',
+			dataIndex: 'adjustment_amount',
+			key: 'adjustment_amount',
+			align: 'center',
+			width: 100,
+		},
+		{
+			title: '扣减订单',
+			dataIndex: 'deduction_order',
+			key: 'deduction_order',
+			align: 'center',
+			width: 100,
+		},
+		{
+			title: '扣减金额(元)',
+			dataIndex: 'deduction_amount',
+			key: 'deduction_amount',
+			align: 'center',
+			width: 100,
+			render: (text) => {
+				return parseFloat(text).toFixed(2)
+			}
+    }
+	];
+}
