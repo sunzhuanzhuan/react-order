@@ -27,9 +27,12 @@ export default class Summary extends Component {
     search: `?${qs.stringify({ id: record.id})}`,
   });
  }
+ handleOut=(record)=>{
+   console.log(record)
+ }
  
   render() {
-    const column = summaryListFunc(this.handleSelectDetail);
+    const column = summaryListFunc(this.handleSelectDetail,this.handleOut);
     const shiColum = summaryShiListFunc()
     let paginationObj = {
 			onChange: (current) => {

@@ -191,7 +191,7 @@ export const paymentListFunc = (handleSelectDetail) => {
 }
 
 // 汇总单列表
-export const summaryListFunc = (handleSelectDetail) => {
+export const summaryListFunc = (handleSelectDetail,handleOut) => {
 	return [
 		{
 			title: '汇总单名称',
@@ -263,8 +263,10 @@ export const summaryListFunc = (handleSelectDetail) => {
 			key: 'ops',
 			align: 'center',
 			width: 100,
-			render: () => {
-				return null
+			render: (text, record) => {
+				return <a href='javascript:;' className='left-gap' onClick={() => {
+          handleOut(record)
+        }}>释放汇总单</a>
 			}
 		}
 
@@ -340,3 +342,121 @@ export const summaryShiListFunc = (handleSelectDetail) => {
     }
 	];
 }
+
+export const summaryTotalDetailListFunc = () => {
+	return [
+		{
+			title: '序号',
+			dataIndex: 'index',
+			key: 'index',
+			align: 'center',
+      width: 100
+		},
+		{
+			title: '订单号',
+			dataIndex: 'order_id',
+			key: 'order_id',
+			align: 'center',
+			width: 100
+    },
+		{
+			title: '快接单下单价(元)',
+			dataIndex: 'public_order_price',
+			key: 'public_order_price',
+			align: 'center',
+			width: 100,
+		},
+		{
+			title: '账号名称',
+			dataIndex: 'weibo_name',
+			key: 'weibo_name',
+			align: 'center',
+			width: 100,
+		},
+		{
+			title: '下单时间',
+			dataIndex: 'ttp_place_order_at',
+			key: 'ttp_place_order_at',
+			align: 'center',
+			width: 100,
+		},
+		{
+			title: '公司简称',
+			dataIndex: 'company_name',
+			key: 'company_name',
+			align: 'center',
+			width: 100,
+		},
+		{
+			title: '媒介',
+			dataIndex: 'm',
+			key: 'm',
+			align: 'center',
+      width: 100,
+      render: (text,record) => {
+				return <span>项目媒介:{record.vol_admin_name}资源媒介:{record.owner_admin_name}</span>
+			}
+		},
+		{
+			title: '销售/执行人/创建人',
+			dataIndex: 'w',
+			key: 'w',
+			align: 'center',
+			width: 100,
+			render: (text,record) => {
+				return <span>{record.sale_name}{record.executor_admin_name}{record.creater_name}</span>
+			}
+    },
+    {
+			title: '三方订单号',
+			dataIndex: 'public_order_id',
+			key: 'public_order_id',
+			align: 'center',
+			width: 100,
+			render: (text) => {
+				return parseFloat(text).toFixed(2)
+			}
+    },
+    {
+			title: '调账金额',
+			dataIndex: 'adjustment_amount',
+			key: 'adjustment_amount',
+			align: 'center',
+			width: 100,
+			render: (text) => {
+				return parseFloat(text).toFixed(2)
+			}
+    },
+    {
+			title: '调账方式',
+			dataIndex: 'operation_type',
+			key: 'operation_type',
+			align: 'center',
+			width: 100,
+			render: (text) => {
+				return parseFloat(text).toFixed(2)
+			}
+    },
+    {
+			title: '调账原因',
+			dataIndex: 'reason',
+			key: 'reason',
+			align: 'center',
+			width: 100,
+			render: (text) => {
+				return parseFloat(text).toFixed(2)
+			}
+    },
+    {
+			title: '应实付金额',
+			dataIndex: 'total_pay_amount',
+			key: 'total_pay_amount',
+			align: 'center',
+			width: 100,
+			render: (text) => {
+				return parseFloat(text).toFixed(2)
+			}
+    }
+	];
+}
+
