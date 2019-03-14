@@ -108,8 +108,7 @@ export class View extends Component {
       '资源/项目媒介',
       '销售/执行人',
       '订单创建人',
-      '分发平台',
-      '账号名称'
+      '分发平台'
     ];
     const values = [
       '一级帮diaper-12月 / Pampers',
@@ -117,9 +116,6 @@ export class View extends Component {
       '宝洁 / 蔡逸琦',
       '蔡逸琦',
       <WBYPlatformIcon key={22} weibo_type={9} widthSize={22} />,
-      <div className='view-value' key={32}>
-        <span>账户名称</span>
-      </div>
     ];
     return <div className='platform-data-detail-module outline'>
       <Row>

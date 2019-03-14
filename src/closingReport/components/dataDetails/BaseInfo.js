@@ -19,8 +19,13 @@ export class Edit extends Component {
     const { getFieldDecorator } = this.props.form;
     const { reason = '' } = this.props;
     return <div className='platform-data-detail-module base-info'>
-      <DataModuleHeader title='基本信息' subTitle={'(手抄)'} extra={reason}/>
+      <DataModuleHeader title='基本信息' extra={reason}/>
       <div style={{paddingTop: '10px'}}>
+        <Form.Item label="账号名称" {...this.props.formItemLayout}>
+          {getFieldDecorator(`usernamexxx`, {
+            rules: [{ validator: this.checkSwitchInput }]
+          })(<SwitchRequiredInput />)}
+          </Form.Item>
         <Form.Item label="主页链接" {...this.props.formItemLayout}>
           {getFieldDecorator(`username2`, {
             rules: [{ validator: this.checkSwitchInput }]

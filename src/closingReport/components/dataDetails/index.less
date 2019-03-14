@@ -142,11 +142,53 @@
   }
 }
 
-.platform-data-detail-module.execution-fetch-data {
+.platform-data-detail-module.execution-data {
+
   .fetch-data-reference {
-    margin: 0 0 10px 100px;
+    width: 160px;
+    text-align: center;
     color: #999;
   }
+
+  .execution-data-fetch-item {
+    display: flex;
+
+    & > .reference-item {
+      width: 160px;
+      text-align: center;
+      line-height: 40px;
+    }
+
+    & > .ant-form-item {
+      flex: 1;
+      margin-bottom: 0;
+    }
+  }
+
+  .input-data {
+    display: flex;
+  }
+
+  .input-data-left {
+    position: relative;
+    width: 280px;
+  }
+
+  .input-data-right {
+    flex: 1;
+  }
+
+  .check-demo {
+    position: absolute;
+    z-index: 1;
+    line-height: 40px;
+    right: 0;
+
+    & > a {
+      margin: 0 8px;
+    }
+  }
+
 }
 
 .data-details-review-wrap {

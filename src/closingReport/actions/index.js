@@ -33,6 +33,7 @@ export const {
 } = createHttpAction('getOrder', Interface.order, {
 	method: 'get',
 });
+// 清空列表数据
 
 export const updateFetchInfo = createAction('updateFetchInfo', (data) => {
 	return { data };

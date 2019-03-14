@@ -36,7 +36,7 @@ export default class CreateReport extends Component {
     super(props);
     let { company_id, summary_name = '' } = parseUrlQuery();
     this.state = {
-      current: 0,
+      current: 1,
       companyId: company_id,
       reportId: null,
       summaryName: summary_name,
