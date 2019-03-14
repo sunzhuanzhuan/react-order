@@ -20,7 +20,7 @@ export class Edit extends Component {
     const { reason = '' } = this.props;
     return <div className='platform-data-detail-module base-info'>
       <DataModuleHeader title='基本信息' subTitle={'(手抄)'} extra={reason}/>
-      <div style={{paddingTop: '20px'}}>
+      <div style={{paddingTop: '10px'}}>
         <Form.Item label="主页链接" {...this.props.formItemLayout}>
           {getFieldDecorator(`username2`, {
             rules: [{ validator: this.checkSwitchInput }]

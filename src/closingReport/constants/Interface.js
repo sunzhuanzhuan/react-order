@@ -3,5 +3,5 @@ export default {
   salesManager: prefix + '/getSalesManager',
   companyBrand: prefix + '/getCompanyBrand',
   companyProject: prefix + '/getCompanyProject',
-  order: '/summary/getOrder',
+  order: prefix + '/getOrder',
 }

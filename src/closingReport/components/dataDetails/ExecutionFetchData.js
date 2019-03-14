@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Form, Input } from 'antd';
+import { Form, Input, Divider } from 'antd';
 import './index.less';
 import DataModuleHeader from '../../base/DataModuleHeader';
 
@@ -11,17 +11,19 @@ export class Edit extends Component {
   render() {
     const { getFieldDecorator } = this.props.form;
     const { reason = '' } = this.props;
-    return <div className='platform-data-detail-module execution-link'>
+    return <div className='platform-data-detail-module execution-fetch-data'>
       <DataModuleHeader title='执行数据' subTitle={'(抓取)'} extra={reason} />
-      <div style={{ paddingTop: '20px' }}>
-        <p style={{marginLeft: '100px'}}>抓取参考数据：阅读量 3000      点赞数  —        </p>
+      <div style={{ paddingTop: '10px' }}>
+        <div className='fetch-data-reference'>
+          抓取参考数据：阅读量 {3000}
+          <Divider type="vertical" />
+          点赞数 {'—'}
+        </div>
         <Form.Item label="阅读量" {...this.props.formItemLayout}>
-          {getFieldDecorator(`username110`, {
-          })(<Input style={{width: 420}} placeholder='请输入'/>)}
+          {getFieldDecorator(`username110`, {})(<Input style={{ width: 420 }} placeholder='请填写数据' />)}
         </Form.Item>
         <Form.Item label="点赞数" {...this.props.formItemLayout}>
-          {getFieldDecorator(`username120`, {
-          })(<Input style={{width: 420}} placeholder='请输入'/>)}
+          {getFieldDecorator(`username120`, {})(<Input style={{ width: 420 }} placeholder='请填写数据' />)}
         </Form.Item>
       </div>
     </div>;
@@ -33,7 +35,7 @@ export class Edit extends Component {
  */
 export class View extends Component {
   render() {
-    return <div className='platform-data-detail-module execution-link read'>
+    return <div className='platform-data-detail-module  execution-fetch-data read'>
       <div className='read-left-head'>
         执行数据
       </div>

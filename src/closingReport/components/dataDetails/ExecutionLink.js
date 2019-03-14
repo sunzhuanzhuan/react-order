@@ -21,7 +21,7 @@ export class Edit extends Component {
     const { reason = '' } = this.props;
     return <div className='platform-data-detail-module execution-link'>
       <DataModuleHeader title='执行链接' extra={reason} />
-      <div style={{ paddingTop: '20px' }}>
+      <div style={{ paddingTop: '10px' }}>
         <Form.Item label="主页链接" {...this.props.formItemLayout}>
           {getFieldDecorator(`username10`, {
             initialValue: { radio: 1 },

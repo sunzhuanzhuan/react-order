@@ -6,22 +6,25 @@ const { RangePicker } = DatePicker;
 const InputGroup = Input.Group;
 const Option = Select.Option;
 
-const formItemLayout = (l = 9, w = 15) => ({
-  labelCol: { span: l },
-  wrapperCol: { span: w }
-});
-
 @Form.create()
 export default class OrderFilterForm extends Component {
   state = {
     expand: false,
-    batchKey: 'order_id'
+    batchKey: 'order_id',
+    timeType: 'time_type_1'
   };
   handleSubmit = (e) => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
         console.log('Received values of form: ', values);
+        // reset select
+        this.props.onSelectChange([])
+        // 处理params
+        values['order_id'] = values['order_id'] && values['order_id'].trim().split(/\s+/g)
+        values['execution_evidence_code'] = values['execution_evidence_code'] && values['execution_evidence_code'].trim().split(/\s+/g)
+        values['requirement_id'] = values['requirement_id'] && values['requirement_id'].trim().split(/\s+/g)
+        this.props.getList({...values, page: 1})
       }
     });
   };
@@ -32,13 +35,15 @@ export default class OrderFilterForm extends Component {
     const { expand } = this.state;
     this.setState({ expand: !expand });
   };
-
-
-  componentWillMount() {
+  validatorBatchId = (rule, value, callback) => {
+    if(value && value.trim().split(/\s+/g).length > 200){
+       return callback('不能超过200个')
+    }
+    callback()
   }
 
   render() {
-    const { source } = this.props;
+    const { source, loading } = this.props;
     const { getFieldDecorator, getFieldValue } = this.props.form;
     return <Form onSubmit={this.handleSubmit} layout="inline" autoComplete="off">
       <Row>
@@ -112,7 +117,7 @@ export default class OrderFilterForm extends Component {
               </Select>
               {getFieldDecorator(this.state.batchKey, {
                 rules: [{
-                  message: '账号名称'
+                  validator: this.validatorBatchId
                 }]
               })(
                 <Input placeholder='请输入订单ID/PO单号/需求ID空格隔开，不超过200个' style={{ width: 'calc(100% - 100px)' }}/>
@@ -122,28 +127,35 @@ export default class OrderFilterForm extends Component {
         </Col>
         {this.state.expand ? <Col span={6}>
           <Form.Item label="订单执行状态">
-            {getFieldDecorator('execution_status', {})(
-              <Input placeholder="请选择"/>
+            {getFieldDecorator('execution_status', {
+              initialValue: this.props.execution_status
+            })(
+              <Select
+                allowClear
+                mode="multiple"
+                style={{ width: '100%' }}
+                placeholder="请选择"
+                maxTagCount={0}
+                optionFilterProp='children'
+                maxTagPlaceholder={(omittedValues) => {
+                  return `已选${omittedValues.length}项`;
+                }}
+              >
+                {source.executionStatus.map(option => <Option key={option.value}>{option.label}</Option>)}
+              </Select>
             )}
           </Form.Item>
         </Col> : null}
         {this.state.expand ? <Col span={12}>
           <Form.Item label={<EmSpan length={4}>时间</EmSpan>}>
             <InputGroup compact>
-              {getFieldDecorator(`time_type`, {
-                initialValue: '1',
-                rules: [{
-                  message: '时间'
-                }]
-              })(
-                <Select style={{ width: '150px' }}>
-                  <Option value="1">回填执行链接时间</Option>
-                  <Option value="2">执行时间</Option>
-                  <Option value="3">提交时间</Option>
-                  <Option value="4">结算时间</Option>
+                <Select style={{ width: '150px' }} value={this.state.timeType} onChange={(key) => this.setState({timeType: key})}>
+                  <Option value="time_type_1">回填执行链接时间</Option>
+                  <Option value="time_type_2">执行时间</Option>
+                  <Option value="time_type_3">提交时间</Option>
+                  <Option value="time_type_4">结算时间</Option>
                 </Select>
-              )}
-              {getFieldDecorator(`screen_time`, {})(
+              {getFieldDecorator(this.state.timeType, {})(
                 <RangePicker style={{ width: 'calc(100% - 150px)' }}/>
               )}
             </InputGroup>
@@ -151,7 +163,7 @@ export default class OrderFilterForm extends Component {
         </Col> : null}
         <Col span={this.state.expand ? 12 : 6}>
           <div style={{ lineHeight: '40px', textAlign: 'left' }}>
-            <Button type='primary' style={{ marginLeft: '20px' }} htmlType='submit'>查询</Button>
+            <Button type='primary' style={{ marginLeft: '20px' }} htmlType='submit' loading={loading}>查询</Button>
             <Button style={{ margin: '0 20px 0 10px' }} onClick={this.handleReset}>重置</Button>
             <a style={{ fontSize: 12 }} onClick={this.toggle}>
               更多 <Icon type={this.state.expand ? 'up' : 'down'}/>
@@ -159,14 +171,6 @@ export default class OrderFilterForm extends Component {
           </div>
         </Col>
       </Row>
-      {/*
-      <Form.Item label="账号名称">
-        {getFieldDecorator(`username90`, {
-          initialValue: { radio: 1 },
-          rules: [{ validator: this.checkRadioLink }]
-        })(<RadioLink />)}
-      </Form.Item>
-      <OutlineReview form={this.props.form} />*/}
     </Form>;
   }
 }

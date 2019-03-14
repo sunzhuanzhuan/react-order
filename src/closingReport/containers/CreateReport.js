@@ -7,6 +7,7 @@ import { bindActionCreators } from 'redux';
 import * as actions from '../actions';
 import { linkTo } from '../../util/linkTo';
 import OrderList from './OrderList';
+import { parseUrlQuery } from '@/util/parseUrl';
 
 
 const Step = Steps.Step;
@@ -28,41 +29,47 @@ const mapDispatchToProps = (dispatch) => ({
     ...actions
   }, dispatch)
 });
-const name = 'xcxzcz';
+
 @connect(mapStateToProps, mapDispatchToProps)
 export default class CreateReport extends Component {
   constructor(props) {
     super(props);
+    let { company_id, summary_name = '' } = parseUrlQuery();
     this.state = {
       current: 0,
+      companyId: company_id,
       reportId: null,
-      name: name,
+      summaryName: summary_name,
       validateStatus: '',
       selectedRowKeys: [],
-      visible: !name
+      visible: !summary_name
     };
   }
 
   onSelectChange = selectedRowKeys => {
     this.setState({ selectedRowKeys });
   };
-  validateName = (name) => {
-    return name.length > 0 && name.length <= 30;
+  validateName = (summaryName) => {
+    return summaryName.length > 0 && summaryName.length <= 30;
   };
   changeName = (e) => {
     let val = e.target.value;
-    this.setState({ name: val, validateStatus: this.validateName(val) ? 'success' : 'error' });
+    this.setState({
+      summaryName: val,
+      validateStatus: this.validateName(val) ? 'success' : 'error'
+    });
   };
   handleOk = () => {
-    if (this.validateName(this.state.name)) {
+    if (this.validateName(this.state.summaryName)) {
       this.setState({ visible: false });
     } else {
       this.setState({ validateStatus: 'error' });
     }
   };
-  handleCancel = () => {
+  handleCancel = (e, url) => {
+    console.log(e);
     // linkTo()
-    window.location.replace('/');
+    window.location.replace(url || '/');
   };
 
   temporarySave = () => {
@@ -84,7 +91,11 @@ export default class CreateReport extends Component {
   }
 
   render() {
-    const { current, selectedRowKeys, name } = this.state;
+    // 参数错误跳到error
+    if (!this.state.companyId) {
+      this.handleCancel(null, '/error');
+    }
+    const { current, selectedRowKeys, summaryName } = this.state;
     const C = steps[current].content;
     const footerWidth = this.props.common.ui.sliderMenuCollapse ? 40 : 200;
     const store = {
@@ -100,18 +111,18 @@ export default class CreateReport extends Component {
       <div className='closing-report-pages create-page'>
         <header className='create-page-steps'>
           <Steps current={current}>
-            {steps.map(item => <Step key={item.title} title={item.title}/>)}
+            {steps.map(item => <Step key={item.title} title={item.title} />)}
           </Steps>
         </header>
         <main className='create-page-content'>
           <div className='content-statistic'>
             <p>结案数据单信息</p>
-            <b>名称</b><span>{name || '-'}</span>
+            <b>名称</b><span>{summaryName || '-'}</span>
             <b>公司简称</b><span><a href={`${'ss'}/sale/company/detail/company_id/${'111'}`}>保洁大品牌公关</a></span>
             <b>所属销售</b><span>保洁</span>
           </div>
           <div className="steps-content">
-            <C {...select} {...store}/>
+            <C {...select} {...store} />
           </div>
         </main>
         <footer className='create-page-action' style={{ width: `calc(100% - ${footerWidth}px)` }}>
@@ -130,7 +141,7 @@ export default class CreateReport extends Component {
               [
                 <span key={4} className='action-item text'>订单内数据完善后才能提交审核</span>,
                 <Button key={5} className='action-item' type="primary"
-                        onClick={() => message.success('Processing complete!')}>提交审核</Button>
+                  onClick={() => message.success('Processing complete!')}>提交审核</Button>
               ]
             }
             {
@@ -146,7 +157,7 @@ export default class CreateReport extends Component {
         <Modal
           title="创建结案数据单"
           visible={this.state.visible}
-          okButtonProps={{ disabled: !this.validateName(name) }}
+          okButtonProps={{ disabled: !this.validateName(summaryName) }}
           onOk={this.handleOk}
           onCancel={this.handleCancel}
           maskClosable={false}
@@ -157,7 +168,7 @@ export default class CreateReport extends Component {
             labelCol={{ span: 6 }}
             wrapperCol={{ span: 17 }}
           >
-            <Input placeholder='请填写投放数据汇总单的名称，不超过30个字' value={name} onChange={this.changeName}/>
+            <Input placeholder='请填写投放数据汇总单的名称，不超过30个字' value={summaryName} onChange={this.changeName} />
           </Form.Item>
         </Modal>
       </div>
