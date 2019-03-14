@@ -460,3 +460,62 @@ export const summaryTotalDetailListFunc = () => {
 	];
 }
 
+//对账列表
+export const stateListFunc = (handleDelete) => {
+	return [
+		{
+			title: '序号',
+			dataIndex: 'index',
+			key: 'index',
+			align: 'center',
+      width: 100
+		},
+		{
+			title: '操作',
+			dataIndex: 'o',
+			key: 'o',
+			align: 'center',
+      width: 100,
+      render:(text, record)=>{
+        return <a href='javascript:;' className='left-gap' onClick={() => {
+          handleDelete(record)
+        }}>删除对账单</a>
+      }
+    },
+		{
+			title: '对账单名称',
+			dataIndex: 'statement_name',
+			key: 'statement_name',
+			align: 'center',
+			width: 100,
+		},
+		{
+			title: '对账单编号',
+			dataIndex: 'statement_batch',
+			key: 'statement_batch',
+			align: 'center',
+      width: 100,
+		},
+		{
+			title: '导入日期',
+			dataIndex: 'created_at',
+			key: 'created_at',
+			align: 'center',
+			width: 100,
+		},
+		{
+			title: '操作人',
+			dataIndex: 'operated_name',
+			key: 'operated_name',
+			align: 'center',
+			width: 100,
+		},
+		{
+			title: '对账单关联状态',
+			dataIndex: 'statement_status',
+			key: 'statement_status',
+			align: 'center',
+      width: 100
+		}
+	];
+}
