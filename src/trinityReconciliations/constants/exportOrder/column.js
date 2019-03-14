@@ -1,6 +1,6 @@
 import React from "react";
 import qs from 'qs';
-import { Radio } from 'antd';
+import { Popconfirm } from 'antd';
 
 export const exportOrderListFunc = () => {
 	return [
@@ -477,9 +477,12 @@ export const stateListFunc = (handleDelete) => {
 			align: 'center',
       width: 100,
       render:(text, record)=>{
-        return <a href='javascript:;' className='left-gap' onClick={() => {
-          handleDelete(record)
-        }}>删除对账单</a>
+        return <Popconfirm title={<div>
+          <div>温馨提示:</div>
+          <div>删除后将无法恢复</div>
+        </div>} onConfirm={handleDelete} okText="确定" cancelText="取消">
+       <a href='javascript:;'>删除对账单</a>
+      </Popconfirm>
       }
     },
 		{
