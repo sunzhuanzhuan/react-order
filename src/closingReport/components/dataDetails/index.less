@@ -28,6 +28,7 @@
   color: #666;
 
   .read-left-head {
+    flex: none;
     line-height: 32px;
     width: 126px;
     text-align: center;
@@ -36,12 +37,13 @@
 
   .read-right-data {
     line-height: 32px;
-    max-width: 480px;
+    //max-width: 480px;
+    flex: 1;
   }
 }
 
 .platform-data-detail-module.outline {
-  margin-bottom: 0;
+  margin-bottom: 10px;
   font-size: 14px;
 
   .outline-title {
@@ -123,7 +125,7 @@
 
 .execution-pic.read {
   .read-right-data {
-    max-width: unset;
+    margin-bottom: -10px;
     display: flex;
     flex-wrap: wrap;
 
@@ -131,7 +133,7 @@
       display: block;
       width: 80px;
       height: 80px;
-      margin: 0 10px 10px 0;
+      margin: 0 0 10px 10px;
       background: #dedede;
 
       & > img {
@@ -157,6 +159,7 @@
       width: 160px;
       text-align: center;
       line-height: 40px;
+      color: #999;
     }
 
     & > .ant-form-item {
@@ -171,7 +174,8 @@
 
   .input-data-left {
     position: relative;
-    width: 280px;
+    width: 310px;
+    padding-left: 10px;
   }
 
   .input-data-right {
@@ -189,6 +193,41 @@
     }
   }
 
+}
+
+.execution-data.read {
+  flex-direction: column;
+  .fetch-data{
+    display: flex;
+  }
+  .execution-data-fetch-item > .reference-item {
+    line-height: 32px;
+  }
+  p.data-item {
+    margin: 0;
+    line-height: 32px;
+
+    .value {
+      color: #151515;
+    }
+  }
+  .input-data-left{
+    width: 380px;
+    min-height: 490px;
+  }
+  .input-data-right{
+    margin-left: 10px;
+    box-sizing: border-box;
+    p.data-item{
+      .title{
+        text-align: right;
+      }
+      .value, .title{
+        display: inline-block;
+        width: 50%;
+      }
+    }
+  }
 }
 
 .data-details-review-wrap {

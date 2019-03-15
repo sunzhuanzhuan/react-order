@@ -1,4 +1,29 @@
 .closing-report-modal-pages{
+  &.data-details{
+    .data-details-header{
+      font-size: 16px;
+      padding: 0;
+      margin: 0;
+      small{
+        color: #999;
+        margin-left: 16px;
+        font-size: 13px;
+        font-weight: normal;
+      }
+    }
+    .ant-modal-body{
+      max-height: 600px;
+      overflow: hidden auto;
+      padding: 6px 16px;
+    }
+    .data-details-footer{
+      display: flex;
+      align-items: center;
+      & > span {
+        margin: 0 auto 0 4px;
+      }
+    }
+  }
   .outline-form-item{
     .ant-form-explain{
       width: 250px;

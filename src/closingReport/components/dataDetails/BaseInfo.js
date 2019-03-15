@@ -58,11 +58,11 @@ export class View extends Component {
       <div className='read-right-data'>
         <p>
           <span className='title'>主页链接：</span>
-          <a className='value' href="">https://mp.weixin.qq.com/cgi-bin/component_unauthorize?ac…</a>
+          <a className='value' href="">https://mp.weixin.qq.com/cgi-bin/component_unauthorize?a</a>
         </p>
         <p>
           <span className='title'>粉丝数：</span>
-          <span className='value'>无法提供该数据</span>
+          <span className='value'>无法提供该数据无法提供该数据无法提供该数据无法提供该数据无法提供该数据无法提供该数据无法提供该数据无法提供该数据无法提供该数据</span>
         </p>
         <p>
           <span className='title'>账号ID：</span>

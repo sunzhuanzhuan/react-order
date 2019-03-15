@@ -1,24 +1,11 @@
 import React, { Component } from 'react';
-import { Form, Button, Modal, Icon } from 'antd';
+import { Form, Button, Icon } from 'antd';
 import './index.less';
 import DataModuleHeader from '../../base/DataModuleHeader';
 import { OssUpload } from 'wbyui';
 import request from '@/api';
+import viewPic from '../../base/viewPic'
 
-const viewPic = (url) => (e) => {
-  e.preventDefault()
-  Modal.info({
-    className: 'closing-report-modal-pages check-demo',
-    width: 600,
-    icon: <i />,
-    content: (
-      <a href={e.url || url} target="_blank" className='check-demo-pic-wrapper'>
-        <img src={e.url || url} alt="" />
-      </a>
-    ),
-    onOk() {}
-  });
-};
 function action() {
   return request.get('/toolbox-gateway/file/v1/getToken').then(({ data }) => {
     return data;
@@ -95,6 +82,15 @@ export class View extends Component {
         执行截图
       </div>
       <div className='read-right-data'>
+        <div className='pic-list-item' onClick={viewPic(url)}>
+          <img src={url} alt="" />
+        </div>
+        <div className='pic-list-item' onClick={viewPic(url)}>
+          <img src={url} alt="" />
+        </div>
+        <div className='pic-list-item' onClick={viewPic(url)}>
+          <img src={url} alt="" />
+        </div>
         <div className='pic-list-item' onClick={viewPic(url)}>
           <img src={url} alt="" />
         </div>

@@ -22,7 +22,7 @@ export class Edit extends Component {
     return <div className='platform-data-detail-module execution-link'>
       <DataModuleHeader title='执行链接' extra={reason} />
       <div style={{ paddingTop: '10px' }}>
-        <Form.Item label="主页链接" {...this.props.formItemLayout}>
+        <Form.Item colon={false} label=" " {...this.props.formItemLayout}>
           {getFieldDecorator(`username10`, {
             initialValue: { radio: 1 },
             rules: [{ validator: this.checkRadioLink }]
@@ -40,12 +40,12 @@ export class View extends Component {
   render() {
     return <div className='platform-data-detail-module execution-link read'>
       <div className='read-left-head'>
-        执行链接
+
       </div>
       <div className='read-right-data'>
         <p>
           <span className='title'>执行链接：</span>
-          <a className='value' href="">https://mp.weixin.qq.com/cgi-bin/component_unauthorize?ac…</a>
+          <a className='value' href="">https://mp.weixin.qq.com/cgi-bin/component_unauthorizponent_unauthorizponent_unauthorizponent_unauthorize?ac</a>
         </p>
       </div>
       {this.props.children}
