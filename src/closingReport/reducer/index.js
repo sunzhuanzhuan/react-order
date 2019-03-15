@@ -6,6 +6,7 @@ import {
   getCompanyBrands_success,
   getCompanyProjects_success,
   getSalesManagers_success,
+  getCompanyPlatforms_success,
   getOrders_success
 } from '../actions';
 
@@ -30,10 +31,8 @@ function initList() {
   return { list: [], source: {}, total: 0, page: 1, pageSize: 50, response: {} };
 }
 
-
-const defaultFilterSource = {
-  brandByCompany: [],
-  projectByCompany: [],
+// 公共的数据
+const defaultPublicSource = {
   salesManagers: [],
   executionStatus: [
     { 'label': '执行中', 'value': '21' },
@@ -51,7 +50,23 @@ const defaultFilterSource = {
     { 'label': '已结案', 'value': '35' }
   ]
 };
-export const filterSource = handleActions({
+export const publicSource = handleActions({
+  [combineActions(getSalesManagers_success)]: (state, action) => {
+    return update(state, {
+      salesManagers: {
+        $set: action.payload.data
+      }
+    });
+  }
+}, defaultPublicSource);
+
+// 公司(结案单)纬度下的数据
+const defaultCompanySource = {
+  brandByCompany: [],
+  projectByCompany: [],
+  platformByCompany: [],
+};
+export const companySource = handleActions({
   [combineActions(getCompanyBrands_success)]: (state, action) => {
     return update(state, {
       brandByCompany: {
@@ -66,20 +81,22 @@ export const filterSource = handleActions({
       }
     });
   },
-  [combineActions(getSalesManagers_success)]: (state, action) => {
+  [combineActions(getCompanyPlatforms_success)]: (state, action) => {
     return update(state, {
-      salesManagers: {
+      platformByCompany: {
         $set: action.payload.data
       }
     });
   }
-}, defaultFilterSource);
+}, defaultCompanySource);
 
+// 请求订单的数据
 export const selectOrderList = handleActions({
   [combineActions(getOrders_success)]: handleResponseList('order_id')
 }, initList());
 
 export default combineReducers({
-  filterSource,
+  publicSource,
+  companySource,
   selectOrderList
 });

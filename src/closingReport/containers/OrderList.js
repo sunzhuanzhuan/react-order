@@ -4,13 +4,20 @@ import OrderCard from '../components/OrderCard';
 import DataDetailsModal from './DataDetailsModal';
 
 export default class OrderList extends Component {
-  state = {
-    detailId: ''
-  };
+  constructor(props, context) {
+    super(props, context);
+    this.state = {
+      detailId: ''
+    };
+    props.actions.getCompanyPlatforms()
+  }
+
+
 
   render() {
+    const { closingReport } = this.props
     return <div>
-      <OrderCard orderActions={{ add: true, del: true, check: true }} />
+      <OrderCard orderActions={{ add: true, del: true, check: true }} source={closingReport.companySource.platformByCompany}/>
       {this.state.detailId ? <DataDetailsModal id={this.state.detailId} /> : null}
     </div>;
   }

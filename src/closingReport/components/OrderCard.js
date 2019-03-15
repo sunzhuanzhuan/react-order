@@ -1,20 +1,42 @@
 import React, { Component } from 'react';
-import { Badge, Icon, Divider, Select, Modal } from 'antd';
+import { Badge, Icon, Divider, Select, Modal, message } from 'antd';
 import './OrderCard.less';
 import IconText from '../base/IconText';
+import update from 'immutability-helper';
+
 const Option = Select.Option;
 
 export default class OrderCard extends Component {
-  componentWillMount() {}
+  constructor(props, context) {
+    super(props, context);
+    this.state = {
+      addModal: {}
+    };
+  }
+
 
   addPlatform = () => {
-
+    this.setState(update(this.state, {
+      addModal: { loading: { $set: true } }
+    }))
+    setTimeout(() => {
+      message.success(`添加平台${this.state.addModal.platformKey}成功`)
+      this.setState(update(this.state, {
+        addModal: { show: { $set: false }, loading: { $set: false } }
+      }))
+    },3000);
   };
 
   render() {
+    const platform = [
+      '1', '110', '9'
+    ];
+    const { addModal } = this.state
     const { orderActions } = this.props;
     const { add, del, check } = orderActions || {};
-
+    const optional = this.props.source;/*.filter((p) => {
+      return !platform.find(id => id === p.platform_id);
+    });*/
     return <div className='order-card-container'>
       <header className='order-card-head'>
         <div className='head-left'>
@@ -29,7 +51,9 @@ export default class OrderCard extends Component {
         </ul>
         <div className='head-right'>
           {
-            add && <a>
+            add && <a onClick={() => this.setState(update(this.state, {
+              addModal: { show: { $set: true }, platformKey: { $set: undefined } }
+            }))}>
               <Icon type="plus-circle" />
               <span>添加平台</span>
             </a>
@@ -99,20 +123,40 @@ export default class OrderCard extends Component {
           </div>
         </li>
       </ul>
-      <Modal
+      {add && <Modal
         title="添加平台"
-        visible={false}
+        visible={addModal.show}
+        width={420}
+        onOk={this.addPlatform}
+        onCancel={() => this.setState(update(this.state, {
+          addModal: { show: { $set: false } }
+        }))}
+        okButtonProps={{
+          disabled: !addModal.platformKey,
+          loading: !!addModal.loading
+        }}
       >
         <div>
           <span>选择平台：</span>
-          <Select defaultValue="lucy" style={{ width: 120 }}>
-            <Option value="jack">Jack</Option>
-            <Option value="lucy">Lucy</Option>
-            <Option value="disabled" disabled>Disabled</Option>
-            <Option value="Yiminghe">yiminghe</Option>
+          <Select
+            placeholder='请选择'
+            style={{ width: 300 }}
+            showSearch
+            optionFilterProp='children'
+            onChange={key => this.setState(update(this.state, {
+              addModal: { platformKey: { $set: key } }
+            }))}
+            value={addModal.platformKey}
+          >
+            {optional.map(option =>
+              <Option
+                disabled={!!platform.find(id => id === option.platform_id)}
+                key={option.platform_id}
+              >{option.platform_name}</Option>)}
           </Select>
+          <div style={{ color: '#999', lineHeight: '32px' }}>如果平台已经存在则不能再次添加</div>
         </div>
-      </Modal>
+      </Modal>}
     </div>;
   }
 }

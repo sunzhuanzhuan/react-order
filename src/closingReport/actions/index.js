@@ -26,6 +26,13 @@ export const {
 } = createHttpAction('getCompanyProjects', Interface.companyProjects, {
 	method: 'get',
 });
+// 获取公司配置平台
+export const {
+	getCompanyPlatforms,
+	getCompanyPlatforms_success
+} = createHttpAction('getCompanyPlatforms', Interface.companyPlatforms, {
+	method: 'get',
+});
 // 获取订单列表
 export const {
 	getOrders,

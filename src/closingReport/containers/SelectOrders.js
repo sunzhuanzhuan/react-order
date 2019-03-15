@@ -46,7 +46,7 @@ const columns = [
     title: '主平台信息',
     dataIndex: 'weibo_type',
     render: (type, record) => {
-      return <IconText platform={type} text={record.weibo_name}/>
+      return <IconText platform={type} text={record.weibo_name} />;
     }
   }, {
     title: '项目/品牌',
@@ -103,7 +103,7 @@ export default class SelectOrders extends Component {
       search: {
         page: 1,
         pageSize: 50,
-        execution_status: ['21', '22', '26', '27', '28', '32', '35'],
+        execution_status: ['21', '22', '26', '27', '28', '32', '35']
       }
     };
     const { actions } = props;
@@ -151,7 +151,7 @@ export default class SelectOrders extends Component {
       <div style={{ padding: '20px 0' }}>
         <OrderFilterForm
           loading={this.state.listLoading}
-          source={closingReport.filterSource}
+          source={{ ...closingReport.publicSource, ...closingReport.companySource }}
           search={this.state.search}
           getList={this.getList}
           onSelectChange={this.props.onSelectChange}
