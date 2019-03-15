@@ -43,6 +43,7 @@ export default class DataDetailsModal extends Component {
       wrapClassName="closing-report-modal-pages data-details"
       visible
       width={800}
+      onCancel={this.props.closed}
       footer={footer}
     >
       <Form>

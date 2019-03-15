@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { Badge, Icon, Divider, Select, Modal, message } from 'antd';
+import { Badge, Icon, Divider, Select, Modal, message, Popconfirm } from 'antd';
 import './OrderCard.less';
 import IconText from '../base/IconText';
 import update from 'immutability-helper';
+import DataDetailsModal from "../containers/DataDetailsModal";
 
 const Option = Select.Option;
 
@@ -10,7 +11,8 @@ export default class OrderCard extends Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      addModal: {}
+      addModal: {},
+      detailId: ''
     };
   }
 
@@ -18,20 +20,20 @@ export default class OrderCard extends Component {
   addPlatform = () => {
     this.setState(update(this.state, {
       addModal: { loading: { $set: true } }
-    }))
+    }));
     setTimeout(() => {
-      message.success(`添加平台${this.state.addModal.platformKey}成功`)
+      message.success(`添加平台${this.state.addModal.platformKey}成功`);
       this.setState(update(this.state, {
         addModal: { show: { $set: false }, loading: { $set: false } }
-      }))
-    },3000);
+      }));
+    }, 3000);
   };
 
   render() {
     const platform = [
       '1', '110', '9'
     ];
-    const { addModal } = this.state
+    const { addModal } = this.state;
     const { orderActions } = this.props;
     const { add, del, check } = orderActions || {};
     const optional = this.props.source;/*.filter((p) => {
@@ -59,10 +61,15 @@ export default class OrderCard extends Component {
             </a>
           }
           {
-            del && <a>
-              <Icon type="delete" />
-              <span>删除</span>
-            </a>
+            del && <Popconfirm
+              getPopupContainer={() => document.querySelector('#order-card-container-delete-btn')}
+              title={<div>删除后，订单内数据将全部清空。<br />确认删除么?</div>}
+              okText="确定" cancelText="取消">
+              <a id='order-card-container-delete-btn'>
+                <Icon type="delete" />
+                <span>删除</span>
+              </a>
+            </Popconfirm>
           }
           {
             check && <a>
@@ -84,7 +91,7 @@ export default class OrderCard extends Component {
             <Badge status="success" text="成功" />
           </div>
           <div className='card-item-actions'>
-            <a>修改</a>
+            <a onClick={() => this.setState({ detailId: 'xxx' })}>修改</a>
             <Divider type="vertical" />
             <a>删除</a>
           </div>
@@ -157,6 +164,8 @@ export default class OrderCard extends Component {
           <div style={{ color: '#999', lineHeight: '32px' }}>如果平台已经存在则不能再次添加</div>
         </div>
       </Modal>}
+      {this.state.detailId ?
+        <DataDetailsModal id={this.state.detailId} closed={() => this.setState({ detailId: '' })} /> : null}
     </div>;
   }
 }

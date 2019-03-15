@@ -23,7 +23,7 @@ class PhotoSwipe extends React.Component {
   };
 
   state = {
-    isOpen: this.props.isOpen
+    isOpen: this.props.isOpen,
   };
 
   componentDidMount = () => {
@@ -47,6 +47,7 @@ class PhotoSwipe extends React.Component {
   };
 
   componentWillUnmount = () => {
+    this.isUnMount = true
     this.closePhotoSwipe();
   };
 
@@ -69,6 +70,7 @@ class PhotoSwipe extends React.Component {
         });
       }
     });
+    if(this.isUnMount) return
     this.setState({
       isOpen: true
     }, () => {
@@ -94,6 +96,7 @@ class PhotoSwipe extends React.Component {
 
   handleClose = () => {
     const { onClose } = this.props;
+    if(this.isUnMount) return
     this.setState({
       isOpen: false
     }, () => {
