@@ -12,6 +12,8 @@ const Payment =lazyLoadComponent(()=>import('./containers/Payment'))
 const Summary= lazyLoadComponent(()=>import('./containers/Summary'))
 const SummaryDetail = lazyLoadComponent(()=>import('./containers/SummaryDetail'))
 const State = lazyLoadComponent(()=>import('./containers/Statement'))
+const ImportResult= lazyLoadComponent(()=>import('./containers/ImportResult'))
+
 
 class AccountEnterIndex extends Component {
 	state = {}
@@ -25,6 +27,7 @@ class AccountEnterIndex extends Component {
         <Route path='/order/trinity/reconciliations/summary' component={Summary} />
         <Route path='/order/trinity/reconciliations/detail' component={SummaryDetail} />
         <Route path='/order/trinity/reconciliations/state' component={State} />
+        <Route path='/order/trinity/reconciliations/importResult' component={ImportResult} />
 			</div>
 		);
 	}
