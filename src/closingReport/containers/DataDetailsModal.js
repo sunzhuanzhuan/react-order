@@ -45,21 +45,21 @@ export default class DataDetailsModal extends Component {
       width={800}
       footer={footer}
     >
-      <Form onSubmit={this.submit}>
+      <Form>
         {/*<Form.Item className='outline-form-item' style={{ marginBottom: '10px' }}>
           {getFieldDecorator('username', {
             initialValue: 'name',
             rules: [{ required: true, message: '必填!' }]
           })(<Outline.Edit />)}
         </Form.Item>*/}
-        <Outline.View/>
+        {/*<Outline.View/>
         <BaseInfo.Edit  {...props} />
         <BaseInfo.View><Agree /></BaseInfo.View>
         <ExecutionLink.Edit {...props} />
         <ExecutionLink.View><Agree top={10}/></ExecutionLink.View>
         <ExecutionPic.Edit  {...props} />
         <ExecutionPic.View><Agree/></ExecutionPic.View>
-        <ExecutionData.Edit  {...props}/>
+        <ExecutionData.Edit  {...props}/>*/}
         <ExecutionData.View><Agree/></ExecutionData.View>
       </Form>
     </Modal>;

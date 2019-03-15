@@ -3,7 +3,6 @@ import { Table, Tooltip } from 'antd';
 import OrderFilterForm from '../components/OrderFilterForm';
 import { SH2 } from '../../base/SectionHeader';
 import './SelectOrders.less';
-import { WBYPlatformIcon } from 'wbyui';
 import IconText from '../base/IconText';
 
 const disabledReason = {
@@ -72,29 +71,6 @@ const columns = [
     dataIndex: 'real_name',
     align: 'center'
   }];
-const data = [
-  {
-    'order_id': '1', //订单id
-    'requirement_id': 1,
-    'requirement_name': '熊猛测试预约流程财务1', //需求名称
-    'brand_name': null, //品牌名称
-    'project_name': null, //项目名称
-    'weibo_name': 'wangyi', //账号名称
-    'weibo_type': 4, //平台id
-    'real_name': '周金伟', //销售经理
-    'execution_status': 25, //执行状态
-    'execution_status_name': '已完成', //执行状态名称
-    'status': '25', //订单状态
-    'status_name': '已完成', //订单状态名称
-    'flag': 1, //勾选条件：1可勾选，2状态不符合不可勾选，3已被勾选
-    'execution_evidence_code': '', //po单号
-    'execution_evidence_id': '',
-    'po_path': 'http://test//sale/executionevidence/detail?id=', //po链接
-    'order_info_path': 'http://test//pack/order/info/order_id/1', //订单链接
-    'requirement_path': 'http://test//pack/reservationrequirement/infoforsale?reservation_requirement_id=1' //需求链接
-  }
-];
-
 
 export default class SelectOrders extends Component {
   constructor(props, context) {

@@ -74,7 +74,13 @@ export function getImageInfos(src) {
     img.src = img_url;
     // 加载完成执行
     img.onload = () => resolve(img);
-    img.onerror = () => resolve(null);
+    img.onerror = () => {
+      let errorImg = new window.Image()
+      errorImg.src = require('../image/errorImg.png')
+      errorImg.width = 380
+      errorImg.height = 490
+      return resolve(errorImg)
+    };
   });
 }
 

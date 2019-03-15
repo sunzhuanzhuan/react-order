@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Form, Empty, Divider, Button, Icon } from 'antd';
-import { PhotoSwipe } from 'react-photoswipe';
-import 'react-photoswipe/lib/photoswipe.css';
+import PhotoSwipe from '../../base/PhotoSwipe';
 import './index.less';
 import DataModuleHeader from '../../base/DataModuleHeader';
 import SwitchRequiredInput from '../../base/SwitchRequiredInput';
@@ -157,7 +156,7 @@ export class View extends Component {
     };
     const imgList = [
       { src: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png' },
-      { src: 'http://www.ruanyifeng.com/blogimg/asset/2015/bg2015071014.png' }
+      { src: 'http://www.ruanyifeng.com/bxxlogimg/asset/2015/bg2015071014.png' }
     ];
     Promise.all(imgList.map(url => getImageInfos(url.src))).then(result => {
       let items = result.filter(Boolean).map((img, n) => ({
@@ -166,7 +165,6 @@ export class View extends Component {
         h: img.height,
         title: 'Image ' + n
       }));
-      console.log(items);
       this.setState({
         items,
         loading: false
