@@ -1,12 +1,20 @@
 import React, { Component } from 'react';
-import { Badge, Icon,Divider } from 'antd';
-import { WBYPlatformIcon } from 'wbyui';
+import { Badge, Icon, Divider, Select, Modal } from 'antd';
 import './OrderCard.less';
+import IconText from '../base/IconText';
+const Option = Select.Option;
 
 export default class OrderCard extends Component {
   componentWillMount() {}
 
+  addPlatform = () => {
+
+  };
+
   render() {
+    const { orderActions } = this.props;
+    const { add, del, check } = orderActions || {};
+
     return <div className='order-card-container'>
       <header className='order-card-head'>
         <div className='head-left'>
@@ -20,17 +28,24 @@ export default class OrderCard extends Component {
           {/*<li>王小丫 提交于2019-01-02  09:11</li>*/}
         </ul>
         <div className='head-right'>
-          <a>
-            <Icon type="plus-circle" />
-            <span>添加平台</span>
-          </a>
-          <a>
-            <Icon type="delete" />
-            <span>删除</span>
-          </a>
-          <a>
-            <span>提交审核</span>
-          </a>
+          {
+            add && <a>
+              <Icon type="plus-circle" />
+              <span>添加平台</span>
+            </a>
+          }
+          {
+            del && <a>
+              <Icon type="delete" />
+              <span>删除</span>
+            </a>
+          }
+          {
+            check && <a>
+              <Icon type="check-circle" />
+              <span>提交审核</span>
+            </a>
+          }
         </div>
       </header>
       <ul className='order-card-main'>
@@ -39,8 +54,7 @@ export default class OrderCard extends Component {
             主平台
           </div>
           <div className='card-item-name'>
-            <WBYPlatformIcon weibo_type='1' widthSize={22}/>
-            <span>账号名账号名账号名</span>
+            <IconText platform={'1'} text={'账号名账号名账号名账号名账号名账号名'} />
           </div>
           <div className='card-item-status'>
             <Badge status="success" text="成功" />
@@ -56,8 +70,7 @@ export default class OrderCard extends Component {
             分发平台（录入)
           </div>
           <div className='card-item-name'>
-            <WBYPlatformIcon weibo_type='110' widthSize={22}/>
-            <span>账号名账号名账号名账号名账号名</span>
+            <IconText platform={'110'} text={'账号名账号名账号名'} />
           </div>
           <div className='card-item-info'>
             王小丫 提交于2019-01-02 09:11
@@ -66,7 +79,6 @@ export default class OrderCard extends Component {
             <Badge status="success" text="成功" />
           </div>
           <div className='card-item-actions'>
-            <a>修改</a>
             <a>删除</a>
           </div>
         </li>
@@ -75,8 +87,7 @@ export default class OrderCard extends Component {
             分发平台
           </div>
           <div className='card-item-name'>
-            <WBYPlatformIcon weibo_type='9' widthSize={22}/>
-            <span>账号名账号名账号名账号名账号名</span>
+            <IconText platform={'9'} text={'账号名账号名账号名'} />
           </div>
           <div className='card-item-info'>
             王小丫 提交于2019-01-02 09:11
@@ -85,10 +96,23 @@ export default class OrderCard extends Component {
           </div>
           <div className='card-item-actions'>
             <a>修改</a>
-            <a>删除</a>
           </div>
         </li>
       </ul>
+      <Modal
+        title="添加平台"
+        visible={false}
+      >
+        <div>
+          <span>选择平台：</span>
+          <Select defaultValue="lucy" style={{ width: 120 }}>
+            <Option value="jack">Jack</Option>
+            <Option value="lucy">Lucy</Option>
+            <Option value="disabled" disabled>Disabled</Option>
+            <Option value="Yiminghe">yiminghe</Option>
+          </Select>
+        </div>
+      </Modal>
     </div>;
   }
 }

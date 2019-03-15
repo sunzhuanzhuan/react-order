@@ -3,10 +3,10 @@ import { handleActions, combineActions } from 'redux-actions';
 import update from 'immutability-helper';
 
 import {
-  getCompanyBrand_success,
-  getCompanyProject_success,
-  getSalesManager_success,
-  getOrder_success
+  getCompanyBrands_success,
+  getCompanyProjects_success,
+  getSalesManagers_success,
+  getOrders_success
 } from '../actions';
 
 // 处理列表数据为map表
@@ -34,7 +34,7 @@ function initList() {
 const defaultFilterSource = {
   brandByCompany: [],
   projectByCompany: [],
-  salesManager: [],
+  salesManagers: [],
   executionStatus: [
     { 'label': '执行中', 'value': '21' },
     { 'label': '已执行', 'value': '22' },
@@ -52,23 +52,23 @@ const defaultFilterSource = {
   ]
 };
 export const filterSource = handleActions({
-  [combineActions(getCompanyBrand_success)]: (state, action) => {
+  [combineActions(getCompanyBrands_success)]: (state, action) => {
     return update(state, {
       brandByCompany: {
         $set: action.payload.data
       }
     });
   },
-  [combineActions(getCompanyProject_success)]: (state, action) => {
+  [combineActions(getCompanyProjects_success)]: (state, action) => {
     return update(state, {
       projectByCompany: {
         $set: action.payload.data
       }
     });
   },
-  [combineActions(getSalesManager_success)]: (state, action) => {
+  [combineActions(getSalesManagers_success)]: (state, action) => {
     return update(state, {
-      salesManager: {
+      salesManagers: {
         $set: action.payload.data
       }
     });
@@ -76,7 +76,7 @@ export const filterSource = handleActions({
 }, defaultFilterSource);
 
 export const selectOrderList = handleActions({
-  [combineActions(getOrder_success)]: handleResponseList('order_id')
+  [combineActions(getOrders_success)]: handleResponseList('order_id')
 }, initList());
 
 export default combineReducers({

@@ -102,7 +102,7 @@ export default class OrderFilterForm extends Component {
                 placeholder="请选择"
                 optionFilterProp='children'
               >
-                {source.salesManager.map(option => <Option key={option.owner_admin_id}>{option.real_name}</Option>)}
+                {source.salesManagers.map(option => <Option key={option.owner_admin_id}>{option.real_name}</Option>)}
               </Select>
             )}
           </Form.Item>

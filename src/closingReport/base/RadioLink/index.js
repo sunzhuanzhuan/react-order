@@ -13,7 +13,8 @@ export default class RadioLink extends Component {
     const value = props.value || {};
     this.state = {
       link: value.link || '',
-      radio: value.radio || 1
+      radio: value.radio || 1,
+      reference: value.reference || ''
     };
   }
 

@@ -1,7 +1,8 @@
 const prefix = '/summaryData'
 export default {
-  salesManager: prefix + '/getSalesManager',
-  companyBrand: prefix + '/getCompanyBrand',
-  companyProject: prefix + '/getCompanyProject',
+  salesManagers: prefix + '/getSalesManager',
+  companyBrands: prefix + '/getCompanyBrand',
+  companyProjects: prefix + '/getCompanyProject',
+  companyPlatforms: prefix + '/getCompanyPlatforms',
   order: prefix + '/getOrder',
 }

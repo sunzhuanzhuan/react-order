@@ -7,30 +7,30 @@ import { createAction } from 'redux-actions'
  */
 // 获取执行人
 export const {
-	getSalesManager,
-	getSalesManager_success
-} = createHttpAction('getSalesManager', Interface.salesManager, {
+	getSalesManagers,
+	getSalesManagers_success
+} = createHttpAction('getSalesManagers', Interface.salesManagers, {
 	method: 'get',
 });
 // 获取公司品牌
 export const {
-	getCompanyBrand,
-	getCompanyBrand_success
-} = createHttpAction('getCompanyBrand', Interface.companyBrand, {
+	getCompanyBrands,
+	getCompanyBrands_success
+} = createHttpAction('getCompanyBrands', Interface.companyBrands, {
 	method: 'get',
 });
 // 获取公司项目
 export const {
-	getCompanyProject,
-	getCompanyProject_success
-} = createHttpAction('getCompanyProject', Interface.companyProject, {
+	getCompanyProjects,
+	getCompanyProjects_success
+} = createHttpAction('getCompanyProjects', Interface.companyProjects, {
 	method: 'get',
 });
 // 获取订单列表
 export const {
-	getOrder,
-	getOrder_success
-} = createHttpAction('getOrder', Interface.order, {
+	getOrders,
+	getOrders_success
+} = createHttpAction('getOrders', Interface.order, {
 	method: 'get',
 });
 // 清空列表数据

@@ -4,10 +4,11 @@ import OrderFilterForm from '../components/OrderFilterForm';
 import { SH2 } from '../../base/SectionHeader';
 import './SelectOrders.less';
 import { WBYPlatformIcon } from 'wbyui';
+import IconText from '../base/IconText';
 
 const disabledReason = {
-  '2': '订单的执行状态不是【执行中】、【已执行】、【待质检】、【质检中】、【质检完成】、【已完成】、【已结案】、【赔偿申请中】、【赔偿通过】 其中任意一个',
-  '3': '订单被其他的投放数据汇总单勾选且保存了'
+  '2': '订单尚未添加执行内容',
+  '3': '订单被其他的投放数据汇总单选择'
 };
 const columns = [
   {
@@ -45,10 +46,7 @@ const columns = [
     title: '主平台信息',
     dataIndex: 'weibo_type',
     render: (type, record) => {
-      return <div>
-        <WBYPlatformIcon weibo_type={type || '1'} widthSize={22}/>
-        <span style={{verticalAlign: 'text-bottom', marginLeft: '5px'}}>{record.weibo_name}</span>
-      </div>;
+      return <IconText platform={type} text={record.weibo_name}/>
     }
   }, {
     title: '项目/品牌',
@@ -109,16 +107,16 @@ export default class SelectOrders extends Component {
       }
     };
     const { actions } = props;
-    actions.getSalesManager();
-    actions.getCompanyBrand();
-    actions.getCompanyProject();
+    actions.getSalesManagers();
+    actions.getCompanyBrands();
+    actions.getCompanyProjects();
   }
 
   getList = (params = {}) => {
     const { actions } = this.props;
     let search = { ...this.state.search, ...params };
     this.setState({ listLoading: true, search });
-    actions.getOrder(search).finally(() => {
+    actions.getOrders(search).finally(() => {
       this.setState({ listLoading: false });
     });
   };
