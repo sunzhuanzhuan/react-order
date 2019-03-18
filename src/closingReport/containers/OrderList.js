@@ -6,12 +6,12 @@ const cardConfig = {
   orderActions: {
     add: true,
     del: true,
-    check: true
+    // check: true
   },
   platformActions: {
     edit: true,
     del: true,
-    check: true
+    // check: true
   },
   display: {
     orderStatus: false,

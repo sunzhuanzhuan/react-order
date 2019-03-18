@@ -125,9 +125,9 @@ const OrderPlatformStatus = ({ orderStatus, data }) => {
   let key = orderStatusToStatus[orderStatus];
   let props = _display[key] && _display[key][data[key]];
   return (
-    props ? <div className='card-item-status'>
-      <Badge {...props} />
-    </div> : null
+    <div className='card-item-status'>
+      {props ? <Badge {...props} /> : null}
+    </div>
   );
 };
 
@@ -184,7 +184,7 @@ export default class OrderCard extends Component {
           }
           {
             del && <Popconfirm
-              getPopupContainer={() => document.querySelector('#order-card-container-delete-btn')}
+              getPopupContainer={(node) => node.parentNode}
               title={<div>删除后，订单内数据将全部清空。<br />确认删除么?</div>}
               okText="确定" cancelText="取消">
               <a id='order-card-container-delete-btn'>
@@ -204,22 +204,22 @@ export default class OrderCard extends Component {
       <ul className='order-card-main'>
         {
           platform.map(item => {
-            return <li key={item.platform_id}>
+            return <li key={item.platform_id + Math.random()}>
               <div className='card-item-type'>
-                主平台
+                主平台{item.is_hand_record == 1 ? '（录入)' : ''}
               </div>
               <div className='card-item-name'>
-                <IconText platform={item.platform_id} text={'账号名账号名账号名账号名账号名账号名'} />
+                <IconText platform={item.platform_id} text={item.weibo_name || '-'} />
               </div>
-              <div className='card-item-info'>
-                王小丫 提交于2019-01-02 09:11
-              </div>
+              {item.modify_name && <div className='card-item-info'>
+                {item.modify_name} 提交于{item.update_at}
+              </div>}
               <OrderPlatformStatus data={item} orderStatus={data.summary_status} />
               <div className='card-item-actions'>
-                {(platformActions.edit && canEdit(data)) ?
+                {(platformActions.edit && canEdit(item)) ?
                   <a onClick={() => this.setState({ detailId: 'xxx' })}>修改</a> : <a>查看</a>}
-                {platformActions.del && <Divider type="vertical" />}
-                {platformActions.del && <a>删除</a>}
+                {platformActions.del && (item.is_hand_record == 1) ? <Divider type="vertical" /> : null}
+                {platformActions.del && (item.is_hand_record == 1) ? <a>删除</a> : null}
                 {platformActions.check && <Divider type="vertical" />}
                 {platformActions.check && <a>去审核</a>}
               </div>
