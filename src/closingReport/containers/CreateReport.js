@@ -8,6 +8,7 @@ import * as actions from '../actions';
 import { linkTo } from '../../util/linkTo';
 import OrderList from './OrderList';
 import { parseUrlQuery } from '@/util/parseUrl';
+import { companySource } from '../reducer';
 
 
 const Step = Steps.Step;
@@ -44,6 +45,7 @@ export default class CreateReport extends Component {
       selectedRowKeys: [],
       visible: !summary_name
     };
+    // 获取结案数据单信息接口
   }
 
   onSelectChange = selectedRowKeys => {
@@ -73,16 +75,30 @@ export default class CreateReport extends Component {
   };
 
   temporarySave = () => {
-
+    this.coreSave();
   };
 
   coreSave() {
-
+    const { closingReport: { companySource: { summaryId } } } = this.props;
+    const { selectedRowKeys, companyId, summaryName } = this.state;
+    if (!selectedRowKeys.length) {
+      message.info('请选择订单');
+      return Promise.reject()
+    }
+    let _msg = message.loading('保存中...');
+    const { actions } = this.props;
+    return actions.addOrUpdateSummary({
+      company_id: companyId,
+      summary_id: summaryId,
+      summary_name: summaryName,
+      order_ids: selectedRowKeys
+    }).then(() => {_msg()});
   }
 
   next() {
+    // this.coreSave().then(() => {});
     const current = this.state.current + 1;
-    this.setState({ current });
+    this.setState({ current, selectedRowKeys: [] });
   }
 
   prev() {

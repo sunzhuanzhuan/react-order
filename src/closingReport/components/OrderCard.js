@@ -3,9 +3,137 @@ import { Badge, Icon, Divider, Select, Modal, message, Popconfirm } from 'antd';
 import './OrderCard.less';
 import IconText from '../base/IconText';
 import update from 'immutability-helper';
-import DataDetailsModal from "../containers/DataDetailsModal";
+import DataDetailsModal from '../containers/DataDetailsModal';
 
 const Option = Select.Option;
+
+// 订单结案状态
+const OrderSummaryStatus = ({ status, reason }) => {
+  let _display = {
+    '1': {
+      status: 'default',
+      text: '待提交内审'
+    },
+    '2': {
+      status: 'processing',
+      text: '待内审'
+    },
+    '3': {
+      status: 'processing',
+      text: '内审通过'
+    },
+    '4': {
+      status: 'error',
+      text: '内审被拒，待修改'
+    },
+    '5': {
+      status: 'processing',
+      text: '待品牌方审核'
+    },
+    '6': {
+      status: 'error',
+      text: '品牌方审核被拒，待修改'
+    },
+    '7': {
+      status: 'success',
+      text: '审核通过'
+    }
+  };
+  let props = _display[status];
+  return (
+    <div className='head-left'>
+      <Badge {...props} />
+      {/*<div>原因: balabala</div>*/}
+    </div>
+  );
+};
+
+// 数据完善状态
+const OrderPlatformStatus = ({ orderStatus, data }) => {
+  let orderStatusToStatus = {
+    '1': 'is_finish',
+    '2': 'check_status',
+    '3': '__none__',
+    '4': 'modify_status',
+    '5': '__none__',
+    '6': '__none__',
+    '7': '__none__'
+  };
+  // ['1待完善' '2已完善' '3待审核' '4已审核' '5无需修改' '6待修改' '7已修改' '8品牌拒绝，待修改' '9审核完成']
+  let _display = {
+    'modify_status': {
+      '1': {
+        status: 'default',
+        text: '待修改',
+        index: '6'
+      },
+      '2': {
+        status: 'success',
+        text: '已修改',
+        index: '7'
+      },
+      '3': {
+        status: 'success',
+        text: '无需修改',
+        index: '5'
+      }
+    },
+    'is_finish': {
+      '1': {
+        status: 'success',
+        text: '已完善',
+        index: '2'
+      },
+      '2': {
+        status: 'error',
+        text: '待完善',
+        index: '1'
+      }
+    },
+    'check_status': {
+      '1': {
+        status: 'processing',
+        text: '待审核',
+        index: '3'
+      },
+      '2': {
+        status: 'success',
+        text: '内审通过',
+        index: '4'
+      },
+      '3': {
+        status: 'error',
+        text: '内审拒绝',
+        index: '4'
+      },
+      '4': {
+        status: 'processing',
+        text: '品牌方待审核'
+      },
+      '5': {
+        status: 'success',
+        text: '品牌方通过',
+        index: '9'
+      },
+      '6': {
+        status: 'error',
+        text: '品牌方拒绝',
+        index: '8'
+      }
+    }
+  };
+  let key = orderStatusToStatus[orderStatus];
+  let props = _display[key] && _display[key][data[key]];
+  return (
+    props ? <div className='card-item-status'>
+      <Badge {...props} />
+    </div> : null
+  );
+};
+
+function canEdit(data) {
+  return data.is_finish == 2 || data.modify_status == 1 || data.check_status == 6;
+}
 
 export default class OrderCard extends Component {
   constructor(props, context) {
@@ -30,25 +158,19 @@ export default class OrderCard extends Component {
   };
 
   render() {
-    const platform = [
-      '1', '110', '9'
-    ];
     const { addModal } = this.state;
-    const { orderActions } = this.props;
+    const { orderActions, optional, data, display, platformActions } = this.props;
     const { add, del, check } = orderActions || {};
-    const optional = this.props.source;/*.filter((p) => {
-      return !platform.find(id => id === p.platform_id);
-    });*/
+    const { platform = [] } = data;
+    /*.filter((p) => {  return !platform.find(id => id === p.platform_id)});*/
+
     return <div className='order-card-container'>
       <header className='order-card-head'>
-        <div className='head-left'>
-          <Badge status="success" text="审核通过" />
-          {/*<div>原因: balabala</div>*/}
-        </div>
+        {display.orderStatus && <OrderSummaryStatus status={data.summary_status} />}
         <ul className='head-center'>
-          <li>订单ID：1234556</li>
-          <li>PO单号：1233567</li>
-          <li>需求名：需求名称1</li>
+          <li>订单ID：{data.order_id}</li>
+          {data.execution_evidence_code && <li>PO单号：{data.execution_evidence_code}</li>}
+          <li>需求名：{data.requirement_name}</li>
           {/*<li>王小丫 提交于2019-01-02  09:11</li>*/}
         </ul>
         <div className='head-right'>
@@ -80,59 +202,30 @@ export default class OrderCard extends Component {
         </div>
       </header>
       <ul className='order-card-main'>
-        <li>
-          <div className='card-item-type'>
-            主平台
-          </div>
-          <div className='card-item-name'>
-            <IconText platform={'1'} text={'账号名账号名账号名账号名账号名账号名'} />
-          </div>
-          <div className='card-item-status'>
-            <Badge status="success" text="成功" />
-          </div>
-          <div className='card-item-actions'>
-            <a onClick={() => this.setState({ detailId: 'xxx' })}>修改</a>
-            <Divider type="vertical" />
-            <a>删除</a>
-          </div>
-        </li>
-        <li>
-          <div className='card-item-type'>
-            分发平台（录入)
-          </div>
-          <div className='card-item-name'>
-            <IconText platform={'110'} text={'账号名账号名账号名'} />
-          </div>
-          <div className='card-item-info'>
-            王小丫 提交于2019-01-02 09:11
-          </div>
-          <div className='card-item-status'>
-            <Badge status="success" text="成功" />
-          </div>
-          <div className='card-item-actions'>
-            <a>删除</a>
-            <Divider type="vertical" />
-            <a>查看</a>
-            <Divider type="vertical" />
-            <a>去审核</a>
-          </div>
-        </li>
-        <li>
-          <div className='card-item-type'>
-            分发平台
-          </div>
-          <div className='card-item-name'>
-            <IconText platform={'9'} text={'账号名账号名账号名'} />
-          </div>
-          <div className='card-item-info'>
-            王小丫 提交于2019-01-02 09:11
-          </div>
-          <div className='card-item-status'>
-          </div>
-          <div className='card-item-actions'>
-            <a>修改</a>
-          </div>
-        </li>
+        {
+          platform.map(item => {
+            return <li key={item.platform_id}>
+              <div className='card-item-type'>
+                主平台
+              </div>
+              <div className='card-item-name'>
+                <IconText platform={item.platform_id} text={'账号名账号名账号名账号名账号名账号名'} />
+              </div>
+              <div className='card-item-info'>
+                王小丫 提交于2019-01-02 09:11
+              </div>
+              <OrderPlatformStatus data={item} orderStatus={data.summary_status} />
+              <div className='card-item-actions'>
+                {(platformActions.edit && canEdit(data)) ?
+                  <a onClick={() => this.setState({ detailId: 'xxx' })}>修改</a> : <a>查看</a>}
+                {platformActions.del && <Divider type="vertical" />}
+                {platformActions.del && <a>删除</a>}
+                {platformActions.check && <Divider type="vertical" />}
+                {platformActions.check && <a>去审核</a>}
+              </div>
+            </li>;
+          })
+        }
       </ul>
       {add && <Modal
         title="添加平台"
@@ -161,7 +254,7 @@ export default class OrderCard extends Component {
           >
             {optional.map(option =>
               <Option
-                disabled={!!platform.find(id => id === option.platform_id)}
+                disabled={!!platform.find(({ platform_id: id }) => id == option.platform_id)}
                 key={option.platform_id}
               >{option.platform_name}</Option>)}
           </Select>

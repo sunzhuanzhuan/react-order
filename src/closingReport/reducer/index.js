@@ -7,6 +7,8 @@ import {
   getCompanyProjects_success,
   getSalesManagers_success,
   getCompanyPlatforms_success,
+  addOrUpdateSummary_success,
+  getSummaryOrderInfo_success,
   getOrders_success
 } from '../actions';
 
@@ -60,11 +62,14 @@ export const publicSource = handleActions({
   }
 }, defaultPublicSource);
 
-// 公司(结案单)纬度下的数据
+// 公司/结案单 纬度下的数据
 const defaultCompanySource = {
   brandByCompany: [],
   projectByCompany: [],
   platformByCompany: [],
+  companyId: '',
+  summaryName: '',
+  beSales: ''
 };
 export const companySource = handleActions({
   [combineActions(getCompanyBrands_success)]: (state, action) => {
@@ -87,6 +92,13 @@ export const companySource = handleActions({
         $set: action.payload.data
       }
     });
+  },
+  [combineActions(addOrUpdateSummary_success)]: (state, action) => {
+    return update(state, {
+      summaryId: {
+        $set: action.payload.data.summary_id
+      }
+    });
   }
 }, defaultCompanySource);
 
@@ -95,8 +107,29 @@ export const selectOrderList = handleActions({
   [combineActions(getOrders_success)]: handleResponseList('order_id')
 }, initList());
 
+// 数据单订单信息(列表)
+export const summaryOrders = handleActions({
+  [combineActions(getSummaryOrderInfo_success)]: (state, action) => {
+    let response = action.payload.data || {}, source = {};
+    let { total = {}, list = [] } = response;
+    list = list.map(item => {
+      source[item['id']] = { ...item };
+      source[item['id']]['key'] = item['id'];
+      return item['id'];
+    });
+    return {
+      list, source: { ...state.source, ...source }, response
+    };
+  }
+}, {
+  list: [],
+  source: {},
+  response: {}
+});
+
 export default combineReducers({
   publicSource,
   companySource,
-  selectOrderList
+  selectOrderList,
+  summaryOrders
 });
