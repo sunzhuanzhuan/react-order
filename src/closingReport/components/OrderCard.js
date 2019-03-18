@@ -111,6 +111,10 @@ export default class OrderCard extends Component {
           </div>
           <div className='card-item-actions'>
             <a>删除</a>
+            <Divider type="vertical" />
+            <a>查看</a>
+            <Divider type="vertical" />
+            <a>去审核</a>
           </div>
         </li>
         <li>

@@ -7,6 +7,7 @@ import './style.less'
 // 懒加载路由级组件
 const Test = lazyLoadComponent(() => import('./containers/Test'))
 const CreateReport = lazyLoadComponent(() => import('./containers/CreateReport'))
+const SummaryListByOrder = lazyLoadComponent(() => import('./containers/SummaryListByOrder'))
 
 
 class ClosingReport extends Component {
@@ -17,6 +18,8 @@ class ClosingReport extends Component {
 			<div className='closing-report-container'>
 				<Route path='/order/closing-report/test' component={Test} />
 				<Route path='/order/closing-report/create' component={CreateReport} />
+				<Route path='/order/closing-report/list/summary-order' component={SummaryListByOrder} />
+				<Route path='/order/closing-report/list/review' component={SummaryListByOrder} />
 			</div>
 		);
 	}
