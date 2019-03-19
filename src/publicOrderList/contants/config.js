@@ -48,17 +48,17 @@ export const filterFormArr = [
     label: "资源媒介",
     type: "selectDependOnRequest",
     key: "meida_user_id",
-    url: ""
+    url: "/api/user/getMediaUsers"
   },
   {
     label: "项目媒介",
     type: "selectDependOnRequest",
     key: "project_user_id",
-    url: ""
+    url: "/api/user/getVolUsers"
   },
   {
     label: "主账号名",
-    type: "input",
+    type: "input"
   },
   {
     label: "是否提前打款",
