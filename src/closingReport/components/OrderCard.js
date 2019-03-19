@@ -3,7 +3,6 @@ import { Badge, Icon, Divider, Select, Modal, message, Popconfirm } from 'antd';
 import './OrderCard.less';
 import IconText from '../base/IconText';
 import update from 'immutability-helper';
-import DataDetailsModal from '../containers/DataDetailsModal';
 
 const Option = Select.Option;
 const orderPlatformStatusMap = {
@@ -198,8 +197,7 @@ export default class OrderCard extends Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      addModal: {},
-      detailId: ''
+      addModal: {}
     };
   }
 
@@ -208,12 +206,12 @@ export default class OrderCard extends Component {
     this.setState(update(this.state, {
       addModal: { loading: { $set: true } }
     }));
-    this.props.actions.addPlatform({
-      id: this.props.data.id,
-      platform_id: this.state.addModal.platformKey
-    });
     setTimeout(() => {
       message.success(`添加平台${this.state.addModal.platformKey}成功`);
+      this.props.actions.addPlatform({
+        id: this.props.data.id,
+        platform_id: this.state.addModal.platformKey
+      });
       this.setState(update(this.state, {
         addModal: { show: { $set: false }, loading: { $set: false } }
       }));
@@ -222,7 +220,7 @@ export default class OrderCard extends Component {
 
   render() {
     const { addModal } = this.state;
-    const { orderActions, optional, data, display } = this.props;
+    const { orderActions, optional, data, display, actions } = this.props;
     const { add, del, check } = orderActions || {};
     const { platform = [] } = data;
     /*.filter((p) => {  return !platform.find(id => id === p.platform_id)});*/
@@ -256,6 +254,9 @@ export default class OrderCard extends Component {
               title={<div>删除后，订单内数据将全部清空。<br />确认删除么?</div>}
               okText="确定"
               cancelText="取消"
+              onConfirm={() => {
+                actions.removeSummaryOrder({ id: data.id });
+              }}
             >
               <a id='order-card-container-delete-btn'>
                 <Icon type="delete" />
@@ -264,7 +265,7 @@ export default class OrderCard extends Component {
             </Popconfirm>
           }
           {
-            check && <a>
+            check && <a disabled={true}>
               <Icon type="check-circle" />
               <span>提交审核</span>
             </a>
@@ -292,22 +293,31 @@ export default class OrderCard extends Component {
               <div className='card-item-actions'>
                 {
                   view &&
-                  <a>查看</a>
+                  <a onClick={() => this.props.onDetail('view', item, data)}>查看</a>
                 }
                 {
                   edit &&
-                  <a onClick={() => this.setState({ detailId: 'xxx' })}>修改</a>
+                  <a onClick={() => this.props.onDetail('edit', item, data)}>修改</a>
                 }
                 {
                   del &&
                   [
                     <Divider key={1} type="vertical" />,
-                    <a key={2} onClick={() => {
-                      this.props.actions.removePlatform({
-                        id: data.id,
-                        platform_id: item.platform_id
-                      });
-                    }}>删除</a>
+                    <Popconfirm key={2}
+                      getPopupContainer={(node) => node.parentNode}
+                      title='是否确认删除本平台？'
+                      okText="确定"
+                      cancelText="取消"
+                      onConfirm={() => {
+                        actions.removePlatform({
+                          id: data.id,
+                          platform_id: item.platform_id
+                        });
+                      }}
+                    >
+                      <a>删除</a>
+                    </Popconfirm>
+
                   ]}
                 {
                   check &&
@@ -355,8 +365,6 @@ export default class OrderCard extends Component {
           <div style={{ color: '#999', lineHeight: '32px' }}>如果平台已经存在则不能再次添加</div>
         </div>
       </Modal>}
-      {this.state.detailId ?
-        <DataDetailsModal id={this.state.detailId} closed={() => this.setState({ detailId: '' })} /> : null}
     </div>;
   }
 }

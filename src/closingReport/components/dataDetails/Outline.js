@@ -103,19 +103,26 @@ export class Edit extends Component {
  */
 export class View extends Component {
   render() {
+    const {
+      brand_name,
+      project_name,
+      executor_name,
+      real_name,
+      resource_media,
+      project_media,
+      platform_id
+    } = this.props.data;
     const titles = [
       '项目/品牌',
       '资源/项目媒介',
       '销售/执行人',
-      '订单创建人',
       '分发平台'
     ];
     const values = [
-      '一级帮diaper-12月 / Pampers',
-      '唐芬莉 / 刘孟颖',
-      '宝洁 / 蔡逸琦',
-      '蔡逸琦',
-      <WBYPlatformIcon key={22} weibo_type={9} widthSize={22} />,
+      brand_name + ' / ' + project_name,
+      resource_media + ' / ' + project_media,
+      real_name + ' / ' + executor_name,
+      <WBYPlatformIcon key={22} weibo_type={platform_id} widthSize={22} />
     ];
     return <div className='platform-data-detail-module outline'>
       <Row>

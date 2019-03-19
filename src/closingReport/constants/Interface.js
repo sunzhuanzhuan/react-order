@@ -7,4 +7,5 @@ export default {
   order: prefix + '/getOrder',
   addOrUpdateSummary: prefix + '/add',
   getSummaryOrderInfo: prefix + '/getSummaryOrderInfo',
+  getPlatformDataInfo: prefix + '/getPlatformDataInfo',
 }

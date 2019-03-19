@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Checkbox, Input } from 'antd';
+import { Checkbox, Input, InputNumber } from 'antd';
 import './index.less';
 
 export default class SwitchRequiredInput extends Component {
@@ -29,6 +29,13 @@ export default class SwitchRequiredInput extends Component {
     this.triggerChange({ input: value });
   };
 
+  handleNumberChange = (value) => {
+    if (!('value' in this.props)) {
+      this.setState({ input: value });
+    }
+    this.triggerChange({ input: value });
+  };
+
   handleCheckChange = (e) => {
     const checked = e.target.checked;
     if (!('value' in this.props)) {
@@ -46,10 +53,32 @@ export default class SwitchRequiredInput extends Component {
 
   render() {
     const { checked, input } = this.state;
-    const { width = 420, placeholder = '请输入' } = this.props;
+    const { width = 420, placeholder = '请输入', inputType = 'input' } = this.props;
+    let props = {
+      style: { width },
+      disabled: checked,
+      value: input,
+      placeholder
+    };
+    let inputComponent = null;
+    switch (inputType) {
+      case 'input':
+        inputComponent = <Input {...props}
+          onChange={this.handleInputChange}
+        />;
+        break;
+      case 'number':
+        inputComponent = <InputNumber {...props}
+          onChange={this.handleNumberChange}
+          min={0}
+          precision={0}
+          formatter={value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+          parser={value => value.replace(/\$\s?|(,*)/g, '')}
+        />;
+    }
     return <div className='switch-required-input'>
-      <Input style={{ width }} disabled={checked} value={input} onChange={this.handleInputChange} placeholder={placeholder} />
-      <Checkbox onChange={this.handleCheckChange} style={checked ? {opacity: 1} : {}}>无法提供该数据</Checkbox>
+      {inputComponent}
+      <Checkbox onChange={this.handleCheckChange} style={checked ? { opacity: 1 } : {}}>无法提供该数据</Checkbox>
     </div>;
   }
 }

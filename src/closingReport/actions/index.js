@@ -67,3 +67,14 @@ export const addPlatform = createAction('addPlatform', (data) => {
 export const removePlatform = createAction('removePlatform', (data) => {
   return { data };
 });
+// 删除订单
+export const removeSummaryOrder = createAction('removeSummaryOrder', (data) => {
+  return { data };
+});
+// 获取平台信息
+export const {
+  getPlatformDataInfo,
+  getPlatformDataInfo_success
+} = createHttpAction('getPlatformDataInfo', Interface.getPlatformDataInfo, {
+  method: 'get'
+});

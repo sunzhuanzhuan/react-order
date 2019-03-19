@@ -9,6 +9,7 @@ import {
   getCompanyPlatforms_success,
   addOrUpdateSummary_success,
   getSummaryOrderInfo_success,
+  getPlatformDataInfo_success,
   getOrders_success
 } from '../actions';
 
@@ -142,6 +143,12 @@ export const summaryOrders = handleActions({
     let index = state.source[id].platform.findIndex(({ platform_id: id }) => platform_id == id);
     return update(state, { source: { [id]: { platform: { $splice: [[index, 1]] } } } });
 
+  },
+  [combineActions('removeSummaryOrder')]: (state, action) => {
+    let { id } = action.payload.data || {};
+    let index = state.list.findIndex((key) => key == id);
+    return update(state, { list: { $splice: [[index, 1]] } });
+
   }
 }, {
   list: [],
@@ -149,9 +156,25 @@ export const summaryOrders = handleActions({
   response: {}
 });
 
+// 平台数据信息
+export const platformData = handleActions({
+  [combineActions(getPlatformDataInfo_success)]: (state, action) => {
+    return {
+      ...action.payload.data
+    };
+  }
+}, {
+  total: {},
+  basic_information: {},
+  execution_link: {},
+  execution_screenshot: {},
+  execution_data: {},
+});
+
 export default combineReducers({
   publicSource,
   companySource,
   selectOrderList,
-  summaryOrders
+  summaryOrders,
+  platformData
 });

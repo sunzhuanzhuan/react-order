@@ -3,6 +3,11 @@ import { Form } from 'antd';
 import './index.less';
 import SwitchRequiredInput from '../../base/SwitchRequiredInput';
 import DataModuleHeader from '../../base/DataModuleHeader';
+import { Against } from '../../base/ApprovalStatus';
+
+const config = {
+  '4': 'number'
+};
 
 /**
  * 基本信息(编辑)
@@ -15,32 +20,36 @@ export class Edit extends Component {
     }
     callback('必填!');
   };
+  validatorUrl = link_prefix => (rule, value, callback) => {
+    if (!link_prefix || value.checked) {
+      return callback();
+    }
+    if (link_prefix.some(pre => new RegExp('^' + pre).test(value.input))) return callback();
+    callback('请输入正确的链接');
+  };
+
   render() {
     const { getFieldDecorator } = this.props.form;
-    const { reason = '' } = this.props;
+    const { data: { data = [] } } = this.props;
+    const reason = parseInt(data.status) === 2 ? <Against reason={data.reason} /> : null;
     return <div className='platform-data-detail-module base-info'>
-      <DataModuleHeader title='基本信息' extra={reason}/>
-      <div style={{paddingTop: '10px'}}>
-        <Form.Item label="账号名称" {...this.props.formItemLayout}>
-          {getFieldDecorator(`usernamexxx`, {
-            rules: [{ validator: this.checkSwitchInput }]
-          })(<SwitchRequiredInput />)}
-          </Form.Item>
-        <Form.Item label="主页链接" {...this.props.formItemLayout}>
-          {getFieldDecorator(`username2`, {
-            rules: [{ validator: this.checkSwitchInput }]
-          })(<SwitchRequiredInput />)}
-        </Form.Item>
-        <Form.Item label="粉丝数" {...this.props.formItemLayout}>
-          {getFieldDecorator(`username3`, {
-            rules: [{ validator: this.checkSwitchInput }]
-          })(<SwitchRequiredInput />)}
-        </Form.Item>
-        <Form.Item label="账号ID" {...this.props.formItemLayout}>
-          {getFieldDecorator(`username4`, {
-            rules: [{ validator: this.checkSwitchInput }]
-          })(<SwitchRequiredInput />)}
-        </Form.Item>
+      <DataModuleHeader title='基本信息' extra={reason} />
+      <div style={{ paddingTop: '10px' }}>
+        {
+          data.map((item, n) => {
+            return <Form.Item key={item.id} label={item.display} {...this.props.formItemLayout}>
+              {getFieldDecorator(`basic_information[${n}]`, {
+                initialValue: { id: item.id, input: item.value, checked: item.checked },
+                validateFirst: true,
+                validateTrigger: 'onBlur',
+                rules: [
+                  { validator: this.checkSwitchInput },
+                  { validator: this.validatorUrl(item.link_prefix) }
+                ]
+              })(<SwitchRequiredInput inputType={config[item.id]} />)}
+            </Form.Item>;
+          })
+        }
       </div>
     </div>;
   }
@@ -51,23 +60,24 @@ export class Edit extends Component {
  */
 export class View extends Component {
   render() {
+    const { data: { data = [] } } = this.props;
     return <div className='platform-data-detail-module base-info read'>
       <div className='read-left-head'>
         基本信息
       </div>
       <div className='read-right-data'>
-        <p>
-          <span className='title'>主页链接：</span>
-          <a className='value' href="">https://mp.weixin.qq.com/cgi-bin/component_unauthorize?a</a>
-        </p>
-        <p>
-          <span className='title'>粉丝数：</span>
-          <span className='value'>无法提供该数据无法提供该数据无法提供该数据无法提供该数据无法提供该数据无法提供该数据无法提供该数据无法提供该数据无法提供该数据</span>
-        </p>
-        <p>
-          <span className='title'>账号ID：</span>
-          <span className='value'>这里显示账号ID</span>
-        </p>
+        {
+          data.map(item => {
+            return <p key={item.id}>
+              <span className='title'>{item.display}：</span>
+              {
+                item.link_prefix ?
+                  <a className='value' target="_blank" href={item.value}>{item.value}</a> :
+                  <span className='value' title={item.value}>{item.value}</span>
+              }
+            </p>;
+          })
+        }
       </div>
       {this.props.children}
     </div>;

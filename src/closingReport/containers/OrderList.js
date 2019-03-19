@@ -1,7 +1,27 @@
 import React, { Component } from 'react';
 import {} from 'antd';
 import OrderCard from '../components/OrderCard';
+import DataDetailsModalEdit from './DataDetailsModalEdit';
+import DataDetailsModalView from './DataDetailsModalView';
+import DataDetailsModalCheck from './DataDetailsModalCheck';
 
+const DetailModal = (props) => {
+  let C;
+  switch (props.type) {
+    case 'edit':
+      C = DataDetailsModalEdit;
+      break;
+    case 'view':
+      C = DataDetailsModalView;
+      break;
+    case 'check':
+      C = DataDetailsModalCheck;
+      break;
+    default :
+      return null;
+  }
+  return props.show && <C {...props} />;
+};
 const cardConfig = {
   orderActions: {
     add: true,
@@ -31,7 +51,12 @@ export default class OrderList extends Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      loading: true
+      loading: true,
+      detailModal: {
+        show: false,
+        data: {},
+        type: ''
+      }
     };
     props.actions.getCompanyPlatforms();
     props.actions.getSummaryOrderInfo().then(() => {
@@ -39,18 +64,42 @@ export default class OrderList extends Component {
     });
   }
 
+  handleDetail = (type, item, data) => {
+    this.setState({
+      detailModal: type ? {
+        show: true,
+        data: { ...data, current: item },
+        type: type
+      } : {}
+    });
+  };
 
   render() {
-    const { closingReport: { companySource, summaryOrders } } = this.props;
+    const { closingReport: { companySource, summaryOrders, platformData }, actions } = this.props;
     const { list = [], source = {} } = summaryOrders;
-    const { loading } = this.state;
+    const { loading, detailModal } = this.state;
+    const connect = {
+      actions,
+      platformData
+    };
     return loading ? 'loading...' : <div>
       {
         list.map(key => {
           let item = source[key];
-          return <OrderCard actions={this.props.actions} key={key} {...cardConfig} optional={companySource.platformByCompany} data={item} />;
+          return <OrderCard
+            key={key}
+            {...cardConfig}
+            optional={companySource.platformByCompany}
+            data={item}
+            onDetail={this.handleDetail}
+          />;
         })
       }
+      <DetailModal
+        {...connect}
+        {...detailModal}
+        closed={() => this.handleDetail()}
+      />
     </div>;
   }
 }
