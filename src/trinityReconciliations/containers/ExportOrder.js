@@ -14,7 +14,9 @@ export default class ExportOrder extends Component {
   }
 
 
-  componentWillMount() {}
+  componentWillMount=()=> {
+    
+  }
   handleCancelSelect=()=>{
    
       this.setState({
