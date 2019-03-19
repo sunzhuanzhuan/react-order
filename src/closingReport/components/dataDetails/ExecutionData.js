@@ -41,7 +41,7 @@ export class Edit extends Component {
   render() {
     const { getFieldDecorator } = this.props.form;
     const { data: { data = [], screenshot = [] } } = this.props;
-    const reason = parseInt(data.status) === 2 ? <Against reason={data.reason} /> : null;
+    const reason = parseInt(this.props.data.status) === 2 ? <Against reason={this.props.data.reason} /> : null;
     let fetchData = [], inputData = [];
     data.forEach((item) => {
       if (item.source_type === 2) {
