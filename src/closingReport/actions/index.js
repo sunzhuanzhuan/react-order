@@ -59,6 +59,11 @@ export const {
   } = createHttpAction('getSummaryOrderInfo', Interface.getSummaryOrderInfo, {
     method: 'get'
   });
-export const updateFetchInfo = createAction('updateFetchInfo', (data) => {
+// 添加平台
+export const addPlatform = createAction('addPlatform', (data) => {
+  return { data };
+});
+// 删除平台
+export const removePlatform = createAction('removePlatform', (data) => {
   return { data };
 });

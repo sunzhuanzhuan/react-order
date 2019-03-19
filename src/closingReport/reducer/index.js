@@ -120,6 +120,28 @@ export const summaryOrders = handleActions({
     return {
       list, source: { ...state.source, ...source }, response
     };
+  },
+  [combineActions('addPlatform')]: (state, action) => {
+    let { platform_id, id } = action.payload.data || {};
+    return update(state, {
+      source: {
+        [id]: {
+          platform: {
+            $push: [{
+              platform_id,
+              is_finish: 2,
+              is_hand_record: 1
+            }]
+          }
+        }
+      }
+    });
+  },
+  [combineActions('removePlatform')]: (state, action) => {
+    let { platform_id, id } = action.payload.data || {};
+    let index = state.source[id].platform.findIndex(({ platform_id: id }) => platform_id == id);
+    return update(state, { source: { [id]: { platform: { $splice: [[index, 1]] } } } });
+
   }
 }, {
   list: [],

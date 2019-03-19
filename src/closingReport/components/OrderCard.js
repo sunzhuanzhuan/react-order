@@ -6,6 +6,69 @@ import update from 'immutability-helper';
 import DataDetailsModal from '../containers/DataDetailsModal';
 
 const Option = Select.Option;
+const orderPlatformStatusMap = {
+  'modify_status': {
+    '1': {
+      status: 'default',
+      text: '待修改',
+      index: '6'
+    },
+    '2': {
+      status: 'success',
+      text: '已修改',
+      index: '7'
+    },
+    '3': {
+      status: 'success',
+      text: '无需修改',
+      index: '5'
+    }
+  },
+  'is_finish': {
+    '1': {
+      status: 'success',
+      text: '已完善',
+      index: '2'
+    },
+    '2': {
+      status: 'error',
+      text: '待完善',
+      index: '1'
+    }
+  },
+  'check_status': {
+    '1': {
+      status: 'processing',
+      text: '待审核',
+      index: '3'
+    },
+    '2': {
+      status: 'success',
+      text: '内审通过',
+      index: '4'
+    },
+    '3': {
+      status: 'error',
+      text: '内审拒绝',
+      index: '4'
+    },
+    '4': {
+      status: 'processing',
+      text: '品牌方待审核'
+    },
+    '5': {
+      status: 'success',
+      text: '品牌方通过',
+      index: '9'
+    },
+    '6': {
+      status: 'error',
+      text: '品牌方拒绝',
+      index: '8'
+    }
+  }
+};
+
 
 // 订单结案状态
 const OrderSummaryStatus = ({ status, reason }) => {
@@ -131,10 +194,6 @@ const OrderPlatformStatus = ({ orderStatus, data }) => {
   );
 };
 
-function canEdit(data) {
-  return data.is_finish == 2 || data.modify_status == 1 || data.check_status == 6;
-}
-
 export default class OrderCard extends Component {
   constructor(props, context) {
     super(props, context);
@@ -149,6 +208,10 @@ export default class OrderCard extends Component {
     this.setState(update(this.state, {
       addModal: { loading: { $set: true } }
     }));
+    this.props.actions.addPlatform({
+      id: this.props.data.id,
+      platform_id: this.state.addModal.platformKey
+    });
     setTimeout(() => {
       message.success(`添加平台${this.state.addModal.platformKey}成功`);
       this.setState(update(this.state, {
@@ -159,7 +222,7 @@ export default class OrderCard extends Component {
 
   render() {
     const { addModal } = this.state;
-    const { orderActions, optional, data, display, platformActions } = this.props;
+    const { orderActions, optional, data, display } = this.props;
     const { add, del, check } = orderActions || {};
     const { platform = [] } = data;
     /*.filter((p) => {  return !platform.find(id => id === p.platform_id)});*/
@@ -171,7 +234,12 @@ export default class OrderCard extends Component {
           <li>订单ID：{data.order_id}</li>
           {data.execution_evidence_code && <li>PO单号：{data.execution_evidence_code}</li>}
           <li>需求名：{data.requirement_name}</li>
-          {/*<li>王小丫 提交于2019-01-02  09:11</li>*/}
+          {!data.submitter_at || data.submitter_at === '0000-00-00 00:00:00' ? null :
+            <li>{data.submitter_name} 提交于 {data.submitter_at}</li>}
+          {!data.internal_check_at || data.internal_check_at === '0000-00-00 00:00:00' ? null :
+            <li>内审于 {data.internal_check_at}</li>}
+          {!data.external_check_at || data.external_check_at === '0000-00-00 00:00:00' ? null :
+            <li>品牌 审核于 {data.external_check_at}</li>}
         </ul>
         <div className='head-right'>
           {
@@ -186,7 +254,9 @@ export default class OrderCard extends Component {
             del && <Popconfirm
               getPopupContainer={(node) => node.parentNode}
               title={<div>删除后，订单内数据将全部清空。<br />确认删除么?</div>}
-              okText="确定" cancelText="取消">
+              okText="确定"
+              cancelText="取消"
+            >
               <a id='order-card-container-delete-btn'>
                 <Icon type="delete" />
                 <span>删除</span>
@@ -204,24 +274,48 @@ export default class OrderCard extends Component {
       <ul className='order-card-main'>
         {
           platform.map(item => {
+            let { edit, del, check, view, props } = display.platformConfig(item, data, orderPlatformStatusMap);
             return <li key={item.platform_id + Math.random()}>
               <div className='card-item-type'>
-                主平台{item.is_hand_record == 1 ? '（录入)' : ''}
+                {item.is_main == 1 ? '主平台' : '分发平台'}{item.is_hand_record == 1 ? '（录入)' : ''}
               </div>
               <div className='card-item-name'>
                 <IconText platform={item.platform_id} text={item.weibo_name || '-'} />
               </div>
-              {item.modify_name && <div className='card-item-info'>
-                {item.modify_name} 提交于{item.update_at}
-              </div>}
-              <OrderPlatformStatus data={item} orderStatus={data.summary_status} />
+              {!item.update_at || item.update_at === '0000-00-00 00:00:00' ? null :
+                <div className='card-item-info'>
+                  {item.modify_name} 提交于{item.update_at}
+                </div>}
+              <div className='card-item-status'>
+                {props ? <Badge {...props} /> : null}
+              </div>
               <div className='card-item-actions'>
-                {(platformActions.edit && canEdit(item)) ?
-                  <a onClick={() => this.setState({ detailId: 'xxx' })}>修改</a> : <a>查看</a>}
-                {platformActions.del && (item.is_hand_record == 1) ? <Divider type="vertical" /> : null}
-                {platformActions.del && (item.is_hand_record == 1) ? <a>删除</a> : null}
-                {platformActions.check && <Divider type="vertical" />}
-                {platformActions.check && <a>去审核</a>}
+                {
+                  view &&
+                  <a>查看</a>
+                }
+                {
+                  edit &&
+                  <a onClick={() => this.setState({ detailId: 'xxx' })}>修改</a>
+                }
+                {
+                  del &&
+                  [
+                    <Divider key={1} type="vertical" />,
+                    <a key={2} onClick={() => {
+                      this.props.actions.removePlatform({
+                        id: data.id,
+                        platform_id: item.platform_id
+                      });
+                    }}>删除</a>
+                  ]}
+                {
+                  check &&
+                  [
+                    <Divider key={1} type="vertical" />,
+                    <a key={2}>去审核</a>
+                  ]
+                }
               </div>
             </li>;
           })

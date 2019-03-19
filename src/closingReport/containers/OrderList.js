@@ -5,17 +5,25 @@ import OrderCard from '../components/OrderCard';
 const cardConfig = {
   orderActions: {
     add: true,
-    del: true,
-    // check: true
-  },
-  platformActions: {
-    edit: true,
-    del: true,
+    del: true
     // check: true
   },
   display: {
     orderStatus: false,
-    isReview: false
+    platformConfig: (item, data, propsSource) => {
+      // data.is_finish == 2 || data.modify_status == 1 || data.check_status == 6;
+      //return { edit, del, check, view, props }
+      let result = {};
+      let source = propsSource['is_finish'];
+      let status = item['is_finish'];
+      result.props = source[status];
+      result.del = parseInt(item.is_hand_record) === 1;
+      if (parseInt(status) === 2) {
+        result.edit = true;
+      }
+      result.view = !result.edit;
+      return result;
+    }
   }
 };
 
@@ -40,7 +48,7 @@ export default class OrderList extends Component {
       {
         list.map(key => {
           let item = source[key];
-          return <OrderCard key={key} {...cardConfig} optional={companySource.platformByCompany} data={item} />;
+          return <OrderCard actions={this.props.actions} key={key} {...cardConfig} optional={companySource.platformByCompany} data={item} />;
         })
       }
     </div>;
