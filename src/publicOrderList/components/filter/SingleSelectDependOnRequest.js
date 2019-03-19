@@ -28,14 +28,14 @@ class SingleSelectDependOnRequest extends React.Component {
       });
   }
   render() {
-    const { form, label, key, layout } = this.props
+    const { form, label, id, layout } = this.props
     const { getFieldDecorator } = form
     return <FormItem
-      // {...layout}
+      {...layout}
       label={label}
       style={{ width: '200px' }}
     >
-      {getFieldDecorator(key, "0")(
+      {getFieldDecorator(id, "0")(
         <Select style={{ width: 150 }}>
           {
             this.state.data.map(item => {

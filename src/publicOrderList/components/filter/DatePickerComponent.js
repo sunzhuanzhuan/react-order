@@ -13,11 +13,11 @@ const DatePickerComponent = (props) => {
   const { getFieldDecorator } = props.form
   return (
     <FormItem
-      // {...props.layout}
+      {...props.layout}
       label={props.label}
-      style={{ width: '200px' }}
+      style={{ width: '350px' }}
     >
-      {getFieldDecorator(props.key)(
+      {getFieldDecorator(props.id)(
         <RangePicker />
       )}
     </FormItem>

@@ -13,11 +13,11 @@ const MultidimSelect = (props) => {
   const { getFieldDecorator } = props.form
   return (
     <FormItem
-      // {...props.layout}
+      {...props.layout}
       label={props.label}
       style={{ width: '200px' }}
     >
-      {getFieldDecorator(props.key)(
+      {getFieldDecorator(props.id)(
         <Select
           mode="multiple"
           style={{ width: '200px' }}

@@ -28,51 +28,47 @@ const FilterForm = (props) => {
             case "input":
               return <InputComponent
                 form={form}
-                label={item.label}
-                key={item.key}
+                {...item}
                 layout={layout}
+                key={item.id}
               />
             //时间组件
             case "time":
-              <DatePickerComponent
+              return <DatePickerComponent
                 form={form}
-                label={item.label}
-                key={item.key}
+                {...item}
                 layout={layout}
+                key={item.id}
               />
             //多选组件
             case "multidim-select":
-              <MultidimSelect
+              return <MultidimSelect
                 form={form}
-                label={item.label}
-                key={item.key}
+                {...item}
                 layout={layout}
-                data={item.data}
+                key={item.id}
               />
             //单选组件
             case "select":
-              <SingleSelect
+              return <SingleSelect
                 form={form}
-                label={item.label}
-                key={item.key}
-                layout={layout}
-                data={item.data}
+                {...item}
+                key={item.id}
               />
             //依赖请求的单选组件
             case "selectDependOnRequest":
-              <SingleSelectDependOnRequest
+              return <SingleSelectDependOnRequest
                 form={form}
-                label={item.label}
-                key={item.key}
+                {...item}
                 layout={layout}
-                url={item.url}
+                key={item.id}
               />
             default:
               return
           }
         })
       }
-      <Button type="primary" onClick={() => props.onSubmit()}>查询</Button>
+      <Button type="primary" className="filterForm-btn" onClick={() => props.onSubmit()}>查询</Button>
     </div>
   )
 }

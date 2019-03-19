@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import { Table } from 'antd';
+import { Form } from 'antd';
 import StatementComponent from '../components/StatementComponent'
+import FilterForm from '../components/filter/FilterForm'
+import { filterFormArr } from '../contants/config'
 import './PublicOrderList.less'
 
 class PublicOrderList extends Component {
@@ -13,9 +15,20 @@ class PublicOrderList extends Component {
     }
   }
   render() {
+    const { form } = this.props
     return <div>
-      {/* 第一模块 */}
+      {/* 第一模块-跳转调账对账周期付款，对接转转 */}
       <StatementComponent />
+      {/* 第二模块-包含筛选项和列表 */}
+      <div className="publicOrderList-chooseBox publicOrderList-main">
+        {/* 筛选项 */}
+        <Form layout="inline">
+          <FilterForm
+            form={form}
+            filtersConfig={filterFormArr}
+          />
+        </Form>
+      </div>
     </div>
   }
 }
@@ -33,5 +46,5 @@ const mapDispatchToProps = (dispatch) => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(PublicOrderList)
+)(Form.create()(PublicOrderList))
 
