@@ -8,21 +8,13 @@ import { OssUpload } from 'wbyui';
 import request from '@/api';
 import { getImageInfos } from '../../util';
 import viewPic from '../../base/viewPic';
+import { Against } from "@/closingReport/base/ApprovalStatus";
 
 function action() {
   return request.get('/toolbox-gateway/file/v1/getToken').then(({ data }) => {
     return data;
   });
 }
-const initialValue = [
-  {
-    uid: '-1',
-    name: 'xxx.png',
-    status: 'done',
-    url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-    thumbUrl: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png'
-  }];
-
 
 /**
  * 执行数据(编辑)
@@ -48,7 +40,16 @@ export class Edit extends Component {
 
   render() {
     const { getFieldDecorator } = this.props.form;
-    const { reason = '' } = this.props;
+    const { data: { data = [], screenshot = [] } } = this.props;
+    const reason = parseInt(data.status) === 2 ? <Against reason={data.reason} /> : null;
+    let fetchData = [], inputData = [];
+    data.forEach((item) => {
+      if (item.source_type === 2) {
+        fetchData.push(item);
+      } else if (item.source_type === 1) {
+        inputData.push(item);
+      }
+    });
     return <div className='platform-data-detail-module execution-data'>
       <DataModuleHeader title='执行数据' extra={reason} />
       <div style={{ paddingTop: '10px' }}>
@@ -57,26 +58,22 @@ export class Edit extends Component {
             抓取参考数据
           </div>
           <div>
-            <div className='execution-data-fetch-item'>
-              <div className='reference-item'>
-                阅读量 {3000}
-              </div>
-              <Form.Item label="阅读量" {...this.props.formItemLayout}>
-                {getFieldDecorator(`username110`, {
-                  rules: [{ validator: this.checkSwitchInput }]
-                })(<SwitchRequiredInput width={330} />)}
-              </Form.Item>
-            </div>
-            <div className='execution-data-fetch-item'>
-              <div className='reference-item'>
-                点赞数 {'-'}
-              </div>
-              <Form.Item label="点赞数" {...this.props.formItemLayout}>
-                {getFieldDecorator(`username220`, {
-                  rules: [{ validator: this.checkSwitchInput }]
-                })(<SwitchRequiredInput width={330} />)}
-              </Form.Item>
-            </div>
+            {
+              fetchData.map((item, n) => {
+                return <div key={item.id} className='execution-data-fetch-item'>
+                  <div className='reference-item'>
+                    {item.display} {item.grasp_value || '-'}
+                  </div>
+                  <Form.Item label={item.display} {...this.props.formItemLayout}>
+                    {getFieldDecorator(`data[${n}]`, {
+                      initialValue: { id: item.id, input: item.value, checked: item.checked },
+                      validateFirst: true,
+                      rules: [{ validator: this.checkSwitchInput }]
+                    })(<SwitchRequiredInput width={330} typeId={item.id} />)}
+                  </Form.Item>
+                </div>;
+              })
+            }
           </div>
         </div>
         <Divider dashed />
@@ -87,11 +84,17 @@ export class Edit extends Component {
               <a>查看图例2</a>
             </p>
             <Form.Item>
-              {getFieldDecorator(`username20`, {
-                initialValue: initialValue,
+              {getFieldDecorator(`screenshot`, {
+                initialValue: (screenshot || []).map(url => ({
+                  uid: url,
+                  name: url.slice(-28),
+                  status: 'done',
+                  url,
+                  thumbUrl: url
+                })),
                 valuePropName: 'fileList',
                 getValueFromEvent: e => e.fileList,
-                rules: [{ required: true }]
+                rules: [{ required: true, message: '请上传图片' }]
               })(<OssUpload
                   authToken={this.state.authToken}
                   listType='picture'
@@ -110,11 +113,17 @@ export class Edit extends Component {
             </Form.Item>
           </div>
           <div className='input-data-right'>
-            <Form.Item label="点赞数点赞数" labelCol={{ span: 8 }} wrapperCol={{ span: 16 }}>
-              {getFieldDecorator(`username23320`, {
-                rules: [{ validator: this.checkSwitchInput }]
-              })(<SwitchRequiredInput width={140} />)}
-            </Form.Item>
+            {
+              inputData.map((item, n) => {
+                return <Form.Item key={item.id} label={item.display} labelCol={{ span: 8 }} wrapperCol={{ span: 16 }}>
+                  {getFieldDecorator(`data[${fetchData.length + n}]`, {
+                    initialValue: { id: item.id, input: item.value, checked: item.checked },
+                    validateFirst: true,
+                    rules: [{ validator: this.checkSwitchInput }]
+                  })(<SwitchRequiredInput width={140} typeId={item.id} />)}
+                </Form.Item>;
+              })
+            }
           </div>
         </div>
       </div>
@@ -154,10 +163,10 @@ export class View extends Component {
       items: [],
       loading: true
     };
-    const imgList = [
-      { src: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png' },
-      { src: 'http://www.ruanyifeng.com/bxxlogimg/asset/2015/bg2015071014.png' }
-    ];
+    const { data: { screenshot = [] } } = this.props;
+    const imgList = screenshot.map(url => ({
+      src: url
+    }));
     Promise.all(imgList.map(url => getImageInfos(url.src))).then(result => {
       let items = result.filter(Boolean).map((img, n) => ({
         src: img.src,
@@ -173,6 +182,15 @@ export class View extends Component {
   }
 
   render() {
+    const { data: { data = [] } } = this.props;
+    let fetchData = [], inputData = [];
+    data.forEach((item) => {
+      if (item.source_type === 2) {
+        fetchData.push(item);
+      } else if (item.source_type === 1) {
+        inputData.push(item);
+      }
+    });
     return <div className='platform-data-detail-module execution-data read'>
       <div className='fetch-data'>
         <div className='read-left-head'>
@@ -183,24 +201,19 @@ export class View extends Component {
             抓取参考数据
           </div>
           <div>
-            <div className='execution-data-fetch-item'>
-              <div className='reference-item'>
-                阅读量 {3000}
-              </div>
-              <p className='data-item'>
-                <span className='title'>粉丝数：</span>
-                <span className='value'>无法提供该数据</span>
-              </p>
-            </div>
-            <div className='execution-data-fetch-item'>
-              <div className='reference-item'>
-                点赞数 {'-'}
-              </div>
-              <p className='data-item'>
-                <span className='title'>粉丝数：</span>
-                <span className='value'>无法提供该数据</span>
-              </p>
-            </div>
+            {
+              fetchData.map(item => {
+                return <div key={item.id} className='execution-data-fetch-item'>
+                  <div className='reference-item'>
+                    {item.display} {item.grasp_value || '-'}
+                  </div>
+                  <p className='data-item'>
+                    <span className='title'>{item.display}：</span>
+                    <span className='value'>{item.checked === 1 ? '无法提供该数据' : item.value}</span>
+                  </p>
+                </div>;
+              })
+            }
           </div>
         </div>
       </div>
@@ -211,10 +224,14 @@ export class View extends Component {
             <PhotoSwipe isOpen={true} items={this.state.items} options={options} />}
         </div>
         <div className='input-data-right'>
-          <p className='data-item'>
-            <span className='title'>粉丝数：</span>
-            <span className='value'>无法提供该数据</span>
-          </p>
+          {
+            inputData.map(item => {
+              return <p key={item.id} className='data-item'>
+                <span className='title'>{item.display}：</span>
+                <span className='value'>{item.checked === 1 ? '无法提供该数据' : item.value}</span>
+              </p>;
+            })
+          }
         </div>
       </div>
       {this.props.children}

@@ -2,6 +2,14 @@ import React, { Component } from 'react';
 import { Checkbox, Input, InputNumber } from 'antd';
 import './index.less';
 
+const config = {
+  '4': 'number',
+  '13': 'number',
+  '14': 'number',
+  '15': 'number',
+  '12': 'number',
+};
+
 export default class SwitchRequiredInput extends Component {
   constructor(props) {
     super(props);
@@ -53,13 +61,14 @@ export default class SwitchRequiredInput extends Component {
 
   render() {
     const { checked, input } = this.state;
-    const { width = 420, placeholder = '请输入', inputType = 'input' } = this.props;
+    const { width = 420, placeholder = '请输入', typeId } = this.props;
     let props = {
       style: { width },
       disabled: checked,
       value: input,
       placeholder
     };
+    let inputType = config[typeId] || 'input'
     let inputComponent = null;
     switch (inputType) {
       case 'input':
@@ -70,7 +79,7 @@ export default class SwitchRequiredInput extends Component {
       case 'number':
         inputComponent = <InputNumber {...props}
           onChange={this.handleNumberChange}
-          min={0}
+          min={1}
           precision={0}
           formatter={value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
           parser={value => value.replace(/\$\s?|(,*)/g, '')}

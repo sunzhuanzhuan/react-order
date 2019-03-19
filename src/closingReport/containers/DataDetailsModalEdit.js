@@ -69,6 +69,7 @@ export default class DataDetailsModalEdit extends Component {
       width={800}
       onCancel={this.props.closed}
       footer={footer}
+      maskClosable={false}
     >
       {this.state.loading ? <div style={{ height: '600px' }}>loading...</div> :
         <Form>
@@ -78,7 +79,7 @@ export default class DataDetailsModalEdit extends Component {
               <BaseInfo.View data={basic_information}><Agree /></BaseInfo.View> :
               <BaseInfo.Edit data={basic_information} {...props} />
           }
-          {/*{
+          {
             parseInt(execution_link.status) === 1 ?
               <ExecutionLink.View data={execution_link}><Agree top={10} /></ExecutionLink.View> :
               <ExecutionLink.Edit data={execution_link} {...props} />
@@ -92,7 +93,7 @@ export default class DataDetailsModalEdit extends Component {
             parseInt(execution_data.status) === 1 ?
               <ExecutionData.View data={execution_data}><Agree /></ExecutionData.View> :
               <ExecutionData.Edit data={execution_data}  {...props} />
-          }*/}
+          }
         </Form>
       }
     </Modal>;

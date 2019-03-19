@@ -5,9 +5,7 @@ import SwitchRequiredInput from '../../base/SwitchRequiredInput';
 import DataModuleHeader from '../../base/DataModuleHeader';
 import { Against } from '../../base/ApprovalStatus';
 
-const config = {
-  '4': 'number'
-};
+
 
 /**
  * 基本信息(编辑)
@@ -18,7 +16,7 @@ export class Edit extends Component {
       callback();
       return;
     }
-    callback('必填!');
+    callback(rule.message);
   };
   validatorUrl = link_prefix => (rule, value, callback) => {
     if (!link_prefix || value.checked) {
@@ -41,12 +39,12 @@ export class Edit extends Component {
               {getFieldDecorator(`basic_information[${n}]`, {
                 initialValue: { id: item.id, input: item.value, checked: item.checked },
                 validateFirst: true,
-                validateTrigger: 'onBlur',
+                validateTrigger: ['onChange'],
                 rules: [
-                  { validator: this.checkSwitchInput },
+                  { validator: this.checkSwitchInput, message: `请输入${item.display}!` },
                   { validator: this.validatorUrl(item.link_prefix) }
                 ]
-              })(<SwitchRequiredInput inputType={config[item.id]} />)}
+              })(<SwitchRequiredInput typeId={item.id} />)}
             </Form.Item>;
           })
         }
