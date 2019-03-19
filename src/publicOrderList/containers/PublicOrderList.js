@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import { Form } from 'antd';
+import { Form, Tabs, Table } from 'antd';
 import StatementComponent from '../components/StatementComponent'
 import FilterForm from '../components/filter/FilterForm'
-import { filterFormArr } from '../contants/config'
+import { filterFormArr, columns } from '../contants/config'
 import './PublicOrderList.less'
+const TabPane = Tabs.TabPane;
 
 class PublicOrderList extends Component {
   constructor(props) {
@@ -13,6 +14,10 @@ class PublicOrderList extends Component {
     this.state = {
 
     }
+  }
+  // tab切换
+  changeTab = (key) => {
+    console.log(key)
   }
   render() {
     const { form } = this.props
@@ -28,6 +33,14 @@ class PublicOrderList extends Component {
             filtersConfig={filterFormArr}
           />
         </Form>
+        {/* tab切换及列表 */}
+        <Tabs defaultActiveKey="1" onChange={this.changeTab}>
+          <TabPane tab="全部" key="1"></TabPane>
+          <TabPane tab="待执行" key="2"></TabPane>
+          <TabPane tab="待贴链接" key="3"></TabPane>
+          <TabPane tab="待上传数据截图" key="4"></TabPane>
+        </Tabs>
+        <Table dataSource={[]} columns={columns} />
       </div>
     </div>
   }
