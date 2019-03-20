@@ -91,3 +91,11 @@ export const {
 export const submitPlatformInfo = createAction('submitPlatformInfo', (data) => {
   return { data };
 });
+
+// 更新平台数据信息
+export const {
+  checkPlatformData,
+  checkPlatformData_success
+} = createHttpAction('checkPlatformData', Interface.checkPlatformData, {
+  method: 'post'
+});

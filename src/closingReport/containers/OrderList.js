@@ -88,6 +88,7 @@ export default class OrderList extends Component {
           let item = source[key];
           return <OrderCard
             key={key}
+            {...connect}
             {...cardConfig}
             optional={companySource.platformByCompany}
             data={item}

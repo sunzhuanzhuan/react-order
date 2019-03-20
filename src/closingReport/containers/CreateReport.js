@@ -37,7 +37,7 @@ export default class CreateReport extends Component {
     super(props);
     let { company_id, summary_name = '' } = parseUrlQuery();
     this.state = {
-      current: 1,
+      current: 0,
       companyId: company_id,
       reportId: null,
       summaryName: summary_name,
@@ -48,6 +48,26 @@ export default class CreateReport extends Component {
     // 获取结案数据单信息接口
   }
 
+  // 提交审核
+  submitCheck = () => {
+    const { closingReport: { summaryOrders: { list, source } } } = this.props;
+    let validate = list.every(orderKey => {
+      let order = source[orderKey]
+      return order.platform.every(platform => parseInt(platform.is_finish) === 1)
+    })
+    if(validate){
+      Modal.confirm({
+        title: '是否确认将本【投放数据汇总单】提交审核？',
+        onOk: hide => {
+          console.log('提交审核')
+          // 跳转到  3.7  【投放数据汇总单】详情页
+        }
+      })
+
+    }else {
+      Modal.info({title: '请先将所有订单的数据都完善之后再提交'})
+    }
+  }
   onSelectChange = selectedRowKeys => {
     this.setState({ selectedRowKeys });
   };
@@ -156,8 +176,10 @@ export default class CreateReport extends Component {
               &&
               [
                 <span key={4} className='action-item text'>订单内数据完善后才能提交审核</span>,
-                <Button key={5} className='action-item' type="primary"
-                  onClick={() => message.success('Processing complete!')}>提交审核</Button>
+                <Button key={5} className='action-item'
+                  onClick={() => {console.log('跳转')}}>存草稿</Button>,
+                <Button key={6} className='action-item' type="primary"
+                  onClick={this.submitCheck}>提交审核</Button>
               ]
             }
             {

@@ -323,7 +323,7 @@ export default class OrderCard extends Component {
                   check &&
                   [
                     <Divider key={1} type="vertical" />,
-                    <a key={2}>去审核</a>
+                    <a key={2} onClick={() => this.props.onDetail('check', item, data)}>去审核</a>
                   ]
                 }
               </div>

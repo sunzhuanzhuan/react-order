@@ -68,7 +68,7 @@ const columns = [
     }
   }, {
     title: '执行人',
-    dataIndex: 'real_name',
+    dataIndex: 'executor_admin_name',
     align: 'center'
   }];
 
