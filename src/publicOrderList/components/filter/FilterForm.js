@@ -60,7 +60,6 @@ const FilterForm = (props) => {
               return <SingleSelectDependOnRequest
                 form={form}
                 {...item}
-                layout={layout}
                 key={item.id}
               />
             default:

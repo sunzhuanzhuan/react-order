@@ -7,7 +7,7 @@
 */
 import React from 'react';
 import axios from 'axios'
-import { Select, Form } from 'antd';
+import { Select, Form, message } from 'antd';
 const Option = Select.Option;
 const FormItem = Form.Item;
 
@@ -20,26 +20,30 @@ class SingleSelectDependOnRequest extends React.Component {
   }
   componentWillMount() {
     axios.get(this.props.url)
-      .then(function (response) {
-        console.log(response);
+      .then((response) => {
+        let data = response.data.data
+        this.setState({
+          data: [...data]
+        })
       })
-      .catch(function (error) {
-        console.log(error);
+      .catch((error) => {
+        message.error("数据获取失败")
       });
   }
   render() {
-    const { form, label, id, layout } = this.props
+    const { form, label, id, layout, data } = this.props
     const { getFieldDecorator } = form
     return <FormItem
       {...layout}
       label={label}
-      style={{ width: '200px' }}
+      style={{ width: '250px' }}
     >
-      {getFieldDecorator(id, "0")(
-        <Select style={{ width: 150 }}>
+      {getFieldDecorator(id, { initialValue: 0 })(
+        <Select>
+          <Option key={0} value={0}>请选择</Option>
           {
             this.state.data.map(item => {
-              return <Option key={item.value} value={item.value}>{item.key}</Option>
+              return <Option key={item[data.key]} value={item[data.key]}>{item[data.value]}</Option>
             })
           }
         </Select>

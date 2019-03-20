@@ -4,7 +4,7 @@ import {
 } from '../contants/ActionTypes'
 
 export const getPublicOrderList = (params) => (dispatch) => {
-  return api.get('/order/getPublicOrderList', { params }).then((response) => {
+  return api.get('/trinity/publicOrder/getList', { params }).then((response) => {
     dispatch({
       type: GET_PUBLIC_ORDER_LIST,
       payload: {

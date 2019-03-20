@@ -43,12 +43,17 @@ export const filterFormArr = [
   //     wrapperCol: { span: 17 }
   //   }
   // },
-  // {
-  //   label: "下单平台/代理商",
-  //   type: "selectDependOnRequest",
-  //   id: "agent_id",
-  //   url: ""
-  // },
+  {
+    label: "下单平台/代理商",
+    type: "selectDependOnRequest",
+    id: "agent_id",
+    url: "/api/operator-gateway/trinityPlatform/v1/getCooperationPlatform",
+    data: { key: "id", value: "cooperationPlatformName" },
+    layout: {
+      labelCol: { span: 11 },
+      wrapperCol: { span: 13 }
+    }
+  },
   {
     label: "执行状态",
     type: "select",
@@ -59,18 +64,28 @@ export const filterFormArr = [
       wrapperCol: { span: 17 }
     }
   },
-  // {
-  //   label: "资源媒介",
-  //   type: "selectDependOnRequest",
-  //   id: "meida_user_id",
-  //   url: "/api/user/getMediaUsers"
-  // },
-  // {
-  //   label: "项目媒介",
-  //   type: "selectDependOnRequest",
-  //   id: "project_user_id",
-  //   url: "/api/user/getVolUsers"
-  // },
+  {
+    label: "资源媒介",
+    type: "selectDependOnRequest",
+    id: "meida_user_id",
+    url: "/api/user/getMediaUsers",
+    data: { key: "user_id", value: "real_name" },
+    layout: {
+      labelCol: { span: 7 },
+      wrapperCol: { span: 17 }
+    }
+  },
+  {
+    label: "项目媒介",
+    type: "selectDependOnRequest",
+    id: "project_user_id",
+    url: "/api/user/getVolUsers",
+    data: { key: "user_id", value: "real_name" },
+    layout: {
+      labelCol: { span: 7 },
+      wrapperCol: { span: 17 }
+    }
+  },
   // {
   //   label: "主账号名",
   //   type: "input"
@@ -91,8 +106,8 @@ export const filterFormArr = [
     id: "pre_deposit_status",
     data: [{ key: "请选择", value: "0" }, { key: "未处理", value: "1" }, { key: "已同意", value: "2" }, { key: "已驳回", value: "3" }],
     layout: {
-      labelCol: { span: 10 },
-      wrapperCol: { span: 14 }
+      labelCol: { span: 9 },
+      wrapperCol: { span: 15 }
     }
   },
   {
@@ -141,8 +156,8 @@ export const filterFormArr = [
     id: "is_labeled_place_order",
     data: [{ key: "请选择", value: "0" }, { key: "是", value: "1" }, { key: "否", value: "2" }],
     layout: {
-      labelCol: { span: 12 },
-      wrapperCol: { span: 12 }
+      labelCol: { span: 10 },
+      wrapperCol: { span: 14 }
     }
   },
   // {

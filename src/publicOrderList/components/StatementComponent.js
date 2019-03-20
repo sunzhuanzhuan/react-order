@@ -6,7 +6,8 @@
 
 */
 import React from 'react';
-import { Select, Button } from 'antd';
+import { Select, Button, message } from 'antd';
+import axios from 'axios'
 const Option = Select.Option;
 import '../containers/PublicOrderList.less'
 
@@ -14,8 +15,20 @@ class StatementComponent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-
+      data: []
     }
+  }
+  componentWillMount() {
+    axios.get("/api/operator-gateway/trinityPlatform/v1/getCooperationPlatform")
+      .then((response) => {
+        let data = response.data.data
+        this.setState({
+          data: [{ id: 0, cooperationPlatformName: "请选择" }, ...data]
+        })
+      })
+      .catch((error) => {
+        message.error("平台/代理商信息获取失败")
+      });
   }
   //选择平台/代理商
   changePlatformAndAaent = (value) => {
@@ -31,10 +44,14 @@ class StatementComponent extends React.Component {
       </ul>
       <div>
         <span>*请选择平台/代理商：</span>
-        <Select style={{ width: 120 }} onChange={this.changePlatformAndAaent}>
-          <Option value="jack">Jack</Option>
-          <Option value="lucy">Lucy</Option>
-          <Option value="Yiminghe">yiminghe</Option>
+        <Select style={{ width: 200 }}
+          defaultValue={0}
+          onChange={this.changePlatformAndAaent}>
+          {
+            this.state.data.map(item => {
+              return <Option key={item.id} value={item.id}>{item.cooperationPlatformName}</Option>
+            })
+          }
         </Select>
       </div>
       <div>
