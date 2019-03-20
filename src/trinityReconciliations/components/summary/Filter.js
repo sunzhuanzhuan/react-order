@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
-import { Row, Col, Form, Select, Button, DatePicker, message, Icon, Input } from "antd";
-
+import { Row, Col, Form, Button, DatePicker, message, Icon, Input } from "antd";
+import qs from 'qs';
 const FormItem = Form.Item;
-const Option = Select.Option;
+
 const dataFormat = 'YYYY-MM-DD'
-const {  RangePicker } = DatePicker;
 
 class SummaryFilter extends Component {
   constructor(props, context) {
@@ -18,16 +17,41 @@ class SummaryFilter extends Component {
 		e.preventDefault();
 		this.props.form.validateFields((err, values) => {
 			if (!err) {
-        console.log(values)
-				// let params = values.month ? { ...values, month: values.month.format('YYYYMM') } : { ...values };
-				// const hide = message.loading('查询中，请稍候...');
-				// questAction({ ...params, page: 1, page_size }).then(() => {
-				// 	handlefilterParams(params);
-				// 	hide();
-				// }).catch(() => {
-				// 	message.error('查询失败');
-				// 	hide();
-				// });
+        let keys = {}, labels = {};
+				for (let key in values) {
+					if (Object.prototype.toString.call(values[key]) === '[object Object]') {
+						if (values[key].key) {
+							keys[key] = values[key].key;
+							labels[key] = values[key].label;
+						}
+					} else {
+						keys[key] = values[key]
+					}
+				}
+				
+				let params = {
+					keys: { ...keys },
+					labels: { ...labels }
+				};
+				Object.keys(params['keys']).forEach(item => { !params['keys'][item] && params['keys'][item] !== 0 ? delete params['keys'][item] : null });
+				
+        const hide = message.loading('查询中，请稍候...');
+        this.props.history.replace({
+          pathname: '/order/trinity/reconciliations/exportOrder',
+          search: `?${qs.stringify(params)}`,
+        })
+        handlefilterParams(...params.keys);
+				questAction({ ...params.keys, page: 1, page_size }).then(() => {
+          handlefilterParams(...params.keys);
+          this.props.history.replace({
+						pathname: '/order/trinity/reconciliations/exportOrder',
+						search: `?${qs.stringify(params)}`,
+					})
+					hide();
+				}).catch(() => {
+					message.error('查询失败');
+					hide();
+				});
 			}
 		});
 	}
@@ -35,7 +59,9 @@ class SummaryFilter extends Component {
 		this.props.form.resetFields();
 	}
 
-  componentWillMount() {}
+  componentDidMount=()=> {
+    this.props.onRef(this)
+  }
 
   render() {
     let { getFieldDecorator } = this.props.form;

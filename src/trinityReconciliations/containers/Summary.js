@@ -15,7 +15,8 @@ class Summary extends Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      page_size:20
+      page_size:20,
+      filterParams:{}
     };
   }
 
@@ -44,10 +45,37 @@ class Summary extends Component {
     search: `?${qs.stringify({ id: record.id})}`,
   });
  }
+ //释放汇总单
  handleOut=(record)=>{
-   console.log(record)
+   console.log(record);
+   this.props.actions.releaseSummaryList().then((res)=>{
+    if(res.data==1000){
+      message.success(res.msg)
+    }else{
+      message.error(res.msg)
+    }
+  })
  }
+ //切换tab
+ handleChangeTab=(activeKey)=>{
+    // console.log(activeKey);
+    this.child.handleClear()
+    if(activeKey == '2'){
+      this.queryData({ page: 1, page_size: this.state.page_size,summary_status:'2' })
+    }else if(activeKey == '3'){
+      this.queryData({ page: 1, page_size: this.state.page_size, summary_status:'3'})
+    }else{
+      this.queryData({ page: 1, page_size: this.state.page_size, })
+    }
+ }
+  //过滤条件
+  handlefilterParams = (filterParams) => {
+    this.setState({ filterParams });
+  }
  
+  onRef=(ref)=>{
+    this.child = ref;
+  }
   render() {
     const search = qs.parse(this.props.location.search.substring(1));
     const column = summaryListFunc(this.handleSelectDetail,this.handleOut);
@@ -77,32 +105,41 @@ class Summary extends Component {
     
     return <div>
      <Row>汇总单列表【平台/代理商:hahah】</Row>
-     <Tabs defaultActiveKey="1">
+     <Tabs defaultActiveKey="1" onChange={this.handleChangeTab}>
       <TabPane tab="全部" key="1">
-        <SummaryFilter/>
+        <SummaryFilter
+          onRef={this.onRef}
+          handlefilterParams={this.handlefilterParams}
+          questAction={this.queryData}
+          page_size={page_size}
+        />
         <SummaryTable
-        loading={loading}
-      columns={column}
-      dataTable={list}
-      paginationObj={paginationObj}
+          loading={loading}
+          columns={column}
+          dataTable={list}
+          paginationObj={paginationObj}
       />
       </TabPane>
       <TabPane tab="对账完成" key="2">
-        <SummaryFilter/>
+        <SummaryFilter
+         onRef={this.onRef}
+        />
         <SummaryTable
-         loading={loading}
-      columns={column}
-      dataTable={list}
-      paginationObj={paginationObj}
+          loading={loading}
+          columns={column}
+          dataTable={list}
+          paginationObj={paginationObj}
       />
       </TabPane>
       <TabPane tab="已释放" key="3">
-        <SummaryFilter/>
+        <SummaryFilter
+         onRef={this.onRef}
+        />
         <SummaryTable
          loading={loading}
-      columns={shiColum}
-      dataTable={list}
-      paginationObj={paginationObj}
+          columns={shiColum}
+          dataTable={list}
+          paginationObj={paginationObj}
       />
       </TabPane>
     </Tabs>,

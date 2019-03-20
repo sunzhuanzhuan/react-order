@@ -31,7 +31,7 @@ class SummaryTable extends Component {
 				<Table
 					columns={columns}
           dataSource={dataTable}
-					rowKey='id'
+					rowKey={(record)=>record.summary_sheet_name}
 					// questAction={this.props.actions.getMissionList}
 					total={50}
 					current={1}

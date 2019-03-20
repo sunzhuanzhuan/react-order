@@ -19,6 +19,19 @@ export const {
 } = createHttpAction('getSummaryList', Interface.statement.listSummary, {
   method: 'get'
 });
+//释放汇总单
+export const {
+  releaseSummaryList,
+  releaseSummaryList_success
+} = createHttpAction('releaseSummaryList', Interface.statement.releaseSummary, {
+  method: 'get'
+});
+
+
+
+
+
+
 // // 使得添加页面提交可用
 // export const setAddSubmit = createAction('setAddSubmit', (data) => {
 //   return data;

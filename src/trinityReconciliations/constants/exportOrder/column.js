@@ -270,8 +270,7 @@ export const summaryListFunc = (handleSelectDetail,handleOut) => {
 			align: 'center',
 			width: 100,
 			render: (text, record) => {
-				return <span>{
-          (record.summary_status == 2 && record.payment_status == 3) || (record.summary_status == 2 && record.payment_status == 5)?
+			return <span>{(record.summary_status == 2 && record.payment_status == 3) || (record.summary_status == 2 && record.payment_status == 5)?
           <a href='javascript:;' className='left-gap' onClick={() => {
             handleOut(record)
           }}>释放汇总单</a>:null
