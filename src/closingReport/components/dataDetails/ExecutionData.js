@@ -35,7 +35,7 @@ export class Edit extends Component {
       callback();
       return;
     }
-    callback('必填!');
+    callback(rule.message);
   };
 
   render() {
@@ -68,7 +68,7 @@ export class Edit extends Component {
                     {getFieldDecorator(`data[${n}]`, {
                       initialValue: { id: item.id, input: item.value, checked: item.checked },
                       validateFirst: true,
-                      rules: [{ validator: this.checkSwitchInput }]
+                      rules: [{ validator: this.checkSwitchInput, message: `请输入${item.display}!` }]
                     })(<SwitchRequiredInput width={330} typeId={item.id} />)}
                   </Form.Item>
                 </div>;
@@ -119,7 +119,7 @@ export class Edit extends Component {
                   {getFieldDecorator(`data[${fetchData.length + n}]`, {
                     initialValue: { id: item.id, input: item.value, checked: item.checked },
                     validateFirst: true,
-                    rules: [{ validator: this.checkSwitchInput }]
+                    rules: [{ validator: this.checkSwitchInput, message: `请输入${item.display}!` }]
                   })(<SwitchRequiredInput width={140} typeId={item.id} />)}
                 </Form.Item>;
               })

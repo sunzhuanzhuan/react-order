@@ -57,7 +57,7 @@ export default class SummaryReviewFilterForm extends Component {
         </Col>
         <Col span={6}>
           <Form.Item label={'创建人'}>
-            {getFieldDecorator('sale_manager_id', {})(
+            {getFieldDecorator('executor_admin_id', {})(
               <Select
                 allowClear
                 showSearch

@@ -94,7 +94,7 @@ export default class OrderFilterForm extends Component {
         </Col>
         <Col span={6}>
           <Form.Item label={<EmSpan length={this.state.expand ? 6 : 3}>执行人</EmSpan>}>
-            {getFieldDecorator('sale_manager_id', {})(
+            {getFieldDecorator('executor_admin_id', {})(
               <Select
                 allowClear
                 showSearch

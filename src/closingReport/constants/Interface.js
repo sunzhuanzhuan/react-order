@@ -8,4 +8,7 @@ export default {
   addOrUpdateSummary: prefix + '/add',
   getSummaryOrderInfo: prefix + '/getSummaryOrderInfo',
   getPlatformDataInfo: prefix + '/getPlatformDataInfo',
+  updatePlatformInfo: prefix + '/updatePlatformInfo',
+  checkPlatformData: prefix + '/checkPlatformData',
+  addSummaryPlatform	: prefix + '/addSummaryPlatform	',
 }

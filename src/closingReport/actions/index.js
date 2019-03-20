@@ -78,3 +78,16 @@ export const {
 } = createHttpAction('getPlatformDataInfo', Interface.getPlatformDataInfo, {
   method: 'get'
 });
+
+// 更新平台数据信息
+export const {
+  updatePlatformInfo,
+  updatePlatformInfo_success
+} = createHttpAction('updatePlatformInfo', Interface.updatePlatformInfo, {
+  method: 'post'
+});
+
+// 更新平台数据(设置完善)
+export const submitPlatformInfo = createAction('submitPlatformInfo', (data) => {
+  return { data };
+});

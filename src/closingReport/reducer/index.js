@@ -10,6 +10,7 @@ import {
   addOrUpdateSummary_success,
   getSummaryOrderInfo_success,
   getPlatformDataInfo_success,
+  updatePlatformInfo_success,
   getOrders_success
 } from '../actions';
 
@@ -149,7 +150,14 @@ export const summaryOrders = handleActions({
     let index = state.list.findIndex((key) => key == id);
     return update(state, { list: { $splice: [[index, 1]] } });
 
+  },
+  [combineActions('submitPlatformInfo')]: (state, action) => {
+    let { platform_id, id } = action.payload.data || {};
+    let index = state.source[id].platform.findIndex(({ platform_id: id }) => platform_id == id);
+    return update(state, { source: { [id]: { platform: { [index]: { is_finish: { $set: 1 } } } } } });
+
   }
+
 }, {
   list: [],
   source: {},
@@ -168,7 +176,7 @@ export const platformData = handleActions({
   basic_information: {},
   execution_link: {},
   execution_screenshot: {},
-  execution_data: {},
+  execution_data: {}
 });
 
 export default combineReducers({
