@@ -32,7 +32,7 @@ export default {
     addOrder:'/finance/statement/import',
     list:'/finance/statement/list',
     listStatement:'/finance/statement/listStatement',
-    deleteSummary:'/finance/statement/deleteSummary',
+    deleteSummary:'/finance/statement/deleteStatement',
     importSummary:'/finance/statement/importSummary',
     releaseSummary:'/finance/statement/releaseSummary',
     listSummary:'/finance/statement/listSummary',

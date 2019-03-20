@@ -1,14 +1,10 @@
 import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-//import { Link, browserHistory } from 'react-router'
-import { Link } from 'react-router-dom'
-import qs from 'qs'
-import PropTypes from 'prop-types'
-// import * as zhangActions from '../actions/index';
-// import Query from'../components/query'
 
-import { Table, Pagination } from "antd";
+import qs from 'qs'
+
+import { Table } from "antd";
 // import './list.less'
 
 class List extends Component {
@@ -24,19 +20,19 @@ class List extends Component {
 		});
 	}
 	render(){
-    let {columns,paginationObj,dataTable,rowSelection}=this.props;
+    let {columns,paginationObj,dataTable,rowSelection,loading}=this.props;
     
 
 		return <div className='top-gap'>
 				<Table
+          loading={loading}
 					columns={columns}
           dataSource={dataTable}
           rowSelection={rowSelection}
-					rowKey='id'
+          rowKey='id'
+          pagination={paginationObj}
 					// questAction={this.props.actions.getMissionList}
-					total={50}
-					current={1}
-					pagination={paginationObj}
+			
 					// filterParams={filterParams}
 					// handlePageSize={this.handlePageSize}
 				></Table>

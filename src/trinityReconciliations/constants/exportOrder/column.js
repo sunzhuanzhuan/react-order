@@ -6,15 +6,15 @@ export const exportOrderListFunc = () => {
 	return [
 		{
 			title: '订单号',
-			dataIndex: 'name',
-			key: 'name',
+			dataIndex: 'order_id',
+			key: 'order_id',
 			align: 'center',
 			width: 100,
 		},
 		{
 			title: '快接单下单价(元)',
-			dataIndex: 'sale_id',
-			key: 'sale_id',
+			dataIndex: 'public_order_price',
+			key: 'salepublic_order_price_id',
 			align: 'center',
 			width: 100,
 		},
@@ -27,22 +27,22 @@ export const exportOrderListFunc = () => {
 		},
 		{
 			title: '账号名称',
-			dataIndex: 'original_target',
-			key: 'original_target',
+			dataIndex: 'weibo_name',
+			key: 'weibo_name',
 			align: 'center',
 			width: 100,
 		},
 		{
 			title: '下单时间',
-			dataIndex: 'distribute_target',
-			key: 'distribute_target',
+			dataIndex: 'ttp_place_order_at',
+			key: 'ttp_place_order_at',
 			align: 'center',
 			width: 100,
 		},
 		{
 			title: '公司简称',
-			dataIndex: 'video_target',
-			key: 'video_target',
+			dataIndex: 'company_name',
+			key: 'company_name',
 			align: 'center',
 			width: 100,
 			render: (text) => {
@@ -50,36 +50,51 @@ export const exportOrderListFunc = () => {
 			}
 		},
 		{
-			title: '媒介',
-			dataIndex: 'not_video_target',
-			key: 'not_video_target',
+			title: '项目媒介',
+			dataIndex: 'vol_admin_name',
+			key: 'vol_admin_name',
+			align: 'center',
+			width: 100,
+    },
+    {
+			title: '资源媒介',
+			dataIndex: 'owner_admin_name',
+			key: 'owner_admin_name',
 			align: 'center',
 			width: 100,
 		},
 		{
-			title: '销售/执行人/创建人',
-			dataIndex: 'all_target',
-			key: 'all_target',
+			title: '销售',
+			dataIndex: 'sale_name',
+			key: 'sale_name',
 			align: 'center',
 			width: 100,
-			render: (text) => {
-				return parseFloat(text).toFixed(2)
-			}
+    },
+    {
+			title: '执行人',
+			dataIndex: 'executor_admin_name',
+			key: 'executor_admin_name',
+			align: 'center',
+			width: 100,
+    },
+    {
+			title: '创建人',
+			dataIndex: 'creater_name',
+			key: 'creater_name',
+			align: 'center',
+			width: 100,
 		},
 		{
 			title: '三方订单号',
-			dataIndex: 'all_target1',
-			key: 'all_target1',
+			dataIndex: 'public_order_id',
+			key: 'public_order_id',
 			align: 'center',
 			width: 100,
-			render: (text) => {
-				return parseFloat(text).toFixed(2)
-			}
 		},
 		{
 			title: '可对账金额',
-			dataIndex: 'all_target2',
-			key: 'all_target2',
+			dataIndex: 'can_statement_amount',
+			key: 'can_statement_amount',
 			width: 100,
 			align: 'center',
 			render: (text) => {
@@ -88,23 +103,17 @@ export const exportOrderListFunc = () => {
 		},
 		{
 			title: '对账状态',
-			dataIndex: 'all_target3',
-			key: 'all_target3',
+			dataIndex: 'statement_status',
+			key: 'statement_status',
 			align: 'center',
 			width: 100,
-			render: (text) => {
-				return parseFloat(text).toFixed(2)
-			}
 		},
 		{
 			title: '打款状态',
-			dataIndex: 'all_target4',
-			key: 'all_target4',
+			dataIndex: 'payment_status',
+			key: 'payment_status',
 			align: 'center',
 			width: 100,
-			render: (text) => {
-				return parseFloat(text).toFixed(2)
-			}
 		}
 		
 
@@ -164,10 +173,7 @@ export const paymentListFunc = (handleSelectDetail) => {
 			dataIndex: 'summary_status',
 			key: 'summary_status',
 			align: 'center',
-			width: 100,
-			render: (text) => {
-				return parseFloat(text).toFixed(2)
-			}
+			width: 100
 		},
 		{
 			title: '打款状态',
@@ -207,8 +213,8 @@ export const summaryListFunc = (handleSelectDetail,handleOut) => {
 		},
 		{
 			title: '汇总单状态',
-			dataIndex: 'status',
-			key: 'status',
+			dataIndex: 'summary_status',
+			key: 'summary_status',
 			align: 'center',
 			width: 100
     },
@@ -264,9 +270,12 @@ export const summaryListFunc = (handleSelectDetail,handleOut) => {
 			align: 'center',
 			width: 100,
 			render: (text, record) => {
-				return <a href='javascript:;' className='left-gap' onClick={() => {
-          handleOut(record)
-        }}>释放汇总单</a>
+				return <span>{
+          (record.summary_status == 2 && record.payment_status == 3) || (record.summary_status == 2 && record.payment_status == 5)?
+          <a href='javascript:;' className='left-gap' onClick={() => {
+            handleOut(record)
+          }}>释放汇总单</a>:null
+      }</span>
 			}
 		}
 
