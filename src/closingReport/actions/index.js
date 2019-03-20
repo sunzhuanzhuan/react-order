@@ -99,3 +99,8 @@ export const {
 } = createHttpAction('checkPlatformData', Interface.checkPlatformData, {
   method: 'post'
 });
+
+// 清除创建页面拉取的全部信息
+export const resetCreateReportData = createAction('resetCreateReportData', (data) => {
+  return { data };
+});

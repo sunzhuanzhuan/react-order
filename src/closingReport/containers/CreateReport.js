@@ -9,6 +9,7 @@ import { linkTo } from '../../util/linkTo';
 import OrderList from './OrderList';
 import { parseUrlQuery } from '@/util/parseUrl';
 import { companySource } from '../reducer';
+import difference from 'lodash/difference';
 
 
 const Step = Steps.Step;
@@ -48,26 +49,32 @@ export default class CreateReport extends Component {
     // 获取结案数据单信息接口
   }
 
+  componentWillUnmount() {
+    // 清除reducer
+    this.props.actions.resetCreateReportData();
+  }
+
   // 提交审核
   submitCheck = () => {
     const { closingReport: { summaryOrders: { list, source } } } = this.props;
     let validate = list.every(orderKey => {
-      let order = source[orderKey]
-      return order.platform.every(platform => parseInt(platform.is_finish) === 1)
-    })
-    if(validate){
+      let order = source[orderKey];
+      return order.platform.every(platform => parseInt(platform.is_finish) === 1);
+    });
+    if (validate) {
       Modal.confirm({
         title: '是否确认将本【投放数据汇总单】提交审核？',
         onOk: hide => {
-          console.log('提交审核')
+          console.log('提交审核');
           // 跳转到  3.7  【投放数据汇总单】详情页
         }
-      })
+      });
 
-    }else {
-      Modal.info({title: '请先将所有订单的数据都完善之后再提交'})
+    } else {
+      Modal.info({ title: '请先将所有订单的数据都完善之后再提交' });
     }
-  }
+  };
+
   onSelectChange = selectedRowKeys => {
     this.setState({ selectedRowKeys });
   };
@@ -95,15 +102,22 @@ export default class CreateReport extends Component {
   };
 
   temporarySave = () => {
-    this.coreSave();
+    this.coreSave(() => {
+      this.linkTo('/order/closing-report/list/summary-order');
+      // 页面刷新跳转到【投放数据汇总单列表】=》草稿 TAB页面
+    });
   };
 
-  coreSave() {
+  linkTo = (url) => {
+    this.props.history.push(url);
+  };
+
+  coreSave(callback) {
     const { closingReport: { companySource: { summaryId } } } = this.props;
     const { selectedRowKeys, companyId, summaryName } = this.state;
     if (!selectedRowKeys.length) {
       message.info('请选择订单');
-      return Promise.reject()
+      return Promise.reject();
     }
     let _msg = message.loading('保存中...');
     const { actions } = this.props;
@@ -112,13 +126,24 @@ export default class CreateReport extends Component {
       summary_id: summaryId,
       summary_name: summaryName,
       order_ids: selectedRowKeys
-    }).then(() => {_msg()});
+    }).then(({ data }) => {
+      if (data.order_ids) {
+        this.setState({ selectedRowKeys: difference(this.state.selectedRowKeys, data.order_ids) });
+        Modal.confirm({
+          title: data.order_ids + '， 已被其他【投放数据汇总单】选中且保存了，已自动为您取消勾选',
+          onOk: callback
+        });
+      } else {
+        callback();
+      }
+    }).finally(_msg);
   }
 
   next() {
-    // this.coreSave().then(() => {});
-    const current = this.state.current + 1;
-    this.setState({ current, selectedRowKeys: [] });
+    this.coreSave(() => {
+      const current = this.state.current + 1;
+      this.setState({ current, selectedRowKeys: [] });
+    });
   }
 
   prev() {
@@ -177,7 +202,7 @@ export default class CreateReport extends Component {
               [
                 <span key={4} className='action-item text'>订单内数据完善后才能提交审核</span>,
                 <Button key={5} className='action-item'
-                  onClick={() => {console.log('跳转')}}>存草稿</Button>,
+                  onClick={() => this.linkTo('/order/closing-report/detail/summary')}>存草稿</Button>,
                 <Button key={6} className='action-item' type="primary"
                   onClick={this.submitCheck}>提交审核</Button>
               ]
