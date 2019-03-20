@@ -10,7 +10,9 @@ import {
   addOrUpdateSummary_success,
   getSummaryOrderInfo_success,
   getPlatformDataInfo_success,
+  getSummaryListByOrder_success,
   getBrands_success,
+  getSummaryList_success,
   getProjects_success,
   getOrders_success
 } from '../actions';
@@ -222,10 +224,22 @@ export const platformData = handleActions({
   execution_data: {}
 });
 
+// 订单投放数据汇总列表
+export const summaryListByOrder = handleActions({
+  [combineActions(getSummaryListByOrder_success)]: handleResponseList('order_id')
+}, initList());
+
+// 订单投放数据审核列表
+export const summaryList = handleActions({
+  [combineActions(getSummaryList_success)]: handleResponseList('summary_id')
+}, initList());
+
 export default combineReducers({
   publicSource,
   companySource,
   selectOrderList,
   summaryOrders,
-  platformData
+  platformData,
+  summaryListByOrder,
+  summaryList
 });

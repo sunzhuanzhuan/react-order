@@ -154,3 +154,18 @@ export const {
 } = createHttpAction('getProjects', Interface.getProjects, {
   method: 'get'
 });
+// 订单投放数据汇总列表(订单维度)
+export const {
+  getSummaryListByOrder,
+  getSummaryListByOrder_success,
+} = createHttpAction('getSummaryListByOrder', Interface.getSummaryListByOrder, {
+  method: 'get'
+});
+
+// 订单投放数据审核列表
+export const {
+  getSummaryList,
+  getSummaryList_success,
+} = createHttpAction('getSummaryList', Interface.getSummaryList, {
+  method: 'get'
+});

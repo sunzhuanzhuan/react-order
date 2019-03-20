@@ -16,4 +16,6 @@ export default {
   getCompanyNames: prefix + '/getCompanyName',
   getBrands: prefix + '/getBrand',
   getProjects: prefix + '/getProject',
+  getSummaryListByOrder: prefix + '/summaryList',
+  getSummaryList: prefix + '/getSummaryList',
 };

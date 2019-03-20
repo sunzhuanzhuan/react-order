@@ -170,7 +170,7 @@ export default class SummaryOrderFilterForm extends Component {
         </Col>
         <Col span={6}>
           <Form.Item label="审核状态">
-            {getFieldDecorator('brand_id', {})(
+            {getFieldDecorator('summary_status', {})(
               <Select
                 allowClear
                 mode="multiple"
