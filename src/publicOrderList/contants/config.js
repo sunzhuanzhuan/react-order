@@ -1,4 +1,5 @@
 import React from 'react'
+import { Button } from 'antd';
 
 // 筛选项配置数组
 export const filterFormArr = [
@@ -155,6 +156,13 @@ export const filterFormArr = [
   }
 ]
 
+// 列表操作事件
+const supportedOperations = {
+  "can_label_place_order": "标为三方已下单",
+  "can_modify_public_order": "修改三方已下单",
+  "can_withdraw_public_order": "撤销三方已下单"
+}
+
 // 列表页column
 export const columns = [
   {
@@ -162,7 +170,14 @@ export const columns = [
     dataIndex: 'supported_operations',
     key: 'supported_operations',
     align: 'center',
-    fixed: 'left'
+    fixed: 'left',
+    render: text => {
+      return <div>
+        {
+          text.map(v => <Button key={v} type="primary">{supportedOperations[v]}</Button>)
+        }
+      </div>
+    }
   },
   {
     title: '预约需求名称/预约需求ID/预约需求状态',

@@ -5,6 +5,7 @@ import { Form, Tabs, Table } from 'antd';
 import StatementComponent from '../components/StatementComponent'
 import FilterForm from '../components/filter/FilterForm'
 import { filterFormArr, columns } from '../contants/config'
+import * as publicOrderListActions from '../actions/publicOrderListActions'
 import './PublicOrderList.less'
 const TabPane = Tabs.TabPane;
 
@@ -15,12 +16,16 @@ class PublicOrderList extends Component {
 
     }
   }
+  componentWillMount() {
+    // 获取列表
+    this.props.actions.getPublicOrderList()
+  }
   // tab切换
   changeTab = (key) => {
     console.log(key)
   }
   render() {
-    const { form } = this.props
+    const { form, publicOrderList } = this.props
     return <div>
       {/* 第一模块-跳转调账对账周期付款，对接转转 */}
       <StatementComponent />
@@ -40,19 +45,23 @@ class PublicOrderList extends Component {
           <TabPane tab="待贴链接" key="3"></TabPane>
           <TabPane tab="待上传数据截图" key="4"></TabPane>
         </Tabs>
-        <Table dataSource={[]} columns={columns} />
+        <Table
+          dataSource={Object.keys(publicOrderList).length != 0 ? publicOrderList.items : []}
+          columns={columns}
+          scroll={{ x: 3000 }}
+        />
       </div>
     </div>
   }
 }
 
 const mapStateToProps = (state) => ({
-
+  publicOrderList: state.publicOrderListReducer.publicOrderList
 })
 
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators({
-
+    ...publicOrderListActions
   }, dispatch)
 })
 
