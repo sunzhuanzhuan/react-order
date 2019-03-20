@@ -1,15 +1,13 @@
 import React, { Component } from 'react';
-import { Table, Tooltip } from 'antd';
-import OrderFilterForm from '../components/OrderFilterForm';
+import { Table } from 'antd';
 import { SH2 } from '../../base/SectionHeader';
 import './SelectOrders.less';
 import IconText from '../base/IconText';
 import SummaryOrderFilterForm from '../components/SummaryOrderFilterForm';
+import { bindActionCreators } from 'redux';
+import * as actions from '../actions';
+import { connect } from 'react-redux';
 
-const disabledReason = {
-  '2': '订单尚未添加执行内容',
-  '3': '订单被其他的投放数据汇总单选择'
-};
 const columns = [
   {
     title: 'ID',
@@ -85,6 +83,17 @@ const columns = [
     align: 'center'
   }];
 
+const mapStateToProps = (state) => ({
+  common: state.commonReducers,
+  closingReport: state.closingReportReducers
+});
+const mapDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators({
+    ...actions
+  }, dispatch)
+});
+
+@connect(mapStateToProps, mapDispatchToProps)
 export default class SummaryListByOrder extends Component {
   constructor(props, context) {
     super(props, context);
@@ -95,6 +104,10 @@ export default class SummaryListByOrder extends Component {
         execution_status: ['21', '22', '26', '27', '28', '32', '35']
       }
     };
+    const { actions } = props;
+    actions.getBrands();
+    actions.getProjects();
+    actions.getSalesManagers()
   }
 
   render() {
@@ -107,21 +120,22 @@ export default class SummaryListByOrder extends Component {
       },
       showQuickJumper: true
     };
+    const { closingReport, actions } = this.props;
     return <div className='select-orders flex-form-layout'>
       <SH2 title='订单投放数据汇总列表' />
       <div style={{ padding: '20px 0' }}>
         <SummaryOrderFilterForm
           loading={this.state.listLoading}
-          source={{}}
+          source={{ ...closingReport.publicSource }}
+          actions={actions}
           search={this.state.search}
           getList={this.getList}
-          onSelectChange={this.props.onSelectChange}
         />
       </div>
       <Table
         loading={this.state.listLoading}
         dataSource={[]}
-        scroll={{ x: 1500}}
+        scroll={{ x: 1500 }}
         pagination={pagination}
         columns={columns}
       />

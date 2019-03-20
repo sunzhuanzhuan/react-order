@@ -152,6 +152,7 @@ export default class CreateReport extends Component {
   }
 
   render() {
+    const { closingReport: { companySource: { summaryId } } } = this.props;
     // 参数错误跳到error
     if (!this.state.companyId) {
       this.handleCancel(null, '/error');
@@ -202,7 +203,7 @@ export default class CreateReport extends Component {
               [
                 <span key={4} className='action-item text'>订单内数据完善后才能提交审核</span>,
                 <Button key={5} className='action-item'
-                  onClick={() => this.linkTo('/order/closing-report/detail/summary')}>存草稿</Button>,
+                  onClick={() => this.linkTo('/order/closing-report/detail/summary?summary_id=' + summaryId)}>存草稿</Button>,
                 <Button key={6} className='action-item' type="primary"
                   onClick={this.submitCheck}>提交审核</Button>
               ]

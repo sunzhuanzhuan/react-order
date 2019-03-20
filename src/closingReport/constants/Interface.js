@@ -12,5 +12,8 @@ export default {
   checkPlatformData: prefix + '/checkPlatformData',
   addSummaryPlatform: prefix + '/addSummaryPlatform',
   deleteSummaryOrder: prefix + '/deleteSummaryOrder',
-  deleteSummaryPlatform: prefix + '/deleteSummaryPlatform'
+  deleteSummaryPlatform: prefix + '/deleteSummaryPlatform',
+  getCompanyNames: prefix + '/getCompanyName',
+  getBrands: prefix + '/getBrand',
+  getProjects: prefix + '/getProject',
 };

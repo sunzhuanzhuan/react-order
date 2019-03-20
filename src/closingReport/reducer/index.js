@@ -10,7 +10,8 @@ import {
   addOrUpdateSummary_success,
   getSummaryOrderInfo_success,
   getPlatformDataInfo_success,
-  updatePlatformInfo_success,
+  getBrands_success,
+  getProjects_success,
   getOrders_success
 } from '../actions';
 
@@ -52,7 +53,18 @@ const defaultPublicSource = {
     { 'label': '赔偿申请中', 'value': '33' },
     { 'label': '赔偿通过', 'value': '34' },
     { 'label': '已结案', 'value': '35' }
-  ]
+  ],
+  summaryStatus: [
+    { 'label': '待提交内审', 'value': '1' },
+    { 'label': '待内审', 'value': '2' },
+    { 'label': '内审通过，待提交品牌方审核', 'value': '3' },
+    { 'label': '内审被拒，待修改', 'value': '4' },
+    { 'label': '待品牌方审核', 'value': '5' },
+    { 'label': '品牌方审核被拒，待修改', 'value': '6' },
+    { 'label': '审核通过', 'value': '7' }
+  ],
+  brandByUser: [],
+  projectByUser: [],
 };
 export const publicSource = handleActions({
   [combineActions(getSalesManagers_success)]: (state, action) => {
@@ -61,7 +73,21 @@ export const publicSource = handleActions({
         $set: action.payload.data
       }
     });
-  }
+  },
+  [combineActions(getBrands_success)]: (state, action) => {
+    return update(state, {
+      brandByUser: {
+        $set: action.payload.data
+      }
+    });
+  },
+  [combineActions(getProjects_success)]: (state, action) => {
+    return update(state, {
+      projectByUser: {
+        $set: action.payload.data
+      }
+    });
+  },
 }, defaultPublicSource);
 
 // 公司/结案单 纬度下的数据
@@ -103,7 +129,7 @@ export const companySource = handleActions({
     });
   },
   [combineActions('resetCreateReportData')]: (state, action) => {
-    return defaultCompanySource
+    return defaultCompanySource;
   }
 }, defaultCompanySource);
 
@@ -164,7 +190,7 @@ export const summaryOrders = handleActions({
       list: [],
       source: {},
       response: {}
-    }
+    };
   }
 }, {
   list: [],
@@ -186,7 +212,7 @@ export const platformData = handleActions({
       execution_link: {},
       execution_screenshot: {},
       execution_data: {}
-    }
+    };
   }
 }, {
   total: {},

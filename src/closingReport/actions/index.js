@@ -54,11 +54,11 @@ export const {
   });
 // 数据单订单详情
 export const {
-    getSummaryOrderInfo,
-    getSummaryOrderInfo_success
-  } = createHttpAction('getSummaryOrderInfo', Interface.getSummaryOrderInfo, {
-    method: 'get'
-  });
+  getSummaryOrderInfo,
+  getSummaryOrderInfo_success
+} = createHttpAction('getSummaryOrderInfo', Interface.getSummaryOrderInfo, {
+  method: 'get'
+});
 
 // 添加平台(async)
 export const {
@@ -128,4 +128,29 @@ export const {
 // 清除创建页面拉取的全部信息
 export const resetCreateReportData = createAction('resetCreateReportData', (data) => {
   return { data };
+});
+/**
+ * 订单投放数据汇总列表
+ */
+
+// 获取个人下公司简称
+export const {
+    getCompanyNames
+  } = createHttpAction('getCompanyNames', Interface.getCompanyNames, {
+    method: 'get'
+  });
+// 获取个人下品牌
+export const {
+  getBrands,
+  getBrands_success
+} = createHttpAction('getBrands', Interface.getBrands, {
+  method: 'get'
+});
+
+// 获取个人下项目
+export const {
+  getProjects,
+  getProjects_success,
+} = createHttpAction('getProjects', Interface.getProjects, {
+  method: 'get'
 });

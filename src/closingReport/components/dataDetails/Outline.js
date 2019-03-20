@@ -1,9 +1,21 @@
 import React, { Component } from 'react';
-import { Row, Col, Input } from 'antd';
+import { Row, Col, Input, Popover, Icon } from 'antd';
 import './index.less';
 import { WBYPlatformIcon } from 'wbyui';
 import DataDetailsReviewWrap from './DataDetailsReviewWrap';
 import { Against, Agree } from '../../base/ApprovalStatus';
+
+const Media = props => {
+  let content = <div>
+    <Icon type="qq" /> {props.qq || '-'} <br />
+    <Icon type="mail" /> {props.email || '-'} <br />
+    <Icon type="phone" /> {props.cell_phone || '-'}
+  </div>;
+  return props.real_name ? <Popover content={content} title={props.title} trigger="click">
+    {props.real_name}
+  </Popover> : '-';
+};
+
 
 /**
  * 头部信息(编辑)
@@ -120,7 +132,10 @@ export class View extends Component {
     ];
     const values = [
       brand_name + ' / ' + project_name,
-      resource_media + ' / ' + project_media,
+      <span key={112}>
+        <Media {...resource_media} title='资源媒介' /> /
+        <Media {...project_media} title='项目媒介' />
+      </span>,
       real_name + ' / ' + executor_name,
       <WBYPlatformIcon key={22} weibo_type={platform_id} widthSize={22} />
     ];
