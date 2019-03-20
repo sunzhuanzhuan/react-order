@@ -1,4 +1,4 @@
-const prefix = '/summaryData'
+const prefix = '/summaryData';
 export default {
   salesManagers: prefix + '/getSalesManager',
   companyBrands: prefix + '/getCompanyBrand',
@@ -10,5 +10,7 @@ export default {
   getPlatformDataInfo: prefix + '/getPlatformDataInfo',
   updatePlatformInfo: prefix + '/updatePlatformInfo',
   checkPlatformData: prefix + '/checkPlatformData',
-  addSummaryPlatform	: prefix + '/addSummaryPlatform	',
-}
+  addSummaryPlatform: prefix + '/addSummaryPlatform',
+  deleteSummaryOrder: prefix + '/deleteSummaryOrder',
+  deleteSummaryPlatform: prefix + '/deleteSummaryPlatform'
+};

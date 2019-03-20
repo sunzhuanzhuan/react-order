@@ -80,7 +80,8 @@ export default class OrderList extends Component {
     const { loading, detailModal } = this.state;
     const connect = {
       actions,
-      platformData
+      platformData,
+      companySource
     };
     return loading ? 'loading...' : <div>
       {

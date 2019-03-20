@@ -206,16 +206,45 @@ export default class OrderCard extends Component {
     this.setState(update(this.state, {
       addModal: { loading: { $set: true } }
     }));
-    setTimeout(() => {
-      message.success(`添加平台${this.state.addModal.platformKey}成功`);
-      this.props.actions.addPlatform({
+    const { actions, data, companySource } = this.props;
+    actions.addSummaryPlatform({
+      'summary_id': companySource.summaryId,
+      'order_id': data.order_id,
+      'platform_id': this.state.addModal.platformKey
+    }).then(() => {
+      actions.addPlatform({
         id: this.props.data.id,
         platform_id: this.state.addModal.platformKey
       });
+      message.success(`添加成功`);
       this.setState(update(this.state, {
         addModal: { show: { $set: false }, loading: { $set: false } }
       }));
-    }, 3000);
+    }).catch(() => {
+      this.setState(update(this.state, {
+        addModal: { loading: { $set: false } }
+      }));
+    });
+  };
+
+  removePlatform = (id, order_id, platform_id) => {
+    const hide = message.loading('删除中...', 0);
+    this.props.actions.deleteSummaryPlatform({
+      order_id, platform_id
+    }).then(() => {
+      this.props.actions.removePlatform({
+        id,
+        platform_id
+      });
+    }).finally(hide);
+  };
+  removeOrder = (id, order_id, summary_id = this.props.companySource.summaryId) => {
+    const hide = message.loading('删除中...', 0);
+    this.props.actions.deleteSummaryOrder({
+      order_id, summary_id
+    }).then(() => {
+      this.props.actions.removeSummaryOrder({ id});
+    }).finally(hide);
   };
 
   render() {
@@ -255,7 +284,7 @@ export default class OrderCard extends Component {
               okText="确定"
               cancelText="取消"
               onConfirm={() => {
-                actions.removeSummaryOrder({ id: data.id });
+                this.removeOrder(data.id, data.order_id)
               }}
             >
               <a id='order-card-container-delete-btn'>
@@ -309,10 +338,7 @@ export default class OrderCard extends Component {
                       okText="确定"
                       cancelText="取消"
                       onConfirm={() => {
-                        actions.removePlatform({
-                          id: data.id,
-                          platform_id: item.platform_id
-                        });
+                        this.removePlatform(data.id, data.order_id, item.platform_id);
                       }}
                     >
                       <a>删除</a>

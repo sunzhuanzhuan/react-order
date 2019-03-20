@@ -59,18 +59,43 @@ export const {
   } = createHttpAction('getSummaryOrderInfo', Interface.getSummaryOrderInfo, {
     method: 'get'
   });
+
+// 添加平台(async)
+export const {
+  addSummaryPlatform,
+  addSummaryPlatform_success
+} = createHttpAction('addSummaryPlatform', Interface.addSummaryPlatform, {
+  method: 'post'
+});
 // 添加平台
 export const addPlatform = createAction('addPlatform', (data) => {
   return { data };
+});
+
+// 删除平台(async)
+export const {
+  deleteSummaryPlatform,
+  deleteSummaryPlatform_success
+} = createHttpAction('deleteSummaryPlatform', Interface.deleteSummaryPlatform, {
+  method: 'post'
 });
 // 删除平台
 export const removePlatform = createAction('removePlatform', (data) => {
   return { data };
 });
+
+// 删除订单(async)
+export const {
+  deleteSummaryOrder,
+  deleteSummaryOrder_success
+} = createHttpAction('deleteSummaryOrder', Interface.deleteSummaryOrder, {
+  method: 'post'
+});
 // 删除订单
 export const removeSummaryOrder = createAction('removeSummaryOrder', (data) => {
   return { data };
 });
+
 // 获取平台信息
 export const {
   getPlatformDataInfo,
