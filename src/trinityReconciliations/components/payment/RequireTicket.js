@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Row, Col, Form, Radio, Input,Button } from "antd";
+import { Row, Col, Form, Radio, Input,Button,message} from "antd";
 
 const FormItem = Form.Item;
 const RadioGroup = Radio.Group;
@@ -13,12 +13,25 @@ class ListQuery extends Component {
     };
   }
   handleSearch = (e) => {
-		const { questAction, page_size, handlefilterParams } = this.props;
+		const { confirmApply, summary_sheet_id,queryData} = this.props;
 		e.preventDefault();
 		this.props.form.validateFields((err, values) => {
 			if (!err) {
-        console.log(values)
-				// let params = values.month ? { ...values, month: values.month.format('YYYYMM') } : { ...values };
+        // console.log(values)
+        let params =  { ...values ,...summary_sheet_id};
+        if(summary_sheet_id !=''){
+            confirmApply(...params).then((res)=>{
+              if(res.code == 1000 ){
+                queryData()
+                message.success('申请成功')
+              }else{
+                message.error('申请失败')
+              }
+          })
+        }else{
+          message.error('请选择汇款单名称')
+        }
+        
 				// const hide = message.loading('查询中，请稍候...');
 				// questAction({ ...params, page: 1, page_size }).then(() => {
 				// 	handlefilterParams(params);
@@ -38,7 +51,7 @@ class ListQuery extends Component {
 
   render() {
     let { getFieldDecorator } = this.props.form;
-	
+    
 		const formItemLayout = {
 			labelCol: { span: 6 },
 			wrapperCol: { span: 18 },
@@ -71,7 +84,7 @@ class ListQuery extends Component {
             {getFieldDecorator('ttp_place_order_at_start',{
                rules:[{required:true,message:'请输入回票金额'}]
             })(
-					<Input style={{ width: 140 }} />
+				<Input style={{ width: 140 }} />
 					)}
 						</FormItem>
 					</Col>
@@ -82,7 +95,7 @@ class ListQuery extends Component {
           <Col span={7} style={{textAlign:'left'}}>
 						<FormItem>
              <Button onClick={this.handleSearch}>取消</Button>
-             <Button type="primary" htmlType="submit" style={{marginLeft:'20px'}} onClick={this.handleSearch}>确认申请</Button>
+             <Button type="primary" style={{marginLeft:'20px'}} onClick={this.handleSearch}>确认申请</Button>
 						</FormItem>
 					</Col>
           <Col span={7}></Col>

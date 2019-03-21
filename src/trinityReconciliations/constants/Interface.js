@@ -38,8 +38,8 @@ export default {
     listSummary:'/finance/statement/listSummary',
     detailSummary:'/finance/statement/detailSummary',
     detailSummaryList:'/finance/statement/detailSummaryList',
-    deleteStatement:'/finance/statement/deleteStatement'
-    
+    deleteStatement:'/finance/statement/deleteStatement',
+    confirmApply:'/finance/statement/deleteStatement'
   },
   meta:{
     metadata:'/finance/statement/metadata'

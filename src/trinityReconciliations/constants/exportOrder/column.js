@@ -1,6 +1,6 @@
 import React from "react";
 import qs from 'qs';
-import { Popconfirm } from 'antd';
+import { Popconfirm ,Radio} from 'antd';
 
 export const exportOrderListFunc = () => {
 	return [
@@ -121,16 +121,16 @@ export const exportOrderListFunc = () => {
 }
 
 
-export const paymentListFunc = (handleSelectDetail) => {
+export const paymentListFunc = (handleSelectDetail,summary_sheet_id) => {
 	return [
     {
-			title: '序号',
-			dataIndex: 'name11',
-			key: 'name11',
+			title: '请选择',
+			dataIndex: '',
+			key: '',
 			align: 'center',
       width: 100,
-      render:(text, record)=>{
-        return <a href='javascript:;' onClick={()=>{handleSelectDetail(record)}}>查看</a>
+      render:(text,record)=>{
+        return <Radio checked={summary_sheet_id == record.summary_sheet_id} onClick={()=>{handleSelectDetail(record)}}></Radio>
       }
 		},
 		{
@@ -142,8 +142,8 @@ export const paymentListFunc = (handleSelectDetail) => {
 		},
 		{
 			title: '订单数量',
-			dataIndex: 'sale_id',
-			key: 'sale_id',
+			dataIndex: 'total_order_amount',
+			key: 'total_order_amount',
 			align: 'center',
 			width: 100,
 		},
@@ -155,44 +155,54 @@ export const paymentListFunc = (handleSelectDetail) => {
 			width: 100,
 		},
 		{
-			title: '所属平台/代理商',
-			dataIndex: 'original_target',
-			key: 'original_target',
+			title: '待付订单',
+			dataIndex: 'wait_pay_order',
+			key: 'wait_pay_order',
 			align: 'center',
 			width: 100,
 		},
 		{
-			title: '生成时间',
-			dataIndex: 'distribute_target',
-			key: 'distribute_target',
+			title: '代付金额',
+			dataIndex: 'wait_pay_amount',
+			key: 'wait_pay_amount',
 			align: 'center',
 			width: 100,
 		},
 		{
-			title: '汇总单状态',
-			dataIndex: 'summary_status',
-			key: 'summary_status',
+			title: '扣减订单',
+			dataIndex: 'deduction_order',
+			key: 'deduction_order',
 			align: 'center',
 			width: 100
 		},
 		{
-			title: '打款状态',
-			dataIndex: 'payment_status',
-			key: 'payment_status',
+			title: '扣减金额',
+			dataIndex: 'deduction_amount',
+			key: 'deduction_amount',
 			align: 'center',
 			width: 100,
 		},
 		{
-			title: '关联三方对账单',
-			dataIndex: 'all_target',
-			key: 'all_target',
+			title: '调账订单',
+			dataIndex: 'adjustment_order',
+			key: 'adjustment_order',
 			align: 'center',
-			width: 100,
-			render: (text) => {
-				return parseFloat(text).toFixed(2)
-			}
+			width: 100
+		},
+		{
+			title: '调账金额',
+			dataIndex: 'adjustment_amount',
+			key: 'adjustment_amount',
+			align: 'center',
+			width: 100
+		},
+		{
+			title: '生成时间',
+			dataIndex: 'created_at',
+			key: 'created_at',
+			align: 'center',
+			width: 100
 		}
-
 	];
 }
 

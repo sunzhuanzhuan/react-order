@@ -12,7 +12,7 @@ export const {
 });
 
 
-//汇总单列表
+//汇总单列表(申请周期付款是一个接口)
 export const {
   getSummaryList,
   getSummaryList_success
@@ -59,6 +59,13 @@ export const {
   method: 'get'
 });
 
+//申请周期付款，确认申请
+export const {
+  confirmApply,
+  confirmApply_success
+} = createHttpAction('confirmApply', Interface.statement.confirmApply, {
+  method: 'get'
+});
 // // 使得添加页面提交可用
 // export const setAddSubmit = createAction('setAddSubmit', (data) => {
 //   return data;
