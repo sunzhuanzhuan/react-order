@@ -117,6 +117,8 @@ export default class SummaryListByOrder extends Component {
             </div>
             {[1].includes(summary_status) &&
             <div><a onClick={() => this.submitCheck(order_id)}>提交审核</a></div>}
+            {[1].includes(summary_status) &&
+            <div><a onClick={() => this.removeOrder(order_id, summary_id)}>删除</a></div>}
             {[4, 6].includes(summary_status) &&
             <div><a onClick={() => this.submitCheck(order_id, true)}>重新审核</a></div>}
           </div>;
@@ -168,6 +170,19 @@ export default class SummaryListByOrder extends Component {
     }
   };
 
+  removeOrder = (order_id, summary_id) => {
+    if(this.orderDel) return
+    this.orderDel = true
+    const hide = message.loading('删除中...', 0);
+    this.props.actions.deleteSummaryOrder({
+      order_id, summary_id
+    }).then(() => {
+      this.getList()
+    }).finally(() => {
+      this.orderDel = false
+      hide()
+    });
+  };
   getList = (params = {}) => {
     const { actions } = this.props;
     let search = { ...this.state.search, ...params };
