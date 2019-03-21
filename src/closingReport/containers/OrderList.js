@@ -1,27 +1,8 @@
 import React, { Component } from 'react';
 import {} from 'antd';
 import OrderCard from '../components/OrderCard';
-import DataDetailsModalEdit from './DataDetailsModalEdit';
-import DataDetailsModalView from './DataDetailsModalView';
-import DataDetailsModalCheck from './DataDetailsModalCheck';
+import DetailModal from '../base/DetailModal';
 
-const DetailModal = (props) => {
-  let C;
-  switch (props.type) {
-    case 'edit':
-      C = DataDetailsModalEdit;
-      break;
-    case 'view':
-      C = DataDetailsModalView;
-      break;
-    case 'check':
-      C = DataDetailsModalCheck;
-      break;
-    default :
-      return null;
-  }
-  return props.show && <C {...props} />;
-};
 
 export default class OrderList extends Component {
   constructor(props, context) {
@@ -40,12 +21,6 @@ export default class OrderList extends Component {
         return {
           add: true,
           del: true,
-          check: {
-            disabled: data.platform.some(platform => parseInt(platform.is_finish) === 2),
-            callback: () => {
-              this.reload()
-            }
-          }
         };
       },
       orderStatus: false,
@@ -69,14 +44,6 @@ export default class OrderList extends Component {
       this.setState({ loading: false });
     });
   }
-
-  reload = () => {
-    const { actions } = this.props;
-    this.setState({ loading: true });
-    actions.getSummaryOrderInfo().then(() => {
-      this.setState({ loading: false });
-    });
-  };
 
   handleDetail = (type, item, data) => {
     this.setState({

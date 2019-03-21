@@ -9,7 +9,7 @@ const Option = Select.Option;
 const orderPlatformStatusMap = {
   'modify_status': {
     '1': {
-      status: 'default',
+      status: 'error',
       text: '待修改',
       index: '6'
     },
@@ -155,11 +155,11 @@ export default class OrderCard extends Component {
           <li>订单ID：{data.order_id}</li>
           {data.execution_evidence_code && <li>PO单号：{data.execution_evidence_code}</li>}
           <li>需求名：{data.requirement_name}</li>
-          {!data.submitter_at || data.submitter_at === '0000-00-00 00:00:00' ? null :
+          {!display.dateTimeRecord || !data.submitter_at || data.submitter_at === '0000-00-00 00:00:00' ? null :
             <li>{data.submitter_name} 提交于 {data.submitter_at}</li>}
-          {!data.internal_check_at || data.internal_check_at === '0000-00-00 00:00:00' ? null :
+          {!display.dateTimeRecord || !data.internal_check_at || data.internal_check_at === '0000-00-00 00:00:00' ? null :
             <li>内审于 {data.internal_check_at}</li>}
-          {!data.external_check_at || data.external_check_at === '0000-00-00 00:00:00' ? null :
+          {!display.dateTimeRecord || !data.external_check_at || data.external_check_at === '0000-00-00 00:00:00' ? null :
             <li>品牌 审核于 {data.external_check_at}</li>}
         </ul>
         <div className='head-right'>

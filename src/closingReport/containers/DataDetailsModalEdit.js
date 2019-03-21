@@ -93,7 +93,8 @@ export default class DataDetailsModalEdit extends Component {
           actions.submitPlatformInfo({
             id: data.id,
             platform_id: data.current.platform_id,
-            is_finish: 1
+            is_finish: 1,
+            status: data.summary_status
           })
           this.props.closed();
         });

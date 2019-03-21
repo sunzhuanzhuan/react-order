@@ -79,13 +79,14 @@ export default class SelectOrders extends Component {
       search: {
         page: 1,
         pageSize: 50,
+        company_id: props.companyId,
         execution_status: ['21', '22', '26', '27', '28', '32', '35']
       }
     };
     const { actions } = props;
     actions.getSalesManagers();
-    actions.getCompanyBrands();
-    actions.getCompanyProjects();
+    actions.getCompanyBrands({ company_id: props.companyId });
+    actions.getCompanyProjects({ company_id: props.companyId });
   }
 
   getList = (params = {}) => {

@@ -47,7 +47,7 @@ export default class CreateReport extends Component {
       visible: !summary_name
     };
     const { actions } = this.props;
-    // 获取结案数据单信息接口
+    // 获取公司信息接口
     actions.getCompanyTotalInfo({ company_id });
   }
 
@@ -167,7 +167,7 @@ export default class CreateReport extends Component {
     if (!this.state.companyId) {
       this.handleCancel(null, '/error');
     }
-    const { current, selectedRowKeys, summaryName } = this.state;
+    const { current, selectedRowKeys, summaryName, companyId } = this.state;
     const C = steps[current].content;
     const footerWidth = this.props.common.ui.sliderMenuCollapse ? 40 : 200;
     const store = {
@@ -177,6 +177,7 @@ export default class CreateReport extends Component {
     };
     const select = {
       selectedRowKeys: selectedRowKeys,
+      companyId,
       onSelectChange: this.onSelectChange
     };
     return (

@@ -99,9 +99,9 @@ const defaultCompanySource = {
   brandByCompany: [],
   projectByCompany: [],
   platformByCompany: [],
-  companyId: '',
+  companyId: '',  // 公司id
   summaryName: '', // 数据单名称
-  summaryId: '', // 数据单名称
+  summaryId: '', // 数据单id
   creatorName: '', // 数据单创建人
   beSalesRealName: '', //公司所属销售
   companyName: '', //公司简称
@@ -146,12 +146,13 @@ export const companySource = handleActions({
     };
   },
   [combineActions(getSummaryTotalInfo_success)]: (state, action) => {
-    const { summary_id, creator_name, summary_name } = action.payload.data;
+    const { summary_id, creator_name, summary_name, company_id } = action.payload.data;
     return {
       ...state,
       summaryName: summary_name,
       summaryId: summary_id,
-      creatorName: creator_name
+      creatorName: creator_name,
+      companyId: company_id
     };
   },
   [combineActions('resetCreateReportData')]: (state, action) => {
@@ -207,9 +208,13 @@ export const summaryOrders = handleActions({
 
   },
   [combineActions('submitPlatformInfo')]: (state, action) => {
-    let { platform_id, id } = action.payload.data || {};
+    let { platform_id, id, status } = action.payload.data || {};
+    //modify_status
     let index = state.source[id].platform.findIndex(({ platform_id: id }) => platform_id == id);
-    return update(state, { source: { [id]: { platform: { [index]: { is_finish: { $set: 1 } } } } } });
+    return update(state, { source: { [id]: { platform: { [index]: {
+      is_finish: { $set: 1 },
+      modify_status: { $set: 2 },
+    } } } } });
   },
   [combineActions('resetCreateReportData')]: (state, action) => {
     return {

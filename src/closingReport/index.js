@@ -9,6 +9,7 @@ const Test = lazyLoadComponent(() => import('./containers/Test'))
 const CreateReport = lazyLoadComponent(() => import('./containers/CreateReport'))
 const SummaryListByOrder = lazyLoadComponent(() => import('./containers/SummaryListByOrder'))
 const SummaryReviewList = lazyLoadComponent(() => import('./containers/SummaryReviewList'))
+const SummaryDetail = lazyLoadComponent(() => import('./containers/SummaryDetail'))
 
 
 class ClosingReport extends Component {
@@ -20,7 +21,7 @@ class ClosingReport extends Component {
 				<Route path='/order/closing-report/test' component={Test} />
 				<Route path='/order/closing-report/create' component={CreateReport} />
 				<Route path='/order/closing-report/list/summary-order' component={SummaryListByOrder} />
-        <Route path='/order/closing-report/detail/summary' component={Test} />
+        <Route path='/order/closing-report/detail/summary' component={SummaryDetail} />
         <Route path='/order/closing-report/detail/order' component={Test} />
         <Route path='/order/closing-report/list/review' component={SummaryReviewList} />
         <Route path='/order/closing-report/detail/review-summary' component={Test} />
