@@ -60,11 +60,11 @@ export default class SummaryReviewList extends Component {
         dataIndex: 'actions',
         align: 'center',
         render: (date, record) => {
-          return <a onClick={() => this.linkTo('/order/closing-report/detail/review-summary?summary_id=' + record.summary_id)}>查看</a>
+          return <a target='_blank' href={'/order/closing-report/detail/review-summary?summary_id=' + record.summary_id}>查看</a>
         }
       }];
     const { actions } = props;
-    actions.getSalesManagers();
+    actions.getExecutor();
   }
   getList = (params = {}) => {
     const { actions } = this.props;

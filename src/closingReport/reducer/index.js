@@ -6,6 +6,7 @@ import {
   getCompanyBrands_success,
   getCompanyProjects_success,
   getSalesManagers_success,
+  getExecutor_success,
   getCompanyPlatforms_success,
   addOrUpdateSummary_success,
   getSummaryOrderInfo_success,
@@ -43,6 +44,7 @@ function initList() {
 // 公共的数据
 const defaultPublicSource = {
   salesManagers: [],
+  executors: [],
   executionStatus: [
     { 'label': '执行中', 'value': '21' },
     { 'label': '已执行', 'value': '22' },
@@ -71,6 +73,13 @@ const defaultPublicSource = {
   projectByUser: []
 };
 export const publicSource = handleActions({
+  [combineActions(getExecutor_success)]: (state, action) => {
+    return update(state, {
+      executors: {
+        $set: action.payload.data
+      }
+    });
+  },
   [combineActions(getSalesManagers_success)]: (state, action) => {
     return update(state, {
       salesManagers: {

@@ -52,7 +52,7 @@ export default class SummaryListByOrder extends Component {
         dataIndex: 'summary_name',
         width: 120,
         render: (name, record) => {
-          return <a onClick={() => this.linkTo('/order/closing-report/detail/summary?summary_id=' + record.summary_id)}>{name}</a>;
+          return <a target='_blank' href={'/order/closing-report/detail/summary?summary_id=' + record.summary_id}>{name}</a>;
         }
       }, {
         title: '需求名称',
@@ -108,10 +108,12 @@ export default class SummaryListByOrder extends Component {
         fixed: 'right',
         width: 70,
         dataIndex: 'actions',
-        render: (date, { summary_status, order_id }) => {
+        render: (date, { summary_status, order_id, summary_id }) => {
           return <div>
-            <div onClick={() => this.linkTo('/order/closing-report/detail/order?order_id=' + order_id)}>
-              {[1, 4, 6].includes(summary_status) ? <a>修改</a> : <a>查看</a>}
+            <div>
+              {[1, 4, 6].includes(summary_status) ?
+                <a target='_blank' href={`/order/closing-report/detail/order?summary_id=${summary_id}&order_id=${order_id}`}>修改</a> :
+                <a target='_blank' href={`/order/closing-report/detail/order?summary_id=${summary_id}&order_id=${order_id}`}>查看</a>}
             </div>
             {[1].includes(summary_status) &&
             <div><a onClick={() => this.submitCheck(order_id)}>提交审核</a></div>}
@@ -124,6 +126,7 @@ export default class SummaryListByOrder extends Component {
     actions.getBrands();
     actions.getProjects();
     actions.getSalesManagers();
+    actions.getExecutor();
   }
   submitCheck = (order_id, isRecheck) => {
     const { actions } = this.props;

@@ -84,7 +84,7 @@ export default class SelectOrders extends Component {
       }
     };
     const { actions } = props;
-    actions.getSalesManagers();
+    actions.getExecutor();
     actions.getCompanyBrands({ company_id: props.companyId });
     actions.getCompanyProjects({ company_id: props.companyId });
   }

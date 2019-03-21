@@ -25,7 +25,7 @@ export default class DataDetailsModalCheck extends Component {
     });
   }
 
-  showConfirm = (values) => {
+  showConfirm = (values, successCallback) => {
     Modal.confirm({
       title: '是否确认提交审核？',
       onOk: () => {
@@ -37,6 +37,7 @@ export default class DataDetailsModalCheck extends Component {
         }).then(() => {
           message.success('保存成功!');
           this.props.closed();
+          successCallback && successCallback()
         });
       }
     });
@@ -46,7 +47,7 @@ export default class DataDetailsModalCheck extends Component {
   submit = () => {
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        this.showConfirm(values);
+        this.showConfirm(values, this.props.successCallback);
       }
     });
   };

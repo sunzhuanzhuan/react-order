@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { PageHeader, Button, Tabs, Divider, Modal, message, Empty } from 'antd';
+import { PageHeader, Divider,  Empty } from 'antd';
 import OrderCard from '../components/OrderCard';
 import { SH2 } from '@/base/SectionHeader';
 import { linkTo } from '../../util/linkTo';
@@ -8,11 +8,6 @@ import { bindActionCreators } from 'redux';
 import * as actions from '../actions';
 import { connect } from 'react-redux';
 import DetailModal from '../base/DetailModal';
-import SelectOrders from './SelectOrders';
-import difference from 'lodash/difference';
-
-
-const TabPane = Tabs.TabPane;
 
 const mapStateToProps = (state) => ({
   common: state.commonReducers,
@@ -28,18 +23,16 @@ const mapDispatchToProps = (dispatch) => ({
 export default class Test extends Component {
   constructor(props) {
     super(props);
-    let { summary_id } = parseUrlQuery();
+    let { summary_id, order_id } = parseUrlQuery();
     this.state = {
       summaryId: summary_id,
+      orderId: order_id,
       loading: true,
-      tableActive: 'all',
       detailModal: {
         show: false,
         data: {},
         type: ''
-      },
-      selectedRowKeys: [],
-      addModal: false
+      }
     };
     this.cardConfig = {
       orderActions: (data) => {
@@ -107,16 +100,16 @@ export default class Test extends Component {
     const { actions } = this.props;
     // 获取结案数据单信息
     actions.getSummaryTotalInfo({ summary_id });
-    actions.getSummaryOrderInfo({ summary_id }).then(() => {
+    actions.getSummaryOrderInfo({ summary_id, order_id }).then(() => {
       this.setState({ loading: false });
     });
   }
 
   reload = () => {
+    let { summary_id, order_id } = parseUrlQuery();
     const { actions } = this.props;
-    let { summary_id } = parseUrlQuery();
     this.setState({ loading: true });
-    actions.getSummaryOrderInfo({ summary_id }).then(() => {
+    actions.getSummaryOrderInfo({ summary_id, order_id }).then(() => {
       this.setState({ loading: false });
     });
   };
@@ -131,80 +124,24 @@ export default class Test extends Component {
     });
   };
 
-  addOrders = () => {
-    const { closingReport: { companySource: { companyId, summaryName } } } = this.props;
-    const { selectedRowKeys, summaryId } = this.state;
-    if (!selectedRowKeys.length) {
-      return message.info('请选择订单');
-    }
-    let _msg = message.loading('保存中...');
-    const { actions } = this.props;
-    return actions.addOrUpdateSummary({
-      company_id: companyId,
-      summary_id: summaryId,
-      summary_name: summaryName,
-      order_ids: selectedRowKeys
-    }).then(({ data }) => {
-      if (data.order_ids) {
-        this.setState({ selectedRowKeys: difference(this.state.selectedRowKeys, data.order_ids) });
-        Modal.info({
-          title: data.order_ids + '， 已被其他【投放数据汇总单】选中且保存了，已自动为您取消勾选'
-        });
-      } else {
-        this.reload()
-        this.setState({ addModal: false });
-      }
-    }).finally(_msg);
-  };
 
   render() {
-    if (!this.state.summaryId) {
+    if (!this.state.summaryId || !this.state.orderId) {
       linkTo('/error');
     }
-    const { closingReport: { companySource, summaryOrders, platformData }, actions, common } = this.props;
+    const { closingReport: { companySource, summaryOrders, platformData }, actions } = this.props;
     const { list = [], source = {} } = summaryOrders;
-    const { summaryName, creatorName, companyId } = companySource;
-    const { loading, detailModal, tableActive, selectedRowKeys, addModal, summaryId } = this.state;
+    const { summaryName, creatorName} = companySource;
+    const { loading, detailModal,  summaryId } = this.state;
     const connect = {
       actions,
       platformData,
       companySource
     };
-    let statistics = {
-      all: list,
-      status_1: [],
-      status_4: [],
-      status_6: []
-    };
-    list.forEach((key) => {
-      let item = source[key];
-      switch (item.summary_status) {
-        case 1:
-          statistics.status_1.push(key);
-          break;
-        case 4:
-          statistics.status_4.push(key);
-          break;
-        case 6:
-          statistics.status_6.push(key);
-          break;
-      }
-    });
-    const selectOrderProps = {
-      common,
-      closingReport: this.props.closingReport,
-      actions,
-      selectedRowKeys,
-      companyId,
-      onSelectChange: selectedRowKeys => {
-        this.setState({ selectedRowKeys });
-      }
-    };
     return <div>
       <PageHeader
         onBack={() => this.props.history.push('/order/closing-report/list/summary-order')}
         title="结案数据单详情页"
-        extra={<Button type='primary' ghost onClick={() => this.setState({ addModal: true })}>添加订单</Button>}
       >
         <div style={{ padding: '20px 15px' }}>
           <span>
@@ -221,19 +158,9 @@ export default class Test extends Component {
         </div>
         <SH2 />
       </PageHeader>
-      {loading ? 'loading...' : <div>
-        <Tabs
-          animated={{ tabPane: false }}
-          activeKey={tableActive}
-          onChange={tableActive => this.setState({ tableActive })}
-        >
-          <TabPane tab={`全部 ${statistics['all'].length}`} key="all" />
-          <TabPane tab={`待提交内审 ${statistics['status_1'].length}`} key="status_1" />
-          <TabPane tab={`内审被拒 ${statistics['status_4'].length}`} key="status_4" />
-          <TabPane tab={`品牌方审核被拒 ${statistics['status_6'].length}`} key="status_6" />
-        </Tabs>
+      {loading ? 'loading...' : <div style={{marginTop: '20px'}}>
         {
-          statistics[tableActive].length ? statistics[tableActive].map(key => {
+          list.length ? list.map(key => {
             let item = source[key];
             return <OrderCard
               key={key}
@@ -251,19 +178,6 @@ export default class Test extends Component {
           closed={() => this.handleDetail()}
         />
       </div>}
-      {addModal && <Modal
-        centered
-        title={<h2 className='data-details-header'>添加订单
-          <small>数据单ID：{summaryId}</small>
-        </h2>}
-        wrapClassName="closing-report-modal-pages data-details"
-        visible
-        width={1000}
-        onCancel={() => this.setState({ addModal: false })}
-        onOk={this.addOrders}
-      >
-        <SelectOrders {...selectOrderProps} />
-      </Modal>}
     </div>;
   }
 }

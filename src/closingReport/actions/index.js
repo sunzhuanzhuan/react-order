@@ -14,6 +14,13 @@ export const {
   });
 // 获取执行人
 export const {
+  getExecutor,
+  getExecutor_success
+} = createHttpAction('getExecutor', Interface.getExecutor, {
+  method: 'get'
+});
+// 获取销售
+export const {
   getSalesManagers,
   getSalesManagers_success
 } = createHttpAction('getSalesManagers', Interface.salesManagers, {

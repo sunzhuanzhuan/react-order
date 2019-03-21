@@ -133,7 +133,7 @@ export default class OrderCard extends Component {
       onOk: hide => {
         return actions.submitCheckSummaryByOrder({ order_id: data.order_id }).then(() => {
           message.success('提交审核成功!');
-          successCallback && successCallback()
+          successCallback && successCallback();
         }).finally(hide);
       }
     });
@@ -242,10 +242,7 @@ export default class OrderCard extends Component {
                   ]}
                 {
                   check &&
-                  [
-                    <Divider key={1} type="vertical" />,
-                    <a key={2} onClick={() => this.props.onDetail('check', item, data)}>去审核</a>
-                  ]
+                  <a onClick={() => this.props.onDetail('check', item, data)}>去审核</a>
                 }
               </div>
             </li>;

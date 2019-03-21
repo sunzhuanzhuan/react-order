@@ -24,20 +24,10 @@ export default class SummaryReviewFilterForm extends Component {
   handleReset = () => {
     this.props.form.resetFields();
   };
-  toggle = () => {
-    const { expand } = this.state;
-    this.setState({ expand: !expand });
-  };
-  validatorBatchId = (rule, value, callback) => {
-    if (value && value.trim().split(/\s+/g).length > 200) {
-      return callback('不能超过200个');
-    }
-    callback();
-  };
 
   render() {
     const { source, loading, actions } = this.props;
-    const { getFieldDecorator, getFieldValue } = this.props.form;
+    const { getFieldDecorator } = this.props.form;
     return <Form onSubmit={this.handleSubmit} layout="inline" autoComplete="off">
       <Row>
         <Col span={8}>
@@ -57,7 +47,7 @@ export default class SummaryReviewFilterForm extends Component {
                 placeholder="请选择"
                 optionFilterProp='children'
               >
-                {source.salesManagers.map(option =>
+                {source.executors.map(option =>
                   <Option key={option.owner_admin_id}>{option.real_name}</Option>)}
               </Select>
             )}

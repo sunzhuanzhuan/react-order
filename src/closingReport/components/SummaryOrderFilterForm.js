@@ -130,7 +130,7 @@ export default class SummaryOrderFilterForm extends Component {
                 placeholder="请选择"
                 optionFilterProp='children'
               >
-                {source.salesManagers.map(option =>
+                {source.executors.map(option =>
                   <Option key={option.owner_admin_id}>{option.real_name}</Option>)}
               </Select>
             )}
