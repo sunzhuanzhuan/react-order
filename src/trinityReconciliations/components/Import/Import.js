@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { Row, Col, Form, Select, Button, Popconfirm, message, Icon, Input } from "antd";
+import './import.less'
+
 import { OssUpload } from 'wbyui'
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -85,7 +87,7 @@ class ListQuery extends Component {
      <Form>
 				<Row>
 					
-					<Col span={10}>
+					<Col span={11}>
 						<FormItem label='请选择关联三方对账单' {...formItemLayout}>
 							{getFieldDecorator('public_order_id_1', { initialValue:'1',rules: [{ required: true, message: '请选择' }], })(
 								<Select
@@ -113,13 +115,15 @@ class ListQuery extends Component {
 
 				</Row>
           <Row>
-          {
-            this.state.visibleTable?<OptionTable num={this.state.num}/>:null
+          { 
+            this.state.visibleTable?<div style={{height:'200px',marginTop:'20px'}}>
+            <OptionTable num={this.state.num}/></div>
+            :<div style={{height:'200px'}}></div>
           }
        </Row>
           
-        <Row>
-        <Col span={8}>
+        <Row style={{marginTop:'20px'}}>
+        <Col span={11}>
 						<FormItem label='请选择要上传的汇总单' {...formItemLayout}>
 							{getFieldDecorator('payment_status', { initialValue: '' ,rules: [{ required: true, message: '请选择' }]})(
                 <Button type="primary" className='left-gap' onClick={this.handleClickTotal}>请选择要上传的汇总单</Button>
@@ -130,6 +134,11 @@ class ListQuery extends Component {
 						</FormItem>
 					</Col>
         </Row>
+        {
+        this.state.stateTotal?<div style={{height:'200px',marginTop:'20px'}}>
+        <TotalTable/></div>:<div style={{height:'200px'}}>
+        </div>
+      }
         <Row>
         <Col span={8}></Col>
         <Col span={8}>
@@ -143,9 +152,7 @@ class ListQuery extends Component {
           <Col span={8}></Col>
         </Row>
 			</Form>
-      {
-        this.state.stateTotal?<TotalTable/>:null
-      }
+     
      
     </div>;
   }
@@ -159,9 +166,9 @@ export class OptionTable extends Component{
 
   }
   render(){
-    return <div>
-      <Row>对账单信息</Row>
-      <Row>
+    return <div className='statementBox'>
+      <Row className='title'>对账单信息</Row>
+      <Row className='info'>
         <Col span={12}>
         三方对账单总数:{this.props.num}
         </Col>
@@ -170,7 +177,7 @@ export class OptionTable extends Component{
         </Col>
       </Row>
 
-      <Row>
+      <Row className='info'>
         <Col span={12}>
         总金额(元):
         </Col>
@@ -179,7 +186,7 @@ export class OptionTable extends Component{
         </Col>
       </Row>
 
-      <Row>
+      <Row className='info'>
         <Col span={12}>
         本次应付订单:
         </Col>
@@ -187,7 +194,7 @@ export class OptionTable extends Component{
         </Col>
       </Row>
 
-       <Row>
+       <Row className='info'>
         <Col span={12}>
         应付总金额(元):
         </Col>
@@ -206,9 +213,9 @@ export class TotalTable extends Component{
 
   }
   render(){
-    return <div>
-      <Row>汇总单信息</Row>
-      <Row>
+    return <div className="statementBox">
+      <Row className='title'>汇总单信息</Row>
+      <Row className='info'>
         <Col span={12}>
         订单总数:{this.props.num}
         </Col>
@@ -217,7 +224,7 @@ export class TotalTable extends Component{
         </Col>
       </Row>
 
-      <Row>
+      <Row className='info'>
         <Col span={12}>
         本次应付订单:
         </Col>
@@ -226,7 +233,7 @@ export class TotalTable extends Component{
         </Col>
       </Row>
 
-      <Row>
+      <Row className='info'>
         <Col span={12}>
         扣减订单:
         </Col>
