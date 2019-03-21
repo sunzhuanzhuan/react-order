@@ -11,6 +11,8 @@ import {
   getSummaryOrderInfo_success,
   getPlatformDataInfo_success,
   getSummaryListByOrder_success,
+  getSummaryTotalInfo_success,
+  getCompanyTotalInfo_success,
   getBrands_success,
   getSummaryList_success,
   getProjects_success,
@@ -66,7 +68,7 @@ const defaultPublicSource = {
     { 'label': '审核通过', 'value': '7' }
   ],
   brandByUser: [],
-  projectByUser: [],
+  projectByUser: []
 };
 export const publicSource = handleActions({
   [combineActions(getSalesManagers_success)]: (state, action) => {
@@ -89,17 +91,21 @@ export const publicSource = handleActions({
         $set: action.payload.data
       }
     });
-  },
+  }
 }, defaultPublicSource);
 
-// 公司/结案单 纬度下的数据
+// 公司/数据单 纬度下的数据
 const defaultCompanySource = {
   brandByCompany: [],
   projectByCompany: [],
   platformByCompany: [],
   companyId: '',
-  summaryName: '',
-  beSales: ''
+  summaryName: '', // 数据单名称
+  summaryId: '', // 数据单名称
+  creatorName: '', // 数据单创建人
+  beSalesRealName: '', //公司所属销售
+  companyName: '', //公司简称
+  companyPath: '' //公司跳转路径
 };
 export const companySource = handleActions({
   [combineActions(getCompanyBrands_success)]: (state, action) => {
@@ -129,6 +135,24 @@ export const companySource = handleActions({
         $set: action.payload.data.summary_id
       }
     });
+  },
+  [combineActions(getCompanyTotalInfo_success)]: (state, action) => {
+    const { company_name, real_name, company_path } = action.payload.data;
+    return {
+      ...state,
+      beSalesRealName: real_name,
+      companyName: company_name,
+      companyPath: company_path
+    };
+  },
+  [combineActions(getSummaryTotalInfo_success)]: (state, action) => {
+    const { summary_id, creator_name, summary_name } = action.payload.data;
+    return {
+      ...state,
+      summaryName: summary_name,
+      summaryId: summary_id,
+      creatorName: creator_name
+    };
   },
   [combineActions('resetCreateReportData')]: (state, action) => {
     return defaultCompanySource;

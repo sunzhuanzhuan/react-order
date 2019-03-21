@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
-import { Badge, Table } from 'antd';
-import { SH2 } from '../../base/SectionHeader';
+import { Modal, Table, message } from 'antd';
+import { SH2 } from '@/base/SectionHeader';
 import './SelectOrders.less';
 import IconText from '../base/IconText';
 import SummaryOrderFilterForm from '../components/SummaryOrderFilterForm';
 import { bindActionCreators } from 'redux';
 import * as actions from '../actions';
 import { connect } from 'react-redux';
-import OrderSummaryStatus from "@/closingReport/base/OrderSummaryStatus";
+import OrderSummaryStatus from '../base/OrderSummaryStatus';
 
 const mapStateToProps = (state) => ({
   common: state.commonReducers,
@@ -110,11 +110,13 @@ export default class SummaryListByOrder extends Component {
         dataIndex: 'actions',
         render: (date, { summary_status, order_id }) => {
           return <div>
-            {[1, 4, 6].includes(summary_status) ?
-              <div><a onClick={() => this.linkTo('/order/closing-report/detail/order?order_id=' + order_id)}>修改</a></div>
-              : <div><a onClick={() => this.linkTo('/order/closing-report/detail/order?order_id=' + order_id)}>查看</a></div>}
-            {[1].includes(summary_status) && <div><a>提交审核</a></div>}
-            {[4, 6].includes(summary_status) && <div><a>重新审核</a></div>}
+            <div onClick={() => this.linkTo('/order/closing-report/detail/order?order_id=' + order_id)}>
+              {[1, 4, 6].includes(summary_status) ? <a>修改</a> : <a>查看</a>}
+            </div>
+            {[1].includes(summary_status) &&
+            <div><a onClick={() => this.submitCheck(order_id)}>提交审核</a></div>}
+            {[4, 6].includes(summary_status) &&
+            <div><a onClick={() => this.submitCheck(order_id, true)}>重新审核</a></div>}
           </div>;
         }
       }];
@@ -123,6 +125,45 @@ export default class SummaryListByOrder extends Component {
     actions.getProjects();
     actions.getSalesManagers();
   }
+  submitCheck = (order_id, isRecheck) => {
+    const { actions } = this.props;
+    if (isRecheck) {
+      // 重新检查
+      Modal.confirm({
+        title: '是否确认重新提交审核？',
+        onOk: hide => {
+          return actions.submitCheckSummaryByOrder({ order_id }).then(() => {
+            message.success('提交审核成功!');
+            this.getList();
+          }).finally(hide);
+        }
+      });
+    } else {
+      if (this.isChecking) return;
+      this.isChecking = true;
+      let hide = message.loading('处理中...', 0);
+      actions.getOrderIsFinish({ order_id }).then(({ data }) => {
+        if (data.flag === 2) {
+          Modal.info({
+            title: '请先将所有平台的数据都完善之后再提交'
+          });
+        } else if (data.flag === 1) {
+          Modal.confirm({
+            title: '是否确认将本订单的投放数据提交审核？',
+            onOk: hide => {
+              return actions.submitCheckSummaryByOrder({ order_id }).then(() => {
+                message.success('提交审核成功!');
+                this.getList();
+              }).finally(hide);
+            }
+          });
+        }
+      }).finally(() => {
+        this.isChecking = false;
+        hide();
+      });
+    }
+  };
 
   getList = (params = {}) => {
     const { actions } = this.props;

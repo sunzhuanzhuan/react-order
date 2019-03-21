@@ -22,30 +22,6 @@ const DetailModal = (props) => {
   }
   return props.show && <C {...props} />;
 };
-const cardConfig = {
-  orderActions: {
-    add: true,
-    del: true
-    // check: true
-  },
-  display: {
-    orderStatus: false,
-    platformConfig: (item, data, propsSource) => {
-      // data.is_finish == 2 || data.modify_status == 1 || data.check_status == 6;
-      //return { edit, del, check, view, props }
-      let result = {};
-      let source = propsSource['is_finish'];
-      let status = item['is_finish'];
-      result.props = source[status];
-      result.del = parseInt(item.is_hand_record) === 1;
-      if (parseInt(status) === 2) {
-        result.edit = true;
-      }
-      result.view = !result.edit;
-      return result;
-    }
-  }
-};
 
 export default class OrderList extends Component {
   constructor(props, context) {
@@ -58,11 +34,49 @@ export default class OrderList extends Component {
         type: ''
       }
     };
+    this.cardConfig = {
+      orderActions: (data) => {
+        //return { add, del, check }
+        return {
+          add: true,
+          del: true,
+          check: {
+            disabled: data.platform.some(platform => parseInt(platform.is_finish) === 2),
+            callback: () => {
+              this.reload()
+            }
+          }
+        };
+      },
+      orderStatus: false,
+      platformConfig: (item, data, propsSource) => {
+        // data.is_finish == 2 || data.modify_status == 1 || data.check_status == 6;
+        //return { edit, del, check, view, props }
+        let result = {};
+        let source = propsSource['is_finish'];
+        let status = item['is_finish'];
+        result.props = source[status];
+        result.del = parseInt(item.is_hand_record) === 1;
+        if (parseInt(status) === 2) {
+          result.edit = true;
+        }
+        result.view = !result.edit;
+        return result;
+      }
+    };
     props.actions.getCompanyPlatforms();
     props.actions.getSummaryOrderInfo().then(() => {
       this.setState({ loading: false });
     });
   }
+
+  reload = () => {
+    const { actions } = this.props;
+    this.setState({ loading: true });
+    actions.getSummaryOrderInfo().then(() => {
+      this.setState({ loading: false });
+    });
+  };
 
   handleDetail = (type, item, data) => {
     this.setState({
@@ -90,7 +104,7 @@ export default class OrderList extends Component {
           return <OrderCard
             key={key}
             {...connect}
-            {...cardConfig}
+            display={this.cardConfig}
             optional={companySource.platformByCompany}
             data={item}
             onDetail={this.handleDetail}

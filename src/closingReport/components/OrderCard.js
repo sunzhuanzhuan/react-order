@@ -3,7 +3,7 @@ import { Badge, Icon, Divider, Select, Modal, message, Popconfirm } from 'antd';
 import './OrderCard.less';
 import IconText from '../base/IconText';
 import update from 'immutability-helper';
-import OrderSummaryStatus from '../base/OrderSummaryStatus'
+import OrderSummaryStatus from '../base/OrderSummaryStatus';
 
 const Option = Select.Option;
 const orderPlatformStatusMap = {
@@ -115,25 +115,42 @@ export default class OrderCard extends Component {
       });
     }).finally(hide);
   };
+
   removeOrder = (id, order_id, summary_id = this.props.companySource.summaryId) => {
     const hide = message.loading('删除中...', 0);
     this.props.actions.deleteSummaryOrder({
       order_id, summary_id
     }).then(() => {
-      this.props.actions.removeSummaryOrder({ id});
+      this.props.actions.removeSummaryOrder({ id });
     }).finally(hide);
+  };
+
+  // 提交审核
+  submitCheck = (data, successCallback) => {
+    const { actions } = this.props;
+    Modal.confirm({
+      title: '是否确认将本订单的投放数据提交审核？',
+      onOk: hide => {
+        return actions.submitCheckSummaryByOrder({ order_id: data.order_id }).then(() => {
+          message.success('提交审核成功!');
+          successCallback && successCallback()
+        }).finally(hide);
+      }
+    });
+
   };
 
   render() {
     const { addModal } = this.state;
     const { orderActions, optional, data, display, actions } = this.props;
-    const { add, del, check } = orderActions || {};
+    const { add, del, check } = display.orderActions(data) || {};
     const { platform = [] } = data;
     /*.filter((p) => {  return !platform.find(id => id === p.platform_id)});*/
 
     return <div className='order-card-container'>
       <header className='order-card-head'>
-        {display.orderStatus && <OrderSummaryStatus status={data.summary_status} reason={data.externa_reason}/>}
+        {display.orderStatus &&
+        <OrderSummaryStatus status={data.summary_status} reason={data.externa_reason} />}
         <ul className='head-center'>
           <li>订单ID：{data.order_id}</li>
           {data.execution_evidence_code && <li>PO单号：{data.execution_evidence_code}</li>}
@@ -161,7 +178,7 @@ export default class OrderCard extends Component {
               okText="确定"
               cancelText="取消"
               onConfirm={() => {
-                this.removeOrder(data.id, data.order_id)
+                this.removeOrder(data.id, data.order_id);
               }}
             >
               <a id='order-card-container-delete-btn'>
@@ -171,7 +188,8 @@ export default class OrderCard extends Component {
             </Popconfirm>
           }
           {
-            check && <a disabled={true}>
+            check &&
+            <a onClick={() => this.submitCheck(data, check.callback)} disabled={check.disabled}>
               <Icon type="check-circle" />
               <span>提交审核</span>
             </a>
@@ -182,7 +200,7 @@ export default class OrderCard extends Component {
         {
           platform.map(item => {
             let { edit, del, check, view, props } = display.platformConfig(item, data, orderPlatformStatusMap);
-            return <li key={item.platform_id + Math.random()}>
+            return <li key={item.platform_id}>
               <div className='card-item-type'>
                 {item.is_main == 1 ? '主平台' : '分发平台'}{item.is_hand_record == 1 ? '（录入)' : ''}
               </div>

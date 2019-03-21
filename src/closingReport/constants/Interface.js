@@ -18,4 +18,9 @@ export default {
   getProjects: prefix + '/getProject',
   getSummaryListByOrder: prefix + '/summaryList',
   getSummaryList: prefix + '/getSummaryList',
+  getOrderIsFinish: prefix + '/getOrderIsFinish',
+  getCompanyTotalInfo: prefix + '/getCompanyTotalInfo',
+  getSummaryTotalInfo: prefix + '/getSummaryTotalInfo',
+  submitCheckSummaryByOrder: prefix + '/checkOrder',
+  submitCheckSummary: prefix + '/checkSummaryOrder'
 };

@@ -46,7 +46,9 @@ export default class CreateReport extends Component {
       selectedRowKeys: [],
       visible: !summary_name
     };
+    const { actions } = this.props;
     // 获取结案数据单信息接口
+    actions.getCompanyTotalInfo({ company_id });
   }
 
   componentWillUnmount() {
@@ -56,7 +58,13 @@ export default class CreateReport extends Component {
 
   // 提交审核
   submitCheck = () => {
-    const { closingReport: { summaryOrders: { list, source } } } = this.props;
+    const {
+      closingReport: {
+        summaryOrders: { list, source },
+        companySource: { summaryId }
+      },
+      actions
+    } = this.props;
     let validate = list.every(orderKey => {
       let order = source[orderKey];
       return order.platform.every(platform => parseInt(platform.is_finish) === 1);
@@ -65,8 +73,10 @@ export default class CreateReport extends Component {
       Modal.confirm({
         title: '是否确认将本【投放数据汇总单】提交审核？',
         onOk: hide => {
-          console.log('提交审核');
-          // 跳转到  3.7  【投放数据汇总单】详情页
+          return actions.submitCheckSummary({ summary_id: summaryId }).then(() => {
+            message.success('提交审核成功!')
+            this.linkTo('/order/closing-report/detail/summary?summary_id=' + summaryId);
+          }).finally(hide);
         }
       });
 
@@ -152,7 +162,7 @@ export default class CreateReport extends Component {
   }
 
   render() {
-    const { closingReport: { companySource: { summaryId } } } = this.props;
+    const { closingReport: { companySource: { summaryId, companyName, companyPath, beSalesRealName } } } = this.props;
     // 参数错误跳到error
     if (!this.state.companyId) {
       this.handleCancel(null, '/error');
@@ -180,8 +190,8 @@ export default class CreateReport extends Component {
           <div className='content-statistic'>
             <p>结案数据单信息</p>
             <b>名称</b><span>{summaryName || '-'}</span>
-            <b>公司简称</b><span><a href={`${'ss'}/sale/company/detail/company_id/${'111'}`}>保洁大品牌公关</a></span>
-            <b>所属销售</b><span>保洁</span>
+            <b>公司简称</b><span><a target='_blank' href={companyPath}>{companyName || '-'}</a></span>
+            <b>所属销售</b><span>{beSalesRealName || '-'}</span>
           </div>
           <div className="steps-content">
             <C {...select} {...store} />

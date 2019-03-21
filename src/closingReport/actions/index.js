@@ -5,13 +5,20 @@ import { createAction } from 'redux-actions';
 /**
  * 订单列表选择
  */
-  // 获取执行人
+  // 公司基本信息
 export const {
-    getSalesManagers,
-    getSalesManagers_success
-  } = createHttpAction('getSalesManagers', Interface.salesManagers, {
+    getCompanyTotalInfo,
+    getCompanyTotalInfo_success
+  } = createHttpAction('getCompanyTotalInfo', Interface.getCompanyTotalInfo, {
     method: 'get'
   });
+// 获取执行人
+export const {
+  getSalesManagers,
+  getSalesManagers_success
+} = createHttpAction('getSalesManagers', Interface.salesManagers, {
+  method: 'get'
+});
 // 获取公司品牌
 export const {
   getCompanyBrands,
@@ -45,13 +52,20 @@ export const {
 /**
  * 数据单操作
  */
-  // 新建或修改数据单信息
+  // 数据单基本信息
 export const {
-    addOrUpdateSummary,
-    addOrUpdateSummary_success
-  } = createHttpAction('addOrUpdateSummary', Interface.addOrUpdateSummary, {
-    method: 'post'
+    getSummaryTotalInfo,
+    getSummaryTotalInfo_success
+  } = createHttpAction('getSummaryTotalInfo', Interface.getSummaryTotalInfo, {
+    method: 'get'
   });
+// 新建或修改数据单信息
+export const {
+  addOrUpdateSummary,
+  addOrUpdateSummary_success
+} = createHttpAction('addOrUpdateSummary', Interface.addOrUpdateSummary, {
+  method: 'post'
+});
 // 数据单订单详情
 export const {
   getSummaryOrderInfo,
@@ -125,6 +139,21 @@ export const {
   method: 'post'
 });
 
+// 提交审核数据单
+export const {
+  submitCheckSummary
+} = createHttpAction('submitCheckSummary', Interface.submitCheckSummary, {
+  method: 'post'
+});
+
+// 提交审核数据单里的订单
+export const {
+  submitCheckSummaryByOrder
+} = createHttpAction('submitCheckSummaryByOrder', Interface.submitCheckSummaryByOrder, {
+  method: 'post'
+});
+
+
 // 清除创建页面拉取的全部信息
 export const resetCreateReportData = createAction('resetCreateReportData', (data) => {
   return { data };
@@ -133,7 +162,7 @@ export const resetCreateReportData = createAction('resetCreateReportData', (data
  * 订单投放数据汇总列表
  */
 
-// 获取个人下公司简称
+  // 获取个人下公司简称
 export const {
     getCompanyNames
   } = createHttpAction('getCompanyNames', Interface.getCompanyNames, {
@@ -150,14 +179,14 @@ export const {
 // 获取个人下项目
 export const {
   getProjects,
-  getProjects_success,
+  getProjects_success
 } = createHttpAction('getProjects', Interface.getProjects, {
   method: 'get'
 });
 // 订单投放数据汇总列表(订单维度)
 export const {
   getSummaryListByOrder,
-  getSummaryListByOrder_success,
+  getSummaryListByOrder_success
 } = createHttpAction('getSummaryListByOrder', Interface.getSummaryListByOrder, {
   method: 'get'
 });
@@ -165,7 +194,14 @@ export const {
 // 订单投放数据审核列表
 export const {
   getSummaryList,
-  getSummaryList_success,
+  getSummaryList_success
 } = createHttpAction('getSummaryList', Interface.getSummaryList, {
+  method: 'get'
+});
+
+// 订单是否已完善
+export const {
+  getOrderIsFinish
+} = createHttpAction('getOrderIsFinish', Interface.getOrderIsFinish, {
   method: 'get'
 });
