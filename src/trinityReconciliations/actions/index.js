@@ -27,9 +27,21 @@ export const {
   method: 'get'
 });
 
+//汇总单详情detailSummary
+export const {
+  getDetailSummary,
+  getDetailSummary_success
+} = createHttpAction('getDetailSummary', Interface.statement.detailSummary, {
+  method: 'get'
+});
 
-
-
+//汇总单详情detailSummary列表
+export const {
+  getDetailSummaryList,
+  getDetailSummaryList_success
+} = createHttpAction('getDetailSummaryList', Interface.statement.detailSummaryList, {
+  method: 'get'
+});
 
 
 // // 使得添加页面提交可用

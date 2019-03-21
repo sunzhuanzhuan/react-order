@@ -32,12 +32,7 @@ class SummaryTable extends Component {
 					columns={columns}
           dataSource={dataTable}
 					rowKey={(record)=>record.summary_sheet_name}
-					// questAction={this.props.actions.getMissionList}
-					total={50}
-					current={1}
 					pagination={paginationObj}
-					// filterParams={filterParams}
-					// handlePageSize={this.handlePageSize}
 				></Table>
 			</div>
 	}

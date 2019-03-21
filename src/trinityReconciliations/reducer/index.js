@@ -1,10 +1,14 @@
 import { combineReducers } from 'redux';
 import {
   orderList,
-  summaryList
+  summaryList,
+  detailSummaryList,
+  detailSummary
 } from './statement'
 
 export default combineReducers({
   orderList,
-  summaryList
+  summaryList,
+  detailSummaryList,
+  detailSummary
 });

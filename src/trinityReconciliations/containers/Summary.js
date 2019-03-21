@@ -16,12 +16,14 @@ class Summary extends Component {
     super(props, context);
     this.state = {
       page_size:20,
-      filterParams:{}
+      filterParams:{},
+      activeKey:'1'
     };
   }
 
 
   componentWillMount=()=> {
+    console.log(1111111)
     const search = qs.parse(this.props.location.search.substring(1));
     this.queryData({ page: 1, page_size: this.state.page_size, ...search.keys })
   }
@@ -40,9 +42,10 @@ class Summary extends Component {
   }
  //选择查看详情
  handleSelectDetail=(record)=>{
+   console.log(record)
   this.props.history.push({
     pathname: '/order/trinity/reconciliations/detail',
-    search: `?${qs.stringify({ id: record.id})}`,
+    search: `?${qs.stringify({ summary_sheet_id: record.summary_sheet_id})}`,
   });
  }
  //释放汇总单
@@ -59,6 +62,7 @@ class Summary extends Component {
  //切换tab
  handleChangeTab=(activeKey)=>{
     // console.log(activeKey);
+    this.setState({activeKey})
     this.child.handleClear()
     if(activeKey == '2'){
       this.queryData({ page: 1, page_size: this.state.page_size,summary_status:'2' })
@@ -123,21 +127,27 @@ class Summary extends Component {
       <TabPane tab="对账完成" key="2">
         <SummaryFilter
          onRef={this.onRef}
+         handlefilterParams={this.handlefilterParams}
+         questAction={this.queryData}
+         page_size={page_size}
         />
         <SummaryTable
-          loading={loading}
-          columns={column}
-          dataTable={list}
-          paginationObj={paginationObj}
+           loading={loading}
+           columns={column}
+           dataTable={list}
+           paginationObj={paginationObj}
       />
       </TabPane>
       <TabPane tab="已释放" key="3">
         <SummaryFilter
-         onRef={this.onRef}
+        onRef={this.onRef}
+        handlefilterParams={this.handlefilterParams}
+        questAction={this.queryData}
+        page_size={page_size}
         />
         <SummaryTable
-         loading={loading}
-          columns={shiColum}
+          loading={loading}
+          columns={column}
           dataTable={list}
           paginationObj={paginationObj}
       />
