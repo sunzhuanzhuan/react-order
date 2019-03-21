@@ -449,7 +449,7 @@ export const columns = (props) => {
 export const modalParams = {
   "can_label_place_order": {
     modalTitle: "标为三方已下单",
-    children: <LabelPublicOrder />
+    children: LabelPublicOrder
   },
   "can_modify_public_order": {
     modalTitle: "修改三方已下单",

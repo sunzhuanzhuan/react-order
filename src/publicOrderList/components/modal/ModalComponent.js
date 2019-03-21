@@ -3,6 +3,7 @@ import { Modal } from 'antd';
 
 const ModalComponent = (props) => {
   const { modalParams, visible, handleCancel } = props
+  let Children = modalParams.children
   return (
     <Modal
       title={modalParams.modalTitle}
@@ -12,7 +13,9 @@ const ModalComponent = (props) => {
       width={600}
       centered={true}
     >
-      {modalParams.children}
+      <Children
+        handleCancel={handleCancel}
+      />
     </Modal>
   )
 }
