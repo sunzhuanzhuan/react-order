@@ -19,15 +19,15 @@ class ListQuery extends Component {
 		this.props.form.validateFields((err, values) => {
 			if (!err) {
         console.log(values)
-				// let params = values.month ? { ...values, month: values.month.format('YYYYMM') } : { ...values };
-				// const hide = message.loading('查询中，请稍候...');
-				// questAction({ ...params, page: 1, page_size }).then(() => {
-				// 	handlefilterParams(params);
-				// 	hide();
-				// }).catch(() => {
-				// 	message.error('查询失败');
-				// 	hide();
-				// });
+				let params =  { ...values };
+				const hide = message.loading('查询中，请稍候...');
+				questAction({ ...params, page: 1, page_size }).then(() => {
+					handlefilterParams(params);
+					hide();
+				}).catch(() => {
+					message.error('查询失败');
+					hide();
+				});
 			}
 		});
 	}

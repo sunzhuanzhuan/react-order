@@ -32,12 +32,13 @@ export default {
     addOrder:'/finance/statement/import',
     list:'/finance/statement/list',
     listStatement:'/finance/statement/listStatement',
-    deleteSummary:'/finance/statement/deleteStatement',
+    // deleteSummary:'/finance/statement/deleteStatement',
     importSummary:'/finance/statement/importSummary',
     releaseSummary:'/finance/statement/releaseSummary',
     listSummary:'/finance/statement/listSummary',
     detailSummary:'/finance/statement/detailSummary',
-    detailSummaryList:'/finance/statement/detailSummaryList'
+    detailSummaryList:'/finance/statement/detailSummaryList',
+    deleteStatement:'/finance/statement/deleteStatement'
     
   },
   meta:{

@@ -43,6 +43,21 @@ export const {
   method: 'get'
 });
 
+//对账单列表
+export const {
+  getListStatement,
+  getListStatement_success
+} = createHttpAction('getListStatement', Interface.statement.listStatement, {
+  method: 'get'
+});
+
+//删除对账单
+export const {
+  deleteStatement,
+  deleteStatement_success
+} = createHttpAction('deleteStatement', Interface.statement.deleteStatement, {
+  method: 'get'
+});
 
 // // 使得添加页面提交可用
 // export const setAddSubmit = createAction('setAddSubmit', (data) => {

@@ -24,17 +24,17 @@ class List extends Component {
 		});
 	}
 	render(){
-    let {columns,paginationObj,dataTable}=this.props;
+    let {columns,paginationObj,dataTable,loading}=this.props;
     
 
 		return <div className='top-gap'>
 				<Table
+          loading={loading}
 					columns={columns}
           dataSource={dataTable}
 					rowKey='id'
 					// questAction={this.props.actions.getMissionList}
-					total={50}
-					current={1}
+					
 					pagination={paginationObj}
 					// filterParams={filterParams}
 					// handlePageSize={this.handlePageSize}

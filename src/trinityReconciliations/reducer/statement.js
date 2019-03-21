@@ -2,7 +2,8 @@ import {
   getOrderList_success,
   getSummaryList_success,
   getDetailSummary_success,
-  getDetailSummaryList_success
+  getDetailSummaryList_success,
+  getListStatement_success
  } from '../actions'
 import { handleActions } from 'redux-actions';
 
@@ -30,6 +31,14 @@ export const detailSummary = handleActions({
 
 export const detailSummaryList = handleActions({
 	[getDetailSummaryList_success]: (state, action) => {
+    return {...action.payload.data }
+	}
+}, {})
+
+
+//对账单列表
+export const statementList = handleActions({
+	[getListStatement_success]: (state, action) => {
     return {...action.payload.data }
 	}
 }, {})

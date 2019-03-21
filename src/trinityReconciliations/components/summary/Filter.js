@@ -36,11 +36,11 @@ class SummaryFilter extends Component {
 				Object.keys(params['keys']).forEach(item => { !params['keys'][item] && params['keys'][item] !== 0 ? delete params['keys'][item] : null });
 				
         const hide = message.loading('查询中，请稍候...');
-        this.props.history.replace({
-          pathname: '/order/trinity/reconciliations/exportOrder',
-          search: `?${qs.stringify(params)}`,
-        })
-        handlefilterParams(...params.keys);
+        // this.props.history.replace({
+        //   pathname: '/order/trinity/reconciliations/exportOrder',
+        //   search: `?${qs.stringify(params)}`,
+        // })
+        // handlefilterParams(...params.keys);
 				questAction({ ...params.keys, page: 1, page_size }).then(() => {
           handlefilterParams(...params.keys);
           this.props.history.replace({

@@ -354,13 +354,6 @@ export const summaryShiListFunc = (handleSelectDetail) => {
 export const summaryTotalDetailListFunc = () => {
 	return [
 		{
-			title: '序号',
-			dataIndex: 'index',
-			key: 'index',
-			align: 'center',
-      width: 100
-		},
-		{
 			title: '订单号',
 			dataIndex: 'order_id',
 			key: 'order_id',
@@ -471,13 +464,6 @@ export const summaryTotalDetailListFunc = () => {
 //对账列表
 export const stateListFunc = (handleDelete) => {
 	return [
-		{
-			title: '序号',
-			dataIndex: 'index',
-			key: 'index',
-			align: 'center',
-      width: 100
-		},
 		{
 			title: '操作',
 			dataIndex: 'o',
