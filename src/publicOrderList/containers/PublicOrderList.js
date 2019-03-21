@@ -4,7 +4,8 @@ import { connect } from 'react-redux'
 import { Form, Tabs, Table } from 'antd';
 import StatementComponent from '../components/StatementComponent'
 import FilterForm from '../components/filter/FilterForm'
-import { filterFormArr, columns } from '../contants/config'
+import ModalComponent from '../components/modal/ModalComponent'
+import { filterFormArr, columns, modalParams } from '../contants/config'
 import * as publicOrderListActions from '../actions/publicOrderListActions'
 import './PublicOrderList.less'
 const TabPane = Tabs.TabPane;
@@ -13,7 +14,8 @@ class PublicOrderList extends Component {
   constructor(props) {
     super(props)
     this.state = {
-
+      visible: false,
+      key: ''
     }
   }
   componentWillMount() {
@@ -21,8 +23,24 @@ class PublicOrderList extends Component {
     this.props.actions.getPublicOrderList()
   }
   // tab切换
-  changeTab = (key) => {
-    console.log(key)
+  changeTab = (tab) => {
+    console.log(tab)
+  }
+  //弹框出现
+  showModal = (params) => {
+    let key = params.key
+    let data = params.data
+    this.setState({
+      key: key,
+      visible: true
+    })
+  }
+  //弹框消失
+  handleCancel = () => {
+    this.setState({
+      key: '',
+      visible: false
+    })
   }
   render() {
     const { form, publicOrderList } = this.props
@@ -47,9 +65,19 @@ class PublicOrderList extends Component {
         </Tabs>
         <Table
           dataSource={Object.keys(publicOrderList).length != 0 ? publicOrderList.items : []}
-          columns={columns}
+          columns={columns({ showModal: this.showModal })}
           scroll={{ x: 3000 }}
         />
+        {/* 弹框组件 */}
+        {
+          this.state.key == '' ?
+            null :
+            <ModalComponent
+              visible={this.state.visible}
+              modalParams={modalParams[this.state.key]}
+              handleCancel={this.handleCancel}
+            ></ModalComponent>
+        }
       </div>
     </div>
   }
