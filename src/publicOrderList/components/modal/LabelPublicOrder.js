@@ -9,6 +9,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import PlaceOrderTime from './formItem/PlaceOrderTime'
 import SingleAgent from './formItem/SingleAgent'
+import MultiAgent from './formItem/MultiAgent'
 import './ModalComponent.less'
 
 class LabelPublicOrder extends Component {
@@ -40,7 +41,11 @@ class LabelPublicOrder extends Component {
           type="can_label_place_order"
         />
         {/* 本单只有一个平台/代理商 */}
-        <SingleAgent
+        {/* <SingleAgent
+          form={form}
+        /> */}
+        {/* 多个平台/代理商 */}
+        <MultiAgent
           form={form}
         />
       </Form>

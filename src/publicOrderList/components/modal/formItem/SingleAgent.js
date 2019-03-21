@@ -5,6 +5,8 @@
 */
 
 import React from 'react';
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 import { Form } from 'antd';
 const FormItem = Form.Item;
 const SingleAgent = (props) => {
@@ -39,5 +41,20 @@ const SingleAgent = (props) => {
     </div>
   )
 }
+const mapStateToProps = () => {
+  return {
 
-export default SingleAgent
+  }
+}
+
+const mapDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators({
+
+  }, dispatch)
+})
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SingleAgent)
+
