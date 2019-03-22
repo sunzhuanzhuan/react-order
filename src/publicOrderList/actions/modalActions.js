@@ -1,6 +1,6 @@
 import api from '../../api/index'
 import {
-  GET_AGENT, GET_AGENT_DETAIL
+  GET_AGENT, GET_AGENT_DETAIL, RESET_AGENT, RESET_AGENT_DETAIL
 } from '../contants/ActionTypes'
 
 export const getAgent = (params) => (dispatch) => {
@@ -14,6 +14,12 @@ export const getAgent = (params) => (dispatch) => {
   })
 }
 
+export const resetAgent = () => (dispatch) => {
+  dispatch({
+    type: RESET_AGENT
+  })
+}
+
 export const getAgentDetail = (params) => (dispatch) => {
   return api.get('/operator-gateway/trinityAgent/v1/getAgentById', { params }).then((response) => {
     dispatch({
@@ -24,6 +30,13 @@ export const getAgentDetail = (params) => (dispatch) => {
     })
   })
 }
+
+export const resetAgentDetail = () => (dispatch) => {
+  dispatch({
+    type: RESET_AGENT_DETAIL
+  })
+}
+
 
 
 

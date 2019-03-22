@@ -21,6 +21,9 @@ class LabelPublicOrder extends Component {
     }
   }
   componentWillMount() {
+    // 清空代理商列表和详情
+    this.props.actions.resetAgent()
+    this.props.actions.resetAgentDetail()
     //获取媒体平台下所有启用合作平台及启用代理商
     this.props.actions.getAgent({ platformId: this.props.record.account.platform_id }).then(() => {
       // 只有一个平台/代理商
@@ -70,6 +73,7 @@ class LabelPublicOrder extends Component {
             /> :
             <MultiAgent
               form={form}
+              agentList={agentList}
             />
         }
       </Form>

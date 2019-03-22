@@ -7,7 +7,9 @@
 import React from 'react';
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+import AgentDetail from './AgentDetail'
 import { Form, Cascader } from 'antd';
+import * as modalActions from '../../../actions/modalActions'
 
 const FormItem = Form.Item;
 
@@ -20,26 +22,22 @@ class MultiAgent extends React.Component {
   }
   //改变代理商
   handleChange = (value) => {
-    console.log(value)
+    let id = value[1]
+    //获取该代理商的详情
+    this.props.actions.getAgentDetail({ id: id }).then(() => {
+      console.log(this.props.agentDetail)
+    })
+  }
+  //处理数据
+  handleData = (data) => {
+    return data.map(v => {
+      return { ...v, agentName: v.cooperationPlatformName }
+    })
   }
   render() {
-    const { form } = this.props
+    const { form, agentList, agentDetail } = this.props
+    console.log(agentDetail)
     const { getFieldDecorator } = form
-    const options = [{
-      id: 'zhejiang',
-      value: 'Zhejiang',
-      children: [{
-        id: 'hangzhou',
-        value: 'Hangzhou'
-      }]
-    }, {
-      id: 'jiangsu',
-      value: 'Jiangsu',
-      children: [{
-        id: 'nanjing',
-        value: 'Nanjing'
-      }]
-    }];
     return (
       <div className="modalBox-singleAgent">
         <FormItem
@@ -57,34 +55,35 @@ class MultiAgent extends React.Component {
             // initialValue: "1"
           })(
             <Cascader
-              fieldNames={{ label: 'id', value: 'value' }}
-              options={options}
+              fieldNames={{ label: 'agentName', value: 'id', children: 'agentVOList' }}
+              options={agentList.length != 0 ? this.handleData(agentList) : []}
               onChange={this.handleChange}
               style={{ width: "230px" }}
+              placeholder="请选择本单使用平台/代理商"
             />
           )}
         </FormItem>
         {/* 平台/代理商详情 */}
-        <ul>
-          <li>合作方式：周期返款</li>
-          <li>返款比例：10%</li>
-          <li>收款方式：支付宝</li>
-          <li>账号：123456789</li>
-          <li>收款方姓名：XXX</li>
-        </ul>
+        {
+          Object.keys(agentDetail).length == 0 ?
+            null :
+            <AgentDetail
+              agentDetail={agentDetail}
+            />
+        }
       </div>
     )
   }
 }
-const mapStateToProps = () => {
+const mapStateToProps = (state) => {
   return {
-
+    agentDetail: state.publicOrderListReducer.agentDetail
   }
 }
 
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators({
-
+    ...modalActions
   }, dispatch)
 })
 
