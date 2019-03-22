@@ -4,9 +4,10 @@
 
 */
 import React, { Component } from 'react'
-import { Form, Button } from 'antd';
+import { Form, Button, message } from 'antd';
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+import * as modalActions from '../../actions/modalActions'
 import PlaceOrderTime from './formItem/PlaceOrderTime'
 import SingleAgent from './formItem/SingleAgent'
 import MultiAgent from './formItem/MultiAgent'
@@ -16,11 +17,30 @@ class LabelPublicOrder extends Component {
   constructor(props) {
     super(props)
     this.state = {
-
+      type: ""
     }
   }
   componentWillMount() {
-
+    //获取媒体平台下所有启用合作平台及启用代理商
+    this.props.actions.getAgent({ platformId: this.props.record.account.platform_id }).then(() => {
+      // 只有一个平台/代理商
+      if (this.props.agentList.length == 1 && this.props.agentList[0].agentVOList.length == 1) {
+        this.setState({
+          type: 'single'
+        })
+        //获取该代理商的详情
+        let id = this.props.agentList[0].agentVOList[0].id
+        this.props.actions.getAgentDetail({ id: id }).then(() => {
+          console.log(this.props.agentDetail)
+        })
+      } else {
+        this.setState({
+          type: 'multi'
+        })
+      }
+    }).catch(() => {
+      message.error("该媒体平台下启用合作平台及启用代理商获取失败")
+    })
   }
   //提交-标为三方已下单
   submit = (e) => {
@@ -32,7 +52,7 @@ class LabelPublicOrder extends Component {
     });
   }
   render() {
-    const { form, handleCancel } = this.props
+    const { form, handleCancel, agentList, agentDetail } = this.props
     return <div className="modalBox">
       <Form layout="inline">
         {/* 下单时间 */}
@@ -40,14 +60,18 @@ class LabelPublicOrder extends Component {
           form={form}
           type="can_label_place_order"
         />
-        {/* 本单只有一个平台/代理商 */}
-        {/* <SingleAgent
-          form={form}
-        /> */}
-        {/* 多个平台/代理商 */}
-        <MultiAgent
-          form={form}
-        />
+        {
+          this.state.type == "single" ?
+            < SingleAgent
+              form={form}
+              agentId={agentList.length != 0 ? this.props.agentList[0].agentVOList[0].id : ""}
+              agentName={agentList.length != 0 ? agentList[0].agentVOList[0].agentName : ""}
+              agentDetail={Object.keys(agentDetail).length != 0 ? agentDetail : {}}
+            /> :
+            <MultiAgent
+              form={form}
+            />
+        }
       </Form>
       {/* 提交按钮 */}
       <div className="modalBox-btnGroup">
@@ -61,15 +85,16 @@ class LabelPublicOrder extends Component {
   }
 }
 
-const mapStateToProps = () => {
+const mapStateToProps = (state) => {
   return {
-
+    agentList: state.publicOrderListReducer.agentList,
+    agentDetail: state.publicOrderListReducer.agentDetail
   }
 }
 
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators({
-
+    ...modalActions
   }, dispatch)
 })
 

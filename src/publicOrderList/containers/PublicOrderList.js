@@ -15,7 +15,8 @@ class PublicOrderList extends Component {
     super(props)
     this.state = {
       visible: false,
-      key: ''
+      key: '',
+      record: {}
     }
   }
   componentWillMount() {
@@ -32,7 +33,8 @@ class PublicOrderList extends Component {
     let data = params.data
     this.setState({
       key: key,
-      visible: true
+      visible: true,
+      record: { ...data }
     })
   }
   //弹框消失
@@ -76,6 +78,7 @@ class PublicOrderList extends Component {
               visible={this.state.visible}
               modalParams={modalParams[this.state.key]}
               handleCancel={this.handleCancel}
+              record={this.state.record}
             ></ModalComponent>
         }
       </div>

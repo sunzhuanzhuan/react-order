@@ -2,7 +2,7 @@ import React from 'react'
 import { Modal } from 'antd';
 
 const ModalComponent = (props) => {
-  const { modalParams, visible, handleCancel } = props
+  const { modalParams, visible, handleCancel, record } = props
   let Children = modalParams.children
   return (
     <Modal
@@ -15,6 +15,7 @@ const ModalComponent = (props) => {
     >
       <Children
         handleCancel={handleCancel}
+        record={record}
       />
     </Modal>
   )

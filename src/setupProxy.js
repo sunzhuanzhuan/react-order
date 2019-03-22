@@ -6,6 +6,9 @@ module.exports = function (app) {
   app.use(proxy('/api/operator-gateway/trinityPlatform/',
     { target: 'http://47.93.10.229:17071', changeOrigin: true }
   ));
+  app.use(proxy('/api/operator-gateway/trinityAgent/',
+    { target: 'http://47.93.10.229:17071', changeOrigin: true }
+  ));
   app.use(proxy('/api/common-file/',
     { target: 'http://weiboyi-files-service-test.192.168.100.203.nip.io', changeOrigin: true }
   ));
