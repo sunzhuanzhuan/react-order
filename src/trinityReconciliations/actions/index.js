@@ -66,6 +66,36 @@ export const {
 } = createHttpAction('confirmApply', Interface.statement.confirmApply, {
   method: 'get'
 });
+
+//导入token
+export const {
+	getToken,
+	getToken_success
+} = createHttpAction('getToken', Interface.getToken, {
+	method: 'get'
+});
+
+//导入三方对账单
+export const {
+	addOrder,
+	addOrder_success
+} = createHttpAction('addOrder', Interface.statement.addOrder, {
+	method: 'get'
+});
+
+
+//导入三方汇总单
+export const {
+	importSummary,
+	importSummary_success
+} = createHttpAction('importSummary', Interface.statement.importSummary, {
+  method: 'post',
+});
+
+
+
+
+
 // // 使得添加页面提交可用
 // export const setAddSubmit = createAction('setAddSubmit', (data) => {
 //   return data;

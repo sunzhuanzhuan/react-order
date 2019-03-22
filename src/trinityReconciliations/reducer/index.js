@@ -4,7 +4,8 @@ import {
   summaryList,
   detailSummaryList,
   detailSummary,
-  statementList
+  statementList,
+  token
 } from './statement'
 
 export default combineReducers({
@@ -12,5 +13,6 @@ export default combineReducers({
   summaryList,
   detailSummaryList,
   detailSummary,
-  statementList
+  statementList,
+  token
 });

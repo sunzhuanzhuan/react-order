@@ -26,6 +26,7 @@ export default {
 	// 	accountOther: '/operator-gateway/account/v1/updateOtherInfo',
 	// 	accountAudiencePortrait: '/operator-gateway/account/v1/updateAudiencePortrait',
   // },
+  getToken: '/toolbox-gateway/file/v1/getToken',
   statement:{
     orderList:'/finance/statement/orderList',
     exportOrder:'/finance/statement/exportOrder',

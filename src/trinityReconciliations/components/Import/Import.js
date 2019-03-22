@@ -1,29 +1,22 @@
 import React, { Component } from 'react';
-import { Row, Col, Form, Select, Button, Popconfirm, message, Icon, Input } from "antd";
-import './import.less'
+import { Row, Col, Form, Select, Button, Popconfirm, Upload, Icon, message } from "antd";
+import NewUpload from '../newUpload';
+import './import.less';
 
-import { OssUpload } from 'wbyui'
 const FormItem = Form.Item;
 const Option = Select.Option;
-const dataFormat = 'YYYY-MM-DD'
-function beforeUpload(file) {
-	const reg = /^[.\w\u4E00-\u9FFF\s()（）#—~【】[\]-]+$/;
-	const formateName = file.name.replace(/\.\w+$/, '');
-	if (!reg.test(formateName)) {
-		message.error('你上传的文件名包含不支持的特殊字符');
-		return false;
-	} else {
-		return true;
-	}
-}
+
 
 class ListQuery extends Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
       visibleTable:false,
-      num:1,
-      stateTotal:false
+      stateMentList:{},
+      stateTotal:false,
+      summaryList:{},
+      fileList:[]
+
     };
   }
   handleSearch = (e) => {
@@ -31,16 +24,16 @@ class ListQuery extends Component {
 		e.preventDefault();
 		this.props.form.validateFields((err, values) => {
 			if (!err) {
-        console.log(values)
-				// let params = values.month ? { ...values, month: values.month.format('YYYYMM') } : { ...values };
-				// const hide = message.loading('查询中，请稍候...');
-				// questAction({ ...params, page: 1, page_size }).then(() => {
-				// 	handlefilterParams(params);
-				// 	hide();
-				// }).catch(() => {
-				// 	message.error('查询失败');
-				// 	hide();
-				// });
+        
+				const hide = message.loading('查询中，请稍候...');
+				this.props.importSummary( ...this.state.fileList,{ commit: 2 }).then(() => {
+					// handlefilterParams(params);
+					hide();
+				}).catch(() => {
+					message.error('查询失败');
+					hide();
+        });
+        
 			}
 		});
 	}
@@ -50,46 +43,89 @@ class ListQuery extends Component {
 
   componentWillMount() {}
 
-  handleClick=()=>{
-    this.props.form.setFieldsValue({public_order_id_1: '2' });
-    this.setState({
-      visibleTable:true,
-      num:3
-    })
-  }
+  // handleClick=()=>{
+  //   this.props.form.setFieldsValue({public_order_id_1: '2' });
+  //   this.setState({
+  //     visibleTable:true,
+  //     num:3
+  //   })
+  // }
   handleChangeOption=(value)=>{
-    if(value !=' '){
-      this.setState({
-        visibleTable:true,
-        num:2
-      })
-    }else{
-      this.setState({
-        visibleTable:false
+    console.log(value)
+    
+    this.props.addOrder().then((res)=>{
+      console.log(res.data)
+        this.setState({
+          visibleTable:true,
+          stateMentList:res.data
+        })
+    })
+   
+   
+  }
+  handleClickTotal=(value)=>{
+    this.props.importSummary(value).then((res)=>{
+        this.setState({
+          stateTotal:true,
+          summaryList:res.data
+        })
       })
     }
    
-  }
-  handleClickTotal=()=>{
-    this.setState({
-      stateTotal:true
-    })
-  }
+  
   render() {
     let { getFieldDecorator } = this.props.form;
-	
+    let { getToken} =this.props;
+    let {stateMentList,summaryList} = this.state
 		const formItemLayout = {
 			labelCol: { span: 6 },
 			wrapperCol: { span: 18 },
 		};
-
+    const props = {
+			headers: { "Content-Type": "application/x-www-form-urlencoded" },
+			accept: ".xlsx,.xls",
+			showUploadList: true,
+			multiple: false,
+			fileList: null,
+			customRequest: obj => {
+				const hide = message.loading("上传中，请稍候...");
+				const { importSummary } = this.props;
+				const { fileList } = this.state;
+				let content = new window.FormData();
+        content.append('file_path', obj.file); 
+        content.append('commit', 1); 
+				importSummary(content).then((res) => {
+          
+					let ary = [...fileList,
+					{
+						uid: obj.file.uid,
+						name: '已导入' + obj.file.name,
+						status: 'done',
+						url: '',
+					}];
+					this.setState({ 
+            fileList: ary,
+            stateTotal:true,
+           summaryList:res.data
+           });
+					hide();
+					message.success('上传成功！');
+				}).catch(({ errorMsg }) => {
+					hide();
+					message.error(errorMsg || '上传失败！')
+				});
+			}
+		};
     return <div>
      <Form>
 				<Row>
 					
 					<Col span={11}>
 						<FormItem label='请选择关联三方对账单' {...formItemLayout}>
-							{getFieldDecorator('public_order_id_1', { initialValue:'1',rules: [{ required: true, message: '请选择' }], })(
+              {getFieldDecorator('public_order_id_1', { initialValue:'1',
+              rules: [{ required: true, message: '请选择' }],
+              valuePropName: 'fileList',
+             })(
 								<Select
                 style={{ width: '300px' }}
                 onChange={this.handleChangeOption}
@@ -102,14 +138,33 @@ class ListQuery extends Component {
 							)}
 						</FormItem>
 					</Col>
-					<Col span={4}>
+					<Col span={13}>
 						<FormItem label='' {...formItemLayout}>
-							{getFieldDecorator('payment_status', { initialValue: '' })(
-                <Button type="primary" className='left-gap' onClick={this.handleClick}>上传三方对账单</Button>
-              // <OssUpload tok={{ token: '', upload_url: '' }}  size={10} len={5} accept={".zip,.rar,.pdf"}
-              // uploadText={'上传合同扫描件'} beforeUpload={beforeUpload}>
-              // </OssUpload>
-							)}
+              {getFieldDecorator('payment_status', { initialValue: [] ,
+              })(
+                <NewUpload
+                tok={getToken}
+                uploadUrl="/api/common-file/file/v1/uploadPriBucket"
+                len={1}
+                size={50}
+                listType="text"
+                uploadText="请选择要上传的三方对账单"
+                onChange={(file, originFile) =>{
+                  console.log(file[0].filepath);
+                  console.log(originFile);
+                  console.log(file);
+                  this.handleChangeOption(file[0].filepath)
+                }}
+                accept=".xlsx,.xls"
+                btnProps={{
+                  type: 'primary'
+                }}
+                bizzCode="ACCOUNT_STATEMENT_EXCEL_UPLOAD"
+              />
+
+
+              )
+              }
 						</FormItem>
 					</Col>
 
@@ -117,33 +172,35 @@ class ListQuery extends Component {
           <Row>
           { 
             this.state.visibleTable?<div style={{height:'200px',marginTop:'20px'}}>
-            <OptionTable num={this.state.num}/></div>
+            <OptionTable stateMentList={stateMentList}/></div>
             :<div style={{height:'200px'}}></div>
           }
        </Row>
           
         <Row style={{marginTop:'20px'}}>
         <Col span={11}>
-						<FormItem label='请选择要上传的汇总单' {...formItemLayout}>
-							{getFieldDecorator('payment_status', { initialValue: '' ,rules: [{ required: true, message: '请选择' }]})(
-                <Button type="primary" className='left-gap' onClick={this.handleClickTotal}>请选择要上传的汇总单</Button>
-              // <OssUpload tok={{ token: '', upload_url: '' }}  size={10} len={5} accept={".zip,.rar,.pdf"}
-              // uploadText={'上传合同扫描件'} beforeUpload={beforeUpload}>
-              // </OssUpload>
+						<FormItem label='' {...formItemLayout}>
+              {getFieldDecorator('payment_status_1', { initialValue: []
+            })(
+              <Upload {...props}>
+              <Button type="primary" >
+                <Icon type="upload" />请选择要上传的汇总单
+              </Button>
+            </Upload>
 							)}
 						</FormItem>
 					</Col>
         </Row>
         {
         this.state.stateTotal?<div style={{height:'200px',marginTop:'20px'}}>
-        <TotalTable/></div>:<div style={{height:'200px'}}>
+        <TotalTable summaryList={summaryList}/></div>:<div style={{height:'200px'}}>
         </div>
       }
         <Row>
         <Col span={8}></Col>
         <Col span={8}>
         
-            <Button style={{marginRight:'20px'}} onClick={this.handleClickTotal}>取消</Button>
+            <Button style={{marginRight:'20px'}}>取消</Button>
             <Popconfirm title="确认后将改变订单的对账状态，是否确认此操作？" onConfirm={this.handleSearch} okText="确定" cancelText="取消">
               <Button type="primary" className='left-gap'>确认对账</Button>
             </Popconfirm>
@@ -166,29 +223,30 @@ export class OptionTable extends Component{
 
   }
   render(){
+    let {stateMentList}= this.props
     return <div className='statementBox'>
       <Row className='title'>对账单信息</Row>
       <Row className='info'>
         <Col span={12}>
-        三方对账单总数:{this.props.num}
+        三方对账单总数:{stateMentList.total_statement}
         </Col>
         <Col span={12}>
-        扣减订单:
-        </Col>
-      </Row>
-
-      <Row className='info'>
-        <Col span={12}>
-        总金额(元):
-        </Col>
-        <Col span={12}>
-        扣减总金额(元):
+        扣减订单:{stateMentList.deduction_order}
         </Col>
       </Row>
 
       <Row className='info'>
         <Col span={12}>
-        本次应付订单:
+        总金额(元):{stateMentList.bill_total_amount}
+        </Col>
+        <Col span={12}>
+        扣减总金额(元):{stateMentList.deduction_amount}
+        </Col>
+      </Row>
+
+      <Row className='info'>
+        <Col span={12}>
+        待付订单:{stateMentList.wait_pay_order}
         </Col>
         <Col span={12}>
         </Col>
@@ -196,7 +254,7 @@ export class OptionTable extends Component{
 
        <Row className='info'>
         <Col span={12}>
-        应付总金额(元):
+        应付总金额(元):{stateMentList.total_pay_amount}
         </Col>
         <Col span={12}>
         </Col>
@@ -213,32 +271,33 @@ export class TotalTable extends Component{
 
   }
   render(){
+    let {summaryList}= this.props
     return <div className="statementBox">
       <Row className='title'>汇总单信息</Row>
       <Row className='info'>
         <Col span={12}>
-        订单总数:{this.props.num}
+        订单总数:{summaryList.total_order}
         </Col>
         <Col span={12}>
-        总金额(元):
-        </Col>
-      </Row>
-
-      <Row className='info'>
-        <Col span={12}>
-        本次应付订单:
-        </Col>
-        <Col span={12}>
-        应付总金额(元):
+        总金额(元):{summaryList.bill_total_amount}
         </Col>
       </Row>
 
       <Row className='info'>
         <Col span={12}>
-        扣减订单:
+        待付订单:{summaryList.wait_pay_order}
         </Col>
         <Col span={12}>
-        扣减总金额(元):
+        应付总金额(元):{summaryList.total_pay_amount}
+        </Col>
+      </Row>
+
+      <Row className='info'>
+        <Col span={12}>
+        扣减订单:{summaryList.deduction_order}
+        </Col>
+        <Col span={12}>
+        扣减总金额(元):{summaryList.deduction_amount} 
         </Col>
       </Row>
 

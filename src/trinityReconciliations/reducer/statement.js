@@ -3,7 +3,8 @@ import {
   getSummaryList_success,
   getDetailSummary_success,
   getDetailSummaryList_success,
-  getListStatement_success
+  getListStatement_success,
+  getToken_success
  } from '../actions'
 import { handleActions } from 'redux-actions';
 
@@ -42,3 +43,10 @@ export const statementList = handleActions({
     return {...action.payload.data }
 	}
 }, {})
+
+
+//获取token
+
+export const token = handleActions({
+	[getToken_success]: (state, action) => (action.payload.data)
+}, "")
