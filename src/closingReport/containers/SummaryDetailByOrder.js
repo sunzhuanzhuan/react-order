@@ -82,9 +82,6 @@ export default class Test extends Component {
           if (parseInt(status) === 1) {
             result.edit = true;
           }
-          if (item['is_finish'] !== 1) {
-            result.edit = true;
-          }
           result.view = !result.edit;
           return result;
         }

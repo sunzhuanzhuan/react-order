@@ -47,7 +47,10 @@ export default class Test extends Component {
       platformConfig: (item, data, propsSource) => {
         // data.is_finish == 2 || data.modify_status == 1 || data.check_status == 6;
         //return { edit, del, check, view, props }
-        // 待提交内审
+        // 待内审
+        // TODO : 当这个订单下对应的所有平台都变成【已审核】，则订单对应的状态会发生变更
+        // 如果平台里面的数据项都审核通过，订单状态变成【内审通过，待提交品牌方审核】
+        // 如果平台里面的数据项存在一个审核被拒的，则订单状态变成【内审被拒，待修改】
         if (data.summary_status === 2) {
           let result = {};
           let status = item['check_status'];

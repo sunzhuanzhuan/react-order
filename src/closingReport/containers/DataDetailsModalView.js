@@ -9,6 +9,7 @@ import {
 } from '../components/dataDetails';
 import './DataDetailsModal.less';
 import Loading from '../base/Loading';
+import { Agree, Refuse } from "@/closingReport/base/ApprovalStatus";
 
 export default class DataDetailsModalView extends Component {
   constructor(props, context) {
@@ -51,10 +52,22 @@ export default class DataDetailsModalView extends Component {
       {this.state.loading ? <div style={{ height: '600px' }}><Loading/></div> :
         <div>
           <Outline.View data={total} />
-          <BaseInfo.View data={basic_information} />
-          <ExecutionLink.View data={execution_link} />
-          <ExecutionPic.View data={execution_screenshot} />
-          <ExecutionData.View data={execution_data} />
+          <BaseInfo.View data={basic_information} >
+            {parseInt(basic_information.status) === 1 && <Agree />}
+            {parseInt(basic_information.status) === 2 && <Refuse reason={basic_information.reason}/>}
+          </BaseInfo.View>
+          <ExecutionLink.View data={execution_link} >
+            {parseInt(execution_link.status) === 1 && <Agree top={10}/>}
+            {parseInt(execution_link.status) === 2 && <Refuse top={10} reason={execution_link.reason}/>}
+          </ExecutionLink.View>
+          <ExecutionPic.View data={execution_screenshot} >
+            {parseInt(execution_screenshot.status) === 1 && <Agree />}
+            {parseInt(execution_screenshot.status) === 2 && <Refuse reason={execution_screenshot.reason}/>}
+          </ExecutionPic.View>
+          <ExecutionData.View data={execution_data} >
+            {parseInt(execution_data.status) === 1 && <Agree />}
+            {parseInt(execution_data.status) === 2 && <Refuse reason={execution_data.reason}/>}
+          </ExecutionData.View>
         </div>
       }
     </Modal>;

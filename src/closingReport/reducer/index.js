@@ -200,6 +200,7 @@ export const summaryOrders = handleActions({
             $push: [{
               platform_id,
               is_finish: 2,
+              modify_status: 1,
               is_hand_record: 1
             }]
           }
