@@ -61,14 +61,14 @@ export default class SwitchRequiredInput extends Component {
 
   render() {
     const { checked, input } = this.state;
-    const { width = 420, placeholder = '请输入', typeId } = this.props;
+    const { width = 420, placeholder = '请输入', type } = this.props;
     let props = {
       style: { width },
       disabled: checked,
       value: input,
       placeholder
     };
-    let inputType = config[typeId] || 'input'
+    let inputType = type || 'input'
     let inputComponent = null;
     switch (inputType) {
       case 'input':

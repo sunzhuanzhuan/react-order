@@ -4,6 +4,8 @@ import './index.less';
 import SwitchRequiredInput from '../../base/SwitchRequiredInput';
 import DataModuleHeader from '../../base/DataModuleHeader';
 import { Against } from '../../base/ApprovalStatus';
+import DataFieldFormat from '../../base/DataFieldFormat';
+import { fieldConfig } from '../../constants/config';
 
 
 
@@ -44,7 +46,7 @@ export class Edit extends Component {
                   { validator: this.checkSwitchInput, message: `请输入${item.display}!` },
                   { validator: this.validatorUrl(item.link_prefix) }
                 ]
-              })(<SwitchRequiredInput typeId={item.id} />)}
+              })(<SwitchRequiredInput type={fieldConfig(item.id)} />)}
             </Form.Item>;
           })
         }
@@ -71,7 +73,7 @@ export class View extends Component {
               {
                 item.link_prefix ?
                   <a className='value' target="_blank" href={item.value}>{item.value}</a> :
-                  <span className='value' title={item.value}>{item.value}</span>
+                  <span className='value' title={item.value}><DataFieldFormat value={item.checked === 1 ? '无法提供该数据' : item.value}/></span>
               }
             </p>;
           })

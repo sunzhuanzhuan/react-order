@@ -68,7 +68,7 @@ export default class OrderFilterForm extends Component {
                   return `已选${omittedValues.length}项`;
                 }}
               >
-                {source.brandByCompany.map(option => <Option key={option.brand_id}>{option.view_name}</Option>)}
+                {source.projectByCompany.map(option => <Option key={option.project_id}>{option.project_name}</Option>)}
               </Select>
             )}
           </Form.Item>
@@ -87,7 +87,7 @@ export default class OrderFilterForm extends Component {
                   return `已选${omittedValues.length}项`;
                 }}
               >
-                {source.projectByCompany.map(option => <Option key={option.project_id}>{option.project_name}</Option>)}
+                {source.brandByCompany.map(option => <Option key={option.brand_id}>{option.view_name}</Option>)}
               </Select>
             )}
           </Form.Item>

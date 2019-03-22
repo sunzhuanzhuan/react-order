@@ -210,8 +210,10 @@
   }
   .execution-data-fetch-item > .reference-item {
     line-height: 32px;
+    flex: 1;
   }
   p.data-item {
+    flex: 1;
     margin: 0;
     line-height: 32px;
 
@@ -228,12 +230,15 @@
     margin-left: 10px;
     box-sizing: border-box;
     p.data-item{
+      flex: none;
       .title{
-        text-align: right;
-      }
-      .value, .title{
         display: inline-block;
-        width: 50%;
+        text-align: right;
+        width: 35%;
+      }
+      .value{
+        display: inline-block;
+        width: 65%;
       }
     }
   }

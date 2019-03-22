@@ -69,7 +69,10 @@ const columns = [
   }, {
     title: '执行人',
     dataIndex: 'executor_admin_name',
-    align: 'center'
+    align: 'center',
+    render: (name) => {
+      return name || '-'
+    }
   }];
 
 export default class SelectOrders extends Component {

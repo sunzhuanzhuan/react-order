@@ -9,6 +9,8 @@ import request from '@/api';
 import { getImageInfos } from '../../util';
 import viewPic from '../../base/viewPic';
 import { Against } from "@/closingReport/base/ApprovalStatus";
+import DataFieldFormat from '../../base/DataFieldFormat';
+import { fieldConfig } from '../../constants/config';
 
 function action() {
   return request.get('/toolbox-gateway/file/v1/getToken').then(({ data }) => {
@@ -62,14 +64,14 @@ export class Edit extends Component {
               fetchData.map((item, n) => {
                 return <div key={item.id} className='execution-data-fetch-item'>
                   <div className='reference-item'>
-                    {item.display} {item.grasp_value || '-'}
+                    {item.display} <DataFieldFormat value={item.grasp_value}/>
                   </div>
                   <Form.Item label={item.display} {...this.props.formItemLayout}>
                     {getFieldDecorator(`data[${n}]`, {
                       initialValue: { id: item.id, input: item.value, checked: item.checked },
                       validateFirst: true,
                       rules: [{ validator: this.checkSwitchInput, message: `请输入${item.display}!` }]
-                    })(<SwitchRequiredInput width={330} typeId={item.id} />)}
+                    })(<SwitchRequiredInput width={330} type={fieldConfig(item.id)} />)}
                   </Form.Item>
                 </div>;
               })
@@ -120,7 +122,7 @@ export class Edit extends Component {
                     initialValue: { id: item.id, input: item.value, checked: item.checked },
                     validateFirst: true,
                     rules: [{ validator: this.checkSwitchInput, message: `请输入${item.display}!` }]
-                  })(<SwitchRequiredInput width={140} typeId={item.id} />)}
+                  })(<SwitchRequiredInput width={140} type={fieldConfig(item.id)} />)}
                 </Form.Item>;
               })
             }
@@ -205,11 +207,11 @@ export class View extends Component {
               fetchData.map(item => {
                 return <div key={item.id} className='execution-data-fetch-item'>
                   <div className='reference-item'>
-                    {item.display} {item.grasp_value || '-'}
+                    {item.display} <DataFieldFormat value={item.grasp_value}/>
                   </div>
                   <p className='data-item'>
                     <span className='title'>{item.display}：</span>
-                    <span className='value'>{item.checked === 1 ? '无法提供该数据' : item.value}</span>
+                    <span className='value'><DataFieldFormat value={item.checked === 1 ? '无法提供该数据' : item.value}/></span>
                   </p>
                 </div>;
               })
@@ -228,7 +230,7 @@ export class View extends Component {
             inputData.map(item => {
               return <p key={item.id} className='data-item'>
                 <span className='title'>{item.display}：</span>
-                <span className='value'>{item.checked === 1 ? '无法提供该数据' : item.value}</span>
+                <span className='value'><DataFieldFormat value={item.checked === 1 ? '无法提供该数据' : item.value}/></span>
               </p>;
             })
           }
