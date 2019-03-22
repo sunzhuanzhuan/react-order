@@ -39,7 +39,7 @@ export class Edit extends Component {
           data.map((item, n) => {
             return <Form.Item key={item.id} label={item.display} {...this.props.formItemLayout}>
               {getFieldDecorator(`basic_information[${n}]`, {
-                initialValue: { id: item.id, input: item.value, checked: item.checked },
+                initialValue: { id: item.id, input: item.value, checked: item.checked === 1 },
                 validateFirst: true,
                 validateTrigger: ['onChange'],
                 rules: [

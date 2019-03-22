@@ -9,6 +9,7 @@ import {
 } from '../components/dataDetails';
 import './DataDetailsModal.less';
 import DataDetailsReviewWrap from '../components/dataDetails/DataDetailsReviewWrap';
+import Loading from '../base/Loading';
 
 @Form.create()
 export default class DataDetailsModalCheck extends Component {
@@ -24,7 +25,9 @@ export default class DataDetailsModalCheck extends Component {
       this.setState({ loading: false });
     });
   }
-
+  componentWillUnmount() {
+    this.props.actions.clearPlatformData();
+  }
   showConfirm = (values, successCallback) => {
     Modal.confirm({
       title: '是否确认提交审核？',
@@ -69,6 +72,7 @@ export default class DataDetailsModalCheck extends Component {
     </h2>;
     return <Modal
       centered
+      destroyOnClose
       title={title}
       wrapClassName="closing-report-modal-pages data-details"
       visible
@@ -78,7 +82,7 @@ export default class DataDetailsModalCheck extends Component {
       okText='提交结果'
       maskClosable={false}
     >
-      {this.state.loading ? <div style={{ height: '600px' }}>loading...</div> :
+      {this.state.loading ? <div style={{ height: '600px' }}><Loading/></div> :
         <Form>
           <Outline.View data={total} />
           <DataDetailsReviewWrap {...props} field='basic_information'>

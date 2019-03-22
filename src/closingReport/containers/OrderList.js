@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {} from 'antd';
 import OrderCard from '../components/OrderCard';
 import DetailModal from '../base/DetailModal';
+import Loading from '../base/Loading';
 
 
 export default class OrderList extends Component {
@@ -39,8 +40,9 @@ export default class OrderList extends Component {
         return result;
       }
     };
-    props.actions.getCompanyPlatforms();
-    props.actions.getSummaryOrderInfo().then(() => {
+    const { closingReport: { companySource }, actions, companyId } = props
+    actions.getCompanyPlatforms({company_id: companyId});
+    actions.getSummaryOrderInfo({summary_id: companySource.summaryId}).then(() => {
       this.setState({ loading: false });
     });
   }
@@ -64,7 +66,7 @@ export default class OrderList extends Component {
       platformData,
       companySource
     };
-    return loading ? 'loading...' : <div>
+    return loading ? <Loading/> : <div>
       {
         list.map(key => {
           let item = source[key];

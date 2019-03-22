@@ -169,9 +169,12 @@ export const companySource = handleActions({
   }
 }, defaultCompanySource);
 
-// 请求全部订单的数据
+// 请求(公司/数据单纬度)全部订单的数据
 export const selectOrderList = handleActions({
-  [combineActions(getOrders_success)]: handleResponseList('order_id')
+  [combineActions(getOrders_success)]: handleResponseList('order_id'),
+  [combineActions("clearAllOrderList")]: (state, action) => {
+    return initList()
+  }
 }, initList());
 
 // 数据单订单信息(列表)
@@ -220,10 +223,18 @@ export const summaryOrders = handleActions({
     let { platform_id, id, status } = action.payload.data || {};
     //modify_status
     let index = state.source[id].platform.findIndex(({ platform_id: id }) => platform_id == id);
-    return update(state, { source: { [id]: { platform: { [index]: {
-      is_finish: { $set: 1 },
-      modify_status: { $set: 2 },
-    } } } } });
+    return update(state, {
+      source: {
+        [id]: {
+          platform: {
+            [index]: {
+              is_finish: { $set: 1 },
+              modify_status: { $set: 2 }
+            }
+          }
+        }
+      }
+    });
   },
   [combineActions('resetCreateReportData')]: (state, action) => {
     return {
@@ -246,6 +257,15 @@ export const platformData = handleActions({
     };
   },
   [combineActions('resetCreateReportData')]: (state, action) => {
+    return {
+      total: {},
+      basic_information: {},
+      execution_link: {},
+      execution_screenshot: {},
+      execution_data: {}
+    };
+  },
+  [combineActions('clearPlatformData')]: (state, action) => {
     return {
       total: {},
       basic_information: {},

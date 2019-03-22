@@ -126,8 +126,12 @@ export default class CreateReport extends Component {
     const { closingReport: { companySource: { summaryId } } } = this.props;
     const { selectedRowKeys, companyId, summaryName } = this.state;
     if (!selectedRowKeys.length) {
-      message.info('请选择订单');
-      return Promise.reject();
+      if(summaryId){
+        return Promise.resolve()
+      }else {
+        message.info('请选择订单');
+        return Promise.reject();
+      }
     }
     let _msg = message.loading('保存中...');
     const { actions } = this.props;

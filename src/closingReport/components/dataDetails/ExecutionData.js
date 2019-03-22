@@ -8,7 +8,7 @@ import { OssUpload } from 'wbyui';
 import request from '@/api';
 import { getImageInfos } from '../../util';
 import viewPic from '../../base/viewPic';
-import { Against } from "@/closingReport/base/ApprovalStatus";
+import { Against } from '@/closingReport/base/ApprovalStatus';
 import DataFieldFormat from '../../base/DataFieldFormat';
 import { fieldConfig } from '../../constants/config';
 
@@ -43,7 +43,8 @@ export class Edit extends Component {
   render() {
     const { getFieldDecorator } = this.props.form;
     const { data: { data = [], screenshot = [] } } = this.props;
-    const reason = parseInt(this.props.data.status) === 2 ? <Against reason={this.props.data.reason} /> : null;
+    const reason = parseInt(this.props.data.status) === 2 ?
+      <Against reason={this.props.data.reason} /> : null;
     let fetchData = [], inputData = [];
     data.forEach((item) => {
       if (item.source_type === 2) {
@@ -64,11 +65,11 @@ export class Edit extends Component {
               fetchData.map((item, n) => {
                 return <div key={item.id} className='execution-data-fetch-item'>
                   <div className='reference-item'>
-                    {item.display} <DataFieldFormat value={item.grasp_value}/>
+                    {item.display} <DataFieldFormat value={item.grasp_value} />
                   </div>
                   <Form.Item label={item.display} {...this.props.formItemLayout}>
                     {getFieldDecorator(`data[${n}]`, {
-                      initialValue: { id: item.id, input: item.value, checked: item.checked },
+                      initialValue: { id: item.id, input: item.value, checked: item.checked === 1 },
                       validateFirst: true,
                       rules: [{ validator: this.checkSwitchInput, message: `请输入${item.display}!` }]
                     })(<SwitchRequiredInput width={330} type={fieldConfig(item.id)} />)}
@@ -81,45 +82,52 @@ export class Edit extends Component {
         <Divider dashed />
         <div className='input-data'>
           <div className='input-data-left'>
-            <p className='check-demo'>
+            {/*<p className='check-demo'>
               <a onClick={viewPic('https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png')}>查看图例1</a>
               <a>查看图例2</a>
-            </p>
-            <Form.Item>
-              {getFieldDecorator(`screenshot`, {
-                initialValue: (screenshot || []).map(url => ({
-                  uid: url,
-                  name: url.slice(-28),
-                  status: 'done',
-                  url,
-                  thumbUrl: url
-                })),
-                valuePropName: 'fileList',
-                getValueFromEvent: e => e.fileList,
-                rules: [{ required: true, message: '请上传图片' }]
-              })(<OssUpload
-                  authToken={this.state.authToken}
-                  listType='picture'
-                  onPreview={viewPic()}
-                  rule={{
-                    bizzCode: 'B_GZA_ORDER_IMG_NORMAL_UPLOAD',
-                    max: 5,
-                    suffix: 'jpg,jpeg,gif,png'
-                  }}
-                  len={10}
-                  tipContent={() => '图片大小不超过5M，支持jpg、jpeg、gif、png, 最多上传10张'}
-                >
-                  <Button><Icon type="upload" /> 上传文件</Button>
-                </OssUpload>
-              )}
-            </Form.Item>
+            </p>*/}
+            {
+              screenshot.map((item, n) => {
+                return <Form.Item key={item.id}>
+                  {getFieldDecorator(`screenshot[${n}].value`, {
+                    initialValue: (item.value || []).map(url => ({
+                      uid: url,
+                      name: url.slice(-28),
+                      status: 'done',
+                      url,
+                      thumbUrl: url
+                    })),
+                    valuePropName: 'fileList',
+                    getValueFromEvent: e => e.fileList,
+                    rules: [{ required: true, message: '请上传图片' }]
+                  })(<OssUpload
+                      authToken={this.state.authToken}
+                      listType='picture'
+                      onPreview={viewPic()}
+                      rule={{
+                        bizzCode: 'B_GZA_ORDER_IMG_NORMAL_UPLOAD',
+                        max: 5,
+                        suffix: 'jpg,jpeg,gif,png'
+                      }}
+                      len={10}
+                      tipContent={() => '图片大小不超过5M，支持jpg、jpeg、gif、png, 最多上传10张'}
+                    >
+                      <Button><Icon type="upload" /> 上传文件</Button>
+                    </OssUpload>
+                  )}
+                  {getFieldDecorator(`screenshot[${n}].id`, {
+                    initialValue: item.id
+                  })(<input type="hidden" />)}
+                </Form.Item>;
+              })
+            }
           </div>
           <div className='input-data-right'>
             {
               inputData.map((item, n) => {
                 return <Form.Item key={item.id} label={item.display} labelCol={{ span: 8 }} wrapperCol={{ span: 16 }}>
                   {getFieldDecorator(`data[${fetchData.length + n}]`, {
-                    initialValue: { id: item.id, input: item.value, checked: item.checked },
+                    initialValue: { id: item.id, input: item.value, checked: item.checked === 1 },
                     validateFirst: true,
                     rules: [{ validator: this.checkSwitchInput, message: `请输入${item.display}!` }]
                   })(<SwitchRequiredInput width={140} type={fieldConfig(item.id)} />)}
@@ -165,10 +173,12 @@ export class View extends Component {
       items: [],
       loading: true
     };
-    const { data: { screenshot = [] } } = this.props;
-    const imgList = screenshot.map(url => ({
-      src: url
-    }));
+    const { data: { screenshot = {} } } = this.props;
+    const imgList = screenshot.reduce((ary, cur) => {
+      return ary.concat(cur.value.map(url => ({
+        src: url
+      })));
+    }, []);
     Promise.all(imgList.map(url => getImageInfos(url.src))).then(result => {
       let items = result.filter(Boolean).map((img, n) => ({
         src: img.src,
@@ -207,11 +217,11 @@ export class View extends Component {
               fetchData.map(item => {
                 return <div key={item.id} className='execution-data-fetch-item'>
                   <div className='reference-item'>
-                    {item.display} <DataFieldFormat value={item.grasp_value}/>
+                    {item.display} <DataFieldFormat value={item.grasp_value} />
                   </div>
                   <p className='data-item'>
                     <span className='title'>{item.display}：</span>
-                    <span className='value'><DataFieldFormat value={item.checked === 1 ? '无法提供该数据' : item.value}/></span>
+                    <span className='value'><DataFieldFormat value={item.checked === 1 ? '无法提供该数据' : item.value} /></span>
                   </p>
                 </div>;
               })
@@ -222,15 +232,15 @@ export class View extends Component {
       <Divider dashed />
       <div className='input-data'>
         <div className='input-data-left'>
-          {this.state.loading ? <Empty /> :
-            <PhotoSwipe isOpen={true} items={this.state.items} options={options} />}
+          {this.state.loading ? <Empty /> : this.state.items.length ?
+            <PhotoSwipe isOpen={true} items={this.state.items} options={options} />: '暂无截图...'}
         </div>
         <div className='input-data-right'>
           {
             inputData.map(item => {
               return <p key={item.id} className='data-item'>
                 <span className='title'>{item.display}：</span>
-                <span className='value'><DataFieldFormat value={item.checked === 1 ? '无法提供该数据' : item.value}/></span>
+                <span className='value'><DataFieldFormat value={item.checked === 1 ? '无法提供该数据' : item.value} /></span>
               </p>;
             })
           }

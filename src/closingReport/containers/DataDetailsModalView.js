@@ -8,6 +8,7 @@ import {
   ExecutionData
 } from '../components/dataDetails';
 import './DataDetailsModal.less';
+import Loading from '../base/Loading';
 
 export default class DataDetailsModalView extends Component {
   constructor(props, context) {
@@ -22,7 +23,9 @@ export default class DataDetailsModalView extends Component {
       this.setState({ loading: false });
     });
   }
-
+  componentWillUnmount() {
+    this.props.actions.clearPlatformData();
+  }
   render() {
     const { data, platformData } = this.props;
     const {
@@ -37,6 +40,7 @@ export default class DataDetailsModalView extends Component {
     </h2>;
     return <Modal
       centered
+      destroyOnClose
       title={title}
       wrapClassName="closing-report-modal-pages data-details"
       visible
@@ -44,7 +48,7 @@ export default class DataDetailsModalView extends Component {
       onCancel={this.props.closed}
       onOk={this.props.closed}
     >
-      {this.state.loading ? <div style={{ height: '600px' }}>loading...</div> :
+      {this.state.loading ? <div style={{ height: '600px' }}><Loading/></div> :
         <div>
           <Outline.View data={total} />
           <BaseInfo.View data={basic_information} />

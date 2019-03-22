@@ -16,7 +16,8 @@ export default class SummaryReviewFilterForm extends Component {
     this.props.form.validateFields((err, values) => {
       if (!err) {
         console.log('Received values of form: ', values);
-        // 处理params
+        values.company_id = values.company_id && values.company_id.key
+        values.created_at = values.created_at && values.created_at.map(m => m && m.toJSON())
         this.props.getList({...values, page: 1})
       }
     });
@@ -69,7 +70,7 @@ export default class SummaryReviewFilterForm extends Component {
         <Col span={16}>
           <Form.Item label={<EmSpan length={7}>创建时间</EmSpan>}>
             {getFieldDecorator('created_at', {})(
-              <RangePicker style={{ width: '100%' }} />
+              <RangePicker style={{ width: '100%' }}/>
             )}
           </Form.Item>
         </Col>

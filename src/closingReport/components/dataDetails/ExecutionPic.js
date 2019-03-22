@@ -35,10 +35,10 @@ export class Edit extends Component {
     return <div className='platform-data-detail-module execution-pic'>
       <DataModuleHeader title='执行截图' extra={reason} />
       <div style={{ padding: '10px 20px' }}>
-        <p className='check-demo'>
+        {/*<p className='check-demo'>
           <a onClick={viewPic('https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png')}>查看图例1</a>
           <a>查看图例2</a>
-        </p>
+        </p>*/}
         {
           data.map((item, n) => {
             return <Form.Item key={item.id} className='upload-list-inline'>

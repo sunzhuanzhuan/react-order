@@ -1,14 +1,8 @@
 import React, { Component } from 'react';
-import { Checkbox, Input, InputNumber } from 'antd';
+import { Checkbox, Input, InputNumber, DatePicker } from 'antd';
 import './index.less';
+import moment from 'moment';
 
-const config = {
-  '4': 'number',
-  '13': 'number',
-  '14': 'number',
-  '15': 'number',
-  '12': 'number',
-};
 
 export default class SwitchRequiredInput extends Component {
   constructor(props) {
@@ -84,10 +78,17 @@ export default class SwitchRequiredInput extends Component {
           formatter={value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
           parser={value => value.replace(/\$\s?|(,*)/g, '')}
         />;
+        break;
+      case 'datetime':
+        inputComponent = <DatePicker {...props}
+          onChange={this.handleNumberChange}
+          value={moment(input).isValid() ? moment(input) : undefined}
+          showTime
+        />;
     }
     return <div className='switch-required-input'>
       {inputComponent}
-      <Checkbox onChange={this.handleCheckChange} style={checked ? { opacity: 1 } : {}}>无法提供该数据</Checkbox>
+      <Checkbox checked={checked} onChange={this.handleCheckChange} style={checked ? { opacity: 1 } : {}}>无法提供该数据</Checkbox>
     </div>;
   }
 }

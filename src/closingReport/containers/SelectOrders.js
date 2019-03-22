@@ -59,7 +59,6 @@ const columns = [
   }, {
     title: '状态',
     dataIndex: 'execution_status_name',
-    align: 'center',
     render: (name, record) => {
       return <div>
         <div>订单状态：{record.status_name || '-'}</div>
@@ -103,6 +102,9 @@ export default class SelectOrders extends Component {
 
   componentDidMount() {
     this.getList();
+  }
+  componentWillUnmount() {
+    this.props.actions.clearAllOrderList()
   }
 
   render() {

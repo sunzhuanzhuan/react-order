@@ -165,6 +165,16 @@ export const {
 export const resetCreateReportData = createAction('resetCreateReportData', (data) => {
   return { data };
 });
+
+// 清除平台详细信息数据
+export const clearPlatformData = createAction('clearPlatformData', (data) => {
+  return { data };
+});
+
+// 清除全部可选订单
+export const clearAllOrderList = createAction('clearAllOrderList', (data) => {
+  return { data };
+});
 /**
  * 订单投放数据汇总列表
  */

@@ -10,6 +10,7 @@ import { connect } from 'react-redux';
 import DetailModal from '../base/DetailModal';
 import SelectOrders from './SelectOrders';
 import difference from 'lodash/difference';
+import Loading from '../base/Loading';
 
 
 const TabPane = Tabs.TabPane;
@@ -106,7 +107,9 @@ export default class Test extends Component {
     };
     const { actions } = this.props;
     // 获取结案数据单信息
-    actions.getSummaryTotalInfo({ summary_id });
+    actions.getSummaryTotalInfo({ summary_id }).then(({ data }) => {
+      actions.getCompanyPlatforms({ company_id: data.company_id });
+    });
     actions.getSummaryOrderInfo({ summary_id }).then(() => {
       this.setState({ loading: false });
     });
@@ -151,7 +154,7 @@ export default class Test extends Component {
           title: data.order_ids + '， 已被其他【投放数据汇总单】选中且保存了，已自动为您取消勾选'
         });
       } else {
-        this.reload()
+        this.reload();
         this.setState({ addModal: false });
       }
     }).finally(_msg);
@@ -204,7 +207,8 @@ export default class Test extends Component {
       <PageHeader
         onBack={() => this.props.history.push('/order/closing-report/list/summary-order')}
         title="结案数据单详情页"
-        extra={<Button type='primary' ghost onClick={() => this.setState({ addModal: true })}>添加订单</Button>}
+        extra={
+          <Button type='primary' ghost onClick={() => this.setState({ addModal: true })}>添加订单</Button>}
       >
         <div style={{ padding: '20px 15px' }}>
           <span>
@@ -221,7 +225,7 @@ export default class Test extends Component {
         </div>
         <SH2 />
       </PageHeader>
-      {loading ? 'loading...' : <div>
+      {loading ? <Loading /> : <div>
         <Tabs
           animated={{ tabPane: false }}
           activeKey={tableActive}
@@ -243,7 +247,7 @@ export default class Test extends Component {
               data={item}
               onDetail={this.handleDetail}
             />;
-          }): <Empty/>
+          }) : <Empty />
         }
         <DetailModal
           {...connect}

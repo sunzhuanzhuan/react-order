@@ -69,7 +69,7 @@ export default class RadioLink extends Component {
           {this.state.radio === 2 ? <Input onChange={this.handleLinkChange} style={{
             width: 400,
             marginLeft: 10
-          }} /> : null}</Radio>
+          }} value={this.state.link}/> : null}</Radio>
       </RadioGroup>
     </div>;
   }

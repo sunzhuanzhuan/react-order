@@ -8,6 +8,7 @@ import { bindActionCreators } from 'redux';
 import * as actions from '../actions';
 import { connect } from 'react-redux';
 import DetailModal from '../base/DetailModal';
+import Loading from '../base/Loading';
 
 
 const TabPane = Tabs.TabPane;
@@ -142,7 +143,7 @@ export default class Test extends Component {
         </div>
         <SH2 />
       </PageHeader>
-      {loading ? 'loading...' : <div>
+      {loading ? <Loading/> : <div>
         <Tabs
           animated={{ tabPane: false }}
           activeKey={tableActive}

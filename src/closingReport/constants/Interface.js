@@ -17,7 +17,7 @@ export default {
   getCompanyNames: prefix + '/getCompanyName',
   getBrands: prefix + '/getBrand',
   getProjects: prefix + '/getProject',
-  getSummaryListByOrder: prefix + '/summaryList',
+  getSummaryListByOrder: prefix + '/getSummaryOrderList',
   getSummaryList: prefix + '/getSummaryList',
   getOrderIsFinish: prefix + '/getOrderIsFinish',
   getCompanyTotalInfo: prefix + '/getCompanyTotalInfo',

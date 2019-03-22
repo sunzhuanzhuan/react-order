@@ -9,6 +9,7 @@ import {
 } from '../components/dataDetails';
 import './DataDetailsModal.less';
 import { Against, Agree } from '../base/ApprovalStatus';
+import Loading from '../base/Loading';
 
 
 const formItemLayout = {
@@ -30,6 +31,10 @@ export default class DataDetailsModalEdit extends Component {
     });
   }
 
+  componentWillUnmount() {
+    this.props.actions.clearPlatformData();
+  }
+
   handleSubmitData = (value) => {
     let result = {};
     let {
@@ -37,7 +42,7 @@ export default class DataDetailsModalEdit extends Component {
       execution_link = [],
       execution_screenshot = [],
       data = [],
-      screenshot = {}
+      screenshot = []
     } = value;
     result.basic_information = basic_information.map(item => ({
       id: item.id,
@@ -58,7 +63,10 @@ export default class DataDetailsModalEdit extends Component {
       value: item.input,
       checked: item.checked ? 1 : 2
     }));
-    result.screenshot = screenshot.map(file => file.url);
+    result.screenshot = screenshot.map(item => ({
+      id: item.id,
+      value: (item.value || []).map(file => file.url)
+    }));
     return result;
   };
 
@@ -87,15 +95,15 @@ export default class DataDetailsModalEdit extends Component {
         return actions.updatePlatformInfo({
           ...values,
           order_id: data.order_id,
+          is_finish: 1,
           platform_id: data.current.platform_id
         }).then(() => {
           message.success('保存成功!');
           actions.submitPlatformInfo({
             id: data.id,
             platform_id: data.current.platform_id,
-            is_finish: 1,
             status: data.summary_status
-          })
+          });
           this.props.closed();
         });
       }
@@ -127,13 +135,14 @@ export default class DataDetailsModalEdit extends Component {
       <small>订单ID：{data.order_id}</small>
     </h2>;
     const footer = <div className='data-details-footer'>
-      <Icon type="exclamation-circle" />
-      <span>说明: 若勾选无法提供该数据，则。。。。。。</span>
+      {/*<Icon type="exclamation-circle" />*/}
+      <span> </span>
       <Button onClick={this.save}>保存</Button>
       <Button type='primary' onClick={this.submit}>保存并提交</Button>
     </div>;
     return <Modal
       centered
+      destroyOnClose
       title={title}
       wrapClassName="closing-report-modal-pages data-details"
       visible
@@ -142,7 +151,7 @@ export default class DataDetailsModalEdit extends Component {
       footer={footer}
       maskClosable={false}
     >
-      {this.state.loading ? <div style={{ height: '600px' }}>loading...</div> :
+      {this.state.loading ? <div style={{ height: '600px' }}><Loading/></div> :
         <Form>
           <Outline.View data={total} />
           {

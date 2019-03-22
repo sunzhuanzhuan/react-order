@@ -8,6 +8,7 @@ import { bindActionCreators } from 'redux';
 import * as actions from '../actions';
 import { connect } from 'react-redux';
 import DetailModal from '../base/DetailModal';
+import Loading from '../base/Loading';
 
 const mapStateToProps = (state) => ({
   common: state.commonReducers,
@@ -81,6 +82,9 @@ export default class Test extends Component {
           if (parseInt(status) === 1) {
             result.edit = true;
           }
+          if (item['is_finish'] !== 1) {
+            result.edit = true;
+          }
           result.view = !result.edit;
           return result;
         }
@@ -99,7 +103,9 @@ export default class Test extends Component {
     };
     const { actions } = this.props;
     // 获取结案数据单信息
-    actions.getSummaryTotalInfo({ summary_id });
+    actions.getSummaryTotalInfo({ summary_id }).then(({ data }) => {
+      actions.getCompanyPlatforms({ company_id: data.company_id });
+    });
     actions.getSummaryOrderInfo({ summary_id, order_id }).then(() => {
       this.setState({ loading: false });
     });
@@ -158,7 +164,7 @@ export default class Test extends Component {
         </div>
         <SH2 />
       </PageHeader>
-      {loading ? 'loading...' : <div style={{marginTop: '20px'}}>
+      {loading ? <Loading/> : <div style={{marginTop: '20px'}}>
         {
           list.length ? list.map(key => {
             let item = source[key];
