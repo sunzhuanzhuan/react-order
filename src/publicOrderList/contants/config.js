@@ -87,10 +87,11 @@ export const filterFormArr = [
       wrapperCol: { span: 17 }
     }
   },
-  // {
-  //   label: "主账号名",
-  //   type: "input"
-  // },
+  {
+    label: "主账号名",
+    type: "input",
+    id: "main_user_name"
+  },
   {
     label: "是否提前打款",
     type: "select",
