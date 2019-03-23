@@ -263,6 +263,7 @@ export default class Test extends Component {
         wrapClassName="closing-report-modal-pages data-details"
         visible
         width={1000}
+        bodyStyle={{minHeight: '600px'}}
         onCancel={() => this.setState({ addModal: false })}
         onOk={this.addOrders}
       >
