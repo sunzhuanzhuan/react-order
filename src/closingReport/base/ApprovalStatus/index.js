@@ -18,7 +18,7 @@ export const Against = props => {
 };
 // Refuse
 export const Refuse = ({text = '未通过', deg = -18, top = 40, right = 30, reason}) => {
-  return <div>
+  return <div style={{width: "100%"}}>
     <div className='refuse-status' style={{transform: `rotate(${deg}deg)`, top: `${top}px`, right: `${right}px`}}>
       {text}
     </div>

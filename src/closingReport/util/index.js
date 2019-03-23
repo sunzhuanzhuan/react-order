@@ -75,14 +75,25 @@ export function getImageInfos(src) {
     // 加载完成执行
     img.onload = () => resolve(img);
     img.onerror = () => {
-      let errorImg = new window.Image()
-      errorImg.src = require('../image/errorImg.png')
-      errorImg.width = 380
-      errorImg.height = 490
-      return resolve(errorImg)
+      let errorImg = new window.Image();
+      errorImg.src = require('../image/errorImg.png');
+      errorImg.width = 380;
+      errorImg.height = 490;
+      return resolve(errorImg);
     };
   });
 }
+/**
+ * 处理时间字符串
+ */
+export function datetimeValidate(dateString) {
+  if (!dateString) {
+    return null;
+  }
+  if (dateString === '0000-00-00 00:00:00') {
+    return null;
+  }
+  return dateString;
+}
 
-
-export default { uploadUrl, checkVal, handleReason, date2moment, getImageInfos };
+export default { uploadUrl, checkVal, handleReason, date2moment, getImageInfos, datetimeValidate };

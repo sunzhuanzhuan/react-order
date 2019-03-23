@@ -8,6 +8,7 @@ import { bindActionCreators } from 'redux';
 import * as actions from '../actions';
 import { connect } from 'react-redux';
 import OrderSummaryStatus from '../base/OrderSummaryStatus';
+import { datetimeValidate } from '../util';
 
 const mapStateToProps = (state) => ({
   common: state.commonReducers,
@@ -82,7 +83,12 @@ export default class SummaryListByOrder extends Component {
       }, {
         title: '公司简称',
         width: 150,
-        dataIndex: 'company_name'
+        dataIndex: 'company_name',
+        render: (name, record) => {
+          return <div style={{ 'wordBreak': 'break-all' }}>
+            {name || '-'}
+          </div>;
+        }
       }, {
         title: '销售/执行人',
         dataIndex: 'real_name',
@@ -97,10 +103,11 @@ export default class SummaryListByOrder extends Component {
         dataIndex: 'submitter_at',
         width: 230,
         render: (date, record) => {
-          return date ? <div>
-            <div>提交：{date || '-'}</div>
-            {record.internal_check_at && <div>内审：{record.internal_check_at}</div>}
-            {record.external_check_at && <div>品牌审核：{record.external_check_at}</div>}
+          return datetimeValidate(date) ? <div>
+            <div>提交：{date}</div>
+            {datetimeValidate(record.internal_check_at) && <div>内审：{record.internal_check_at}</div>}
+            {datetimeValidate(record.external_check_at) &&
+            <div>品牌审核：{record.external_check_at}</div>}
           </div> : '-';
         }
       }, {
@@ -130,6 +137,7 @@ export default class SummaryListByOrder extends Component {
     actions.getSalesManagers();
     actions.getExecutor();
   }
+
   submitCheck = (order_id, isRecheck) => {
     const { actions } = this.props;
     if (isRecheck) {
@@ -171,21 +179,33 @@ export default class SummaryListByOrder extends Component {
   };
 
   removeOrder = (order_id, summary_id) => {
-    if(this.orderDel) return
-    this.orderDel = true
+    if (this.orderDel) return;
+    this.orderDel = true;
     const hide = message.loading('删除中...', 0);
     this.props.actions.deleteSummaryOrder({
       order_id, summary_id
     }).then(() => {
-      this.getList()
+      this.getList();
     }).finally(() => {
-      this.orderDel = false
-      hide()
+      this.orderDel = false;
+      hide();
     });
   };
   getList = (params = {}) => {
     const { actions } = this.props;
     let search = { ...this.state.search, ...params };
+    if (params['order_id'] || params['execution_evidence_code'] || params['requirement_id']) {
+      search['order_id'] = params['order_id'];
+      search['execution_evidence_code'] = params['execution_evidence_code'];
+      search['requirement_id'] = params['requirement_id'];
+    }
+
+    if (params['external_check_at'] || params['internal_check_at'] || params['submitter_at']) {
+      search['external_check_at'] = params['external_check_at'];
+      search['internal_check_at'] = params['internal_check_at'];
+      search['submitter_at'] = params['submitter_at'];
+    }
+
     this.setState({ listLoading: true, search });
     actions.getSummaryListByOrder(search).finally(() => {
       this.setState({ listLoading: false });

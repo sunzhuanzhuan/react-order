@@ -8,6 +8,17 @@ const { RangePicker } = DatePicker;
 const InputGroup = Input.Group;
 const Option = Select.Option;
 
+function handleValue(values) {
+  values['order_id'] = values['order_id'] && values['order_id'].trim().split(/\s+/g);
+  values['execution_evidence_code'] = values['execution_evidence_code'] && values['execution_evidence_code'].trim().split(/\s+/g);
+  values['requirement_id'] = values['requirement_id'] && values['requirement_id'].trim().split(/\s+/g);
+  values.company_id = values.company_id && values.company_id.key;
+  values.external_check_at = values.external_check_at && values.external_check_at.map(m => m && m.toJSON());
+  values.internal_check_at = values.internal_check_at && values.internal_check_at.map(m => m && m.toJSON());
+  values.submitter_at = values.submitter_at && values.submitter_at.map(m => m && m.toJSON());
+  return values;
+}
+
 @Form.create()
 export default class SummaryOrderFilterForm extends Component {
   state = {
@@ -20,19 +31,13 @@ export default class SummaryOrderFilterForm extends Component {
       if (!err) {
         console.log('Received values of form: ', values);
         // 处理params
-        values['order_id'] = values['order_id'] && values['order_id'].trim().split(/\s+/g)
-        values['execution_evidence_code'] = values['execution_evidence_code'] && values['execution_evidence_code'].trim().split(/\s+/g)
-        values['requirement_id'] = values['requirement_id'] && values['requirement_id'].trim().split(/\s+/g)
-        this.props.getList({...values, page: 1})
+        values = handleValue(values);
+        this.props.getList({ ...values, page: 1 });
       }
     });
   };
   handleReset = () => {
     this.props.form.resetFields();
-  };
-  toggle = () => {
-    const { expand } = this.state;
-    this.setState({ expand: !expand });
   };
   validatorBatchId = (rule, value, callback) => {
     if (value && value.trim().split(/\s+/g).length > 200) {
@@ -50,7 +55,8 @@ export default class SummaryOrderFilterForm extends Component {
           <Form.Item label="公司简称">
             {getFieldDecorator('company_id', {
               initialValue: this.props.execution_status
-            })(<SearchSelect placeholder="请输入并从下拉框选择" action={actions.getCompanyNames} wordKey='name'
+            })(
+              <SearchSelect placeholder="请输入并从下拉框选择" action={actions.getCompanyNames} wordKey='name'
                 mapResultItemToOption={({ company_id, name } = {}) => ({
                   value: company_id,
                   label: name
@@ -92,7 +98,8 @@ export default class SummaryOrderFilterForm extends Component {
                   return `已选${omittedValues.length}项`;
                 }}
               >
-                {source.brandByUser.map(option => <Option key={option.id}>{option.view_name}</Option>)}
+                {source.brandByUser.map(option =>
+                  <Option key={option.id}>{option.view_name}</Option>)}
               </Select>
             )}
           </Form.Item>

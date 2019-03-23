@@ -4,6 +4,7 @@ import './OrderCard.less';
 import IconText from '../base/IconText';
 import update from 'immutability-helper';
 import OrderSummaryStatus from '../base/OrderSummaryStatus';
+import { datetimeValidate } from '../util';
 
 const Option = Select.Option;
 const orderPlatformStatusMap = {
@@ -155,12 +156,12 @@ export default class OrderCard extends Component {
           <li>订单ID：{data.order_id}</li>
           {data.execution_evidence_code && <li>PO单号：{data.execution_evidence_code}</li>}
           <li>需求名：{data.requirement_name}</li>
-          {!display.dateTimeRecord || !data.submitter_at || data.submitter_at === '0000-00-00 00:00:00' ? null :
-            <li>{data.submitter_name} 提交于 {data.submitter_at}</li>}
-          {!display.dateTimeRecord || !data.internal_check_at || data.internal_check_at === '0000-00-00 00:00:00' ? null :
-            <li>内审于 {data.internal_check_at}</li>}
-          {!display.dateTimeRecord || !data.external_check_at || data.external_check_at === '0000-00-00 00:00:00' ? null :
-            <li>品牌 审核于 {data.external_check_at}</li>}
+          {display.dateTimeRecord && datetimeValidate(data.submitter_at) &&
+          <li>{data.submitter_name} 提交于 {data.submitter_at}</li>}
+          {display.dateTimeRecord && datetimeValidate(data.internal_check_at) &&
+          <li>内审于 {data.internal_check_at}</li>}
+          {display.dateTimeRecord && datetimeValidate(data.external_check_at) &&
+          <li>品牌 审核于 {data.external_check_at}</li>}
         </ul>
         <div className='head-right'>
           {
@@ -207,10 +208,10 @@ export default class OrderCard extends Component {
               <div className='card-item-name'>
                 <IconText platform={item.platform_id} text={item.weibo_name || '-'} />
               </div>
-              {!item.update_at || item.update_at === '0000-00-00 00:00:00' ? null :
-                <div className='card-item-info'>
-                  {item.modify_name} 提交于{item.update_at}
-                </div>}
+              {datetimeValidate(item.update_at) &&
+              <div className='card-item-info'>
+                {item.modify_name} 提交于{item.update_at}
+              </div>}
               <div className='card-item-status'>
                 {props ? <Badge {...props} /> : null}
               </div>

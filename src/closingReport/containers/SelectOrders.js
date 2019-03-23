@@ -94,6 +94,11 @@ export default class SelectOrders extends Component {
   getList = (params = {}) => {
     const { actions } = this.props;
     let search = { ...this.state.search, ...params };
+    if (params['order_id'] || params['requirement_id'] || params['execution_evidence_code']) {
+      search['order_id'] = params['order_id'];
+      search['requirement_id'] = params['requirement_id'];
+      search['execution_evidence_code'] = params['execution_evidence_code'];
+    }
     this.setState({ listLoading: true, search });
     actions.getOrders(search).finally(() => {
       this.setState({ listLoading: false });
