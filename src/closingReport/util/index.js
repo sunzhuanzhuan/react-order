@@ -95,5 +95,39 @@ export function datetimeValidate(dateString) {
   }
   return dateString;
 }
+/**
+ * 处理moment 或者 [moment,...] 为 'YYYY-MM-DD HH:mm:ss'
+ */
+export function moment2dateStr(datetime) {
+  if (!datetime) return datetime;
+  if (Array.isArray(datetime)) {
+    return datetime.map(m => {
+      return moment2dateStr(m);
+    });
+  }
+  if (moment(datetime).isValid()) {
+    return moment(datetime).format('YYYY-MM-DD HH:mm:ss');
+  }
+  return datetime;
+}
+// 处理批量查询
+export function batchText2Array(batchText) {
+  // /\s+|,|，/g
+  if (!batchText) return batchText;
+  if (typeof batchText === 'string') {
+    return batchText.trim().split(/\s+/g).filter(Boolean)
+  }
+  return batchText;
+}
 
-export default { uploadUrl, checkVal, handleReason, date2moment, getImageInfos, datetimeValidate };
+
+export default {
+  uploadUrl,
+  checkVal,
+  handleReason,
+  date2moment,
+  getImageInfos,
+  datetimeValidate,
+  moment2dateStr,
+  batchText2Array
+};

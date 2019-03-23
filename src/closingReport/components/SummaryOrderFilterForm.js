@@ -1,21 +1,21 @@
 import React, { Component } from 'react';
-import { Form, Input, Row, Col, Select, Button, DatePicker, Icon } from 'antd';
+import { Form, Input, Row, Col, Select, Button, DatePicker } from 'antd';
 import EmSpan from '../base/EmSpan';
 import SearchSelect from '../../base/SearchSelect';
-import * as actions from '../actions';
+import { batchText2Array, moment2dateStr } from '../util';
 
 const { RangePicker } = DatePicker;
 const InputGroup = Input.Group;
 const Option = Select.Option;
 
 function handleValue(values) {
-  values['order_id'] = values['order_id'] && values['order_id'].trim().split(/\s+/g);
-  values['execution_evidence_code'] = values['execution_evidence_code'] && values['execution_evidence_code'].trim().split(/\s+/g);
-  values['requirement_id'] = values['requirement_id'] && values['requirement_id'].trim().split(/\s+/g);
+  values['order_id'] = batchText2Array(values['order_id']);
+  values['execution_evidence_code'] = batchText2Array(values['execution_evidence_code']);
+  values['requirement_id'] = batchText2Array(values['requirement_id']);
   values.company_id = values.company_id && values.company_id.key;
-  values.external_check_at = values.external_check_at && values.external_check_at.map(m => m && m.toJSON());
-  values.internal_check_at = values.internal_check_at && values.internal_check_at.map(m => m && m.toJSON());
-  values.submitter_at = values.submitter_at && values.submitter_at.map(m => m && m.toJSON());
+  values.external_check_at = moment2dateStr(values.external_check_at);
+  values.internal_check_at = moment2dateStr(values.internal_check_at);
+  values.submitter_at = moment2dateStr(values.submitter_at);
   return values;
 }
 
@@ -29,7 +29,6 @@ export default class SummaryOrderFilterForm extends Component {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        console.log('Received values of form: ', values);
         // 处理params
         values = handleValue(values);
         this.props.getList({ ...values, page: 1 });

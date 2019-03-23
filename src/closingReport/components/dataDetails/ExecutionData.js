@@ -56,7 +56,7 @@ export class Edit extends Component {
     return <div className='platform-data-detail-module execution-data'>
       <DataModuleHeader title='执行数据' extra={reason} />
       <div style={{ paddingTop: '10px' }}>
-        <div className='fetch-data'>
+        {fetchData.length ? <div className='fetch-data'>
           <div className='fetch-data-reference'>
             抓取参考数据
           </div>
@@ -78,10 +78,10 @@ export class Edit extends Component {
               })
             }
           </div>
-        </div>
-        <Divider dashed />
+        </div> : null}
+        {fetchData.length ? <Divider dashed /> : null}
         <div className='input-data'>
-          <div className='input-data-left'>
+          {screenshot.length ? <div className='input-data-left'>
             {/*<p className='check-demo'>
               <a onClick={viewPic('https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png')}>查看图例1</a>
               <a>查看图例2</a>
@@ -121,7 +121,7 @@ export class Edit extends Component {
                 </Form.Item>;
               })
             }
-          </div>
+          </div> : null}
           <div className='input-data-right'>
             {
               inputData.map((item, n) => {
@@ -173,7 +173,7 @@ export class View extends Component {
       items: [],
       loading: true
     };
-    const { data: { screenshot = {} } } = this.props;
+    const { data: { screenshot = [] } } = this.props;
     const imgList = screenshot.reduce((ary, cur) => {
       return ary.concat(cur.value.map(url => ({
         src: url
@@ -194,7 +194,7 @@ export class View extends Component {
   }
 
   render() {
-    const { data: { data = [] } } = this.props;
+    const { data: { data = [], screenshot = [] } } = this.props;
     let fetchData = [], inputData = [];
     data.forEach((item) => {
       if (item.source_type === 2) {
@@ -208,7 +208,7 @@ export class View extends Component {
         <div className='read-left-head'>
           执行数据
         </div>
-        <div className='read-right-data'>
+        {fetchData.length ? <div className='read-right-data'>
           <div className='fetch-data-reference'>
             抓取参考数据
           </div>
@@ -227,14 +227,14 @@ export class View extends Component {
               })
             }
           </div>
-        </div>
+        </div> : null}
       </div>
-      <Divider dashed />
+      {fetchData.length ? <Divider dashed /> : null}
       <div className='input-data'>
-        <div className='input-data-left'>
+        {screenshot.length ? <div className='input-data-left'>
           {this.state.loading ? <Empty /> : this.state.items.length ?
-            <PhotoSwipe isOpen={true} items={this.state.items} options={options} />: '暂无截图...'}
-        </div>
+            <PhotoSwipe isOpen={true} items={this.state.items} options={options} /> : '暂无截图...'}
+        </div> : null}
         <div className='input-data-right'>
           {
             inputData.map(item => {

@@ -1,6 +1,8 @@
+/* eslint-disable no-self-assign */
 import React, { Component } from 'react';
 import { Form, Input, Row, Col, Select, Button, DatePicker, Icon } from 'antd';
 import EmSpan from '../base/EmSpan';
+import { batchText2Array, moment2dateStr } from '../util';
 
 const { RangePicker } = DatePicker;
 const InputGroup = Input.Group;
@@ -17,13 +19,17 @@ export default class OrderFilterForm extends Component {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        console.log('Received values of form: ', values);
         // reset select
         this.props.onSelectChange([])
         // 处理params
-        values['order_id'] = values['order_id'] && values['order_id'].trim().split(/\s+/g)
-        values['execution_evidence_code'] = values['execution_evidence_code'] && values['execution_evidence_code'].trim().split(/\s+/g)
-        values['requirement_id'] = values['requirement_id'] && values['requirement_id'].trim().split(/\s+/g)
+        values['order_id'] = batchText2Array(values['order_id'])
+        values['execution_evidence_code'] = batchText2Array(values['execution_evidence_code'])
+        values['requirement_id'] = batchText2Array(values['requirement_id'])
+
+        values['time_type_1'] = moment2dateStr(values['time_type_1']);
+        values['time_type_2'] = moment2dateStr(values['time_type_2']);
+        values['time_type_3'] = moment2dateStr(values['time_type_3']);
+        values['time_type_4'] = moment2dateStr(values['time_type_4']);
         this.props.getList({...values, page: 1})
       }
     });

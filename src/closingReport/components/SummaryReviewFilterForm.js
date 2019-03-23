@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Form, Input, Row, Col, Select, Button, DatePicker, Icon } from 'antd';
 import EmSpan from '../base/EmSpan';
 import SearchSelect from "@/base/SearchSelect";
+import { moment2dateStr } from '../util';
 
 const { RangePicker } = DatePicker;
 const InputGroup = Input.Group;
@@ -15,9 +16,8 @@ export default class SummaryReviewFilterForm extends Component {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        console.log('Received values of form: ', values);
         values.company_id = values.company_id && values.company_id.key
-        values.created_at = values.created_at && values.created_at.map(m => m && m.toJSON())
+        values.created_at = moment2dateStr(values.created_at)
         this.props.getList({...values, page: 1})
       }
     });

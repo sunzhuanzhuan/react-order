@@ -194,18 +194,6 @@ export default class SummaryListByOrder extends Component {
   getList = (params = {}) => {
     const { actions } = this.props;
     let search = { ...this.state.search, ...params };
-    if (params['order_id'] || params['execution_evidence_code'] || params['requirement_id']) {
-      search['order_id'] = params['order_id'];
-      search['execution_evidence_code'] = params['execution_evidence_code'];
-      search['requirement_id'] = params['requirement_id'];
-    }
-
-    if (params['external_check_at'] || params['internal_check_at'] || params['submitter_at']) {
-      search['external_check_at'] = params['external_check_at'];
-      search['internal_check_at'] = params['internal_check_at'];
-      search['submitter_at'] = params['submitter_at'];
-    }
-
     this.setState({ listLoading: true, search });
     actions.getSummaryListByOrder(search).finally(() => {
       this.setState({ listLoading: false });
