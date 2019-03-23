@@ -25,9 +25,11 @@ export default class DataDetailsModalCheck extends Component {
       this.setState({ loading: false });
     });
   }
+
   componentWillUnmount() {
     this.props.actions.clearPlatformData();
   }
+
   showConfirm = (values, successCallback) => {
     Modal.confirm({
       title: '是否确认提交审核？',
@@ -40,7 +42,7 @@ export default class DataDetailsModalCheck extends Component {
         }).then(() => {
           message.success('保存成功!');
           this.props.closed();
-          successCallback && successCallback()
+          successCallback && successCallback();
         });
       }
     });
@@ -50,6 +52,12 @@ export default class DataDetailsModalCheck extends Component {
   submit = () => {
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
+        let defaultValue = {
+          'basic_information_status': 1,
+          'execution_link_status': 1,
+          'execution_screenshot_status': 1,
+          'execution_data_status': 1
+        };
         this.showConfirm(values, this.props.successCallback);
       }
     });
@@ -82,7 +90,7 @@ export default class DataDetailsModalCheck extends Component {
       okText='提交结果'
       maskClosable={false}
     >
-      {this.state.loading ? <div style={{ height: '600px' }}><Loading/></div> :
+      {this.state.loading ? <div style={{ height: '600px' }}><Loading /></div> :
         <Form>
           <Outline.View data={total} />
           <DataDetailsReviewWrap {...props} field='basic_information'>
