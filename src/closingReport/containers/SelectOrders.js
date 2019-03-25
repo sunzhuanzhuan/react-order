@@ -130,7 +130,7 @@ export default class SelectOrders extends Component {
     };
     return <div className='select-orders flex-form-layout'>
       <SH2 title='订单列表' />
-      <div style={{ padding: '20px 0' }}>
+      <div style={{ padding: '20px 0' }} className='closing-report-filter-container'>
         <OrderFilterForm
           loading={this.state.listLoading}
           source={{ ...closingReport.publicSource, ...closingReport.companySource }}

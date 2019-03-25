@@ -56,6 +56,7 @@ export default class SummaryOrderFilterForm extends Component {
               initialValue: this.props.execution_status
             })(
               <SearchSelect placeholder="请输入并从下拉框选择" action={actions.getCompanyNames} wordKey='name'
+                getPopupContainer={() => document.querySelector('.closing-report-filter-container')}
                 mapResultItemToOption={({ company_id, name } = {}) => ({
                   value: company_id,
                   label: name
@@ -70,6 +71,7 @@ export default class SummaryOrderFilterForm extends Component {
               <Select
                 allowClear
                 mode="multiple"
+                getPopupContainer={() => document.querySelector('.closing-report-filter-container')}
                 style={{ width: '100%' }}
                 placeholder="请选择"
                 maxTagCount={0}
@@ -89,6 +91,7 @@ export default class SummaryOrderFilterForm extends Component {
               <Select
                 allowClear
                 mode="multiple"
+                getPopupContainer={() => document.querySelector('.closing-report-filter-container')}
                 style={{ width: '100%' }}
                 placeholder="请选择"
                 maxTagCount={0}
@@ -116,6 +119,7 @@ export default class SummaryOrderFilterForm extends Component {
               <Select
                 allowClear
                 showSearch
+                getPopupContainer={() => document.querySelector('.closing-report-filter-container')}
                 style={{ width: '100%' }}
                 placeholder="请选择"
                 optionFilterProp='children'
@@ -132,6 +136,7 @@ export default class SummaryOrderFilterForm extends Component {
               <Select
                 allowClear
                 showSearch
+                getPopupContainer={() => document.querySelector('.closing-report-filter-container')}
                 style={{ width: '100%' }}
                 placeholder="请选择"
                 optionFilterProp='children'
@@ -145,7 +150,12 @@ export default class SummaryOrderFilterForm extends Component {
         <Col span={12}>
           <Form.Item label={<EmSpan length={4}>时间</EmSpan>}>
             <InputGroup compact>
-              <Select style={{ width: '130px' }} value={this.state.timeType} onChange={(key) => this.setState({ timeType: key })}>
+              <Select
+                style={{ width: '130px' }}
+                value={this.state.timeType}
+                getPopupContainer={() => document.querySelector('.closing-report-filter-container')}
+                onChange={(key) => this.setState({ timeType: key })}
+              >
                 <Option value="submitter_at">提交时间</Option>
                 <Option value="internal_check_at">内审审核时间</Option>
                 <Option value="external_check_at">品牌审核时间</Option>
@@ -159,7 +169,12 @@ export default class SummaryOrderFilterForm extends Component {
         <Col span={12}>
           <Form.Item label="批量查询">
             <InputGroup compact>
-              <Select value={this.state.batchKey} style={{ width: '100px' }} onChange={(key) => this.setState({ batchKey: key })}>
+              <Select
+                value={this.state.batchKey}
+                style={{ width: '100px' }}
+                getPopupContainer={() => document.querySelector('.closing-report-filter-container')}
+                onChange={(key) => this.setState({ batchKey: key })}
+              >
                 <Option value="order_id">订单ID</Option>
                 <Option value="execution_evidence_code">PO单号</Option>
                 <Option value="summary_id">数据单ID</Option>
@@ -183,6 +198,7 @@ export default class SummaryOrderFilterForm extends Component {
                 style={{ width: '100%' }}
                 placeholder="请选择"
                 maxTagCount={0}
+                getPopupContainer={() => document.querySelector('.closing-report-filter-container')}
                 optionFilterProp='children'
                 maxTagPlaceholder={(omittedValues) => {
                   return `已选${omittedValues.length}项`;

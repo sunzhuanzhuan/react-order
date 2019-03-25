@@ -222,7 +222,7 @@ export default class SummaryListByOrder extends Component {
     };
     return <div className='select-orders flex-form-layout'>
       <SH2 title='订单投放数据汇总列表' />
-      <div style={{ padding: '20px 0' }}>
+      <div style={{ padding: '20px 0' }} className='closing-report-filter-container'>
         <SummaryOrderFilterForm
           loading={this.state.listLoading}
           source={{ ...closingReport.publicSource }}

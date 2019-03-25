@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Form, Input, Row, Col, Select, Button, DatePicker, Icon } from 'antd';
 import EmSpan from '../base/EmSpan';
-import SearchSelect from "@/base/SearchSelect";
+import SearchSelect from '@/base/SearchSelect';
 import { moment2dateStr } from '../util';
 
 const { RangePicker } = DatePicker;
@@ -10,15 +10,14 @@ const Option = Select.Option;
 
 @Form.create()
 export default class SummaryReviewFilterForm extends Component {
-  state = {
-  };
+  state = {};
   handleSubmit = (e) => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        values.company_id = values.company_id && values.company_id.key
-        values.created_at = moment2dateStr(values.created_at)
-        this.props.getList({...values, page: 1})
+        values.company_id = values.company_id && values.company_id.key;
+        values.created_at = moment2dateStr(values.created_at);
+        this.props.getList({ ...values, page: 1 });
       }
     });
   };
@@ -46,6 +45,7 @@ export default class SummaryReviewFilterForm extends Component {
                 showSearch
                 style={{ width: '100%' }}
                 placeholder="请选择"
+                getPopupContainer={() => document.querySelector('.closing-report-filter-container')}
                 optionFilterProp='children'
               >
                 {source.executors.map(option =>
@@ -58,7 +58,9 @@ export default class SummaryReviewFilterForm extends Component {
           <Form.Item label="公司简称">
             {getFieldDecorator('company_id', {
               initialValue: this.props.execution_status
-            })(<SearchSelect placeholder="请输入并从下拉框选择" action={actions.getCompanyNames} wordKey='name'
+            })(
+              <SearchSelect placeholder="请输入并从下拉框选择" action={actions.getCompanyNames} wordKey='name'
+                getPopupContainer={() => document.querySelector('.closing-report-filter-container')}
                 mapResultItemToOption={({ company_id, name } = {}) => ({
                   value: company_id,
                   label: name
@@ -70,7 +72,7 @@ export default class SummaryReviewFilterForm extends Component {
         <Col span={16}>
           <Form.Item label={<EmSpan length={7}>创建时间</EmSpan>}>
             {getFieldDecorator('created_at', {})(
-              <RangePicker style={{ width: '100%' }}/>
+              <RangePicker style={{ width: '100%' }} />
             )}
           </Form.Item>
         </Col>
