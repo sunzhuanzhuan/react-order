@@ -9,6 +9,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import AgentDetail from './AgentDetail'
 import { Form, Cascader } from 'antd';
+import AddAgent from '../AddAgent'
 import * as modalActions from '../../../actions/modalActions'
 
 const FormItem = Form.Item;
@@ -35,8 +36,7 @@ class MultiAgent extends React.Component {
     })
   }
   render() {
-    const { form, agentList, agentDetail } = this.props
-    console.log(agentDetail)
+    const { form, agentList, agentDetail, platformId } = this.props
     const { getFieldDecorator } = form
     return (
       <div className="modalBox-singleAgent">
@@ -46,7 +46,7 @@ class MultiAgent extends React.Component {
             labelCol: { span: 7 },
             wrapperCol: { span: 17 }
           }}
-          style={{ width: '500px' }}
+          style={{ width: '400px', float: 'left' }}
         >
           {getFieldDecorator("agent_id", {
             rules: [{
@@ -63,6 +63,7 @@ class MultiAgent extends React.Component {
             />
           )}
         </FormItem>
+        <AddAgent platformId={platformId} />
         {/* 平台/代理商详情 */}
         {
           Object.keys(agentDetail).length == 0 ?

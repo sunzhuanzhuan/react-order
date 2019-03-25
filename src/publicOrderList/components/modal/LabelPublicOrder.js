@@ -55,7 +55,7 @@ class LabelPublicOrder extends Component {
     });
   }
   render() {
-    const { form, handleCancel, agentList, agentDetail } = this.props
+    const { form, handleCancel, agentList, agentDetail, record } = this.props
     return <div className="modalBox">
       <Form layout="inline">
         {/* 下单时间 */}
@@ -67,13 +67,14 @@ class LabelPublicOrder extends Component {
           this.state.type == "single" ?
             < SingleAgent
               form={form}
-              agentId={agentList.length != 0 ? this.props.agentList[0].agentVOList[0].id : ""}
+              agentId={agentList.length != 0 ? agentList[0].agentVOList[0].id : ""}
               agentName={agentList.length != 0 ? agentList[0].agentVOList[0].agentName : ""}
               agentDetail={Object.keys(agentDetail).length != 0 ? agentDetail : {}}
             /> :
             <MultiAgent
               form={form}
               agentList={agentList}
+              platformId={record.account.platform_id}
             />
         }
       </Form>
