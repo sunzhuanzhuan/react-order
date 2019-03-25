@@ -1,6 +1,12 @@
 import React, { Component } from 'react';
 import { Card, Table, Checkbox } from 'antd';
 import AddInternalOrder from '../components/AddInternalOrder';
+import BtnUpload from '../../components/btnUpload'
+import  * as actionsImport from '../actions'
+import { connect } from 'react-redux';
+import { bindActionCreators } from "redux";
+
+
 
 const CheckboxGroup = Checkbox.Group;
 const columns = [{
@@ -38,8 +44,7 @@ const dataMap = {
   }
 };
 
-
-export default class Test extends Component {
+class Test extends Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
@@ -66,7 +71,9 @@ export default class Test extends Component {
     });
   };
 
-  componentWillMount() {}
+  componentWillMount() {
+    console.log(this.props)
+  }
 
   render() {
     const { selectedRowKeys, joinStore } = this.state;
@@ -75,7 +82,10 @@ export default class Test extends Component {
       selectedRowKeys.length ? <a href="#" onClick={this.joint}>关联</a> : null;
 
     return <div className='reconciliation-container'>
-      <div className='left'>
+    <BtnUpload
+    getToken={this.props.actions.getToken}
+    />
+      {/* <div className='left'>
         <CheckboxGroup value={selectedRowKeys} onChange={(selectedRowKeys) => {
           this.setState({ selectedRowKeys });
         }}>
@@ -93,7 +103,16 @@ export default class Test extends Component {
           {joinStore.map(key => <p key={key}>{dataMap[key].name}</p>)}
         </Card>
         <AddInternalOrder />
-      </div>
+      </div> */}
     </div>;
   }
 }
+const mapStateToProps = (state) => {
+	return {
+	}
+}
+const mapDispatchToProps = dispatch => ({
+	actions: bindActionCreators({ ...actionsImport }, dispatch)
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Test)
