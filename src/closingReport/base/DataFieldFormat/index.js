@@ -1,21 +1,21 @@
-import React from 'react';
-import numeral from 'numeral';
+import React from 'react'
+import numeral from 'numeral'
 
 const DataFieldFormat = ({ value, not, type = 'number' }) => {
-  if (not) return value;
-  let result;
+  if (not) return value
+  let result
   if (!value) {
-    return '-';
+    return '-'
   }
   if (type === 'number' && !isNaN(value)) {
-    result = numeral(value).format('0,0');
+    result = numeral(value).format('0,0')
   } else if (type === 'input') {
-    result = value;
+    result = value
   } else {
-    result = value;
+    result = value
   }
-  return <span>{result}</span>;
+  return <span>{result}</span>
 
-};
+}
 
-export default DataFieldFormat;
+export default DataFieldFormat

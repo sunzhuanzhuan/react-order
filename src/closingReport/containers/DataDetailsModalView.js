@@ -1,44 +1,46 @@
-import React, { Component } from 'react';
-import { Modal,Button } from 'antd';
+import React, { Component } from 'react'
+import { Modal, Button } from 'antd'
 import {
   Outline,
   BaseInfo,
   ExecutionLink,
   ExecutionPic,
   ExecutionData
-} from '../components/dataDetails';
-import './DataDetailsModal.less';
-import Loading from '../base/Loading';
-import { Agree, Refuse } from "@/closingReport/base/ApprovalStatus";
+} from '../components/dataDetails'
+import './DataDetailsModal.less'
+import Loading from '../base/Loading'
+import { Agree, Refuse } from '@/closingReport/base/ApprovalStatus'
 
 export default class DataDetailsModalView extends Component {
   constructor(props, context) {
-    super(props, context);
-    const { actions, data } = props;
-    this.state = { loading: true };
+    super(props, context)
+    const { actions, data } = props
+    this.state = { loading: true }
     // 请求数据
     actions.getPlatformDataInfo({
       order_id: data.order_id,
       platform_id: data.current.platform_id
     }).finally(() => {
-      this.setState({ loading: false });
-    });
+      this.setState({ loading: false })
+    })
   }
+
   componentWillUnmount() {
-    this.props.actions.clearPlatformData();
+    this.props.actions.clearPlatformData()
   }
+
   render() {
-    const { data, platformData } = this.props;
+    const { data, platformData } = this.props
     const {
       total, // outline
       basic_information, // baseInfo
       execution_link,
       execution_screenshot, // executionPic
       execution_data
-    } = platformData;
+    } = platformData
     const title = <h2 className='data-details-header'>平台数据详情
       <small>订单ID：{data.order_id}</small>
-    </h2>;
+    </h2>
     return <Modal
       centered
       destroyOnClose
@@ -49,27 +51,30 @@ export default class DataDetailsModalView extends Component {
       onCancel={this.props.closed}
       onOk={this.props.closed}
     >
-      {this.state.loading ? <div style={{ height: '600px' }}><Loading/></div> :
+      {this.state.loading ? <div style={{ height: '600px' }}><Loading /></div> :
         <div>
           <Outline.View data={total} />
-          <BaseInfo.View data={basic_information} >
+          <BaseInfo.View data={basic_information}>
             {parseInt(basic_information.status) === 1 && <Agree />}
-            {parseInt(basic_information.status) === 2 && <Refuse reason={basic_information.reason}/>}
+            {parseInt(basic_information.status) === 2 &&
+            <Refuse reason={basic_information.reason} />}
           </BaseInfo.View>
-          <ExecutionLink.View data={execution_link} >
-            {parseInt(execution_link.status) === 1 && <Agree top={10}/>}
-            {parseInt(execution_link.status) === 2 && <Refuse top={10} reason={execution_link.reason}/>}
+          <ExecutionLink.View data={execution_link}>
+            {parseInt(execution_link.status) === 1 && <Agree top={10} />}
+            {parseInt(execution_link.status) === 2 &&
+            <Refuse top={10} reason={execution_link.reason} />}
           </ExecutionLink.View>
-          <ExecutionPic.View data={execution_screenshot} >
+          <ExecutionPic.View data={execution_screenshot}>
             {parseInt(execution_screenshot.status) === 1 && <Agree />}
-            {parseInt(execution_screenshot.status) === 2 && <Refuse reason={execution_screenshot.reason}/>}
+            {parseInt(execution_screenshot.status) === 2 &&
+            <Refuse reason={execution_screenshot.reason} />}
           </ExecutionPic.View>
-          <ExecutionData.View data={execution_data} >
+          <ExecutionData.View data={execution_data}>
             {parseInt(execution_data.status) === 1 && <Agree />}
-            {parseInt(execution_data.status) === 2 && <Refuse reason={execution_data.reason}/>}
+            {parseInt(execution_data.status) === 2 && <Refuse reason={execution_data.reason} />}
           </ExecutionData.View>
         </div>
       }
-    </Modal>;
+    </Modal>
   }
 }

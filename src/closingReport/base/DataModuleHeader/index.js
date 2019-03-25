@@ -1,6 +1,6 @@
-import React from 'react';
-import { Icon } from 'antd';
-import './index.less';
+import React from 'react'
+import { Icon } from 'antd'
+import './index.less'
 
 const DataModuleHeader = (props) => {
   return (
@@ -16,7 +16,7 @@ const DataModuleHeader = (props) => {
         {props.extra}
       </div>
     </header>
-  );
-};
+  )
+}
 
-export default DataModuleHeader;
+export default DataModuleHeader

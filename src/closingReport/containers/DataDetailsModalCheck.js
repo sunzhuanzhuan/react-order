@@ -1,52 +1,52 @@
-import React, { Component } from 'react';
-import { Modal, Form, Icon, Button, message } from 'antd';
+import React, { Component } from 'react'
+import { Modal, Form, Icon, Button, message } from 'antd'
 import {
   Outline,
   BaseInfo,
   ExecutionLink,
   ExecutionPic,
   ExecutionData
-} from '../components/dataDetails';
-import './DataDetailsModal.less';
-import DataDetailsReviewWrap from '../components/dataDetails/DataDetailsReviewWrap';
-import Loading from '../base/Loading';
+} from '../components/dataDetails'
+import './DataDetailsModal.less'
+import DataDetailsReviewWrap from '../components/dataDetails/DataDetailsReviewWrap'
+import Loading from '../base/Loading'
 
 @Form.create()
 export default class DataDetailsModalCheck extends Component {
   constructor(props, context) {
-    super(props, context);
-    const { actions, data } = props;
-    this.state = { loading: true };
+    super(props, context)
+    const { actions, data } = props
+    this.state = { loading: true }
     // 请求数据
     actions.getPlatformDataInfo({
       order_id: data.order_id,
       platform_id: data.current.platform_id
     }).finally(() => {
-      this.setState({ loading: false });
-    });
+      this.setState({ loading: false })
+    })
   }
 
   componentWillUnmount() {
-    this.props.actions.clearPlatformData();
+    this.props.actions.clearPlatformData()
   }
 
   showConfirm = (values, successCallback) => {
     Modal.confirm({
       title: '是否确认提交审核？',
       onOk: () => {
-        const { actions, data } = this.props;
+        const { actions, data } = this.props
         return actions.checkPlatformData({
           ...values,
           order_id: data.order_id,
           platform_id: data.current.platform_id
         }).then(() => {
-          message.success('保存成功!');
-          this.props.closed();
-          successCallback && successCallback();
-        });
+          message.success('保存成功!')
+          this.props.closed()
+          successCallback && successCallback()
+        })
       }
-    });
-  };
+    })
+  }
 
 
   submit = () => {
@@ -57,27 +57,27 @@ export default class DataDetailsModalCheck extends Component {
           'execution_link_status': 1,
           'execution_screenshot_status': 1,
           'execution_data_status': 1
-        };
-        this.showConfirm(values, this.props.successCallback);
+        }
+        this.showConfirm(values, this.props.successCallback)
       }
-    });
-  };
+    })
+  }
 
   render() {
-    const { form, data, platformData } = this.props;
+    const { form, data, platformData } = this.props
     const {
       total, // outline
       basic_information, // baseInfo
       execution_link,
       execution_screenshot, // executionPic
       execution_data
-    } = platformData;
+    } = platformData
     const props = {
       form
-    };
+    }
     const title = <h2 className='data-details-header'>平台数据详情
       <small>订单ID：{data.order_id}</small>
-    </h2>;
+    </h2>
     return <Modal
       centered
       destroyOnClose
@@ -107,6 +107,6 @@ export default class DataDetailsModalCheck extends Component {
           </DataDetailsReviewWrap>
         </Form>
       }
-    </Modal>;
+    </Modal>
   }
 }

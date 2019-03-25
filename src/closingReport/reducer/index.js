@@ -1,6 +1,6 @@
-import { combineReducers } from 'redux';
-import { handleActions, combineActions } from 'redux-actions';
-import update from 'immutability-helper';
+import { combineReducers } from 'redux'
+import { handleActions, combineActions } from 'redux-actions'
+import update from 'immutability-helper'
 
 import {
   getCompanyBrands_success,
@@ -18,27 +18,27 @@ import {
   getSummaryList_success,
   getProjects_success,
   getOrders_success
-} from '../actions';
+} from '../actions'
 
 // 处理列表数据为map表
 function handleResponseList(primary_key) {
   return (state, action) => {
-    let response = action.payload.data || {}, source = {};
-    const { total = 0, page = 1, pageSize = 50, rows = [] } = response;
+    let response = action.payload.data || {}, source = {}
+    const { total = 0, page = 1, pageSize = 50 rows = [] } = response
     const list = rows.map(item => {
-      source[item[primary_key]] = { ...item };
-      source[item[primary_key]]['key'] = item[primary_key];
-      return item[primary_key];
-    });
+      source[item[primary_key]] = { ...item }
+      source[item[primary_key]]['key'] = item[primary_key]
+      return item[primary_key]
+    })
     return {
       total, page, pageSize, list, source: { ...state.source, ...source }, response
-    };
-  };
+    }
+  }
 }
 
 // 初始化列表数据
 function initList() {
-  return { list: [], source: {}, total: 0, page: 1, pageSize: 50, response: {} };
+  return { list: [], source: {}, total: 0, page: 1, pageSize: 50, response: {} }
 }
 
 // 公共的数据
@@ -71,37 +71,37 @@ const defaultPublicSource = {
   ],
   brandByUser: [],
   projectByUser: []
-};
+}
 export const publicSource = handleActions({
   [combineActions(getExecutor_success)]: (state, action) => {
     return update(state, {
       executors: {
         $set: action.payload.data
       }
-    });
+    })
   },
   [combineActions(getSalesManagers_success)]: (state, action) => {
     return update(state, {
       salesManagers: {
         $set: action.payload.data
       }
-    });
+    })
   },
   [combineActions(getBrands_success)]: (state, action) => {
     return update(state, {
       brandByUser: {
         $set: action.payload.data
       }
-    });
+    })
   },
   [combineActions(getProjects_success)]: (state, action) => {
     return update(state, {
       projectByUser: {
         $set: action.payload.data
       }
-    });
+    })
   }
-}, defaultPublicSource);
+}, defaultPublicSource)
 
 // 公司/数据单 纬度下的数据
 const defaultCompanySource = {
@@ -115,84 +115,84 @@ const defaultCompanySource = {
   beSalesRealName: '', //公司所属销售
   companyName: '', //公司简称
   companyPath: '' //公司跳转路径
-};
+}
 export const companySource = handleActions({
   [combineActions(getCompanyBrands_success)]: (state, action) => {
     return update(state, {
       brandByCompany: {
         $set: action.payload.data
       }
-    });
+    })
   },
   [combineActions(getCompanyProjects_success)]: (state, action) => {
     return update(state, {
       projectByCompany: {
         $set: action.payload.data
       }
-    });
+    })
   },
   [combineActions(getCompanyPlatforms_success)]: (state, action) => {
     return update(state, {
       platformByCompany: {
         $set: action.payload.data
       }
-    });
+    })
   },
   [combineActions(addOrUpdateSummary_success)]: (state, action) => {
     return update(state, {
       summaryId: {
         $set: action.payload.data.summary_id
       }
-    });
+    })
   },
   [combineActions(getCompanyTotalInfo_success)]: (state, action) => {
-    const { company_name, real_name, company_path } = action.payload.data;
+    const { company_name, real_name, company_path } = action.payload.data
     return {
       ...state,
       beSalesRealName: real_name,
       companyName: company_name,
       companyPath: company_path
-    };
+    }
   },
   [combineActions(getSummaryTotalInfo_success)]: (state, action) => {
-    const { summary_id, creator_name, summary_name, company_id } = action.payload.data;
+    const { summary_id, creator_name, summary_name, company_id } = action.payload.data
     return {
       ...state,
       summaryName: summary_name,
       summaryId: summary_id,
       creatorName: creator_name,
       companyId: company_id
-    };
+    }
   },
   [combineActions('resetCreateReportData')]: (state, action) => {
-    return defaultCompanySource;
+    return defaultCompanySource
   }
-}, defaultCompanySource);
+}, defaultCompanySource)
 
 // 请求(公司/数据单纬度)全部订单的数据
 export const selectOrderList = handleActions({
   [combineActions(getOrders_success)]: handleResponseList('order_id'),
-  [combineActions("clearAllOrderList")]: (state, action) => {
+  [combineActions('clearAllOrderList')]: (state, action) => {
     return initList()
   }
-}, initList());
+}, initList())
 
 // 数据单订单信息(列表)
 export const summaryOrders = handleActions({
   [combineActions(getSummaryOrderInfo_success)]: (state, action) => {
-    let response = action.payload.data || {}, source = {};
-    let { total = {}, list = [] } = response;
+    let response = action.payload.data || {}, source = {}
+    let { total = {}, list = [] } = response
     list = list.map(item => {
-      source[item['id']] = { ...item };
-      source[item['id']]['key'] = item['id'];
-      return item['id'];
-    });
+      source[item['id']] = { ...item }
+      source[item['id']]['key'] = item['id']
+      return item['id']
+    })
     return {
       list, source: { ...state.source, ...source }, response
-    };
+    }
   },
   [combineActions('addPlatform')]: (state, action) => {
-    let { platform_id, id } = action.payload.data || {};
+    let { platform_id, id } = action.payload.data || {}
     return update(state, {
       source: {
         [id]: {
@@ -206,24 +206,24 @@ export const summaryOrders = handleActions({
           }
         }
       }
-    });
+    })
   },
   [combineActions('removePlatform')]: (state, action) => {
-    let { platform_id, id } = action.payload.data || {};
-    let index = state.source[id].platform.findIndex(({ platform_id: id }) => platform_id == id);
-    return update(state, { source: { [id]: { platform: { $splice: [[index, 1]] } } } });
+    let { platform_id, id } = action.payload.data || {}
+    let index = state.source[id].platform.findIndex(({ platform_id: id }) => platform_id == id)
+    return update(state, { source: { [id]: { platform: { $splice: [[index, 1]] } } } })
 
   },
   [combineActions('removeSummaryOrder')]: (state, action) => {
-    let { id } = action.payload.data || {};
-    let index = state.list.findIndex((key) => key == id);
-    return update(state, { list: { $splice: [[index, 1]] } });
+    let { id } = action.payload.data || {}
+    let index = state.list.findIndex((key) => key == id)
+    return update(state, { list: { $splice: [[index, 1]] } })
 
   },
   [combineActions('submitPlatformInfo')]: (state, action) => {
-    let { platform_id, id, status } = action.payload.data || {};
+    let { platform_id, id status } = action.payload.data || {}
     //modify_status
-    let index = state.source[id].platform.findIndex(({ platform_id: id }) => platform_id == id);
+    let index = state.source[id].platform.findIndex(({ platform_id: id }) => platform_id == id)
     return update(state, {
       source: {
         [id]: {
@@ -235,27 +235,27 @@ export const summaryOrders = handleActions({
           }
         }
       }
-    });
+    })
   },
   [combineActions('resetCreateReportData')]: (state, action) => {
     return {
       list: [],
       source: {},
       response: {}
-    };
+    }
   }
 }, {
   list: [],
   source: {},
   response: {}
-});
+})
 
 // 平台数据信息
 export const platformData = handleActions({
   [combineActions(getPlatformDataInfo_success)]: (state, action) => {
     return {
       ...action.payload.data
-    };
+    }
   },
   [combineActions('resetCreateReportData')]: (state, action) => {
     return {
@@ -264,7 +264,7 @@ export const platformData = handleActions({
       execution_link: {},
       execution_screenshot: {},
       execution_data: {}
-    };
+    }
   },
   [combineActions('clearPlatformData')]: (state, action) => {
     return {
@@ -273,7 +273,7 @@ export const platformData = handleActions({
       execution_link: {},
       execution_screenshot: {},
       execution_data: {}
-    };
+    }
   }
 }, {
   total: {},
@@ -281,17 +281,17 @@ export const platformData = handleActions({
   execution_link: {},
   execution_screenshot: {},
   execution_data: {}
-});
+})
 
 // 订单投放数据汇总列表
 export const summaryListByOrder = handleActions({
   [combineActions(getSummaryListByOrder_success)]: handleResponseList('order_id')
-}, initList());
+}, initList())
 
 // 订单投放数据审核列表
 export const summaryList = handleActions({
   [combineActions(getSummaryList_success)]: handleResponseList('summary_id')
-}, initList());
+}, initList())
 
 export default combineReducers({
   publicSource,
@@ -301,4 +301,4 @@ export default combineReducers({
   platformData,
   summaryListByOrder,
   summaryList
-});
+})

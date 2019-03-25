@@ -1,15 +1,15 @@
-import React, { Component } from 'react';
-import { Radio, Input, Form } from 'antd';
+import React, { Component } from 'react'
+import { Radio, Input, Form } from 'antd'
 
-const RadioGroup = Radio.Group;
-const TextArea = Input.TextArea;
+const RadioGroup = Radio.Group
+const TextArea = Input.TextArea
 
 
 export default class DataDetailsReviewWrap extends Component {
 
   render() {
-    const { getFieldDecorator, getFieldValue } = this.props.form;
-    const { field = 'review' } = this.props;
+    const { getFieldDecorator, getFieldValue } = this.props.form
+    const { field = 'review' } = this.props
     return <div className='data-details-review-wrap'>
       {this.props.children}
       <footer className='review-actions'>
@@ -24,13 +24,13 @@ export default class DataDetailsReviewWrap extends Component {
             <Radio value={2}>审核拒绝</Radio>
           </RadioGroup>)}
         </Form.Item>
-          {getFieldValue(`${field}_status`) === 2 ? getFieldDecorator(`${field}_reason`, {
-            rules: [{
-              required: true,
-              message: '请填写拒绝原因!'
-            }]
-          })(<TextArea autosize={{ minRows: 2, maxRows: 6 }} />) : null}
+        {getFieldValue(`${field}_status`) === 2 ? getFieldDecorator(`${field}_reason`, {
+          rules: [{
+            required: true,
+            message: '请填写拒绝原因!'
+          }]
+        })(<TextArea autosize={{ minRows: 2, maxRows: 6 }} />) : null}
       </footer>
-    </div>;
+    </div>
   }
 }

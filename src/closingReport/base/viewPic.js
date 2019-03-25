@@ -1,8 +1,8 @@
-import React from 'react';
-import { Modal } from 'antd';
+import React from 'react'
+import { Modal } from 'antd'
 
 const viewPic = (url) => (e) => {
-  e.preventDefault && e.preventDefault();
+  e.preventDefault && e.preventDefault()
   Modal.info({
     className: 'closing-report-modal-pages check-demo',
     width: 600,
@@ -14,6 +14,6 @@ const viewPic = (url) => (e) => {
       </a>
     ),
     onOk() {}
-  });
-};
-export default viewPic;
+  })
+}
+export default viewPic

@@ -1,7 +1,7 @@
-import React  from 'react';
-import DataDetailsModalEdit from '../../containers/DataDetailsModalEdit';
-import DataDetailsModalView from '../../containers/DataDetailsModalView';
-import DataDetailsModalCheck from '../../containers/DataDetailsModalCheck';
+import React from 'react'
+import DataDetailsModalEdit from '../../containers/DataDetailsModalEdit'
+import DataDetailsModalView from '../../containers/DataDetailsModalView'
+import DataDetailsModalCheck from '../../containers/DataDetailsModalCheck'
 
 const DetailModal = (props) => {
   let C;

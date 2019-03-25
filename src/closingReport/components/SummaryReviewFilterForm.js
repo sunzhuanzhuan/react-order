@@ -1,33 +1,33 @@
-import React, { Component } from 'react';
-import { Form, Input, Row, Col, Select, Button, DatePicker, Icon } from 'antd';
-import EmSpan from '../base/EmSpan';
-import SearchSelect from '@/base/SearchSelect';
-import { moment2dateStr } from '../util';
+import React, { Component } from 'react'
+import { Form, Input, Row, Col, Select, Button, DatePicker, Icon } from 'antd'
+import EmSpan from '../base/EmSpan'
+import SearchSelect from '@/base/SearchSelect'
+import { moment2dateStr } from '../util'
 
-const { RangePicker } = DatePicker;
-const InputGroup = Input.Group;
-const Option = Select.Option;
+const { RangePicker } = DatePicker
+const InputGroup = Input.Group
+const Option = Select.Option
 
 @Form.create()
 export default class SummaryReviewFilterForm extends Component {
-  state = {};
+  state = {}
   handleSubmit = (e) => {
-    e.preventDefault();
+    e.preventDefault()
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        values.company_id = values.company_id && values.company_id.key;
-        values.created_at = moment2dateStr(values.created_at);
-        this.props.getList({ ...values, page: 1 });
+        values.company_id = values.company_id && values.company_id.key
+        values.created_at = moment2dateStr(values.created_at)
+        this.props.getList({ ...values, page: 1 })
       }
-    });
-  };
+    })
+  }
   handleReset = () => {
-    this.props.form.resetFields();
-  };
+    this.props.form.resetFields()
+  }
 
   render() {
-    const { source, loading, actions } = this.props;
-    const { getFieldDecorator } = this.props.form;
+    const { source, loading, actions } = this.props
+    const { getFieldDecorator } = this.props.form
     return <Form onSubmit={this.handleSubmit} layout="inline" autoComplete="off">
       <Row>
         <Col span={8}>
@@ -83,6 +83,6 @@ export default class SummaryReviewFilterForm extends Component {
           </div>
         </Col>
       </Row>
-    </Form>;
+    </Form>
   }
 }

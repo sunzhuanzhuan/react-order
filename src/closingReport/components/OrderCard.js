@@ -1,12 +1,12 @@
-import React, { Component } from 'react';
-import { Badge, Icon, Divider, Select, Modal, message, Popconfirm } from 'antd';
-import './OrderCard.less';
-import IconText from '../base/IconText';
-import update from 'immutability-helper';
-import OrderSummaryStatus from '../base/OrderSummaryStatus';
-import { datetimeValidate } from '../util';
+import React, { Component } from 'react'
+import { Badge, Icon, Divider, Select, Modal, message, Popconfirm } from 'antd'
+import './OrderCard.less'
+import IconText from '../base/IconText'
+import update from 'immutability-helper'
+import OrderSummaryStatus from '../base/OrderSummaryStatus'
+import { datetimeValidate } from '../util'
 
-const Option = Select.Option;
+const Option = Select.Option
 const orderPlatformStatusMap = {
   'modify_status': {
     '1': {
@@ -68,23 +68,23 @@ const orderPlatformStatusMap = {
       index: '8'
     }
   }
-};
+}
 
 
 export default class OrderCard extends Component {
   constructor(props, context) {
-    super(props, context);
+    super(props, context)
     this.state = {
       addModal: {}
-    };
+    }
   }
 
 
   addPlatform = () => {
     this.setState(update(this.state, {
       addModal: { loading: { $set: true } }
-    }));
-    const { actions, data, companySource } = this.props;
+    }))
+    const { actions, data, companySource } = this.props
     actions.addSummaryPlatform({
       'summary_id': companySource.summaryId,
       'order_id': data.order_id,
@@ -93,59 +93,59 @@ export default class OrderCard extends Component {
       actions.addPlatform({
         id: this.props.data.id,
         platform_id: this.state.addModal.platformKey
-      });
-      message.success(`添加成功`);
+      })
+      message.success(`添加成功`)
       this.setState(update(this.state, {
         addModal: { show: { $set: false }, loading: { $set: false } }
-      }));
+      }))
     }).catch(() => {
       this.setState(update(this.state, {
         addModal: { loading: { $set: false } }
-      }));
-    });
-  };
+      }))
+    })
+  }
 
   removePlatform = (id, order_id, platform_id) => {
-    const hide = message.loading('删除中...', 0);
+    const hide = message.loading('删除中...', 0)
     this.props.actions.deleteSummaryPlatform({
       order_id, platform_id
     }).then(() => {
       this.props.actions.removePlatform({
         id,
         platform_id
-      });
-    }).finally(hide);
-  };
+      })
+    }).finally(hide)
+  }
 
   removeOrder = (id, order_id, summary_id = this.props.companySource.summaryId) => {
-    const hide = message.loading('删除中...', 0);
+    const hide = message.loading('删除中...', 0)
     this.props.actions.deleteSummaryOrder({
       order_id, summary_id
     }).then(() => {
-      this.props.actions.removeSummaryOrder({ id });
-    }).finally(hide);
-  };
+      this.props.actions.removeSummaryOrder({ id })
+    }).finally(hide)
+  }
 
   // 提交审核
   submitCheck = (data, successCallback) => {
-    const { actions } = this.props;
+    const { actions } = this.props
     Modal.confirm({
       title: '是否确认将本订单的投放数据提交审核？',
       onOk: hide => {
         return actions.submitCheckSummaryByOrder({ order_id: data.order_id }).then(() => {
-          message.success('提交审核成功!');
-          successCallback && successCallback();
-        }).finally(hide);
+          message.success('提交审核成功!')
+          successCallback && successCallback()
+        }).finally(hide)
       }
-    });
+    })
 
-  };
+  }
 
   render() {
-    const { addModal } = this.state;
-    const { orderActions, optional, data, display, actions } = this.props;
-    const { add, del, check } = display.orderActions(data) || {};
-    const { platform = [] } = data;
+    const { addModal } = this.state
+    const { orderActions, optional, data, display, actions } = this.props
+    const { add, del, check } = display.orderActions(data) || {}
+    const { platform = [] } = data
     /*.filter((p) => {  return !platform.find(id => id === p.platform_id)});*/
 
     return <div className='order-card-container'>
@@ -179,7 +179,7 @@ export default class OrderCard extends Component {
               okText="确定"
               cancelText="取消"
               onConfirm={() => {
-                this.removeOrder(data.id, data.order_id);
+                this.removeOrder(data.id, data.order_id)
               }}
             >
               <a id='order-card-container-delete-btn'>
@@ -200,7 +200,7 @@ export default class OrderCard extends Component {
       <ul className='order-card-main'>
         {
           platform.map(item => {
-            let { edit, del, check, view, props } = display.platformConfig(item, data, orderPlatformStatusMap);
+            let { edit, del, check, view, props } = display.platformConfig(item, data, orderPlatformStatusMap)
             return <li key={item.platform_id}>
               <div className='card-item-type'>
                 {item.is_main == 1 ? '主平台' : '分发平台'}{item.is_hand_record == 1 ? '（录入)' : ''}
@@ -234,7 +234,7 @@ export default class OrderCard extends Component {
                       okText="确定"
                       cancelText="取消"
                       onConfirm={() => {
-                        this.removePlatform(data.id, data.order_id, item.platform_id);
+                        this.removePlatform(data.id, data.order_id, item.platform_id)
                       }}
                     >
                       <a>删除</a>
@@ -246,7 +246,7 @@ export default class OrderCard extends Component {
                   <a onClick={() => this.props.onDetail('check', item, data)}>去审核</a>
                 }
               </div>
-            </li>;
+            </li>
           })
         }
       </ul>
@@ -284,6 +284,6 @@ export default class OrderCard extends Component {
           <div style={{ color: '#999', lineHeight: '32px' }}>如果平台已经存在则不能再次添加</div>
         </div>
       </Modal>}
-    </div>;
+    </div>
   }
 }

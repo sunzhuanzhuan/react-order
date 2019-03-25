@@ -1,10 +1,9 @@
-import React, { Component } from 'react';
-import { Form } from 'antd';
-import './index.less';
-import DataModuleHeader from '../../base/DataModuleHeader';
-import RadioLink from '../../base/RadioLink';
-import { Against } from '../../base/ApprovalStatus';
-import SwitchRequiredInput from './BaseInfo';
+import React, { Component } from 'react'
+import { Form } from 'antd'
+import './index.less'
+import DataModuleHeader from '../../base/DataModuleHeader'
+import RadioLink from '../../base/RadioLink'
+import { Against } from '../../base/ApprovalStatus'
 
 /**
  * 执行链接(编辑)
@@ -12,24 +11,24 @@ import SwitchRequiredInput from './BaseInfo';
 export class Edit extends Component {
   checkRadioLink = (rule, value = {}, callback) => {
     if (value.radio === 1 || value.link) {
-      callback();
-      return;
+      callback()
+      return
     }
-    callback('必填!');
-  };
+    callback('必填!')
+  }
   validatorUrl = link_prefix => (rule, value, callback) => {
     if (!link_prefix || value.radio === 1) {
-      return callback();
+      return callback()
     }
-    console.log(value,'=======');
-    if (link_prefix.some(pre => new RegExp('^' + pre).test(value.link))) return callback();
-    callback('请输入正确的链接');
-  };
+    if (link_prefix.some(pre => new RegExp('^' + pre).test(value.link))) return callback()
+    callback('请输入正确的链接')
+  }
 
   render() {
-    const { getFieldDecorator } = this.props.form;
-    const { data: { data = [] } } = this.props;
-    const reason = parseInt(this.props.data.status) === 2 ? <Against reason={this.props.data.reason} /> : null;
+    const { getFieldDecorator } = this.props.form
+    const { data: { data = [] } } = this.props
+    const reason = parseInt(this.props.data.status) === 2 ?
+      <Against reason={this.props.data.reason} /> : null
     return <div className='platform-data-detail-module execution-link'>
       <DataModuleHeader title='执行链接' extra={reason} />
       <div style={{ paddingTop: '10px' }}>
@@ -41,18 +40,19 @@ export class Edit extends Component {
                   id: item.id,
                   link: item.value,
                   radio: item.radio || (item.reference ? 1 : 2),
-                  reference: item.reference },
+                  reference: item.reference
+                },
                 validateFirst: true,
                 rules: [
                   { validator: this.checkRadioLink, message: `请输入${item.display}!` },
                   { validator: this.validatorUrl(item.link_prefix) }
                 ]
               })(<RadioLink />)}
-            </Form.Item>;
+            </Form.Item>
           })
         }
       </div>
-    </div>;
+    </div>
   }
 }
 
@@ -61,7 +61,7 @@ export class Edit extends Component {
  */
 export class View extends Component {
   render() {
-    const { data: { data = [] } } = this.props;
+    const { data: { data = [] } } = this.props
     return <div className='platform-data-detail-module execution-link read'>
       <div className='read-left-head'>
         执行链接
@@ -69,19 +69,19 @@ export class View extends Component {
       <div className='read-right-data'>
         {
           data.map(item => {
-            return  <p key={item.id}>
-              <span className='title'/>
+            return <p key={item.id}>
+              <span className='title' />
               <a className='value' target='_blank' href={item.value}>{item.value}</a>
             </p>
           })
         }
       </div>
       {this.props.children}
-    </div>;
+    </div>
   }
 }
 
 export default {
   Edit,
   View
-};
+}

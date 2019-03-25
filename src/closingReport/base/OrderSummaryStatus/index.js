@@ -1,5 +1,5 @@
-import React from "react";
-import { Badge } from "antd";
+import React from 'react'
+import { Badge } from 'antd'
 // 订单结案状态
 const OrderSummaryStatus = ({ status, reason }) => {
   let _display = {
@@ -31,16 +31,16 @@ const OrderSummaryStatus = ({ status, reason }) => {
       status: 'success',
       text: '审核通过'
     }
-  };
-  let props = _display[status];
+  }
+  let props = _display[status]
   return (
     <div className='head-left'>
       <Badge {...props} />
       {reason && <div style={{ color: 'red' }}>{reason}</div>}
     </div>
-  );
-};
-export default OrderSummaryStatus;
+  )
+}
+export default OrderSummaryStatus
 
 // 数据完善状态
 const OrderPlatformStatus = ({ orderStatus, data }) => {
@@ -52,7 +52,7 @@ const OrderPlatformStatus = ({ orderStatus, data }) => {
     '5': '__none__',
     '6': '__none__',
     '7': '__none__'
-  };
+  }
   // ['1待完善' '2已完善' '3待审核' '4已审核' '5无需修改' '6待修改' '7已修改' '8品牌拒绝，待修改' '9审核完成']
   let _display = {
     'modify_status': {
@@ -115,12 +115,12 @@ const OrderPlatformStatus = ({ orderStatus, data }) => {
         index: '8'
       }
     }
-  };
-  let key = orderStatusToStatus[orderStatus];
-  let props = _display[key] && _display[key][data[key]];
+  }
+  let key = orderStatusToStatus[orderStatus]
+  let props = _display[key] && _display[key][data[key]]
   return (
     <div className='card-item-status'>
       {props ? <Badge {...props} /> : null}
     </div>
-  );
-};
+  )
+}

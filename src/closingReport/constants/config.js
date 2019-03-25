@@ -16,6 +16,6 @@ export const fieldConfig = (fieldId) => {
     '19': 'number',
     '20': 'number',
     '21': 'datetime'
-  };
-  return obj[fieldId] || 'input';
-};
+  }
+  return obj[fieldId] || 'input'
+}

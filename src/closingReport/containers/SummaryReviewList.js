@@ -1,33 +1,33 @@
-import React, { Component } from 'react';
-import { Table, Tooltip } from 'antd';
-import { SH2 } from '../../base/SectionHeader';
-import './SelectOrders.less';
-import IconText from '../base/IconText';
-import SummaryReviewFilterForm from '../components/SummaryReviewFilterForm';
-import { bindActionCreators } from "redux";
-import * as actions from "../actions";
-import { connect } from "react-redux";
+import React, { Component } from 'react'
+import { Table, Tooltip } from 'antd'
+import { SH2 } from '../../base/SectionHeader'
+import './SelectOrders.less'
+import IconText from '../base/IconText'
+import SummaryReviewFilterForm from '../components/SummaryReviewFilterForm'
+import { bindActionCreators } from 'redux'
+import * as actions from '../actions'
+import { connect } from 'react-redux'
 
 const mapStateToProps = (state) => ({
   common: state.commonReducers,
   closingReport: state.closingReportReducers
-});
+})
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators({
     ...actions
   }, dispatch)
-});
+})
 
 @connect(mapStateToProps, mapDispatchToProps)
 export default class SummaryReviewList extends Component {
   constructor(props, context) {
-    super(props, context);
+    super(props, context)
     this.state = {
       search: {
         page: 1,
         pageSize: 50
       }
-    };
+    }
     this.columns = [
       {
         title: '数据单号',
@@ -47,7 +47,7 @@ export default class SummaryReviewList extends Component {
         render: (ids, record) => {
           return <div>
             <b>{ids}</b>个
-          </div>;
+          </div>
         }
       }, {
         title: '创建人',
@@ -55,46 +55,47 @@ export default class SummaryReviewList extends Component {
       }, {
         title: '时间',
         dataIndex: 'created_at'
-      },{
+      }, {
         title: '操作',
         dataIndex: 'actions',
         align: 'center',
         render: (date, record) => {
           return <a target='_blank' href={'/order/closing-report/detail/review-summary?summary_id=' + record.summary_id}>查看</a>
         }
-      }];
-    const { actions } = props;
-    actions.getExecutor();
+      }]
+    const { actions } = props
+    actions.getExecutor()
   }
+
   getList = (params = {}) => {
-    const { actions } = this.props;
-    let search = { ...this.state.search, ...params };
-    this.setState({ listLoading: true, search });
+    const { actions } = this.props
+    let search = { ...this.state.search, ...params }
+    this.setState({ listLoading: true, search })
     actions.getSummaryList(search).finally(() => {
-      this.setState({ listLoading: false });
-    });
-  };
+      this.setState({ listLoading: false })
+    })
+  }
 
   linkTo = (url) => {
-    this.props.history.push(url);
-  };
+    this.props.history.push(url)
+  }
 
   componentDidMount() {
-    this.getList();
+    this.getList()
   }
 
   render() {
-    const { closingReport, actions } = this.props;
-    const { summaryList: { list, source, total, page, pageSize } } = closingReport;
+    const { closingReport, actions } = this.props
+    const { summaryList: { list, source, total, page, pageSize } } = closingReport
     const pagination = {
       total,
       pageSize,
       current: page,
       onChange: (current, size) => {
-        this.getList({ page: current });
+        this.getList({ page: current })
       },
       showQuickJumper: true
-    };
+    }
     return <div className='select-orders flex-form-layout'>
       <SH2 title='投放数据汇总单审核列表' />
       <div style={{ padding: '20px 0' }} className='closing-report-filter-container'>
@@ -112,6 +113,6 @@ export default class SummaryReviewList extends Component {
         pagination={pagination}
         columns={this.columns}
       />
-    </div>;
+    </div>
   }
 }

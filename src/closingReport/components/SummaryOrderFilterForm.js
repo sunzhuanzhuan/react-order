@@ -1,22 +1,22 @@
-import React, { Component } from 'react';
-import { Form, Input, Row, Col, Select, Button, DatePicker } from 'antd';
-import EmSpan from '../base/EmSpan';
-import SearchSelect from '../../base/SearchSelect';
-import { batchText2Array, moment2dateStr } from '../util';
+import React, { Component } from 'react'
+import { Form, Input, Row, Col, Select, Button, DatePicker } from 'antd'
+import EmSpan from '../base/EmSpan'
+import SearchSelect from '../../base/SearchSelect'
+import { batchText2Array, moment2dateStr } from '../util'
 
-const { RangePicker } = DatePicker;
-const InputGroup = Input.Group;
-const Option = Select.Option;
+const { RangePicker } = DatePicker
+const InputGroup = Input.Group
+const Option = Select.Option
 
 function handleValue(values) {
-  values['order_id'] = batchText2Array(values['order_id']);
-  values['execution_evidence_code'] = batchText2Array(values['execution_evidence_code']);
-  values['requirement_id'] = batchText2Array(values['requirement_id']);
-  values.company_id = values.company_id && values.company_id.key;
-  values.external_check_at = moment2dateStr(values.external_check_at);
-  values.internal_check_at = moment2dateStr(values.internal_check_at);
-  values.submitter_at = moment2dateStr(values.submitter_at);
-  return values;
+  values['order_id'] = batchText2Array(values['order_id'])
+  values['execution_evidence_code'] = batchText2Array(values['execution_evidence_code'])
+  values['requirement_id'] = batchText2Array(values['requirement_id'])
+  values.company_id = values.company_id && values.company_id.key
+  values.external_check_at = moment2dateStr(values.external_check_at)
+  values.internal_check_at = moment2dateStr(values.internal_check_at)
+  values.submitter_at = moment2dateStr(values.submitter_at)
+  return values
 }
 
 @Form.create()
@@ -24,30 +24,30 @@ export default class SummaryOrderFilterForm extends Component {
   state = {
     batchKey: 'order_id',
     timeType: 'submitter_at'
-  };
+  }
   handleSubmit = (e) => {
-    e.preventDefault();
+    e.preventDefault()
     this.props.form.validateFields((err, values) => {
       if (!err) {
         // 处理params
-        values = handleValue(values);
-        this.props.getList({ ...values, page: 1 });
+        values = handleValue(values)
+        this.props.getList({ ...values, page: 1 })
       }
-    });
-  };
+    })
+  }
   handleReset = () => {
-    this.props.form.resetFields();
-  };
+    this.props.form.resetFields()
+  }
   validatorBatchId = (rule, value, callback) => {
     if (value && value.trim().split(/\s+/g).length > 200) {
-      return callback('不能超过200个');
+      return callback('不能超过200个')
     }
-    callback();
-  };
+    callback()
+  }
 
   render() {
-    const { source, loading, actions } = this.props;
-    const { getFieldDecorator, getFieldValue } = this.props.form;
+    const { source, loading, actions } = this.props
+    const { getFieldDecorator, getFieldValue } = this.props.form
     return <Form onSubmit={this.handleSubmit} layout="inline" autoComplete="off">
       <Row>
         <Col span={6}>
@@ -77,7 +77,7 @@ export default class SummaryOrderFilterForm extends Component {
                 maxTagCount={0}
                 optionFilterProp='children'
                 maxTagPlaceholder={(omittedValues) => {
-                  return `已选${omittedValues.length}项`;
+                  return `已选${omittedValues.length}项`
                 }}
               >
                 {source.projectByUser.map(option => <Option key={option.id}>{option.name}</Option>)}
@@ -97,7 +97,7 @@ export default class SummaryOrderFilterForm extends Component {
                 maxTagCount={0}
                 optionFilterProp='children'
                 maxTagPlaceholder={(omittedValues) => {
-                  return `已选${omittedValues.length}项`;
+                  return `已选${omittedValues.length}项`
                 }}
               >
                 {source.brandByUser.map(option =>
@@ -201,7 +201,7 @@ export default class SummaryOrderFilterForm extends Component {
                 getPopupContainer={() => document.querySelector('.closing-report-filter-container')}
                 optionFilterProp='children'
                 maxTagPlaceholder={(omittedValues) => {
-                  return `已选${omittedValues.length}项`;
+                  return `已选${omittedValues.length}项`
                 }}
               >
                 {source.summaryStatus.map(option =>
@@ -217,6 +217,6 @@ export default class SummaryOrderFilterForm extends Component {
           </div>
         </Col>
       </Row>
-    </Form>;
+    </Form>
   }
 }

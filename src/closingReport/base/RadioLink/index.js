@@ -1,54 +1,54 @@
-import React, { Component } from 'react';
-import { Radio, Input } from 'antd';
+import React, { Component } from 'react'
+import { Radio, Input } from 'antd'
 
-const RadioGroup = Radio.Group;
+const RadioGroup = Radio.Group
 const radioStyle = {
   display: 'block',
   height: '30px',
   lineHeight: '30px'
-};
+}
 export default class RadioLink extends Component {
   constructor(props) {
-    super(props);
-    const value = props.value || {};
+    super(props)
+    const value = props.value || {}
     this.state = {
       link: value.link || '',
       radio: value.radio || 1,
       reference: value.reference || ''
-    };
+    }
   }
 
   static getDerivedStateFromProps(nextProps) {
     if ('value' in nextProps) {
       return {
         ...(nextProps.value || {})
-      };
+      }
     }
-    return null;
+    return null
   }
 
   handleLinkChange = (e) => {
-    const value = e.target.value;
+    const value = e.target.value
     if (!('value' in this.props)) {
-      this.setState({ link: value });
+      this.setState({ link: value })
     }
-    this.triggerChange({ link: value });
-  };
+    this.triggerChange({ link: value })
+  }
 
   handleRadioChange = (e) => {
-    const radio = e.target.value;
+    const radio = e.target.value
     if (!('value' in this.props)) {
-      this.setState({ radio });
+      this.setState({ radio })
     }
-    this.triggerChange({ radio });
-  };
+    this.triggerChange({ radio })
+  }
 
   triggerChange = (changedValue) => {
-    const onChange = this.props.onChange;
+    const onChange = this.props.onChange
     if (onChange) {
-      onChange(Object.assign({}, this.state, changedValue));
+      onChange(Object.assign({}, this.state, changedValue))
     }
-  };
+  }
 
   render() {
     return <div>
@@ -57,7 +57,7 @@ export default class RadioLink extends Component {
           参考链接
           <a
             className='text-overflow-ellipsis'
-            style={{ marginLeft: 10, width: 400, display: 'inline-block', verticalAlign: "bottom" }}
+            style={{ marginLeft: 10, width: 400, display: 'inline-block', verticalAlign: 'bottom' }}
             target='_blank'
             href={this.state.reference}
           >
@@ -69,8 +69,8 @@ export default class RadioLink extends Component {
           {this.state.radio === 2 ? <Input onChange={this.handleLinkChange} style={{
             width: 400,
             marginLeft: 10
-          }} value={this.state.link}/> : null}</Radio>
+          }} value={this.state.link} /> : null}</Radio>
       </RadioGroup>
-    </div>;
+    </div>
   }
 }

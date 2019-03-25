@@ -244,7 +244,8 @@
     background-image: url("./default-skin.svg"); }
   .pswp--svg .pswp__button--arrow--left,
   .pswp--svg .pswp__button--arrow--right {
-    background: none; } }
+    background: none; }
+}
 
 .pswp__button--close {
   background-position: 0 -44px; }
@@ -547,7 +548,8 @@ a.pswp__share--download:hover {
     left: auto;
     top: auto;
     margin: 0;
-    float: right; } }
+    float: right; }
+}
 
 @-webkit-keyframes clockwise {
   0% {
@@ -555,7 +557,8 @@ a.pswp__share--download:hover {
     transform: rotate(0deg); }
   100% {
     -webkit-transform: rotate(360deg);
-    transform: rotate(360deg); } }
+    transform: rotate(360deg); }
+}
 
 @keyframes clockwise {
   0% {
@@ -563,7 +566,8 @@ a.pswp__share--download:hover {
     transform: rotate(0deg); }
   100% {
     -webkit-transform: rotate(360deg);
-    transform: rotate(360deg); } }
+    transform: rotate(360deg); }
+}
 
 @-webkit-keyframes donut-rotate {
   0% {
@@ -574,7 +578,8 @@ a.pswp__share--download:hover {
     transform: rotate(-140deg); }
   100% {
     -webkit-transform: rotate(0);
-    transform: rotate(0); } }
+    transform: rotate(0); }
+}
 
 @keyframes donut-rotate {
   0% {
@@ -585,7 +590,8 @@ a.pswp__share--download:hover {
     transform: rotate(-140deg); }
   100% {
     -webkit-transform: rotate(0);
-    transform: rotate(0); } }
+    transform: rotate(0); }
+}
 
 /*
 

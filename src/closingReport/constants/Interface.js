@@ -1,4 +1,4 @@
-const prefix = '/summaryData';
+const prefix = '/summaryData'
 export default {
   salesManagers: prefix + '/getSalesManager',
   getExecutor: prefix + '/getExecutor',
@@ -23,5 +23,5 @@ export default {
   getCompanyTotalInfo: prefix + '/getCompanyTotalInfo',
   getSummaryTotalInfo: prefix + '/getSummaryTotalInfo',
   submitCheckSummaryByOrder: prefix + '/checkOrder',
-  submitCheckSummary: prefix + '/checkSummaryOrder',
-};
+  submitCheckSummary: prefix + '/checkSummaryOrder'
+}

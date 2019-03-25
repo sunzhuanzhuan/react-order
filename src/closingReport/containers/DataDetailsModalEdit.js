@@ -1,145 +1,145 @@
-import React, { Component } from 'react';
-import { Modal, Form, Icon, Button, message } from 'antd';
+import React, { Component } from 'react'
+import { Modal, Form, Icon, Button, message } from 'antd'
 import {
   Outline,
   BaseInfo,
   ExecutionLink,
   ExecutionPic,
   ExecutionData
-} from '../components/dataDetails';
-import './DataDetailsModal.less';
-import { Against, Agree } from '../base/ApprovalStatus';
-import Loading from '../base/Loading';
+} from '../components/dataDetails'
+import './DataDetailsModal.less'
+import { Against, Agree } from '../base/ApprovalStatus'
+import Loading from '../base/Loading'
 
 
 const formItemLayout = {
   labelCol: { span: 4 },
   wrapperCol: { span: 20 }
-};
+}
 @Form.create()
 export default class DataDetailsModalEdit extends Component {
   constructor(props, context) {
-    super(props, context);
-    const { actions, data } = props;
-    this.state = { loading: true };
+    super(props, context)
+    const { actions, data } = props
+    this.state = { loading: true }
     // 请求数据
     actions.getPlatformDataInfo({
       order_id: data.order_id,
       platform_id: data.current.platform_id
     }).finally(() => {
-      this.setState({ loading: false });
-    });
+      this.setState({ loading: false })
+    })
   }
 
   componentWillUnmount() {
-    this.props.actions.clearPlatformData();
+    this.props.actions.clearPlatformData()
   }
 
   handleSubmitData = (value) => {
-    let result = {};
+    let result = {}
     let {
       basic_information = [],
       execution_link = [],
       execution_screenshot = [],
       data = [],
       screenshot = []
-    } = value;
+    } = value
     result.basic_information = basic_information.map(item => ({
       id: item.id,
       value: item.input,
       checked: item.checked ? 1 : 2
-    }));
+    }))
     result.execution_link = execution_link.map(item => ({
       id: item.id,
       value: item.radio === 1 ? item.reference : item.link,
       radio: item.radio
-    }));
+    }))
     result.execution_screenshot = execution_screenshot.map(item => ({
       id: item.id,
       value: (item.value || []).map(file => file.url)
-    }));
+    }))
     result.data = data.map(item => ({
       id: item.id,
       value: item.input,
       checked: item.checked ? 1 : 2
-    }));
+    }))
     result.screenshot = screenshot.map(item => ({
       id: item.id,
       value: (item.value || []).map(file => file.url)
-    }));
-    return result;
-  };
+    }))
+    return result
+  }
 
   save = () => {
-    let values = this.props.form.getFieldsValue();
-    values = this.handleSubmitData(values);
-    const { actions, data } = this.props;
-    let hide = message.loading('保存中..', 0);
+    let values = this.props.form.getFieldsValue()
+    values = this.handleSubmitData(values)
+    const { actions, data } = this.props
+    let hide = message.loading('保存中..', 0)
     actions.updatePlatformInfo({
       ...values,
       order_id: data.order_id,
       platform_id: data.current.platform_id
     }).then(() => {
-      message.success('保存成功!');
+      message.success('保存成功!')
     }).finally(() => {
-      hide();
-    });
-  };
+      hide()
+    })
+  }
 
   showConfirm = (values) => {
     Modal.confirm({
       title: '提交之后数据再次修改，是否确认提交？',
       onOk: () => {
-        values = this.handleSubmitData(values);
-        const { actions, data } = this.props;
+        values = this.handleSubmitData(values)
+        const { actions, data } = this.props
         return actions.updatePlatformInfo({
           ...values,
           order_id: data.order_id,
           is_finish: 1,
           platform_id: data.current.platform_id
         }).then(() => {
-          message.success('保存成功!');
+          message.success('保存成功!')
           actions.submitPlatformInfo({
             id: data.id,
             platform_id: data.current.platform_id,
             status: data.summary_status
-          });
-          this.props.closed();
-        });
+          })
+          this.props.closed()
+        })
       }
-    });
-  };
+    })
+  }
 
 
   submit = () => {
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        this.showConfirm(values);
+        this.showConfirm(values)
       }
-    });
-  };
+    })
+  }
 
   render() {
-    const { form, data, type, platformData } = this.props;
+    const { form, data, type, platformData } = this.props
     const {
       total, // outline
       basic_information, // baseInfo
       execution_link,
       execution_screenshot, // executionPic
       execution_data
-    } = platformData;
+    } = platformData
     const props = {
       formItemLayout, form
-    };
+    }
     const title = <h2 className='data-details-header'>平台数据详情
       <small>订单ID：{data.order_id}</small>
-    </h2>;
+    </h2>
     const footer = <div className='data-details-footer'>
       {/*<Icon type="exclamation-circle" />*/}
       <span> </span>
       <Button onClick={this.save}>保存</Button>
       <Button type='primary' onClick={this.submit}>保存并提交</Button>
-    </div>;
+    </div>
     return <Modal
       centered
       destroyOnClose
@@ -151,7 +151,7 @@ export default class DataDetailsModalEdit extends Component {
       footer={footer}
       maskClosable={false}
     >
-      {this.state.loading ? <div style={{ height: '600px' }}><Loading/></div> :
+      {this.state.loading ? <div style={{ height: '600px' }}><Loading /></div> :
         <Form>
           <Outline.View data={total} />
           {
@@ -176,6 +176,6 @@ export default class DataDetailsModalEdit extends Component {
           }
         </Form>
       }
-    </Modal>;
+    </Modal>
   }
 }

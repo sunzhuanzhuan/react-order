@@ -1,20 +1,20 @@
-import React, { Component } from 'react';
-import { Row, Col, Input, Popover, Icon } from 'antd';
-import './index.less';
-import { WBYPlatformIcon } from 'wbyui';
-import DataDetailsReviewWrap from './DataDetailsReviewWrap';
-import { Against, Agree } from '../../base/ApprovalStatus';
+import React, { Component } from 'react'
+import { Row, Col, Input, Popover, Icon } from 'antd'
+import './index.less'
+import { WBYPlatformIcon } from 'wbyui'
+import DataDetailsReviewWrap from './DataDetailsReviewWrap'
+import { Against, Agree } from '../../base/ApprovalStatus'
 
 const Media = props => {
   let content = <div>
     <Icon type="qq" /> {props.qq || '-'} <br />
     <Icon type="mail" /> {props.email || '-'} <br />
     <Icon type="phone" /> {props.cell_phone || '-'}
-  </div>;
+  </div>
   return props.real_name ? <Popover content={content} title={props.title} trigger="click">
     {props.real_name}
-  </Popover> : '-';
-};
+  </Popover> : '-'
+}
 
 
 /**
@@ -22,51 +22,51 @@ const Media = props => {
  */
 export class Edit extends Component {
   constructor(props, context) {
-    super(props, context);
-    const value = props.value || '';
+    super(props, context)
+    const value = props.value || ''
     this.state = {
       editName: false,
       inputValue: value
-    };
+    }
   }
 
   static getDerivedStateFromProps(nextProps) {
     if ('value' in nextProps) {
       return {
         inputValue: nextProps.value || ''
-      };
+      }
     }
-    return null;
+    return null
   }
 
   triggerChange = (changedValue) => {
-    const onChange = this.props.onChange;
+    const onChange = this.props.onChange
     if (onChange) {
-      onChange(changedValue);
+      onChange(changedValue)
     }
-  };
+  }
 
   change = () => {
-    this.setState({ editName: true });
-  };
+    this.setState({ editName: true })
+  }
 
   cancel = () => {
-    this.setState({ editName: false });
-  };
+    this.setState({ editName: false })
+  }
   ok = () => {
-    let val = this.input.state.value;
+    let val = this.input.state.value
     if (!('value' in this.props)) {
       this.setState({
         inputValue: val,
         editName: false
-      });
+      })
     } else {
       this.setState({
         editName: false
-      });
-      this.triggerChange(val);
+      })
+      this.triggerChange(val)
     }
-  };
+  }
 
   render() {
     const titles = [
@@ -76,7 +76,7 @@ export class Edit extends Component {
       '订单创建人',
       '分发平台',
       '账号名称'
-    ];
+    ]
     const values = [
       '一级帮diaper-12月 / Pampers',
       '唐芬莉 / 刘孟颖',
@@ -91,7 +91,7 @@ export class Edit extends Component {
         <span>{this.state.inputValue || '--'}</span>
         <a onClick={this.change}>修改</a>
       </div>
-    ];
+    ]
     return <div className='platform-data-detail-module outline'>
       <Row>
         {
@@ -106,7 +106,7 @@ export class Edit extends Component {
         }
         {this.props.children}
       </Row>
-    </div>;
+    </div>
   }
 }
 
@@ -123,13 +123,13 @@ export class View extends Component {
       resource_media,
       project_media,
       platform_id
-    } = this.props.data;
+    } = this.props.data
     const titles = [
       '项目/品牌',
       '资源/项目媒介',
       '销售/执行人',
       '分发平台'
-    ];
+    ]
     const values = [
       brand_name + ' / ' + project_name,
       <span key={112}>
@@ -138,7 +138,7 @@ export class View extends Component {
       </span>,
       real_name + ' / ' + executor_name,
       <WBYPlatformIcon key={22} weibo_type={platform_id} widthSize={22} />
-    ];
+    ]
     return <div className='platform-data-detail-module outline'>
       <Row>
         {
@@ -153,7 +153,7 @@ export class View extends Component {
         }
       </Row>
       {this.props.children}
-    </div>;
+    </div>
   }
 }
 
@@ -171,11 +171,11 @@ export class Review extends Component {
           <Against reason={'asdasdasdwww qweqweqwe'} maxWidth={200} />
         </Col>
       </Edit>
-    </DataDetailsReviewWrap>;
+    </DataDetailsReviewWrap>
   }
 }
 
 export default {
   Edit,
   View
-};
+}

@@ -1,21 +1,21 @@
-import React, { Component } from 'react';
-import { Form, Empty, Divider, Button, Icon } from 'antd';
-import PhotoSwipe from '../../base/PhotoSwipe';
-import './index.less';
-import DataModuleHeader from '../../base/DataModuleHeader';
-import SwitchRequiredInput from '../../base/SwitchRequiredInput';
-import { OssUpload } from 'wbyui';
-import request from '@/api';
-import { getImageInfos } from '../../util';
-import viewPic from '../../base/viewPic';
-import { Against } from '@/closingReport/base/ApprovalStatus';
-import DataFieldFormat from '../../base/DataFieldFormat';
-import { fieldConfig } from '../../constants/config';
+import React, { Component } from 'react'
+import { Form, Empty, Divider, Button, Icon } from 'antd'
+import PhotoSwipe from '../../base/PhotoSwipe'
+import './index.less'
+import DataModuleHeader from '../../base/DataModuleHeader'
+import SwitchRequiredInput from '../../base/SwitchRequiredInput'
+import { OssUpload } from 'wbyui'
+import request from '@/api'
+import { getImageInfos } from '../../util'
+import viewPic from '../../base/viewPic'
+import { Against } from '@/closingReport/base/ApprovalStatus'
+import DataFieldFormat from '../../base/DataFieldFormat'
+import { fieldConfig } from '../../constants/config'
 
 function action() {
   return request.get('/toolbox-gateway/file/v1/getToken').then(({ data }) => {
-    return data;
-  });
+    return data
+  })
 }
 
 /**
@@ -23,36 +23,36 @@ function action() {
  */
 export class Edit extends Component {
   constructor(props, context) {
-    super(props, context);
+    super(props, context)
     this.state = {
       authToken: ''
-    };
+    }
     action().then(authToken => {
-      this.setState({ authToken });
-    });
+      this.setState({ authToken })
+    })
   }
 
   checkSwitchInput = (rule, value = {}, callback) => {
     if (value.input || value.checked) {
-      callback();
-      return;
+      callback()
+      return
     }
-    callback(rule.message);
-  };
+    callback(rule.message)
+  }
 
   render() {
-    const { getFieldDecorator } = this.props.form;
-    const { data: { data = [], screenshot = [] } } = this.props;
+    const { getFieldDecorator } = this.props.form
+    const { data: { data = [], screenshot = [] } } = this.props
     const reason = parseInt(this.props.data.status) === 2 ?
-      <Against reason={this.props.data.reason} /> : null;
-    let fetchData = [], inputData = [];
+      <Against reason={this.props.data.reason} /> : null
+    let fetchData = [], inputData = []
     data.forEach((item) => {
       if (item.source_type === 2) {
-        fetchData.push(item);
+        fetchData.push(item)
       } else if (item.source_type === 1) {
-        inputData.push(item);
+        inputData.push(item)
       }
-    });
+    })
     return <div className='platform-data-detail-module execution-data'>
       <DataModuleHeader title='执行数据' extra={reason} />
       <div style={{ paddingTop: '10px' }}>
@@ -74,7 +74,7 @@ export class Edit extends Component {
                       rules: [{ validator: this.checkSwitchInput, message: `请输入${item.display}!` }]
                     })(<SwitchRequiredInput width={330} type={fieldConfig(item.id)} />)}
                   </Form.Item>
-                </div>;
+                </div>
               })
             }
           </div>
@@ -118,7 +118,7 @@ export class Edit extends Component {
                   {getFieldDecorator(`screenshot[${n}].id`, {
                     initialValue: item.id
                   })(<input type="hidden" />)}
-                </Form.Item>;
+                </Form.Item>
               })
             }
           </div> : null}
@@ -131,13 +131,13 @@ export class Edit extends Component {
                     validateFirst: true,
                     rules: [{ validator: this.checkSwitchInput, message: `请输入${item.display}!` }]
                   })(<SwitchRequiredInput width={140} type={fieldConfig(item.id)} />)}
-                </Form.Item>;
+                </Form.Item>
               })
             }
           </div>
         </div>
       </div>
-    </div>;
+    </div>
   }
 }
 
@@ -161,48 +161,48 @@ const options = {
   fullscreenEl: false,
   focus: false
   //http://photoswipe.com/documentation/options.html
-};
+}
 
 /**
  * 执行数据(查看)
  */
 export class View extends Component {
   constructor(props, context) {
-    super(props, context);
+    super(props, context)
     this.state = {
       items: [],
       loading: true
-    };
-    const { data: { screenshot = [] } } = this.props;
+    }
+    const { data: { screenshot = [] } } = this.props
     const imgList = screenshot.reduce((ary, cur) => {
       return ary.concat(cur.value.map(url => ({
         src: url
-      })));
-    }, []);
+      })))
+    }, [])
     Promise.all(imgList.map(url => getImageInfos(url.src))).then(result => {
       let items = result.filter(Boolean).map((img, n) => ({
         src: img.src,
         w: img.width,
         h: img.height,
         title: 'Image ' + n
-      }));
+      }))
       this.setState({
         items,
         loading: false
-      });
-    });
+      })
+    })
   }
 
   render() {
-    const { data: { data = [], screenshot = [] } } = this.props;
-    let fetchData = [], inputData = [];
+    const { data: { data = [], screenshot = [] } } = this.props
+    let fetchData = [], inputData = []
     data.forEach((item) => {
       if (item.source_type === 2) {
-        fetchData.push(item);
+        fetchData.push(item)
       } else if (item.source_type === 1) {
-        inputData.push(item);
+        inputData.push(item)
       }
-    });
+    })
     return <div className='platform-data-detail-module execution-data read'>
       <div className='fetch-data'>
         <div className='read-left-head'>
@@ -223,7 +223,7 @@ export class View extends Component {
                     <span className='title'>{item.display}：</span>
                     <span className='value'><DataFieldFormat value={item.checked === 1 ? '无法提供该数据' : item.value} /></span>
                   </p>
-                </div>;
+                </div>
               })
             }
           </div>
@@ -241,17 +241,17 @@ export class View extends Component {
               return <p key={item.id} className='data-item'>
                 <span className='title'>{item.display}：</span>
                 <span className='value'><DataFieldFormat value={item.checked === 1 ? '无法提供该数据' : item.value} /></span>
-              </p>;
+              </p>
             })
           }
         </div>
       </div>
       {this.props.children}
-    </div>;
+    </div>
   }
 }
 
 export default {
   Edit,
   View
-};
+}

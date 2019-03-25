@@ -1,9 +1,10 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import Photoswipe from 'photoswipe';
-import PhotoswipeUIDefault from 'photoswipe/dist/photoswipe-ui-default';
-import events from './events';
+import React from 'react'
+import PropTypes from 'prop-types'
+import Photoswipe from 'photoswipe'
+import PhotoswipeUIDefault from 'photoswipe/dist/photoswipe-ui-default'
+import events from './events'
 import './style.css'
+
 class PhotoSwipe extends React.Component {
   static propTypes = {
     isOpen: PropTypes.bool.isRequired,
@@ -12,7 +13,7 @@ class PhotoSwipe extends React.Component {
     onClose: PropTypes.func,
     id: PropTypes.string,
     className: PropTypes.string
-  };
+  }
 
   static defaultProps = {
     options: {},
@@ -20,94 +21,94 @@ class PhotoSwipe extends React.Component {
     },
     id: '',
     className: ''
-  };
+  }
 
   state = {
-    isOpen: this.props.isOpen,
-  };
+    isOpen: this.props.isOpen
+  }
 
   componentDidMount = () => {
-    const { isOpen } = this.state;
+    const { isOpen } = this.state
     if (isOpen) {
-      this.openPhotoSwipe(this.props);
+      this.openPhotoSwipe(this.props)
     }
-  };
+  }
 
   componentWillReceiveProps = (nextProps) => {
-    const { isOpen } = this.state;
+    const { isOpen } = this.state
     if (nextProps.isOpen) {
       if (!isOpen) {
-        this.openPhotoSwipe(nextProps);
+        this.openPhotoSwipe(nextProps)
       } else {
-        this.updateItems([...nextProps.items]);
+        this.updateItems([ ...nextProps.items ])
       }
     } else if (isOpen) {
-      this.closePhotoSwipe();
+      this.closePhotoSwipe()
     }
-  };
+  }
 
   componentWillUnmount = () => {
     this.isUnMount = true
-    this.closePhotoSwipe();
-  };
+    this.closePhotoSwipe()
+  }
 
   openPhotoSwipe = (props) => {
-    const { items, options } = props;
-    const pswpElement = this.pswpElement;
-    this.photoSwipe = new Photoswipe(pswpElement, PhotoswipeUIDefault, items, options);
+    const { items, options } = props
+    const pswpElement = this.pswpElement
+    this.photoSwipe = new Photoswipe(pswpElement, PhotoswipeUIDefault, items, options)
     events.forEach((event) => {
-      const callback = props[event];
+      const callback = props[event]
       if (callback || event === 'destroy') {
-        const self = this;
-        this.photoSwipe.listen(event, function (...args) {
+        const self = this
+        this.photoSwipe.listen(event, function(...args) {
           if (callback) {
-            args.unshift(this);
-            callback(...args);
+            args.unshift(this)
+            callback(...args)
           }
           if (event === 'destroy') {
-            self.handleClose();
+            self.handleClose()
           }
-        });
+        })
       }
-    });
-    if(this.isUnMount) return
+    })
+    if (this.isUnMount) return
     this.setState({
       isOpen: true
     }, () => {
-      this.photoSwipe.init();
-    });
-  };
+      this.photoSwipe.init()
+    })
+  }
 
   updateItems = (items = []) => {
-    this.photoSwipe.items.length = 0;
+    this.photoSwipe.items.length = 0
     items.forEach((item) => {
-      this.photoSwipe.items.push(item);
-    });
-    this.photoSwipe.invalidateCurrItems();
-    this.photoSwipe.updateSize(true);
-  };
+      this.photoSwipe.items.push(item)
+    })
+    this.photoSwipe.invalidateCurrItems()
+    this.photoSwipe.updateSize(true)
+  }
 
   closePhotoSwipe = () => {
     if (!this.photoSwipe) {
-      return;
+      return
     }
-    this.photoSwipe.close();
-  };
+    this.photoSwipe.close()
+  }
 
   handleClose = () => {
-    const { onClose } = this.props;
-    if(this.isUnMount) return
+    const { onClose } = this.props
+    if (this.isUnMount) return
     this.setState({
       isOpen: false
     }, () => {
       if (onClose) {
-        onClose();
+        onClose()
       }
-    });
-  };
+    })
+  }
 
   render() {
-    const { id } = this.props;
+    const { id } = this.props
     return (
       <div
         id={id}
@@ -116,7 +117,7 @@ class PhotoSwipe extends React.Component {
         role="dialog"
         aria-hidden="true"
         ref={(node) => {
-          this.pswpElement = node;
+          this.pswpElement = node
         }}
       >
         <div className="pswp__bg"/>
@@ -167,8 +168,8 @@ class PhotoSwipe extends React.Component {
           </div>
         </div>
       </div>
-    );
+    )
   }
 }
 
-export default PhotoSwipe;
+export default PhotoSwipe

@@ -1,12 +1,11 @@
-import React, { Component } from 'react';
-import { Form } from 'antd';
-import './index.less';
-import SwitchRequiredInput from '../../base/SwitchRequiredInput';
-import DataModuleHeader from '../../base/DataModuleHeader';
-import { Against } from '../../base/ApprovalStatus';
-import DataFieldFormat from '../../base/DataFieldFormat';
-import { fieldConfig } from '../../constants/config';
-
+import React, { Component } from 'react'
+import { Form } from 'antd'
+import './index.less'
+import SwitchRequiredInput from '../../base/SwitchRequiredInput'
+import DataModuleHeader from '../../base/DataModuleHeader'
+import { Against } from '../../base/ApprovalStatus'
+import DataFieldFormat from '../../base/DataFieldFormat'
+import { fieldConfig } from '../../constants/config'
 
 
 /**
@@ -15,23 +14,24 @@ import { fieldConfig } from '../../constants/config';
 export class Edit extends Component {
   checkSwitchInput = (rule, value = {}, callback) => {
     if (value.input || value.checked) {
-      callback();
-      return;
+      callback()
+      return
     }
-    callback(rule.message);
-  };
+    callback(rule.message)
+  }
   validatorUrl = link_prefix => (rule, value, callback) => {
     if (!link_prefix || value.checked) {
-      return callback();
+      return callback()
     }
-    if (link_prefix.some(pre => new RegExp('^' + pre).test(value.input))) return callback();
-    callback('请输入正确的链接');
-  };
+    if (link_prefix.some(pre => new RegExp('^' + pre).test(value.input))) return callback()
+    callback('请输入正确的链接')
+  }
 
   render() {
-    const { getFieldDecorator } = this.props.form;
-    const { data: { data = [] } } = this.props;
-    const reason = parseInt(this.props.data.status) === 2 ? <Against reason={this.props.data.reason} /> : null;
+    const { getFieldDecorator } = this.props.form
+    const { data: { data = [] } } = this.props
+    const reason = parseInt(this.props.data.status) === 2 ?
+      <Against reason={this.props.data.reason} /> : null
     return <div className='platform-data-detail-module base-info'>
       <DataModuleHeader title='基本信息' extra={reason} />
       <div style={{ paddingTop: '10px' }}>
@@ -47,11 +47,11 @@ export class Edit extends Component {
                   { validator: this.validatorUrl(item.link_prefix) }
                 ]
               })(<SwitchRequiredInput type={fieldConfig(item.id)} />)}
-            </Form.Item>;
+            </Form.Item>
           })
         }
       </div>
-    </div>;
+    </div>
   }
 }
 
@@ -60,7 +60,7 @@ export class Edit extends Component {
  */
 export class View extends Component {
   render() {
-    const { data: { data = [] } } = this.props;
+    const { data: { data = [] } } = this.props
     return <div className='platform-data-detail-module base-info read'>
       <div className='read-left-head'>
         基本信息
@@ -73,18 +73,18 @@ export class View extends Component {
               {
                 item.link_prefix ?
                   <a className='value' target="_blank" href={item.value}>{item.value}</a> :
-                  <span className='value' title={item.value}><DataFieldFormat value={item.checked === 1 ? '无法提供该数据' : item.value}/></span>
+                  <span className='value' title={item.value}><DataFieldFormat value={item.checked === 1 ? '无法提供该数据' : item.value} /></span>
               }
-            </p>;
+            </p>
           })
         }
       </div>
       {this.props.children}
-    </div>;
+    </div>
   }
 }
 
 export default {
   Edit,
   View
-};
+}

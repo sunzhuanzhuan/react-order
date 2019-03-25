@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
-import { Route } from 'react-router-dom'
+import { Route, Switch } from 'react-router-dom'
 import lazyLoadComponent from '@/components/LazyLoadComponent'
 import './style.less'
+import { linkTo } from '../util/linkTo'
 // moment.fn.toJSON = function () {return moment(this).format("YYYY-MM-DD HH:mm:ss")}
 
 // 懒加载路由级组件
@@ -15,24 +16,27 @@ const SummaryDetailByOrder = lazyLoadComponent(() => import('./containers/Summar
 
 
 class ClosingReport extends Component {
-	state = {}
+  state = {}
 
-	render() {
-		return (
-			<div className='closing-report-container'>
-				<Route path='/order/closing-report/test' component={Test} />
-				<Route path='/order/closing-report/create' component={CreateReport} />
-				<Route path='/order/closing-report/list/summary-order' component={SummaryListByOrder} />
-        <Route path='/order/closing-report/detail/summary' component={SummaryDetail} />
-        <Route path='/order/closing-report/detail/order' component={SummaryDetailByOrder} />
-        <Route path='/order/closing-report/list/review' component={SummaryReviewList} />
-        <Route path='/order/closing-report/detail/review-summary' component={SummaryReviewDetail} />
-			</div>
-		);
-	}
+  render() {
+    return (
+      <div className='closing-report-container'>
+        <Switch>
+          <Route path='/order/closing-report/test' component={Test} />
+          <Route path='/order/closing-report/create' component={CreateReport} />
+          <Route path='/order/closing-report/list/summary-order' component={SummaryListByOrder} />
+          <Route path='/order/closing-report/detail/summary' component={SummaryDetail} />
+          <Route path='/order/closing-report/detail/order' component={SummaryDetailByOrder} />
+          <Route path='/order/closing-report/list/review' component={SummaryReviewList} />
+          <Route path='/order/closing-report/detail/review-summary' component={SummaryReviewDetail} />
+          <Route render={() => linkTo('/error', 'push')} />
+        </Switch>
+      </div>
+    )
+  }
 }
 
-export default ClosingReport;
+export default ClosingReport
 
 
 

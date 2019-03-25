@@ -1,16 +1,16 @@
-import React, { Component } from 'react';
-import { Form, Button, Icon } from 'antd';
-import './index.less';
-import DataModuleHeader from '../../base/DataModuleHeader';
-import { OssUpload } from 'wbyui';
-import request from '@/api';
-import viewPic from '../../base/viewPic';
-import { Against } from '@/closingReport/base/ApprovalStatus';
+import React, { Component } from 'react'
+import { Form, Button, Icon } from 'antd'
+import './index.less'
+import DataModuleHeader from '../../base/DataModuleHeader'
+import { OssUpload } from 'wbyui'
+import request from '@/api'
+import viewPic from '../../base/viewPic'
+import { Against } from '@/closingReport/base/ApprovalStatus'
 
 function action() {
   return request.get('/toolbox-gateway/file/v1/getToken').then(({ data }) => {
-    return data;
-  });
+    return data
+  })
 }
 
 /**
@@ -18,20 +18,20 @@ function action() {
  */
 export class Edit extends Component {
   constructor(props, context) {
-    super(props, context);
+    super(props, context)
     this.state = {
       authToken: ''
-    };
+    }
     action().then(authToken => {
-      this.setState({ authToken });
-    });
+      this.setState({ authToken })
+    })
   }
 
   render() {
-    const { getFieldDecorator } = this.props.form;
-    const { data: { data = [] } } = this.props;
+    const { getFieldDecorator } = this.props.form
+    const { data: { data = [] } } = this.props
     const reason = parseInt(this.props.data.status) === 2 ?
-      <Against reason={this.props.data.reason} /> : null;
+      <Against reason={this.props.data.reason} /> : null
     return <div className='platform-data-detail-module execution-pic'>
       <DataModuleHeader title='执行截图' extra={reason} />
       <div style={{ padding: '10px 20px' }}>
@@ -72,11 +72,11 @@ export class Edit extends Component {
               {getFieldDecorator(`execution_screenshot[${n}].id`, {
                 initialValue: item.id
               })(<input type="hidden" />)}
-            </Form.Item>;
+            </Form.Item>
           })
         }
       </div>
-    </div>;
+    </div>
   }
 }
 
@@ -85,7 +85,7 @@ export class Edit extends Component {
  */
 export class View extends Component {
   render() {
-    const { data: { data = [] } } = this.props;
+    const { data: { data = [] } } = this.props
     return <div className='platform-data-detail-module execution-pic read'>
       <div className='read-left-head'>
         执行截图
@@ -96,17 +96,17 @@ export class View extends Component {
             return (item.value || []).map((url, n) => {
               return <div key={n} className='pic-list-item' onClick={viewPic(url)}>
                 <img src={url} alt={url} />
-              </div>;
-            });
+              </div>
+            })
           })
         }
       </div>
       {this.props.children}
-    </div>;
+    </div>
   }
 }
 
 export default {
   Edit,
   View
-};
+}

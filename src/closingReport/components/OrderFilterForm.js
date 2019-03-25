@@ -1,12 +1,12 @@
 /* eslint-disable no-self-assign */
-import React, { Component } from 'react';
-import { Form, Input, Row, Col, Select, Button, DatePicker, Icon } from 'antd';
-import EmSpan from '../base/EmSpan';
-import { batchText2Array, moment2dateStr } from '../util';
+import React, { Component } from 'react'
+import { Form, Input, Row, Col, Select, Button, DatePicker, Icon } from 'antd'
+import EmSpan from '../base/EmSpan'
+import { batchText2Array, moment2dateStr } from '../util'
 
-const { RangePicker } = DatePicker;
-const InputGroup = Input.Group;
-const Option = Select.Option;
+const { RangePicker } = DatePicker
+const InputGroup = Input.Group
+const Option = Select.Option
 
 @Form.create()
 export default class OrderFilterForm extends Component {
@@ -14,43 +14,43 @@ export default class OrderFilterForm extends Component {
     expand: false,
     batchKey: 'order_id',
     timeType: 'time_type_1'
-  };
+  }
   handleSubmit = (e) => {
-    e.preventDefault();
+    e.preventDefault()
     this.props.form.validateFields((err, values) => {
       if (!err) {
         // reset select
-        this.props.onSelectChange([]);
+        this.props.onSelectChange([])
         // 处理params
-        values['order_id'] = batchText2Array(values['order_id']);
-        values['execution_evidence_code'] = batchText2Array(values['execution_evidence_code']);
-        values['requirement_id'] = batchText2Array(values['requirement_id']);
+        values['order_id'] = batchText2Array(values['order_id'])
+        values['execution_evidence_code'] = batchText2Array(values['execution_evidence_code'])
+        values['requirement_id'] = batchText2Array(values['requirement_id'])
 
-        values['time_type_1'] = moment2dateStr(values['time_type_1']);
-        values['time_type_2'] = moment2dateStr(values['time_type_2']);
-        values['time_type_3'] = moment2dateStr(values['time_type_3']);
-        values['time_type_4'] = moment2dateStr(values['time_type_4']);
-        this.props.getList({ ...values, page: 1 });
+        values['time_type_1'] = moment2dateStr(values['time_type_1'])
+        values['time_type_2'] = moment2dateStr(values['time_type_2'])
+        values['time_type_3'] = moment2dateStr(values['time_type_3'])
+        values['time_type_4'] = moment2dateStr(values['time_type_4'])
+        this.props.getList({ ...values, page: 1 })
       }
-    });
-  };
+    })
+  }
   handleReset = () => {
-    this.props.form.resetFields();
-  };
+    this.props.form.resetFields()
+  }
   toggle = () => {
-    const { expand } = this.state;
-    this.setState({ expand: !expand });
-  };
+    const { expand } = this.state
+    this.setState({ expand: !expand })
+  }
   validatorBatchId = (rule, value, callback) => {
     if (value && value.trim().split(/\s+/g).length > 200) {
-      return callback('不能超过200个');
+      return callback('不能超过200个')
     }
-    callback();
-  };
+    callback()
+  }
 
   render() {
-    const { source, loading } = this.props;
-    const { getFieldDecorator, getFieldValue } = this.props.form;
+    const { source, loading } = this.props
+    const { getFieldDecorator, getFieldValue } = this.props.form
     return <Form onSubmit={this.handleSubmit} layout="inline" autoComplete="off">
       <Row>
         <Col span={6}>
@@ -72,7 +72,7 @@ export default class OrderFilterForm extends Component {
                 maxTagCount={0}
                 optionFilterProp='children'
                 maxTagPlaceholder={(omittedValues) => {
-                  return `已选${omittedValues.length}项`;
+                  return `已选${omittedValues.length}项`
                 }}
               >
                 {source.projectByCompany.map(option =>
@@ -93,7 +93,7 @@ export default class OrderFilterForm extends Component {
                 maxTagCount={0}
                 optionFilterProp='children'
                 maxTagPlaceholder={(omittedValues) => {
-                  return `已选${omittedValues.length}项`;
+                  return `已选${omittedValues.length}项`
                 }}
               >
                 {source.brandByCompany.map(option =>
@@ -156,7 +156,7 @@ export default class OrderFilterForm extends Component {
                 optionFilterProp='children'
                 getPopupContainer={() => document.querySelector('.closing-report-filter-container')}
                 maxTagPlaceholder={(omittedValues) => {
-                  return `已选${omittedValues.length}项`;
+                  return `已选${omittedValues.length}项`
                 }}
               >
                 {source.executionStatus.map(option =>
@@ -195,6 +195,6 @@ export default class OrderFilterForm extends Component {
           </div>
         </Col>
       </Row>
-    </Form>;
+    </Form>
   }
 }

@@ -1,18 +1,18 @@
-import React, { Component } from 'react';
-import { Steps, Button, message, Modal, Input, Form } from 'antd';
-import './CreateReport.less';
-import SelectOrders from './SelectOrders';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import * as actions from '../actions';
-import { linkTo } from '../../util/linkTo';
-import OrderList from './OrderList';
-import { parseUrlQuery } from '@/util/parseUrl';
-import { companySource } from '../reducer';
-import difference from 'lodash/difference';
+import React, { Component } from 'react'
+import { Steps, Button, message, Modal, Input, Form } from 'antd'
+import './CreateReport.less'
+import SelectOrders from './SelectOrders'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import * as actions from '../actions'
+import { linkTo } from '../../util/linkTo'
+import OrderList from './OrderList'
+import { parseUrlQuery } from '@/util/parseUrl'
+import { companySource } from '../reducer'
+import difference from 'lodash/difference'
 
 
-const Step = Steps.Step;
+const Step = Steps.Step
 
 const steps = [{
   title: '选择订单',
@@ -20,23 +20,23 @@ const steps = [{
 }, {
   title: '完善订单数据',
   content: OrderList
-}];
+}]
 
 const mapStateToProps = (state) => ({
   common: state.commonReducers,
   closingReport: state.closingReportReducers
-});
+})
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators({
     ...actions
   }, dispatch)
-});
+})
 
 @connect(mapStateToProps, mapDispatchToProps)
 export default class CreateReport extends Component {
   constructor(props) {
-    super(props);
-    let { company_id, summary_name = '' } = parseUrlQuery();
+    super(props)
+    let { company_id, summary_name = '' } = parseUrlQuery()
     this.state = {
       current: 0,
       companyId: company_id,
@@ -45,15 +45,15 @@ export default class CreateReport extends Component {
       validateStatus: '',
       selectedRowKeys: [],
       visible: !summary_name
-    };
-    const { actions } = this.props;
+    }
+    const { actions } = this.props
     // 获取公司信息接口
-    actions.getCompanyTotalInfo({ company_id });
+    actions.getCompanyTotalInfo({ company_id })
   }
 
   componentWillUnmount() {
     // 清除reducer
-    this.props.actions.resetCreateReportData();
+    this.props.actions.resetCreateReportData()
   }
 
   // 提交审核
@@ -64,77 +64,77 @@ export default class CreateReport extends Component {
         companySource: { summaryId }
       },
       actions
-    } = this.props;
+    } = this.props
     let validate = list.every(orderKey => {
-      let order = source[orderKey];
-      return order.platform.every(platform => parseInt(platform.is_finish) === 1);
-    });
+      let order = source[orderKey]
+      return order.platform.every(platform => parseInt(platform.is_finish) === 1)
+    })
     if (validate) {
       Modal.confirm({
         title: '是否确认将本【投放数据汇总单】提交审核？',
         onOk: hide => {
           return actions.submitCheckSummary({ summary_id: summaryId }).then(() => {
             message.success('提交审核成功!')
-            this.linkTo('/order/closing-report/detail/summary?summary_id=' + summaryId);
-          }).finally(hide);
+            this.linkTo('/order/closing-report/detail/summary?summary_id=' + summaryId)
+          }).finally(hide)
         }
-      });
+      })
 
     } else {
-      Modal.info({ title: '请先将所有订单的数据都完善之后再提交' });
+      Modal.info({ title: '请先将所有订单的数据都完善之后再提交' })
     }
-  };
+  }
 
   onSelectChange = selectedRowKeys => {
-    this.setState({ selectedRowKeys });
-  };
+    this.setState({ selectedRowKeys })
+  }
   validateName = (summaryName) => {
-    return summaryName.length > 0 && summaryName.length <= 30;
-  };
+    return summaryName.length > 0 && summaryName.length <= 30
+  }
   changeName = (e) => {
-    let val = e.target.value;
+    let val = e.target.value
     this.setState({
       summaryName: val,
       validateStatus: this.validateName(val) ? 'success' : 'error'
-    });
-  };
+    })
+  }
   handleOk = () => {
     if (this.validateName(this.state.summaryName)) {
-      this.setState({ visible: false });
+      this.setState({ visible: false })
     } else {
-      this.setState({ validateStatus: 'error' });
+      this.setState({ validateStatus: 'error' })
     }
-  };
+  }
   handleCancel = (e, url) => {
-    console.log(e);
+    console.log(e)
     // linkTo()
-    window.location.replace(url || '/');
-  };
+    window.location.replace(url || '/')
+  }
 
   temporarySave = () => {
     this.coreSave(() => {
-      this.linkTo('/order/closing-report/list/summary-order');
+      this.linkTo('/order/closing-report/list/summary-order')
       // 页面刷新跳转到【投放数据汇总单列表】=》草稿 TAB页面
-    });
-  };
+    })
+  }
 
   linkTo = (url) => {
-    this.props.history.push(url);
-  };
+    this.props.history.push(url)
+  }
 
   coreSave(callback) {
-    const { closingReport: { companySource: { summaryId } } } = this.props;
-    const { selectedRowKeys, companyId, summaryName } = this.state;
+    const { closingReport: { companySource: { summaryId } } } = this.props
+    const { selectedRowKeys, companyId, summaryName } = this.state
     if (!selectedRowKeys.length) {
-      if(summaryId){
+      if (summaryId) {
         return Promise.resolve()
-      }else {
-        message.info('请选择订单');
-        return Promise.reject();
+      } else {
+        message.info('请选择订单')
+        return Promise.reject()
       }
     }
-    let _msg = message.loading('保存中...');
-    const { actions } = this.props;
+    let _msg = message.loading('保存中...')
+    const { actions } = this.props
     return actions.addOrUpdateSummary({
       company_id: companyId,
       summary_id: summaryId,
@@ -142,48 +142,48 @@ export default class CreateReport extends Component {
       order_ids: selectedRowKeys
     }).then(({ data }) => {
       if (data.order_ids) {
-        this.setState({ selectedRowKeys: difference(this.state.selectedRowKeys, data.order_ids) });
+        this.setState({ selectedRowKeys: difference(this.state.selectedRowKeys, data.order_ids) })
         Modal.confirm({
           title: data.order_ids + '， 已被其他【投放数据汇总单】选中且保存了，已自动为您取消勾选',
           onOk: callback
-        });
+        })
       } else {
-        callback();
+        callback()
       }
-    }).finally(_msg);
+    }).finally(_msg)
   }
 
   next() {
     this.coreSave(() => {
-      const current = this.state.current + 1;
-      this.setState({ current, selectedRowKeys: [] });
-    });
+      const current = this.state.current + 1
+      this.setState({ current, selectedRowKeys: [] })
+    })
   }
 
   prev() {
-    const current = this.state.current - 1;
-    this.setState({ current });
+    const current = this.state.current - 1
+    this.setState({ current })
   }
 
   render() {
-    const { closingReport: { companySource: { summaryId, companyName, companyPath, beSalesRealName } } } = this.props;
+    const { closingReport: { companySource: { summaryId, companyName, companyPath, beSalesRealName } } } = this.props
     // 参数错误跳到error
     if (!this.state.companyId) {
-      this.handleCancel(null, '/error');
+      this.handleCancel(null, '/error')
     }
-    const { current, selectedRowKeys, summaryName, companyId } = this.state;
-    const C = steps[current].content;
-    const footerWidth = this.props.common.ui.sliderMenuCollapse ? 40 : 200;
+    const { current, selectedRowKeys, summaryName, companyId } = this.state
+    const C = steps[current].content
+    const footerWidth = this.props.common.ui.sliderMenuCollapse ? 40 : 200
     const store = {
       common: this.props.common,
       closingReport: this.props.closingReport,
       actions: this.props.actions
-    };
+    }
     const select = {
       selectedRowKeys: selectedRowKeys,
       companyId,
       onSelectChange: this.onSelectChange
-    };
+    }
     return (
       <div className='closing-report-pages create-page'>
         <header className='create-page-steps'>
@@ -251,6 +251,6 @@ export default class CreateReport extends Component {
           </Form.Item>
         </Modal>
       </div>
-    );
+    )
   }
 }
