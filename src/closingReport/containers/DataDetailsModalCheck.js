@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Modal, Form, message } from 'antd'
+import { Modal, Form, message, Empty } from 'antd'
 import {
   Outline,
   BaseInfo,
@@ -21,6 +21,8 @@ export default class DataDetailsModalCheck extends Component {
     actions.getPlatformDataInfo({
       order_id: data.order_id,
       platform_id: data.current.platform_id
+    }).catch((err) => {
+      this.setState({ error: true, errorMsg: '错误:' + err.errorMsg || '未知错误!' })
     }).finally(() => {
       this.setState({ loading: false })
     })
@@ -90,23 +92,28 @@ export default class DataDetailsModalCheck extends Component {
       okText='提交结果'
       maskClosable={false}
     >
-      {this.state.loading ? <div style={{ height: '600px' }}><Loading /></div> :
-        <Form>
-          <Outline.View data={total} />
-          <DataDetailsReviewWrap {...props} field='basic_information'>
-            <BaseInfo.View data={basic_information} />
-          </DataDetailsReviewWrap>
-          <DataDetailsReviewWrap {...props} field='execution_link'>
-            <ExecutionLink.View data={execution_link} />
-          </DataDetailsReviewWrap>
-          <DataDetailsReviewWrap {...props} field='execution_screenshot'>
-            <ExecutionPic.View data={execution_screenshot} />
-          </DataDetailsReviewWrap>
-          <DataDetailsReviewWrap {...props} field='execution_data'>
-            <ExecutionData.View data={execution_data} />
-          </DataDetailsReviewWrap>
-        </Form>
-      }
+      <div style={{ height: '588px' }}>
+        {this.state.loading ?
+          <Loading /> :
+          this.state.error ?
+            <Empty description={this.state.errorMsg} style={{ paddingTop: '130px' }} /> :
+            <Form>
+              <Outline.View data={total} />
+              <DataDetailsReviewWrap {...props} field='basic_information'>
+                <BaseInfo.View data={basic_information} />
+              </DataDetailsReviewWrap>
+              <DataDetailsReviewWrap {...props} field='execution_link'>
+                <ExecutionLink.View data={execution_link} />
+              </DataDetailsReviewWrap>
+              <DataDetailsReviewWrap {...props} field='execution_screenshot'>
+                <ExecutionPic.View data={execution_screenshot} />
+              </DataDetailsReviewWrap>
+              <DataDetailsReviewWrap {...props} field='execution_data'>
+                <ExecutionData.View data={execution_data} />
+              </DataDetailsReviewWrap>
+            </Form>
+        }
+      </div>
     </Modal>
   }
 }

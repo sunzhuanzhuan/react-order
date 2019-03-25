@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Modal, Form, Button, message } from 'antd'
+import { Modal, Form, Button, message, Empty } from 'antd'
 import {
   Outline,
   BaseInfo,
@@ -26,6 +26,8 @@ export default class DataDetailsModalEdit extends Component {
     actions.getPlatformDataInfo({
       order_id: data.order_id,
       platform_id: data.current.platform_id
+    }).catch((err) => {
+      this.setState({ error: true, errorMsg: '错误:' + err.errorMsg || '未知错误!' })
     }).finally(() => {
       this.setState({ loading: false })
     })
@@ -151,31 +153,36 @@ export default class DataDetailsModalEdit extends Component {
       footer={footer}
       maskClosable={false}
     >
-      {this.state.loading ? <div style={{ height: '600px' }}><Loading /></div> :
-        <Form>
-          <Outline.View data={total} />
-          {
-            parseInt(basic_information.status) === 1 ?
-              <BaseInfo.View data={basic_information}><Agree /></BaseInfo.View> :
-              <BaseInfo.Edit data={basic_information} {...props} />
-          }
-          {
-            parseInt(execution_link.status) === 1 ?
-              <ExecutionLink.View data={execution_link}><Agree top={10} /></ExecutionLink.View> :
-              <ExecutionLink.Edit data={execution_link} {...props} />
-          }
-          {
-            parseInt(execution_screenshot.status) === 1 ?
-              <ExecutionPic.View data={execution_screenshot}><Agree /></ExecutionPic.View> :
-              <ExecutionPic.Edit data={execution_screenshot} {...props} />
-          }
-          {
-            parseInt(execution_data.status) === 1 ?
-              <ExecutionData.View data={execution_data}><Agree /></ExecutionData.View> :
-              <ExecutionData.Edit data={execution_data}  {...props} />
-          }
-        </Form>
-      }
+      <div style={{ height: '588px' }}>
+        {this.state.loading ?
+          <Loading /> :
+          this.state.error ?
+            <Empty description={this.state.errorMsg} style={{ paddingTop: '130px' }} /> :
+            <Form>
+              <Outline.View data={total} />
+              {
+                parseInt(basic_information.status) === 1 ?
+                  <BaseInfo.View data={basic_information}><Agree /></BaseInfo.View> :
+                  <BaseInfo.Edit data={basic_information} {...props} />
+              }
+              {
+                parseInt(execution_link.status) === 1 ?
+                  <ExecutionLink.View data={execution_link}><Agree top={10} /></ExecutionLink.View> :
+                  <ExecutionLink.Edit data={execution_link} {...props} />
+              }
+              {
+                parseInt(execution_screenshot.status) === 1 ?
+                  <ExecutionPic.View data={execution_screenshot}><Agree /></ExecutionPic.View> :
+                  <ExecutionPic.Edit data={execution_screenshot} {...props} />
+              }
+              {
+                parseInt(execution_data.status) === 1 ?
+                  <ExecutionData.View data={execution_data}><Agree /></ExecutionData.View> :
+                  <ExecutionData.Edit data={execution_data}  {...props} />
+              }
+            </Form>
+        }
+      </div>
     </Modal>
   }
 }
