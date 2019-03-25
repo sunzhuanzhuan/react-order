@@ -7,7 +7,7 @@ import IconText from '../base/IconText'
 
 const disabledReason = {
   '2': '订单尚未添加执行内容',
-  '3': '订单被其他的投放数据汇总单选择'
+  '3': '订单已被投放数据汇总单选择'
 }
 const columns = [
   {
