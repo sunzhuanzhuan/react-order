@@ -192,7 +192,8 @@ export const summaryOrders = handleActions({
     }
   },
   [combineActions('addPlatform')]: (state, action) => {
-    let { platform_id, id } = action.payload.data || {}
+    let { platform_id, id, status } = action.payload.data || {}
+    console.log(status, '=====>');
     return update(state, {
       source: {
         [id]: {
@@ -201,7 +202,8 @@ export const summaryOrders = handleActions({
               platform_id,
               is_finish: 2,
               modify_status: 1,
-              is_hand_record: 1
+              is_hand_record: 1,
+              check_status: 1
             }]
           }
         }

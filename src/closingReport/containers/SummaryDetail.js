@@ -52,7 +52,7 @@ export default class Test extends Component {
         // 订单操作逻辑同在 逻辑B 的基础上增加【提交审核】操作
         return {
           add: true,
-          del: true,
+          del: data.summary_status === 1,
           check: {
             disabled: data.platform.some(platform => parseInt(platform.is_finish) === 2),
             callback: () => {
@@ -85,7 +85,7 @@ export default class Test extends Component {
           let source = propsSource['modify_status']
           let status = item['modify_status']
           result.props = source[status]
-          result.del = parseInt(item.is_hand_record) === 1 && parseInt(status) !== 3
+          result.del = item.check_status === 1 // 当前新增的平台可以删除(还没提交过审核)
           if (parseInt(status) === 1) {
             result.edit = true
           }
@@ -95,7 +95,7 @@ export default class Test extends Component {
         // 品牌方审核被拒，待修改
         if (data.summary_status === 6) {
           let result = {}
-          result.del = parseInt(item.is_hand_record) === 1
+          result.del = item.check_status === 1 // 当前新增的平台可以删除(还没提交过审核)
           result.edit = true
           result.view = !result.edit
           return result
