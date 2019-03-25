@@ -85,8 +85,10 @@ class ExportOrder extends Component {
     };
     return <div>
      <Row>导出订单</Row>
-     <div>收款平台/代理商:</div>
+     <div>收款平台/代理商:{search.agent}</div>
      <ExportOrderFilter
+     search={this.props.actions.searchName}
+     accountName={this.props.accountName}
      history={this.props.history}
      questAction={this.queryData}
      page_size={page_size}
@@ -115,7 +117,8 @@ class ExportOrder extends Component {
 
 const mapStateToProps = (state) => {
 	return {
-		orderList: state.statement.orderList,
+    orderList: state.statement.orderList,
+    accountName: state.statement.accountName,
 	}
 }
 const mapDispatchToProps = dispatch => ({

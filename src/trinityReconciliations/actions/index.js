@@ -92,6 +92,14 @@ export const {
   method: 'post',
 });
 
+//导入订单模糊搜索
+
+export const {
+	searchName,
+	searchName_success
+} = createHttpAction('searchName', Interface.statement.searchName, {
+  method: 'get',
+});
 
 
 

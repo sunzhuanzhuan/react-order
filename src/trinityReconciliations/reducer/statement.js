@@ -4,7 +4,8 @@ import {
   getDetailSummary_success,
   getDetailSummaryList_success,
   getListStatement_success,
-  getToken_success
+  getToken_success,
+  searchName_success
  } from '../actions'
 import { handleActions } from 'redux-actions';
 
@@ -50,3 +51,10 @@ export const statementList = handleActions({
 export const token = handleActions({
 	[getToken_success]: (state, action) => (action.payload.data)
 }, "")
+
+
+//获取账号名称模糊搜索
+export const accountName = handleActions({
+	[searchName_success]: (state, action) => (action.payload.data)
+}, "")
+

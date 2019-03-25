@@ -5,7 +5,8 @@ import {
   detailSummaryList,
   detailSummary,
   statementList,
-  token
+  token,
+  accountName
 } from './statement'
 
 export default combineReducers({
@@ -14,5 +15,6 @@ export default combineReducers({
   detailSummaryList,
   detailSummary,
   statementList,
-  token
+  token,
+  accountName
 });

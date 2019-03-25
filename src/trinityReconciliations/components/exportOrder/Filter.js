@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Row, Col, Form, Select, Button, DatePicker, message, Icon, Input } from "antd";
+import { Row, Col, Form, Select, Button, DatePicker, message, Spin, Input } from "antd";
 import qs from 'qs';
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -10,7 +10,8 @@ class ListQuery extends Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-    
+      fetching: false,
+      typeValue:[]
     };
   }
   handleSearch = (e) => {
@@ -59,12 +60,19 @@ class ListQuery extends Component {
 	handleClear = () => {
 		this.props.form.resetFields();
 	}
-
+  fetchUser = (value) => {
+    this.setState({  fetching: true });
+    this.props.search().then(() => {
+        
+        this.setState({fetching: false });
+      });
+  }
   componentWillMount() {}
 
   render() {
     let { getFieldDecorator } = this.props.form;
-	
+    let {fetching,typeValue}=this.state;
+    let {accountName:{list=[]}}=this.props;
 		const formItemLayout = {
 			labelCol: { span: 6 },
 			wrapperCol: { span: 18 },
@@ -83,7 +91,18 @@ class ListQuery extends Component {
 					<Col span={4}>
 						<FormItem label="账号名称" {...formItemLayout} >
 							{getFieldDecorator('weibo_name')(
-								<Input style={{ width: 140 }} />
+								<Select
+                mode="multiple"
+                labelInValue
+                placeholder="Select users"
+                notFoundContent={fetching ? <Spin size="small" /> : null}
+                filterOption={false}
+                onSearch={this.fetchUser}
+                onChange={this.handleChange}
+                style={{ width: '100%' }}
+              >
+                {list.map(d => <Option key={d.statement_id}>{d.statement_name}</Option>)}
+              </Select>
 							)}
 						</FormItem>
 					</Col>
@@ -122,14 +141,14 @@ class ListQuery extends Component {
 					</Col>
 					<Col span={10}>
 						<FormItem label='对账状态' {...formItemLayout}>
-							{getFieldDecorator('public_order_id_1', { initialValue: ['1', '2'] })(
+							{getFieldDecorator('statement_status', { initialValue: ['1', '4'] })(
 								<Select
                 mode="multiple"
                 style={{ width: '300px' }}
               >
                <Option key={'1'} >未对账</Option>
-               <Option key={'2'}>对账完成</Option>
-               <Option key={'3'}>部分对账</Option>
+               <Option key={'3'}>对账完成</Option>
+               <Option key={'4'}>部分对账</Option>
               </Select>
 							)}
 						</FormItem>

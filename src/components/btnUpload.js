@@ -3,10 +3,12 @@ import {  message } from "antd";
 import NewUpload from '../trinityReconciliations/components/newUpload';
 // import './import.less';
 import axios from 'axios'
+import { connect } from 'react-redux';
+import { bindActionCreators } from "redux";
+import * as actionsStatement from '../trinityReconciliations/actions/index'
 
 
-
-export default class ListQuery extends Component {
+class btnUpload extends Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
@@ -27,19 +29,23 @@ export default class ListQuery extends Component {
       })
     }) 
   }
+  componentWillMount=()=>{
+    console.log(this.props)
+    
+  }
   
-  
+
   render() {
-    let {getToken}  =this.props;  
+    let {uploadText}=this.props;
     return <div>
     
                 <NewUpload
-                tok={getToken}
+                tok={this.props.actions.getToken}
                 uploadUrl="/api/common-file/file/v1/uploadPriBucket"
                 len={1}
                 size={50}
                 listType="text"
-                uploadText="请选择要上传的三方对账单"
+                uploadText={uploadText||'请上传'}
                 onChange={(file, originFile) =>{
                   console.log(file[0].filepath);
                   console.log(originFile);
@@ -56,4 +62,13 @@ export default class ListQuery extends Component {
     </div>;
   }
 }
+const mapStateToProps = (state) => {
+	return {
+    
+	}
+}
+const mapDispatchToProps = dispatch => ({
+	actions: bindActionCreators({ ...actionsStatement }, dispatch)
+});
 
+export default connect(mapStateToProps, mapDispatchToProps)(btnUpload)

@@ -5,9 +5,6 @@ import BtnUpload from '../../components/btnUpload'
 import  * as actionsImport from '../actions'
 import { connect } from 'react-redux';
 import { bindActionCreators } from "redux";
-
-
-
 const CheckboxGroup = Checkbox.Group;
 const columns = [{
   title: 'Name',
@@ -83,7 +80,7 @@ class Test extends Component {
 
     return <div className='reconciliation-container'>
     <BtnUpload
-    getToken={this.props.actions.getToken}
+    uploadText={'哈哈'}
     />
       {/* <div className='left'>
         <CheckboxGroup value={selectedRowKeys} onChange={(selectedRowKeys) => {

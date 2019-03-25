@@ -40,7 +40,8 @@ export default {
     detailSummary:'/finance/statement/detailSummary',
     detailSummaryList:'/finance/statement/detailSummaryList',
     deleteStatement:'/finance/statement/deleteStatement',
-    confirmApply:'/finance/statement/deleteStatement'
+    confirmApply:'/finance/statement/deleteStatement',
+    searchName:'/finance/statement/search'
   },
   meta:{
     metadata:'/finance/statement/metadata'
