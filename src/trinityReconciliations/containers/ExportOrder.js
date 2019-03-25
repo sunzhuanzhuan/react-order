@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from "redux";
 import * as actionsStatement from '../actions'
 import qs from 'qs'
+import './payment.less';
 
 const downloadUrl = url => {
   let iframe = document.createElement('iframe')
@@ -107,8 +108,8 @@ class ExportOrder extends Component {
      
     };
     return <div>
-     <Row>导出订单</Row>
-     <div>收款平台/代理商:{search.agent}</div>
+     <Row className='title'>导出订单</Row>
+     <div className='agent'>收款平台/代理商:<span className="agent_name">{search.agent}</span></div>
      <ExportOrderFilter
      search={this.props.actions.searchName}
      accountName={this.props.accountName}

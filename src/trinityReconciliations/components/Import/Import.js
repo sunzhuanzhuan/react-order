@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Row, Col, Form, Select, Button, Popconfirm, Upload, Icon, message } from "antd";
 import NewUpload from '../newUpload';
 import './import.less';
+import qs from 'qs';
 
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -20,18 +21,37 @@ class ListQuery extends Component {
     };
   }
   handleSearch = (e) => {
-		const { questAction, page_size, handlefilterParams } = this.props;
+		// const { questAction, page_size, handlefilterParams } = this.props;
 		e.preventDefault();
 		this.props.form.validateFields((err, values) => {
 			if (!err) {
-        
-				const hide = message.loading('查询中，请稍候...');
-				this.props.importSummary( ...this.state.fileList,{ commit: 2 }).then(() => {
+        let {search }=this.props;
+				const hide = message.loading('上传中，请稍候...');
+				this.props.importSummary( ...this.state.fileList,{ commit: 2 }).then((res) => {
 					// handlefilterParams(params);
-					hide();
+          hide();
+          if(res.data.code == 1000){
+            message.success('上传成功，本次对账完成！');
+            this.props.history.push({
+              pathname: '/order/trinity/reconciliations/summary',
+              search: `?${qs.stringify({ agent: search.agent})}`,
+            });
+          }else{
+            message.error('双方的对账金额不符，请重新对账后再上传对账！');
+            hide();
+            // this.props.history.push({
+            //   pathname: '/order/trinity/reconciliations/summary',
+            //   search: `?${qs.stringify({ agent: search.agent})}`,
+            // });
+          }
+          
 				}).catch(() => {
-					message.error('查询失败');
-					hide();
+          // this.props.history.push({
+          //   pathname: '/order/trinity/reconciliations/summary',
+          //   search: `?${qs.stringify({ agent: search.agent})}`,
+          // });
+					// message.error('双方的对账金额不符，请重新对账后再上传对账！');
+					// hide();
         });
         
 			}
@@ -41,20 +61,13 @@ class ListQuery extends Component {
 		this.props.form.resetFields();
 	}
 
-  componentWillMount() {}
-
-  // handleClick=()=>{
-  //   this.props.form.setFieldsValue({public_order_id_1: '2' });
-  //   this.setState({
-  //     visibleTable:true,
-  //     num:3
-  //   })
-  // }
+ 
   handleChangeOption=(value)=>{
     console.log(value)
     
     this.props.addOrder().then((res)=>{
-      console.log(res.data)
+      console.log(res.data);
+      this.props.form.setFieldsValue({public_order_id: '3' });
         this.setState({
           visibleTable:true,
           stateMentList:res.data
@@ -109,10 +122,11 @@ class ListQuery extends Component {
            summaryList:res.data
            });
 					hide();
-					message.success('上传成功！');
+          message.success('上传成功！');
+          
 				}).catch(({ errorMsg }) => {
 					hide();
-					message.error(errorMsg || '上传失败！')
+					message.error(errorMsg || '当前导入文件已存在，请勿重复导入！')
 				});
 			}
 		};
@@ -122,9 +136,8 @@ class ListQuery extends Component {
 					
 					<Col span={11}>
 						<FormItem label='请选择关联三方对账单' {...formItemLayout}>
-              {getFieldDecorator('public_order_id_1', { initialValue:'1',
-              rules: [{ required: true, message: '请选择' }],
-              valuePropName: 'fileList',
+              {getFieldDecorator('public_order_id', { initialValue:'',
+              rules: [{ required: true, message: '请选择关联三方对账单' }],
              })(
 								<Select
                 style={{ width: '300px' }}
@@ -141,6 +154,7 @@ class ListQuery extends Component {
 					<Col span={13}>
 						<FormItem label='' {...formItemLayout}>
               {getFieldDecorator('payment_status', { initialValue: [] ,
+               rules: [{ required: true, message: '请选择要上传的三方对账单' }],
               })(
                 <NewUpload
                 tok={getToken}
@@ -180,7 +194,8 @@ class ListQuery extends Component {
         <Row style={{marginTop:'20px'}}>
         <Col span={11}>
 						<FormItem label='' {...formItemLayout}>
-              {getFieldDecorator('payment_status_1', { initialValue: []
+              {getFieldDecorator('payment_status_1', { initialValue: [],
+               rules: [{ required: true, message: '请选择要上传的汇总单' }],
             })(
               <Upload {...props}>
               <Button type="primary" >
@@ -197,12 +212,13 @@ class ListQuery extends Component {
         </div>
       }
         <Row>
-        <Col span={8}></Col>
-        <Col span={8}>
+        <Col span={10}></Col>
+        <Col span={6}>
         
             <Button style={{marginRight:'20px'}}>取消</Button>
             <Popconfirm title="确认后将改变订单的对账状态，是否确认此操作？" onConfirm={this.handleSearch} okText="确定" cancelText="取消">
-              <Button type="primary" className='left-gap'>确认对账</Button>
+              <Button type="primary" className='left-gap'
+               disabled={!(stateMentList.bill_total_amount==summaryList.bill_total_amount)}>确认对账</Button>
             </Popconfirm>
           
 					</Col>
