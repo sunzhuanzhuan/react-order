@@ -16,7 +16,7 @@ export const Against = props => {
   return <div className='against-status'>
     <span className='title'>{props.text || '未通过'}</span>
     {props.reason ? <Tooltip title={props.reason}>
-      <span className='reason' style={{ width: props.maxWidth || 500 }} title={props.reason}>原因: {props.reason}</span>
+      <span className='reason' style={{ maxWidth: props.maxWidth || 500 }} title={props.reason}>原因: {props.reason}</span>
     </Tooltip> : null}
   </div>
 }

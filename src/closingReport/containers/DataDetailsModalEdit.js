@@ -10,6 +10,8 @@ import {
 import './DataDetailsModal.less'
 import { Agree } from '../base/ApprovalStatus'
 import Loading from '../base/Loading'
+import { fieldConfig } from '../constants/config';
+import { moment2dateStr } from '../util';
 
 
 const formItemLayout = {
@@ -62,7 +64,7 @@ export default class DataDetailsModalEdit extends Component {
     }))
     result.data = data.map(item => ({
       id: item.id,
-      value: item.input,
+      value: fieldConfig(item.id) === 'datetime' ? moment2dateStr(item.input) : item.input,
       checked: item.checked ? 1 : 2
     }))
     result.screenshot = screenshot.map(item => ({
