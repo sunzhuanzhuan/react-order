@@ -5,10 +5,8 @@ import SelectOrders from './SelectOrders'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import * as actions from '../actions'
-import { linkTo } from '../../util/linkTo'
 import OrderList from './OrderList'
 import { parseUrlQuery } from '@/util/parseUrl'
-import { companySource } from '../reducer'
 import difference from 'lodash/difference'
 
 
@@ -106,7 +104,7 @@ export default class CreateReport extends Component {
     }
   }
   handleCancel = (e, url) => {
-    console.log(e)
+    // TODO: 关闭弹窗跳转
     // linkTo()
     window.location.replace(url || '/')
   }

@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
-import { Table, Tooltip } from 'antd'
+import { Table } from 'antd'
 import { SH2 } from '../../base/SectionHeader'
 import './SelectOrders.less'
-import IconText from '../base/IconText'
 import SummaryReviewFilterForm from '../components/SummaryReviewFilterForm'
 import { bindActionCreators } from 'redux'
 import * as actions from '../actions'
@@ -20,8 +19,8 @@ const mapDispatchToProps = (dispatch) => ({
 
 @connect(mapStateToProps, mapDispatchToProps)
 export default class SummaryReviewList extends Component {
-  constructor(props, context) {
-    super(props, context)
+  constructor(props) {
+    super(props)
     this.state = {
       search: {
         page: 1,
@@ -44,7 +43,7 @@ export default class SummaryReviewList extends Component {
       }, {
         title: '含待内审订单',
         dataIndex: 'ids',
-        render: (ids, record) => {
+        render: (ids) => {
           return <div>
             <b>{ids}</b>个
           </div>
@@ -76,9 +75,6 @@ export default class SummaryReviewList extends Component {
     })
   }
 
-  linkTo = (url) => {
-    this.props.history.push(url)
-  }
 
   componentDidMount() {
     this.getList()
@@ -91,7 +87,7 @@ export default class SummaryReviewList extends Component {
       total,
       pageSize,
       current: page,
-      onChange: (current, size) => {
+      onChange: (current) => {
         this.getList({ page: current })
       },
       showQuickJumper: true

@@ -84,7 +84,7 @@ export default class SummaryListByOrder extends Component {
         title: '公司简称',
         width: 150,
         dataIndex: 'company_name',
-        render: (name, record) => {
+        render: (name) => {
           return <div style={{ 'wordBreak': 'break-all' }}>
             {name || '-'}
           </div>
@@ -210,12 +210,12 @@ export default class SummaryListByOrder extends Component {
 
   render() {
     const { closingReport, actions } = this.props
-    const { summaryListByOrder: { list, source total, page, pageSize } } = closingReport
+    const { summaryListByOrder: { list, source, total, page, pageSize } } = closingReport
     const pagination = {
       total,
       pageSize,
       current: page,
-      onChange: (current, size) => {
+      onChange: (current) => {
         this.getList({ page: current })
       },
       showQuickJumper: true

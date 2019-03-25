@@ -2,8 +2,6 @@ import React, { Component } from 'react'
 import { Row, Col, Input, Popover, Icon } from 'antd'
 import './index.less'
 import { WBYPlatformIcon } from 'wbyui'
-import DataDetailsReviewWrap from './DataDetailsReviewWrap'
-import { Against, Agree } from '../../base/ApprovalStatus'
 
 const Media = props => {
   let content = <div>
@@ -154,24 +152,6 @@ export class View extends Component {
       </Row>
       {this.props.children}
     </div>
-  }
-}
-
-/**
- * 头部信息(审核) - 使用范例
- */
-export class Review extends Component {
-  componentWillMount() {}
-
-  render() {
-    return <DataDetailsReviewWrap form={this.props.form}>
-      {/*<View><Agree/></View>*/}
-      <Edit form={this.props.form}>
-        <Col span={8} offset={16}>
-          <Against reason={'asdasdasdwww qweqweqwe'} maxWidth={200} />
-        </Col>
-      </Edit>
-    </DataDetailsReviewWrap>
   }
 }
 

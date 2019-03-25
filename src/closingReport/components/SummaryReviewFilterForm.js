@@ -1,11 +1,10 @@
 import React, { Component } from 'react'
-import { Form, Input, Row, Col, Select, Button, DatePicker, Icon } from 'antd'
+import { Form, Input, Row, Col, Select, Button, DatePicker } from 'antd'
 import EmSpan from '../base/EmSpan'
 import SearchSelect from '@/base/SearchSelect'
 import { moment2dateStr } from '../util'
 
 const { RangePicker } = DatePicker
-const InputGroup = Input.Group
 const Option = Select.Option
 
 @Form.create()

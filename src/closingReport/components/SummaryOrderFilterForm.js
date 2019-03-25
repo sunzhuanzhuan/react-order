@@ -47,7 +47,7 @@ export default class SummaryOrderFilterForm extends Component {
 
   render() {
     const { source, loading, actions } = this.props
-    const { getFieldDecorator, getFieldValue } = this.props.form
+    const { getFieldDecorator } = this.props.form
     return <Form onSubmit={this.handleSubmit} layout="inline" autoComplete="off">
       <Row>
         <Col span={6}>

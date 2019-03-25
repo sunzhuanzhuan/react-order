@@ -143,7 +143,7 @@ export default class OrderCard extends Component {
 
   render() {
     const { addModal } = this.state
-    const { orderActions, optional, data, display, actions } = this.props
+    const { optional, data, display } = this.props
     const { add, del, check } = display.orderActions(data) || {}
     const { platform = [] } = data
     /*.filter((p) => {  return !platform.find(id => id === p.platform_id)});*/

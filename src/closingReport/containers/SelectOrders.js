@@ -124,7 +124,7 @@ export default class SelectOrders extends Component {
       total,
       pageSize,
       current: page,
-      onChange: (current, size) => {
+      onChange: (current) => {
         this.getList({ page: current })
       },
       showQuickJumper: true

@@ -39,12 +39,12 @@ export default class Test extends Component {
       }
     }
     this.cardConfig = {
-      orderActions: (data) => {
+      orderActions: () => {
         return {}
       },
       orderStatus: true,
       dateTimeRecord: false,
-      platformConfig: (item, data, propsSource) => {
+      platformConfig: (item, data) => {
         // data.is_finish == 2 || data.modify_status == 1 || data.check_status == 6;
         //return { edit, del, check, view, props }
         // 待内审

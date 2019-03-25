@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Modal, Form, Icon, Button, message } from 'antd'
+import { Modal, Form, Button, message } from 'antd'
 import {
   Outline,
   BaseInfo,
@@ -8,7 +8,7 @@ import {
   ExecutionData
 } from '../components/dataDetails'
 import './DataDetailsModal.less'
-import { Against, Agree } from '../base/ApprovalStatus'
+import { Agree } from '../base/ApprovalStatus'
 import Loading from '../base/Loading'
 
 
@@ -120,7 +120,7 @@ export default class DataDetailsModalEdit extends Component {
   }
 
   render() {
-    const { form, data, type, platformData } = this.props
+    const { form, data, platformData } = this.props
     const {
       total, // outline
       basic_information, // baseInfo

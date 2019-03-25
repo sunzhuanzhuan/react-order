@@ -24,7 +24,7 @@ import {
 function handleResponseList(primary_key) {
   return (state, action) => {
     let response = action.payload.data || {}, source = {}
-    const { total = 0, page = 1, pageSize = 50 rows = [] } = response
+    const { total = 0, page = 1, pageSize = 50, rows = [] } = response
     const list = rows.map(item => {
       source[item[primary_key]] = { ...item }
       source[item[primary_key]]['key'] = item[primary_key]
@@ -164,7 +164,7 @@ export const companySource = handleActions({
       companyId: company_id
     }
   },
-  [combineActions('resetCreateReportData')]: (state, action) => {
+  [combineActions('resetCreateReportData')]: () => {
     return defaultCompanySource
   }
 }, defaultCompanySource)
@@ -172,7 +172,7 @@ export const companySource = handleActions({
 // 请求(公司/数据单纬度)全部订单的数据
 export const selectOrderList = handleActions({
   [combineActions(getOrders_success)]: handleResponseList('order_id'),
-  [combineActions('clearAllOrderList')]: (state, action) => {
+  [combineActions('clearAllOrderList')]: () => {
     return initList()
   }
 }, initList())
@@ -181,7 +181,7 @@ export const selectOrderList = handleActions({
 export const summaryOrders = handleActions({
   [combineActions(getSummaryOrderInfo_success)]: (state, action) => {
     let response = action.payload.data || {}, source = {}
-    let { total = {}, list = [] } = response
+    let { list = [] } = response
     list = list.map(item => {
       source[item['id']] = { ...item }
       source[item['id']]['key'] = item['id']
@@ -221,7 +221,7 @@ export const summaryOrders = handleActions({
 
   },
   [combineActions('submitPlatformInfo')]: (state, action) => {
-    let { platform_id, id status } = action.payload.data || {}
+    let { platform_id, id } = action.payload.data || {}
     //modify_status
     let index = state.source[id].platform.findIndex(({ platform_id: id }) => platform_id == id)
     return update(state, {
@@ -237,7 +237,7 @@ export const summaryOrders = handleActions({
       }
     })
   },
-  [combineActions('resetCreateReportData')]: (state, action) => {
+  [combineActions('resetCreateReportData')]: () => {
     return {
       list: [],
       source: {},
@@ -257,7 +257,7 @@ export const platformData = handleActions({
       ...action.payload.data
     }
   },
-  [combineActions('resetCreateReportData')]: (state, action) => {
+  [combineActions('resetCreateReportData')]: () => {
     return {
       total: {},
       basic_information: {},
@@ -266,7 +266,7 @@ export const platformData = handleActions({
       execution_data: {}
     }
   },
-  [combineActions('clearPlatformData')]: (state, action) => {
+  [combineActions('clearPlatformData')]: () => {
     return {
       total: {},
       basic_information: {},

@@ -17,7 +17,7 @@ export default class OrderList extends Component {
       }
     }
     this.cardConfig = {
-      orderActions: (data) => {
+      orderActions: () => {
         //return { add, del, check }
         return {
           add: true,
