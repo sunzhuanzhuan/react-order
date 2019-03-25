@@ -101,7 +101,13 @@ export const {
   method: 'get',
 });
 
-
+//导出Excel订单
+export const {
+	exportOrder,
+	exportOrder_success
+} = createHttpAction('exportOrder', Interface.statement.exportOrder, {
+  method: 'post',
+});
 
 
 // // 使得添加页面提交可用

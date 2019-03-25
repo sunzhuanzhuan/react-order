@@ -71,8 +71,9 @@ class ListQuery extends Component {
 
   render() {
     let { getFieldDecorator } = this.props.form;
-    let {fetching,typeValue}=this.state;
+    let {fetching}=this.state;
     let {accountName:{list=[]}}=this.props;
+    // console.log()
 		const formItemLayout = {
 			labelCol: { span: 6 },
 			wrapperCol: { span: 18 },
@@ -94,14 +95,15 @@ class ListQuery extends Component {
 								<Select
                 mode="multiple"
                 labelInValue
-                placeholder="Select users"
+                placeholder="请搜索"
                 notFoundContent={fetching ? <Spin size="small" /> : null}
                 filterOption={false}
                 onSearch={this.fetchUser}
                 onChange={this.handleChange}
-                style={{ width: '100%' }}
+                style={{ width: '200px' }}
               >
-                {list.map(d => <Option key={d.statement_id}>{d.statement_name}</Option>)}
+                {list.length>0?
+                  list.map(d => <Option key={d.statement_id}>{d.statement_name}</Option>):null}
               </Select>
 							)}
 						</FormItem>
@@ -132,14 +134,14 @@ class ListQuery extends Component {
 					<Row type="flex" justify="space-between">
 					
 					
-					<Col span={4}>
+					<Col span={6}>
 						<FormItem label='三方订单号' {...formItemLayout}>
 							{getFieldDecorator('public_order_id', { initialValue: '' })(
-								<Input style={{ width: 140 }} />
+								<Input style={{ width: 240 }} />
 							)}
 						</FormItem>
 					</Col>
-					<Col span={10}>
+					<Col span={8}>
 						<FormItem label='对账状态' {...formItemLayout}>
 							{getFieldDecorator('statement_status', { initialValue: ['1', '4'] })(
 								<Select
@@ -153,15 +155,14 @@ class ListQuery extends Component {
 							)}
 						</FormItem>
 					</Col>
-					<Col span={4}>
-						<FormItem label='打款状态' {...formItemLayout}>
-							{getFieldDecorator('payment_status', { initialValue: '' })(
+					<Col span={6}>
+						<FormItem label='是否可扣减' {...formItemLayout}>
+							{getFieldDecorator('payment_status', { initialValue: ' ' })(
 								<Select
               >
-               <Option key={'1'} >打款成功</Option>
-               <Option key={'2'}>打款失败</Option>
-               <Option key={'3'}>未打款</Option>
-               <Option key={'4'}>打款撤销</Option>
+               <Option key={' '} >请选择</Option>
+               <Option key={'2'}>是</Option>
+               <Option key={'3'}>否</Option>
               </Select>
 							)}
 						</FormItem>

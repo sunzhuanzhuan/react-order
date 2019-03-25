@@ -8,6 +8,15 @@ import { bindActionCreators } from "redux";
 import * as actionsStatement from '../actions'
 import qs from 'qs'
 
+const downloadUrl = url => {
+  let iframe = document.createElement('iframe')
+  iframe.style.display = 'none'
+  iframe.src = url
+  iframe.onload = function () {
+    document.body.removeChild(iframe)
+  }
+  document.body.appendChild(iframe)
+}
 
 class ExportOrder extends Component {
   constructor(props, context) {
@@ -29,8 +38,8 @@ class ExportOrder extends Component {
         selectedRowKeys: [],
       })
   }
-  onSelectChange = (selectedRowKeys) => {
-    this.setState({ selectedRowKeys });
+  onSelectChange = (selectedRowKeys,selectedRow) => {
+    this.setState({ selectedRowKeys,selectedRow });
   }
   //查询
   queryData = (obj, func) => {
@@ -52,7 +61,21 @@ class ExportOrder extends Component {
   }
   //导出订单
   handleExportOrder=()=>{
-    
+    let selectedRow = this.state.selectedRow;
+    let order_ids=[];
+    selectedRow.map((item)=>{
+      order_ids.push(item.order_id)
+    })
+    this.props.actions.exportOrder({order_ids:order_ids}).then((response)=>{
+      if(response.data.code === 1000){
+        // 处理下载请求
+        if (response.headers && (response.headers['content-type'] === 'application/vnd.ms-excel' || response.headers['content-type'] === 'application/x-msdownload' || response.headers['content-type'] === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')) {
+          downloadUrl(response.request.responseURL)
+          return
+  }
+      }
+    })
+    // console.log(order_ids)
   }
   render() {
     const search = qs.parse(this.props.location.search.substring(1));
@@ -103,8 +126,13 @@ class ExportOrder extends Component {
      rowSelection={rowSelection}
      />
      <Row style={{textAlign:'center'}}>
-     <Popconfirm title="Are you sure delete this task?"
-      onConfirm={this.handleCancelSelect} onCancel={this.cancel} okText="Yes" cancelText="No">
+     <Popconfirm title={
+       <div>
+         <div>温馨提示</div>
+         <div>取消后将无法保存信息，是否确认此操作?</div>
+       </div>
+     }
+      onConfirm={this.handleCancelSelect} onCancel={this.cancel} okText="确定" cancelText="取消">
      <Button>取消</Button>
     </Popconfirm>
      
