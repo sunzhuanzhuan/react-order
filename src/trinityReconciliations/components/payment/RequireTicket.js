@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Row, Col, Form, Radio, Input,Button,message} from "antd";
+import ColumnGroup from 'antd/lib/table/ColumnGroup';
 
 const FormItem = Form.Item;
 const RadioGroup = Radio.Group;
@@ -17,10 +18,10 @@ class ListQuery extends Component {
 		e.preventDefault();
 		this.props.form.validateFields((err, values) => {
 			if (!err) {
-        // console.log(values)
-        let params =  { ...values ,...summary_sheet_id};
+       
         if(summary_sheet_id !=''){
-            confirmApply(...params).then((res)=>{
+          let params =  { summary_sheet_id:summary_sheet_id,...values };
+            confirmApply({...params}).then((res)=>{
               if(res.code == 1000 ){
                 queryData()
                 message.success('申请成功')
@@ -32,20 +33,14 @@ class ListQuery extends Component {
           message.error('请选择汇款单名称')
         }
         
-				// const hide = message.loading('查询中，请稍候...');
-				// questAction({ ...params, page: 1, page_size }).then(() => {
-				// 	handlefilterParams(params);
-				// 	hide();
-				// }).catch(() => {
-				// 	message.error('查询失败');
-				// 	hide();
-				// });
 			}
 		});
 	}
 	handleClear = () => {
-		this.props.form.resetFields();
-	}
+    this.props.form.resetFields();
+    this.props.handleSelectDetail({summary_sheet_id:''})
+  }
+  
 
   componentWillMount() {}
 
@@ -64,13 +59,13 @@ class ListQuery extends Component {
         
 					<Col span={10}>
 						<FormItem label='回汇票方式' {...formItemLayout}>
-							{getFieldDecorator('summary_sheet_name',{
+							{getFieldDecorator('return_invoice_type',{
                 rules:[{required:true,message:'请输入回票方式'}]
               })(
-                <RadioGroup onChange={this.onChange} value={this.state.value}>
-                <Radio value={1}>全部回票</Radio>
-                <Radio value={2}>部分回票</Radio>
-                <Radio value={3}>不回票</Radio>
+                <RadioGroup>
+                  <Radio value={1}>全部回票</Radio>
+                  <Radio value={2}>部分回票</Radio>
+                  <Radio value={3}>不回票</Radio>
               </RadioGroup>
 							)}
 						</FormItem>
@@ -81,7 +76,7 @@ class ListQuery extends Component {
           <Col span={7}></Col>
           <Col span={10} style={{textAlign:'left'}}>
 						<FormItem label='回票金额(元)' {...formItemLayout}>
-            {getFieldDecorator('ttp_place_order_at_start',{
+            {getFieldDecorator('return_invoice_amount',{
                rules:[{required:true,message:'请输入回票金额'}]
             })(
 				<Input style={{ width: 140 }} />
@@ -93,10 +88,9 @@ class ListQuery extends Component {
           <Row style={{textAlign:'center'}}>
           <Col span={10}></Col>
           <Col span={7} style={{textAlign:'left'}}>
-						<FormItem>
-             <Button onClick={this.handleSearch}>取消</Button>
-             <Button type="primary" style={{marginLeft:'20px'}} onClick={this.handleSearch}>确认申请</Button>
-						</FormItem>
+             <Button onClick={this.handleClear}>取消</Button>
+             <Button type="primary" style={{marginLeft:'20px'}}
+              onClick={this.handleSearch}>确认申请</Button>
 					</Col>
           <Col span={7}></Col>
           </Row>

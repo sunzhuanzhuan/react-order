@@ -5,7 +5,7 @@ import {paymentListFunc} from '../constants/exportOrder/column'
 import PaymentTable from '../components/payment/PaymentTable'
 import ReqireTicket from '../components/payment/RequireTicket'
 import qs from 'qs'
-import  * as actionsSummary from '../actions'
+import  * as actionsPayment from '../actions'
 import { connect } from 'react-redux';
 import { bindActionCreators } from "redux";
 import './payment.less';
@@ -24,7 +24,6 @@ class Payment extends Component {
 
 
   componentWillMount=()=> {
-    console.log(1111111)
     const search = qs.parse(this.props.location.search.substring(1));
     this.queryData({ page: 1, page_size: this.state.page_size, ...search.keys })
   }
@@ -43,7 +42,6 @@ class Payment extends Component {
   }
   //选择查看详情
   handleSelectDetail=(record)=>{
-    console.log(record);
     this.setState({
       summary_sheet_id:record.summary_sheet_id
     })
@@ -77,11 +75,11 @@ class Payment extends Component {
       showSizeChanger:true,
       pageSizeOptions:['20','50','100','200']
     };
-    
+    // console.log(this.props.actions.confirmApply)
     
     return <div className="payBox">
-     <Row>申请周期付款</Row>
-     <div>收款平台/代理商:</div>
+     <Row className='title'>申请周期付款</Row>
+     <div className='agent'>收款平台/代理商:<span className='agent_name'>{search.agent}</span></div>
       <PaymentFilter
         summary_sheet_id={this.state.summary_sheet_id}
         handlefilterParams={this.handlefilterParams}
@@ -100,6 +98,8 @@ class Payment extends Component {
         <ReqireTicket
         confirmApply={this.props.actions.confirmApply}
         queryData={this.queryData}
+        summary_sheet_id={this.state.summary_sheet_id}
+        handleSelectDetail={this.handleSelectDetail}
         />
      </Row>
     </div>;
@@ -113,7 +113,7 @@ const mapStateToProps = (state) => {
 	}
 }
 const mapDispatchToProps = dispatch => ({
-	actions: bindActionCreators({ ...actionsSummary }, dispatch)
+	actions: bindActionCreators({ ...actionsPayment }, dispatch)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Payment)

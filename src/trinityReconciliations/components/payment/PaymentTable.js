@@ -8,7 +8,7 @@ import PropTypes from 'prop-types'
 // import * as zhangActions from '../actions/index';
 // import Query from'../components/query'
 
-import { Table, Pagination } from "antd";
+import { Table } from "antd";
 // import './list.less'
 
 class List extends Component {
@@ -33,7 +33,6 @@ class List extends Component {
 					columns={columns}
           dataSource={dataTable}
           rowKey={(record)=>{record.summary_sheet_id}}
-         
           pagination={paginationObj}
 					// questAction={this.props.actions.getMissionList}
 				
