@@ -6,6 +6,9 @@ import {summaryTotalDetailListFunc} from '../constants/exportOrder/column'
 import  * as actionsSummary from '../actions'
 import { connect } from 'react-redux';
 import { bindActionCreators } from "redux";
+import qs from 'qs'
+import './payment.less'
+
 
 class SummaryDetail extends Component {
   constructor(props, context) {
@@ -37,10 +40,11 @@ class SummaryDetail extends Component {
       pageSize:page_size,
     
 		};
-    
+    const search = qs.parse(this.props.location.search.substring(1));
     
     return <div>
-    <Row>查看汇总单详情【汇总单名称:】</Row>
+    <Row className='title'>查看汇总单详情</Row>
+    <Row className='agent'>汇总单名称:<span className='agent_name'>{search.summary_sheet_name}</span></Row>
      <SummaryDetailInfo
      detailSummary={detailSummary}
      />

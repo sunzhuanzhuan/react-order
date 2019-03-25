@@ -7,6 +7,7 @@ import qs from 'qs'
 import  * as actionsSummary from '../actions'
 import { connect } from 'react-redux';
 import { bindActionCreators } from "redux";
+import './payment.less'
 const TabPane = Tabs.TabPane;
 
 
@@ -42,10 +43,13 @@ class Summary extends Component {
   }
  //选择查看详情
  handleSelectDetail=(record)=>{
-   console.log(record)
+  const search = qs.parse(this.props.location.search.substring(1));
   this.props.history.push({
     pathname: '/order/trinity/reconciliations/detail',
-    search: `?${qs.stringify({ summary_sheet_id: record.summary_sheet_id})}`,
+    search: `?${qs.stringify({ 
+      summary_sheet_name: record.summary_sheet_name,
+      summary_sheet_id:record.summary_sheet_id,
+      agent:search.agent})}`,
   });
  }
  //释放汇总单
@@ -108,7 +112,8 @@ class Summary extends Component {
     
     
     return <div>
-     <Row>汇总单列表【平台/代理商:hahah】</Row>
+     <Row className='title'>汇总单列表</Row>
+     <Row className='agent'>平台/代理商:<span className='agent_name'>{search.agent}</span></Row>
      <Tabs defaultActiveKey="1" onChange={this.handleChangeTab}>
       <TabPane tab="全部" key="1">
         <SummaryFilter
