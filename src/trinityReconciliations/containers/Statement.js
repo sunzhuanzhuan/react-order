@@ -62,13 +62,13 @@ class Statement extends Component {
     let paginationObj = {
       onChange: (current) => {
         
-        this.queryData({ ...search.key, page: current, page_size ,...filterParams});
+        this.queryData({ page: current, page_size ,...filterParams});
       },
       onShowSizeChange: (current, pageSize) => {
       
 				const curPage = Math.ceil(total / pageSize);
 				this.setState({ page_size: pageSize });
-				this.queryData({ ...search.key, page: curPage, page_size: pageSize,...filterParams });
+				this.queryData({ page: curPage, page_size: pageSize,...filterParams });
 			},
 			total: parseInt(total),
       current: parseInt(page),
@@ -82,6 +82,7 @@ class Statement extends Component {
       <Row>对账单导入记录【所属平台:,总对账单数量:】</Row>
       <Filter
       questAction={this.queryData}
+      page_size={page_size}
       />
      
      <StateTable

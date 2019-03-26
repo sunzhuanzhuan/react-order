@@ -22,7 +22,7 @@ class ListQuery extends Component {
 				let params =  { ...values };
 				const hide = message.loading('查询中，请稍候...');
 				questAction({ ...params, page: 1, page_size }).then(() => {
-					handlefilterParams(params);
+					handlefilterParams({...params});
 					hide();
 				}).catch(() => {
 					message.error('查询失败');

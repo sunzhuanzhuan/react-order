@@ -76,6 +76,12 @@ class ListQuery extends Component {
    
    
   }
+  handleChangeSelect=(value)=>{
+    console.log(value)
+    this.setState({
+      visibleTable:true
+    })
+  }
   handleClickTotal=(value)=>{
     this.props.importSummary(value).then((res)=>{
         this.setState({
@@ -141,7 +147,7 @@ class ListQuery extends Component {
              })(
 								<Select
                 style={{ width: '300px' }}
-                onChange={this.handleChangeOption}
+                onChange={this.handleChangeSelect}
               >
                <Option key={' '} >请选择</Option>
                <Option key={'1'} >未对账</Option>

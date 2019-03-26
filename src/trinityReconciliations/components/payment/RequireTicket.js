@@ -14,7 +14,7 @@ class ListQuery extends Component {
     };
   }
   handleSearch = (e) => {
-		const { confirmApply, summary_sheet_id,queryData} = this.props;
+		const { confirmApply, summary_sheet_id,queryData,filterParams,page_size} = this.props;
 		e.preventDefault();
 		this.props.form.validateFields((err, values) => {
 			if (!err) {
@@ -23,10 +23,14 @@ class ListQuery extends Component {
           let params =  { summary_sheet_id:summary_sheet_id,...values };
             confirmApply({...params}).then((res)=>{
               if(res.code == 1000 ){
-                queryData()
+                queryData({...filterParams,page:1,page_size:page_size})
+                this.props.handleSelectDetail({summary_sheet_id:''});
+                this.props.form.resetFields();
                 message.success('申请成功')
               }else{
-                message.error('申请失败')
+                message.error('申请失败');
+                this.props.handleSelectDetail({summary_sheet_id:''});
+                this.props.form.resetFields();
               }
           })
         }else{

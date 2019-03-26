@@ -62,6 +62,7 @@ class ExportOrder extends Component {
   }
   //导出订单
   handleExportOrder=()=>{
+    const search = qs.parse(this.props.location.search.substring(1));
     let selectedRow = this.state.selectedRow;
     let order_ids=[];
     selectedRow.map((item)=>{
@@ -72,6 +73,7 @@ class ExportOrder extends Component {
         // 处理下载请求
         if (response.headers && (response.headers['content-type'] === 'application/vnd.ms-excel' || response.headers['content-type'] === 'application/x-msdownload' || response.headers['content-type'] === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')) {
           downloadUrl(response.request.responseURL)
+          this.queryData({ page: 1, page_size: this.state.page_size, ...search.keys })
           return
   }
       }
@@ -83,16 +85,17 @@ class ExportOrder extends Component {
     let {orderList:{list=[], page, total}}=this.props;
     let {loading,page_size,selectedRowKeys}= this.state;
     const column = exportOrderListFunc();
+    let {filterParams}=this.state
     let paginationObj = {
 			onChange: (current) => {
         
-        this.queryData({ ...search.key, page: current, page_size });
+        this.queryData({ ...filterParams, page: current, page_size });
       },
       onShowSizeChange: (current, pageSize) => {
       
 				const curPage = Math.ceil(total / pageSize);
 				this.setState({ page_size: pageSize });
-				this.queryData({ ...search.key, page: curPage, page_size: pageSize });
+				this.queryData({ ...filterParams, page: curPage, page_size: pageSize });
 			},
 			total: parseInt(total),
       current: parseInt(page),

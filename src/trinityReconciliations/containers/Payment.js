@@ -55,7 +55,7 @@ class Payment extends Component {
     const search = qs.parse(this.props.location.search.substring(1));
     const column = paymentListFunc(this.handleSelectDetail,this.state.summary_sheet_id);
     let {summaryList:{list=[],page,total }}=this.props;
-    let {loading,page_size}= this.state;
+    let {loading,page_size,filterParams}= this.state;
    
     let paginationObj = {
       onChange: (current) => {
@@ -100,6 +100,8 @@ class Payment extends Component {
         queryData={this.queryData}
         summary_sheet_id={this.state.summary_sheet_id}
         handleSelectDetail={this.handleSelectDetail}
+        filterParams={filterParams}
+        page_size={page_size}
         />
      </Row>
     </div>;
