@@ -4,7 +4,7 @@
 
 */
 import React, { Component } from 'react'
-import { Form, Button, message } from 'antd';
+import { Form, Button, message, Input } from 'antd';
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import * as modalActions from '../../actions/modalActions'
@@ -12,6 +12,9 @@ import PlaceOrderTime from './formItem/PlaceOrderTime'
 import SingleAgent from './formItem/SingleAgent'
 import MultiAgent from './formItem/MultiAgent'
 import './ModalComponent.less'
+
+const FormItem = Form.Item;
+const { TextArea } = Input;
 
 class LabelPublicOrder extends Component {
   constructor(props) {
@@ -56,6 +59,7 @@ class LabelPublicOrder extends Component {
   }
   render() {
     const { form, handleCancel, agentList, agentDetail, record } = this.props
+    const { getFieldDecorator } = form
     return <div className="modalBox">
       <Form layout="inline">
         {/* 下单时间 */}
@@ -77,6 +81,42 @@ class LabelPublicOrder extends Component {
               platformId={record.account.platform_id}
             />
         }
+        <FormItem
+          label="三方平台订单号"
+          layout={{
+            labelCol: { span: 7 },
+            wrapperCol: { span: 17 }
+          }}
+          style={{ width: '400px' }}
+        >
+          {getFieldDecorator("public_order_id", {
+            rules: [{
+              pattern: /^.{0,100}$/, message: '最多可输入100个字符！'
+            }]
+          })(
+            <Input
+              style={{ width: '230px' }}
+              placeholder="可以输入多个订单号，多个订单号之间需以,分隔" />
+          )}
+        </FormItem>
+        <FormItem
+          label="备注"
+          layout={{
+            labelCol: { span: 7 },
+            wrapperCol: { span: 17 }
+          }}
+          style={{ width: '400px' }}
+        >
+          {getFieldDecorator("comment", {
+            rules: [{
+              pattern: /^.{0,100}$/, message: '最多可输入100个字符！'
+            }]
+          })(
+            <TextArea placeholder="请输入备注"
+              style={{ width: '300px' }}
+              autosize={{ minRows: 2, maxRows: 6 }} />
+          )}
+        </FormItem>
       </Form>
       {/* 提交按钮 */}
       <div className="modalBox-btnGroup">
