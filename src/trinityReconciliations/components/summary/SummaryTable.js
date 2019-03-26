@@ -31,7 +31,7 @@ class SummaryTable extends Component {
 				<Table
 					columns={columns}
           dataSource={dataTable}
-					rowKey={(record)=>record.summary_sheet_name}
+					rowKey={(record)=>record.summary_sheet_id}
 					pagination={paginationObj}
 				></Table>
 			</div>

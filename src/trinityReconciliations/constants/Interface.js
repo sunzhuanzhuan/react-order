@@ -41,7 +41,7 @@ export default {
     detailSummaryList:'/finance/statement/detailSummaryList',
     deleteStatement:'/finance/statement/deleteStatement',
     confirmApply:'/finance/statement/deleteStatement',
-    searchName:'/finance/statement/search'
+    searchName:'/finance/statement/search',
   },
   meta:{
     metadata:'/finance/statement/metadata'

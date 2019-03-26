@@ -206,6 +206,19 @@ export const paymentListFunc = (handleSelectDetail,summary_sheet_id) => {
 	];
 }
 
+const summaryStatus={
+  1:'未对账',
+  2:'对账成功',
+  3:'已释放',
+}
+const paymentStatus={
+  1:'未打款',
+  2:'打款失败',
+  3:'打款成功',
+  4:'打款撤销',
+  5:'打款中'
+}
+
 // 汇总单列表
 export const summaryListFunc = (handleSelectDetail,handleOut) => {
 	return [
@@ -226,10 +239,13 @@ export const summaryListFunc = (handleSelectDetail,handleOut) => {
 			dataIndex: 'summary_status',
 			key: 'summary_status',
 			align: 'center',
-			width: 100
+      width: 100,
+      render:(text)=>{
+        return summaryStatus[text]
+      }
     },
 		{
-			title: '汇总单总数',
+			title: '订单数量',
 			dataIndex: 'total_order_amount',
 			key: 'total_order_amount',
 			align: 'center',
@@ -241,6 +257,26 @@ export const summaryListFunc = (handleSelectDetail,handleOut) => {
 			key: 'total_pay_amount',
 			align: 'center',
 			width: 100,
+			render: (text) => {
+				return parseFloat(text).toFixed(2)
+			}
+		},
+		{
+			title: '待付订单',
+			dataIndex: 'wait_pay_order',
+			key: 'wait_pay_order',
+			align: 'center',
+			width: 100,
+		},
+		{
+			title: '待付金额(元)',
+			dataIndex: 'wait_pay_amount',
+			key: 'wait_pay_amount',
+			align: 'center',
+			width: 100,
+			render: (text) => {
+				return parseFloat(text).toFixed(2)
+			}
 		},
 		{
 			title: '调账订单',
@@ -255,6 +291,9 @@ export const summaryListFunc = (handleSelectDetail,handleOut) => {
 			key: 'adjustment_amount',
 			align: 'center',
 			width: 100,
+			render: (text) => {
+				return parseFloat(text).toFixed(2)
+			}
 		},
 		{
 			title: '扣减订单',
@@ -271,6 +310,16 @@ export const summaryListFunc = (handleSelectDetail,handleOut) => {
 			width: 100,
 			render: (text) => {
 				return parseFloat(text).toFixed(2)
+			}
+    },
+		{
+			title: '打款状态',
+			dataIndex: 'payment_status',
+			key: 'payment_status',
+			align: 'center',
+			width: 100,
+			render: (text) => {
+				return paymentStatus[text]
 			}
     },
     {
@@ -308,10 +357,13 @@ export const summaryShiListFunc = (handleSelectDetail) => {
 		},
 		{
 			title: '汇总单状态',
-			dataIndex: 'status',
-			key: 'status',
+			dataIndex: 'summary_status',
+			key: 'summary_status',
 			align: 'center',
-			width: 100
+      width: 100,
+      render:(text)=>{
+        return summaryStatus[text]
+      }
     },
 		{
 			title: '汇总单总数',

@@ -157,12 +157,12 @@ class ListQuery extends Component {
 					</Col>
 					<Col span={6}>
 						<FormItem label='是否可扣减' {...formItemLayout}>
-							{getFieldDecorator('payment_status', { initialValue: ' ' })(
+							{getFieldDecorator('is_can_decution', { initialValue: ' ' })(
 								<Select
               >
                <Option key={' '} >请选择</Option>
-               <Option key={'2'}>是</Option>
-               <Option key={'3'}>否</Option>
+               <Option key={'1'}>是</Option>
+               <Option key={'2'}>否</Option>
               </Select>
 							)}
 						</FormItem>

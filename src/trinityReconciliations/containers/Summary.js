@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Tabs,Row,message } from 'antd';
+import { Tabs,Row,message,Modal } from 'antd';
 import SummaryFilter from '../components/summary/Filter'
 import {summaryListFunc,summaryShiListFunc} from '../constants/exportOrder/column'
 import SummaryTable from '../components/summary/SummaryTable';
@@ -7,6 +7,9 @@ import qs from 'qs'
 import  * as actionsSummary from '../actions'
 import { connect } from 'react-redux';
 import { bindActionCreators } from "redux";
+import SummaryDetailInfo from '../components/summary/Detail'
+import InfoTable from '../components/summary/SummaryTable'
+import {summaryTotalDetailListFunc} from '../constants/exportOrder/column'
 import './payment.less'
 const TabPane = Tabs.TabPane;
 
@@ -18,13 +21,13 @@ class Summary extends Component {
     this.state = {
       page_size:20,
       filterParams:{},
-      activeKey:'1'
+      activeKey:'1',
+      visible: false
     };
   }
 
 
   componentWillMount=()=> {
-    console.log(1111111)
     const search = qs.parse(this.props.location.search.substring(1));
     this.queryData({ page: 1, page_size: this.state.page_size, ...search.keys })
   }
@@ -44,17 +47,44 @@ class Summary extends Component {
  //选择查看详情
  handleSelectDetail=(record)=>{
   const search = qs.parse(this.props.location.search.substring(1));
-  this.props.history.push({
-    pathname: '/order/trinity/reconciliations/detail',
-    search: `?${qs.stringify({ 
-      summary_sheet_name: record.summary_sheet_name,
-      summary_sheet_id:record.summary_sheet_id,
-      agent:search.agent})}`,
-  });
+  this.props.actions.getDetailSummary().then(()=>{
+    this.props.actions.getDetailSummaryList().then(()=>{
+      this.props.history.push({
+        pathname: '/order/trinity/reconciliations/detail',
+        search: `?${qs.stringify({ 
+          summary_sheet_name: record.summary_sheet_name,
+          summary_sheet_id:record.summary_sheet_id,
+          agent:search.agent})}`,
+      });
+    })
+ });
+  
+ 
  }
  //释放汇总单
  handleOut=(record)=>{
-   console.log(record);
+  //  console.log(this);
+  this.props.actions.getDetailSummary().then(()=>{
+    this.props.actions.getDetailSummaryList().then((res)=>{
+      // console.log(res)
+      if(res.code == 1000){
+        this.setState({
+              visible: true,
+        });
+      }
+    
+    })
+    })
+   
+  //  console.log(record);
+  
+ }
+
+handleOk = () => {
+  
+  this.setState({
+    visible: false,
+  });
    this.props.actions.releaseSummaryList().then((res)=>{
     if(res.data==1000){
       message.success(res.msg)
@@ -62,7 +92,14 @@ class Summary extends Component {
       message.error(res.msg)
     }
   })
- }
+}
+
+handleCancel = (e) => {
+  console.log(e);
+  this.setState({
+    visible: false,
+  });
+}
  //切换tab
  handleChangeTab=(activeKey)=>{
     // console.log(activeKey);
@@ -85,12 +122,24 @@ class Summary extends Component {
     this.child = ref;
   }
   render() {
+    const columnDetail = summaryTotalDetailListFunc();
     const search = qs.parse(this.props.location.search.substring(1));
     const column = summaryListFunc(this.handleSelectDetail,this.handleOut);
     const shiColum = summaryShiListFunc();
+    let {detailSummary,detailSummaryList:{list:detailList=[],page:detailPage,total:detailTotal,page_size:detailPageSize}}=this.props;
     let {summaryList:{list=[],page,total }}=this.props;
     let {loading,page_size}= this.state;
-   
+    let paginationObjInfo = {
+      onChange: (current) => {
+        
+        // this.queryData({  page: current, page_size });
+      },
+     
+			total: parseInt(detailTotal),
+      current: parseInt(detailPage),
+      pageSize:detailPageSize,
+    
+		};
     let paginationObj = {
       onChange: (current) => {
         
@@ -152,21 +201,40 @@ class Summary extends Component {
         />
         <SummaryTable
           loading={loading}
-          columns={column}
+          columns={shiColum}
           dataTable={list}
           paginationObj={paginationObj}
       />
       </TabPane>
     </Tabs>,
      
+   {this.state.visible? <Modal
+      width={1000}
+      title="释放汇总单"
+      visible={this.state.visible}
+      onOk={this.handleOk}
+      onCancel={this.handleCancel}
+      >
+      <h3 style={{color:'red'}}>是否确认释放该汇总单，释放后，需重新对账操作！</h3>
+         <SummaryDetailInfo
+          detailSummary={detailSummary}
+          />
+        <InfoTable
+        columns={columnDetail}
+        dataTable={detailList}
+        paginationObj={paginationObjInfo}
+        />
      
+        </Modal>:null}
     </div>;
   }
 }
 
 const mapStateToProps = (state) => {
 	return {
-		summaryList: state.statement.summaryList,
+    summaryList: state.statement.summaryList,
+    detailSummary: state.statement.detailSummary,
+		detailSummaryList: state.statement.detailSummaryList,
 	}
 }
 const mapDispatchToProps = dispatch => ({
