@@ -17,7 +17,7 @@ module.exports = function (app) {
   ));
   
   app.use(proxy('/api',
-    { target: 'http://nb.tst-weiboyi.com', changeOrigin:true }
+    { target: 'http://nb.dev-weiboyi.com', changeOrigin:true }
   ));
   
 }
