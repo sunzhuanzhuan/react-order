@@ -46,6 +46,12 @@ export const {
   method: 'post'
 });
 
+export const {
+  labelPlaceOrder
+} = createHttpAction('labelPlaceOrder', Interface.labelPlaceOrder, {
+  method: 'post'
+});
+
 
 
 

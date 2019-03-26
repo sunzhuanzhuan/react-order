@@ -4,7 +4,7 @@
 
 */
 import React, { Component } from 'react'
-import { Form, Button, message, Input } from 'antd';
+import { Form, Button, message, Input, Modal } from 'antd';
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import * as modalActions from '../../actions/modalActions'
@@ -15,12 +15,14 @@ import './ModalComponent.less'
 
 const FormItem = Form.Item;
 const { TextArea } = Input;
+const confirm = Modal.confirm;
 
 class LabelPublicOrder extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      type: ""
+      type: "",
+      singleIds: []
     }
   }
   componentWillMount() {
@@ -32,7 +34,8 @@ class LabelPublicOrder extends Component {
       // 只有一个平台/代理商
       if (this.props.agentList.length == 1 && this.props.agentList[0].agentVOList.length == 1) {
         this.setState({
-          type: 'single'
+          type: 'single',
+          singleIds: [this.props.agentList[0].id, this.props.agentList[0].agentVOList[0].id]
         })
         //获取该代理商的详情
         let id = this.props.agentList[0].agentVOList[0].id
@@ -41,7 +44,8 @@ class LabelPublicOrder extends Component {
         })
       } else {
         this.setState({
-          type: 'multi'
+          type: 'multi',
+          singleIds: []
         })
       }
     }).catch(() => {
@@ -53,7 +57,30 @@ class LabelPublicOrder extends Component {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        console.log('Received values of form: ', values);
+        values.ttp_place_order_at = values.ttp_place_order_at.format("YYYY-MM-DD HH:mm:ss")
+        if (this.state.type == "single") {
+          values.ttp_cooperation_platform_id = this.state.singleIds[0]
+          values.agent_id = this.state.singleIds[1]
+        } else {
+          values.ttp_cooperation_platform_id = values.multiAgentIds[0]
+          values.agent_id = values.multiAgentIds[1]
+          delete values.multiAgentIds
+        }
+        this.props.actions.labelPlaceOrder({ ...values }).then(() => {
+          message.success('您所提交的信息已经保存成功！', 2)
+          this.props.handleCancel()
+        }).catch(() => {
+          message.error("标记三方已下单失败")
+        })
+      }
+    });
+  }
+  //点击取消
+  cancel = () => {
+    confirm({
+      title: '取消后您的信息将无法保存，是否确认此操作？',
+      onOk: () => {
+        this.props.handleCancel()
       }
     });
   }
@@ -66,10 +93,11 @@ class LabelPublicOrder extends Component {
         <PlaceOrderTime
           form={form}
           type="can_label_place_order"
+          id="ttp_place_order_at"
         />
         {
           this.state.type == "single" ?
-            < SingleAgent
+            <SingleAgent
               form={form}
               agentId={agentList.length != 0 ? agentList[0].agentVOList[0].id : ""}
               agentName={agentList.length != 0 ? agentList[0].agentVOList[0].agentName : ""}
@@ -123,7 +151,7 @@ class LabelPublicOrder extends Component {
         <Button type="primary" onClick={this.submit}>提交</Button>
         <Button type="primary"
           className="modalBox-btnGroup-cancel"
-          onClick={handleCancel}
+          onClick={this.cancel}
         >取消</Button>
       </div>
     </div>

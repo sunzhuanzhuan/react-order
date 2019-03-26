@@ -49,7 +49,7 @@ class MultiAgent extends React.Component {
             }}
             style={{ width: '400px', float: 'left' }}
           >
-            {getFieldDecorator("agent_id", {
+            {getFieldDecorator("multiAgentIds", {
               rules: [{
                 required: true, message: '本项为必选项，请选择！',
               }],
