@@ -1,3 +1,3 @@
 export default {
-  // getAgent: '/operator-gateway/trinityPlatform/v1/getAllCooperationPlatformAndAgent'
+  addAgent: '/operator-gateway/trinityAgent/v1/insertAgent'
 }

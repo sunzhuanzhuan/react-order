@@ -87,25 +87,25 @@ class LabelPublicOrder extends Component {
             labelCol: { span: 7 },
             wrapperCol: { span: 17 }
           }}
-          style={{ width: '400px' }}
+          style={{ width: '450px' }}
         >
           {getFieldDecorator("public_order_id", {
             rules: [{
-              pattern: /^.{0,100}$/, message: '最多可输入100个字符！'
+              pattern: /^[\u4e00-\u9fa5a-zA-Z0-9-_,]{0,100}$/, message: '最多可输入100个字符！'
             }]
           })(
             <Input
-              style={{ width: '230px' }}
+              style={{ width: '330px' }}
               placeholder="可以输入多个订单号，多个订单号之间需以,分隔" />
           )}
         </FormItem>
         <FormItem
           label="备注"
           layout={{
-            labelCol: { span: 7 },
-            wrapperCol: { span: 17 }
+            labelCol: { span: 10 },
+            wrapperCol: { span: 14 }
           }}
-          style={{ width: '400px' }}
+          style={{ width: '450px' }}
         >
           {getFieldDecorator("comment", {
             rules: [{
@@ -113,7 +113,7 @@ class LabelPublicOrder extends Component {
             }]
           })(
             <TextArea placeholder="请输入备注"
-              style={{ width: '300px' }}
+              style={{ width: '400px' }}
               autosize={{ minRows: 2, maxRows: 6 }} />
           )}
         </FormItem>

@@ -6,6 +6,7 @@
 import React, { Component } from 'react'
 import axios from 'axios'
 import { Form, Button, Modal, Select, Input, Radio, message } from 'antd';
+import * as modalActions from '../../actions/modalActions'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
@@ -75,14 +76,17 @@ class AddAgent extends Component {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        console.log('Received values of form: ', values);
-        axios.post("/api/operator-gateway/trinityAgent/v1/insertAgent", {
-          ...values
-        }).then((response) => {
-
-        }).catch((error) => {
-          message.error("新增代理商失败")
-        });
+        if (values.paymentCompanyCode == "ZF0002") {
+          values.paymentCompanyName = "微播易"
+        } else if (values.paymentCompanyCode == "ZF0001") {
+          values.paymentCompanyName = "布谷鸟"
+        }
+        this.props.actions.addAgent({ ...values }).then(() => {
+          this.setState({
+            visible: false
+          })
+          this.props.actions.getAgent({ platformId: this.props.platformId })
+        })
       }
     });
   }
@@ -515,7 +519,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators({
-
+    ...modalActions
   }, dispatch)
 })
 

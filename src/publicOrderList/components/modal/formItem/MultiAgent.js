@@ -39,31 +39,33 @@ class MultiAgent extends React.Component {
     const { form, agentList, agentDetail, platformId } = this.props
     const { getFieldDecorator } = form
     return (
-      <div className="modalBox-singleAgent">
-        <FormItem
-          label="本单使用平台/代理商"
-          layout={{
-            labelCol: { span: 7 },
-            wrapperCol: { span: 17 }
-          }}
-          style={{ width: '400px', float: 'left' }}
-        >
-          {getFieldDecorator("agent_id", {
-            rules: [{
-              required: true, message: '本项为必选项，请选择！',
-            }],
-            // initialValue: "1"
-          })(
-            <Cascader
-              fieldNames={{ label: 'agentName', value: 'id', children: 'agentVOList' }}
-              options={agentList.length != 0 ? this.handleData(agentList) : []}
-              onChange={this.handleChange}
-              style={{ width: "230px" }}
-              placeholder="请选择本单使用平台/代理商"
-            />
-          )}
-        </FormItem>
-        <AddAgent platformId={platformId} />
+      <div>
+        <div className="modalBox-singleAgent">
+          <FormItem
+            label="本单使用平台/代理商"
+            layout={{
+              labelCol: { span: 7 },
+              wrapperCol: { span: 17 }
+            }}
+            style={{ width: '400px', float: 'left' }}
+          >
+            {getFieldDecorator("agent_id", {
+              rules: [{
+                required: true, message: '本项为必选项，请选择！',
+              }],
+              // initialValue: "1"
+            })(
+              <Cascader
+                fieldNames={{ label: 'agentName', value: 'id', children: 'agentVOList' }}
+                options={agentList.length != 0 ? this.handleData(agentList) : []}
+                onChange={this.handleChange}
+                style={{ width: "230px" }}
+                placeholder="请选择本单使用平台/代理商"
+              />
+            )}
+          </FormItem>
+          <AddAgent platformId={platformId} />
+        </div>
         {/* 平台/代理商详情 */}
         {
           Object.keys(agentDetail).length == 0 ?

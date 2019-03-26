@@ -2,6 +2,9 @@ import api from '../../api/index'
 import {
   GET_AGENT, GET_AGENT_DETAIL, RESET_AGENT, RESET_AGENT_DETAIL
 } from '../contants/ActionTypes'
+import Interface from '../contants/Interface'
+import { createHttpAction } from '../../store/ajaxMiddleware'
+
 
 export const getAgent = (params) => (dispatch) => {
   return api.get('/operator-gateway/trinityPlatform/v1/getAllCooperationPlatformAndAgent', { params }).then((response) => {
@@ -36,6 +39,13 @@ export const resetAgentDetail = () => (dispatch) => {
     type: RESET_AGENT_DETAIL
   })
 }
+
+export const {
+  addAgent
+} = createHttpAction('addAgent', Interface.addAgent, {
+  method: 'post'
+});
+
 
 
 
