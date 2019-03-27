@@ -115,7 +115,7 @@ export function batchText2Array(batchText) {
   // /\s+|,|，/g
   if (!batchText) return batchText;
   if (typeof batchText === 'string') {
-    return batchText.trim().split(/\s+/g).filter(Boolean)
+    return batchText.trim().split(/\s+/g).filter(id => /^\d+$/.test(id))
   }
   return batchText;
 }
