@@ -109,8 +109,9 @@ export default class CreateReport extends Component {
   }
 
   temporarySave = () => {
-    this.coreSave(() => {
-      this.linkTo('/order/closing-report/list/summary-order')
+    this.coreSave((summaryId) => {
+      window.alert(summaryId)
+      this.linkTo('/order/closing-report/detail/summary?summary_id=' + summaryId)
       // 页面刷新跳转到【投放数据汇总单列表】=》草稿 TAB页面
     })
   }
@@ -125,7 +126,7 @@ export default class CreateReport extends Component {
     const { selectedRowKeys, companyId, summaryName } = this.state
     if (!selectedRowKeys.length) {
       if (summaryId) {
-        callback()
+        callback(summaryId)
         return Promise.resolve()
       } else {
         message.info('请选择订单')
@@ -142,12 +143,11 @@ export default class CreateReport extends Component {
     }).then(({ data }) => {
       if (data.order_ids) {
         this.setState({ selectedRowKeys: difference(this.state.selectedRowKeys, data.order_ids) })
-        Modal.confirm({
-          title: data.order_ids + '， 已被其他【投放数据汇总单】选中且保存了，已自动为您取消勾选',
-          onOk: callback
+        Modal.info({
+          title: data.order_ids + '， 已被其他【投放数据汇总单】选中且保存了，已自动为您取消勾选'
         })
       } else {
-        callback()
+        callback(data.summary_id)
       }
     }).finally(_msg)
   }

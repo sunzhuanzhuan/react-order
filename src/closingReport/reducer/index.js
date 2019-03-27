@@ -141,7 +141,7 @@ export const companySource = handleActions({
   [combineActions(addOrUpdateSummary_success)]: (state, action) => {
     return update(state, {
       summaryId: {
-        $set: action.payload.data.summary_id
+        $set: action.payload.data.summary_id && state.summaryId
       }
     })
   },
