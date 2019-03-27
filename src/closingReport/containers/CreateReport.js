@@ -8,6 +8,7 @@ import * as actions from '../actions'
 import OrderList from './OrderList'
 import { parseUrlQuery } from '@/util/parseUrl'
 import difference from 'lodash/difference'
+import { linkTo } from '../../util/linkTo';
 
 
 const Step = Steps.Step
@@ -103,10 +104,8 @@ export default class CreateReport extends Component {
       this.setState({ validateStatus: 'error' })
     }
   }
-  handleCancel = (e, url) => {
-    // TODO: 关闭弹窗跳转
-    // linkTo()
-    window.location.replace(url || '/')
+  handleCancel = (url = '/') => {
+    linkTo(url)
   }
 
   temporarySave = () => {
@@ -169,7 +168,7 @@ export default class CreateReport extends Component {
     const { closingReport: { companySource: { summaryId, companyName, companyPath, beSalesRealName } } } = this.props
     // 参数错误跳到error
     if (!this.state.companyId) {
-      this.handleCancel(null, '/error')
+      this.handleCancel('/error')
     }
     const { current, selectedRowKeys, summaryName, companyId } = this.state
     const C = steps[current].content
@@ -234,18 +233,20 @@ export default class CreateReport extends Component {
           </div>
         </footer>
         <Modal
-          title="创建结案数据单"
+          title="创建投放数据汇总单"
           visible={this.state.visible}
           okButtonProps={{ disabled: !this.validateName(summaryName) }}
           onOk={this.handleOk}
-          onCancel={this.handleCancel}
+          okText='下一步'
+          onCancel={() => this.handleCancel('/loginSuccess')}
           maskClosable={false}
         >
           <Form.Item
-            label='结案数据单名称'
+            label='投放数据汇总单名称'
             validateStatus={this.state.validateStatus}
-            labelCol={{ span: 6 }}
-            wrapperCol={{ span: 17 }}
+            help={this.state.validateStatus === 'error' ? '输入的名称长度不能超过30个字' : ''}
+            labelCol={{ span: 8 }}
+            wrapperCol={{ span: 15 }}
           >
             <Input placeholder='请填写投放数据汇总单的名称，不超过30个字' value={summaryName} onChange={this.changeName} />
           </Form.Item>

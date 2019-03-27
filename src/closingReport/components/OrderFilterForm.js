@@ -145,7 +145,7 @@ export default class OrderFilterForm extends Component {
         {this.state.expand ? <Col span={6}>
           <Form.Item label="订单执行状态">
             {getFieldDecorator('execution_status', {
-              initialValue: this.props.execution_status
+              initialValue: this.props.search.execution_status
             })(
               <Select
                 allowClear
