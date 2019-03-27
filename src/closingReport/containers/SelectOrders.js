@@ -13,7 +13,6 @@ const columns = [
   {
     title: '订单ID',
     dataIndex: 'order_id',
-    width: 100,
     render: (id, record) => {
       return <div>
         <a target="_blank" href={record.order_info_path}>{id}</a>
@@ -35,7 +34,6 @@ const columns = [
   }, {
     title: '需求名称',
     dataIndex: 'requirement_name',
-    width: 180,
     render: (name, record) => {
       return <div>
         <a target="_blank" href={record.requirement_path}>{name}</a>
@@ -51,7 +49,7 @@ const columns = [
     title: '项目/品牌',
     dataIndex: 'brand_name',
     render: (brand, record) => {
-      return <div>
+      return <div style={{minWidth: 120}}>
         <a target="_blank" href={record.project_path}>项目：{record.project_name || '-'}</a>
         <div>品牌：{brand || '-'}</div>
       </div>
