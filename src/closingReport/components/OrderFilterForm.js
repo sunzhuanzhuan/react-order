@@ -180,7 +180,7 @@ export default class OrderFilterForm extends Component {
                 <Option value="time_type_4">结算时间</Option>
               </Select>
               {getFieldDecorator(this.state.timeType, {})(
-                <RangePicker style={{ width: 'calc(100% - 150px)' }} />
+                <RangePicker showTime style={{ width: 'calc(100% - 150px)' }} />
               )}
             </InputGroup>
           </Form.Item>

@@ -161,7 +161,7 @@ export default class SummaryOrderFilterForm extends Component {
                 <Option value="external_check_at">品牌审核时间</Option>
               </Select>
               {getFieldDecorator(this.state.timeType, {})(
-                <RangePicker style={{ width: 'calc(100% - 130px)' }} />
+                <RangePicker showTime style={{ width: 'calc(100% - 130px)' }} />
               )}
             </InputGroup>
           </Form.Item>

@@ -71,7 +71,7 @@ export default class SummaryReviewFilterForm extends Component {
         <Col span={16}>
           <Form.Item label={<EmSpan length={7}>创建时间</EmSpan>}>
             {getFieldDecorator('created_at', {})(
-              <RangePicker style={{ width: '100%' }} />
+              <RangePicker showTime style={{ width: '100%' }} />
             )}
           </Form.Item>
         </Col>
