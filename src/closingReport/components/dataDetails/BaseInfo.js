@@ -29,7 +29,7 @@ export class Edit extends Component {
 
   render() {
     const { getFieldDecorator } = this.props.form
-    const { data: { data = [], isMain } } = this.props
+    const { data: { data = [] }, isMain } = this.props
     const reason = parseInt(this.props.data.status) === 2 ?
       <Against reason={this.props.data.reason} /> : null
     return <div className='platform-data-detail-module base-info'>
