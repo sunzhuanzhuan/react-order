@@ -127,7 +127,7 @@ export default class SummaryListByOrder extends Component {
             {[1].includes(summary_status) &&
             <div><a onClick={() => this.removeOrder(order_id, summary_id)}>删除</a></div>}
             {[4, 6].includes(summary_status) &&
-            <div><a onClick={() => this.submitCheck(order_id, true)}>重新审核</a></div>}
+            <div><a onClick={() => this.submitCheck(order_id, true)}>提交审核</a></div>}
           </div>
         }
       }]

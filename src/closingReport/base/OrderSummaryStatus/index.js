@@ -13,7 +13,7 @@ const OrderSummaryStatus = ({ status, reason }) => {
     },
     '3': {
       status: 'processing',
-      text: '内审通过'
+      text: '内审通过,待提交品牌方审核'
     },
     '4': {
       status: 'error',

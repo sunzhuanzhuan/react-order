@@ -7,7 +7,7 @@ import IconText from '../base/IconText'
 
 const disabledReason = {
   '2': '订单尚未添加执行内容',
-  '3': '订单已被投放数据汇总单选择'
+  '3': '订单已被$投放数据汇总单$选择'
 }
 const columns = [
   {
@@ -17,9 +17,11 @@ const columns = [
       return <div>
         <a target="_blank" href={record.order_info_path}>{id}</a>
         {record.flag > 1 ?
-          <Tooltip title={disabledReason[record.flag]}>
-            <div style={{ color: 'red', cursor: 'pointer' }}>不可选原因</div>
-          </Tooltip>
+          <div>
+            <Tooltip title={disabledReason[record.flag].replace('$投放数据汇总单$', record.flag_summary_id)}>
+              <span style={{ color: 'red', cursor: 'pointer' }}>不可选原因</span>
+            </Tooltip>
+          </div>
           : null}
       </div>
     }
