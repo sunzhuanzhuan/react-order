@@ -52,6 +52,13 @@ export const {
   method: 'post'
 });
 
+//撤销三方已下单
+export const {
+  withdrawLabelPlaceOrder
+} = createHttpAction('withdrawLabelPlaceOrder', Interface.withdrawLabelPlaceOrder, {
+  method: 'post'
+});
+
 
 
 

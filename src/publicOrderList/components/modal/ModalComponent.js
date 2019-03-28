@@ -12,6 +12,7 @@ const ModalComponent = (props) => {
       onCancel={handleCancel}
       width={600}
       centered={true}
+      maskClosable={false}
     >
       <Children
         handleCancel={handleCancel}

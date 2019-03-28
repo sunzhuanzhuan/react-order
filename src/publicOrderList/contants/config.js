@@ -1,5 +1,7 @@
 import React from 'react'
 import LabelPublicOrder from '../components/modal/LabelPublicOrder'
+import ModifyPublicOrder from '../components/modal/ModifyPublicOrder'
+import WithdrawPublicOrder from '../components/modal/WithdrawPublicOrder'
 import { Button } from 'antd';
 
 // 筛选项配置数组
@@ -454,8 +456,10 @@ export const modalParams = {
   },
   "can_modify_public_order": {
     modalTitle: "修改三方已下单",
+    children: ModifyPublicOrder
   },
   "can_withdraw_public_order": {
     modalTitle: "撤销三方已下单",
+    children: WithdrawPublicOrder
   }
 }
