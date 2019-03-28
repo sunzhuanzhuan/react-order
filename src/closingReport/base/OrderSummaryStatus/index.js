@@ -17,7 +17,7 @@ const OrderSummaryStatus = ({ status, reason }) => {
     },
     '4': {
       status: 'error',
-      text: '内审被拒' //待修改
+      text: '内审被拒,待修改' //待修改
     },
     '5': {
       status: 'processing',
@@ -25,7 +25,7 @@ const OrderSummaryStatus = ({ status, reason }) => {
     },
     '6': {
       status: 'error',
-      text: '品牌方审核被拒' //待修改
+      text: '品牌方审核被拒,待修改' //待修改
     },
     '7': {
       status: 'success',
