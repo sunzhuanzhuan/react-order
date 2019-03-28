@@ -192,7 +192,7 @@ export default class CreateReport extends Component {
         </header>
         <main className='create-page-content'>
           <div className='content-statistic'>
-            <p>结案数据单信息</p>
+            <p>投放数据汇总单</p>
             <b>名称</b><span>{summaryName || '-'}</span>
             <b>公司简称</b><span><a target='_blank' href={companyPath}>{companyName || '-'}</a></span>
             <b>所属销售</b><span>{beSalesRealName || '-'}</span>

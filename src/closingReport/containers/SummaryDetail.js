@@ -233,8 +233,8 @@ export default class Test extends Component {
         >
           <TabPane tab={`全部 ${statistics['all'].length}`} key="all" />
           <TabPane tab={`待提交内审 ${statistics['status_1'].length}`} key="status_1" />
-          <TabPane tab={`内审被拒 ${statistics['status_4'].length}`} key="status_4" />
-          <TabPane tab={`品牌方审核被拒 ${statistics['status_6'].length}`} key="status_6" />
+          <TabPane tab={`内审被拒,待修改 ${statistics['status_4'].length}`} key="status_4" />
+          <TabPane tab={`品牌方审核被拒,待修改 ${statistics['status_6'].length}`} key="status_6" />
         </Tabs>
         {
           statistics[tableActive].length ? statistics[tableActive].map(key => {
