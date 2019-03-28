@@ -23,7 +23,7 @@ export default class OrderFilterForm extends Component {
         this.props.onSelectChange([])
         // 处理params
         values['order_id'] = batchText2Array(values['order_id'])
-        values['execution_evidence_code'] = batchText2Array(values['execution_evidence_code'])
+        values['execution_evidence_code'] = batchText2Array(values['execution_evidence_code'], true)
         values['requirement_id'] = batchText2Array(values['requirement_id'])
 
         values['time_type_1'] = moment2dateStr(values['time_type_1'])

@@ -10,7 +10,7 @@ const Option = Select.Option
 
 function handleValue(values) {
   values['order_id'] = batchText2Array(values['order_id'])
-  values['execution_evidence_code'] = batchText2Array(values['execution_evidence_code'])
+  values['execution_evidence_code'] = batchText2Array(values['execution_evidence_code'], true)
   values['requirement_id'] = batchText2Array(values['requirement_id'])
   values.company_id = values.company_id && values.company_id.key
   values.external_check_at = moment2dateStr(values.external_check_at)

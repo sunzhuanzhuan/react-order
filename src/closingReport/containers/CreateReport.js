@@ -110,7 +110,6 @@ export default class CreateReport extends Component {
 
   temporarySave = () => {
     this.coreSave((summaryId) => {
-      window.alert(summaryId)
       this.linkTo('/order/closing-report/detail/summary?summary_id=' + summaryId)
       // 页面刷新跳转到【投放数据汇总单列表】=》草稿 TAB页面
     })

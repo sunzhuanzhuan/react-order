@@ -111,11 +111,17 @@ export function moment2dateStr(datetime) {
   return datetime;
 }
 // 处理批量查询
-export function batchText2Array(batchText) {
+export function batchText2Array(batchText, notNumber) {
   // /\s+|,|，/g
   if (!batchText) return batchText;
   if (typeof batchText === 'string') {
-    return batchText.trim().split(/\s+/g).filter(id => /^\d+$/.test(id))
+    let filterFn;
+    if(notNumber){
+      filterFn = Boolean
+    }else {
+      filterFn = (id) => /^\d+$/.test(id)
+    }
+    return batchText.trim().split(/\s+/g).filter(filterFn)
   }
   return batchText;
 }
