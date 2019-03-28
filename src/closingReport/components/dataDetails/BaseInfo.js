@@ -29,7 +29,7 @@ export class Edit extends Component {
 
   render() {
     const { getFieldDecorator } = this.props.form
-    const { data: { data = [] } } = this.props
+    const { data: { data = [], isMain } } = this.props
     const reason = parseInt(this.props.data.status) === 2 ?
       <Against reason={this.props.data.reason} /> : null
     return <div className='platform-data-detail-module base-info'>
@@ -46,7 +46,7 @@ export class Edit extends Component {
                   { validator: this.checkSwitchInput, message: `请输入${item.display}!` },
                   { validator: this.validatorUrl(item.link_prefix) }
                 ]
-              })(<SwitchRequiredInput type={fieldConfig(item.id)} />)}
+              })(<SwitchRequiredInput type={fieldConfig(item.id)} disabled={item.id === 1 && isMain === 1}/>)}
             </Form.Item>
           })
         }

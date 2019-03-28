@@ -72,7 +72,7 @@ export default class Test extends Component {
       }
     }
     const { actions } = this.props
-    // 获取结案数据单信息
+    // 获取投放数据汇总单信息
     actions.getSummaryTotalInfo({ summary_id })
     actions.getSummaryOrderInfo({ summary_id }).then(() => {
       this.setState({ loading: false })
@@ -126,15 +126,15 @@ export default class Test extends Component {
     return <div>
       <PageHeader
         onBack={() => this.props.history.push('/order/closing-report/list/review')}
-        title="结案数据单审核详情"
+        title="投放数据汇总单审核详情"
       >
         <div style={{ padding: '20px 15px' }}>
           <span>
-            结案数据单号：{summaryId}
+            投放数据汇总单号：{summaryId}
           </span>
           <Divider type="vertical" />
           <span>
-            结案数据单名称：{summaryName}
+            投放数据汇总单名称：{summaryName}
           </span>
           <Divider type="vertical" />
           <span>

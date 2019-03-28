@@ -130,7 +130,8 @@ export default class DataDetailsModalEdit extends Component {
       basic_information, // baseInfo
       execution_link,
       execution_screenshot, // executionPic
-      execution_data
+      execution_data,
+      is_main
     } = platformData
     const props = {
       formItemLayout, form
@@ -165,7 +166,7 @@ export default class DataDetailsModalEdit extends Component {
               {
                 parseInt(basic_information.status) === 1 ?
                   <BaseInfo.View data={basic_information}><Agree /></BaseInfo.View> :
-                  <BaseInfo.Edit data={basic_information} {...props} />
+                  <BaseInfo.Edit data={basic_information} isMain={is_main} {...props} />
               }
               {
                 parseInt(execution_link.status) === 1 ?

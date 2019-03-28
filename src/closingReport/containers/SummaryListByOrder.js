@@ -49,9 +49,8 @@ export default class SummaryListByOrder extends Component {
           return <OrderSummaryStatus status={status} reason={record.externa_reason} />
         }
       }, {
-        title: '结案数据单名称',
+        title: '投放数据汇总单名称',
         dataIndex: 'summary_name',
-        width: 120,
         render: (name, record) => {
           return <a target='_blank' href={'/order/closing-report/detail/summary?summary_id=' + record.summary_id}>{name}</a>
         }
@@ -234,7 +233,7 @@ export default class SummaryListByOrder extends Component {
       <Table
         loading={this.state.listLoading}
         dataSource={list.map(key => source[key])}
-        scroll={{ x: 1500 }}
+        scroll={{ x: 1800 }}
         pagination={pagination}
         columns={this.columns}
       />

@@ -55,10 +55,10 @@ export default class SwitchRequiredInput extends Component {
 
   render() {
     const { checked, input } = this.state
-    const { width = 420, placeholder = '请输入', type } = this.props
+    const { width = 420, placeholder = '请输入', type, disabled } = this.props
     let props = {
       style: { width },
-      disabled: checked,
+      disabled: checked || disabled,
       value: input,
       placeholder
     }
@@ -88,7 +88,7 @@ export default class SwitchRequiredInput extends Component {
     }
     return <div className='switch-required-input'>
       {inputComponent}
-      <Checkbox checked={checked} onChange={this.handleCheckChange} style={checked ? { opacity: 1 } : {}}>无法提供该数据</Checkbox>
+      <Checkbox disabled={disabled} checked={checked} onChange={this.handleCheckChange} style={checked ? { opacity: 1 } : {}}>无法提供该数据</Checkbox>
     </div>
   }
 }

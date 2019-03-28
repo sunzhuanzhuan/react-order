@@ -17,16 +17,16 @@ export default class Test extends Component {
     return <div>
       <PageHeader
         onBack={() => null}
-        title="结案数据单详情页"
+        title="投放数据汇总单详情页"
         extra={<Button type='primary' ghost>添加订单</Button>}
       >
         <div style={{ padding: '20px 15px' }}>
           <span>
-            结案数据单号：001
+            投放数据汇总单号：001
           </span>
           <Divider type="vertical" />
           <span>
-            结案数据单名称：这里显示名称
+            投放数据汇总单名称：这里显示名称
           </span>
           <Divider type="vertical" />
           <span>

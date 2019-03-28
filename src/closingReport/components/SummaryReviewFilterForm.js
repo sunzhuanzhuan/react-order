@@ -30,7 +30,7 @@ export default class SummaryReviewFilterForm extends Component {
     return <Form onSubmit={this.handleSubmit} layout="inline" autoComplete="off">
       <Row>
         <Col span={8}>
-          <Form.Item label="结案数据单名称">
+          <Form.Item label="投放数据汇总单名称">
             {getFieldDecorator('summary_name', {})(
               <Input placeholder="请输入名称" style={{ width: '100%' }} />
             )}
@@ -69,7 +69,7 @@ export default class SummaryReviewFilterForm extends Component {
           </Form.Item>
         </Col>
         <Col span={16}>
-          <Form.Item label={<EmSpan length={7}>创建时间</EmSpan>}>
+          <Form.Item label={<EmSpan length={9}>创建时间</EmSpan>}>
             {getFieldDecorator('created_at', {})(
               <RangePicker showTime style={{ width: '100%' }} />
             )}

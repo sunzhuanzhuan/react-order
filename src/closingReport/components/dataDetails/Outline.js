@@ -72,7 +72,7 @@ export class Edit extends Component {
       '资源/项目媒介',
       '销售/执行人',
       '订单创建人',
-      '分发平台',
+      '平台',
       '账号名称'
     ]
     const values = [

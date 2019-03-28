@@ -107,7 +107,7 @@ export default class SummaryOrderFilterForm extends Component {
           </Form.Item>
         </Col>
         <Col span={6}>
-          <Form.Item label="结案数据单名称">
+          <Form.Item label="投放数据汇总单名称">
             {getFieldDecorator('summary_name', {})(
               <Input placeholder="请输入数据单名称" style={{ width: '100%' }} />
             )}
