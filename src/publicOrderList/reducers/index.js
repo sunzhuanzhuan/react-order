@@ -1,6 +1,7 @@
 import { combineReducers } from 'redux'
 import {
-  publicOrderList
+  publicOrderList,
+  orderDetail
 } from './publicOrderListReducers'
 import {
   agentList,
@@ -10,6 +11,7 @@ import {
 export default combineReducers({
   publicOrderList,
   agentList,
-  agentDetail
+  agentDetail,
+  orderDetail
 })
 

@@ -28,25 +28,20 @@ class LabelPublicOrder extends Component {
     }
   }
   componentWillMount() {
-    api.get("/trinity/publicOrder/getOrderDetail", {
-      params: {
-        order_id: this.props.record.order_id
-      }
-    }).then((res) => {
-      let settle_type_statistic = res.data.public_order.settle_type_statistic
-      if (settle_type_statistic == 1) {
-        //全为预付型
-        let agent_id = res.data.public_order.agent_id
-        this.setState({
-          type: 'single',
-          agent_id: agent_id
-        })
-      } else {
-        this.setState({
-          type: 'multi'
-        })
-      }
-    })
+    let orderDetail = this.props.orderDetail
+    let settle_type_statistic = orderDetail.public_order.settle_type_statistic
+    if (settle_type_statistic == 1) {
+      //全为预付型
+      let agent_id = orderDetail.public_order.agent_id
+      this.setState({
+        type: 'single',
+        agent_id: agent_id
+      })
+    } else {
+      this.setState({
+        type: 'multi'
+      })
+    }
   }
   //提交-标为三方已下单
   submit = (e) => {
@@ -81,7 +76,7 @@ class LabelPublicOrder extends Component {
     });
   }
   render() {
-    const { form, record } = this.props
+    const { form, record, orderDetail } = this.props
     const { getFieldDecorator } = form
     return <div className="modalBox">
       <Form layout="inline">

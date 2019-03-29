@@ -1,6 +1,8 @@
 import api from '../../api/index'
 import {
-  GET_PUBLIC_ORDER_LIST
+  GET_PUBLIC_ORDER_LIST,
+  GET_ORDER_DETAIL,
+  RESET_ORDER_DETAIL
 } from '../contants/ActionTypes'
 
 export const getPublicOrderList = (params) => (dispatch) => {
@@ -11,6 +13,23 @@ export const getPublicOrderList = (params) => (dispatch) => {
         data: response.data
       }
     })
+  })
+}
+
+export const getOrderDetail = (params) => (dispatch) => {
+  return api.get('/trinity/publicOrder/getOrderDetail', { params }).then((response) => {
+    dispatch({
+      type: GET_ORDER_DETAIL,
+      payload: {
+        data: response.data
+      }
+    })
+  })
+}
+
+export const resetOrderDetail = (params) => (dispatch) => {
+  dispatch({
+    type: RESET_ORDER_DETAIL
   })
 }
 

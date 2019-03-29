@@ -1,12 +1,23 @@
 import React from 'react'
-import { Modal } from 'antd';
+import { Modal, Skeleton } from 'antd';
 
 const ModalComponent = (props) => {
-  const { modalParams, visible, handleCancel, record } = props
+  const { modalParams, visible, handleCancel, record, orderDetail } = props
   let Children = modalParams.children
-  return (
+  return Object.keys(orderDetail).length == 0 ?
     <Modal
-      title={`${modalParams.modalTitle} 【订单号： 平台： 账号名称：${record.account.account_name}】`}
+      title={modalParams.modalTitle}
+      visible={visible}
+      onCancel={handleCancel}
+      width={600}
+      maskClosable={false}
+      footer={null}
+      centered={true}
+    >
+      <Skeleton active />
+    </Modal> :
+    <Modal
+      title={`${modalParams.modalTitle} 【订单号：${orderDetail.id} 平台：${orderDetail.platform.platform_name} 账号名称：${orderDetail.account.weibo_name}】`}
       visible={visible}
       footer={null}
       onCancel={handleCancel}
@@ -18,9 +29,9 @@ const ModalComponent = (props) => {
       <Children
         handleCancel={handleCancel}
         record={record}
+        orderDetail={orderDetail}
       />
     </Modal>
-  )
 }
 
 export default ModalComponent

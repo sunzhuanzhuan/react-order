@@ -22,34 +22,30 @@ class ModifyPublicOrder extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      data: {}
+      type: "",
+      agent_id: "",
+      cooperationPlatform: ""
     }
   }
   componentWillMount() {
-    // 获取标为三方已下单详情
-    api.get("/trinity/publicOrder/getPublicOrderInfoForModify", {
-      params: {
-        "public_order_id": this.props.record.public_order.public_order_id
-      }
-    }).then((res) => {
-      let data = res.data
-      let agent_id = data.agent_id
-      // api.get("/operator-gateway/trinityAgent/v1/getAgentById", {
-      //   params: {
-      //     id: agent_id
-      //   }
-      // }).then((res) => {
-      //   this.setState({
-      //     agentName: res.data.agentName,
-      //     agentDetail: res.data
-      //   })
-      // })
-      this.props.actions.getAgent({ platformId: this.props.record.account.platform_id })
-      this.props.actions.getAgentDetail({ id: agent_id })
-      this.setState({
-        data: { ...data }
-      })
+    let orderDetail = this.props.orderDetail
+    let settle_type_statistic = orderDetail.public_order.settle_type_statistic
+    let agent_id = orderDetail.public_order.agent_id
+    let cooperationPlatform = orderDetail.public_order.cooperation_platform_id
+    this.setState({
+      agent_id: agent_id,
+      cooperationPlatform: cooperationPlatform
     })
+    if (settle_type_statistic == 1) {
+      //全为预付型
+      this.setState({
+        type: 'single'
+      })
+    } else {
+      this.setState({
+        type: 'multi'
+      })
+    }
   }
   //点击取消
   cancel = () => {
@@ -84,10 +80,9 @@ class ModifyPublicOrder extends Component {
     });
   }
   render() {
-    const { form } = this.props
+    const { form, record } = this.props
     const { getFieldDecorator } = form
-    const { data } = this.state
-    // const { getFieldDecorator } = form
+    const { agent_id, cooperationPlatform } = this.state
     return <div>
       <Form layout="inline">
         {/* 下单时间 */}
@@ -98,7 +93,24 @@ class ModifyPublicOrder extends Component {
           initialValue="2018-10-10 10:10:10"
         />
         {/* 本单使用平台/代理商 */}
-
+        {
+          this.state.type == "single" ?
+            <SingleAgent
+              form={form}
+              agent_id={agent_id}
+              platformId={record.account.platform_id}
+            /> : null
+        }
+        {
+          this.state.type == "multi" ?
+            <MultiAgent
+              form={form}
+              platformId={record.account.platform_id}
+              agent_id={agent_id}
+              cooperationPlatform={cooperationPlatform}
+              is_agentDetail_initial_loading={true}
+            /> : null
+        }
         <FormItem
           label="三方平台订单号"
           layout={{

@@ -31,6 +31,9 @@ class PublicOrderList extends Component {
   showModal = (params) => {
     let key = params.key
     let data = params.data
+    //获取弹框详情
+    this.props.actions.resetOrderDetail()
+    this.props.actions.getOrderDetail({ order_id: data.order_id })
     this.setState({
       key: key,
       visible: true,
@@ -45,7 +48,7 @@ class PublicOrderList extends Component {
     })
   }
   render() {
-    const { form, publicOrderList } = this.props
+    const { form, publicOrderList, orderDetail } = this.props
     return <div>
       {/* 第一模块-跳转调账对账周期付款，对接转转 */}
       <StatementComponent />
@@ -79,6 +82,7 @@ class PublicOrderList extends Component {
               modalParams={modalParams[this.state.key]}
               handleCancel={this.handleCancel}
               record={this.state.record}
+              orderDetail={orderDetail}
             ></ModalComponent>
         }
       </div>
@@ -87,7 +91,8 @@ class PublicOrderList extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  publicOrderList: state.publicOrderListReducer.publicOrderList
+  publicOrderList: state.publicOrderListReducer.publicOrderList,
+  orderDetail: state.publicOrderListReducer.orderDetail
 })
 
 const mapDispatchToProps = (dispatch) => ({
