@@ -6,7 +6,7 @@ const ModalComponent = (props) => {
   let Children = modalParams.children
   return (
     <Modal
-      title={modalParams.modalTitle}
+      title={`${modalParams.modalTitle} 【订单号： 平台： 账号名称：${record.account.account_name}】`}
       visible={visible}
       footer={null}
       onCancel={handleCancel}

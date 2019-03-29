@@ -182,7 +182,10 @@ export const filterFormArr = [
 const supportedOperations = {
   "can_label_place_order": "标为三方已下单",
   "can_modify_public_order": "修改三方已下单",
-  "can_withdraw_public_order": "撤销三方已下单"
+  "can_withdraw_public_order": "撤销三方已下单",
+  "execute_handle": "执行申请处理",
+  "apply_prepayment": "申请预付款",
+  "set_execution_termination_request": "执行终止处理"
 }
 
 // 列表页column

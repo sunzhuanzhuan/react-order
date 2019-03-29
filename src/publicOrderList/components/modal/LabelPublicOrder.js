@@ -21,36 +21,12 @@ class LabelPublicOrder extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      type: "",
+      type: "multi",
       singleIds: []
     }
   }
   componentWillMount() {
-    // 清空代理商列表和详情
-    this.props.actions.resetAgent()
-    this.props.actions.resetAgentDetail()
-    //获取媒体平台下所有启用合作平台及启用代理商
-    this.props.actions.getAgent({ platformId: this.props.record.account.platform_id }).then(() => {
-      // 只有一个平台/代理商
-      if (this.props.agentList.length == 1 && this.props.agentList[0].agentVOList.length == 1) {
-        this.setState({
-          type: 'single',
-          singleIds: [this.props.agentList[0].id, this.props.agentList[0].agentVOList[0].id]
-        })
-        //获取该代理商的详情
-        let id = this.props.agentList[0].agentVOList[0].id
-        this.props.actions.getAgentDetail({ id: id }).then(() => {
-          console.log(this.props.agentDetail)
-        })
-      } else {
-        this.setState({
-          type: 'multi',
-          singleIds: []
-        })
-      }
-    }).catch(() => {
-      message.error("该媒体平台下启用合作平台及启用代理商获取失败")
-    })
+
   }
   //提交-标为三方已下单
   submit = (e) => {
@@ -85,7 +61,7 @@ class LabelPublicOrder extends Component {
     });
   }
   render() {
-    const { form, handleCancel, agentList, agentDetail, record } = this.props
+    const { form, agentList, agentDetail, record } = this.props
     const { getFieldDecorator } = form
     return <div className="modalBox">
       <Form layout="inline">
@@ -102,12 +78,17 @@ class LabelPublicOrder extends Component {
               agentId={agentList.length != 0 ? agentList[0].agentVOList[0].id : ""}
               agentName={agentList.length != 0 ? agentList[0].agentVOList[0].agentName : ""}
               agentDetail={Object.keys(agentDetail).length != 0 ? agentDetail : {}}
-            /> :
+            /> : null
+        }
+        {
+          this.state.type == "multi" ?
             <MultiAgent
               form={form}
-              agentList={agentList}
               platformId={record.account.platform_id}
-            />
+              // cooperationPlatform={124}
+              // agent_id={56}
+              is_agentDetail_initial_loading={false}
+            /> : null
         }
         <FormItem
           label="三方平台订单号"
