@@ -61,15 +61,16 @@ class ModifyPublicOrder extends Component {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
+        console.log(values)
         values.ttp_place_order_at = values.ttp_place_order_at.format("YYYY-MM-DD HH:mm:ss")
-        // if (this.state.type == "single") {
-        //   values.ttp_cooperation_platform_id = this.state.singleIds[0]
-        //   values.agent_id = this.state.singleIds[1]
-        // } else {
-        //   values.ttp_cooperation_platform_id = values.multiAgentIds[0]
-        //   values.agent_id = values.multiAgentIds[1]
-        //   delete values.multiAgentIds
-        // }
+        if (this.state.type == "single") {
+          values.ttp_cooperation_platform_id = this.state.cooperationPlatform
+          values.agent_id = this.state.agent_id
+        } else {
+          values.ttp_cooperation_platform_id = values.multiAgentIds[0]
+          values.agent_id = values.multiAgentIds[1]
+          delete values.multiAgentIds
+        }
         this.props.actions.modifyLabelPlaceOrder({ ...values }).then(() => {
           message.success('您所提交的信息已经保存成功！', 2)
           this.props.handleCancel()
@@ -80,7 +81,7 @@ class ModifyPublicOrder extends Component {
     });
   }
   render() {
-    const { form, record } = this.props
+    const { form, record, orderDetail } = this.props
     const { getFieldDecorator } = form
     const { agent_id, cooperationPlatform } = this.state
     return <div>
@@ -90,7 +91,7 @@ class ModifyPublicOrder extends Component {
           form={form}
           type="can_modify_public_order"
           id="ttp_place_order_at"
-          initialValue="2018-10-10 10:10:10"
+          initialValue={orderDetail.public_order.ttp_place_order_at}
         />
         {/* 本单使用平台/代理商 */}
         {
@@ -123,7 +124,7 @@ class ModifyPublicOrder extends Component {
             rules: [{
               pattern: /^[\u4e00-\u9fa5a-zA-Z0-9-_,]{0,100}$/, message: '最多可输入100个字符！'
             }],
-            initialValue: "修改三方已下单"
+            initialValue: "这里是假数据"
           })(
             <Input
               style={{ width: '330px' }}
@@ -142,7 +143,7 @@ class ModifyPublicOrder extends Component {
             rules: [{
               pattern: /^.{0,100}$/, message: '最多可输入100个字符！'
             }],
-            initialValue: "修改三方已下单"
+            initialValue: orderDetail.public_order.deal_execution_notification_comment
           })(
             <TextArea placeholder="请输入备注"
               style={{ width: '400px' }}
