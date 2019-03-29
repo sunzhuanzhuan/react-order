@@ -61,7 +61,6 @@ class ModifyPublicOrder extends Component {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        console.log(values)
         values.ttp_place_order_at = values.ttp_place_order_at.format("YYYY-MM-DD HH:mm:ss")
         if (this.state.type == "single") {
           values.ttp_cooperation_platform_id = this.state.cooperationPlatform

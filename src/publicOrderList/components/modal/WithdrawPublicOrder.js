@@ -6,11 +6,12 @@
 import React, { Component } from 'react'
 import api from '../../../api/index'
 import * as modalActions from '../../actions/modalActions'
-import { Skeleton, Button, message } from 'antd';
+import { Button, message, Spin } from 'antd';
 import AgentDetail from './formItem/AgentDetail'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import './ModalComponent.less'
+import './formItem/formItem.less'
 
 class WithdrawPublicOrder extends Component {
   constructor(props) {
@@ -18,30 +19,21 @@ class WithdrawPublicOrder extends Component {
     this.state = {
       data: {},
       agentName: "",
-      agentDetail: {}
+      agentDetail: {},
+      is_agentDetail_loading: true
     }
   }
   componentWillMount() {
-    api.get("/trinity/publicOrder/getPublicOrderInfoForModify", {
-      params: {
-        "public_order_id": this.props.record.public_order.public_order_id
-      }
-    }).then((res) => {
-      let data = res.data
-      let agent_id = data.agent_id
-      api.get("/operator-gateway/trinityAgent/v1/getAgentById", {
-        params: {
-          id: agent_id
-        }
-      }).then((res) => {
-        this.setState({
-          agentName: res.data.agentName,
-          agentDetail: res.data
-        })
-      })
+    let orderDetail = this.props.orderDetail
+    let agent_id = orderDetail.public_order.agent_id
+    this.props.actions.getAgentDetail({ id: agent_id }).then(() => {
       this.setState({
-        data: { ...data }
+        is_agentDetail_loading: false
       })
+    }).catch(() => {
+      this.setState({
+        is_agentDetail_loading: false
+      }, () => { message.error("代理商详情加载失败", 2) })
     })
   }
   //撤销三方已下单
@@ -49,27 +41,36 @@ class WithdrawPublicOrder extends Component {
     this.props.actions.withdrawLabelPlaceOrder({
       public_order_id: this.props.record.public_order.public_order_id
     }).then(() => {
+      message.success('您所提交的信息已经保存成功！', 2)
       this.props.handleCancel()
     }).catch(() => {
       message.error("撤销三方已下单操作失败", 2)
     })
   }
   render() {
-    const { data, agentName, agentDetail } = this.state
+    const { orderDetail, agentDetail } = this.props
+    const { is_agentDetail_loading } = this.state
     const { handleCancel } = this.props
     return <div className="withdrawPublicOrder">
-      {
-        Object.keys(data).length != 0 ?
-          <ul>
-            <li>下单时间：{data.ttp_place_order_at}</li>
-            <li style={{ marginTop: '5px' }}>本单使用平台/代理商：{agentName == "" ? "-" : agentName}</li>
-            <AgentDetail
-              agentDetail={agentDetail}
-            />
-            <li style={{ marginTop: '5px' }}>三方订单号：{data.ttp_order_id}</li>
-            <li style={{ marginTop: '5px' }}>备注：{data.comment}</li>
-          </ul> : <Skeleton active />
-      }
+      <ul>
+        <li>下单时间：{orderDetail.public_order.ttp_place_order_at}</li>
+        <li style={{ marginTop: '5px' }}>本单使用平台/代理商：{Object.keys(agentDetail).length != 0 ? "-" : agentDetail.agentName}</li>
+        {/* 是否加载中 */}
+        {
+          is_agentDetail_loading ?
+            <div className="multiAgent-agentDetail-loading">
+              <Spin />
+            </div> : null
+        }
+        {/* 平台/代理商详情 */}
+        {
+          Object.keys(agentDetail).length != 0 ?
+            <AgentDetail agentDetail={agentDetail} /> :
+            null
+        }
+        <li style={{ marginTop: '5px' }}>三方订单号：这是假数据</li>
+        <li style={{ marginTop: '5px' }}>备注：{orderDetail.public_order.deal_execution_notification_comment}</li>
+      </ul>
       <div className="withdrawPublicOrder-tips">是否要撤销三方已下单的标识？</div>
       <div className="modalBox-btnGroup">
         <Button type="primary" onClick={this.submit}>确定撤销</Button>
@@ -84,7 +85,7 @@ class WithdrawPublicOrder extends Component {
 
 const mapStateToProps = (state) => {
   return {
-
+    agentDetail: state.publicOrderListReducer.agentDetail
   }
 }
 
