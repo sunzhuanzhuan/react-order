@@ -58,7 +58,7 @@ export class Edit extends Component {
       <div style={{ paddingTop: '10px' }}>
         {fetchData.length ? <div className='fetch-data'>
           <div className='fetch-data-reference'>
-            抓取参考数据
+            抓取数据(参考值)
           </div>
           <div>
             {
@@ -72,7 +72,7 @@ export class Edit extends Component {
                       initialValue: { id: item.id, input: item.value, checked: item.checked === 1 },
                       validateFirst: true,
                       rules: [{ validator: this.checkSwitchInput, message: `请输入${item.display}!` }]
-                    })(<SwitchRequiredInput width={330} type={fieldConfig(item.id)} />)}
+                    })(<SwitchRequiredInput width={270} type={fieldConfig(item.id)} />)}
                   </Form.Item>
                 </div>
               })
@@ -210,7 +210,7 @@ export class View extends Component {
         </div>
         {fetchData.length ? <div className='read-right-data'>
           <div className='fetch-data-reference'>
-            抓取参考数据
+            抓取数据(参考值)
           </div>
           <div>
             {

@@ -70,7 +70,9 @@ const columns = [
     dataIndex: 'executor_admin_name',
     align: 'center',
     render: (name) => {
-      return name || '-'
+      return <div style={{minWidth: '60px'}}>
+        {name || '-'}
+      </div>
     }
   }]
 
