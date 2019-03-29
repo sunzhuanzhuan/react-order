@@ -79,7 +79,7 @@ export class Edit extends Component {
             }
           </div>
         </div> : null}
-        {fetchData.length ? <Divider dashed /> : null}
+        {(fetchData.length && screenshot.length) ? <Divider dashed /> : null}
         <div className='input-data'>
           {screenshot.length ? <div className='input-data-left'>
             {/*<p className='check-demo'>
@@ -229,7 +229,7 @@ export class View extends Component {
           </div>
         </div> : null}
       </div>
-      {fetchData.length ? <Divider dashed /> : null}
+      {(fetchData.length && screenshot.length) ? <Divider dashed /> : null}
       <div className='input-data'>
         {screenshot.length ? <div className='input-data-left'>
           {this.state.loading ? <Empty /> : this.state.items.length ?

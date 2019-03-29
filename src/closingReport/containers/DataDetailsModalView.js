@@ -53,7 +53,7 @@ export default class DataDetailsModalView extends Component {
       onCancel={this.props.closed}
       onOk={this.props.closed}
     >
-      <div style={{ minHeight: '588px' }}>
+      <div style={{ minHeight: '438px' }}>
         {this.state.loading ?
           <Loading /> :
           this.state.error ?

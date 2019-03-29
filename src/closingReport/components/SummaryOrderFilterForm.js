@@ -12,6 +12,7 @@ function handleValue(values) {
   values['order_id'] = batchText2Array(values['order_id'])
   values['execution_evidence_code'] = batchText2Array(values['execution_evidence_code'], true)
   values['summary_id'] = batchText2Array(values['summary_id'])
+  values['requirement_id'] = batchText2Array(values['requirement_id'])
   values.company_id = values.company_id && values.company_id.key
   values.external_check_at = moment2dateStr(values.external_check_at)
   values.internal_check_at = moment2dateStr(values.internal_check_at)
@@ -177,6 +178,7 @@ export default class SummaryOrderFilterForm extends Component {
               >
                 <Option value="order_id">订单ID</Option>
                 <Option value="execution_evidence_code">PO单号</Option>
+                <Option value="requirement_id">需求ID</Option>
                 <Option value="summary_id">数据单ID</Option>
               </Select>
               {getFieldDecorator(this.state.batchKey, {
@@ -184,7 +186,7 @@ export default class SummaryOrderFilterForm extends Component {
                   validator: this.validatorBatchId
                 }]
               })(
-                <Input placeholder='请输入订单ID/PO单号/数据单ID空格隔开，不超过200个' style={{ width: 'calc(100% - 100px)' }} />
+                <Input placeholder='请输入订单ID/PO单号/需求ID/数据单ID空格隔开，不超过200个' style={{ width: 'calc(100% - 100px)' }} />
               )}
             </InputGroup>
           </Form.Item>

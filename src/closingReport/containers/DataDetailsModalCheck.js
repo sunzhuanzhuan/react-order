@@ -60,7 +60,7 @@ export default class DataDetailsModalCheck extends Component {
           'execution_screenshot_status': 1,
           'execution_data_status': 1
         }
-        this.showConfirm(values, this.props.successCallback)
+        this.showConfirm({...defaultValue, ...values}, this.props.successCallback)
       }
     })
   }
@@ -92,7 +92,7 @@ export default class DataDetailsModalCheck extends Component {
       okText='提交结果'
       maskClosable={false}
     >
-      <div style={{ height: '588px' }}>
+      <div style={{ minHeight: '438px' }}>
         {this.state.loading ?
           <Loading /> :
           this.state.error ?
@@ -102,12 +102,16 @@ export default class DataDetailsModalCheck extends Component {
               <DataDetailsReviewWrap {...props} field='basic_information'>
                 <BaseInfo.View data={basic_information} />
               </DataDetailsReviewWrap>
-              <DataDetailsReviewWrap {...props} field='execution_link'>
-                <ExecutionLink.View data={execution_link} />
-              </DataDetailsReviewWrap>
-              <DataDetailsReviewWrap {...props} field='execution_screenshot'>
+              {
+                execution_link.data.length ? <DataDetailsReviewWrap {...props} field='execution_link'>
+                  <ExecutionLink.View data={execution_link} />
+                </DataDetailsReviewWrap> : null
+              }
+              {
+                execution_screenshot.data.length ? <DataDetailsReviewWrap {...props} field='execution_screenshot'>
                 <ExecutionPic.View data={execution_screenshot} />
-              </DataDetailsReviewWrap>
+              </DataDetailsReviewWrap> : null
+              }
               <DataDetailsReviewWrap {...props} field='execution_data'>
                 <ExecutionData.View data={execution_data} />
               </DataDetailsReviewWrap>

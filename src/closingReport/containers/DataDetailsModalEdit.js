@@ -156,7 +156,7 @@ export default class DataDetailsModalEdit extends Component {
       footer={footer}
       maskClosable={false}
     >
-      <div style={{ height: '588px' }}>
+      <div style={{ minHeight: '438px' }}>
         {this.state.loading ?
           <Loading /> :
           this.state.error ?

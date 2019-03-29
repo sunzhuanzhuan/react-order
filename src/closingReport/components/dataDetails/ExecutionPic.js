@@ -32,7 +32,7 @@ export class Edit extends Component {
     const { data: { data = [] } } = this.props
     const reason = parseInt(this.props.data.status) === 2 ?
       <Against reason={this.props.data.reason} /> : null
-    return <div className='platform-data-detail-module execution-pic'>
+    return data.length ? <div className='platform-data-detail-module execution-pic'>
       <DataModuleHeader title='执行截图' extra={reason} />
       <div style={{ padding: '10px 20px' }}>
         {/*<p className='check-demo'>
@@ -76,7 +76,7 @@ export class Edit extends Component {
           })
         }
       </div>
-    </div>
+    </div> : null
   }
 }
 
@@ -86,7 +86,7 @@ export class Edit extends Component {
 export class View extends Component {
   render() {
     const { data: { data = [] } } = this.props
-    return <div className='platform-data-detail-module execution-pic read'>
+    return data.length ? <div className='platform-data-detail-module execution-pic read'>
       <div className='read-left-head'>
         执行截图
       </div>
@@ -102,7 +102,7 @@ export class View extends Component {
         }
       </div>
       {this.props.children}
-    </div>
+    </div> : null
   }
 }
 
