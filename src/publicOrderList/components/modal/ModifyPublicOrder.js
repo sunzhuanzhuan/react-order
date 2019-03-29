@@ -5,7 +5,6 @@
 */
 import React, { Component } from 'react'
 import { Form, message, Modal, Input, Button } from 'antd';
-import api from '../../../api/index'
 import PlaceOrderTime from './formItem/PlaceOrderTime'
 import MultiAgent from './formItem/MultiAgent'
 import SingleAgent from './formItem/SingleAgent'
