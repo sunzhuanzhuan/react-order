@@ -94,7 +94,7 @@ export default class SummaryListByOrder extends Component {
         width: 100,
         render: (name, record) => {
           return <div>
-            {name || '-'} / {record.executor_name || '-'}
+            {name || '-'} / {record.executor_admin_name || '-'}
           </div>
         }
       }, {
