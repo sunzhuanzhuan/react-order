@@ -126,7 +126,7 @@ export class View extends Component {
       '项目/品牌',
       '资源/项目媒介',
       '销售/执行人',
-      '分发平台'
+      '平台'
     ]
     const values = [
       brand_name + ' / ' + project_name,
