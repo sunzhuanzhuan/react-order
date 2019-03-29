@@ -8,48 +8,85 @@ import React from 'react';
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import AgentDetail from './AgentDetail'
-import { Form, Skeleton } from 'antd';
+import AddAgent from '../AddAgent'
+import { Form, Spin, message } from 'antd';
+import * as modalActions from '../../../actions/modalActions'
+import './formItem.less'
 const FormItem = Form.Item;
-const SingleAgent = (props) => {
-  const { agentDetail, form, agentName, agentId } = props
-  const { getFieldDecorator } = form
-  return (
-    <div className="modalBox-singleAgent">
-      <FormItem
-        label="本单使用平台/代理商"
-        layout={{
-          labelCol: { span: 7 },
-          wrapperCol: { span: 17 }
-        }}
-        style={{ width: '500px' }}
-      >
-        {getFieldDecorator("agent_id", {
-          rules: [{
-            required: true, message: '本项为必选项，请选择！',
-          }],
-          initialValue: { agentId }
-        })(
-          <span>{agentName}</span>
-        )}
-      </FormItem>
-      {/* 平台/代理商详情 */}
-      {
-        Object.keys(agentDetail).length != 0 ?
-          <AgentDetail agentDetail={agentDetail} /> :
-          <Skeleton active />
-      }
-    </div>
-  )
+class SingleAgent extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      is_agentDetail_loading: false
+    }
+  }
+  componentWillMount() {
+    this.props.actions.resetAgentDetail()
+    this.setState({
+      is_agentDetail_loading: true
+    })
+    this.props.actions.getAgentDetail({ id: this.props.agent_id }).then(() => {
+      this.setState({
+        is_agentDetail_loading: false
+      })
+    }).catch(() => {
+      this.setState({
+        is_agentDetail_loading: false
+      }, () => { message.error("代理商详情加载失败", 2) })
+    })
+  }
+  render() {
+    const { agentDetail, form, platformId } = this.props
+    const { getFieldDecorator } = form
+    const { is_agentDetail_loading } = this.state
+    return (
+      <div>
+        <div className="modalBox-singleAgent">
+          <FormItem
+            label="本单使用平台/代理商"
+            layout={{
+              labelCol: { span: 7 },
+              wrapperCol: { span: 17 }
+            }}
+            style={{ width: '400px', float: 'left' }}
+          >
+            {getFieldDecorator("agent_id", {
+              rules: [{
+                required: true, message: '本项为必选项，请选择！',
+              }],
+              initialValue: agentDetail.agentId
+            })(
+              <span>{agentDetail.agentName}</span>
+            )}
+          </FormItem>
+          <AddAgent platformId={platformId} />
+        </div>
+        {/* 是否加载中 */}
+        {
+          is_agentDetail_loading ?
+            <div className="multiAgent-agentDetail-loading">
+              <Spin />
+            </div> : null
+        }
+        {/* 平台/代理商详情 */}
+        {
+          Object.keys(agentDetail).length != 0 ?
+            <AgentDetail agentDetail={agentDetail} /> :
+            null
+        }
+      </div>
+    )
+  }
 }
-const mapStateToProps = () => {
+const mapStateToProps = (state) => {
   return {
-
+    agentDetail: state.publicOrderListReducer.agentDetail
   }
 }
 
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators({
-
+    ...modalActions
   }, dispatch)
 })
 

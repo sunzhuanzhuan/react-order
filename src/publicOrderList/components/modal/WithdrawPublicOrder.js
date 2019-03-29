@@ -62,12 +62,12 @@ class WithdrawPublicOrder extends Component {
         Object.keys(data).length != 0 ?
           <ul>
             <li>下单时间：{data.ttp_place_order_at}</li>
-            <li>本单使用平台/代理商：{agentName == "" ? "-" : agentName}</li>
+            <li style={{ marginTop: '5px' }}>本单使用平台/代理商：{agentName == "" ? "-" : agentName}</li>
             <AgentDetail
               agentDetail={agentDetail}
             />
-            <li>三方订单号：{data.ttp_order_id}</li>
-            <li>备注：{data.comment}</li>
+            <li style={{ marginTop: '5px' }}>三方订单号：{data.ttp_order_id}</li>
+            <li style={{ marginTop: '5px' }}>备注：{data.comment}</li>
           </ul> : <Skeleton active />
       }
       <div className="withdrawPublicOrder-tips">是否要撤销三方已下单的标识？</div>

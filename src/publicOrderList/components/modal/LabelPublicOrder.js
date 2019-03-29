@@ -4,6 +4,7 @@
 
 */
 import React, { Component } from 'react'
+import api from '../../../api/index'
 import { Form, Button, message, Input, Modal } from 'antd';
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
@@ -21,12 +22,31 @@ class LabelPublicOrder extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      type: "multi",
-      singleIds: []
+      type: "",
+      singleIds: [],
+      agent_id: ""
     }
   }
   componentWillMount() {
-
+    api.get("/trinity/publicOrder/getOrderDetail", {
+      params: {
+        order_id: this.props.record.order_id
+      }
+    }).then((res) => {
+      let settle_type_statistic = res.data.public_order.settle_type_statistic
+      if (settle_type_statistic == 1) {
+        //全为预付型
+        let agent_id = res.data.public_order.agent_id
+        this.setState({
+          type: 'single',
+          agent_id: agent_id
+        })
+      } else {
+        this.setState({
+          type: 'multi'
+        })
+      }
+    })
   }
   //提交-标为三方已下单
   submit = (e) => {
@@ -61,7 +81,7 @@ class LabelPublicOrder extends Component {
     });
   }
   render() {
-    const { form, agentList, agentDetail, record } = this.props
+    const { form, record } = this.props
     const { getFieldDecorator } = form
     return <div className="modalBox">
       <Form layout="inline">
@@ -75,9 +95,8 @@ class LabelPublicOrder extends Component {
           this.state.type == "single" ?
             <SingleAgent
               form={form}
-              agentId={agentList.length != 0 ? agentList[0].agentVOList[0].id : ""}
-              agentName={agentList.length != 0 ? agentList[0].agentVOList[0].agentName : ""}
-              agentDetail={Object.keys(agentDetail).length != 0 ? agentDetail : {}}
+              agent_id={this.state.agent_id}
+              platformId={record.account.platform_id}
             /> : null
         }
         {
@@ -85,8 +104,6 @@ class LabelPublicOrder extends Component {
             <MultiAgent
               form={form}
               platformId={record.account.platform_id}
-              // cooperationPlatform={124}
-              // agent_id={56}
               is_agentDetail_initial_loading={false}
             /> : null
         }
@@ -114,7 +131,7 @@ class LabelPublicOrder extends Component {
             labelCol: { span: 10 },
             wrapperCol: { span: 14 }
           }}
-          style={{ width: '450px' }}
+          style={{ width: '450px', marginTop: '5px' }}
         >
           {getFieldDecorator("comment", {
             rules: [{
@@ -141,8 +158,7 @@ class LabelPublicOrder extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    agentList: state.publicOrderListReducer.agentList,
-    agentDetail: state.publicOrderListReducer.agentDetail
+
   }
 }
 

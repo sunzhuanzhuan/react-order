@@ -59,6 +59,13 @@ export const {
   method: 'post'
 });
 
+// 修改三方已下单
+export const {
+  modifyLabelPlaceOrder
+} = createHttpAction('modifyLabelPlaceOrder', Interface.modifyLabelPlaceOrder, {
+  method: 'post'
+});
+
 
 
 
