@@ -15,7 +15,7 @@ class PlaceOrderTime extends React.Component {
     return current < moment().subtract(31, "days").endOf('day') || current > moment().endOf('day')
   }
   render() {
-    const { form, type, id } = this.props
+    const { form, type, id, initialValue } = this.props
     const { getFieldDecorator } = form;
     return <FormItem
       label="下单时间"
@@ -26,7 +26,7 @@ class PlaceOrderTime extends React.Component {
       style={{ width: '500px' }}
     >
       {getFieldDecorator(id, {
-        initialValue: type == "can_label_place_order" ? moment() : "",
+        initialValue: type == "can_label_place_order" ? moment() : moment(initialValue),
         rules: [{
           required: true, message: '本项为必选项，请选择！',
         }]

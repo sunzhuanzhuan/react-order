@@ -2,6 +2,9 @@ import React from 'react'
 import LabelPublicOrder from '../components/modal/LabelPublicOrder'
 import ModifyPublicOrder from '../components/modal/ModifyPublicOrder'
 import WithdrawPublicOrder from '../components/modal/WithdrawPublicOrder'
+import ExecuteHandle from '../components/modal/ExecuteHandle'
+import ApplyPrepayment from '../components/modal/ApplyPrepayment'
+import SetExecutionTerminationRequest from '../components/modal/SetExecutionTerminationRequest'
 import { Button } from 'antd';
 
 // 筛选项配置数组
@@ -461,5 +464,17 @@ export const modalParams = {
   "can_withdraw_public_order": {
     modalTitle: "撤销三方已下单",
     children: WithdrawPublicOrder
+  },
+  "execute_handle": {
+    modalTitle: "执行申请处理",
+    children: ExecuteHandle
+  },
+  "apply_prepayment": {
+    modalTitle: "申请预付款",
+    children: ApplyPrepayment
+  },
+  "set_execution_termination_request": {
+    modalTitle: "执行终止处理",
+    children: SetExecutionTerminationRequest
   }
 }
