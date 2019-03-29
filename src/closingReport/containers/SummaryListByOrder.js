@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Modal, Table, message } from 'antd'
+import { Modal, Table, message, Icon, Popconfirm } from 'antd'
 import { SH2 } from '@/base/SectionHeader'
 import './SelectOrders.less'
 import IconText from '../base/IconText'
@@ -123,8 +123,20 @@ export default class SummaryListByOrder extends Component {
             </div>
             {[1].includes(summary_status) &&
             <div><a onClick={() => this.submitCheck(order_id)}>提交审核</a></div>}
-            {[1].includes(summary_status) &&
-            <div><a onClick={() => this.removeOrder(order_id, summary_id)}>删除</a></div>}
+            {/*{[1].includes(summary_status) && <div>
+              <Popconfirm
+                getPopupContainer={() => document.querySelector('.closing-report-container')}
+                placement='left'
+                title={<div>删除后，订单内数据将全部清空。<br />确认删除么?</div>}
+                okText="确定"
+                cancelText="取消"
+                onConfirm={() => {
+                  this.removeOrder(order_id, summary_id)
+                }}
+              >
+                <a>删除</a>
+              </Popconfirm>
+            </div>}*/}
             {[4, 6].includes(summary_status) &&
             <div><a onClick={() => this.submitCheck(order_id, true)}>提交审核</a></div>}
           </div>
