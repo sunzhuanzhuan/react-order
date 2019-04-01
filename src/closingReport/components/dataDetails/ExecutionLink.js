@@ -39,7 +39,7 @@ export class Edit extends Component {
                 initialValue: {
                   id: item.id,
                   link: item.value,
-                  radio: item.radio || (item.reference ? 1 : 2),
+                  radio: item.radio || (item.value ? 2 : item.reference ? 1 : 2),
                   reference: item.reference
                 },
                 validateFirst: true,
