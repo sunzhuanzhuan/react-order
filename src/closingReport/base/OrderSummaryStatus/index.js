@@ -36,7 +36,7 @@ const OrderSummaryStatus = ({ status, reason }) => {
   return (
     <div className='head-left'>
       <Badge {...props} />
-      {reason && <div style={{ color: 'red' }}>{reason}</div>}
+      {reason && status === 6 && <div style={{ color: 'red' }}>{reason}</div>}
     </div>
   )
 }
