@@ -1,5 +1,5 @@
 import React from 'react'
-import { Badge } from 'antd'
+import { Badge, Tooltip } from 'antd'
 // 订单结案状态
 const OrderSummaryStatus = ({ status, reason }) => {
   let _display = {
@@ -36,7 +36,9 @@ const OrderSummaryStatus = ({ status, reason }) => {
   return (
     <div className='head-left'>
       <Badge {...props} />
-      {reason && status === 6 && <div style={{ color: 'red' }}>{reason}</div>}
+      {reason && status === 6 && <Tooltip title={reason} placement='topLeft'>
+        <div className='text-overflow-ellipsis' style={{ color: 'red'}}>{reason}</div>
+      </Tooltip>}
     </div>
   )
 }
