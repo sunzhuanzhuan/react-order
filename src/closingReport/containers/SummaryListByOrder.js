@@ -9,6 +9,7 @@ import * as actions from '../actions'
 import { connect } from 'react-redux'
 import OrderSummaryStatus from '../base/OrderSummaryStatus'
 import { datetimeValidate } from '../util'
+import ScrollTable from '../../components/Scolltable'
 
 const mapStateToProps = (state) => ({
   common: state.commonReducers,
@@ -245,7 +246,7 @@ export default class SummaryListByOrder extends Component {
       <Table
         loading={this.state.listLoading}
         dataSource={list.map(key => source[key])}
-        scroll={{ x: 1800 }}
+        scroll={{ x: 1800, y: document.body.clientHeight - 380 }}
         pagination={pagination}
         columns={this.columns}
       />
