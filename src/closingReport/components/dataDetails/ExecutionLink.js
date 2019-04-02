@@ -71,7 +71,7 @@ export class View extends Component {
           data.map(item => {
             return <p key={item.id}>
               <span className='title' />
-              <a className='value' target='_blank' href={item.value}>{item.value}</a>
+              {item.radio  === 3 ? <span className='value'>无法提供该数据</span> : <a className='value' target='_blank' href={item.value}>{item.value}</a>}
             </p>
           })
         }

@@ -74,7 +74,8 @@ export class Edit extends Component {
                   <Button disabled={getFieldValue(`execution_screenshot[${n}].checked`)}><Icon type="upload" /> 上传文件</Button>
                   <div onClick={e => e.stopPropagation()} style={{display: "inline-block", paddingLeft: "18px"}}>
                     {getFieldDecorator(`execution_screenshot[${n}].checked`, {
-                      initialValue: item.checked === 1
+                      initialValue: item.checked === 1,
+                      valuePropName: 'checked'
                     })(<Checkbox onClick={() => this.handleCheck(`execution_screenshot[${n}].value`)}>无法提供该数据</Checkbox>)}
                   </div>
                 </OssUpload>
@@ -103,6 +104,9 @@ export class View extends Component {
       <div className='read-right-data'>
         {
           data.map(item => {
+            if(item.checked === 1){
+              return <span style={{color: '#151515'}}>无法提供该数据</span>
+            }
             return (item.value || []).map((url, n) => {
               return <div key={n} className='pic-list-item' onClick={viewPic(url)}>
                 <img src={url} alt={url} />

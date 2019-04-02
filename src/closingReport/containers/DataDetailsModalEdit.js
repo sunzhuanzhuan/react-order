@@ -177,7 +177,7 @@ export default class DataDetailsModalEdit extends Component {
               }
               {
                 parseInt(execution_screenshot.status) === 1 ?
-                  <ExecutionPic.View data={execution_screenshot}><Agree /></ExecutionPic.View> :
+                  <ExecutionPic.View data={execution_screenshot}><Agree top={10}/></ExecutionPic.View> :
                   <ExecutionPic.Edit data={execution_screenshot} {...props} />
               }
               {

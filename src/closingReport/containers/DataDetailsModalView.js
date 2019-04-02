@@ -71,7 +71,7 @@ export default class DataDetailsModalView extends Component {
                 <Refuse top={10} reason={execution_link.reason} />}
               </ExecutionLink.View>
               <ExecutionPic.View data={execution_screenshot}>
-                {parseInt(execution_screenshot.status) === 1 && <Agree />}
+                {parseInt(execution_screenshot.status) === 1 && <Agree top={10}/>}
                 {parseInt(execution_screenshot.status) === 2 &&
                 <Refuse reason={execution_screenshot.reason} />}
               </ExecutionPic.View>
