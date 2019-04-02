@@ -70,6 +70,7 @@ export default class RadioLink extends Component {
             width: 400,
             marginLeft: 10
           }} value={this.state.link} /> : null}</Radio>
+        <Radio style={radioStyle} value={3}>无法提供该数据</Radio>
       </RadioGroup>
     </div>
   }

@@ -10,14 +10,14 @@ import { Against } from '../../base/ApprovalStatus'
  */
 export class Edit extends Component {
   checkRadioLink = (rule, value = {}, callback) => {
-    if (value.radio === 1 || value.link) {
+    if (value.radio === 1 || value.radio === 3 || value.link) {
       callback()
       return
     }
     callback('必填!')
   }
   validatorUrl = link_prefix => (rule, value, callback) => {
-    if (!link_prefix || value.radio === 1) {
+    if (!link_prefix || value.radio === 1 || value.radio === 3) {
       return callback()
     }
     if (link_prefix.some(pre => new RegExp('^' + pre).test(value.link))) return callback()

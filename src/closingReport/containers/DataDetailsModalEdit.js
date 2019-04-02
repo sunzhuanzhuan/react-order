@@ -55,12 +55,13 @@ export default class DataDetailsModalEdit extends Component {
     }))
     result.execution_link = execution_link.map(item => ({
       id: item.id,
-      value: item.radio === 1 ? item.reference : item.link,
+      value: item.radio === 1 ? item.reference : item.radio === 3 ? '' : item.link,
       radio: item.radio
     }))
     result.execution_screenshot = execution_screenshot.map(item => ({
       id: item.id,
-      value: (item.value || []).map(file => file.url)
+      value: (item.value || []).map(file => file.url),
+      checked: item.checked ? 1 : 2
     }))
     result.data = data.map(item => ({
       id: item.id,
@@ -69,7 +70,8 @@ export default class DataDetailsModalEdit extends Component {
     }))
     result.screenshot = screenshot.map(item => ({
       id: item.id,
-      value: (item.value || []).map(file => file.url)
+      value: (item.value || []).map(file => file.url),
+      checked: item.checked ? 1 : 2
     }))
     return result
   }
@@ -92,7 +94,7 @@ export default class DataDetailsModalEdit extends Component {
 
   showConfirm = (values) => {
     Modal.confirm({
-      title: '提交之后数据再次修改，是否确认提交？',
+      title: '提交之后数据不可再次修改，是否确认提交？',
       onOk: () => {
         values = this.handleSubmitData(values)
         const { actions, data } = this.props

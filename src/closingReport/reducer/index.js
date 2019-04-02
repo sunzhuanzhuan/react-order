@@ -54,7 +54,7 @@ const defaultPublicSource = {
     { 'label': '待质检', 'value': '26' },
     { 'label': '质检中', 'value': '27' },
     { 'label': '质检完成', 'value': '28' },
-    { 'label': '执行终止申请', 'value': '31' },
+    { 'label': '终止申请中', 'value': '31' },
     { 'label': '已完成', 'value': '32' },
     { 'label': '赔偿申请中', 'value': '33' },
     { 'label': '赔偿通过', 'value': '34' },

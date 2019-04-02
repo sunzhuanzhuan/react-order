@@ -9,7 +9,7 @@ const Media = props => {
     <Icon type="mail" /> {props.email || '-'} <br />
     <Icon type="phone" /> {props.cell_phone || '-'}
   </div>
-  return props.real_name ? <Popover content={content} title={props.title} trigger="click">
+  return props.real_name ? <Popover content={content} title={props.title} trigger="hover">
     {props.real_name}
   </Popover> : '-'
 }
@@ -129,12 +129,12 @@ export class View extends Component {
       '平台'
     ]
     const values = [
-      brand_name + ' / ' + project_name,
+      (brand_name || '-') + ' / ' + (project_name || '-'),
       <span key={112}>
         <Media {...resource_media} title='资源媒介' /> /
         <Media {...project_media} title='项目媒介' />
       </span>,
-      real_name + ' / ' + executor_name,
+      (real_name || '-') + ' / ' + (executor_name || '-'),
       <WBYPlatformIcon key={22} weibo_type={platform_id} widthSize={22} />
     ]
     return <div className='platform-data-detail-module outline'>

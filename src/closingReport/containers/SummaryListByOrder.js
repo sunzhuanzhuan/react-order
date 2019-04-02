@@ -42,7 +42,7 @@ export default class SummaryListByOrder extends Component {
           </div>
         }
       }, {
-        title: '状态',
+        title: '审核状态',
         dataIndex: 'summary_status',
         width: 140,
         render: (status, record) => {

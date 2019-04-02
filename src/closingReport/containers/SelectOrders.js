@@ -7,7 +7,9 @@ import IconText from '../base/IconText'
 
 const disabledReason = {
   '2': '订单尚未添加执行内容',
-  '3': '已经被投放数据汇总单(单号: $投放数据汇总单号$)勾选'
+  '3': '已经被投放数据汇总单(单号: $投放数据汇总单号$)勾选',
+  '4': '订单已执行终止',
+  '5': '订单终止申请中'
 }
 const columns = [
   {
@@ -84,7 +86,7 @@ export default class SelectOrders extends Component {
         page: 1,
         pageSize: 50,
         company_id: props.companyId,
-        execution_status: ['21', '22', '26', '27', '28', '32', '35']
+        execution_status: ['21', '22', '26', '27', '28', '32', '33', '34', '35']
       }
     }
     const { actions } = props

@@ -82,7 +82,7 @@ export default class OrderFilterForm extends Component {
           </Form.Item>
         </Col>
         <Col span={6}>
-          <Form.Item label="所属品牌">
+          <Form.Item label={<EmSpan length={6}>所属品牌</EmSpan>}>
             {getFieldDecorator('brand_id', {})(
               <Select
                 allowClear
@@ -103,7 +103,7 @@ export default class OrderFilterForm extends Component {
           </Form.Item>
         </Col>
         <Col span={6}>
-          <Form.Item label={<EmSpan length={this.state.expand ? 6 : 3}>执行人</EmSpan>}>
+          <Form.Item label={"执行人"}>
             {getFieldDecorator('executor_admin_id', {})(
               <Select
                 allowClear
@@ -119,7 +119,7 @@ export default class OrderFilterForm extends Component {
             )}
           </Form.Item>
         </Col>
-        <Col span={18}>
+        <Col span={12}>
           <Form.Item label="批量查询">
             <InputGroup compact>
               <Select
@@ -142,7 +142,7 @@ export default class OrderFilterForm extends Component {
             </InputGroup>
           </Form.Item>
         </Col>
-        {this.state.expand ? <Col span={6}>
+        <Col span={6}>
           <Form.Item label="订单执行状态">
             {getFieldDecorator('execution_status', {
               initialValue: this.props.search.execution_status
@@ -164,7 +164,16 @@ export default class OrderFilterForm extends Component {
               </Select>
             )}
           </Form.Item>
-        </Col> : null}
+        </Col>
+        <Col span={6}>
+          <div style={{ lineHeight: '40px', textAlign: 'left' }}>
+            <Button type='primary' style={{ marginLeft: '20px' }} htmlType='submit' loading={loading}>查询</Button>
+            <Button style={{ margin: '0 20px 0 10px' }} onClick={this.handleReset}>重置</Button>
+            <a style={{ fontSize: 12 }} onClick={this.toggle}>
+              更多 <Icon type={this.state.expand ? 'up' : 'down'} />
+            </a>
+          </div>
+        </Col>
         {this.state.expand ? <Col span={12}>
           <Form.Item label={<EmSpan length={4}>时间</EmSpan>}>
             <InputGroup compact>
@@ -185,15 +194,6 @@ export default class OrderFilterForm extends Component {
             </InputGroup>
           </Form.Item>
         </Col> : null}
-        <Col span={this.state.expand ? 12 : 6}>
-          <div style={{ lineHeight: '40px', textAlign: 'left' }}>
-            <Button type='primary' style={{ marginLeft: '20px' }} htmlType='submit' loading={loading}>查询</Button>
-            <Button style={{ margin: '0 20px 0 10px' }} onClick={this.handleReset}>重置</Button>
-            <a style={{ fontSize: 12 }} onClick={this.toggle}>
-              更多 <Icon type={this.state.expand ? 'up' : 'down'} />
-            </a>
-          </div>
-        </Col>
       </Row>
     </Form>
   }

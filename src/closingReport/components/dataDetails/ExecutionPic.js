@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Form, Button, Icon } from 'antd'
+import { Form, Button, Icon, Checkbox } from 'antd'
 import './index.less'
 import DataModuleHeader from '../../base/DataModuleHeader'
 import { OssUpload } from 'wbyui'
@@ -27,8 +27,12 @@ export class Edit extends Component {
     })
   }
 
+  handleCheck = (fields) => {
+    const { setFieldsValue } = this.props.form
+    setFieldsValue({[fields] : []})
+  }
   render() {
-    const { getFieldDecorator } = this.props.form
+    const { getFieldDecorator, getFieldValue } = this.props.form
     const { data: { data = [] } } = this.props
     const reason = parseInt(this.props.data.status) === 2 ?
       <Against reason={this.props.data.reason} /> : null
@@ -52,12 +56,13 @@ export class Edit extends Component {
                 })),
                 valuePropName: 'fileList',
                 getValueFromEvent: e => e.fileList,
-                rules: [{ required: true, message: '请上传图片' }]
+                rules: [{ required: !getFieldValue(`execution_screenshot[${n}].checked`), message: '请上传图片' }]
               })(<OssUpload
                   key={item.id + 'sss'}
                   authToken={this.state.authToken}
                   listType='picture'
                   onPreview={viewPic()}
+                  multiple
                   rule={{
                     bizzCode: 'B_GZA_ORDER_IMG_NORMAL_UPLOAD',
                     max: 5,
@@ -66,7 +71,12 @@ export class Edit extends Component {
                   len={item.img_limit || 10}
                   tipContent={() => `图片大小不超过5M，支持jpg、jpeg、gif、png，最多上传${item.img_limit || 10}张`}
                 >
-                  <Button><Icon type="upload" /> 上传文件</Button>
+                  <Button disabled={getFieldValue(`execution_screenshot[${n}].checked`)}><Icon type="upload" /> 上传文件</Button>
+                  <div onClick={e => e.stopPropagation()} style={{display: "inline-block", paddingLeft: "18px"}}>
+                    {getFieldDecorator(`execution_screenshot[${n}].checked`, {
+                      initialValue: item.checked === 1
+                    })(<Checkbox onClick={() => this.handleCheck(`execution_screenshot[${n}].value`)}>无法提供该数据</Checkbox>)}
+                  </div>
                 </OssUpload>
               )}
               {getFieldDecorator(`execution_screenshot[${n}].id`, {

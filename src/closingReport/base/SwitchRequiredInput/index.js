@@ -83,7 +83,10 @@ export default class SwitchRequiredInput extends Component {
         inputComponent = <DatePicker {...props}
           onChange={this.handleNumberChange}
           value={moment(input).isValid() ? moment(input) : undefined}
-          showTime
+          format="YYYY-MM-DD HH:mm"
+          showTime={{
+            format: 'HH:mm'
+          }}
         />
     }
     return <div className='switch-required-input'>
