@@ -246,6 +246,41 @@ export const columns = (props) => {
     "5": "预约取消",
     "31": "终止申请中"
   }
+  const publicAdvancePaymentApplyStatus = {
+    "1": "待审核",
+    "2": "已同意",
+    "3": "已拒绝"
+  }
+  const publicOrderTradeStatus = {
+    "1": "未处理",
+    "2": "已同意",
+    "3": "已驳回"
+  }
+  const paymentResult = {
+    "1": "未处理",
+    "2": "打款成功",
+    "3": "打款失败",
+    "4": "打款撤销"
+  }
+  const statementStatus = {
+    "1": "未对账",
+    "2": "对账中",
+    "3": "对账成功",
+    "4": "部分对账"
+  }
+  // 调账方式
+  const operationType = {
+    "1": "正常",
+    "2": "三方成本减项",
+    "3": "三方成本增项",
+    "4": "部分对账"
+  }
+  // 来源
+  const form = {
+    "1": "B端",
+    "2": "A端",
+    "3": "C端"
+  }
   return [
     {
       title: '操作',
@@ -298,12 +333,15 @@ export const columns = (props) => {
       key: 'order_id',
       align: 'center',
       fixed: 'left',
-      width: 100,
+      width: 150,
       render: (text, record) => {
         return <div className="list-item">
           <div>{text}</div>
-          <a href="#" target="_blank">预约链接</a>
-          <a href="#" target="_blank">执行链接</a>
+          <a href={record.review_reservation_doc_url} target="_blank">预约链接</a>
+          {
+            record.review_execution_doc_url ?
+              <a href={record.review_execution_doc_url} target="_blank">执行链接</a> : null
+          }
           <div>{orderStatus[record.order_status]}</div>
         </div>
       }
@@ -313,7 +351,7 @@ export const columns = (props) => {
       dataIndex: 'account',
       key: 'account',
       align: 'center',
-      width: 100,
+      width: 150,
       render: (text, record) => {
         return <div className="list-div">
           <div className="list-divItem">
@@ -338,93 +376,109 @@ export const columns = (props) => {
         </div>
       }
     },
-    // {
-    //   title: '三方平台下单价（元）',
-    //   dataIndex: 'order_id',
-    //   key: 'order_id',
-    //   align: 'center'
-    // },
-    // {
-    //   title: '下单平台',
-    //   dataIndex: 'platform_name',
-    //   key: 'platform_name',
-    //   align: 'center',
-    //   render: (text, record) => <span>{record.place_order.platform_name}</span>
-    // },
+    {
+      title: '三方平台下单价（元）',
+      dataIndex: 'public_cost_price',
+      key: 'public_cost_price',
+      align: 'center',
+      width: 100,
+      render: (text, record) => <span>{record.public_order.public_order_skus[0].public_cost_price}</span>
+    },
+    {
+      title: '下单平台',
+      dataIndex: 'cooperation_platform_name',
+      key: 'cooperation_platform_name',
+      align: 'center',
+      render: (text, record) => <span>{record.public_order.cooperation_platform_name}</span>
+    },
     {
       title: '是否标注三方已下单',
       dataIndex: 'is_labeled_place_order',
       key: 'is_labeled_place_order',
       align: 'center',
       width: 100,
-      render: (text, record) => <span>{record.place_order.is_labeled_place_order == "1" ? "是" : "否"}</span>
+      render: (text, record) => <span>{record.public_order.is_labeled_place_order == "1" ? "是" : "否"}</span>
     },
     {
       title: '三方下单信息',
-      dataIndex: 'place_order',
-      key: 'place_order',
+      dataIndex: 'public_order',
+      key: 'public_order',
       align: 'center',
+      width: 200,
       render: (text, record) => {
         return text.is_labeled_place_order == "1" ?
           <div className="list-div">
             <div className="list-divItem">
               <span>下单时间：</span>
-              <span>{text.place_order_at}</span>
+              <span>{text.ttp_place_order_at}</span>
             </div>
             <div className="list-divItem">
               <span>本单使用下单平台/代理商：</span>
-              <span>{text.platform_name}</span>
+              <span>{`${text.cooperation_platform_name}-${text.agent_name}`}</span>
             </div>
             <div className="list-divItem">
               <span>三方订单号:</span>
-              <span>{text.third_platform_order_id ? text.third_platform_order_id : ""}</span>
+              <span>{text.ttp_order_id ? text.ttp_order_id : ""}</span>
             </div>
           </div> : null
       }
     },
-    // {
-    //   title: '预付款申请状态/预付款打款状态',
-    //   dataIndex: 'order_id',
-    //   key: 'order_id',
-    //   align: 'center'
-    // },
+    {
+      title: '预付款申请状态/预付款打款状态',
+      dataIndex: 'public_advance_payment_apply',
+      key: 'public_advance_payment_apply',
+      align: 'center',
+      width: 200,
+      render: (text, record) => {
+        return <div>
+          <div>申请状态：{publicAdvancePaymentApplyStatus[record.public_order.public_advance_payment_apply.status]}</div>
+          <div>打款状态：{publicOrderTradeStatus[record.public_order.public_order_trade.statement_status]}</div>
+        </div>
+      }
+    },
     {
       title: '预计推广时间',
       dataIndex: 'promote_started_at',
       key: 'promote_started_at',
       align: 'center',
+      width: 200,
       render: (text, record) => {
         return <div>
           <div>
             <span>预计推广开始时间：</span>
-            <span>{record.place_order.promote_started_at}</span>
+            <span>{record.public_order.promote_started_at}</span>
           </div>
           <div>
             <span>预计推广结束时间：</span>
-            <span>{record.place_order.promote_ended_at}</span>
+            <span>{record.public_order.promote_ended_at}</span>
           </div>
         </div>
       }
     },
     {
       title: '是否提前打款/提前打款状态/提前打款结果',
-      dataIndex: 'pre_deposit',
-      key: 'pre_deposit',
+      dataIndex: 'is_prepayment',
+      key: 'is_prepayment',
       align: 'center',
-      render: text => {
+      render: (text, record) => {
         return <div>
           <div>
             <span>是否提前打款：</span>
-            <span>{text.is_pre_deposit == "1" ? "是" : "否"}</span>
+            <span>{text == "1" ? "是" : "否"}</span>
           </div>
-          <div>
-            <span>提前打款状态：</span>
-            <span>{text.pre_deposit_status}</span>
-          </div>
-          <div>
-            <span>提前打款结果：</span>
-            <span>{text.pre_deposit_result}</span>
-          </div>
+          {
+            text == "1" ?
+              <div>
+                <div>
+                  <span>打款状态：</span>
+                  <span>{publicOrderTradeStatus[record.prepayment_status]}</span>
+                </div>
+                <div>
+                  <span>打款结果：</span>
+                  <span>{paymentResult[record.prepayment.payment_result]}</span>
+                </div>
+              </div> : null
+          }
         </div>
       }
     },
@@ -436,97 +490,144 @@ export const columns = (props) => {
     // },
     {
       title: '对账状态',
-      dataIndex: 'check_status',
-      key: 'check_status',
-      align: 'center'
+      dataIndex: 'statement_status',
+      key: 'statement_status',
+      align: 'center',
+      width: 100,
+      render: (text, record) => {
+        return record.public_order.settle_type == "2" ?
+          <span>{statementStatus[record.public_order.public_order_statement.statement_status]}</span> : "-"
+      }
     },
     {
       title: '调账信息',
-      dataIndex: 'money_adjustment',
-      key: 'money_adjustment',
+      dataIndex: 'last_public_summary_order_relation',
+      key: 'last_public_summary_order_relation',
       align: 'center',
-      render: text => {
+      width: 200,
+      render: (text, record) => {
         return <div>
           <div>
             <span>调账金额：</span>
-            <span>{text.adjust_amount}</span>
+            <span>{record.public_order.last_public_summary_order_relation.adjustment_amount}</span>
           </div>
           <div>
             <span>调账方式：</span>
-            <span>{text.adjust_type}</span>
+            <span>{operationType[record.public_order.last_public_summary_order_relation.operation_type]}</span>
           </div>
           <div>
             <span>调账原因：</span>
-            <span>{text.adjust_reason}</span>
+            <span>{record.public_order.last_public_summary_order_relation.adjustment_reason}</span>
           </div>
         </div>
       }
     },
     {
-      title: '扣减信息',
-      dataIndex: 'deduction',
-      key: 'deduction',
+      title: '调账时间',
+      dataIndex: 'last_public_summary_order_relation_created_at',
+      key: 'last_public_summary_order_relation_created_at',
       align: 'center',
-      render: text => {
+      width: '200',
+      render: (text, record) => <span>{record.public_order.last_public_summary_order_relation.created_at}</span>
+    },
+    {
+      title: '扣减信息',
+      dataIndex: 'deduction_amount',
+      key: 'deduction_amount',
+      align: 'center',
+      width: 200,
+      render: (text, record) => {
         return <div>
           <div>
             <span>扣减金额：</span>
-            <span>{text.deduct_amount}</span>
+            <span>{record.public_order.last_public_summary_order_relation.deduction_amount}</span>
           </div>
           <div>
             <span>扣减原因：</span>
-            <span>{text.deduct_reason}</span>
+            <span>{record.public_order.last_public_summary_order_relation.deduction_reason}</span>
           </div>
         </div>
       }
     },
     {
       title: '应实付金额',
-      dataIndex: 'payable_amount',
-      key: 'payable_amount',
-      align: 'center'
+      dataIndex: 'paying_amount',
+      key: 'paying_amount',
+      align: 'center',
+      width: 150,
+      render: (text, record) => <span>{record.public_order.public_order_trade.paying_amount}</span>
     },
     {
       title: '实付金额',
       dataIndex: 'paid_amount',
       key: 'paid_amount',
-      align: 'center'
+      align: 'center',
+      width: 150,
+      render: (text, record) => <span>{record.public_order.public_order_trade.paid_amount}</span>
+    },
+    {
+      title: '销售/创建人/执行人',
+      dataIndex: 'sale_user',
+      key: 'sale_user',
+      align: 'center',
+      width: 150,
+      render: (text, record) => {
+        return <div>
+          <div>销售：{record.sale_user.name ? record.sale_user.name : "-"}</div>
+          <div>创建人：{record.creator.name ? record.creator.name : "-"}</div>
+          <div>执行人：{record.executor.name ? record.executor.name : "-"}</div>
+        </div>
+      }
+    },
+    {
+      title: '主账号',
+      dataIndex: 'main_account',
+      key: 'main_account',
+      align: 'center',
+      width: 100,
+      render: (text) => {
+        return <div>
+          <div><a href={`${host}/user/update/user_id/${text.user_id}`} target="_blank">{text.realname}</a></div>
+          <Tooltip placement="top" title={text.cell_phone}>
+            <div>手机号</div>
+          </Tooltip>
+        </div>
+      }
     },
     // {
-    //   title: '销售/创建人/执行人',
-    //   dataIndex: 'paid_amount',
-    //   key: 'paid_amount',
-    //   align: 'center'
-    // },
-    // {
-    //   title: '主账号',
-    //   dataIndex: 'main_account',
-    //   key: 'main_account',
-    //   align: 'center'
-    // },
-    // {
     //   title: '媒介经理',
-    //   dataIndex: 'main_account',
-    //   key: 'main_account',
-    //   align: 'center'
+    //   dataIndex: 'media_admin_user',
+    //   key: 'media_admin_user',
+    //   align: 'center',
+    //   render: (text, record) => {
+    //     return <div>
+    //       <div>资源媒介：{record.media_admin_user.name}</div>
+    //       <div>项目媒介：{record.vol_admin_user.name}</div>
+    //     </div>
+    //   }
     // },
-    // {
-    //   title: '公司简称',
-    //   dataIndex: 'main_account',
-    //   key: 'main_account',
-    //   align: 'center'
-    // },
+    {
+      title: '公司简称',
+      dataIndex: 'company',
+      key: 'company',
+      align: 'center',
+      width: 100,
+      render: text => <span>{text.company_name}</span>
+    },
     {
       title: '提交时间',
       dataIndex: 'submitted_at',
       key: 'submitted_at',
-      align: 'center'
+      align: 'center',
+      width: 150
     },
     {
       title: '来源',
-      dataIndex: 'origin',
-      key: 'origin',
-      align: 'center'
+      dataIndex: 'from',
+      key: 'from',
+      align: 'center',
+      width: 50,
+      render: text => <span>{form[text]}</span>
     }
   ]
 }
