@@ -14,7 +14,7 @@ import 'moment/locale/zh-cn';
 import 'numeral/locales/chs';
 // 顶级根目录页面
 import App from './containers/App';
-import AccountManage from './accountManage';
+import ClosingReport from './closingReport';
 import { linkTo } from '@/util/linkTo';
 // 设置语言包
 numeral.locale('chs');
@@ -29,7 +29,7 @@ const redirectToOtherProjects = ({ location: { pathname = '/error', search = '' 
 const routes = () => (
   <App history={history}>
     <Switch>
-      <Route path="/account/manage" component={AccountManage} />
+      <Route path="/order/closing-report" component={ClosingReport} />
       <Route render={() => linkTo('/error')} />
     </Switch>
   </App>
@@ -42,9 +42,9 @@ render(
         <Switch>
           {
             process.env.NODE_ENV === 'development' ?
-              <Route exact path="/" render={() => <Redirect to="/account/manage" />} /> : null
+              <Route exact path="/" render={() => <Redirect to="/order/closing-report" />} /> : null
           }
-          <Route path="/account" render={routes} />
+          <Route path="/order" render={routes} />
           <Route render={redirectToOtherProjects} />
         </Switch>
       </Router>

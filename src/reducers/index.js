@@ -5,8 +5,7 @@ import authReducers from '../auth/reducers'
 import loginReducer from '../login/reducer/index'
 import siderMenuReducer from '../siderMenu/reducers'
 import authorizationsReducers from './authorizations'
-import accountManageReducer from '../accountManage/reducer';
-import exportTemplateReducer from '../components/exportTemplate/reducer'
+import closingReportReducers from '../closingReport/reducer'
 export default combineReducers({
 	commonReducers,
 	routing: routerReducer,
@@ -14,6 +13,5 @@ export default combineReducers({
 	loginReducer,
 	siderMenuReducer,
 	authorizationsReducers,
-	accountManageReducer,
-	exportTemplateReducer
+  closingReportReducers
 });
