@@ -96,7 +96,7 @@ class MultiAgent extends React.Component {
     })
   }
   render() {
-    const { form, agentList, agentDetail, platformId } = this.props
+    const { form, agentList, agentDetail, platformId, formLayout } = this.props
     const { getFieldDecorator } = form
     const { is_agentDetail_loading, initialValue } = this.state
     let agentDetailInitialValue = this.props.agent_id ? [this.props.cooperationPlatform, this.props.agent_id] :
@@ -106,11 +106,7 @@ class MultiAgent extends React.Component {
         <div className="modalBox-singleAgent">
           <FormItem
             label="本单使用平台/代理商"
-            layout={{
-              labelCol: { span: 7 },
-              wrapperCol: { span: 17 }
-            }}
-            style={{ width: '400px', float: 'left' }}
+            {...formLayout}
           >
             {getFieldDecorator("multiAgentIds", {
               rules: [{
@@ -122,7 +118,7 @@ class MultiAgent extends React.Component {
                 fieldNames={{ label: 'agentName', value: 'id', children: 'agentVOList' }}
                 options={agentList.length != 0 ? this.handleData(agentList) : []}
                 onChange={this.handleChange}
-                style={{ width: "230px" }}
+                style={{ width: "300px" }}
                 placeholder="请选择本单使用平台/代理商"
               />
             )}

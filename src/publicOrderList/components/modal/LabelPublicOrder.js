@@ -103,6 +103,7 @@ class LabelPublicOrder extends Component {
         {
           this.state.type == "multi" ?
             <MultiAgent
+              formLayout={formLayout}
               form={form}
               platformId={record.account.platform_id}
               is_agentDetail_initial_loading={false}

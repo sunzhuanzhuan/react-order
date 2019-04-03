@@ -97,7 +97,7 @@ class AddAgent extends Component {
       labelCol: { span: 5 },
       wrapperCol: { span: 19 },
     }
-    return <div style={{ float: 'right', marginTop: '4px' }}>
+    return <div style={{ position: 'absolute', right: '0', top: '2px' }}>
       <Button type="primary"
         onClick={this.showModal}
       >添加代理商</Button>
