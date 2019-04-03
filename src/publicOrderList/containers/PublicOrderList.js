@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import { Form, Tabs, Table } from 'antd';
+import { Form, Tabs, Table, message } from 'antd';
 import StatementComponent from '../components/StatementComponent'
 import FilterForm from '../components/filter/FilterForm'
 import ModalComponent from '../components/modal/ModalComponent'
@@ -17,16 +17,41 @@ class PublicOrderList extends Component {
     this.state = {
       visible: false,
       key: '',
-      record: {}
+      record: {},
+      tableLoading: true,
+      tab: 0,
+      filterParams: {},
+      pageSize: "20"
     }
+  }
+  getList = (tab, page, pageSize) => {
+    this.setState({
+      tableLoading: true
+    })
+    this.props.actions.getPublicOrderList({
+      special_type: tab, current_page: page, page_size: pageSize, ...this.state.filterParams
+    }).then(() => {
+      this.setState({
+        tableLoading: false
+      })
+    }).catch(() => {
+      message.error("列表数据加载失败", 2)
+      this.setState({
+        tableLoading: false
+      })
+    })
   }
   componentWillMount() {
     // 获取列表
-    this.props.actions.getPublicOrderList()
+    this.getList(0, 1, this.state.pageSize)
   }
   // tab切换
   changeTab = (tab) => {
-    console.log(tab)
+    this.setState({
+      tab: tab
+    })
+    this.props.actions.resetPublicOrderList()
+    this.getList(tab, 1, this.state.pageSize)
   }
   //弹框出现
   showModal = (params) => {
@@ -78,9 +103,27 @@ class PublicOrderList extends Component {
             values[Object.keys(values)[index]] = undefined
           }
         })
-        console.log(values)
+        this.setState({
+          filterParams: { ...values }
+        }, () => {
+          this.props.actions.resetPublicOrderList()
+          this.getList(this.state.tab, 1, this.state.pageSize)
+        })
       }
     });
+  }
+  //分页
+  changeTablePage = (page) => {
+    this.props.actions.resetPublicOrderList()
+    this.getList(this.state.tab, page, this.state.pageSize)
+  }
+  //选择一页显示多少条
+  onShowSizeChange = (current, pageSize) => {
+    this.setState({
+      pageSize: pageSize
+    })
+    this.props.actions.resetPublicOrderList()
+    this.getList(this.state.tab, 1, pageSize)
   }
   render() {
     const { form, publicOrderList, orderDetail, loginReducer } = this.props
@@ -100,16 +143,27 @@ class PublicOrderList extends Component {
           />
         </Form>
         {/* tab切换及列表 */}
-        <Tabs defaultActiveKey="1" onChange={this.changeTab}>
-          <TabPane tab="全部" key="1"></TabPane>
-          <TabPane tab="待执行" key="2"></TabPane>
-          <TabPane tab="待贴链接" key="3"></TabPane>
-          <TabPane tab="待上传数据截图" key="4"></TabPane>
+        <Tabs defaultActiveKey={this.state.tab} onChange={this.changeTab}>
+          <TabPane tab="全部" key={0}></TabPane>
+          <TabPane tab="待执行" key={3}></TabPane>
+          <TabPane tab="待贴链接" key={2}></TabPane>
+          <TabPane tab="待上传数据截图" key={5}></TabPane>
         </Tabs>
         <Table
           dataSource={Object.keys(publicOrderList).length != 0 ? publicOrderList.items : []}
           columns={columns({ showModal: this.showModal, babysitter_host: babysitter_host })}
           scroll={{ x: 3000 }}
+          loading={this.state.tableLoading}
+          pagination={{
+            current: Object.keys(publicOrderList).length != 0 ? publicOrderList.pagination.current_page : "-",
+            pageSize: Object.keys(publicOrderList).length != 0 ? publicOrderList.pagination.page_size : "-",
+            total: Object.keys(publicOrderList).length != 0 ? publicOrderList.pagination.total : "-",
+            onChange: this.changeTablePage,
+            showSizeChanger: true,
+            onShowSizeChange: this.onShowSizeChange,
+            pageSizeOptions: ["10", "20", "50", "100"],
+          }}
+
         />
         {/* 弹框组件 */}
         {

@@ -2,7 +2,8 @@ import api from '../../api/index'
 import {
   GET_PUBLIC_ORDER_LIST,
   GET_ORDER_DETAIL,
-  RESET_ORDER_DETAIL
+  RESET_ORDER_DETAIL,
+  RESET_PUBLIC_ORDER_LIST
 } from '../contants/ActionTypes'
 
 export const getPublicOrderList = (params) => (dispatch) => {
@@ -13,6 +14,12 @@ export const getPublicOrderList = (params) => (dispatch) => {
         data: response.data
       }
     })
+  })
+}
+
+export const resetPublicOrderList = () => (dispatch) => {
+  dispatch({
+    type: RESET_PUBLIC_ORDER_LIST
   })
 }
 
