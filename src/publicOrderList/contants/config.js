@@ -5,14 +5,15 @@ import WithdrawPublicOrder from '../components/modal/WithdrawPublicOrder'
 import ExecuteHandle from '../components/modal/ExecuteHandle'
 import ApplyPrepayment from '../components/modal/ApplyPrepayment'
 import SetExecutionTerminationRequest from '../components/modal/SetExecutionTerminationRequest'
-import { Button } from 'antd';
+import { Button, Tooltip } from 'antd';
+import './config.less'
 
 // 筛选项配置数组
 export const filterFormArr = [
   {
     label: "需求名称",
     type: "input",
-    id: "reservation_requirement_name"
+    id: "equirement_name"
   },
   {
     label: "需求ID",
@@ -28,7 +29,14 @@ export const filterFormArr = [
     label: "订单状态",
     type: "select",
     id: "order_status",
-    data: [],
+    data: [
+      { key: "请选择", value: "0" },
+      { key: "应约", value: "2" },
+      { key: "拒约", value: "3" },
+      { key: "流约", value: "4" },
+      { key: "预约取消", value: "5" },
+      { key: "终止申请中", value: "31" }
+    ],
     layout: {
       labelCol: { span: 7 },
       wrapperCol: { span: 17 }
@@ -39,22 +47,25 @@ export const filterFormArr = [
     type: "input",
     id: "account_name"
   },
-  // {
-  //   label: "平台",
-  //   type: "multidim-select",
-  //   id: "platform_id",
-  //   data: [],
-  //   layout: {
-  //     labelCol: { span: 7 },
-  //     wrapperCol: { span: 17 }
-  //   }
-  // },
+  {
+    label: "平台",
+    type: "multidim-select",
+    id: "platform_id",
+    data: [
+      { key: "美拍--M计划", value: "25" },
+      { key: "快手--快接单", value: "103" },
+      { key: "新浪微博--微任务/WEIQ", value: "1" },
+      { key: "抖音--星图", value: "115" }
+    ],
+    layout: {
+      labelCol: { span: 7 },
+      wrapperCol: { span: 17 }
+    }
+  },
   {
     label: "下单平台/代理商",
-    type: "selectDependOnRequest",
+    type: "agentComponent",
     id: "agent_id",
-    url: "/api/operator-gateway/trinityPlatform/v1/getCooperationPlatform",
-    data: { key: "id", value: "cooperationPlatformName" },
     layout: {
       labelCol: { span: 11 },
       wrapperCol: { span: 13 }
@@ -64,7 +75,22 @@ export const filterFormArr = [
     label: "执行状态",
     type: "select",
     id: "execution_status",
-    data: [],
+    data: [
+      { key: "请选择", value: "0" },
+      { key: "执行中", value: "21" },
+      { key: "已执行", value: "22" },
+      { key: "待执行", value: "23" },
+      { key: "执行取消", value: "24" },
+      { key: "终止申请中", value: "31" },
+      { key: "执行终止", value: "25" },
+      { key: "待质检", value: "26" },
+      { key: "质检中", value: "27" },
+      { key: "质检完成", value: "28" },
+      { key: "已完成", value: "32" },
+      { key: "已结案", value: "35" },
+      { key: "赔偿申请中", value: "33" },
+      { key: "赔偿通过", value: "34" }
+    ],
     layout: {
       labelCol: { span: 7 },
       wrapperCol: { span: 17 }
@@ -73,7 +99,7 @@ export const filterFormArr = [
   {
     label: "资源媒介",
     type: "selectDependOnRequest",
-    id: "meida_user_id",
+    id: "media_owner_admin_id",
     url: "/api/user/getMediaUsers",
     data: { key: "user_id", value: "real_name" },
     layout: {
@@ -84,7 +110,7 @@ export const filterFormArr = [
   {
     label: "项目媒介",
     type: "selectDependOnRequest",
-    id: "project_user_id",
+    id: "vol_admin_id",
     url: "/api/user/getVolUsers",
     data: { key: "user_id", value: "real_name" },
     layout: {
@@ -130,7 +156,7 @@ export const filterFormArr = [
   {
     label: "预付款申请状态",
     type: "select",
-    id: "prepay_apply_status",
+    id: "public_advance_payment_apply_status",
     data: [{ key: "请选择", value: "0" }, { key: "待审核", value: "1" }, { key: "已同意", value: "2" }, { key: "已拒绝", value: "3" }],
     layout: {
       labelCol: { span: 12 },
@@ -140,8 +166,13 @@ export const filterFormArr = [
   {
     label: "打款状态",
     type: "select",
-    id: "deposit_status",
-    data: [],
+    id: "last_payment_status",
+    data: [
+      { key: "请选择", value: "0" },
+      { key: "未处理", value: "1" },
+      { key: "已同意", value: "2" },
+      { key: "已驳回", value: "3" }
+    ],
     layout: {
       labelCol: { span: 7 },
       wrapperCol: { span: 17 }
@@ -150,7 +181,7 @@ export const filterFormArr = [
   {
     label: "对账状态",
     type: "select",
-    id: "check_status",
+    id: "statement_status",
     data: [{ key: "请选择", value: "0" }, { key: "未对账", value: "1" }, { key: "对账中", value: "2" }, { key: "对账成功", value: "3" }, { key: "部分对账", value: "4" }],
     layout: {
       labelCol: { span: 7 },
@@ -167,14 +198,23 @@ export const filterFormArr = [
       wrapperCol: { span: 14 }
     }
   },
-  // {
-  //   label: "预付款申请时间",
-  //   type: "time",
-  // },
+  {
+    label: "预付款申请时间",
+    type: "time",
+    id: "public_advance_payment_apply_created_at",
+    layout: {
+      labelCol: { span: 5 },
+      wrapperCol: { span: 19 }
+    }
+  },
   {
     label: "三方下单时间",
     type: "time",
-    id: "platform_place_order_at"
+    id: "ttp_place_order_at",
+    layout: {
+      labelCol: { span: 5 },
+      wrapperCol: { span: 19 }
+    }
   }
 ]
 
@@ -190,6 +230,22 @@ const supportedOperations = {
 
 // 列表页column
 export const columns = (props) => {
+  const host = props.babysitter_host.value
+  const reservationRequirementStatus = {
+    "1": "未添加账号",
+    "2": "预约进行中",
+    "3": "预约完成",
+    "4": "取消",
+    "5": "审核中"
+  }
+  const orderStatus = {
+    "1": "预约中",
+    "2": "应约",
+    "3": "拒约",
+    "4": "流约",
+    "5": "预约取消",
+    "31": "终止申请中"
+  }
   return [
     {
       title: '操作',
@@ -197,12 +253,14 @@ export const columns = (props) => {
       key: 'supported_operations',
       align: 'center',
       fixed: 'left',
+      width: 100,
       render: (text, record) => {
         return <div>
           {
             text.map(v => <Button
               key={v}
               type="primary"
+              style={{ marginTop: '3px' }}
               onClick={() => props.showModal({ key: v, data: record })}
             >{supportedOperations[v]}</Button>)
           }
@@ -215,11 +273,22 @@ export const columns = (props) => {
       key: 'requirement_name',
       align: 'center',
       fixed: 'left',
+      width: 100,
       render: (text, record) => {
-        return <div>
-          <a href="#" target="_blank">{text}</a>
-          <a href="#" target="_blank">{record.requirement_id}</a>
-          {/* <a href="#" target="_blank">{record.requirement_id}</a> */}
+        return <div className="list-item">
+          <Tooltip placement="top" title={text}>
+            <a href={host ?
+              `${host}/pack/reservationrequirement/orderlistformedia/special_type/0/page/${record.requirement_id}`
+              : '#'
+            } target="_blank"
+            >{text}</a>
+          </Tooltip>
+          <a href={host ?
+            `${host}/pack/reservationrequirement/orderlistformedia/special_type/0/page/${record.requirement_id}`
+            : '#'
+          } target="_blank"
+          >{record.requirement_id}</a>
+          <div>{reservationRequirementStatus[record.reservation_requirement_status]}</div>
         </div>
       }
     },
@@ -229,10 +298,13 @@ export const columns = (props) => {
       key: 'order_id',
       align: 'center',
       fixed: 'left',
+      width: 100,
       render: (text, record) => {
-        return <div>
-          <a href="#" target="_blank">{text}</a>
-          <a href="#" target="_blank">{record.order_status}</a>
+        return <div className="list-item">
+          <div>{text}</div>
+          <a href="#" target="_blank">预约链接</a>
+          <a href="#" target="_blank">执行链接</a>
+          <div>{orderStatus[record.order_status]}</div>
         </div>
       }
     },
@@ -241,21 +313,25 @@ export const columns = (props) => {
       dataIndex: 'account',
       key: 'account',
       align: 'center',
+      width: 100,
       render: (text, record) => {
-        return <div>
-          <div>
+        return <div className="list-div">
+          <div className="list-divItem">
             <span>账号名称：</span>
-            <a href="#" target="_blank">{text.account_name}</a>
+            <a href=
+              {`${window.location.host}/account/manage/update/9?account_id=${text.account_id}`}
+              target="_blank"
+            >{text.account_name}</a>
           </div>
-          <div>
+          <div className="list-divItem">
             <span>{`${text.platform_name}号:`}</span>
             <span>{text.sns_id}</span>
           </div>
-          <div>
+          <div className="list-divItem">
             <span>粉数:</span>
             <span>{text.follower_count}</span>
           </div>
-          <div>
+          <div className="list-divItem">
             <span>平台:</span>
             <span>{text.platform_name}</span>
           </div>
@@ -280,6 +356,7 @@ export const columns = (props) => {
       dataIndex: 'is_labeled_place_order',
       key: 'is_labeled_place_order',
       align: 'center',
+      width: 100,
       render: (text, record) => <span>{record.place_order.is_labeled_place_order == "1" ? "是" : "否"}</span>
     },
     {
@@ -289,16 +366,16 @@ export const columns = (props) => {
       align: 'center',
       render: (text, record) => {
         return text.is_labeled_place_order == "1" ?
-          <div>
-            <div>
+          <div className="list-div">
+            <div className="list-divItem">
               <span>下单时间：</span>
               <span>{text.place_order_at}</span>
             </div>
-            <div>
+            <div className="list-divItem">
               <span>本单使用下单平台/代理商：</span>
               <span>{text.platform_name}</span>
             </div>
-            <div>
+            <div className="list-divItem">
               <span>三方订单号:</span>
               <span>{text.third_platform_order_id ? text.third_platform_order_id : ""}</span>
             </div>

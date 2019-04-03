@@ -9,28 +9,31 @@ import React from 'react';
 import { Form, Select } from 'antd';
 const FormItem = Form.Item;
 const Option = Select.Option;
-const MultidimSelect = (props) => {
-  const { getFieldDecorator } = props.form
-  return (
-    <FormItem
-      {...props.layout}
-      label={props.label}
-      style={{ width: '200px' }}
-    >
-      {getFieldDecorator(props.id)(
-        <Select
-          mode="multiple"
-          style={{ width: '200px' }}
-        >
-          {
-            props.data.map(item => {
-              return <Option key={item.value} value={item.value}>{item.key}</Option>
-            })
-          }
-        </Select>
-      )}
-    </FormItem>
-  )
+class MultidimSelect extends React.Component {
+  render() {
+    const { getFieldDecorator } = this.props.form
+    return (
+      <FormItem
+        {...this.props.layout}
+        label={this.props.label}
+        style={{ width: '200px' }}
+      >
+        {getFieldDecorator(this.props.id)(
+          <Select
+            mode="multiple"
+            style={{ width: '200px' }}
+            allowClear={true}
+          >
+            {
+              this.props.data.map(item => {
+                return <Option key={item.value} value={item.value}>{item.key}</Option>
+              })
+            }
+          </Select>
+        )}
+      </FormItem>
+    )
+  }
 }
 
 export default MultidimSelect

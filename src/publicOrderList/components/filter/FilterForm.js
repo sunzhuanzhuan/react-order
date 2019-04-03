@@ -11,6 +11,7 @@ import DatePickerComponent from './DatePickerComponent'
 import MultidimSelect from './MultidimSelect'
 import SingleSelect from './SingleSelect'
 import SingleSelectDependOnRequest from './SingleSelectDependOnRequest'
+import AgentComponent from './AgentComponent'
 import './FilterForm.less'
 
 const FilterForm = (props) => {
@@ -37,7 +38,6 @@ const FilterForm = (props) => {
               return <DatePickerComponent
                 form={form}
                 {...item}
-                layout={layout}
                 key={item.id}
               />
             //多选组件
@@ -62,12 +62,19 @@ const FilterForm = (props) => {
                 {...item}
                 key={item.id}
               />
+            // 下单平台/代理商
+            case "agentComponent":
+              return <AgentComponent
+                form={form}
+                key={item.id}
+                {...item}
+              />
             default:
               return
           }
         })
       }
-      <Button type="primary" className="filterForm-btn" onClick={() => props.onSubmit()}>查询</Button>
+      <Button type="primary" className="filterForm-btn" onClick={(e) => props.onSubmit(e)}>查询</Button>
     </div>
   )
 }
