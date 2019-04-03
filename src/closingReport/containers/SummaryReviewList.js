@@ -1,11 +1,13 @@
 import React, { Component } from 'react'
-import { Table } from 'antd'
+import { Table, Tabs } from 'antd'
 import { SH2 } from '../../base/SectionHeader'
 import './SelectOrders.less'
 import SummaryReviewFilterForm from '../components/SummaryReviewFilterForm'
 import { bindActionCreators } from 'redux'
 import * as actions from '../actions'
 import { connect } from 'react-redux'
+
+const TabPane = Tabs.TabPane
 
 const mapStateToProps = (state) => ({
   common: state.commonReducers,
@@ -24,7 +26,8 @@ export default class SummaryReviewList extends Component {
     this.state = {
       search: {
         page: 1,
-        pageSize: 50
+        pageSize: 50,
+        summary_data_status: '1'
       }
     }
     this.columns = [
@@ -99,6 +102,16 @@ export default class SummaryReviewList extends Component {
           getList={this.getList}
         />
       </div>
+      <Tabs
+        animated={{ tabPane: false }}
+        activeKey={this.state.search.summary_data_status}
+        onChange={tableActive => {
+          this.getList({ summary_data_status: tableActive, page: 1 })
+        }}
+      >
+        <TabPane tab={`含待内审订单`} key="1" />
+        <TabPane tab={`全部`} key="0" />
+      </Tabs>
       <Table
         loading={this.state.listLoading}
         dataSource={list.map(key => source[key])}

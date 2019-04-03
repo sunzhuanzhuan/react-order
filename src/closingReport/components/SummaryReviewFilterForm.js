@@ -32,14 +32,14 @@ export default class SummaryReviewFilterForm extends Component {
     const { getFieldDecorator } = this.props.form
     return <Form onSubmit={this.handleSubmit} layout="inline" autoComplete="off">
       <Row>
-        <Col span={6}>
+        <Col span={8}>
           <Form.Item label="投放数据汇总单名称">
             {getFieldDecorator('summary_name', {})(
               <Input placeholder="请输入名称" style={{ width: '100%' }} />
             )}
           </Form.Item>
         </Col>
-        <Col span={6}>
+        <Col span={8}>
           <Form.Item label={'创建人'}>
             {getFieldDecorator('creator_id', {})(
               <Select
@@ -56,7 +56,7 @@ export default class SummaryReviewFilterForm extends Component {
             )}
           </Form.Item>
         </Col>
-        <Col span={6}>
+        <Col span={8}>
           <Form.Item label="公司简称">
             {getFieldDecorator('company_id', {
               initialValue: this.props.execution_status
@@ -71,7 +71,7 @@ export default class SummaryReviewFilterForm extends Component {
             )}
           </Form.Item>
         </Col>
-        <Col span={6}>
+        {/*<Col span={6}>
           <Form.Item label="是否含待内审订单">
             {getFieldDecorator('summary_data_status', {
               initialValue: 1
@@ -86,15 +86,15 @@ export default class SummaryReviewFilterForm extends Component {
               </Select>
             )}
           </Form.Item>
-        </Col>
-        <Col span={12}>
+        </Col>*/}
+        <Col span={16}>
           <Form.Item label={<EmSpan length={9}>创建时间</EmSpan>}>
             {getFieldDecorator('created_at', {})(
               <RangePicker showTime style={{ width: '100%' }} />
             )}
           </Form.Item>
         </Col>
-        <Col span={12}>
+        <Col span={8}>
           <div style={{ lineHeight: '40px', textAlign: 'right' }}>
             <Button type='primary' style={{ marginLeft: '20px' }} htmlType='submit' loading={loading}>查询</Button>
             <Button style={{ margin: '0 16px 0 10px' }} onClick={this.handleReset}>重置</Button>
