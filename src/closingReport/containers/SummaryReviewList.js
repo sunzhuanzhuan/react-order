@@ -76,10 +76,6 @@ export default class SummaryReviewList extends Component {
   }
 
 
-  componentDidMount() {
-    this.getList()
-  }
-
   render() {
     const { closingReport, actions } = this.props
     const { summaryList: { list, source, total, page, pageSize } } = closingReport
