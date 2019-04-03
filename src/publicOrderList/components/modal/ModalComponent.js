@@ -2,7 +2,7 @@ import React from 'react'
 import { Modal, Skeleton } from 'antd';
 
 const ModalComponent = (props) => {
-  const { modalParams, visible, handleCancel, record, orderDetail } = props
+  const { modalParams, visible, handleCancel, record, orderDetail, getList } = props
   let Children = modalParams.children
   return Object.keys(orderDetail).length == 0 ?
     <Modal
@@ -30,6 +30,7 @@ const ModalComponent = (props) => {
         handleCancel={handleCancel}
         record={record}
         orderDetail={orderDetail}
+        getList={getList}
       />
     </Modal>
 }

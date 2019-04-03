@@ -60,6 +60,7 @@ class LabelPublicOrder extends Component {
         this.props.actions.labelPlaceOrder({ ...values }).then(() => {
           message.success('您所提交的信息已经保存成功！', 2)
           this.props.handleCancel()
+          this.props.getList()
         }).catch(() => {
           message.error("标记三方已下单失败")
         })

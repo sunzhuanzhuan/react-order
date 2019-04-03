@@ -29,7 +29,10 @@ class PublicOrderList extends Component {
       tableLoading: true
     })
     this.props.actions.getPublicOrderList({
-      special_type: tab, current_page: page, page_size: pageSize, ...this.state.filterParams
+      special_type: tab ? tab : this.state.tab,
+      current_page: page ? page : 1,
+      page_size: pageSize ? pageSize : this.state.pageSize,
+      ...this.state.filterParams
     }).then(() => {
       this.setState({
         tableLoading: false
@@ -175,6 +178,7 @@ class PublicOrderList extends Component {
               handleCancel={this.handleCancel}
               record={this.state.record}
               orderDetail={orderDetail}
+              getList={this.getList}
             ></ModalComponent>
         }
       </div>
