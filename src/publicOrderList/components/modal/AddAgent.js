@@ -93,6 +93,10 @@ class AddAgent extends Component {
   render() {
     const { form } = this.props
     const { getFieldDecorator } = form
+    const formLayout = {
+      labelCol: { span: 5 },
+      wrapperCol: { span: 19 },
+    }
     return <div style={{ float: 'right', marginTop: '4px' }}>
       <Button type="primary"
         onClick={this.showModal}
@@ -103,25 +107,21 @@ class AddAgent extends Component {
         onCancel={this.handleCancel}
         footer={null}
         destroyOnClose={true}
-        width={500}
+        width={600}
         bodyStyle={{ height: '500px', overflowY: 'auto' }}
         centered={true}
       >
-        <Form layout="inline">
+        <Form layout="horizontal">
           <FormItem
             label="下单平台"
-            layout={{
-              labelCol: { span: 7 },
-              wrapperCol: { span: 17 }
-            }}
-            style={{ width: '400px' }}
+            {...formLayout}
           >
             {getFieldDecorator("cooperationPlatformCode", {
               rules: [{
                 required: true, message: '本项为必选项，请选择！',
               }]
             })(
-              <Select style={{ width: '250px' }}>
+              <Select style={{ width: '350px' }}>
                 {
                   this.state.cooperationPlatform.map(v => {
                     return <Option
@@ -134,11 +134,7 @@ class AddAgent extends Component {
           </FormItem>
           <FormItem
             label="代理商名称"
-            layout={{
-              labelCol: { span: 7 },
-              wrapperCol: { span: 17 }
-            }}
-            style={{ width: '400px' }}
+            {...formLayout}
           >
             {getFieldDecorator("agentName", {
               rules: [{
@@ -148,17 +144,13 @@ class AddAgent extends Component {
               }]
             })(
               <Input
-                style={{ width: '250px' }}
+                style={{ width: '350px' }}
                 placeholder="请输入代理商名称" />
             )}
           </FormItem>
           <FormItem
             label="合作方式"
-            layout={{
-              labelCol: { span: 7 },
-              wrapperCol: { span: 17 }
-            }}
-            style={{ width: '400px' }}
+            {...formLayout}
           >
             {getFieldDecorator("cooperationType", {
               rules: [{
@@ -176,11 +168,7 @@ class AddAgent extends Component {
             this.state.cooperationType == "1" ?
               <FormItem
                 label="返款比例"
-                layout={{
-                  labelCol: { span: 7 },
-                  wrapperCol: { span: 17 }
-                }}
-                style={{ width: '400px' }}
+                {...formLayout}
               >
                 {getFieldDecorator("refundRate", {
                   rules: [{
@@ -189,16 +177,12 @@ class AddAgent extends Component {
                     pattern: /^([1-9][0-9]{0,1}(\.[0-9]{1,2})?|100|100.0|100.00|[0]\.[0-9]{1,2}|0)$/, message: "仅可输入100以内的数字，仅可保留两位小数"
                   }]
                 })(
-                  <Input style={{ width: '250px' }} addonAfter="%" />
+                  <Input style={{ width: '350px' }} addonAfter="%" />
                 )}
               </FormItem> :
               <FormItem
                 label="说明"
-                layout={{
-                  labelCol: { span: 9 },
-                  wrapperCol: { span: 15 }
-                }}
-                style={{ width: '400px' }}
+                {...formLayout}
               >
                 {getFieldDecorator("cooperationRemark", {
                   rules: [{
@@ -206,7 +190,7 @@ class AddAgent extends Component {
                   }]
                 })(
                   <TextArea
-                    style={{ width: '300px' }}
+                    style={{ width: '350px' }}
                     placeholder="请输入说明"
                     autosize={{ minRows: 2, maxRows: 6 }} />
                 )}
@@ -214,11 +198,7 @@ class AddAgent extends Component {
           }
           <FormItem
             label="付款公司"
-            layout={{
-              labelCol: { span: 7 },
-              wrapperCol: { span: 17 }
-            }}
-            style={{ width: '400px' }}
+            {...formLayout}
           >
             {getFieldDecorator("paymentCompanyCode", {
               rules: [{
@@ -233,11 +213,7 @@ class AddAgent extends Component {
           </FormItem>
           <FormItem
             label="结算方式"
-            layout={{
-              labelCol: { span: 7 },
-              wrapperCol: { span: 17 }
-            }}
-            style={{ width: '400px' }}
+            {...formLayout}
           >
             {getFieldDecorator("settleType", {
               rules: [{
@@ -252,11 +228,7 @@ class AddAgent extends Component {
           </FormItem>
           <FormItem
             label="回票方式"
-            layout={{
-              labelCol: { span: 8 },
-              wrapperCol: { span: 16 }
-            }}
-            style={{ width: '400px' }}
+            {...formLayout}
           >
             {getFieldDecorator("returnInvoiceType", {
               initialValue: '1'
@@ -268,11 +240,7 @@ class AddAgent extends Component {
           </FormItem>
           <FormItem
             label="发票开具方"
-            layout={{
-              labelCol: { span: 7 },
-              wrapperCol: { span: 17 }
-            }}
-            style={{ width: '400px' }}
+            {...formLayout}
           >
             {getFieldDecorator("beneficiaryCompany", {
               rules: [{
@@ -282,18 +250,14 @@ class AddAgent extends Component {
               }]
             })(
               <TextArea
-                style={{ width: '250px' }}
+                style={{ width: '350px' }}
                 placeholder="请输入发票开具方"
                 autosize={{ minRows: 2, maxRows: 6 }} />
             )}
           </FormItem>
           <FormItem
             label="结算方式"
-            layout={{
-              labelCol: { span: 7 },
-              wrapperCol: { span: 17 }
-            }}
-            style={{ width: '400px' }}
+            {...formLayout}
           >
             {getFieldDecorator("paymentType", {
               rules: [{
@@ -312,18 +276,14 @@ class AddAgent extends Component {
               <div>
                 <FormItem
                   label="开户行"
-                  layout={{
-                    labelCol: { span: 7 },
-                    wrapperCol: { span: 17 }
-                  }}
-                  style={{ width: '400px' }}
+                  {...formLayout}
                 >
                   {getFieldDecorator("bank", {
                     rules: [{
                       required: true, message: '本项为必选项，请选择！',
                     }]
                   })(
-                    <Select style={{ width: '250px' }}>
+                    <Select style={{ width: '350px' }}>
                       {
                         this.state.bankList.map(v => {
                           return <Option
@@ -336,11 +296,7 @@ class AddAgent extends Component {
                 </FormItem>
                 <FormItem
                   label="开户支行"
-                  layout={{
-                    labelCol: { span: 7 },
-                    wrapperCol: { span: 17 }
-                  }}
-                  style={{ width: '400px' }}
+                  {...formLayout}
                 >
                   {getFieldDecorator("bankAgency", {
                     rules: [{
@@ -350,18 +306,14 @@ class AddAgent extends Component {
                     }]
                   })(
                     <TextArea
-                      style={{ width: '250px' }}
+                      style={{ width: '350px' }}
                       placeholder="请输入开户支行"
                       autosize={{ minRows: 2, maxRows: 6 }} />
                   )}
                 </FormItem>
                 <FormItem
                   label="开户行所在省"
-                  layout={{
-                    labelCol: { span: 7 },
-                    wrapperCol: { span: 17 }
-                  }}
-                  style={{ width: '400px' }}
+                  {...formLayout}
                 >
                   {getFieldDecorator("bankAgencyProvince", {
                     rules: [{
@@ -371,18 +323,14 @@ class AddAgent extends Component {
                     }]
                   })(
                     <TextArea
-                      style={{ width: '250px' }}
+                      style={{ width: '350px' }}
                       placeholder="请输入开户行所在省"
                       autosize={{ minRows: 2, maxRows: 6 }} />
                   )}
                 </FormItem>
                 <FormItem
                   label="开户行所在市"
-                  layout={{
-                    labelCol: { span: 7 },
-                    wrapperCol: { span: 17 }
-                  }}
-                  style={{ width: '400px' }}
+                  {...formLayout}
                 >
                   {getFieldDecorator("bankAgencyCity", {
                     rules: [{
@@ -392,18 +340,14 @@ class AddAgent extends Component {
                     }]
                   })(
                     <TextArea
-                      style={{ width: '250px' }}
+                      style={{ width: '350px' }}
                       placeholder="请输入开户行所在市"
                       autosize={{ minRows: 2, maxRows: 6 }} />
                   )}
                 </FormItem>
                 <FormItem
                   label="帐号"
-                  layout={{
-                    labelCol: { span: 7 },
-                    wrapperCol: { span: 17 }
-                  }}
-                  style={{ width: '400px' }}
+                  {...formLayout}
                 >
                   {getFieldDecorator("cardNumber", {
                     rules: [{
@@ -412,16 +356,12 @@ class AddAgent extends Component {
                       pattern: /^[0-9]{16,19}$/, message: '仅可输入16-19位数字'
                     }]
                   })(
-                    <Input style={{ width: '250px' }} placeholder="请输入帐号" />
+                    <Input style={{ width: '350px' }} placeholder="请输入帐号" />
                   )}
                 </FormItem>
                 <FormItem
                   label="户名"
-                  layout={{
-                    labelCol: { span: 7 },
-                    wrapperCol: { span: 17 }
-                  }}
-                  style={{ width: '400px' }}
+                  {...formLayout}
                 >
                   {getFieldDecorator("realName", {
                     rules: [{
@@ -431,7 +371,7 @@ class AddAgent extends Component {
                     }]
                   })(
                     <TextArea
-                      style={{ width: '250px' }}
+                      style={{ width: '350px' }}
                       placeholder="请输入户名"
                       autosize={{ minRows: 2, maxRows: 6 }} />
                   )}
@@ -440,11 +380,7 @@ class AddAgent extends Component {
               <div>
                 <FormItem
                   label="帐号"
-                  layout={{
-                    labelCol: { span: 7 },
-                    wrapperCol: { span: 17 }
-                  }}
-                  style={{ width: '400px' }}
+                  {...formLayout}
                 >
                   {getFieldDecorator("alipayAccount", {
                     rules: [{
@@ -454,18 +390,14 @@ class AddAgent extends Component {
                     }]
                   })(
                     <TextArea
-                      style={{ width: '250px' }}
+                      style={{ width: '350px' }}
                       placeholder="请输入帐号"
                       autosize={{ minRows: 2, maxRows: 6 }} />
                   )}
                 </FormItem>
                 <FormItem
                   label="收款方名称"
-                  layout={{
-                    labelCol: { span: 7 },
-                    wrapperCol: { span: 17 }
-                  }}
-                  style={{ width: '400px' }}
+                  {...formLayout}
                 >
                   {getFieldDecorator("alipayAccountName", {
                     rules: [{
@@ -475,7 +407,7 @@ class AddAgent extends Component {
                     }]
                   })(
                     <TextArea
-                      style={{ width: '250px' }}
+                      style={{ width: '350px' }}
                       placeholder="请输入收款方名称"
                       autosize={{ minRows: 2, maxRows: 6 }} />
                   )}
@@ -484,11 +416,7 @@ class AddAgent extends Component {
           }
           <FormItem
             label="备注"
-            layout={{
-              labelCol: { span: 7 },
-              wrapperCol: { span: 17 }
-            }}
-            style={{ width: '400px' }}
+            {...formLayout}
           >
             {getFieldDecorator("agentRemark", {
               rules: [{
@@ -496,7 +424,7 @@ class AddAgent extends Component {
               }]
             })(
               <TextArea
-                style={{ width: '250px' }}
+                style={{ width: '350px' }}
                 placeholder="请输入备注"
                 autosize={{ minRows: 2, maxRows: 6 }} />
             )}
