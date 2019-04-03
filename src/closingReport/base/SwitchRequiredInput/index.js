@@ -74,6 +74,7 @@ export default class SwitchRequiredInput extends Component {
         inputComponent = <InputNumber {...props}
           onChange={this.handleNumberChange}
           min={1}
+          max={9999999999}
           precision={0}
           formatter={value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
           parser={value => value.replace(/\$\s?|(,*)/g, '')}
@@ -84,6 +85,13 @@ export default class SwitchRequiredInput extends Component {
           onChange={this.handleNumberChange}
           value={moment(input).isValid() ? moment(input) : undefined}
           format="YYYY-MM-DD HH:mm"
+          disabledDate={current => {
+            const endValue = moment();
+            if (!current || !endValue) {
+              return false;
+            }
+            return current.valueOf() > endValue.valueOf();
+          }}
           showTime={{
             format: 'HH:mm'
           }}
