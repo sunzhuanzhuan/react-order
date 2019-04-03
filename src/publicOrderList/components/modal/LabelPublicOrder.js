@@ -79,10 +79,15 @@ class LabelPublicOrder extends Component {
   render() {
     const { form, record, orderDetail } = this.props
     const { getFieldDecorator } = form
+    const formLayout = {
+      labelCol: { span: 6 },
+      wrapperCol: { span: 18 },
+    }
     return <div className="modalBox">
-      <Form layout="inline">
+      <Form layout="horizontal">
         {/* 下单时间 */}
         <PlaceOrderTime
+          formLayout={formLayout}
           form={form}
           type="can_label_place_order"
           id="ttp_place_order_at"
@@ -105,11 +110,7 @@ class LabelPublicOrder extends Component {
         }
         <FormItem
           label="三方平台订单号"
-          layout={{
-            labelCol: { span: 7 },
-            wrapperCol: { span: 17 }
-          }}
-          style={{ width: '450px' }}
+          {...formLayout}
         >
           {getFieldDecorator("public_order_id", {
             rules: [{
@@ -117,17 +118,13 @@ class LabelPublicOrder extends Component {
             }]
           })(
             <Input
-              style={{ width: '330px' }}
+              style={{ width: '350px' }}
               placeholder="可以输入多个订单号，多个订单号之间需以,分隔" />
           )}
         </FormItem>
         <FormItem
           label="备注"
-          layout={{
-            labelCol: { span: 10 },
-            wrapperCol: { span: 14 }
-          }}
-          style={{ width: '450px', marginTop: '5px' }}
+          {...formLayout}
         >
           {getFieldDecorator("comment", {
             rules: [{
@@ -135,7 +132,7 @@ class LabelPublicOrder extends Component {
             }]
           })(
             <TextArea placeholder="请输入备注"
-              style={{ width: '400px' }}
+              style={{ width: '350px' }}
               autosize={{ minRows: 2, maxRows: 6 }} />
           )}
         </FormItem>

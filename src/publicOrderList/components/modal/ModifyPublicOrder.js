@@ -82,11 +82,16 @@ class ModifyPublicOrder extends Component {
     const { form, record, orderDetail } = this.props
     const { getFieldDecorator } = form
     const { agent_id, cooperationPlatform } = this.state
+    const formLayout = {
+      labelCol: { span: 6 },
+      wrapperCol: { span: 18 },
+    }
     return <div>
       <Form layout="inline">
         {/* 下单时间 */}
         <PlaceOrderTime
           form={form}
+          formLayout={formLayout}
           type="can_modify_public_order"
           id="ttp_place_order_at"
           initialValue={orderDetail.public_order.ttp_place_order_at}

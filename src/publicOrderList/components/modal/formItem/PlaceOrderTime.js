@@ -15,15 +15,11 @@ class PlaceOrderTime extends React.Component {
     return current < moment().subtract(31, "days").endOf('day') || current > moment().endOf('day')
   }
   render() {
-    const { form, type, id, initialValue } = this.props
+    const { form, type, id, initialValue, formLayout } = this.props
     const { getFieldDecorator } = form;
     return <FormItem
       label="下单时间"
-      layout={{
-        labelCol: { span: 7 },
-        wrapperCol: { span: 17 }
-      }}
-      style={{ width: '500px' }}
+      {...formLayout}
     >
       {getFieldDecorator(id, {
         initialValue: type == "can_label_place_order" ? moment() : moment(initialValue),
@@ -34,7 +30,7 @@ class PlaceOrderTime extends React.Component {
         <DatePicker
           disabledDate={this.disabledDate}
           format="YYYY-MM-DD HH:mm:ss"
-          style={{ width: "300px" }}
+          style={{ width: "350px" }}
         />
       )}
     </FormItem>
