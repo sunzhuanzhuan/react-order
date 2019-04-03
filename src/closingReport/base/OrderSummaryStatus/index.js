@@ -37,7 +37,7 @@ const OrderSummaryStatus = ({ status, reason }) => {
     <div className='head-left'>
       <Badge {...props} />
       {reason && status === 6 && <Tooltip title={reason} placement='topLeft'>
-        <div className='text-overflow-ellipsis' style={{ color: 'red'}}>{reason}</div>
+        <div className='text-overflow-ellipsis' style={{ color: 'red', maxWidth: "170px"}}>{reason}</div>
       </Tooltip>}
     </div>
   )
