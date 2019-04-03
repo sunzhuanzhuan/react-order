@@ -35,7 +35,6 @@ export default class SummaryListByOrder extends Component {
       {
         title: 'ID',
         dataIndex: 'execution_evidence_code',
-        width: 120,
         render: (po, record) => {
           return <div>
             <div>订单：{record.order_id}</div>
@@ -45,7 +44,7 @@ export default class SummaryListByOrder extends Component {
       }, {
         title: '审核状态',
         dataIndex: 'summary_status',
-        width: 140,
+        width: 200,
         render: (status, record) => {
           return <OrderSummaryStatus status={status} reason={record.externa_reason} />
         }
@@ -243,13 +242,15 @@ export default class SummaryListByOrder extends Component {
           getList={this.getList}
         />
       </div>
-      <Table
-        loading={this.state.listLoading}
-        dataSource={list.map(key => source[key])}
-        scroll={{ x: 1800, y: document.body.clientHeight - 380 }}
-        pagination={pagination}
-        columns={this.columns}
-      />
+      <ScrollTable scrollClassName='.ant-table-body' widthScroll={1800}>
+        <Table
+          loading={this.state.listLoading}
+          dataSource={list.map(key => source[key])}
+          scroll={{ x: 1800}}
+          pagination={pagination}
+          columns={this.columns}
+        />
+      </ScrollTable>
     </div>
   }
 }
