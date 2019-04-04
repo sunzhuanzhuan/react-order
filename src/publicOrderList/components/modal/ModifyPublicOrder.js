@@ -72,6 +72,7 @@ class ModifyPublicOrder extends Component {
         this.props.actions.modifyLabelPlaceOrder({ ...values }).then(() => {
           message.success('您所提交的信息已经保存成功！', 2)
           this.props.handleCancel()
+          this.props.getList()
         }).catch(() => {
           message.error("修改三方已下单失败")
         })
@@ -87,7 +88,7 @@ class ModifyPublicOrder extends Component {
       wrapperCol: { span: 18 },
     }
     return <div>
-      <Form layout="inline">
+      <Form layout="horizontal">
         {/* 下单时间 */}
         <PlaceOrderTime
           form={form}
@@ -108,6 +109,7 @@ class ModifyPublicOrder extends Component {
         {
           this.state.type == "multi" ?
             <MultiAgent
+              formLayout={formLayout}
               form={form}
               platformId={record.account.platform_id}
               agent_id={agent_id}
@@ -117,11 +119,7 @@ class ModifyPublicOrder extends Component {
         }
         <FormItem
           label="三方平台订单号"
-          layout={{
-            labelCol: { span: 7 },
-            wrapperCol: { span: 17 }
-          }}
-          style={{ width: '450px' }}
+          {...formLayout}
         >
           {getFieldDecorator("public_order_id", {
             rules: [{
@@ -130,17 +128,13 @@ class ModifyPublicOrder extends Component {
             initialValue: "这里是假数据"
           })(
             <Input
-              style={{ width: '330px' }}
+              style={{ width: '350px' }}
               placeholder="可以输入多个订单号，多个订单号之间需以,分隔" />
           )}
         </FormItem>
         <FormItem
           label="备注"
-          layout={{
-            labelCol: { span: 10 },
-            wrapperCol: { span: 14 }
-          }}
-          style={{ width: '450px', marginTop: '5px' }}
+          {...formLayout}
         >
           {getFieldDecorator("comment", {
             rules: [{
@@ -149,7 +143,7 @@ class ModifyPublicOrder extends Component {
             initialValue: orderDetail.public_order.deal_execution_notification_comment
           })(
             <TextArea placeholder="请输入备注"
-              style={{ width: '400px' }}
+              style={{ width: '350px' }}
               autosize={{ minRows: 2, maxRows: 6 }} />
           )}
         </FormItem>
