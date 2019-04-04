@@ -80,6 +80,13 @@ export const {
   method: 'post'
 });
 
+//执行终止
+export const {
+  dealExecutionTermination
+} = createHttpAction('dealExecutionTermination', Interface.dealExecutionTermination, {
+  method: 'post'
+});
+
 
 
 

@@ -9,7 +9,7 @@ const ModalComponent = (props) => {
       title={modalParams.modalTitle}
       visible={visible}
       onCancel={handleCancel}
-      width={630}
+      width={640}
       maskClosable={false}
       footer={null}
       centered={true}
@@ -21,7 +21,7 @@ const ModalComponent = (props) => {
       visible={visible}
       footer={null}
       onCancel={handleCancel}
-      width={630}
+      width={640}
       centered={true}
       maskClosable={false}
       closable={false}

@@ -42,21 +42,15 @@ class SetExecutionTerminationRequest extends Component {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        // values.ttp_place_order_at = values.ttp_place_order_at.format("YYYY-MM-DD HH:mm:ss")
-        // if (this.state.type == "single") {
-        //   values.ttp_cooperation_platform_id = this.state.cooperationPlatform
-        //   values.agent_id = this.state.agent_id
-        // } else {
-        //   values.ttp_cooperation_platform_id = values.multiAgentIds[0]
-        //   values.agent_id = values.multiAgentIds[1]
-        //   delete values.multiAgentIds
-        // }
-        // this.props.actions.modifyLabelPlaceOrder({ ...values }).then(() => {
-        //   message.success('您所提交的信息已经保存成功！', 2)
-        //   this.props.handleCancel()
-        // }).catch(() => {
-        //   message.error("修改三方已下单失败")
-        // })
+        console.log(values)
+        values.public_order_id = this.props.record.public_order.public_order_id
+        this.props.actions.dealExecutionTermination({ ...values }).then(() => {
+          message.success('您所提交的信息已经保存成功！', 2)
+          this.props.handleCancel()
+          this.props.getList()
+        }).catch(() => {
+          message.error("执行终止处理失败")
+        })
       }
     });
   }
@@ -88,11 +82,18 @@ class SetExecutionTerminationRequest extends Component {
       dataIndex: 'address',
       key: 'address',
     }];
+    const formLayout = {
+      labelCol: { span: 7 },
+      wrapperCol: { span: 17 },
+    }
     return <div className="modalBox-singleAgent">
-      <Form layout="inline">
-        <ul>
-          <li>需求名称： 大元客户发布发布</li>
-        </ul>
+      <Form layout="horizontal">
+        <FormItem
+          label="需求名称"
+          {...formLayout}
+        >
+          <span>{orderDetail.requirement.name}</span>
+        </FormItem>
         <Table
           dataSource={dataSource}
           columns={columns}
@@ -100,17 +101,12 @@ class SetExecutionTerminationRequest extends Component {
         />
         <FormItem
           label="是否在微任务/WEIQ已下单"
-          layout={{
-            labelCol: { span: 5 },
-            wrapperCol: { span: 19 }
-          }}
-          style={{ width: '500px' }}
+          {...formLayout}
         >
           {getFieldDecorator("operate_type", {
             rules: [{
               required: true, message: '本项为必选项，请选择！',
-            }],
-            initialValue: '1'
+            }]
           })(
             <RadioGroup>
               <Radio value='1'>已下单，拒绝终止</Radio>
@@ -120,11 +116,7 @@ class SetExecutionTerminationRequest extends Component {
         </FormItem>
         <FormItem
           label="备注"
-          layout={{
-            labelCol: { span: 10 },
-            wrapperCol: { span: 14 }
-          }}
-          style={{ width: '450px', margin: '5px auto', display: 'block' }}
+          {...formLayout}
         >
           {getFieldDecorator("comment", {
             rules: [{
@@ -132,7 +124,7 @@ class SetExecutionTerminationRequest extends Component {
             }]
           })(
             <TextArea placeholder="请输入备注"
-              style={{ width: '300px' }}
+              style={{ width: '350px' }}
               autosize={{ minRows: 2, maxRows: 6 }} />
           )}
         </FormItem>
