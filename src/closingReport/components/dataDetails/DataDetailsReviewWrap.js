@@ -24,12 +24,14 @@ export default class DataDetailsReviewWrap extends Component {
             <Radio value={2}>审核拒绝</Radio>
           </RadioGroup>)}
         </Form.Item>
-        {getFieldValue(`${field}_status`) === 2 ? getFieldDecorator(`${field}_reason`, {
-          rules: [{
-            required: true,
-            message: '请填写拒绝原因!'
-          }]
-        })(<TextArea autosize={{ minRows: 2, maxRows: 6 }} />) : null}
+        <Form.Item>
+          {getFieldValue(`${field}_status`) === 2 ? getFieldDecorator(`${field}_reason`, {
+            rules: [{
+              required: true,
+              message: '请填写拒绝原因!'
+            }]
+          })(<TextArea autosize={{ minRows: 2, maxRows: 6 }} />) : null}
+        </Form.Item>
       </footer>
     </div>
   }
