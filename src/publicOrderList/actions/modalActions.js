@@ -66,6 +66,13 @@ export const {
   method: 'post'
 });
 
+//执行处理
+export const {
+  dealExecutionNotificationApply
+} = createHttpAction('dealExecutionNotificationApply', Interface.dealExecutionNotificationApply, {
+  method: 'post'
+});
+
 
 
 

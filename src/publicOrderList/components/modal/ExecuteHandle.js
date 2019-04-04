@@ -1,6 +1,6 @@
 /* 执行申请处理 */
 import React, { Component } from 'react'
-import { Form, message, Modal, Input, Button, Radio } from 'antd';
+import { Form, message, Modal, Input, Button, Radio, InputNumber } from 'antd';
 import PlaceOrderTime from './formItem/PlaceOrderTime'
 import MultiAgent from './formItem/MultiAgent'
 import SingleAgent from './formItem/SingleAgent'
@@ -18,7 +18,8 @@ class ExecuteHandle extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      settleType: '1'
+      settleType: '1',
+      invoiceType: '1'
     }
   }
   componentWillMount() {
@@ -26,7 +27,6 @@ class ExecuteHandle extends Component {
     let settle_type_statistic = orderDetail.public_order.settle_type_statistic
     let agent_id = orderDetail.public_order.agent_id
     let cooperationPlatform = orderDetail.public_order.cooperation_platform_id
-
   }
   //点击取消
   cancel = () => {
@@ -42,47 +42,76 @@ class ExecuteHandle extends Component {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        values.ttp_place_order_at = values.ttp_place_order_at.format("YYYY-MM-DD HH:mm:ss")
-        // if (this.state.type == "single") {
-        //   values.ttp_cooperation_platform_id = this.state.cooperationPlatform
-        //   values.agent_id = this.state.agent_id
-        // } else {
-        //   values.ttp_cooperation_platform_id = values.multiAgentIds[0]
-        //   values.agent_id = values.multiAgentIds[1]
-        //   delete values.multiAgentIds
-        // }
-        // this.props.actions.modifyLabelPlaceOrder({ ...values }).then(() => {
-        //   message.success('您所提交的信息已经保存成功！', 2)
-        //   this.props.handleCancel()
-        // }).catch(() => {
-        //   message.error("修改三方已下单失败")
-        // })
+        if (this.state.settleType == '1') {
+          values.cooperation_platform_id = values.multiAgentIds[0]
+          values.agent_id = values.multiAgentIds[1]
+          delete values.multiAgentIds
+        }
+        values.order_id = this.props.record.order_id
+        this.props.actions.dealExecutionNotificationApply({ ...values }).then(() => {
+          message.success('您所提交的信息已经保存成功！', 2)
+          this.props.handleCancel()
+          this.props.getList()
+        }).catch(() => {
+          message.error("执行处理失败")
+        })
       }
     });
   }
   // 改变结算方式
   changeSettleType = (e) => {
-    console.log(e.target.value)
+    this.setState({
+      settleType: e.target.value
+    })
+  }
+  //改变回票方式
+  changeReturnInvoiceType = (e) => {
+    this.setState({
+      invoiceType: e.target.value
+    })
   }
   render() {
     const { form, record, orderDetail } = this.props
     const { getFieldDecorator } = form
+    const formLayout = {
+      labelCol: { span: 6 },
+      wrapperCol: { span: 18 },
+    }
     return <div className="modalBox-singleAgent">
-      <Form layout="inline">
-        <ul>
-          <li>需求名称： 大元客户发布发布</li>
-          <li>厂商： 宝洁</li>
-          <li>创建需求销售：吴一一</li>
-          <li>快接单下单金额（元）： 10000.00</li>
-          <li>预计推广时间： 2019-1-22 19：00：00--2019-1-23 19：00：00</li>
-        </ul>
+      <Form layout="horizontal">
+        <FormItem
+          label="需求名称"
+          {...formLayout}
+        >
+          <span>{orderDetail.requirement.name}</span>
+        </FormItem>
+        <FormItem
+          label="厂商"
+          {...formLayout}
+        >
+          <span>{orderDetail.requirement.company.name}</span>
+        </FormItem>
+        <FormItem
+          label="创建需求销售"
+          {...formLayout}
+        >
+          <span>{orderDetail.requirement.sale_manager_info.real_name}</span>
+        </FormItem>
+        <FormItem
+          label="快接单下单金额（元）"
+          {...formLayout}
+        >
+          <span>{orderDetail.public_order.public_order_sku_valid.public_cost_price}</span>
+        </FormItem>
+        <FormItem
+          label="预计推广时间"
+          {...formLayout}
+        >
+          <span>{`${orderDetail.public_order.promote_started_at}-${orderDetail.public_order.promote_ended_at}`}</span>
+        </FormItem>
         <FormItem
           label="是否发起预付款申请"
-          layout={{
-            labelCol: { span: 7 },
-            wrapperCol: { span: 17 }
-          }}
-          style={{ width: '400px' }}
+          {...formLayout}
         >
           {getFieldDecorator("settle_type", {
             rules: [{
@@ -98,24 +127,67 @@ class ExecuteHandle extends Component {
         </FormItem>
         {
           this.state.settleType == '1' ?
-            <MultiAgent
-              form={form}
-              platformId={record.account.platform_id}
-              is_agentDetail_initial_loading={false}
-            /> : null
+            <div>
+              <MultiAgent
+                formLayout={formLayout}
+                form={form}
+                platformId={record.account.platform_id}
+                is_agentDetail_initial_loading={false}
+              />
+              <FormItem
+                label="回票方式"
+                {...formLayout}
+              >
+                {getFieldDecorator("return_invoice_type", {
+                  rules: [{
+                    required: true, message: '本项为必选项，请选择！',
+                  }],
+                  initialValue: '1'
+                })(
+                  <RadioGroup onChange={this.changeReturnInvoiceType}>
+                    <Radio value='1'>全部回票</Radio>
+                    <Radio value='2'>部分回票</Radio>
+                    <Radio value='3'>不回票</Radio>
+                  </RadioGroup>
+                )}
+              </FormItem>
+              {
+                this.state.invoiceType == '2' ?
+                  <FormItem
+                    label="回票金额"
+                    {...formLayout}
+                  >
+                    {getFieldDecorator("return_invoice_amount", {
+                      rules: [{
+                        required: true, message: '本项为必填项，请输入！',
+                      }, {
+                        pattern: /^(([1-9][0-9]*)|(([0]\.\d{1,2}|[1-9][0-9]*\.\d{1,2})))$/, message: '请输入不大于三方下单价的有效数字，小数点后最多两位！'
+                      }]
+                    })(
+                      <InputNumber
+                        style={{ width: '350px' }}
+                        max={parseFloat(orderDetail.public_order.public_order_sku_valid.public_cost_price)}
+                        placeholder="请输入回票金额" />
+                    )}
+                  </FormItem> :
+                  <FormItem
+                    label="回票金额"
+                    {...formLayout}
+                  >
+                    <span>{orderDetail.public_order.public_advance_payment_apply.return_invoice_amount}</span>
+                  </FormItem>
+              }
+            </div>
+            : null
         }
         <FormItem
           label="备注"
-          layout={{
-            labelCol: { span: 10 },
-            wrapperCol: { span: 14 }
-          }}
-          style={{ width: '450px', marginTop: '5px' }}
+          {...formLayout}
         >
           <div className="executeHandle-comment">
             <Input disabled={true}
               style={{ width: '400px', border: 'none' }}
-              defaultValue="11111111"
+              defaultValue={orderDetail.public_order.execution_notification_comment}
             />
             {getFieldDecorator("comment", {
               rules: [{
@@ -124,7 +196,7 @@ class ExecuteHandle extends Component {
             })(
               <TextArea placeholder="请输入备注"
                 autosize={false}
-                style={{ width: '400px', border: 'none' }} />
+                style={{ width: '350px', border: 'none' }} />
             )}
           </div>
         </FormItem>

@@ -25,6 +25,7 @@ const ModalComponent = (props) => {
       centered={true}
       maskClosable={false}
       closable={false}
+      bodyStyle={{ maxHeight: '500px', overflowY: 'auto' }}
     >
       <Children
         handleCancel={handleCancel}
