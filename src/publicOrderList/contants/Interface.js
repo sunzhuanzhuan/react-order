@@ -3,5 +3,6 @@ export default {
   labelPlaceOrder: '/trinity/publicOrder/labelPlaceOrder',
   withdrawLabelPlaceOrder: '/trinity/publicOrder/withdrawLabelPlaceOrder',
   modifyLabelPlaceOrder: '/trinity/publicOrder/modifyLabelPlaceOrder',
-  dealExecutionNotificationApply: '/trinity/publicOrder/dealExecutionNotificationApply'
+  dealExecutionNotificationApply: '/trinity/publicOrder/dealExecutionNotificationApply',
+  createPrepayApply: '/trinity/publicOrder/createPrepayApply'
 }

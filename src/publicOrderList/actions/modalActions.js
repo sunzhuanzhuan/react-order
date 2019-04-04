@@ -73,6 +73,13 @@ export const {
   method: 'post'
 });
 
+//申请预付款
+export const {
+  createPrepayApply
+} = createHttpAction('createPrepayApply', Interface.createPrepayApply, {
+  method: 'post'
+});
+
 
 
 

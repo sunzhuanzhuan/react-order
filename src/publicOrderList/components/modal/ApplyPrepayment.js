@@ -1,6 +1,6 @@
 /* 申请预付款 */
 import React, { Component } from 'react'
-import { Form, message, Modal, Input, Button, DatePicker } from 'antd';
+import { Form, message, Modal, Input, Button, DatePicker, Radio, InputNumber } from 'antd';
 import MultiAgent from './formItem/MultiAgent'
 import * as modalActions from '../../actions/modalActions'
 import { connect } from 'react-redux'
@@ -10,16 +10,16 @@ import './ModalComponent.less'
 const FormItem = Form.Item;
 const { TextArea } = Input;
 const confirm = Modal.confirm;
+const RadioGroup = Radio.Group;
 
 class ApplyPrepayment extends Component {
   constructor(props) {
     super(props)
     this.state = {
-
+      invoiceType: '1',
+      startValue: null,
+      endValue: null,
     }
-  }
-  componentWillMount() {
-
   }
   //点击取消
   cancel = () => {
@@ -34,64 +34,164 @@ class ApplyPrepayment extends Component {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        console.log(values)
-        // values.ttp_place_order_at = values.ttp_place_order_at.format("YYYY-MM-DD HH:mm:ss")
-        // if (this.state.type == "single") {
-        //   values.ttp_cooperation_platform_id = this.state.cooperationPlatform
-        //   values.agent_id = this.state.agent_id
-        // } else {
-        //   values.ttp_cooperation_platform_id = values.multiAgentIds[0]
-        //   values.agent_id = values.multiAgentIds[1]
-        //   delete values.multiAgentIds
-        // }
-        // this.props.actions.modifyLabelPlaceOrder({ ...values }).then(() => {
-        //   message.success('您所提交的信息已经保存成功！', 2)
-        //   this.props.handleCancel()
-        // }).catch(() => {
-        //   message.error("修改三方已下单失败")
-        // })
+        if (values.promote_ended_at) {
+          values.promote_ended_at = values.promote_ended_at.format("YYYY-MM-DD HH:mm:ss")
+        }
+        if (values.promote_started_at) {
+          values.promote_started_at = values.promote_started_at.format("YYYY-MM-DD HH:mm:ss")
+        }
+        values.order_id = this.props.record.order_id
+        values.cooperation_platform_id = values.multiAgentIds[0]
+        values.agent_id = values.multiAgentIds[1]
+        delete values.multiAgentIds
+        this.props.actions.createPrepayApply({ ...values }).then(() => {
+          message.success('您所提交的信息已经保存成功！', 2)
+          this.props.handleCancel()
+          this.props.getList()
+        }).catch(() => {
+          message.error("申请预付款失败")
+        })
       }
     });
+  }
+  //改变回票方式
+  changeReturnInvoiceType = (e) => {
+    this.setState({
+      invoiceType: e.target.value
+    })
+  }
+  disabledStartDate = (startValue) => {
+    const endValue = this.state.endValue;
+    if (!startValue || !endValue) {
+      return false;
+    }
+    return startValue.valueOf() > endValue.valueOf();
+  }
+
+  disabledEndDate = (endValue) => {
+    const startValue = this.state.startValue;
+    if (!endValue || !startValue) {
+      return false;
+    }
+    return endValue.valueOf() <= startValue.valueOf();
+  }
+
+  onChange = (field, value) => {
+    this.setState({
+      [field]: value,
+    });
+  }
+
+  onStartChange = (value) => {
+    this.onChange('startValue', value);
+  }
+
+  onEndChange = (value) => {
+    this.onChange('endValue', value);
   }
   render() {
     const { form, record, orderDetail } = this.props
     const { getFieldDecorator } = form
+    const formLayout = {
+      labelCol: { span: 6 },
+      wrapperCol: { span: 18 },
+    }
     return <div className="modalBox-singleAgent">
-      <Form layout="inline">
-        <ul>
-          <li>需求名称： 大元客户发布发布</li>
-          <li>厂商： 宝洁</li>
-          <li>创建需求销售：吴一一</li>
-          <li>快接单下单金额（元）： 10000.00</li>
-        </ul>
+      <Form layout="horizontal">
+        <FormItem
+          label="需求名称"
+          {...formLayout}
+        >
+          <span>{orderDetail.requirement.name}</span>
+        </FormItem>
+        <FormItem
+          label="厂商"
+          {...formLayout}
+        >
+          <span>{orderDetail.requirement.company.name}</span>
+        </FormItem>
+        <FormItem
+          label="创建需求销售"
+          {...formLayout}
+        >
+          <span>{orderDetail.requirement.sale_manager_info.real_name}</span>
+        </FormItem>
+        <FormItem
+          label="快接单下单金额（元）"
+          {...formLayout}
+        >
+          <span>{orderDetail.public_order.public_order_sku_valid.public_cost_price}</span>
+        </FormItem>
         <MultiAgent
+          formLayout={formLayout}
           form={form}
           platformId={record.account.platform_id}
           is_agentDetail_initial_loading={false}
         />
         <FormItem
+          label="回票方式"
+          {...formLayout}
+        >
+          {getFieldDecorator("return_invoice_type", {
+            rules: [{
+              required: true, message: '本项为必选项，请选择！',
+            }],
+            initialValue: '1'
+          })(
+            <RadioGroup onChange={this.changeReturnInvoiceType}>
+              <Radio value='1'>全部回票</Radio>
+              <Radio value='2'>部分回票</Radio>
+              <Radio value='3'>不回票</Radio>
+            </RadioGroup>
+          )}
+        </FormItem>
+        {
+          this.state.invoiceType == '2' ?
+            <FormItem
+              label="回票金额"
+              {...formLayout}
+            >
+              {getFieldDecorator("return_invoice_amount", {
+                rules: [{
+                  required: true, message: '本项为必填项，请输入！',
+                }, {
+                  pattern: /^(([1-9][0-9]*)|(([0]\.\d{1,2}|[1-9][0-9]*\.\d{1,2})))$/, message: '请输入不大于三方下单价的有效数字，小数点后最多两位！'
+                }]
+              })(
+                <InputNumber
+                  style={{ width: '350px' }}
+                  max={parseFloat(orderDetail.public_order.public_order_sku_valid.public_cost_price)}
+                  placeholder="请输入回票金额" />
+              )}
+            </FormItem> :
+            <FormItem
+              label="回票金额"
+              {...formLayout}
+            >
+              <span>{orderDetail.public_order.public_advance_payment_apply.return_invoice_amount}</span>
+            </FormItem>
+        }
+        <FormItem
           label="预计推广时间"
-          layout={{
-            labelCol: { span: 4 },
-            wrapperCol: { span: 20 }
-          }}
-          style={{ width: '500px' }}
+          {...formLayout}
         >
           {getFieldDecorator("promote_started_at")(
-            <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />
+            <DatePicker showTime format="YYYY-MM-DD HH:mm:ss"
+              onChange={this.onStartChange}
+              disabledDate={this.disabledStartDate}
+            />
           )}
           <span>-</span>
           {getFieldDecorator("promote_ended_at")(
-            <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />
+            <DatePicker showTime format="YYYY-MM-DD HH:mm:ss"
+              disabledDate={this.disabledEndDate}
+              onChange={this.onEndChange}
+            />
           )}
         </FormItem>
         <FormItem
           label="备注"
-          layout={{
-            labelCol: { span: 6 },
-            wrapperCol: { span: 18 }
-          }}
-          style={{ width: '500px', marginTop: '5px' }}
+          {...formLayout}
         >
           {getFieldDecorator("comment", {
             rules: [{
@@ -99,7 +199,7 @@ class ApplyPrepayment extends Component {
             }]
           })(
             <TextArea placeholder="请输入备注"
-              style={{ width: '400px' }}
+              style={{ width: '350px' }}
               autosize={{ minRows: 2, maxRows: 6 }} />
           )}
         </FormItem>
