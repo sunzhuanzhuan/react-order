@@ -125,7 +125,7 @@ class ModifyPublicOrder extends Component {
             rules: [{
               pattern: /^[\u4e00-\u9fa5a-zA-Z0-9-_,]{0,100}$/, message: '最多可输入100个字符！'
             }],
-            initialValue: "这里是假数据"
+            initialValue: orderDetail.public_order.ttp_order_id
           })(
             <Input
               style={{ width: '350px' }}

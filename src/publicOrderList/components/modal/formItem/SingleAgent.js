@@ -36,7 +36,7 @@ class SingleAgent extends React.Component {
     })
   }
   render() {
-    const { agentDetail, form, platformId } = this.props
+    const { agentDetail, form, platformId, formLayout } = this.props
     const { getFieldDecorator } = form
     const { is_agentDetail_loading } = this.state
     return (
@@ -44,11 +44,7 @@ class SingleAgent extends React.Component {
         <div className="modalBox-singleAgent">
           <FormItem
             label="本单使用平台/代理商"
-            layout={{
-              labelCol: { span: 7 },
-              wrapperCol: { span: 17 }
-            }}
-            style={{ width: '400px', float: 'left' }}
+            {...formLayout}
           >
             {getFieldDecorator("agent_id", {
               rules: [{

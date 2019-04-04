@@ -4,14 +4,15 @@
 
 */
 import React, { Component } from 'react'
-import api from '../../../api/index'
 import * as modalActions from '../../actions/modalActions'
-import { Button, message, Spin } from 'antd';
-import AgentDetail from './formItem/AgentDetail'
+import { Button, message, Spin, Form } from 'antd';
+import SingleAgent from './formItem/SingleAgent'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import './ModalComponent.less'
 import './formItem/formItem.less'
+
+const FormItem = Form.Item;
 
 class WithdrawPublicOrder extends Component {
   constructor(props) {
@@ -20,20 +21,16 @@ class WithdrawPublicOrder extends Component {
       data: {},
       agentName: "",
       agentDetail: {},
-      is_agentDetail_loading: true
+      is_agentDetail_loading: true,
+      agent_id: ''
     }
   }
   componentWillMount() {
     let orderDetail = this.props.orderDetail
     let agent_id = orderDetail.public_order.agent_id
-    this.props.actions.getAgentDetail({ id: agent_id }).then(() => {
-      this.setState({
-        is_agentDetail_loading: false
-      })
-    }).catch(() => {
-      this.setState({
-        is_agentDetail_loading: false
-      }, () => { message.error("代理商详情加载失败", 2) })
+    this.setState({
+      agent_id: agent_id,
+      is_agentDetail_loading: false
     })
   }
   //撤销三方已下单
@@ -43,34 +40,52 @@ class WithdrawPublicOrder extends Component {
     }).then(() => {
       message.success('您所提交的信息已经保存成功！', 2)
       this.props.handleCancel()
+      this.props.getList()
     }).catch(() => {
       message.error("撤销三方已下单操作失败", 2)
     })
   }
   render() {
-    const { orderDetail, agentDetail } = this.props
+    const { orderDetail, record, form } = this.props
     const { is_agentDetail_loading } = this.state
     const { handleCancel } = this.props
+    const formLayout = {
+      labelCol: { span: 6 },
+      wrapperCol: { span: 18 },
+    }
     return <div className="withdrawPublicOrder">
-      <ul>
-        <li>下单时间：{orderDetail.public_order.ttp_place_order_at}</li>
-        <li style={{ marginTop: '5px' }}>本单使用平台/代理商：{Object.keys(agentDetail).length != 0 ? "-" : agentDetail.agentName}</li>
+      <Form layout="horizontal">
+        <FormItem
+          label="下单时间"
+          {...formLayout}
+        >
+          <span>{orderDetail.public_order.ttp_place_order_at}</span>
+        </FormItem>
         {/* 是否加载中 */}
         {
           is_agentDetail_loading ?
             <div className="multiAgent-agentDetail-loading">
               <Spin />
-            </div> : null
+            </div> : <SingleAgent
+              formLayout={formLayout}
+              form={form}
+              agent_id={this.state.agent_id}
+              platformId={record.account.platform_id}
+            />
         }
-        {/* 平台/代理商详情 */}
-        {
-          Object.keys(agentDetail).length != 0 ?
-            <AgentDetail agentDetail={agentDetail} /> :
-            null
-        }
-        <li style={{ marginTop: '5px' }}>三方订单号：这是假数据</li>
-        <li style={{ marginTop: '5px' }}>备注：{orderDetail.public_order.deal_execution_notification_comment}</li>
-      </ul>
+        <FormItem
+          label="三方订单号"
+          {...formLayout}
+        >
+          <span>{orderDetail.public_order.ttp_order_id}</span>
+        </FormItem>
+        <FormItem
+          label="备注"
+          {...formLayout}
+        >
+          <span>{orderDetail.public_order.deal_execution_notification_comment}</span>
+        </FormItem>
+      </Form>
       <div className="withdrawPublicOrder-tips">是否要撤销三方已下单的标识？</div>
       <div className="modalBox-btnGroup">
         <Button type="primary" onClick={this.submit}>确定撤销</Button>
@@ -85,7 +100,6 @@ class WithdrawPublicOrder extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    agentDetail: state.publicOrderListReducer.agentDetail
   }
 }
 
@@ -98,5 +112,5 @@ const mapDispatchToProps = (dispatch) => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(WithdrawPublicOrder)
+)(Form.create()(WithdrawPublicOrder))
 
