@@ -5,8 +5,10 @@ import WithdrawPublicOrder from '../components/modal/WithdrawPublicOrder'
 import ExecuteHandle from '../components/modal/ExecuteHandle'
 import ApplyPrepayment from '../components/modal/ApplyPrepayment'
 import SetExecutionTerminationRequest from '../components/modal/SetExecutionTerminationRequest'
-import { Button, Tooltip } from 'antd';
+import { Button, Tooltip, Popover, Form } from 'antd';
 import './config.less'
+
+const FormItem = Form.Item;
 
 // 筛选项配置数组
 export const filterFormArr = [
@@ -280,6 +282,10 @@ export const columns = (props) => {
     "1": "B端",
     "2": "A端",
     "3": "C端"
+  }
+  const formLayout = {
+    labelCol: { span: 6 },
+    wrapperCol: { span: 18 },
   }
   return [
     {
@@ -594,18 +600,90 @@ export const columns = (props) => {
         </div>
       }
     },
-    // {
-    //   title: '媒介经理',
-    //   dataIndex: 'media_admin_user',
-    //   key: 'media_admin_user',
-    //   align: 'center',
-    //   render: (text, record) => {
-    //     return <div>
-    //       <div>资源媒介：{record.media_admin_user.name}</div>
-    //       <div>项目媒介：{record.vol_admin_user.name}</div>
-    //     </div>
-    //   }
-    // },
+    {
+      title: '媒介经理',
+      dataIndex: 'media_admin_user',
+      key: 'media_admin_user',
+      align: 'center',
+      render: (text, record) => {
+        return <div>
+          <div>资源媒介：
+            <Popover
+              content={(
+                <Form layout="horizontal">
+                  <FormItem
+                    label="手机号"
+                    {...formLayout}
+                  >
+                    <span>{record.media_admin_user.cell_phone ? record.media_admin_user.cell_phone : "-"}</span>
+                  </FormItem>
+                  {
+                    record.media_admin_user.qr_code ?
+                      <FormItem
+                        label="微信"
+                        {...formLayout}
+                      >
+                        <img src={record.media_admin_user.qr_code} width="100" />
+                      </FormItem> : null
+                  }
+                  <FormItem
+                    label="qq"
+                    {...formLayout}
+                  >
+                    <span>{record.media_admin_user.qq ? record.media_admin_user.qq : "-"}</span>
+                  </FormItem>
+                  <FormItem
+                    label="email"
+                    {...formLayout}
+                  >
+                    <span>{record.media_admin_user.email ? record.media_admin_user.email : "-"}</span>
+                  </FormItem>
+                </Form>
+              )} title="联系方式" trigger="click">
+              {record.media_admin_user.name}
+            </Popover>
+          </div>
+          <div>项目媒介：
+            <Popover
+              content={(
+                <Form layout="horizontal">
+                  <FormItem
+                    label="手机号"
+                    {...formLayout}
+                  >
+                    <span>{record.vol_admin_user.cell_phone ? record.vol_admin_user.cell_phone : "-"}</span>
+                  </FormItem>
+                  {
+                    record.vol_admin_user.qr_code ?
+                      <FormItem
+                        label="微信"
+                        {...formLayout}
+                      >
+                        <img src={record.vol_admin_user.qr_code} width="100" />
+                      </FormItem> : null
+                  }
+                  <FormItem
+                    label="qq"
+                    {...formLayout}
+                  >
+                    <span>{record.vol_admin_user.qq ? record.vol_admin_user.qq : "-"}</span>
+                  </FormItem>
+                  <FormItem
+                    label="email"
+                    {...formLayout}
+                  >
+                    <span>{record.vol_admin_user.email ? record.vol_admin_user.email : "-"}</span>
+                  </FormItem>
+                </Form>
+              )}
+              title="联系方式" trigger="click"
+            >
+              {record.vol_admin_user.name}
+            </Popover>
+          </div>
+        </div>
+      }
+    },
     {
       title: '公司简称',
       dataIndex: 'company',

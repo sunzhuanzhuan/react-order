@@ -18,15 +18,67 @@ class SetExecutionTerminationRequest extends Component {
   constructor(props) {
     super(props)
     this.state = {
-
+      dataSource: []
     }
   }
   componentWillMount() {
     let orderDetail = this.props.orderDetail
-    let settle_type_statistic = orderDetail.public_order.settle_type_statistic
-    let agent_id = orderDetail.public_order.agent_id
-    let cooperationPlatform = orderDetail.public_order.cooperation_platform_id
-
+    console.log(orderDetail)
+    // let settle_type_statistic = orderDetail.public_order.settle_type_statistic
+    // let agent_id = orderDetail.public_order.agent_id
+    // let cooperationPlatform = orderDetail.public_order.cooperation_platform_id
+    let dataSource = []
+    // if (data.execution_termination_request.reneger) {
+    //   //申请执行终止
+    //   let termination_reason_str = ""
+    //   let termination_reason = data.execution_termination_request.termination_reason.split(",")
+    //   data.termination_reason_list["1"].forEach(v => {
+    //     if (termination_reason.indexOf(v.value) != -1) {
+    //       termination_reason_str = v.text + ";" + termination_reason_str
+    //     }
+    //   })
+    //   let obj = {
+    //     operation: "申请执行终止",
+    //     operation_content: [
+    //       {
+    //         key: "违约方",
+    //         value: data.reneger_list.find(v => v.key == data.execution_termination_request.reneger).value
+    //       },
+    //       {
+    //         key: "终止原因",
+    //         value: termination_reason_str
+    //       }
+    //     ],
+    //     operator: `${data.execution_termination_request.requestor_name}（${data.execution_termination_request.requestor_group}）`,
+    //     operation_time: data.execution_termination_request.created_at
+    //   }
+    //   dataSource.push(obj)
+    // }
+    // if (execution_termination_request.confirmations && execution_termination_request.confirmations.length != 0) {
+    //   //确认执行终止
+    //   let arr = execution_termination_request.confirmations
+    //   arr.forEach(v => {
+    //     let obj = {
+    //       operation: "确认执行终止",
+    //       operation_content: [
+    //         {
+    //           key: "执行终止",
+    //           value: v.confirmor_type == 1 ? "同意" : "拒绝"
+    //         },
+    //         {
+    //           key: "原因",
+    //           value: v.content
+    //         }
+    //       ],
+    //       operator: `${v.confirmor_name}（${v.confirmor_group}）`,
+    //       operation_time: v.created_at
+    //     }
+    //     dataSource.push(obj)
+    //   })
+    // }
+    this.setState({
+      dataSource: [...dataSource]
+    })
   }
   //点击取消
   cancel = () => {
@@ -57,31 +109,38 @@ class SetExecutionTerminationRequest extends Component {
   render() {
     const { form, record, orderDetail } = this.props
     const { getFieldDecorator } = form
-    const dataSource = [{
-      key: '1',
-      name: '胡彦斌',
-      age: 32,
-      address: '西湖区湖底公园1号'
-    }, {
-      key: '2',
-      name: '胡彦祖',
-      age: 42,
-      address: '西湖区湖底公园1号'
-    }];
 
-    const columns = [{
-      title: '姓名',
-      dataIndex: 'name',
-      key: 'name',
-    }, {
-      title: '年龄',
-      dataIndex: 'age',
-      key: 'age',
-    }, {
-      title: '住址',
-      dataIndex: 'address',
-      key: 'address',
-    }];
+    const columns = [
+      {
+        title: '操作',
+        dataIndex: 'operation',
+        key: 'operation'
+      },
+      {
+        title: '操作内容',
+        dataIndex: 'operation_content',
+        key: 'operation_content',
+        render: text => {
+          return <div>
+            {
+              text.map(v => {
+                return <div key={v.key}>{`${v.key}：${v.value}`}</div>
+              })
+            }
+          </div>
+        }
+      },
+      {
+        title: '操作人',
+        dataIndex: 'operator',
+        key: 'operator'
+      },
+      {
+        title: '操作时间',
+        dataIndex: 'operation_time',
+        key: 'operation_time'
+      }
+    ];
     const formLayout = {
       labelCol: { span: 7 },
       wrapperCol: { span: 17 },
@@ -95,7 +154,7 @@ class SetExecutionTerminationRequest extends Component {
           <span>{orderDetail.requirement.name}</span>
         </FormItem>
         <Table
-          dataSource={dataSource}
+          dataSource={this.state.dataSource}
           columns={columns}
           pagination={false}
         />

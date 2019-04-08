@@ -59,10 +59,16 @@ class PublicOrderList extends Component {
   //弹框出现
   showModal = (params) => {
     let key = params.key
+    console.log(key)
     let data = params.data
     //获取弹框详情
     this.props.actions.resetOrderDetail()
-    this.props.actions.getOrderDetail({ order_id: data.order_id })
+    if (key == "set_execution_termination_request") {
+      //执行终止处理弹框
+      this.props.actions.getInterruptExecution({ order_id: data.order_id })
+    } else {
+      this.props.actions.getOrderDetail({ order_id: data.order_id })
+    }
     this.setState({
       key: key,
       visible: true,
