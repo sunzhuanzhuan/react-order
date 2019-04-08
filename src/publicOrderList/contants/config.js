@@ -613,6 +613,7 @@ export const columns = (props) => {
                 <Form layout="horizontal">
                   <FormItem
                     label="手机号"
+                    style={{ width: '300px' }}
                     {...formLayout}
                   >
                     <span>{record.media_admin_user.cell_phone ? record.media_admin_user.cell_phone : "-"}</span>
@@ -640,7 +641,7 @@ export const columns = (props) => {
                   </FormItem>
                 </Form>
               )} title="联系方式" trigger="click">
-              {record.media_admin_user.name}
+              <a href="#">{record.media_admin_user.name}</a>
             </Popover>
           </div>
           <div>项目媒介：
@@ -650,6 +651,7 @@ export const columns = (props) => {
                   <FormItem
                     label="手机号"
                     {...formLayout}
+                    style={{ width: '300px' }}
                   >
                     <span>{record.vol_admin_user.cell_phone ? record.vol_admin_user.cell_phone : "-"}</span>
                   </FormItem>
@@ -678,7 +680,7 @@ export const columns = (props) => {
               )}
               title="联系方式" trigger="click"
             >
-              {record.vol_admin_user.name}
+              <a href="#">{record.vol_admin_user.name}</a>
             </Popover>
           </div>
         </div>
