@@ -23,7 +23,6 @@ class SetExecutionTerminationRequest extends Component {
   }
   componentWillMount() {
     let orderDetail = this.props.orderDetail
-    console.log(orderDetail)
     let dataSource = []
     if (orderDetail.execution_termination_request.reneger) {
       //申请执行终止

@@ -8,7 +8,6 @@ import ModalComponent from '../components/modal/ModalComponent'
 import { filterFormArr, columns, modalParams } from '../contants/config'
 import * as publicOrderListActions from '../actions/publicOrderListActions'
 import './PublicOrderList.less'
-import { id } from 'postcss-selector-parser';
 const TabPane = Tabs.TabPane;
 
 class PublicOrderList extends Component {
@@ -161,7 +160,7 @@ class PublicOrderList extends Component {
         <Table
           dataSource={Object.keys(publicOrderList).length != 0 ? publicOrderList.items : []}
           columns={columns({ showModal: this.showModal, babysitter_host: babysitter_host })}
-          scroll={{ x: 3000 }}
+          scroll={{ x: 3700 }}
           loading={this.state.tableLoading}
           pagination={{
             current: Object.keys(publicOrderList).length != 0 ? publicOrderList.pagination.current_page : "-",

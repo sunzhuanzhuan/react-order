@@ -314,7 +314,7 @@ export const columns = (props) => {
       key: 'requirement_name',
       align: 'center',
       fixed: 'left',
-      width: 100,
+      width: 150,
       render: (text, record) => {
         return <div className="list-item">
           <Tooltip placement="top" title={text}>
@@ -357,7 +357,7 @@ export const columns = (props) => {
       dataIndex: 'account',
       key: 'account',
       align: 'center',
-      width: 150,
+      width: 300,
       render: (text, record) => {
         return <div className="list-div">
           <div className="list-divItem">
@@ -387,7 +387,7 @@ export const columns = (props) => {
       dataIndex: 'public_cost_price',
       key: 'public_cost_price',
       align: 'center',
-      width: 100,
+      width: 150,
       render: (text, record) => <span>{record.public_order.public_order_skus[0].public_cost_price}</span>
     },
     {
@@ -395,6 +395,7 @@ export const columns = (props) => {
       dataIndex: 'cooperation_platform_name',
       key: 'cooperation_platform_name',
       align: 'center',
+      width: 100,
       render: (text, record) => <span>{record.public_order.cooperation_platform_name}</span>
     },
     {
@@ -410,7 +411,7 @@ export const columns = (props) => {
       dataIndex: 'public_order',
       key: 'public_order',
       align: 'center',
-      width: 200,
+      width: 300,
       render: (text, record) => {
         return text.is_labeled_place_order == "1" ?
           <div className="list-div">
@@ -466,6 +467,7 @@ export const columns = (props) => {
       dataIndex: 'is_prepayment',
       key: 'is_prepayment',
       align: 'center',
+      width: 200,
       render: (text, record) => {
         return <div>
           <div>
@@ -533,7 +535,7 @@ export const columns = (props) => {
       dataIndex: 'last_public_summary_order_relation_created_at',
       key: 'last_public_summary_order_relation_created_at',
       align: 'center',
-      width: '200',
+      width: 200,
       render: (text, record) => <span>{record.public_order.last_public_summary_order_relation.created_at}</span>
     },
     {
@@ -605,6 +607,7 @@ export const columns = (props) => {
       dataIndex: 'media_admin_user',
       key: 'media_admin_user',
       align: 'center',
+      width: 200,
       render: (text, record) => {
         return <div>
           <div>资源媒介：
