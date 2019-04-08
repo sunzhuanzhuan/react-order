@@ -91,7 +91,7 @@ class ListQuery extends Component {
 					</Col>
 					<Col span={4}>
 						<FormItem label="账号名称" {...formItemLayout} >
-							{getFieldDecorator('weibo_name')(
+							{getFieldDecorator('account_ids')(
 								<Select
                 mode="multiple"
                 labelInValue
@@ -136,7 +136,7 @@ class ListQuery extends Component {
 					
 					<Col span={6}>
 						<FormItem label='三方订单号' {...formItemLayout}>
-							{getFieldDecorator('public_order_id', { initialValue: '' })(
+							{getFieldDecorator('public_order_ids', { initialValue: '' })(
 								<Input style={{ width: 240 }} />
 							)}
 						</FormItem>
@@ -157,7 +157,7 @@ class ListQuery extends Component {
 					</Col>
 					<Col span={6}>
 						<FormItem label='是否可扣减' {...formItemLayout}>
-							{getFieldDecorator('is_can_decution', { initialValue: ' ' })(
+							{getFieldDecorator('is_can_deduction', { initialValue: ' ' })(
 								<Select
               >
                <Option key={' '} >请选择</Option>
