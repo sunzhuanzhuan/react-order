@@ -24,58 +24,55 @@ class SetExecutionTerminationRequest extends Component {
   componentWillMount() {
     let orderDetail = this.props.orderDetail
     console.log(orderDetail)
-    // let settle_type_statistic = orderDetail.public_order.settle_type_statistic
-    // let agent_id = orderDetail.public_order.agent_id
-    // let cooperationPlatform = orderDetail.public_order.cooperation_platform_id
     let dataSource = []
-    // if (data.execution_termination_request.reneger) {
-    //   //申请执行终止
-    //   let termination_reason_str = ""
-    //   let termination_reason = data.execution_termination_request.termination_reason.split(",")
-    //   data.termination_reason_list["1"].forEach(v => {
-    //     if (termination_reason.indexOf(v.value) != -1) {
-    //       termination_reason_str = v.text + ";" + termination_reason_str
-    //     }
-    //   })
-    //   let obj = {
-    //     operation: "申请执行终止",
-    //     operation_content: [
-    //       {
-    //         key: "违约方",
-    //         value: data.reneger_list.find(v => v.key == data.execution_termination_request.reneger).value
-    //       },
-    //       {
-    //         key: "终止原因",
-    //         value: termination_reason_str
-    //       }
-    //     ],
-    //     operator: `${data.execution_termination_request.requestor_name}（${data.execution_termination_request.requestor_group}）`,
-    //     operation_time: data.execution_termination_request.created_at
-    //   }
-    //   dataSource.push(obj)
-    // }
-    // if (execution_termination_request.confirmations && execution_termination_request.confirmations.length != 0) {
-    //   //确认执行终止
-    //   let arr = execution_termination_request.confirmations
-    //   arr.forEach(v => {
-    //     let obj = {
-    //       operation: "确认执行终止",
-    //       operation_content: [
-    //         {
-    //           key: "执行终止",
-    //           value: v.confirmor_type == 1 ? "同意" : "拒绝"
-    //         },
-    //         {
-    //           key: "原因",
-    //           value: v.content
-    //         }
-    //       ],
-    //       operator: `${v.confirmor_name}（${v.confirmor_group}）`,
-    //       operation_time: v.created_at
-    //     }
-    //     dataSource.push(obj)
-    //   })
-    // }
+    if (orderDetail.execution_termination_request.reneger) {
+      //申请执行终止
+      let termination_reason_str = ""
+      let termination_reason = orderDetail.execution_termination_request.termination_reason.split(",")
+      orderDetail.termination_reason_list["1"].forEach(v => {
+        if (termination_reason.indexOf((v.value).toString()) != -1) {
+          termination_reason_str = v.text + ";" + termination_reason_str
+        }
+      })
+      let obj = {
+        operation: "申请执行终止",
+        operation_content: [
+          {
+            key: "违约方",
+            value: orderDetail.reneger_list.find(v => v.key == orderDetail.execution_termination_request.reneger).value
+          },
+          {
+            key: "终止原因",
+            value: termination_reason_str
+          }
+        ],
+        operator: `${orderDetail.execution_termination_request.requestor_name}（${orderDetail.execution_termination_request.requestor_group}）`,
+        operation_time: orderDetail.execution_termination_request.created_at
+      }
+      dataSource.push(obj)
+    }
+    if (orderDetail.execution_termination_request.confirmations && orderDetail.execution_termination_request.confirmations.length != 0) {
+      //确认执行终止
+      let arr = orderDetail.execution_termination_request.confirmations
+      arr.forEach(v => {
+        let obj = {
+          operation: "确认执行终止",
+          operation_content: [
+            {
+              key: "执行终止",
+              value: v.confirmor_type == 1 ? "同意" : "拒绝"
+            },
+            {
+              key: "原因",
+              value: v.content
+            }
+          ],
+          operator: `${v.confirmor_name}（${v.confirmor_group}）`,
+          operation_time: v.created_at
+        }
+        dataSource.push(obj)
+      })
+    }
     this.setState({
       dataSource: [...dataSource]
     })
