@@ -111,7 +111,7 @@ class ListFilterForm extends Component {
         )}
       </Form.Item>
       {this.state.expand ? <Form.Item label={`订单id`}>
-        {getFieldDecorator(`order_id`, {
+        {getFieldDecorator(`wby_order_id`, {
         })(<Input placeholder="1020322323" />)}
       </Form.Item> : null}
       <Button type="primary" htmlType="submit">搜索</Button>

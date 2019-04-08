@@ -417,8 +417,8 @@ export const summaryTotalDetailListFunc = () => {
 	return [
 		{
 			title: '订单号',
-			dataIndex: 'order_id',
-			key: 'order_id',
+			dataIndex: 'wby_order_id',
+			key: 'wby_order_id',
 			align: 'center',
 			width: 100
     },

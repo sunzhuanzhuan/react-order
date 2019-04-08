@@ -84,7 +84,7 @@ class ListQuery extends Component {
 				<Row>
 					<Col span={4}>
 						<FormItem label='订单号' {...formItemLayout}>
-							{getFieldDecorator('order_id')(
+							{getFieldDecorator('wby_order_id')(
 					<Input style={{ width: 140 }} />
 							)}
 						</FormItem>
