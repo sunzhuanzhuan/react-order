@@ -339,9 +339,9 @@ export const columns = (props) => {
       key: 'order_id',
       align: 'center',
       fixed: 'left',
-      width: 150,
+      width: 200,
       render: (text, record) => {
-        return <div className="list-item">
+        return <div>
           <div>{text}</div>
           <a href={record.review_reservation_doc_url} target="_blank">预约链接</a>
           {

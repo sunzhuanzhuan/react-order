@@ -58,7 +58,6 @@ class PublicOrderList extends Component {
   //弹框出现
   showModal = (params) => {
     let key = params.key
-    console.log(key)
     let data = params.data
     //获取弹框详情
     this.props.actions.resetOrderDetail()
@@ -160,7 +159,7 @@ class PublicOrderList extends Component {
         <Table
           dataSource={Object.keys(publicOrderList).length != 0 ? publicOrderList.items : []}
           columns={columns({ showModal: this.showModal, babysitter_host: babysitter_host })}
-          scroll={{ x: 3700 }}
+          scroll={{ x: 3600 }}
           loading={this.state.tableLoading}
           pagination={{
             current: Object.keys(publicOrderList).length != 0 ? publicOrderList.pagination.current_page : "-",
