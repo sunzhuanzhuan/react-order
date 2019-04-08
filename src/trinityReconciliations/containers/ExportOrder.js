@@ -66,7 +66,7 @@ class ExportOrder extends Component {
     let selectedRow = this.state.selectedRow;
     let order_ids=[];
     selectedRow.map((item)=>{
-      order_ids.push(item.order_id)
+      order_ids.push(item.wby_order_id)
     })
     this.props.actions.exportOrder({order_ids:order_ids}).then((response)=>{
       if(response.data.code === 1000){
