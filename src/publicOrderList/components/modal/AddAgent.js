@@ -91,7 +91,7 @@ class AddAgent extends Component {
     });
   }
   render() {
-    const { form } = this.props
+    const { form, platformName } = this.props
     const { getFieldDecorator } = form
     const formLayout = {
       labelCol: { span: 5 },
@@ -102,7 +102,7 @@ class AddAgent extends Component {
         onClick={this.showModal}
       >添加代理商</Button>
       <Modal
-        title="新增代理商"
+        title={`新增代理商 所属媒体平台：${platformName}`}
         visible={this.state.visible}
         onCancel={this.handleCancel}
         footer={null}
@@ -431,7 +431,9 @@ class AddAgent extends Component {
           </FormItem>
           <div style={{ width: '100%', textAlign: 'center', marginTop: '10px' }}>
             <Button type="primary" onClick={this.submit}>提交</Button>
-            <Button type="primary" style={{ marginLeft: '10px' }}>取消</Button>
+            <Button type="primary" style={{ marginLeft: '10px' }}
+              onClick={this.handleCancel}
+            >取消</Button>
           </div>
         </Form>
       </Modal>

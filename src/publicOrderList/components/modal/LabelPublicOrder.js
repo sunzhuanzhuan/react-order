@@ -98,6 +98,7 @@ class LabelPublicOrder extends Component {
               form={form}
               agent_id={this.state.agent_id}
               platformId={record.account.platform_id}
+              platformName={orderDetail.platform.platform_name}
             /> : null
         }
         {
@@ -107,6 +108,7 @@ class LabelPublicOrder extends Component {
               form={form}
               platformId={record.account.platform_id}
               is_agentDetail_initial_loading={false}
+              platformName={orderDetail.platform.platform_name}
             /> : null
         }
         <FormItem

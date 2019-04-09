@@ -96,7 +96,7 @@ class MultiAgent extends React.Component {
     })
   }
   render() {
-    const { form, agentList, agentDetail, platformId, formLayout } = this.props
+    const { form, agentList, agentDetail, platformId, formLayout, platformName } = this.props
     const { getFieldDecorator } = form
     const { is_agentDetail_loading, initialValue } = this.state
     let agentDetailInitialValue = this.props.agent_id ? [this.props.cooperationPlatform, this.props.agent_id] :
@@ -123,7 +123,7 @@ class MultiAgent extends React.Component {
               />
             )}
           </FormItem>
-          <AddAgent platformId={platformId} />
+          <AddAgent platformId={platformId} platformName={platformName} />
         </div>
         {/* 是否加载中 */}
         {
