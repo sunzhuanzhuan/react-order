@@ -413,16 +413,16 @@ export const columns = (props) => {
       align: 'center',
       width: 200,
       render: (text, record) => {
-        return <div>
+        return record.public_order ? <div>
           <div>
             <span>预计推广开始时间：</span>
-            <span>{record.public_order ? record.public_order.promote_started_at : "-"}</span>
+            <span>{record.public_order.promote_started_at}</span>
           </div>
           <div>
             <span>预计推广结束时间：</span>
-            <span>{record.public_order ? record.public_order.promote_ended_at : "-"}</span>
+            <span>{record.public_order.promote_ended_at}</span>
           </div>
-        </div>
+        </div> : null
       }
     },
     {
@@ -477,34 +477,23 @@ export const columns = (props) => {
       align: 'center',
       width: 200,
       render: (text, record) => {
-        return <div>
+        return record.public_order ? <div>
           <div>
             <span>调账金额：</span>
-            <span>
-              {record.public_order ?
-                record.public_order.last_public_summary_order_relation.adjustment_amount : "-"
-              }
+            <span>{record.public_order.last_public_summary_order_relation.adjustment_amount}
             </span>
           </div>
           <div>
             <span>调账方式：</span>
-            <span>
-              {record.public_order ?
-                operationType[record.public_order.last_public_summary_order_relation.operation_type]
-                : "-"
-              }
+            <span>{operationType[record.public_order.last_public_summary_order_relation.operation_type]}
             </span>
           </div>
           <div>
             <span>调账原因：</span>
-            <span>
-              {record.public_order ?
-                record.public_order.last_public_summary_order_relation.adjustment_reason
-                : "-"
-              }
+            <span>{record.public_order.last_public_summary_order_relation.adjustment_reason}
             </span>
           </div>
-        </div>
+        </div> : null
       }
     },
     {
@@ -526,25 +515,18 @@ export const columns = (props) => {
       align: 'center',
       width: 200,
       render: (text, record) => {
-        return <div>
+        return record.public_order ? <div>
           <div>
             <span>扣减金额：</span>
-            <span>
-              {record.public_order ?
-                record.public_order.last_public_summary_order_relation.deduction_amount : "-"
-              }
+            <span>{record.public_order.last_public_summary_order_relation.deduction_amount}
             </span>
           </div>
           <div>
             <span>扣减原因：</span>
-            <span>
-              {record.public_order ?
-                record.public_order.last_public_summary_order_relation.deduction_reason
-                : "-"
-              }
+            <span>{record.public_order.last_public_summary_order_relation.deduction_reason}
             </span>
           </div>
-        </div>
+        </div> : null
       }
     },
     {
