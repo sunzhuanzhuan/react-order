@@ -342,7 +342,7 @@ export const columns = (props) => {
       render: (text, record) => {
         return record.public_order ?
           <span>{record.public_order.public_order_skus[0].public_cost_price}</span> :
-          "-"
+          null
       }
 
     },
@@ -354,7 +354,7 @@ export const columns = (props) => {
       width: 100,
       render: (text, record) => {
         return record.public_order ?
-          <span>{record.public_order.cooperation_platform_name}</span> : "-"
+          <span>{record.public_order.cooperation_platform_name}</span> : null
       }
     },
     {
@@ -366,7 +366,7 @@ export const columns = (props) => {
       render: (text, record) => {
         return record.public_order ?
           <span>{record.public_order.is_labeled_place_order == "1" ? "是" : "否"}</span> :
-          "-"
+          null
       }
     },
     {
@@ -390,7 +390,7 @@ export const columns = (props) => {
               <span>三方订单号:</span>
               <span>{text.ttp_order_id ? text.ttp_order_id : ""}</span>
             </div>
-          </div> : null) : "-"
+          </div> : null) : null
       }
     },
     {
@@ -403,7 +403,7 @@ export const columns = (props) => {
         return record.public_order ? <div>
           <div>申请状态：{publicAdvancePaymentApplyStatus[record.public_order.public_advance_payment_apply.status]}</div>
           <div>打款状态：{publicOrderTradeStatus[record.public_order.public_order_trade.statement_status]}</div>
-        </div> : "-"
+        </div> : null
       }
     },
     {
@@ -467,7 +467,7 @@ export const columns = (props) => {
       width: 100,
       render: (text, record) => {
         return record.public_order && record.public_order.settle_type == "2" ?
-          <span>{statementStatus[record.public_order.public_order_statement.statement_status]}</span> : "-"
+          <span>{statementStatus[record.public_order.public_order_statement.statement_status]}</span> : null
       }
     },
     {
@@ -516,7 +516,7 @@ export const columns = (props) => {
       render: (text, record) => {
         return record.public_order ?
           <span>{record.public_order.last_public_summary_order_relation.created_at}</span> :
-          "-"
+          null
       }
     },
     {
@@ -555,7 +555,7 @@ export const columns = (props) => {
       width: 150,
       render: (text, record) => {
         return record.public_order ?
-          <span>{record.public_order.public_order_trade.paying_amount}</span> : "-"
+          <span>{record.public_order.public_order_trade.paying_amount}</span> : null
       }
     },
     {
@@ -566,7 +566,7 @@ export const columns = (props) => {
       width: 150,
       render: (text, record) => {
         return record.public_order ?
-          <span>{record.public_order.public_order_trade.paid_amount}</span> : "-"
+          <span>{record.public_order.public_order_trade.paid_amount}</span> : null
       }
     },
     {
