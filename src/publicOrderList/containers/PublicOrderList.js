@@ -18,7 +18,7 @@ class PublicOrderList extends Component {
       key: '',
       record: {},
       tableLoading: true,
-      tab: 0,
+      tab: "0",
       filterParams: {},
       pageSize: "20"
     }
@@ -151,10 +151,10 @@ class PublicOrderList extends Component {
         </Form>
         {/* tab切换及列表 */}
         <Tabs defaultActiveKey={this.state.tab} onChange={this.changeTab}>
-          <TabPane tab="全部" key={0}></TabPane>
-          <TabPane tab="待执行" key={3}></TabPane>
-          <TabPane tab="待贴链接" key={2}></TabPane>
-          <TabPane tab="待上传数据截图" key={5}></TabPane>
+          <TabPane tab="全部" key="0"></TabPane>
+          <TabPane tab="待执行" key="3"></TabPane>
+          <TabPane tab="待贴链接" key="2"></TabPane>
+          <TabPane tab="待上传数据截图" key="5"></TabPane>
         </Tabs>
         <Table
           dataSource={Object.keys(publicOrderList).length != 0 ? publicOrderList.items : []}
@@ -162,9 +162,9 @@ class PublicOrderList extends Component {
           scroll={{ x: 3600 }}
           loading={this.state.tableLoading}
           pagination={{
-            current: Object.keys(publicOrderList).length != 0 ? publicOrderList.pagination.current_page : "-",
-            pageSize: Object.keys(publicOrderList).length != 0 ? publicOrderList.pagination.page_size : "-",
-            total: Object.keys(publicOrderList).length != 0 ? publicOrderList.pagination.total : "-",
+            current: Object.keys(publicOrderList).length != 0 ? parseInt(publicOrderList.pagination.current_page) : 0,
+            pageSize: Object.keys(publicOrderList).length != 0 ? parseInt(publicOrderList.pagination.page_size) : 0,
+            total: Object.keys(publicOrderList).length != 0 ? parseInt(publicOrderList.pagination.total) : 0,
             onChange: this.changeTablePage,
             showSizeChanger: true,
             onShowSizeChange: this.onShowSizeChange,
