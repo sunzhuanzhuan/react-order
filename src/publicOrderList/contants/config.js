@@ -292,7 +292,7 @@ export const columns = (props) => {
       fixed: 'left',
       width: 200,
       render: (text, record) => {
-        return <div>
+        return <div className="list-item">
           <div>{text}</div>
           <a href={record.review_reservation_doc_url} target="_blank">预约链接</a>
           {

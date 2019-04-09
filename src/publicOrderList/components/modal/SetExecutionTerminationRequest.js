@@ -90,8 +90,8 @@ class SetExecutionTerminationRequest extends Component {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        console.log(values)
-        values.public_order_id = this.props.record.public_order.public_order_id
+        values.request_id = this.props.orderDetail.execution_termination_request.id
+        values.confirmor_type = 8
         this.props.actions.dealExecutionTermination({ ...values }).then(() => {
           message.success('您所提交的信息已经保存成功！', 2)
           this.props.handleCancel()
@@ -103,7 +103,7 @@ class SetExecutionTerminationRequest extends Component {
     });
   }
   render() {
-    const { form, record, orderDetail } = this.props
+    const { form, orderDetail } = this.props
     const { getFieldDecorator } = form
 
     const columns = [
@@ -158,14 +158,14 @@ class SetExecutionTerminationRequest extends Component {
           label="是否在微任务/WEIQ已下单"
           {...formLayout}
         >
-          {getFieldDecorator("operate_type", {
+          {getFieldDecorator("status", {
             rules: [{
               required: true, message: '本项为必选项，请选择！',
             }]
           })(
             <RadioGroup>
-              <Radio value='1'>已下单，拒绝终止</Radio>
-              <Radio value='2'>未下单，同意终止</Radio>
+              <Radio value='2'>已下单，拒绝终止</Radio>
+              <Radio value='1'>未下单，同意终止</Radio>
             </RadioGroup>
           )}
         </FormItem>
@@ -173,7 +173,7 @@ class SetExecutionTerminationRequest extends Component {
           label="备注"
           {...formLayout}
         >
-          {getFieldDecorator("comment", {
+          {getFieldDecorator("content", {
             rules: [{
               pattern: /^.{0,100}$/, message: '最多可输入100个字符！'
             }]
