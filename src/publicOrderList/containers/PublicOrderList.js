@@ -142,7 +142,7 @@ class PublicOrderList extends Component {
       {/* 第二模块-包含筛选项和列表 */}
       <div className="publicOrderList-chooseBox publicOrderList-main">
         {/* 筛选项 */}
-        <Form layout="inline">
+        <Form layout="inline" className="publicOrderList-form">
           <FilterForm
             form={form}
             filtersConfig={filterFormArr}

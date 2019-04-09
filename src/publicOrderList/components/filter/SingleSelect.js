@@ -15,10 +15,9 @@ const SingleSelect = (props) => {
     <FormItem
       {...props.layout}
       label={props.label}
-      style={{ width: '250px' }}
     >
       {getFieldDecorator(props.id, { initialValue: "0" })(
-        <Select>
+        <Select style={{ width: '270px' }}>
           {
             props.data.map(item => {
               return <Option key={item.value} value={item.value}>{item.key}</Option>

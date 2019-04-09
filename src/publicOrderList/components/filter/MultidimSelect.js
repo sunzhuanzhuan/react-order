@@ -16,12 +16,11 @@ class MultidimSelect extends React.Component {
       <FormItem
         {...this.props.layout}
         label={this.props.label}
-        style={{ width: '200px' }}
       >
         {getFieldDecorator(this.props.id)(
           <Select
             mode="multiple"
-            style={{ width: '200px' }}
+            style={{ width: '270px' }}
             allowClear={true}
           >
             {

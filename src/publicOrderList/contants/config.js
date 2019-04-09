@@ -38,11 +38,7 @@ export const filterFormArr = [
       { key: "流约", value: "4" },
       { key: "预约取消", value: "5" },
       { key: "终止申请中", value: "31" }
-    ],
-    layout: {
-      labelCol: { span: 7 },
-      wrapperCol: { span: 17 }
-    }
+    ]
   },
   {
     label: "账号名称",
@@ -58,20 +54,12 @@ export const filterFormArr = [
       { key: "快手--快接单", value: "103" },
       { key: "新浪微博--微任务/WEIQ", value: "1" },
       { key: "抖音--星图", value: "115" }
-    ],
-    layout: {
-      labelCol: { span: 7 },
-      wrapperCol: { span: 17 }
-    }
+    ]
   },
   {
     label: "下单平台/代理商",
     type: "agentComponent",
-    id: "agent_id",
-    layout: {
-      labelCol: { span: 11 },
-      wrapperCol: { span: 13 }
-    }
+    id: "agent_id"
   },
   {
     label: "执行状态",
@@ -92,33 +80,21 @@ export const filterFormArr = [
       { key: "已结案", value: "35" },
       { key: "赔偿申请中", value: "33" },
       { key: "赔偿通过", value: "34" }
-    ],
-    layout: {
-      labelCol: { span: 7 },
-      wrapperCol: { span: 17 }
-    }
+    ]
   },
   {
     label: "资源媒介",
     type: "selectDependOnRequest",
     id: "media_owner_admin_id",
     url: "/api/user/getMediaUsers",
-    data: { key: "user_id", value: "real_name" },
-    layout: {
-      labelCol: { span: 7 },
-      wrapperCol: { span: 17 }
-    }
+    data: { key: "user_id", value: "real_name" }
   },
   {
     label: "项目媒介",
     type: "selectDependOnRequest",
     id: "vol_admin_id",
     url: "/api/user/getVolUsers",
-    data: { key: "user_id", value: "real_name" },
-    layout: {
-      labelCol: { span: 7 },
-      wrapperCol: { span: 17 }
-    }
+    data: { key: "user_id", value: "real_name" }
   },
   {
     label: "主账号名",
@@ -130,40 +106,24 @@ export const filterFormArr = [
     type: "select",
     id: "is_pre_deposit",
     data: [{ key: "请选择", value: "0" }, { key: "是", value: "1" }, { key: "否", value: "2" }],
-    layout: {
-      labelCol: { span: 10 },
-      wrapperCol: { span: 14 }
-    }
   },
   {
     label: "提前打款状态",
     type: "select",
     id: "pre_deposit_status",
     data: [{ key: "请选择", value: "0" }, { key: "未处理", value: "1" }, { key: "已同意", value: "2" }, { key: "已驳回", value: "3" }],
-    layout: {
-      labelCol: { span: 9 },
-      wrapperCol: { span: 15 }
-    }
   },
   {
     label: "提前打款结果",
     type: "select",
     id: "pre_deposit_result",
     data: [{ key: "请选择", value: "0" }, { key: "未处理", value: "1" }, { key: "打款成功", value: "2" }, { key: "打款失败", value: "3" }, { key: "打款撤销", value: "4" }],
-    layout: {
-      labelCol: { span: 10 },
-      wrapperCol: { span: 14 }
-    }
   },
   {
     label: "预付款申请状态",
     type: "select",
     id: "public_advance_payment_apply_status",
     data: [{ key: "请选择", value: "0" }, { key: "待审核", value: "1" }, { key: "已同意", value: "2" }, { key: "已拒绝", value: "3" }],
-    layout: {
-      labelCol: { span: 12 },
-      wrapperCol: { span: 12 }
-    }
   },
   {
     label: "打款状态",
@@ -174,49 +134,29 @@ export const filterFormArr = [
       { key: "未处理", value: "1" },
       { key: "已同意", value: "2" },
       { key: "已驳回", value: "3" }
-    ],
-    layout: {
-      labelCol: { span: 7 },
-      wrapperCol: { span: 17 }
-    }
+    ]
   },
   {
     label: "对账状态",
     type: "select",
     id: "statement_status",
     data: [{ key: "请选择", value: "0" }, { key: "未对账", value: "1" }, { key: "对账中", value: "2" }, { key: "对账成功", value: "3" }, { key: "部分对账", value: "4" }],
-    layout: {
-      labelCol: { span: 7 },
-      wrapperCol: { span: 17 }
-    }
   },
   {
     label: "是否标注已下单",
     type: "select",
     id: "is_labeled_place_order",
     data: [{ key: "请选择", value: "0" }, { key: "是", value: "1" }, { key: "否", value: "2" }],
-    layout: {
-      labelCol: { span: 10 },
-      wrapperCol: { span: 14 }
-    }
   },
   {
     label: "预付款申请时间",
     type: "time",
-    id: "public_advance_payment_apply_created_at",
-    layout: {
-      labelCol: { span: 5 },
-      wrapperCol: { span: 19 }
-    }
+    id: "public_advance_payment_apply_created_at"
   },
   {
     label: "三方下单时间",
     type: "time",
-    id: "ttp_place_order_at",
-    layout: {
-      labelCol: { span: 5 },
-      wrapperCol: { span: 19 }
-    }
+    id: "ttp_place_order_at"
   }
 ]
 

@@ -36,10 +36,9 @@ class SingleSelectDependOnRequest extends React.Component {
     return <FormItem
       {...layout}
       label={label}
-      style={{ width: '250px' }}
     >
       {getFieldDecorator(id, { initialValue: 0 })(
-        <Select>
+        <Select style={{ width: '270px' }}>
           <Option key={0} value={0}>请选择</Option>
           {
             this.state.data.map(item => {

@@ -38,6 +38,7 @@ const FilterForm = (props) => {
               return <DatePickerComponent
                 form={form}
                 {...item}
+                layout={layout}
                 key={item.id}
               />
             //多选组件
@@ -53,6 +54,7 @@ const FilterForm = (props) => {
               return <SingleSelect
                 form={form}
                 {...item}
+                layout={layout}
                 key={item.id}
               />
             //依赖请求的单选组件
@@ -60,6 +62,7 @@ const FilterForm = (props) => {
               return <SingleSelectDependOnRequest
                 form={form}
                 {...item}
+                layout={layout}
                 key={item.id}
               />
             // 下单平台/代理商
@@ -68,6 +71,7 @@ const FilterForm = (props) => {
                 form={form}
                 key={item.id}
                 {...item}
+                layout={layout}
               />
             default:
               return

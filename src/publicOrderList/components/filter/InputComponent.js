@@ -17,10 +17,9 @@ const InputComponent = (props) => {
     <FormItem
       {...props.layout}
       label={props.label}
-      style={{ width: '250px' }}
     >
       {getFieldDecorator(props.id)(
-        <Input />
+        <Input style={{ width: '270px' }} />
       )}
     </FormItem>
   )

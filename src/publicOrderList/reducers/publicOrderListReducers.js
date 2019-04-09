@@ -9,7 +9,10 @@ import {
 export const publicOrderList = (state = {}, action) => {
   switch (action.type) {
     case GET_PUBLIC_ORDER_LIST:
-      return { ...action.payload.data }
+      return {
+        ...action.payload.data,
+        items: [...action.payload.data.items.filter(v => v.public_order != null)]
+      }
     case RESET_PUBLIC_ORDER_LIST:
       return {}
     default:
