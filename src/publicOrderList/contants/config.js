@@ -222,12 +222,12 @@ export const filterFormArr = [
 
 // 列表操作事件
 const supportedOperations = {
-  "can_label_place_order": "标为三方已下单",
-  "can_modify_public_order": "修改三方已下单",
-  "can_withdraw_public_order": "撤销三方已下单",
+  "can_label_place_order": "标注为三方已下单",
+  "can_modify_public_order": "修改三方下单信息",
+  "can_withdraw_public_order": "撤销三方下单标注",
   "execute_handle": "执行申请处理",
-  "apply_prepayment": "申请预付款",
-  "set_execution_termination_request": "执行终止处理"
+  "apply_prepayment": "预付款申请",
+  "interrupt_execution": "同意/拒绝执行终止"
 }
 
 // 列表页column
@@ -718,15 +718,15 @@ export const columns = (props) => {
 // 弹框配置项
 export const modalParams = {
   "can_label_place_order": {
-    modalTitle: "标为三方已下单",
+    modalTitle: "标注为三方已下单",
     children: LabelPublicOrder
   },
   "can_modify_public_order": {
-    modalTitle: "修改三方已下单",
+    modalTitle: "修改三方下单信息",
     children: ModifyPublicOrder
   },
   "can_withdraw_public_order": {
-    modalTitle: "撤销三方已下单",
+    modalTitle: "撤销三方下单标注",
     children: WithdrawPublicOrder
   },
   "execute_handle": {
@@ -734,11 +734,11 @@ export const modalParams = {
     children: ExecuteHandle
   },
   "apply_prepayment": {
-    modalTitle: "申请预付款",
+    modalTitle: "预付款申请",
     children: ApplyPrepayment
   },
-  "set_execution_termination_request": {
-    modalTitle: "执行终止处理",
+  "interrupt_execution": {
+    modalTitle: "同意/拒绝执行终止",
     children: SetExecutionTerminationRequest
   }
 }
