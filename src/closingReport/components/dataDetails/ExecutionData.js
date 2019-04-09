@@ -11,6 +11,7 @@ import viewPic from '../../base/viewPic'
 import { Against } from '@/closingReport/base/ApprovalStatus'
 import DataFieldFormat from '../../base/DataFieldFormat'
 import { fieldConfig } from '../../constants/config'
+import moment from 'moment';
 
 function action() {
   return request.get('/toolbox-gateway/file/v1/getToken').then(({ data }) => {
@@ -74,7 +75,7 @@ export class Edit extends Component {
                   </div>
                   <Form.Item label={item.display} {...this.props.formItemLayout}>
                     {getFieldDecorator(`data[${n}]`, {
-                      initialValue: { id: item.id, input: item.value, checked: item.checked === 1 },
+                      initialValue: { id: item.id, input: item.value || (fieldConfig(item.id) === 'datetime' ? moment(item.grasp_value) : item.grasp_value), checked: item.checked === 1 },
                       validateFirst: true,
                       rules: [{ validator: this.checkSwitchInput, message: `请输入${item.display}!` }]
                     })(<SwitchRequiredInput width={270} type={fieldConfig(item.id)} />)}
