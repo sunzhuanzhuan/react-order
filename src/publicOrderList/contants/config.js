@@ -172,6 +172,11 @@ const supportedOperations = {
 
 // 列表页column
 export const columns = (props) => {
+  const operationBtn = [
+    "can_label_place_order", "can_modify_public_order",
+    "can_withdraw_public_order", "execute_handle",
+    "apply_prepayment", "interrupt_execution"
+  ]
   const host = props.babysitter_host.value
   const reservationRequirementStatus = {
     "1": "未添加账号",
@@ -236,9 +241,15 @@ export const columns = (props) => {
       fixed: 'left',
       width: 100,
       render: (text, record) => {
+        let btnArr = []
+        operationBtn.forEach(v => {
+          if (text[v]) {
+            btnArr.push(v)
+          }
+        })
         return <div>
           {
-            text.map(v => <Button
+            btnArr.map(v => <Button
               key={v}
               type="primary"
               style={{ marginTop: '3px' }}
@@ -328,7 +339,12 @@ export const columns = (props) => {
       key: 'public_cost_price',
       align: 'center',
       width: 150,
-      render: (text, record) => <span>{record.public_order.public_order_skus[0].public_cost_price}</span>
+      render: (text, record) => {
+        return record.public_order ?
+          <span>{record.public_order.public_order_skus[0].public_cost_price}</span> :
+          "-"
+      }
+
     },
     {
       title: '下单平台',
@@ -336,7 +352,10 @@ export const columns = (props) => {
       key: 'cooperation_platform_name',
       align: 'center',
       width: 100,
-      render: (text, record) => <span>{record.public_order.cooperation_platform_name}</span>
+      render: (text, record) => {
+        return record.public_order ?
+          <span>{record.public_order.cooperation_platform_name}</span> : "-"
+      }
     },
     {
       title: '是否标注三方已下单',
@@ -344,7 +363,11 @@ export const columns = (props) => {
       key: 'is_labeled_place_order',
       align: 'center',
       width: 100,
-      render: (text, record) => <span>{record.public_order.is_labeled_place_order == "1" ? "是" : "否"}</span>
+      render: (text, record) => {
+        return record.public_order ?
+          <span>{record.public_order.is_labeled_place_order == "1" ? "是" : "否"}</span> :
+          "-"
+      }
     },
     {
       title: '三方下单信息',
@@ -353,7 +376,7 @@ export const columns = (props) => {
       align: 'center',
       width: 300,
       render: (text, record) => {
-        return text.is_labeled_place_order == "1" ?
+        return record.public_order ? (text.is_labeled_place_order == "1" ?
           <div className="list-div">
             <div className="list-divItem">
               <span>下单时间：</span>
@@ -367,7 +390,7 @@ export const columns = (props) => {
               <span>三方订单号:</span>
               <span>{text.ttp_order_id ? text.ttp_order_id : ""}</span>
             </div>
-          </div> : null
+          </div> : null) : "-"
       }
     },
     {
@@ -377,10 +400,10 @@ export const columns = (props) => {
       align: 'center',
       width: 200,
       render: (text, record) => {
-        return <div>
+        return record.public_order ? <div>
           <div>申请状态：{publicAdvancePaymentApplyStatus[record.public_order.public_advance_payment_apply.status]}</div>
           <div>打款状态：{publicOrderTradeStatus[record.public_order.public_order_trade.statement_status]}</div>
-        </div>
+        </div> : "-"
       }
     },
     {
@@ -393,11 +416,11 @@ export const columns = (props) => {
         return <div>
           <div>
             <span>预计推广开始时间：</span>
-            <span>{record.public_order.promote_started_at}</span>
+            <span>{record.public_order ? record.public_order.promote_started_at : "-"}</span>
           </div>
           <div>
             <span>预计推广结束时间：</span>
-            <span>{record.public_order.promote_ended_at}</span>
+            <span>{record.public_order ? record.public_order.promote_ended_at : "-"}</span>
           </div>
         </div>
       }
@@ -443,7 +466,7 @@ export const columns = (props) => {
       align: 'center',
       width: 100,
       render: (text, record) => {
-        return record.public_order.settle_type == "2" ?
+        return record.public_order && record.public_order.settle_type == "2" ?
           <span>{statementStatus[record.public_order.public_order_statement.statement_status]}</span> : "-"
       }
     },
@@ -457,15 +480,29 @@ export const columns = (props) => {
         return <div>
           <div>
             <span>调账金额：</span>
-            <span>{record.public_order.last_public_summary_order_relation.adjustment_amount}</span>
+            <span>
+              {record.public_order ?
+                record.public_order.last_public_summary_order_relation.adjustment_amount : "-"
+              }
+            </span>
           </div>
           <div>
             <span>调账方式：</span>
-            <span>{operationType[record.public_order.last_public_summary_order_relation.operation_type]}</span>
+            <span>
+              {record.public_order ?
+                operationType[record.public_order.last_public_summary_order_relation.operation_type]
+                : "-"
+              }
+            </span>
           </div>
           <div>
             <span>调账原因：</span>
-            <span>{record.public_order.last_public_summary_order_relation.adjustment_reason}</span>
+            <span>
+              {record.public_order ?
+                record.public_order.last_public_summary_order_relation.adjustment_reason
+                : "-"
+              }
+            </span>
           </div>
         </div>
       }
@@ -476,7 +513,11 @@ export const columns = (props) => {
       key: 'last_public_summary_order_relation_created_at',
       align: 'center',
       width: 200,
-      render: (text, record) => <span>{record.public_order.last_public_summary_order_relation.created_at}</span>
+      render: (text, record) => {
+        return record.public_order ?
+          <span>{record.public_order.last_public_summary_order_relation.created_at}</span> :
+          "-"
+      }
     },
     {
       title: '扣减信息',
@@ -488,11 +529,20 @@ export const columns = (props) => {
         return <div>
           <div>
             <span>扣减金额：</span>
-            <span>{record.public_order.last_public_summary_order_relation.deduction_amount}</span>
+            <span>
+              {record.public_order ?
+                record.public_order.last_public_summary_order_relation.deduction_amount : "-"
+              }
+            </span>
           </div>
           <div>
             <span>扣减原因：</span>
-            <span>{record.public_order.last_public_summary_order_relation.deduction_reason}</span>
+            <span>
+              {record.public_order ?
+                record.public_order.last_public_summary_order_relation.deduction_reason
+                : "-"
+              }
+            </span>
           </div>
         </div>
       }
@@ -503,7 +553,10 @@ export const columns = (props) => {
       key: 'paying_amount',
       align: 'center',
       width: 150,
-      render: (text, record) => <span>{record.public_order.public_order_trade.paying_amount}</span>
+      render: (text, record) => {
+        return record.public_order ?
+          <span>{record.public_order.public_order_trade.paying_amount}</span> : "-"
+      }
     },
     {
       title: '实付金额',
@@ -511,7 +564,10 @@ export const columns = (props) => {
       key: 'paid_amount',
       align: 'center',
       width: 150,
-      render: (text, record) => <span>{record.public_order.public_order_trade.paid_amount}</span>
+      render: (text, record) => {
+        return record.public_order ?
+          <span>{record.public_order.public_order_trade.paid_amount}</span> : "-"
+      }
     },
     {
       title: '销售/创建人/执行人',
