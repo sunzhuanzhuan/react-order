@@ -14,6 +14,7 @@ const FormItem = Form.Item;
 const Option = Select.Option;
 const RadioGroup = Radio.Group;
 const { TextArea } = Input;
+const confirm = Modal.confirm;
 
 class AddAgent extends Component {
   constructor(props) {
@@ -55,9 +56,14 @@ class AddAgent extends Component {
   }
   //关闭弹框
   handleCancel = () => {
-    this.setState({
-      visible: false
-    })
+    confirm({
+      title: '取消后您的信息将无法保存，是否确认此操作？',
+      onOk: () => {
+        this.setState({
+          visible: false
+        })
+      }
+    });
   }
   //选择合作方式
   changeCooperationType = (e) => {
@@ -174,7 +180,7 @@ class AddAgent extends Component {
                   rules: [{
                     required: true, message: '本项为必填项，请输入！',
                   }, {
-                    pattern: /^([1-9][0-9]{0,1}(\.[0-9]{1,2})?|100|100.0|100.00|[0]\.[0-9]{1,2}|0)$/, message: "仅可输入100以内的数字，仅可保留两位小数"
+                    pattern: /^([1-9][0-9]{0,1}(\.[0-9]{1,2})?|100|100.0|100.00|[0]\.[0-9]{1,2}|0)$/, message: "仅可输入100以内的数字，您可保留两位小数"
                   }]
                 })(
                   <Input style={{ width: '350px' }} addonAfter="%" />
