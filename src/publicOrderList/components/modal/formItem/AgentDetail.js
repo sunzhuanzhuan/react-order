@@ -10,7 +10,7 @@ const AgentDetail = (props) => {
   return (
     <ul className="agentDetail">
       <li>{`合作方式：${agentDetail.cooperationType == 1 ? "周期付款" : "其他"}`}</li>
-      <li>{agentDetail.cooperation_type == 1 ? `返款比例：${agentDetail.refundRate}` : `说明：${agentDetail.cooperationRemark}`}</li>
+      <li>{agentDetail.cooperationType == 1 ? `返款比例：${agentDetail.refundRate}` : `说明：${agentDetail.cooperationRemark}`}</li>
       <li>{`收款方式：${agentDetail.paymentType == 1 ? "银行转账" : "支付宝"}`}</li>
       {
         agentDetail.paymentType == 1 ?

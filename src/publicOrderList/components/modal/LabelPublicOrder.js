@@ -16,7 +16,6 @@ import './ModalComponent.less'
 
 const FormItem = Form.Item;
 const { TextArea } = Input;
-const confirm = Modal.confirm;
 
 class LabelPublicOrder extends Component {
   constructor(props) {
@@ -79,17 +78,8 @@ class LabelPublicOrder extends Component {
       }
     });
   }
-  //点击取消
-  cancel = () => {
-    confirm({
-      title: '取消后您的信息将无法保存，是否确认此操作？',
-      onOk: () => {
-        this.props.handleCancel()
-      }
-    });
-  }
   render() {
-    const { form, record, orderDetail } = this.props
+    const { form, record, orderDetail, handleCancelWithConfirm } = this.props
     const { getFieldDecorator } = form
     const formLayout = {
       labelCol: { span: 6 },
@@ -157,7 +147,7 @@ class LabelPublicOrder extends Component {
         <Button type="primary" onClick={this.submit}>提交</Button>
         <Button type="primary"
           className="modalBox-btnGroup-cancel"
-          onClick={this.cancel}
+          onClick={handleCancelWithConfirm}
         >取消</Button>
       </div>
     </div>

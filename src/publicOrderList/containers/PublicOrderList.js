@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import { Form, Tabs, Table, message } from 'antd';
+import { Form, Tabs, Table, message, Modal } from 'antd';
 import StatementComponent from '../components/StatementComponent'
 import FilterForm from '../components/filter/FilterForm'
 import ModalComponent from '../components/modal/ModalComponent'
@@ -9,6 +9,7 @@ import { filterFormArr, columns, modalParams } from '../contants/config'
 import * as publicOrderListActions from '../actions/publicOrderListActions'
 import './PublicOrderList.less'
 const TabPane = Tabs.TabPane;
+const confirm = Modal.confirm;
 
 class PublicOrderList extends Component {
   constructor(props) {
@@ -79,6 +80,15 @@ class PublicOrderList extends Component {
       key: '',
       visible: false
     })
+  }
+  //带确认的弹框消失
+  handleCancelWithConfirm = () => {
+    confirm({
+      title: '取消后您的信息将无法保存，是否确认此操作？',
+      onOk: () => {
+        this.handleCancel()
+      }
+    });
   }
   //筛选
   onSubmit = (e) => {
@@ -183,6 +193,7 @@ class PublicOrderList extends Component {
               record={this.state.record}
               orderDetail={orderDetail}
               getList={this.getList}
+              handleCancelWithConfirm={this.handleCancelWithConfirm}
             ></ModalComponent>
         }
       </div>
