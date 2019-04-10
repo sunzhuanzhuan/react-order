@@ -334,7 +334,7 @@ class AddAgent extends Component {
                         this.state.bankList.map(v => {
                           return <Option
                             key={v.payment_type_id}
-                            value={v.payment_type_id}>{v.name}</Option>
+                            value={v.name}>{v.name}</Option>
                         })
                       }
                     </Select>

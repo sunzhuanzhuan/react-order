@@ -110,7 +110,11 @@ class ApplyPrepayment extends Component {
           label="快接单下单金额（元）"
           {...formLayout}
         >
-          <span>{orderDetail.public_order.public_order_sku_valid.public_cost_price}</span>
+          <span>{orderDetail.public_order.public_order_sku_valid
+            && Object.keys(orderDetail.public_order.public_order_sku_valid).length != 0
+            && orderDetail.public_order.public_order_sku_valid.public_cost_price
+            ?
+            orderDetail.public_order.public_order_sku_valid.public_cost_price : "-"}</span>
         </FormItem>
         <MultiAgent
           formLayout={formLayout}
@@ -151,7 +155,13 @@ class ApplyPrepayment extends Component {
               })(
                 <InputNumber
                   style={{ width: '350px' }}
-                  max={parseFloat(orderDetail.public_order.public_order_sku_valid.public_cost_price)}
+                  max={orderDetail.public_order.public_order_sku_valid
+                    && Object.keys(orderDetail.public_order.public_order_sku_valid).length != 0
+                    && orderDetail.public_order.public_order_sku_valid.public_cost_price
+                    ?
+                    parseFloat(orderDetail.public_order.public_order_sku_valid.public_cost_price)
+                    : 0
+                  }
                   placeholder="请输入回票金额" />
               )}
             </FormItem> :
@@ -159,7 +169,14 @@ class ApplyPrepayment extends Component {
               label="回票金额"
               {...formLayout}
             >
-              <span>{orderDetail.public_order.public_advance_payment_apply.return_invoice_amount}</span>
+              {getFieldDecorator("return_invoice_amount", {
+                initialValue: 0
+              })(
+                <span>{orderDetail.public_order.public_advance_payment_apply &&
+                  Object.keys(orderDetail.public_order.public_advance_payment_apply).length != 0
+                  && orderDetail.public_order.public_advance_payment_apply.return_invoice_amount ?
+                  orderDetail.public_order.public_advance_payment_apply.return_invoice_amount : "-"}</span>
+              )}
             </FormItem>
         }
         <FormItem
