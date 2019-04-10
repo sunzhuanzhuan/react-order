@@ -5,13 +5,15 @@ import {
 } from './publicOrderListReducers'
 import {
   agentList,
-  agentDetail
+  agentDetail,
+  existsAgentName
 } from './modalReducers'
 
 export default combineReducers({
   publicOrderList,
   agentList,
   agentDetail,
-  orderDetail
+  orderDetail,
+  existsAgentName
 })
 

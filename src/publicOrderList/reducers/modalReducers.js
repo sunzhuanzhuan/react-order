@@ -1,9 +1,15 @@
+import { handleActions } from 'redux-actions';
 import {
   GET_AGENT,
   GET_AGENT_DETAIL,
   RESET_AGENT,
   RESET_AGENT_DETAIL
 } from '../contants/ActionTypes'
+
+import {
+  existsAgentName_success
+} from '../actions/modalActions'
+
 
 export const agentList = (state = [], action) => {
   switch (action.type) {
@@ -26,3 +32,11 @@ export const agentDetail = (state = {}, action) => {
       return state
   }
 }
+
+export const existsAgentName = handleActions({
+  [existsAgentName_success]: (state, action) => ({
+    ...state,
+    ...action.payload
+  })
+}, {})
+

@@ -89,6 +89,18 @@ class MultiAgent extends React.Component {
       this.callback("代理商详情加载失败")
     })
   }
+  // 新增代理商成功后
+  addAgentSuccessCallback = () => {
+    this.props.actions.resetAgentDetail()
+    this.props.actions.resetAgent()
+    this.props.props.setFieldsValue({ "multiAgentIds": [] })
+    this.setState({
+      is_agentDetail_loading: true
+    })
+    this.props.actions.getAgent({ platformId: this.props.platformId }).then(() => {
+
+    })
+  }
   //处理数据
   handleData = (data) => {
     return data.map(v => {
@@ -123,7 +135,12 @@ class MultiAgent extends React.Component {
               />
             )}
           </FormItem>
-          <AddAgent platformId={platformId} platformName={platformName} />
+          <AddAgent
+            platformId={platformId}
+            platformName={platformName}
+            addAgentSuccessCallback={this.addAgentSuccessCallback}
+            type="multi"
+          />
         </div>
         {/* 是否加载中 */}
         {

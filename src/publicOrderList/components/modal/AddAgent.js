@@ -91,10 +91,32 @@ class AddAgent extends Component {
           this.setState({
             visible: false
           })
-          this.props.actions.getAgent({ platformId: this.props.platformId })
+          if (this.props.type == "multi") {
+            this.props.addAgentSuccessCallback()
+          } else {
+            this.props.actions.getAgent({ platformId: this.props.platformId })
+          }
         })
       }
     });
+  }
+  isExistAgentName = (rule, value, callback) => {
+    let cooperationPlatformCode = this.props.form.getFieldValue("cooperationPlatformCode")
+    if (cooperationPlatformCode) {
+      this.props.actions.existsAgentName({
+        cooperationPlatformCode: cooperationPlatformCode,
+        agentName: value
+      }).then(() => {
+        if (this.props.existsAgentName.data) {
+          //重复
+          callback('代理商名称重复！')
+        } else {
+          callback()
+        }
+      })
+    } else {
+      message.error("请先选择下单平台")
+    }
   }
   render() {
     const { form, platformName } = this.props
@@ -147,11 +169,14 @@ class AddAgent extends Component {
                 required: true, message: '本项为必填项，请输入！',
               }, {
                 pattern: /^[\u4e00-\u9fa5a-zA-Z0-9]{1,40}$/, message: '最多可输入40个以内的中英文及数字！'
+              }, {
+                validator: this.isExistAgentName
               }]
             })(
               <Input
                 style={{ width: '350px' }}
-                placeholder="请输入代理商名称" />
+                placeholder="请输入代理商名称"
+              />
             )}
           </FormItem>
           <FormItem
@@ -449,7 +474,7 @@ class AddAgent extends Component {
 
 const mapStateToProps = (state) => {
   return {
-
+    existsAgentName: state.publicOrderListReducer.existsAgentName
   }
 }
 

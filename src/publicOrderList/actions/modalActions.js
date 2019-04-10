@@ -87,6 +87,16 @@ export const {
   method: 'post'
 });
 
+//新增代理商失焦验证代理商名称是否重复
+export const {
+  existsAgentName,
+  existsAgentName_success
+} = createHttpAction('existsAgentName', Interface.existsAgentName, {
+  method: 'get'
+});
+
+
+
 
 
 

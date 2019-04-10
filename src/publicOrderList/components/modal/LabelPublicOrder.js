@@ -30,9 +30,9 @@ class LabelPublicOrder extends Component {
   componentWillMount() {
     let orderDetail = this.props.orderDetail
     let settle_type_statistic = orderDetail.public_order.settle_type_statistic
-    if (settle_type_statistic == 1) {
+    let agent_id = orderDetail.public_order.agent_id || undefined
+    if (settle_type_statistic == 1 || agent_id) {
       //全为预付型
-      let agent_id = orderDetail.public_order.agent_id
       this.setState({
         type: 'single',
         agent_id: agent_id
@@ -48,6 +48,7 @@ class LabelPublicOrder extends Component {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
+        let agentId = this.props.orderDetail.public_order.agent_id || undefined
         values.ttp_place_order_at = values.ttp_place_order_at.format("YYYY-MM-DD HH:mm:ss")
         if (this.state.type == "single") {
           values.ttp_cooperation_platform_id = this.state.singleIds[0]
@@ -57,12 +58,23 @@ class LabelPublicOrder extends Component {
           values.agent_id = values.multiAgentIds[1]
           delete values.multiAgentIds
         }
-        this.props.actions.labelPlaceOrder({ ...values }).then(() => {
-          message.success('您所提交的信息已经保存成功！', 2)
-          this.props.handleCancel()
-          this.props.getList()
-        }).catch(() => {
-          message.error("标记三方已下单失败")
+        api.get("/operator-gateway/trinityAgent/v1/getAgentById", {
+          params: { id: values.agent_id }
+        }).then((res) => {
+          let settleType = res.data.settleType
+          if (settleType == 2 || (settleType == 1 && agentId)) {
+            this.props.actions.labelPlaceOrder({ ...values }).then(() => {
+              message.success('您所提交的信息已经保存成功！', 2)
+              this.props.handleCancel()
+              this.props.getList()
+            }).catch(() => {
+              message.error("标记三方已下单失败")
+            })
+          } else {
+            Modal.error({
+              title: '您选择的代理商为预付类型，请先申请预付款后再进行下单标注！'
+            });
+          }
         })
       }
     });
