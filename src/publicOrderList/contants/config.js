@@ -86,14 +86,14 @@ export const filterFormArr = [
     label: "资源媒介",
     type: "selectDependOnRequest",
     id: "media_owner_admin_id",
-    url: "/api/user/getMediaUsers",
+    url: "/user/getMediaUsers",
     data: { key: "user_id", value: "real_name" }
   },
   {
     label: "项目媒介",
     type: "selectDependOnRequest",
     id: "vol_admin_id",
-    url: "/api/user/getVolUsers",
+    url: "/user/getVolUsers",
     data: { key: "user_id", value: "real_name" }
   },
   {

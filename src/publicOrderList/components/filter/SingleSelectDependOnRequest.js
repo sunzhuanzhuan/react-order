@@ -6,7 +6,7 @@
 
 */
 import React from 'react';
-import axios from 'axios'
+import api from '../../../api/index'
 import { Select, Form, message } from 'antd';
 const Option = Select.Option;
 const FormItem = Form.Item;
@@ -19,9 +19,9 @@ class SingleSelectDependOnRequest extends React.Component {
     }
   }
   componentWillMount() {
-    axios.get(this.props.url)
+    api.get(this.props.url)
       .then((response) => {
-        let data = response.data.data
+        let data = response.data
         this.setState({
           data: [...data]
         })

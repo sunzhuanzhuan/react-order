@@ -29,13 +29,13 @@ class ModifyPublicOrder extends Component {
   componentWillMount() {
     let orderDetail = this.props.orderDetail
     let settle_type_statistic = orderDetail.public_order.settle_type_statistic
-    let agent_id = orderDetail.public_order.agent_id
+    let agent_id = orderDetail.public_order.agent_id || undefined
     let cooperationPlatform = orderDetail.public_order.cooperation_platform_id
     this.setState({
       agent_id: agent_id,
       cooperationPlatform: cooperationPlatform
     })
-    if (settle_type_statistic == 1) {
+    if (settle_type_statistic == 1 || agent_id) {
       //全为预付型
       this.setState({
         type: 'single'
@@ -104,6 +104,7 @@ class ModifyPublicOrder extends Component {
               form={form}
               agent_id={agent_id}
               platformId={record.account.platform_id}
+              platformName={orderDetail.platform.platform_name}
             /> : null
         }
         {
@@ -115,6 +116,7 @@ class ModifyPublicOrder extends Component {
               agent_id={agent_id}
               cooperationPlatform={cooperationPlatform}
               is_agentDetail_initial_loading={true}
+              platformName={orderDetail.platform.platform_name}
             /> : null
         }
         <FormItem

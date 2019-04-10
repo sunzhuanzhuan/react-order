@@ -6,7 +6,7 @@
 
 */
 import React from 'react';
-import axios from 'axios'
+import api from '../../../api/index'
 import { Select, Form, message } from 'antd';
 const Option = Select.Option;
 const FormItem = Form.Item;
@@ -19,14 +19,13 @@ class AgentComponent extends React.Component {
     }
   }
   componentWillMount() {
-    axios.get("/api/operator-gateway/trinityAgent/v1/getAgentList", {
+    api.get("/operator-gateway/trinityAgent/v1/getAgentList", {
       params: {
         agentStatus: 1, defaultAgent: 1
       }
     })
       .then((response) => {
-        console.log(response)
-        let data = response.data.data
+        let data = response.data
         this.setState({
           data: [...data]
         })

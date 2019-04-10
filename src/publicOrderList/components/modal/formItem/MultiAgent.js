@@ -37,9 +37,6 @@ class MultiAgent extends React.Component {
     this.props.actions.getAgent({ platformId: this.props.platformId }).then(() => {
       if (this.props.agent_id) {
         // 有代理商id的初始值-说明是修改
-        this.setState({
-          is_agentDetail_loading: true
-        })
         this.props.actions.getAgentDetail({ id: this.props.agent_id }).then(() => {
           this.callback()
         }).catch(() => {
@@ -49,9 +46,6 @@ class MultiAgent extends React.Component {
         // 没有代理商id的初始值
         if (this.props.agentList.length == 1 && this.props.agentList[0].agentVOList.length == 1) {
           // 只有一个代理商
-          this.setState({
-            is_agentDetail_loading: true
-          })
           let id = this.props.agentList[0].agentVOList[0].id
           this.setState({
             initialValue: [this.props.agentList[0].id, id]
@@ -60,6 +54,10 @@ class MultiAgent extends React.Component {
             this.callback()
           }).catch(() => {
             this.callback("代理商详情加载失败")
+          })
+        } else {
+          this.setState({
+            is_agentDetail_loading: false
           })
         }
       }

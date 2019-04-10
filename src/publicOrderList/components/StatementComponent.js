@@ -7,7 +7,7 @@
 */
 import React from 'react';
 import { Select, Button, message } from 'antd';
-import axios from 'axios'
+import api from '../../api/index'
 const Option = Select.Option;
 import '../containers/PublicOrderList.less'
 
@@ -19,9 +19,9 @@ class StatementComponent extends React.Component {
     }
   }
   componentWillMount() {
-    axios.get("/api/operator-gateway/trinityPlatform/v1/getCooperationPlatform")
+    api.get("/operator-gateway/trinityPlatform/v1/getCooperationPlatform")
       .then((response) => {
-        let data = response.data.data
+        let data = response.data
         this.setState({
           data: [{ id: 0, cooperationPlatformName: "请选择" }, ...data]
         })

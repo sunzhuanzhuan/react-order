@@ -4,7 +4,7 @@
 
 */
 import React, { Component } from 'react'
-import axios from 'axios'
+import api from '../../../api/index'
 import { Form, Button, Modal, Select, Input, Radio, message } from 'antd';
 import * as modalActions from '../../actions/modalActions'
 import { connect } from 'react-redux'
@@ -24,7 +24,8 @@ class AddAgent extends Component {
       cooperationType: '1',
       paymentType: '1',
       cooperationPlatform: [],
-      bankList: []
+      bankList: [],
+      cooperationPlatformId: ''
     }
   }
   //点击出现弹框
@@ -32,21 +33,21 @@ class AddAgent extends Component {
     this.setState({
       visible: true
     })
-    axios.get("/api/operator-gateway/trinityPlatform/v1/getCooperationPlatform", {
+    api.get("/operator-gateway/trinityPlatform/v1/getCooperationPlatform", {
       params: {
         platformId: this.props.platformId,
         cooperationPlatformStatus: 1
       }
     }).then((response) => {
-      let data = response.data.data
+      let data = response.data
       this.setState({
         cooperationPlatform: [...data]
       })
     }).catch((error) => {
       message.error("下单列表获取失败")
     });
-    axios.get("/api/finance/payment/paymentTypeList").then((response) => {
-      let data = response.data.data.payment_type_list
+    api.get("/finance/payment/paymentTypeList").then((response) => {
+      let data = response.data.payment_type_list
       this.setState({
         bankList: [...data]
       })
@@ -118,6 +119,12 @@ class AddAgent extends Component {
       message.error("请先选择下单平台")
     }
   }
+  //获取下单平台id
+  getCooperationPlatformId = (value, option) => {
+    this.setState({
+      cooperationPlatformId: option.props.id
+    })
+  }
   render() {
     const { form, platformName } = this.props
     const { getFieldDecorator } = form
@@ -149,12 +156,16 @@ class AddAgent extends Component {
                 required: true, message: '本项为必选项，请选择！',
               }]
             })(
-              <Select style={{ width: '350px' }}>
+              <Select style={{ width: '350px' }}
+                onChange={this.getCooperationPlatformId}
+              >
                 {
                   this.state.cooperationPlatform.map(v => {
                     return <Option
                       key={v.cooperationPlatformCode}
-                      value={v.cooperationPlatformCode}>{v.cooperationPlatformName}</Option>
+                      value={v.cooperationPlatformCode}
+                      id={v.id}
+                    >{v.cooperationPlatformName}</Option>
                   })
                 }
               </Select>
