@@ -73,7 +73,7 @@ export default class SwitchRequiredInput extends Component {
       case 'number':
         inputComponent = <InputNumber {...props}
           onChange={this.handleNumberChange}
-          min={1}
+          min={0}
           max={9999999999}
           precision={0}
           formatter={value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
