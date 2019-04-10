@@ -88,15 +88,27 @@ class MultiAgent extends React.Component {
     })
   }
   // 新增代理商成功后
-  addAgentSuccessCallback = () => {
+  addAgentSuccessCallback = (data) => {
+    let cooperationPlatformId = data.cooperationPlatformId
+    let agentId = data.agentId
     this.props.actions.resetAgentDetail()
     this.props.actions.resetAgent()
-    this.props.props.setFieldsValue({ "multiAgentIds": [] })
+    this.props.form.setFieldsValue({ "multiAgentIds": [] })
     this.setState({
       is_agentDetail_loading: true
     })
     this.props.actions.getAgent({ platformId: this.props.platformId }).then(() => {
-
+      this.props.form.setFieldsValue({ "multiAgentIds": [cooperationPlatformId, agentId] })
+      this.props.actions.getAgentDetail({ id: agentId }).then(() => {
+        this.callback()
+      }).catch(() => {
+        this.callback("代理商详情加载失败")
+      })
+    }).catch(() => {
+      this.setState({
+        is_agentDetail_loading: false
+      })
+      message.error("代理商加载失败")
     })
   }
   //处理数据

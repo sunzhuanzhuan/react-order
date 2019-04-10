@@ -88,12 +88,16 @@ class AddAgent extends Component {
         } else if (values.paymentCompanyCode == "ZF0001") {
           values.paymentCompanyName = "布谷鸟"
         }
-        this.props.actions.addAgent({ ...values }).then(() => {
+        values.agentStatus = 1
+        this.props.actions.addAgent({ ...values }).then((res) => {
           this.setState({
             visible: false
           })
           if (this.props.type == "multi") {
-            this.props.addAgentSuccessCallback()
+            this.props.addAgentSuccessCallback({
+              cooperationPlatformId: this.state.cooperationPlatformId,
+              agentId: res.data
+            })
           } else {
             this.props.actions.getAgent({ platformId: this.props.platformId })
           }
