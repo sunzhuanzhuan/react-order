@@ -115,7 +115,6 @@ export default class SearchSelect extends Component {
 				onSearch={this.search}
 				onBlur={this.focusEvent}
 				onFocus={this.onCancel}
-				style={{ width: "120px" }}
 				{...this.props}
 				onChange={this.handleChange}
 			>

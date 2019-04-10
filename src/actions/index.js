@@ -39,5 +39,9 @@ export const resetSiderAuth = createAction('RESET_SIDERMENU_AUTH', () => {
 	return [];
 })
 
+export const setSliderMenuCollapse = createAction('SET_SLIDER_MENU_COLLAPSE', (bool) => {
+	return bool;
+})
+
 
 export const getCompanyList = getCompanyList2
