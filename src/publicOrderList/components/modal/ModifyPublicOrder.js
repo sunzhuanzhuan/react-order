@@ -92,6 +92,7 @@ class ModifyPublicOrder extends Component {
           this.state.type == "single" ?
             <SingleAgent
               form={form}
+              formLayout={formLayout}
               agent_id={agent_id}
               platformId={record.account.platform_id}
               platformName={orderDetail.platform.platform_name}

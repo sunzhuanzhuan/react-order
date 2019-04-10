@@ -47,9 +47,6 @@ class SingleAgent extends React.Component {
             {...formLayout}
           >
             {getFieldDecorator("agent_id", {
-              rules: [{
-                required: true, message: '本项为必选项，请选择！',
-              }],
               initialValue: agentDetail.agentId
             })(
               <span>{agentDetail.agentName}</span>

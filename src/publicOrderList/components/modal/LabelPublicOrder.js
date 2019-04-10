@@ -50,8 +50,8 @@ class LabelPublicOrder extends Component {
         let agentId = this.props.orderDetail.public_order.agent_id || undefined
         values.ttp_place_order_at = values.ttp_place_order_at.format("YYYY-MM-DD HH:mm:ss")
         if (this.state.type == "single") {
-          values.ttp_cooperation_platform_id = this.state.singleIds[0]
-          values.agent_id = this.state.singleIds[1]
+          values.ttp_cooperation_platform_id = this.props.orderDetail.public_order.cooperation_platform_id
+          values.agent_id = agentId
         } else {
           values.ttp_cooperation_platform_id = values.multiAgentIds[0]
           values.agent_id = values.multiAgentIds[1]
@@ -98,6 +98,7 @@ class LabelPublicOrder extends Component {
           this.state.type == "single" ?
             <SingleAgent
               form={form}
+              formLayout={formLayout}
               agent_id={this.state.agent_id}
               platformId={record.account.platform_id}
               platformName={orderDetail.platform.platform_name}

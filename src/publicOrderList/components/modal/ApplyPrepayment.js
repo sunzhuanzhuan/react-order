@@ -117,6 +117,7 @@ class ApplyPrepayment extends Component {
           form={form}
           platformId={record.account.platform_id}
           is_agentDetail_initial_loading={false}
+          platformName={orderDetail.platform.platform_name}
         />
         <FormItem
           label="回票方式"

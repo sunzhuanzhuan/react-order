@@ -70,6 +70,7 @@ class WithdrawPublicOrder extends Component {
               form={form}
               agent_id={this.state.agent_id}
               platformId={record.account.platform_id}
+              platformName={orderDetail.platform.platform_name}
             />
         }
         <FormItem

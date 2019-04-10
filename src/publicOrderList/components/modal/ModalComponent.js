@@ -35,6 +35,7 @@ const ModalComponent = (props) => {
     >
       <Children
         handleCancelWithConfirm={handleCancelWithConfirm}
+        handleCancel={handleCancel}
         record={record}
         orderDetail={orderDetail}
         getList={getList}
