@@ -23,7 +23,8 @@ class LabelPublicOrder extends Component {
     this.state = {
       type: "",
       singleIds: [],
-      agent_id: ""
+      agent_id: "",
+      loading: false
     }
   }
   componentWillMount() {
@@ -57,17 +58,27 @@ class LabelPublicOrder extends Component {
           values.agent_id = values.multiAgentIds[1]
           delete values.multiAgentIds
         }
+        values.public_order_id = this.props.record.public_order.public_order_id
         api.get("/operator-gateway/trinityAgent/v1/getAgentById", {
           params: { id: values.agent_id }
         }).then((res) => {
+          this.setState({
+            loading: true
+          })
           let settleType = res.data.settleType
           if (settleType == 2 || (settleType == 1 && agentId)) {
             this.props.actions.labelPlaceOrder({ ...values }).then(() => {
               message.success('您所提交的信息已经保存成功！', 2)
+              this.setState({
+                loading: false
+              })
               this.props.handleCancel()
               this.props.getList()
             }).catch(() => {
               message.error("标记三方已下单失败")
+              this.setState({
+                loading: false
+              })
             })
           } else {
             Modal.error({
@@ -118,7 +129,7 @@ class LabelPublicOrder extends Component {
           label="三方平台订单号"
           {...formLayout}
         >
-          {getFieldDecorator("public_order_id", {
+          {getFieldDecorator("ttp_order_id", {
             rules: [{
               pattern: /^[\u4e00-\u9fa5a-zA-Z0-9-_,]{0,100}$/, message: '最多可输入100个字符！'
             }]
@@ -145,10 +156,13 @@ class LabelPublicOrder extends Component {
       </Form>
       {/* 提交按钮 */}
       <div className="modalBox-btnGroup">
-        <Button type="primary" onClick={this.submit}>提交</Button>
+        <Button type="primary" onClick={this.submit}
+          loading={this.state.loading}
+        >提交</Button>
         <Button type="primary"
           className="modalBox-btnGroup-cancel"
           onClick={handleCancelWithConfirm}
+          loading={this.state.loading}
         >取消</Button>
       </div>
     </div>

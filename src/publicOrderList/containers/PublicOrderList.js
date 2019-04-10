@@ -169,7 +169,7 @@ class PublicOrderList extends Component {
         <Table
           dataSource={Object.keys(publicOrderList).length != 0 ? publicOrderList.items : []}
           columns={columns({ showModal: this.showModal, babysitter_host: babysitter_host })}
-          scroll={{ x: 3600 }}
+          scroll={{ x: 2700 }}
           loading={this.state.tableLoading}
           pagination={{
             current: Object.keys(publicOrderList).length != 0 ? parseInt(publicOrderList.pagination.current_page) : 0,
