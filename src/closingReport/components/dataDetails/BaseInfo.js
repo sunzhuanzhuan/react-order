@@ -13,7 +13,7 @@ import { fieldConfig } from '../../constants/config'
  */
 export class Edit extends Component {
   checkSwitchInput = (rule, value = {}, callback) => {
-    if (value.input || value.checked) {
+    if (value.input === 0 || value.input || value.checked) {
       callback()
       return
     }
