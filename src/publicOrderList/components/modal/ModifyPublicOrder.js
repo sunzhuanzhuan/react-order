@@ -4,7 +4,7 @@
 
 */
 import React, { Component } from 'react'
-import { Form, message, Modal, Input, Button } from 'antd';
+import { Form, message, Input, Button } from 'antd';
 import PlaceOrderTime from './formItem/PlaceOrderTime'
 import MultiAgent from './formItem/MultiAgent'
 import SingleAgent from './formItem/SingleAgent'
@@ -15,7 +15,6 @@ import './ModalComponent.less'
 
 const FormItem = Form.Item;
 const { TextArea } = Input;
-const confirm = Modal.confirm;
 
 class ModifyPublicOrder extends Component {
   constructor(props) {
@@ -46,15 +45,6 @@ class ModifyPublicOrder extends Component {
       })
     }
   }
-  //点击取消
-  cancel = () => {
-    confirm({
-      title: '取消后您的信息将无法保存，是否确认此操作？',
-      onOk: () => {
-        this.props.handleCancel()
-      }
-    });
-  }
   //提交-修改三方已下单
   submit = (e) => {
     e.preventDefault();
@@ -80,7 +70,7 @@ class ModifyPublicOrder extends Component {
     });
   }
   render() {
-    const { form, record, orderDetail } = this.props
+    const { form, record, orderDetail, handleCancelWithConfirm } = this.props
     const { getFieldDecorator } = form
     const { agent_id, cooperationPlatform } = this.state
     const formLayout = {
@@ -154,7 +144,7 @@ class ModifyPublicOrder extends Component {
           <Button type="primary" onClick={this.submit}>提交</Button>
           <Button type="primary"
             className="modalBox-btnGroup-cancel"
-            onClick={this.cancel}
+            onClick={handleCancelWithConfirm}
           >取消</Button>
         </div>
       </Form>

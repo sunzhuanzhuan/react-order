@@ -5,7 +5,7 @@
 */
 import React, { Component } from 'react'
 import * as modalActions from '../../actions/modalActions'
-import { Button, message, Spin, Form, Modal } from 'antd';
+import { Button, message, Spin, Form } from 'antd';
 import SingleAgent from './formItem/SingleAgent'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
@@ -13,7 +13,6 @@ import './ModalComponent.less'
 import './formItem/formItem.less'
 
 const FormItem = Form.Item;
-const confirm = Modal.confirm;
 
 class WithdrawPublicOrder extends Component {
   constructor(props) {
@@ -46,17 +45,8 @@ class WithdrawPublicOrder extends Component {
       message.error("撤销三方已下单操作失败", 2)
     })
   }
-  //点击取消
-  cancel = () => {
-    confirm({
-      title: '取消后您的信息将无法保存，是否确认此操作？',
-      onOk: () => {
-        this.props.handleCancel()
-      }
-    });
-  }
   render() {
-    const { orderDetail, record, form } = this.props
+    const { orderDetail, record, form, handleCancelWithConfirm } = this.props
     const { is_agentDetail_loading } = this.state
     const formLayout = {
       labelCol: { span: 6 },
@@ -100,7 +90,7 @@ class WithdrawPublicOrder extends Component {
         <Button type="primary" onClick={this.submit}>确定撤销</Button>
         <Button type="primary"
           className="modalBox-btnGroup-cancel"
-          onClick={this.cancel}
+          onClick={handleCancelWithConfirm}
         >取消</Button>
       </div>
     </div>

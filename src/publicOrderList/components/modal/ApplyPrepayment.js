@@ -1,6 +1,6 @@
 /* 申请预付款 */
 import React, { Component } from 'react'
-import { Form, message, Modal, Input, Button, DatePicker, Radio, InputNumber } from 'antd';
+import { Form, message, Input, Button, DatePicker, Radio, InputNumber } from 'antd';
 import MultiAgent from './formItem/MultiAgent'
 import * as modalActions from '../../actions/modalActions'
 import { connect } from 'react-redux'
@@ -9,7 +9,6 @@ import './ModalComponent.less'
 
 const FormItem = Form.Item;
 const { TextArea } = Input;
-const confirm = Modal.confirm;
 const RadioGroup = Radio.Group;
 
 class ApplyPrepayment extends Component {
@@ -20,15 +19,6 @@ class ApplyPrepayment extends Component {
       startValue: null,
       endValue: null,
     }
-  }
-  //点击取消
-  cancel = () => {
-    confirm({
-      title: '取消后您的信息将无法保存，是否确认此操作？',
-      onOk: () => {
-        this.props.handleCancel()
-      }
-    });
   }
   submit = (e) => {
     e.preventDefault();
@@ -90,7 +80,7 @@ class ApplyPrepayment extends Component {
     this.onChange('endValue', value);
   }
   render() {
-    const { form, record, orderDetail } = this.props
+    const { form, record, orderDetail, handleCancelWithConfirm } = this.props
     const { getFieldDecorator } = form
     const formLayout = {
       labelCol: { span: 6 },
@@ -208,7 +198,7 @@ class ApplyPrepayment extends Component {
           <Button type="primary" onClick={this.submit}>提交</Button>
           <Button type="primary"
             className="modalBox-btnGroup-cancel"
-            onClick={this.cancel}
+            onClick={handleCancelWithConfirm}
           >取消</Button>
         </div>
       </Form>

@@ -1,9 +1,7 @@
 /* 执行申请处理 */
 import React, { Component } from 'react'
-import { Form, message, Modal, Input, Button, Radio, InputNumber } from 'antd';
-import PlaceOrderTime from './formItem/PlaceOrderTime'
+import { Form, message, Input, Button, Radio, InputNumber } from 'antd';
 import MultiAgent from './formItem/MultiAgent'
-import SingleAgent from './formItem/SingleAgent'
 import * as modalActions from '../../actions/modalActions'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
@@ -12,7 +10,6 @@ import './ModalComponent.less'
 const FormItem = Form.Item;
 const { TextArea } = Input;
 const RadioGroup = Radio.Group;
-const confirm = Modal.confirm;
 
 class ExecuteHandle extends Component {
   constructor(props) {
@@ -27,15 +24,6 @@ class ExecuteHandle extends Component {
     let settle_type_statistic = orderDetail.public_order.settle_type_statistic
     let agent_id = orderDetail.public_order.agent_id
     let cooperationPlatform = orderDetail.public_order.cooperation_platform_id
-  }
-  //点击取消
-  cancel = () => {
-    confirm({
-      title: '取消后您的信息将无法保存，是否确认此操作？',
-      onOk: () => {
-        this.props.handleCancel()
-      }
-    });
   }
   //提交-执行处理
   submit = (e) => {
@@ -71,7 +59,7 @@ class ExecuteHandle extends Component {
     })
   }
   render() {
-    const { form, record, orderDetail } = this.props
+    const { form, record, orderDetail, handleCancelWithConfirm } = this.props
     const { getFieldDecorator } = form
     const formLayout = {
       labelCol: { span: 6 },
@@ -205,7 +193,7 @@ class ExecuteHandle extends Component {
           <Button type="primary" onClick={this.submit}>提交</Button>
           <Button type="primary"
             className="modalBox-btnGroup-cancel"
-            onClick={this.cancel}
+            onClick={handleCancelWithConfirm}
           >取消</Button>
         </div>
       </Form>

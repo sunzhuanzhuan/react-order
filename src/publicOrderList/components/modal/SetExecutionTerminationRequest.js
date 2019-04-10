@@ -1,9 +1,6 @@
 /* 执行终止处理 */
 import React, { Component } from 'react'
-import { Form, message, Modal, Input, Button, Table, Radio } from 'antd';
-import PlaceOrderTime from './formItem/PlaceOrderTime'
-import MultiAgent from './formItem/MultiAgent'
-import SingleAgent from './formItem/SingleAgent'
+import { Form, message, Input, Button, Table, Radio } from 'antd';
 import * as modalActions from '../../actions/modalActions'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
@@ -12,7 +9,6 @@ import './ModalComponent.less'
 const FormItem = Form.Item;
 const { TextArea } = Input;
 const RadioGroup = Radio.Group;
-const confirm = Modal.confirm;
 
 class SetExecutionTerminationRequest extends Component {
   constructor(props) {
@@ -76,15 +72,6 @@ class SetExecutionTerminationRequest extends Component {
       dataSource: [...dataSource]
     })
   }
-  //点击取消
-  cancel = () => {
-    confirm({
-      title: '取消后您的信息将无法保存，是否确认此操作？',
-      onOk: () => {
-        this.props.handleCancel()
-      }
-    });
-  }
   //提交-修改三方已下单
   submit = (e) => {
     e.preventDefault();
@@ -103,7 +90,7 @@ class SetExecutionTerminationRequest extends Component {
     });
   }
   render() {
-    const { form, orderDetail } = this.props
+    const { form, orderDetail, handleCancelWithConfirm } = this.props
     const { getFieldDecorator } = form
 
     const columns = [
@@ -188,7 +175,7 @@ class SetExecutionTerminationRequest extends Component {
           <Button type="primary" onClick={this.submit}>提交</Button>
           <Button type="primary"
             className="modalBox-btnGroup-cancel"
-            onClick={this.cancel}
+            onClick={handleCancelWithConfirm}
           >取消</Button>
         </div>
       </Form>
