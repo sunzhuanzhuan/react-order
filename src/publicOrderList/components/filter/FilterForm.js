@@ -78,7 +78,8 @@ const FilterForm = (props) => {
           }
         })
       }
-      <Button type="primary" className="filterForm-btn" onClick={(e) => props.onSubmit(e)}>查询</Button>
+      <Button type="primary" className="filterForm-btn"
+        onClick={(e) => props.onSubmit(e)}>查询</Button>
     </div>
   )
 }
