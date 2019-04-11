@@ -5,13 +5,15 @@ import authReducers from '../auth/reducers'
 import loginReducer from '../login/reducer/index'
 import siderMenuReducer from '../siderMenu/reducers'
 import authorizationsReducers from './authorizations'
+import publicOrderListReducer from '../publicOrderList/reducers'
 import closingReportReducers from '../closingReport/reducer'
 export default combineReducers({
-	commonReducers,
-	routing: routerReducer,
-	auth: authReducers,
-	loginReducer,
-	siderMenuReducer,
-	authorizationsReducers,
-  closingReportReducers
+  commonReducers,
+  routing: routerReducer,
+  auth: authReducers,
+  loginReducer,
+  siderMenuReducer,
+  authorizationsReducers,
+  closingReportReducers,
+  publicOrderListReducer
 });
