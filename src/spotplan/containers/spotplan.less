@@ -1,0 +1,206 @@
+@import "../../indexNbTheme";
+.spotplan-add{
+    position: relative;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    h3::before{
+        vertical-align: middle;
+        left: 0;
+        content: '';
+        display: inline-block;
+        height: 15px;
+        width: 4px;
+        border-radius: 2px;
+        background: @primary-color;
+        margin-right: 10px;
+    }
+    &::-webkit-scrollbar {
+        display: none;
+    }
+    .steps-container{
+        width:60%;
+        margin-left: 22%;
+    }
+    .spotplan-add-container{
+        display: flex;
+        justify-content: center;
+        .spotplan-add-form{
+            margin-left: 17%;
+            width:60%;
+            padding-top: 50px;
+            .tip-style{
+                line-height: 22px;
+                color: rgba(0, 0, 0, 0.4);
+                margin:0;
+            }
+        }
+    }
+
+    .splotplan-check-container{
+        width:100%;
+        padding-bottom: 60px;
+        .check-table-container{
+            .pagination{
+                float: right;
+                margin-top: 20px;
+            }
+            .spotplan-check-form{
+                .ant-form-item,.ant-form-item-label,.ant-form-item-control-wrapper{
+                    display: inline-block;
+                }
+                .ant-form-item{
+                    padding-left: 20px;
+                }
+            }
+            .check-order-item{
+                width:100%;
+                margin-top: 20px;
+                .list-item{
+                    width: 100%;
+                }
+                .order-item-title{
+                    display: flex;
+                    padding-left: 10px;
+                    background-color: #e1e1e1;
+                    span{
+                        line-height: 40px;
+                        display: inline-block;
+                        &:nth-child(1),&:nth-child(9),&:nth-child(11),&:nth-child(14){
+                            flex: 3
+                        }
+                        &:nth-child(2),&:nth-child(3),&:nth-child(5),&:nth-child(7),&:nth-child(12){
+                            flex: 4
+                        }
+                        &:nth-child(4),&:nth-child(10){
+                            flex: 5
+                        }
+                        &:nth-child(8),&:nth-child(14){
+                            flex: 6
+                        }
+                        &:nth-child(6){
+                            flex: 12
+                        }
+                    }
+                }
+                .ant-radio-group{
+                    width: 100%;
+                    .ant-radio-wrapper{
+                        height: 60px !important;
+                        // line-height: 60px !important;
+                    }
+                    .order-item-list{
+                        display: inline-block;
+                        width:100%;
+                        vertical-align: middle;
+                        padding-left: 30px;
+                        .list-item{
+                            display: inline-block;
+                            &:nth-child(1),&:nth-child(3),&:nth-child(4){
+                                width:20%;
+                            }
+                            &:nth-child(2){
+                                width:36%;
+                            }
+                            .title{
+                                color: rgba(0, 0, 0, 0.4);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    .splotplan-edit-container{
+        width: 100%;
+    }
+    .left-little-gap{
+        margin-left: 10px;
+    }
+    .left-gap{
+        margin-left: 20px;
+    }
+    .top-gap{
+        margin-top: 20px;
+    }
+}
+
+.spotList-list-container{
+    h3::before{
+        vertical-align: middle;
+        left: 0;
+        content: '';
+        display: inline-block;
+        height: 15px;
+        width: 4px;
+        border-radius: 2px;
+        background: @primary-color;
+        margin-right: 10px;
+    }
+    .ant-form-item,.ant-form-item-label,.ant-form-item-control-wrapper{
+        display: inline-block;
+    }
+    .ant-form-item{
+        padding-left: 20px;
+    }
+    .left-little-gap{
+        margin-left: 10px;
+    }
+    .left-gap{
+        margin-left: 20px;
+    }
+    .top-gap{
+        margin-top: 20px;
+    }
+}
+
+.spotList-detail-container{
+    h3::before{
+        vertical-align: middle;
+        left: 0;
+        content: '';
+        display: inline-block;
+        height: 15px;
+        width: 4px;
+        border-radius: 2px;
+        background: @primary-color;
+        margin-right: 10px;
+    }
+    .ant-form-item,.ant-form-item-label,.ant-form-item-control-wrapper{
+        display: inline-block;
+    }
+    .ant-form-item{
+        padding-left: 20px;
+    }
+    .info-container{
+        padding: 0 10px;
+        .info-row{
+            line-height: 32px;
+            font-size: 14px;
+        }
+    }
+    .spotplan-detail-statistics{
+        background-color: #e1e1e1;
+        padding: 10px 20px;
+        margin: 10px 0;
+    }
+    .primary-font{
+        color:@primary-color;
+    }
+    .left-little-gap{
+        margin-left: 10px;
+    }
+    .left-gap{
+        margin-left: 20px;
+    }
+    .top-gap{
+        margin-top: 20px;
+    }
+}
+.statistics-tip{
+    .ant-tooltip-arrow{
+        border-top-color:red;
+    }
+    .ant-tooltip-inner{
+        background-color: red ;
+    }
+}
