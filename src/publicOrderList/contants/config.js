@@ -476,7 +476,7 @@ export const columns = (props) => {
       align: 'center',
       width: 100,
       render: (text, record) => {
-        return record.public_order && record.public_order.settle_type == "2" ?
+        return record.public_order && record.public_order.public_order_statement && record.public_order.public_order_statement.statement_status && record.public_order.settle_type == "2" ?
           <span>{statementStatus[record.public_order.public_order_statement.statement_status]}</span> : null
       }
     },
