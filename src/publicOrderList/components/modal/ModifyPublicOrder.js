@@ -4,7 +4,8 @@
 
 */
 import React, { Component } from 'react'
-import { Form, message, Input, Button } from 'antd';
+import api from '../../../api/index'
+import { Form, message, Input, Button, Modal } from 'antd';
 import PlaceOrderTime from './formItem/PlaceOrderTime'
 import MultiAgent from './formItem/MultiAgent'
 import SingleAgent from './formItem/SingleAgent'
@@ -29,13 +30,14 @@ class ModifyPublicOrder extends Component {
   componentWillMount() {
     let orderDetail = this.props.orderDetail
     let settle_type_statistic = orderDetail.public_order.settle_type_statistic
+    let settle_type = orderDetail.public_order.settle_type
     let agent_id = orderDetail.public_order.agent_id || undefined
     let cooperationPlatform = orderDetail.public_order.cooperation_platform_id
     this.setState({
       agent_id: agent_id,
       cooperationPlatform: cooperationPlatform
     })
-    if (settle_type_statistic == 1 || agent_id) {
+    if (settle_type_statistic == 1 || settle_type == 1) {
       //全为预付型
       this.setState({
         type: 'single'
@@ -61,21 +63,33 @@ class ModifyPublicOrder extends Component {
           delete values.multiAgentIds
         }
         values.public_order_id = this.props.record.public_order.public_order_id
-        this.setState({
-          loading: true
-        })
-        this.props.actions.modifyLabelPlaceOrder({ ...values }).then(() => {
-          message.success('您所提交的信息已经保存成功！', 2)
-          this.setState({
-            loading: false
-          })
-          this.props.handleCancel()
-          this.props.getList()
-        }).catch(() => {
-          message.error("修改三方已下单失败")
-          this.setState({
-            loading: false
-          })
+        api.get("/operator-gateway/trinityAgent/v1/getAgentById", {
+          params: { id: values.agent_id }
+        }).then((res) => {
+          let settleType = res.data.settleType
+          if (settleType == 2) {
+            this.setState({
+              loading: true
+            })
+            values.settle_type = settleType
+            this.props.actions.modifyLabelPlaceOrder({ ...values }).then(() => {
+              message.success('您所提交的信息已经保存成功！', 2)
+              this.setState({
+                loading: false
+              })
+              this.props.handleCancel()
+              this.props.getList()
+            }).catch(() => {
+              message.error("修改三方已下单失败")
+              this.setState({
+                loading: false
+              })
+            })
+          } else {
+            Modal.error({
+              title: '您选择的代理商为预付类型，请先申请预付款后再进行下单标注！'
+            });
+          }
         })
       }
     });
@@ -144,7 +158,7 @@ class ModifyPublicOrder extends Component {
             rules: [{
               pattern: /^.{0,100}$/, message: '最多可输入100个字符！'
             }],
-            initialValue: orderDetail.public_order.deal_execution_notification_comment
+            initialValue: orderDetail.public_order.label_place_order_comment
           })(
             <TextArea placeholder="请输入备注"
               style={{ width: '350px' }}

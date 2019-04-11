@@ -83,7 +83,7 @@ class WithdrawPublicOrder extends Component {
           label="备注"
           {...formLayout}
         >
-          <span>{orderDetail.public_order.deal_execution_notification_comment}</span>
+          <span>{orderDetail.public_order.label_place_order_comment}</span>
         </FormItem>
       </Form>
       <div className="withdrawPublicOrder-tips">是否要撤销三方已下单的标识？</div>

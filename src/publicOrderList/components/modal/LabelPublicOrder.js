@@ -62,11 +62,12 @@ class LabelPublicOrder extends Component {
         api.get("/operator-gateway/trinityAgent/v1/getAgentById", {
           params: { id: values.agent_id }
         }).then((res) => {
-          this.setState({
-            loading: true
-          })
           let settleType = res.data.settleType
           if (settleType == 2 || (settleType == 1 && agentId)) {
+            this.setState({
+              loading: true
+            })
+            values.settle_type = settleType
             this.props.actions.labelPlaceOrder({ ...values }).then(() => {
               message.success('您所提交的信息已经保存成功！', 2)
               this.setState({

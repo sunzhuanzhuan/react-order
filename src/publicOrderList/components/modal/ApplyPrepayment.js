@@ -1,6 +1,6 @@
 /* 申请预付款 */
 import React, { Component } from 'react'
-import { Form, message, Input, Button, DatePicker, Radio, InputNumber } from 'antd';
+import { Form, message, Input, Button, DatePicker, Radio } from 'antd';
 import MultiAgent from './formItem/MultiAgent'
 import * as modalActions from '../../actions/modalActions'
 import { connect } from 'react-redux'
@@ -79,6 +79,14 @@ class ApplyPrepayment extends Component {
   onEndChange = (value) => {
     this.onChange('endValue', value);
   }
+  //最大回票金额
+  maxReturnInvoiceAmount = (rule, value, callback) => {
+    let maxNum = this.props.orderDetail.public_order.public_order_sku_valid.public_cost_price
+    if (value > maxNum) {
+      callback('请输入不大于三方下单价的有效数字，小数点后最多两位！')
+    }
+    callback()
+  }
   render() {
     const { form, record, orderDetail, handleCancelWithConfirm } = this.props
     const { getFieldDecorator } = form
@@ -147,11 +155,12 @@ class ApplyPrepayment extends Component {
                   required: true, message: '本项为必填项，请输入！',
                 }, {
                   pattern: /^(([1-9][0-9]*)|(([0]\.\d{1,2}|[1-9][0-9]*\.\d{1,2})))$/, message: '请输入不大于三方下单价的有效数字，小数点后最多两位！'
+                }, {
+                  validator: this.maxReturnInvoiceAmount
                 }]
               })(
-                <InputNumber
+                <Input
                   style={{ width: '350px' }}
-                  max={orderDetail.public_order.public_order_sku_valid.public_cost_price}
                   placeholder="请输入回票金额" />
               )}
             </FormItem> :

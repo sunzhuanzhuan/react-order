@@ -66,11 +66,11 @@ class MultiAgent extends React.Component {
     })
   }
   // 代理商详情加载完后的回调函数
-  callback = (message) => {
+  callback = (msg) => {
     this.setState({
       is_agentDetail_loading: false
     }, () => {
-      message ? message.error(message, 2) : null
+      msg ? message.error(msg, 2) : null
     })
   }
   //改变代理商
