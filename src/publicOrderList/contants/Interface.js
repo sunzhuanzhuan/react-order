@@ -5,6 +5,6 @@ export default {
   modifyLabelPlaceOrder: '/trinity/publicOrder/modifyLabelPlaceOrder',
   dealExecutionNotificationApply: '/trinity/publicOrder/dealExecutionNotificationApply',
   createPrepayApply: '/trinity/publicOrder/createPrepayApply',
-  dealExecutionTermination: '/trinity/publicOrder/dealExecutionTermination',
+  dealExecutionTermination: '/trinity/publicOrder/dealTerminationRequest',
   existsAgentName: '/operator-gateway/trinityAgent/v1/existsAgentName'
 }

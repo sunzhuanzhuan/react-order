@@ -166,7 +166,7 @@ const supportedOperations = {
   "can_modify_public_order": "修改三方下单信息",
   "can_withdraw_public_order": "撤销三方下单标注",
   "execute_handle": "执行申请处理",
-  "apply_prepayment": "预付款申请",
+  "can_apply_prepay": "预付款申请",
   "interrupt_execution": "同意/拒绝执行终止"
 }
 
@@ -175,7 +175,7 @@ export const columns = (props) => {
   const operationBtn = [
     "can_label_place_order", "can_modify_public_order",
     "can_withdraw_public_order", "execute_handle",
-    "apply_prepayment", "interrupt_execution"
+    "can_apply_prepay", "interrupt_execution"
   ]
   const host = props.babysitter_host.value
   const reservationRequirementStatus = {
@@ -733,7 +733,7 @@ export const modalParams = {
     modalTitle: "执行申请处理",
     children: ExecuteHandle
   },
-  "apply_prepayment": {
+  "can_apply_prepay": {
     modalTitle: "预付款申请",
     children: ApplyPrepayment
   },

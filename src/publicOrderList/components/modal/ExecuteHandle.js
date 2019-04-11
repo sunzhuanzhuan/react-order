@@ -16,7 +16,8 @@ class ExecuteHandle extends Component {
     super(props)
     this.state = {
       settleType: '1',
-      invoiceType: '1'
+      invoiceType: '1',
+      loading: false
     }
   }
   componentWillMount() {
@@ -30,6 +31,9 @@ class ExecuteHandle extends Component {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
+        this.setState({
+          loading: true
+        })
         if (this.state.settleType == '1') {
           values.cooperation_platform_id = values.multiAgentIds[0]
           values.agent_id = values.multiAgentIds[1]
@@ -38,10 +42,16 @@ class ExecuteHandle extends Component {
         values.order_id = this.props.record.order_id
         this.props.actions.dealExecutionNotificationApply({ ...values }).then(() => {
           message.success('您所提交的信息已经保存成功！', 2)
+          this.setState({
+            loading: false
+          })
           this.props.handleCancel()
           this.props.getList()
         }).catch(() => {
           message.error("执行处理失败")
+          this.setState({
+            loading: false
+          })
         })
       }
     });
@@ -191,10 +201,13 @@ class ExecuteHandle extends Component {
         </FormItem>
         {/* 提交按钮 */}
         <div className="modalBox-btnGroup">
-          <Button type="primary" onClick={this.submit}>提交</Button>
+          <Button type="primary" onClick={this.submit}
+            loading={this.state.loading}
+          >提交</Button>
           <Button type="primary"
             className="modalBox-btnGroup-cancel"
             onClick={handleCancelWithConfirm}
+            loading={this.state.loading}
           >取消</Button>
         </div>
       </Form>

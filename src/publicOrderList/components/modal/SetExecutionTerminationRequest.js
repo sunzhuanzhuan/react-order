@@ -14,7 +14,8 @@ class SetExecutionTerminationRequest extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      dataSource: []
+      dataSource: [],
+      loading: false
     }
   }
   componentWillMount() {
@@ -77,14 +78,23 @@ class SetExecutionTerminationRequest extends Component {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
+        this.setState({
+          loading: true
+        })
         values.request_id = this.props.orderDetail.execution_termination_request.id
         values.confirmor_type = 8
         this.props.actions.dealExecutionTermination({ ...values }).then(() => {
           message.success('您所提交的信息已经保存成功！', 2)
+          this.setState({
+            loading: false
+          })
           this.props.handleCancel()
           this.props.getList()
         }).catch(() => {
           message.error("执行终止处理失败")
+          this.setState({
+            loading: false
+          })
         })
       }
     });
@@ -172,10 +182,13 @@ class SetExecutionTerminationRequest extends Component {
         </FormItem>
         {/* 提交按钮 */}
         <div className="modalBox-btnGroup">
-          <Button type="primary" onClick={this.submit}>提交</Button>
+          <Button type="primary" onClick={this.submit}
+            loading={this.state.loading}
+          >提交</Button>
           <Button type="primary"
             className="modalBox-btnGroup-cancel"
             onClick={handleCancelWithConfirm}
+            loading={this.state.loading}
           >取消</Button>
         </div>
       </Form>

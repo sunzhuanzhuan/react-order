@@ -22,7 +22,8 @@ class WithdrawPublicOrder extends Component {
       agentName: "",
       agentDetail: {},
       is_agentDetail_loading: true,
-      agent_id: ''
+      agent_id: '',
+      loading: false
     }
   }
   componentWillMount() {
@@ -35,14 +36,23 @@ class WithdrawPublicOrder extends Component {
   }
   //撤销三方已下单
   submit = () => {
+    this.setState({
+      loading: true
+    })
     this.props.actions.withdrawLabelPlaceOrder({
       public_order_id: this.props.record.public_order.public_order_id
     }).then(() => {
       message.success('您所提交的信息已经保存成功！', 2)
+      this.setState({
+        loading: false
+      })
       this.props.handleCancel()
       this.props.getList()
     }).catch(() => {
       message.error("撤销三方已下单操作失败", 2)
+      this.setState({
+        loading: false
+      })
     })
   }
   render() {
@@ -88,10 +98,13 @@ class WithdrawPublicOrder extends Component {
       </Form>
       <div className="withdrawPublicOrder-tips">是否要撤销三方已下单的标识？</div>
       <div className="modalBox-btnGroup">
-        <Button type="primary" onClick={this.submit}>确定撤销</Button>
+        <Button type="primary" onClick={this.submit}
+          loading={this.state.loading}
+        >确定撤销</Button>
         <Button type="primary"
           className="modalBox-btnGroup-cancel"
           onClick={handleCancelWithConfirm}
+          loading={this.state.loading}
         >取消</Button>
       </div>
     </div>
