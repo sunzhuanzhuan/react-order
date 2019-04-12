@@ -1,25 +1,27 @@
 import React from 'react'
-import { Col, Radio } from 'antd'
+import { Col, Radio, Tooltip } from 'antd'
 
 const RadioGroup = Radio.Group;
 export default class OrderItem extends React.Component {
   constructor() {
     super();
     this.state = {
-      value: undefined
     }
   }
   handleChange = e => {
-    this.props.handleCheck('123', e.target.value);
-    this.setState({ value: e.target.value });
+    const { data } = this.props;
+    const item = data.price.find(item => item.price_id == e.target.value);
+    const params = {
+      ...item,
+      order_id: data.order_id,
+      requirement_name: data.requirement_name,
+      weibo_type_name: data.weibo_type_name,
+      weibo_name: data.weibo_name,
+    };
+    this.props.handleCheck(data.order_id, params);
   }
   render() {
-    const plainOptions = [
-      { 'priceId': 1, 'a': 2, 'b': 3 },
-      { 'priceId': 2, 'a': 2, 'b': 3 },
-      { 'priceId': 3, 'a': 2, 'b': 3 },
-    ];
-    const { value } = this.state;
+    const { data, orderMaps } = this.props;
     const radioStyle = {
       display: 'block',
       height: '30px',
@@ -27,43 +29,52 @@ export default class OrderItem extends React.Component {
     };
     return <div className='check-order-item'>
       <div className='order-item-title'>
-        <span>订单ID：</span><span>12345</span>
-        <span>订单状态：</span><span >客户待确认</span>
-        <span>需求名称：</span><span ><a target='_blank' href='http://192.168.100.142/pack/reservationrequirement/infoforsale?reservation_requirement_id=26684'>(复制)帮宝适一级帮4月种草</a></span>
-        <span>账号名称：</span><span >辣爸爸新主张</span>
-        <span>平台：</span><span >新浪微博</span>
-        <span>执行人：</span><span>蔡逸琦</span>
-        <span>项目：</span><span >pampers201900</span>
+        <div className='title-info'>
+          <span>订单ID：</span><span className='primary-font'>{data && data.order_id}</span>
+          <span>订单状态：</span><span>{data && data.status_name}</span>
+          <span>需求名称：</span><span><a target='_blank' href={data && data.requirement_path}>{data && data.requirement_name}</a></span>
+          <span>账号名称：</span><span >{data && data.weibo_name}</span>
+          <span>平台：</span><span className='primary-font'>{data && data.weibo_type_name}</span>
+          <span>执行人：</span><span>{data && data.executor_admin_name}</span>
+          <span>项目：</span><span><a target='_blank' href={data && data.project_path}>{data && data.project_name}</a></span>
+        </div>
+        {data && (data.flag == 2 || data.flag == 3) && <div className='disabled-reason'>
+          <Tooltip
+            getPopupContainer={() => document.querySelector('.order-item-title')}
+            title={data.flag == 2 ? '订单不是【客户待确认】状态' : '订单已经被Spotplan（ID：XXX）绑定了'}>不可选原因</Tooltip>
+        </div>}
       </div>
       <RadioGroup
         onChange={this.handleChange}
-        value={value}
+        value={(data && orderMaps[data.order_id] && orderMaps[data.order_id].price_id) || ''}
       >
-        {plainOptions.map((item, index) => (<Radio style={radioStyle} key={index} value={item.priceId}>
-          <Item />
+        {data && data.price.map((item, index) => (<Radio style={radioStyle} key={index} value={item.price_id}
+        // disabled={!(data && data.flag ==1)}
+        >
+          <Item data={item} />
         </Radio>))}
       </RadioGroup>
     </div>
   }
 }
 
-function Item() {
+function Item({ data }) {
   return <div className='order-item-list'>
     <Col className='list-item'>
       <div className='title'>PriceID</div>
-      <div>408551</div>
+      <div>{data && data.price_id}</div>
     </Col>
     <Col className='list-item'>
       <div className='title'>价格名称</div>
-      <div>直发+原创视频+微任务+真人出镜+内容授权</div>
+      <div>{data && data.price_name}</div>
     </Col>
     <Col className='list-item'>
       <div className='title'>账号报价（应约价）</div>
-      <div>170,213.00</div>
+      <div>{data && data.cost}</div>
     </Col>
     <Col className='list-item'>
       <div className='title'>总价（应约价）</div>
-      <div>188,545.00</div>
+      <div>{data && data.costwithfee}</div>
     </Col>
   </div>
 }

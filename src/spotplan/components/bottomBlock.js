@@ -1,8 +1,12 @@
 import React from 'react'
+import { connect } from 'react-redux';
+import { bindActionCreators } from "redux";
+import * as spotplanAction from "../actions";
 import { Button, Modal, Table, Form } from 'antd'
-import { CheckModalCols, EditOrderCols } from '../constants'
+import { CheckModalFunc, EditOrderCols } from '../constants'
 import './bottomBlock.less'
-export default class BottomBlock extends React.Component {
+
+class BottomBlock extends React.Component {
   constructor() {
     super();
     this.state = {
@@ -16,33 +20,33 @@ export default class BottomBlock extends React.Component {
     this.setState({ leadVisible: boolean })
   }
   render() {
-    const { current, handleSteps } = this.props;
+    const { current, handleSteps, orderMaps = {}, handlDel } = this.props;
     const { visible, leadVisible } = this.state;
     return <div className='bottom-block'>
-      {current == 0 && <div className='right-block'><Button type='primary' onClick={() => {
-        handleSteps(1)
+      {current == 1 && <div className='right-block'><Button type='primary' onClick={() => {
+        handleSteps(2, 'go')
       }}>下一步</Button>
       </div>}
-      {current == 1 && <>
-        <div className='left-block'>
-          <Button onClick={() => {
-            // this.props.history.goBack()
-            handleSteps(0)
-          }}>上一步</Button>
-        </div>
-        <div className='right-block'>
-          <span style={{ paddingRight: '20px' }}>已选订单：<a href='javascript:;' onClick={() => {
-            this.toggleVisible(true);
-          }}>12个</a></span>
-          <Button type='primary' onClick={() => {
-            handleSteps(2)
-          }}>下一步</Button>
-        </div></>}
       {current == 2 && <>
         <div className='left-block'>
           <Button onClick={() => {
             // this.props.history.goBack()
             handleSteps(1)
+          }}>上一步</Button>
+        </div>
+        <div className='right-block'>
+          <span style={{ paddingRight: '20px' }}>已选订单：<a href='javascript:;' onClick={() => {
+            this.toggleVisible(true);
+          }}>{Object.values(orderMaps).length || 0}个</a></span>
+          <Button type='primary' onClick={() => {
+            handleSteps(3)
+          }}>下一步</Button>
+        </div></>}
+      {current == 3 && <>
+        <div className='left-block'>
+          <Button onClick={() => {
+            // this.props.history.goBack()
+            handleSteps(2, 'back')
           }}>上一步</Button>
         </div>
         <div className='right-block'>
@@ -58,16 +62,19 @@ export default class BottomBlock extends React.Component {
             console.log(2);
           }}>提交</Button>
         </div></>}
-      {visible && <CheckModal visible={visible} onCancel={() => {
-        this.toggleVisible(false)
-      }} />}
+      {visible && <CheckModal visible={visible} data={orderMaps} handlDel={handlDel}
+        onCancel={() => {
+          this.toggleVisible(false)
+        }} />}
     </div>
   }
 }
 
 class CheckModal extends React.PureComponent {
   render() {
-    const { visible, onCancel } = this.props;
+    const { visible, onCancel, data = {}, handlDel } = this.props;
+    const dataAry = Object.values(data);
+    const CheckModalCols = CheckModalFunc(handlDel);
     return <Modal
       wrapClassName='checkOrder-modal'
       key='checkOrder'
@@ -82,11 +89,23 @@ class CheckModal extends React.PureComponent {
         ]}
     >
       <>
-        <p>已选订单：<span className='primary-font'>12个</span></p>
-        <Table columns={CheckModalCols}
-
+        <p>已选订单：<span className='primary-font'>{dataAry.length || '0'}个</span></p>
+        <Table
+          rowKey='order_id'
+          columns={CheckModalCols}
+          dataSource={dataAry}
+          bordered
         />
       </>
     </Modal>
   }
 }
+const mapStateToProps = (state) => {
+  return {
+    // spotplanCompanyInfo: state.spotplanReducers.spotplanCompanyInfo,
+  }
+}
+const mapDispatchToProps = dispatch => ({
+  actions: bindActionCreators({ ...spotplanAction }, dispatch)
+});
+export default connect(mapStateToProps, mapDispatchToProps)(BottomBlock)

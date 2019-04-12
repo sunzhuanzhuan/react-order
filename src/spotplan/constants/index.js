@@ -1,5 +1,7 @@
 import React from 'react'
-export const CheckModalCols = [
+import { Modal, Input } from 'antd'
+const { TextArea } = Input;
+export const CheckModalFunc = handleDel => [
   {
     title: '订单ID',
     dataIndex: 'order_id',
@@ -9,38 +11,41 @@ export const CheckModalCols = [
   },
   {
     title: '需求名称',
-    dataIndex: 'platform_name',
-    key: 'platform_name',
+    dataIndex: 'requirement_name',
+    key: 'requirement_name',
     align: 'center',
     width: 160
   },
   {
     title: '平台',
-    dataIndex: 'cooperation_platform_name',
-    key: 'cooperation_platform_name',
+    dataIndex: 'weibo_type_name',
+    key: 'weibo_type_name',
     align: 'center',
     width: 100
   },
   {
     title: '账号名称',
-    dataIndex: 'agent_name',
-    key: 'agent_name',
+    dataIndex: 'weibo_name',
+    key: 'weibo_name',
     align: 'center',
     width: 120
   },
   {
     title: '价格名称',
-    dataIndex: 'public_order_id',
-    key: 'public_order_id',
+    dataIndex: 'price_name',
+    key: 'price_name',
     align: 'center',
     width: 180
   },
   {
     title: '应约价（账号报价/总价）',
-    dataIndex: 'payment_amount',
-    key: 'payment_amount',
+    dataIndex: 'price',
+    key: 'price',
     align: 'center',
-    width: 180
+    width: 180,
+    render: (text, record) => {
+      return record.cost + '/' + record.costwithfee
+    }
   },
   {
     title: '操作',
@@ -49,101 +54,132 @@ export const CheckModalCols = [
     align: 'center',
     width: 100,
     render: (text, record) => {
-      return <a href='javascript:;'>删除</a>
+      return <a href='javascript:;' onClick={() => {
+        Modal.confirm({
+          title: '',
+          content: `是否确认删除该订单？`,
+          onOk: () => {
+            handleDel(record.order_id)
+          }
+        })
+      }}>删除</a>
     }
   }
 ];
 export const EditOrderCols = [
   {
     title: '订单ID',
-    dataIndex: 'payment_slip_id',
-    key: 'payment_slip_id',
+    dataIndex: 'order_id',
+    key: 'order_id',
     align: 'center',
-    width: 100
+    width: 100,
+    fixed: 'left',
+    render: (text, record) => {
+      return <a href={record.order_info_path} target="_blank">{text}</a>
+    }
   },
   {
     title: '需求名称',
-    dataIndex: 'platform_name',
-    key: 'platform_name',
+    dataIndex: 'requirement_name',
+    key: 'requirement_name',
     align: 'center',
-    width: 100
+    width: 100,
+    render: (text, record) => {
+      return <a href={record.requirement_path} target="_blank">{text}</a>
+    }
   },
   {
     title: '平台',
-    dataIndex: 'cooperation_platform_name',
-    key: 'cooperation_platform_name',
+    dataIndex: 'weibo_type_name',
+    key: 'weibo_type_name',
     align: 'center',
     width: 100
   },
   {
     title: '账号名称',
-    dataIndex: 'agent_name',
-    key: 'agent_name',
+    dataIndex: 'weibo_name',
+    key: 'weibo_name',
     align: 'center',
-    width: 140
+    width: 140,
+    render: (text, record) => {
+      return <a href={record.link_url} target="_blank">{text}</a>
+    }
   },
   {
     title: '账号ID',
-    dataIndex: 'public_order_id',
-    key: 'public_order_id',
+    dataIndex: 'id',
+    key: 'id',
     align: 'center',
     width: 100
   },
   {
     title: 'PriceID',
-    dataIndex: 'payment_amount',
-    key: 'payment_amount',
+    dataIndex: 'price_id',
+    key: 'price_id',
     align: 'center',
     width: 100
   },
   {
     title: '价格名称',
-    dataIndex: 'payment_status_desc',
-    key: 'payment_status_desc',
+    dataIndex: 'price_name',
+    key: 'price_name',
     align: 'center',
-    width: 100
+    width: 200,
+    fixed: 'right',
+    render: () => {
+      return <TextArea autosize={{ minRows: 4 }} style={{ width: 180 }} />
+    }
   },
   {
     title: 'Cost（元）',
-    dataIndex: 'payment_company_name',
-    key: 'payment_company_name',
+    dataIndex: 'cost',
+    key: 'cost',
     align: 'center',
-    width: 100
+    width: 100,
+    fixed: 'right'
   },
   {
     title: 'Costwithfee（元）',
-    dataIndex: 'created_at',
-    key: 'created_at',
+    dataIndex: 'costwithfee',
+    key: 'costwithfee',
     align: 'center',
-    width: 100
+    width: 100,
+    fixed: 'right'
   },
   {
     title: '账号分类',
-    dataIndex: 'return_invoice_amount',
-    key: 'return_invoice_amount',
+    dataIndex: 'account_category_name',
+    key: 'account_category_name',
     align: 'center',
-    width: 100
+    width: 100,
+    fixed: 'right'
   },
   {
     title: '是否备选号',
-    dataIndex: 'invoice_surplus',
-    key: 'invoice_surplus',
+    dataIndex: 'is_replace',
+    key: 'is_replace',
     align: 'center',
-    width: 100
+    width: 100,
+    fixed: 'right',
+    render: text => {
+      return text == 1 ? '是' : text == 2 ? '否' : '-'
+    }
   },
   {
     title: '位置/直发or转发',
-    dataIndex: 'main_user_name',
-    key: 'main_user_name',
+    dataIndex: 'release_form',
+    key: 'release_form',
     align: 'center',
-    width: 100
+    width: 100,
+    fixed: 'right'
   },
   {
     title: '备注（非必填）',
-    dataIndex: 'media_user_name',
-    key: 'media_user_name',
+    dataIndex: 'content',
+    key: 'content',
     align: 'center',
-    width: 100
+    width: 100,
+    fixed: 'right'
   }
 ];
 export const SpotplanListCols = [
@@ -378,4 +414,23 @@ export const DetailTableCols = [
     align: 'center',
     width: 100
   }
+]
+
+//客户确认状态
+export const STATUS_CUSTOMER = [
+  { key: '客户待确认', value: 11 },
+  { key: '客户确认', value: 12 },
+  { key: '客户拒绝', value: 13 },
+  { key: '客户取消', value: 14 },
+  { key: '过时未确认', value: 15 },
+  { key: '待支付', value: 36 }
+];
+//预约中状态
+export const STATUS_RESERVATION = [
+  { key: '预约中', value: 1 },
+  { key: '应约', value: 2 },
+  { key: '拒约', value: 3 },
+  { key: '流约', value: 4 },
+  { key: '预约取消', value: 5 },
+  { key: '终止申请中', value: 31 },
 ]

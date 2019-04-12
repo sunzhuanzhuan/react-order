@@ -7,6 +7,10 @@ export default class EditOrder extends React.Component {
     super();
     this.state = {}
   }
+  componentDidMount() {
+    const { search } = this.props;
+    this.props.queryData(3, { spotplan_id: search.spotplan_id });
+  }
   render() {
     return <div className='splotplan-edit-container'>
       <Header />
