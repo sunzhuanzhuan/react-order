@@ -6,6 +6,7 @@ import loginReducer from '../login/reducer/index'
 import siderMenuReducer from '../siderMenu/reducers'
 import authorizationsReducers from './authorizations'
 import closingReportReducers from '../closingReport/reducer'
+import business from '../business/reducers'
 export default combineReducers({
 	commonReducers,
 	routing: routerReducer,
@@ -13,5 +14,6 @@ export default combineReducers({
 	loginReducer,
 	siderMenuReducer,
 	authorizationsReducers,
-  closingReportReducers
+  closingReportReducers,
+  business
 });

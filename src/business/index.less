@@ -1,0 +1,48 @@
+@import "../indexNbTheme";
+.business-page-container {
+  .ant-table-row td {
+    text-align: unset;
+  }
+  .merchant-list-head, .merchant-detail-head {
+    margin-bottom: 6px;
+    h2 {
+      display: inline-block;
+      margin: 0;
+      line-height: 32px;
+      small {
+        margin-left: 14px;
+        a {color: @primary-color;}
+      }
+    }
+    .ant-btn {
+      float: right;
+    }
+  }
+  .merchant-detail-top {
+    &.business-infos {
+      padding: 8px 40px;
+      border: 1px solid #f0f0f0;
+      background: #f7f7f7;
+      margin: 18px 0;
+      .info-title {
+        display: inline-block;
+        padding: 5px 0;
+        color: #999;
+        &::after {
+          content: '\FF1A';
+        }
+      }
+      .info-value {
+        color: #111;
+      }
+    }
+  }
+}
+.complaints-list-modal-tips {
+  list-style: none;
+  padding: 20px 0 0 45px;
+  li {
+    list-style: none;
+    margin-bottom: 4px;
+  }
+}

@@ -14,8 +14,11 @@ import 'moment/locale/zh-cn';
 import 'numeral/locales/chs';
 // 顶级根目录页面
 import App from './containers/App';
-import ClosingReport from './closingReport';
 import { linkTo } from '@/util/linkTo';
+// 项目
+import ClosingReport from './closingReport';
+import Business from './business';
+
 // 设置语言包
 numeral.locale('chs');
 moment.locale('zh-cn');
@@ -30,6 +33,7 @@ const routes = () => (
   <App history={history}>
     <Switch>
       <Route path="/order/closing-report" component={ClosingReport} />
+      <Route path="/order/business" component={Business} />
       <Route render={() => linkTo('/error')} />
     </Switch>
   </App>
@@ -42,7 +46,7 @@ render(
         <Switch>
           {
             process.env.NODE_ENV === 'development' ?
-              <Route exact path="/" render={() => <Redirect to="/order/closing-report" />} /> : null
+              <Route exact path="/" render={() => <Redirect to="/order/business/merchant/list" />} /> : null
           }
           <Route path="/order" render={routes} />
           <Route render={redirectToOtherProjects} />
