@@ -152,7 +152,10 @@ export const EditOrderCols = [
     key: 'account_category_name',
     align: 'center',
     width: 100,
-    fixed: 'right'
+    fixed: 'right',
+    render: () => {
+      return <Input />
+    }
   },
   {
     title: '是否备选号',
@@ -171,7 +174,10 @@ export const EditOrderCols = [
     key: 'release_form',
     align: 'center',
     width: 100,
-    fixed: 'right'
+    fixed: 'right',
+    render: () => {
+      return <Input />
+    }
   },
   {
     title: '备注（非必填）',
@@ -179,7 +185,10 @@ export const EditOrderCols = [
     key: 'content',
     align: 'center',
     width: 100,
-    fixed: 'right'
+    fixed: 'right',
+    render: () => {
+      return <TextArea autosize={{ minRows: 4 }} style={{ width: 180 }} />
+    }
   }
 ];
 export const SpotplanListCols = [
