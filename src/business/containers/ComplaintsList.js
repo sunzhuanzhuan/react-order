@@ -158,10 +158,16 @@ export default class ComplaintsList extends Component {
       >
         <Form layout='inline'>
           <Form.Item label="退款比例">
-            {getFieldDecorator('ratio')(
-              <InputNumber min={0} max={100} placeholder='25' />
+            {getFieldDecorator('ratio', {
+              rules: [
+                { required: true, message: '请输入退款比例' }
+              ]
+            })(
+              <InputNumber min={0} max={100} precision={0} placeholder='25' />
             )}
-            <span style={{ margin: '0 20px 0 4px' }}>%</span>
+            <span style={{ margin: '0 14px 0 4px' }}>%</span>
+          </Form.Item>
+          <Form.Item style={{display: 'inline-block', margin: '0'}}>
             {getFieldDecorator('note')(
               <Input placeholder='添加退款备注内容' style={{ width: '240px' }} />
             )}
