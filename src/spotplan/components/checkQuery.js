@@ -1,5 +1,6 @@
 import React from 'react'
-import { Row, Form, Select, Input, Button } from 'antd'
+import { Row, Form, Select, Input, Button, message } from 'antd'
+import qs from 'qs'
 
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -8,6 +9,67 @@ class CheckQuery extends React.Component {
     super();
     this.state = {}
   }
+  componentDidMount() {
+    const search = qs.parse(this.props.location.search.substring(1));
+    const { setFieldsValue } = this.props.form;
+    const obj = {};
+    const keys = search.keys || {};
+    const labels = search.labels ? Object.keys(search.labels) : [];
+
+    labels.length > 0 ? labels.forEach(item => {
+      obj[item] = { key: search.keys[item], label: search.labels[item] }
+    }) : null;
+    const settle_id = keys.order_id || keys.po_code;
+    if (keys.weibo_name) {
+      keys['weibo_name'] = keys['weibo_name'].join(' ');
+    }
+    if (settle_id) {
+      keys['settle_id'] = settle_id.join(' ');
+      delete keys['order_id']
+      delete keys['requirement_id']
+    }
+    setFieldsValue({ ...keys, ...obj });
+  }
+  handleReset = () => {
+    this.props.form.resetFields();
+  }
+  handleSearch = e => {
+    e.preventDefault();
+    this.props.form.validateFields((err, values) => {
+      if (!err) {
+        const search = qs.parse(this.props.location.search.substring(1));
+        const keys = {}, labels = {};
+        for (let key in values) {
+          if (Object.prototype.toString.call(values[key]) === '[object Object]') {
+            keys[key] = values[key].key;
+            labels[key] = values[key].label;
+          } else if (key == 'settle_id' && values[key]) {
+            values['settle_type'].key == 1 ? keys['order_id'] = values[key].trim().split(' ') : keys['requirement_id'] = values[key].trim().split(' ');
+          } else if (key == 'weibo_name' && values[key]) {
+            keys['weibo_name'] = values['weibo_name'].trim().split(' ')
+          } else {
+            keys[key] = values[key]
+          }
+        }
+        const params = {
+          keys: { ...keys },
+          labels: { ...labels }
+        };
+        Object.keys(params['keys']).forEach(item => { !params['keys'][item] && params['keys'][item] !== 0 ? delete params['keys'][item] : null });
+        const hide = message.loading('查询中，请稍候...');
+        this.props.queryData(2, { ...params.keys }).then(() => {
+          this.props.history.replace({
+            pathname: this.props.location.pathname,
+            search: `?${qs.stringify({ step: search.step, spotplan_id: search.spotplan_id, ...params })}`,
+          })
+          hide();
+        }).catch(({ errorMsg }) => {
+          message.error(errorMsg || '查询失败');
+          hide();
+        });
+      }
+    });
+  }
   render() {
     const { getFieldDecorator } = this.props.form;
     const { customer_status, reservation_status, spotplan_executor, spotplan_platform, spotplan_project } = this.props;
@@ -15,7 +77,7 @@ class CheckQuery extends React.Component {
       <Row>
         <FormItem label='批量查询'>
           {getFieldDecorator('settle_type', {
-            initialValue: { key: '订单ID', value: 1 }
+            initialValue: { key: 1, label: '订单ID' }
           })(
             <Select style={{ width: 100 }}
               placeholder='请选择'
@@ -92,7 +154,7 @@ class CheckQuery extends React.Component {
         </FormItem>
         <FormItem label='订单预约状态'>
           {getFieldDecorator('reservation_status', {
-            initialValue: { key: '应约', value: 2 }
+            initialValue: { key: 2, label: '应约' }
           })(
             <Select style={{ width: 140 }}
               placeholder='请选择'
@@ -126,8 +188,8 @@ class CheckQuery extends React.Component {
             </Select>
           )}
         </FormItem>
-        <Button className='left-gap'>重置</Button>
-        <Button className='left-gap' type='primary'>查询</Button>
+        <Button className='left-gap' onClick={this.handleReset}>重置</Button>
+        <Button className='left-gap' type='primary' onClick={this.handleSearch}>查询</Button>
       </Row>
     </Form>
   }

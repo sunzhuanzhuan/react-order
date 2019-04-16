@@ -28,6 +28,7 @@ class SpotplanAdd extends React.Component {
       orderMaps: {}
     }
     this.basicInfo = React.createRef();
+    this.editOrder = React.createRef();
   }
   componentDidMount() {
     document.querySelector('.spotplan-add').style.height = document.documentElement.clientHeight - 100 + 'px';
@@ -36,14 +37,20 @@ class SpotplanAdd extends React.Component {
     this.setState({ loading: true });
     const actionMap = { 1: 'getSpotplanCompanyInfo', 2: 'getSpotplanOrderList', 3: 'getSpotplanEditOrder' };
     const actionName = actionMap[step];
-    return this.props.actions[actionName]({ ...obj }).then(() => {
+    return this.props.actions[actionName]({ ...obj }).then((res) => {
       if (func && Object.prototype.toString.call(func) === '[object Function]') {
-        func();
+        func(res.data);
       }
       this.setState({ loading: false });
     }).catch(({ errorMsg }) => {
       this.setState({ loading: false });
       message.error(errorMsg || '获取接口数据出错！');
+    })
+  }
+  handleUpdate = obj => {
+    const search = qs.parse(this.props.location.search.substring(1));
+    return this.props.actions.postUpdateSpotplanOrder({ spotplan_id: search.spotplan_id, ...obj }).then(() => {
+      message.success('更新完成！', 1);
     })
   }
   handleCheck = (order_id, price_id) => {
@@ -108,12 +115,23 @@ class SpotplanAdd extends React.Component {
       })
 
     }
+    if (num == 4) {
+      if (type && type == 'submit') {
+        this.editOrder.current.validateFields((err) => {
+          if (!err) {
+            this.props.history.push('/order/spotplan/detail?spotplan_id=' + search.spotplan_id);
+          }
+        })
+      } else {
+        this.props.history.push('/order/spotplan/detail?spotplan_id=' + search.spotplan_id);
+      }
+    }
   }
   render() {
     const search = qs.parse(this.props.location.search.substring(1));
     const step = parseInt(search.step);
     const { orderMaps } = this.state;
-    const { spotplanCompanyInfo } = this.props;
+    const { spotplanCompanyInfo, spotplanEditList } = this.props;
     return <>
       <div className='spotplan-add'>
         <h2>创建Spotplan</h2>
@@ -124,20 +142,20 @@ class SpotplanAdd extends React.Component {
         </div>
         <div className='spotplan-add-container'>
           {step == 1 && <BasicInfo ref={this.basicInfo} queryData={this.queryData} data={spotplanCompanyInfo} />}
-          {step == 2 && <CheckOrder search={search} queryData={this.queryData} handleCheck={this.handleCheck}
-            orderMaps={orderMaps} />}
-          {step == 3 && <EditOrder search={search} queryData={this.queryData} />}
+          {step == 2 && <CheckOrder queryData={this.queryData} handleCheck={this.handleCheck}
+            orderMaps={orderMaps} location={this.props.location} history={this.props.history} />}
+          {step == 3 && <EditOrder ref={this.editOrder} search={search} queryData={this.queryData} data={spotplanEditList} handleUpdate={this.handleUpdate} />}
         </div>
-
       </div>
       <BottomBlock current={step} handleSteps={this.handleSteps} orderMaps={orderMaps}
-        handlDel={this.handlDelCheck} />
+        handlDel={this.handlDelCheck} data={spotplanEditList} />
     </>
   }
 }
 const mapStateToProps = (state) => {
   return {
     spotplanCompanyInfo: state.spotplanReducers.spotplanCompanyInfo,
+    spotplanEditList: state.spotplanReducers.spotplanEditList,
   }
 }
 const mapDispatchToProps = dispatch => ({

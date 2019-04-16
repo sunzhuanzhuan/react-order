@@ -7,6 +7,7 @@ import CheckQuery from '../components/checkQuery'
 import OrderItem from '../components/orderItem'
 import Header from '../components/header'
 import { STATUS_CUSTOMER, STATUS_RESERVATION } from '../constants'
+import qs from 'qs'
 
 class CheckOrder extends React.Component {
   constructor() {
@@ -16,7 +17,7 @@ class CheckOrder extends React.Component {
     }
   }
   componentDidMount() {
-    const { search } = this.props;
+    const search = qs.parse(this.props.location.search.substring(1));
     const { getSpotplanExecutor, getSpotplanPlatform, getSpotplanProject } = this.props.actions;
     getSpotplanExecutor();
     getSpotplanPlatform();
@@ -29,7 +30,11 @@ class CheckOrder extends React.Component {
       <Header />
       <h3 style={{ marginTop: '20px' }}>订单列表</h3>
       <div className='check-table-container'>
-        <CheckQuery customer_status={STATUS_CUSTOMER}
+        <CheckQuery
+          location={this.props.location}
+          history={this.props.history}
+          queryData={this.props.queryData}
+          customer_status={STATUS_CUSTOMER}
           reservation_status={STATUS_RESERVATION}
           spotplan_executor={spotplanExecutor}
           spotplan_platform={spotplanPlatform}

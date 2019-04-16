@@ -1,33 +1,90 @@
 import React from 'react'
-import { Breadcrumb, Table, Row, Col, Button, Modal, Tooltip, Icon, Tabs, Checkbox } from 'antd'
-import DetailQuery from '../components/detailQuery'
-import DetailTable from '../components/detailTable'
-import { HisttoryCols } from '../constants'
+import { connect } from 'react-redux';
+import { bindActionCreators } from "redux";
+import * as spotplanAction from "../actions";
+import { Breadcrumb, Row, Col, Button, Tooltip, Icon, Tabs, Checkbox, Modal, message } from 'antd'
+import DetailQuery from '../components/spotplanDetail/detailQuery'
+import DetailTable from '../components/spotplanDetail/detailTable'
+import HistoryModal from '../components/spotplanDetail/historyModal'
+import EditOrderModal from '../components/spotplanDetail/editOrderModal'
 import './spotplan.less'
+import qs from 'qs'
 
 const TabPane = Tabs.TabPane;
-export default class SpotPlanDetail extends React.Component {
+class SpotPlanDetail extends React.Component {
   constructor() {
     super();
     this.state = {
-      historyVisible: false
+      historyVisible: false,
+      editVisible: false,
+      type: 'all',
+      rowsKeys: {}
     }
   }
-  handleTabsChange = (e) => {
-    console.log('%ce: ', 'color: MidnightBlue; background: Aquamarine; font-size: 20px;', e);
-
+  componentDidMount() {
+    const search = qs.parse(this.props.location.search.substring(1));
+    const { getSpotplanPoInfo, getSpotplanAmount } = this.props.actions;
+    getSpotplanPoInfo({ spotplan_id: search.spotplan_id });
+    getSpotplanAmount({ spotplan_id: search.spotplan_id });
+    this.queryData({ spotplan_id: search.spotplan_id, ...search.keys });
+  }
+  queryData = (obj, func) => {
+    this.setState({ loading: true });
+    return this.props.actions.getSpotplanEditOrder({ ...obj }).then((res) => {
+      if (func && Object.prototype.toString.call(func) === '[object Function]') {
+        func(res.data);
+      }
+      this.setState({ loading: false });
+    }).catch(({ errorMsg }) => {
+      this.setState({ loading: false });
+      message.error(errorMsg || '获取接口数据出错！');
+    })
+  }
+  onSelectChange = (selectedRowKeys, selectedRows) => {
+    const { type, rowsKeys } = this.state;
+    this.setState({ rowsKeys: { ...rowsKeys, [type]: selectedRowKeys } });
+  }
+  handleTabsChange = value => {
+    const { rows } = this.state;
+    const search = qs.parse(this.props.location.search.substring(1));
+    if (value - 1) {
+      this.queryData({ ...search.keys, spotplan_id: search.spotplan_id, type: value - 1 });
+      this.setState({ type: value - 1, rows: { ...rows, [value - 1]: {} } });
+      return
+    }
+    this.queryData({ ...search.keys, spotplan_id: search.spotplan_id });
+    this.setState({ type: 'all', rows: { ...rows, 'all': {} } });
   }
   handleCheckAll = () => {
-    console.log('check all');
+    const { type, rows, rowsKeys } = this.state;
+    const { spotplanEditList: { list = [] } } = this.props;
+    this.setState({ rows: { ...rows, [type]: {} } });
+  }
+  handleEditOrder = order_id => {
+    const search = qs.parse(this.props.location.search.substring(1));
+    this.props.actions.getBasicSpotplanOrderInfo({ spotplan_id: search.spotplan_id, order_id }).then(() => {
+      this.setState({ editVisible: true });
+    })
+  }
+  handleDel = order_id => {
+    const search = qs.parse(this.props.location.search.substring(1));
+    Modal.confirm({
+      title: '',
+      content: '是否确认将该订单从本spotplan删除？',
+      onOk: () => {
+        console.log('delete');
+      }
+    })
   }
   render() {
-    const { historyVisible } = this.state;
+    const { historyVisible, editVisible, rowsKeys, type } = this.state;
+    const { spotplanPoInfo, spotplanAmount, spotplanEditList: { list = [] }, basicSpotplanOrderInfo } = this.props;
+    const rowSelection = {
+      selectedRowKeys: rowsKeys[type],
+      onChange: this.onSelectChange,
+    };
     return <div className='spotList-detail-container'>
-      <Breadcrumb>
-        <Breadcrumb.Item><a href="javascript:;">Spotplan管理</a></Breadcrumb.Item>
-        <Breadcrumb.Item><a href="/order/spotplan/list">Spotplan列表</a></Breadcrumb.Item>
-        <Breadcrumb.Item><a href="">Spotplan详情页</a></Breadcrumb.Item>
-      </Breadcrumb>
+      <NavBar />
       <h2>Spotplan详情页</h2>
       <div>
         <h3 className='top-gap' style={{ display: 'inline-block' }}>Spotplan基本信息</h3>
@@ -36,16 +93,16 @@ export default class SpotPlanDetail extends React.Component {
           <Button type='primary' className='left-gap'>导出为Excel</Button>
         </div>
       </div>
-      <BasicInfo handleClick={() => { this.setState({ historyVisible: true }) }} />
+      <BasicInfo data={spotplanPoInfo} handleClick={() => { this.setState({ historyVisible: true }) }} />
       <h3 className='top-gap'>订单列表</h3>
-      <Statistics />
+      <Statistics data={spotplanAmount} />
       <DetailQuery />
       <Tabs onChange={this.handleTabsChange} type="card">
-        <TabPane tab="全部（13）" key="1"><DetailTable /></TabPane>
-        <TabPane tab="待确认合作（11）" key="2"><DetailTable /></TabPane>
-        <TabPane tab="已确认合作（2）" key="3"><DetailTable /></TabPane>
-        <TabPane tab="终止合作申请中（2）" key="4"><DetailTable /></TabPane>
-        <TabPane tab="已终止合作（2）" key="5"><DetailTable /></TabPane>
+        <TabPane tab="全部（13）" key="1"><DetailTable dataSource={list} rowSelection={rowSelection} /></TabPane>
+        <TabPane tab="待确认合作（11）" key="2"><DetailTable dataSource={list} rowSelection={rowSelection} /></TabPane>
+        <TabPane tab="已确认合作（2）" key="3"><DetailTable dataSource={list} rowSelection={rowSelection} /></TabPane>
+        <TabPane tab="终止合作申请中（2）" key="4"><DetailTable dataSource={list} rowSelection={rowSelection} /></TabPane>
+        <TabPane tab="已终止合作（2）" key="5"><DetailTable dataSource={list} rowSelection={rowSelection} /></TabPane>
       </Tabs>
       <div className='top-gap'>
         <Checkbox onChange={this.handleCheckAll}>全选</Checkbox>
@@ -53,47 +110,70 @@ export default class SpotPlanDetail extends React.Component {
         <Button className='left-gap' type='primary'>批量申请终止合作</Button>
       </div>
 
-      {historyVisible && <HistoryModal visible={historyVisible} onCancel={
-        () => { this.setState({ historyVisible: false }) }} />}
+      {historyVisible && <HistoryModal visible={historyVisible} onCancel={() => { this.setState({ historyVisible: false }) }} />}
+      {editVisible && <EditOrderModal visible={editVisible}
+        data={basicSpotplanOrderInfo}
+        onCancel={() => {
+          this.setState({ editVisible: false })
+        }}
+      />}
     </div>
   }
 }
+const mapStateToProps = (state) => {
+  return {
+    spotplanPoInfo: state.spotplanReducers.spotplanPoInfo,
+    spotplanAmount: state.spotplanReducers.spotplanAmount,
+    basicSpotplanOrderInfo: state.spotplanReducers.basicSpotplanOrderInfo,
+    spotplanEditList: state.spotplanReducers.spotplanEditList,
+  }
+}
+const mapDispatchToProps = dispatch => ({
+  actions: bindActionCreators({ ...spotplanAction }, dispatch)
+});
+export default connect(mapStateToProps, mapDispatchToProps)(SpotPlanDetail)
 
-
-function BasicInfo({ handleClick }) {
+function NavBar() {
+  return <Breadcrumb>
+    <Breadcrumb.Item><a href="javascript:;">Spotplan管理</a></Breadcrumb.Item>
+    <Breadcrumb.Item><a href="/order/spotplan/list">Spotplan列表</a></Breadcrumb.Item>
+    <Breadcrumb.Item><a href="">Spotplan详情页</a></Breadcrumb.Item>
+  </Breadcrumb>
+}
+function BasicInfo({ data, handleClick }) {
   return <div className='info-container top-gap'>
     <Row className='info-row'>
-      <Col span={3}>SpotplanID:</Col><Col span={4}>120</Col>
-      <Col span={3}>Spotplan名称:</Col><Col span={12}>Pampers Ichiban diaper Double.11 Grass­seeding KOL</Col>
+      <Col span={3}>SpotplanID:</Col><Col span={4}>{data && data.spotplan_id}</Col>
+      <Col span={3}>Spotplan名称:</Col><Col span={12}>{data && data.spotplan_name}</Col>
     </Row>
     <Row className='info-row'>
-      <Col span={3}>创建人:</Col><Col span={4}>蔡逸琦</Col>
-      <Col span={3}>所属项目/品牌:</Col><Col span={12}>一级帮diaper-12月  / pampers</Col>
+      <Col span={3}>创建人:</Col><Col span={4}>{data && data.creator_name}</Col>
+      <Col span={3}>所属项目/品牌:</Col><Col span={12}>{data && data.project_name} / {data && data.brand_name || '-'}</Col>
     </Row>
     <Row className='info-row'>
-      <Col span={3}>创建时间:</Col><Col span={4}>2019-03-30 00:00</Col>
-      <Col span={3}>更新时间:</Col><Col span={12}>2019-03-30 00:00</Col>
+      <Col span={3}>创建时间:</Col><Col span={4}>{data && data.created_at}</Col>
+      <Col span={3}>更新时间:</Col><Col span={12}>{data && data.updated_at}</Col>
     </Row>
     <Row className='info-row'>
-      <Col span={3}>PO单号:</Col><Col span={4}>8910283849</Col>
-      <Col span={3}>发起更新申请次数:</Col><Col span={12}>10<a style={{ marginLeft: '40px' }} href='javascript:;' onClick={handleClick}>查看历史更新申请记录</a></Col>
+      <Col span={3}>PO单号:</Col><Col span={4}>{data && data.customer_po_code}</Col>
+      <Col span={3}>发起更新申请次数:</Col><Col span={12}>{data && data.customer_po_amount}<a style={{ marginLeft: '40px' }} href='javascript:;' onClick={handleClick}>查看历史更新申请记录</a></Col>
     </Row>
     <Row className='info-row'>
-      <Col span={3}>PO总额（不含税）:</Col><Col span={4}>8,889,098.00 元</Col>
-      <Col span={3}>PO总额（含税）:</Col><Col span={12}>8,889,098.00 元</Col>
+      <Col span={3}>PO总额（不含税）:</Col><Col span={4}>{data && data.total_budget} 元</Col>
+      <Col span={3}>PO总额（含税）:</Col><Col span={12}>{data && data.total_budget} 元</Col>
     </Row>
   </div>
 }
 
-function Statistics() {
+function Statistics({ data }) {
   return <div className='spotplan-detail-statistics'>
     <Row className='info-row'>
       <Col span={4}>
-        <Tooltip
+        {data.flag == 2 ? <Tooltip
           overlayClassName='statistics-tip'
           defaultVisible={true}
           getPopupContainer={() => document.querySelector('.spotplan-detail-statistics')}
-          title={'金额已超PO总额（不含税）'}>预计消耗PO金额（不含税）</Tooltip>
+          title={'金额已超PO总额（不含税）'}>预计消耗PO金额（不含税）</Tooltip> : '预计消耗PO金额（不含税）'}
       </Col>
       <Col span={4}>Costwithfee（已确认合作订单）
       <Tooltip title={'已确认合作订单：客户确认使的订单，终止合作申请已被审核通过的订单除外'}><Icon type="question-circle" /></Tooltip>
@@ -103,29 +183,11 @@ function Statistics() {
       </Col>
     </Row>
     <Row className='info-row'>
-      <Col span={3}><span className='primary-font'>1,000,332.00 元</span></Col>
+      <Col span={3}><span className='primary-font'>{data & data.amount} 元</span></Col>
       <Col span={1}>=</Col>
-      <Col span={3}><span className='primary-font'>999,096.00 元</span></Col>
+      <Col span={3}><span className='primary-font'>{data & data.confirmCostwithfee} 元</span></Col>
       <Col span={1}>+</Col>
-      <Col span={4}><span className='primary-font'>1,236.00 元</span></Col>
+      <Col span={4}><span className='primary-font'>{data & data.toBeconfirmCostwithfee} 元</span></Col>
     </Row>
   </div>
-}
-
-function HistoryModal({ visible, onCancel }) {
-  return <Modal
-    wrapClassName='history-modal'
-    key='historyModal'
-    width={700}
-    title='查看历史更新申请记录'
-    visible={visible}
-    maskClosable={false}
-    onCancel={onCancel}
-    footer={
-      [
-        <Button key="back" type='primary' onClick={onCancel}>确认</Button>,
-      ]}
-  >
-    <Table border columns={HisttoryCols} />
-  </Modal>
 }

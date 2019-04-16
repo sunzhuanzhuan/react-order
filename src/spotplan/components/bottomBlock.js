@@ -16,12 +16,9 @@ class BottomBlock extends React.Component {
   toggleVisible = boolean => {
     this.setState({ visible: boolean })
   }
-  toggleLeadVisible = boolean => {
-    this.setState({ leadVisible: boolean })
-  }
   render() {
-    const { current, handleSteps, orderMaps = {}, handlDel } = this.props;
-    const { visible, leadVisible } = this.state;
+    const { current, handleSteps, orderMaps = {}, handlDel, data } = this.props;
+    const { visible } = this.state;
     return <div className='bottom-block'>
       {current == 1 && <div className='right-block'><Button type='primary' onClick={() => {
         handleSteps(2, 'go')
@@ -50,16 +47,14 @@ class BottomBlock extends React.Component {
           }}>上一步</Button>
         </div>
         <div className='right-block'>
-          <span style={{ paddingRight: '20px' }}>已选订单：<a href='javascript:;' onClick={() => {
-            this.toggleVisible(true);
-          }}>12个</a></span>
-          <span style={{ paddingRight: '20px' }}>Cost总计：<span className='primary-font'>66666.00 元</span></span>
-          <span style={{ paddingRight: '20px' }}>Costwithfee总计：<span className='primary-font'>777096.00 元</span></span>
+          <span style={{ paddingRight: '20px' }}>已选订单：<span className='primary-font'>{data && data.total || 0}</span></span>
+          <span style={{ paddingRight: '20px' }}>Cost总计：<span className='primary-font'>{data && data.cost_num || 0}元</span></span>
+          <span style={{ paddingRight: '20px' }}>Costwithfee总计：<span className='primary-font'>{data && data.costwithfee_num || 0}元</span></span>
           <Button onClick={() => {
-            console.log(1);
+            handleSteps(4)
           }}>存为草稿</Button>
           <Button type='primary' onClick={() => {
-            console.log(2);
+            handleSteps(4, 'submit')
           }}>提交</Button>
         </div></>}
       {visible && <CheckModal visible={visible} data={orderMaps} handlDel={handlDel}

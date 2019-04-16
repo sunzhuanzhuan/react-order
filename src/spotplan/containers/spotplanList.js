@@ -1,15 +1,73 @@
 import React from 'react'
-import { Breadcrumb, Table } from 'antd'
+import { connect } from 'react-redux';
+import { bindActionCreators } from "redux";
+import * as spotplanAction from "../actions";
+import { Breadcrumb, Table, message } from 'antd'
 import ListQuery from '../components/listQuery'
-import { SpotplanListCols } from '../constants'
+import { SpotplanListFunc } from '../constants'
 import './spotplan.less'
+import qs from 'qs'
 
-export default class SpotPlanList extends React.Component {
+class SpotPlanList extends React.Component {
   constructor() {
     super();
     this.state = {}
   }
+  componentDidMount() {
+    const search = qs.parse(this.props.location.search.substring(1));
+    const { getSpotplanProject, getSpotplanBrand } = this.props.actions;
+    getSpotplanProject();
+    getSpotplanBrand();
+    this.queryData({ ...search.keys })
+  }
+  queryData = (obj, func) => {
+    this.setState({ loading: true });
+    return this.props.actions.getSpotplanList({ ...obj }).then((res) => {
+      if (func && Object.prototype.toString.call(func) === '[object Function]') {
+        func(res.data);
+      }
+      this.setState({ loading: false });
+    }).catch(({ errorMsg }) => {
+      this.setState({ loading: false });
+      message.error(errorMsg || '获取接口数据出错！');
+    })
+  }
+  handleReset = () => {
+    this.props.form.resetFields();
+  }
+  hanldeJump = (spotplan_id) => {
+    this.props.history.push('/order/spotplan/detail?spotplan_id=' + spotplan_id);
+  }
   render() {
+    const search = qs.parse(this.props.location.search.substring(1));
+    const { loading } = this.state;
+    const { spotplanProject, spotplanBrand, spotplanList: { total, page, pageSize, rows } } = this.props;
+    const SpotplanListCols = SpotplanListFunc(this.hanldeJump);
+    const paginationObj = {
+      onChange: (current) => {
+        this.queryData({ ...search.keys, page: current }).then(() => {
+          this.props.history.replace({
+            pathname: this.props.location.pathname,
+            search: `?${qs.stringify({ ...search, keys: { ...search.keys, page: current } })}`,
+          });
+        })
+      },
+      onShowSizeChange: (current, page_size) => {
+        this.queryData({ ...search.keys, page: 1, page_size }).then(() => {
+          this.props.history.replace({
+            pathname: this.props.location.pathname,
+            search: `?${qs.stringify({ ...search, keys: { ...search.keys, page: current, page_size } })}`,
+          });
+        })
+      },
+      total: parseInt(total),
+      current: parseInt(page),
+      pageSize: parseInt(pageSize),
+      showQuickJumper: true,
+      showSizeChanger: true,
+      pageSizeOptions: ['50', '100', '200'],
+      size: "small"
+    };
     return <div className='spotList-list-container'>
       <Breadcrumb>
         <Breadcrumb.Item><a href="">Spotplan管理</a></Breadcrumb.Item>
@@ -17,16 +75,33 @@ export default class SpotPlanList extends React.Component {
       </Breadcrumb>
       <h2>Spotplan列表</h2>
       <h3 style={{ marginTop: '20px' }}>筛选项</h3>
-      <ListQuery />
+      <ListQuery
+        queryData={this.queryData}
+        history={this.props.history}
+        location={this.props.location}
+        spotplan_project={spotplanProject}
+        spotplan_brand={spotplanBrand}
+      />
       <h3 style={{ marginTop: '20px' }}>Spotplan列表</h3>
       <Table
-        rowKey='id'
-        // loading={loading}
+        rowKey='spotplan_id'
+        loading={loading}
         columns={SpotplanListCols}
-        // dataSource={list}
+        dataSource={rows}
         bordered
-      // pagination={total > page_size ? paginationObj : false}
+        pagination={total > 50 ? paginationObj : false}
       />
     </div>
   }
 }
+const mapStateToProps = (state) => {
+  return {
+    spotplanProject: state.spotplanReducers.spotplanProject,
+    spotplanBrand: state.spotplanReducers.spotplanBrand,
+    spotplanList: state.spotplanReducers.spotplanList,
+  }
+}
+const mapDispatchToProps = dispatch => ({
+  actions: bindActionCreators({ ...spotplanAction }, dispatch)
+});
+export default connect(mapStateToProps, mapDispatchToProps)(SpotPlanList)

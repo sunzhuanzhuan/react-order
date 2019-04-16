@@ -1,6 +1,8 @@
 import React from 'react'
-import { Modal, Input } from 'antd'
+import { Modal, Input, Form, Select } from 'antd'
 const { TextArea } = Input;
+const FormItem = Form.Item;
+const Option = Select.Option;
 export const CheckModalFunc = handleDel => [
   {
     title: '订单ID',
@@ -66,14 +68,13 @@ export const CheckModalFunc = handleDel => [
     }
   }
 ];
-export const EditOrderCols = [
+export const EditOrderFunc = (getFieldDecorator, handleUpdate) => [
   {
     title: '订单ID',
     dataIndex: 'order_id',
     key: 'order_id',
     align: 'center',
-    width: 100,
-    fixed: 'left',
+    width: 80,
     render: (text, record) => {
       return <a href={record.order_info_path} target="_blank">{text}</a>
     }
@@ -83,7 +84,7 @@ export const EditOrderCols = [
     dataIndex: 'requirement_name',
     key: 'requirement_name',
     align: 'center',
-    width: 100,
+    width: 80,
     render: (text, record) => {
       return <a href={record.requirement_path} target="_blank">{text}</a>
     }
@@ -93,14 +94,14 @@ export const EditOrderCols = [
     dataIndex: 'weibo_type_name',
     key: 'weibo_type_name',
     align: 'center',
-    width: 100
+    width: 80
   },
   {
     title: '账号名称',
     dataIndex: 'weibo_name',
     key: 'weibo_name',
     align: 'center',
-    width: 140,
+    width: 100,
     render: (text, record) => {
       return <a href={record.link_url} target="_blank">{text}</a>
     }
@@ -110,24 +111,33 @@ export const EditOrderCols = [
     dataIndex: 'id',
     key: 'id',
     align: 'center',
-    width: 100
+    width: 80
   },
   {
     title: 'PriceID',
     dataIndex: 'price_id',
     key: 'price_id',
     align: 'center',
-    width: 100
+    width: 80
   },
   {
     title: '价格名称',
     dataIndex: 'price_name',
     key: 'price_name',
     align: 'center',
-    width: 200,
-    fixed: 'right',
-    render: () => {
-      return <TextArea autosize={{ minRows: 4 }} style={{ width: 180 }} />
+    render: (text, record) => {
+      return <FormItem>
+        {getFieldDecorator(`${record.order_id}.price_name`, {
+          rules: [{ required: true, message: '请填写名称' }]
+        })(
+          <TextArea autosize={{ minRows: 4 }} style={{ width: 140 }} placeholder='请填写名称' onBlur={(e) => {
+            if (e.target.value != record.price_name) {
+              handleUpdate({ order_id: record.order_id, price_id: record.price_id, price_name: e.target.value })
+            }
+          }} />
+        )
+        }
+      </FormItem>
     }
   },
   {
@@ -135,8 +145,7 @@ export const EditOrderCols = [
     dataIndex: 'cost',
     key: 'cost',
     align: 'center',
-    width: 100,
-    fixed: 'right'
+    width: 80,
   },
   {
     title: 'Costwithfee（元）',
@@ -144,7 +153,6 @@ export const EditOrderCols = [
     key: 'costwithfee',
     align: 'center',
     width: 100,
-    fixed: 'right'
   },
   {
     title: '账号分类',
@@ -152,9 +160,19 @@ export const EditOrderCols = [
     key: 'account_category_name',
     align: 'center',
     width: 100,
-    fixed: 'right',
-    render: () => {
-      return <Input />
+    render: (text, record) => {
+      return <FormItem>
+        {getFieldDecorator(`${record.order_id}.account_category_name`, {
+          rules: [{ required: true, message: '请填写分类' }]
+        })(
+          <Input onBlur={(e) => {
+            if (e.target.value != record.account_category_name) {
+              handleUpdate({ order_id: record.order_id, price_id: record.price_id, account_category_name: e.target.value })
+            }
+          }} />
+        )
+        }
+      </FormItem>
     }
   },
   {
@@ -163,9 +181,25 @@ export const EditOrderCols = [
     key: 'is_replace',
     align: 'center',
     width: 100,
-    fixed: 'right',
-    render: text => {
-      return text == 1 ? '是' : text == 2 ? '否' : '-'
+    render: (text, record) => {
+      return <FormItem>
+        {getFieldDecorator(`${record.order_id}.is_replace`, {
+          rules: [{ required: true, message: '请选择是否备选' }]
+        })(
+          <Select
+            placeholder='请选择'
+            getPopupContainer={() => document.querySelector('.edit-table')}
+            onBlur={value => {
+              if (value != record.is_replace) {
+                handleUpdate({ order_id: record.order_id, price_id: record.price_id, is_replace: value })
+              }
+            }}
+          >
+            <Option value={1} >是</Option>
+            <Option value={2} >否</Option>
+          </Select>
+        )}
+      </FormItem>
     }
   },
   {
@@ -174,9 +208,19 @@ export const EditOrderCols = [
     key: 'release_form',
     align: 'center',
     width: 100,
-    fixed: 'right',
-    render: () => {
-      return <Input />
+    render: (text, record) => {
+      return <FormItem>
+        {getFieldDecorator(`${record.order_id}.release_form`, {
+          rules: [{ required: true, message: '请填写位置' }]
+        })(
+          <Input onBlur={(e) => {
+            if (e.target.value != record.release_form) {
+              handleUpdate({ order_id: record.order_id, price_id: record.price_id, is_replace: e.target.value })
+            }
+          }} />
+        )
+        }
+      </FormItem>
     }
   },
   {
@@ -184,69 +228,95 @@ export const EditOrderCols = [
     dataIndex: 'content',
     key: 'content',
     align: 'center',
-    width: 100,
-    fixed: 'right',
-    render: () => {
-      return <TextArea autosize={{ minRows: 4 }} style={{ width: 180 }} />
+    render: (text, record) => {
+      return <FormItem>
+        {getFieldDecorator(`${record.order_id}.content`, {
+          rules: [
+            { max: 200, message: '不能超过200字' }
+          ]
+        })(
+          <TextArea autosize={{ minRows: 4 }} style={{ width: 140 }} placeholder='填写备注信息' onBlur={(e) => {
+            if (e.target.value != record.content) {
+              handleUpdate({ order_id: record.order_id, price_id: record.price_id, content: e.target.value })
+            }
+          }} />
+        )
+        }
+      </FormItem>
     }
   }
 ];
-export const SpotplanListCols = [
+export const SpotplanListFunc = handleJump => [
   {
     title: 'ID',
-    dataIndex: 'payment_slip_id',
-    key: 'payment_slip_id',
+    dataIndex: 'spotplan_id',
+    key: 'spotplan_id',
     align: 'center',
     width: 100
   },
   {
     title: 'PO单号',
-    dataIndex: 'platform_name',
-    key: 'platform_name',
+    dataIndex: 'po_id',
+    key: 'po_id',
     align: 'center',
-    width: 100
+    width: 100,
+    render: (text, record) => {
+      return text ? <a href={record.po_path} target="_blank">text</a> : '-'
+    }
   },
   {
     title: '名称',
-    dataIndex: 'cooperation_platform_name',
-    key: 'cooperation_platform_name',
+    dataIndex: 'spotplan_name',
+    key: 'spotplan_name',
     align: 'center',
     width: 100
   },
   {
     title: '订单数量',
-    dataIndex: 'agent_name',
-    key: 'agent_name',
+    dataIndex: 'order_num',
+    key: 'order_num',
     align: 'center',
-    width: 140
+    width: 100
   },
   {
     title: '更新请求被拒订单',
-    dataIndex: 'public_order_id',
-    key: 'public_order_id',
+    dataIndex: 'is_refused_num',
+    key: 'is_refused_num',
     align: 'center',
     width: 100
   },
   {
     title: '创建人',
-    dataIndex: 'payment_amount',
-    key: 'payment_amount',
+    dataIndex: 'real_name',
+    key: 'real_name',
     align: 'center',
     width: 100
   },
   {
     title: '项目/品牌',
-    dataIndex: 'payment_status_desc',
-    key: 'payment_status_desc',
+    dataIndex: 'project_and_brand',
+    key: 'project_and_brand',
     align: 'center',
-    width: 100
+    width: 100,
+    render: (text, record) => {
+      return <>
+        <div><span>{record.project_name ? <a href={record.project_path} target='_blank'>项目：{record.project_name}</a> : '项目：-'}</span></div>
+        <div>品牌：<span>{record.brand_name || '-'}</span></div>
+      </>
+    }
   },
   {
     title: '时间',
-    dataIndex: 'payment_company_name',
-    key: 'payment_company_name',
+    dataIndex: 'time',
+    key: 'tiem',
     align: 'center',
-    width: 100
+    width: 180,
+    render: (text, record) => {
+      return <>
+        <div>创建时间：<span>{record.created_at}</span></div>
+        <div>更新时间：<span>{record.updated_at}</span></div>
+      </>
+    }
   },
   {
     title: '操作',
@@ -255,11 +325,13 @@ export const SpotplanListCols = [
     align: 'center',
     width: 100,
     render: (text, record) => {
-      return <a href='javascript:;'>查看详情</a>
+      return <a href='javascript:;' onClick={() => {
+        handleJump(record.spotplan_id)
+      }}>查看详情</a>
     }
   }
 ];
-export const HisttoryCols = [
+export const HistoryCols = [
   {
     title: '申请类型',
     dataIndex: 'payment_slip_id',
@@ -306,113 +378,122 @@ export const HisttoryCols = [
 export const DetailTableCols = [
   {
     title: '订单ID',
-    dataIndex: 'payment_slip_id',
-    key: 'payment_slip_id',
+    dataIndex: 'order_id',
+    key: 'order_id',
     align: 'center',
-    width: 100
+    width: 80,
+    render: (text, record) => {
+      return <a href={record.order_info_path} target="_blank">{text}</a>
+    }
   },
   {
     title: '需求名称',
-    dataIndex: 'platform_name',
-    key: 'platform_name',
+    dataIndex: 'requirement_name',
+    key: 'requirement_name',
     align: 'center',
-    width: 100
+    width: 80,
+    render: (text, record) => {
+      return <a href={record.requirement_path} target="_blank">{text}</a>
+    }
   },
   {
     title: '订单状态',
-    dataIndex: 'cooperation_platform_name',
-    key: 'cooperation_platform_name',
+    dataIndex: 'b',
+    key: 'b',
     align: 'center',
-    width: 100
+    width: 80
   },
   {
     title: 'spotplan更新审核状态',
-    dataIndex: 'agent_name',
-    key: 'agent_name',
+    dataIndex: 'last_apply_status',
+    key: 'last_apply_status',
     align: 'center',
-    width: 140
+    width: 100
   },
   {
     title: '订单信息确认状态',
-    dataIndex: 'public_order_id',
-    key: 'public_order_id',
+    dataIndex: 'a',
+    key: 'a',
     align: 'center',
-    width: 100
+    width: 80
   },
   {
     title: '平台',
-    dataIndex: 'payment_amount',
-    key: 'payment_amount',
+    dataIndex: 'weibo_type_name',
+    key: 'weibo_type_name',
     align: 'center',
-    width: 100
+    width: 80
   },
   {
     title: '账号名称',
-    dataIndex: 'payment_status_desc',
-    key: 'payment_status_desc',
+    dataIndex: 'weibo_name',
+    key: 'weibo_name',
     align: 'center',
-    width: 100
+    width: 100,
+    render: (text, record) => {
+      return <a href={record.link_url} target="_blank">{text}</a>
+    }
   },
   {
     title: '账号 ID',
-    dataIndex: 'payment_company_name',
-    key: 'payment_company_name',
+    dataIndex: 'id',
+    key: 'id',
     align: 'center',
-    width: 100
+    width: 80
   },
   {
     title: 'PriceID',
-    dataIndex: 'created_at',
-    key: 'created_at',
+    dataIndex: 'price_id',
+    key: 'price_id',
     align: 'center',
-    width: 100
+    width: 80
   },
   {
     title: '价格名称',
-    dataIndex: 'return_invoice_amount',
-    key: 'return_invoice_amount',
+    dataIndex: 'price_name',
+    key: 'price_name',
     align: 'center',
     width: 100
   },
   {
     title: 'Cost（元）',
-    dataIndex: 'invoice_surplus',
-    key: 'invoice_surplus',
+    dataIndex: 'cost',
+    key: 'cost',
     align: 'center',
     width: 100
   },
   {
     title: 'Costwithfee（元）',
-    dataIndex: 'main_user_name',
-    key: 'main_user_name',
+    dataIndex: 'costwithfee',
+    key: 'costwithfee',
     align: 'center',
     width: 100
   },
   {
     title: '账号分类',
-    dataIndex: 'media_user_name',
-    key: 'media_user_name',
+    dataIndex: 'account_category_name',
+    key: 'account_category_name',
     align: 'center',
     width: 100
   },
   {
     title: '是否备选号',
-    dataIndex: 'a',
-    key: 'a',
+    dataIndex: 'is_replace',
+    key: 'is_replace',
     align: 'center',
-    width: 100
+    width: 80
   },
   {
     title: '位置/直发or转发',
-    dataIndex: 'b',
-    key: 'b',
+    dataIndex: 'release_form',
+    key: 'release_form',
     align: 'center',
     width: 100
   },
   {
     title: '备注',
-    dataIndex: 'c',
-    key: 'c',
+    dataIndex: 'content',
+    key: 'content',
     align: 'center',
     width: 100
   },
@@ -421,7 +502,16 @@ export const DetailTableCols = [
     dataIndex: 'action',
     key: 'action',
     align: 'center',
-    width: 100
+    width: 100,
+    render: (text, record) => {
+      return <>
+        <div><a href='javascript:;'>申请换号</a></div>
+        <div><a href='javascript:;'>申请终止合作</a></div>
+        <div><a href='javascript:;'>申请更新信息</a></div>
+        <div><a href='javascript:;'>编辑信息</a></div>
+        <div><a href='javascript:;'>删除订单</a></div>
+      </>
+    }
   }
 ]
 

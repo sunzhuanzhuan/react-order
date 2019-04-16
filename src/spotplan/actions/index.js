@@ -40,7 +40,8 @@ export const {
   getSpotplanOrderList,
   getSpotplanOrderList_success
 } = createHttpAction('getSpotplanOrderList', Interface.getSpotplanOrderList, {
-  method: 'get'
+  method: 'get',
+  ignoreToast: true,
 });
 
 export const {
@@ -54,6 +55,50 @@ export const {
   getSpotplanEditOrder,
   getSpotplanEditOrder_success
 } = createHttpAction('getSpotplanEditOrder', Interface.getSpotplanEditOrder, {
+  method: 'get',
+  ignoreToast: true,
+});
+
+export const {
+  postUpdateSpotplanOrder,
+  postUpdateSpotplanOrder_success
+} = createHttpAction('postUpdateSpotplanOrder', Interface.postUpdateSpotplanOrder, {
+  method: 'post'
+});
+
+export const {
+  getSpotplanBrand,
+  getSpotplanBrand_success
+} = createHttpAction('getSpotplanBrand', Interface.getSpotplanBrand, {
   method: 'get'
+});
+
+export const {
+  getSpotplanList,
+  getSpotplanList_success
+} = createHttpAction('getSpotplanList', Interface.getSpotplanList, {
+  method: 'get',
+  ignoreToast: true,
+});
+
+export const {
+  getSpotplanPoInfo,
+  getSpotplanPoInfo_success
+} = createHttpAction('getSpotplanPoInfo', Interface.getSpotplanPoInfo, {
+  method: 'get',
+});
+
+export const {
+  getSpotplanAmount,
+  getSpotplanAmount_success
+} = createHttpAction('getSpotplanAmount', Interface.getSpotplanAmount, {
+  method: 'get',
+});
+
+export const {
+  getBasicSpotplanOrderInfo,
+  getBasicSpotplanOrderInfo_success
+} = createHttpAction('getBasicSpotplanOrderInfo', Interface.getBasicSpotplanOrderInfo, {
+  method: 'get',
 });
 

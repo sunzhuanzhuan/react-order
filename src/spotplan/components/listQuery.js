@@ -1,32 +1,90 @@
 import React from 'react'
-import { Row, Form, Select, Input, Button, DatePicker } from 'antd'
+import { Row, Form, Select, Input, Button, DatePicker, message } from 'antd'
+import qs from 'qs'
+
 const { RangePicker } = DatePicker;
 const FormItem = Form.Item;
 const Option = Select.Option;
-class CheckQuery extends React.Component {
+class ListQuery extends React.Component {
   constructor() {
     super();
     this.state = {}
   }
+  componentDidMount() {
+    const search = qs.parse(this.props.location.search.substring(1));
+    const { setFieldsValue } = this.props.form;
+    const obj = {};
+    const keys = search.keys || {};
+    const labels = search.labels ? Object.keys(search.labels) : [];
+
+    labels.length > 0 ? labels.forEach(item => {
+      obj[item] = { key: search.keys[item], label: search.labels[item] }
+    }) : null;
+    const settle_id = keys.order_id || keys.po_code;
+    if (settle_id) {
+      keys['settle_id'] = settle_id.join(' ');
+      delete keys['order_id']
+      delete keys['po_code']
+    }
+    setFieldsValue({ ...keys, ...obj });
+  }
+  handleReset = () => {
+    this.props.form.resetFields();
+  }
+  handleSearch = e => {
+    e.preventDefault();
+    this.props.form.validateFields((err, values) => {
+      if (!err) {
+        const keys = {}, labels = {};
+        for (let key in values) {
+          if (Object.prototype.toString.call(values[key]) === '[object Object]') {
+            keys[key] = values[key].key;
+            labels[key] = values[key].label;
+          } else if (key == 'settle_id' && values[key]) {
+            values['settle_type'].key == 1 ? keys['order_id'] = values[key].trim().split(' ') : keys['po_code'] = values[key].trim().split(' ');
+          } else {
+            keys[key] = values[key]
+          }
+        }
+        const params = {
+          keys: { ...keys },
+          labels: { ...labels }
+        };
+        Object.keys(params['keys']).forEach(item => { !params['keys'][item] && params['keys'][item] !== 0 ? delete params['keys'][item] : null });
+        const hide = message.loading('查询中，请稍候...');
+        this.props.queryData({ ...params.keys }).then(() => {
+          this.props.history.replace({
+            pathname: this.props.location.pathname,
+            search: `?${qs.stringify(params)}`,
+          })
+          hide();
+        }).catch(({ errorMsg }) => {
+          message.error(errorMsg || '查询失败');
+          hide();
+        });
+      }
+    });
+  }
   render() {
     const { getFieldDecorator } = this.props.form;
-    return <Form className='spotplan-check-form'>
+    const { spotplan_project, spotplan_brand } = this.props;
+    return <Form className='spotplan-list-form'>
       <Row>
         <FormItem label='批量查询'>
           {getFieldDecorator('settle_type', {
-            initialValue: { key: '订单ID', value: 1 }
+            initialValue: { key: 1, label: 'spotplan ID' }
           })(
-            <Select style={{ width: 100 }}
+            <Select style={{ width: 120 }}
               placeholder='请选择'
-              getPopupContainer={() => document.querySelector('.spotplan-check-form')}
+              getPopupContainer={() => document.querySelector('.spotplan-list-form')}
               labelInValue
             >
-              <Option value={1} key={1}>订单ID</Option>
-              <Option value={2} key={2}>需求ID</Option>
+              <Option value={1} key={1}>spotplan ID</Option>
+              <Option value={2} key={2}>PO 单号</Option>
             </Select>
           )}
           {getFieldDecorator('settle_id')(
-            <Input placeholder='请输入订单ID/需求ID，多个空格隔开' className='left-little-gap' style={{ width: 240 }} />
+            <Input placeholder='请输入spotplan ID / PO 单号，多个空格隔开' className='left-little-gap' style={{ width: 280 }} />
           )}
         </FormItem>
         <FormItem label='Spotplan名称'>
@@ -35,10 +93,10 @@ class CheckQuery extends React.Component {
           )}
         </FormItem>
         <FormItem label='所属项目'>
-          {getFieldDecorator('project_name')(
+          {getFieldDecorator('project_id')(
             <Select style={{ width: 140 }}
               placeholder='请选择'
-              getPopupContainer={() => document.querySelector('.spotplan-check-form')}
+              getPopupContainer={() => document.querySelector('.spotplan-list-form')}
               labelInValue
               allowClear
               showSearch
@@ -46,16 +104,15 @@ class CheckQuery extends React.Component {
                 option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
               )}
             >
-              <Option value={1} key={1}>订单ID</Option>
-              <Option value={2} key={2}>需求ID</Option>
+              {spotplan_project && spotplan_project.map(item => (<Option value={item.id} key={item.id}>{item.name}</Option>))}
             </Select>
           )}
         </FormItem>
         <FormItem label='所属品牌'>
-          {getFieldDecorator('plam_id')(
+          {getFieldDecorator('brand_id')(
             <Select style={{ width: 140 }}
               placeholder='请选择'
-              getPopupContainer={() => document.querySelector('.spotplan-check-form')}
+              getPopupContainer={() => document.querySelector('.spotplan-list-form')}
               labelInValue
               allowClear
               showSearch
@@ -63,18 +120,15 @@ class CheckQuery extends React.Component {
                 option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
               )}
             >
-              <Option value={1} key={1}>订单ID</Option>
-              <Option value={2} key={2}>需求ID</Option>
+              {spotplan_brand && spotplan_brand.map(item => (<Option value={item.id} key={item.id}>{item.view_name}</Option>))}
             </Select>
           )}
         </FormItem>
-      </Row>
-      <Row>
         <FormItem label='创建人'>
-          {getFieldDecorator('belong_to')(
+          {getFieldDecorator('creator_id')(
             <Select style={{ width: 140 }}
               placeholder='请选择'
-              getPopupContainer={() => document.querySelector('.spotplan-check-form')}
+              getPopupContainer={() => document.querySelector('.spotplan-list-form')}
               labelInValue
               allowClear
               showSearch
@@ -93,26 +147,21 @@ class CheckQuery extends React.Component {
           )}
         </FormItem>
         <FormItem label='是否存在更新请求被拒订单'>
-          {getFieldDecorator('is_true')(
+          {getFieldDecorator('is_refused')(
             <Select style={{ width: 140 }}
               placeholder='请选择'
-              getPopupContainer={() => document.querySelector('.spotplan-check-form')}
+              getPopupContainer={() => document.querySelector('.spotplan-list-form')}
               labelInValue
-              allowClear
-              showSearch
-              filterOption={(input, option) => (
-                option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-              )}
             >
-              <Option value={1} key={1}>1</Option>
-              <Option value={2} key={2}>2</Option>
+              <Option value={1}>是</Option>
+              <Option value={2}>否</Option>
             </Select>
           )}
         </FormItem>
-        <Button className='left-gap'>重置</Button>
-        <Button className='left-gap' type='primary'>搜索</Button>
+        <Button className='left-gap' onClick={this.handleReset}>重置</Button>
+        <Button className='left-gap' type='primary' onClick={this.handleSearch}>搜索</Button>
       </Row>
     </Form>
   }
 }
-export default Form.create()(CheckQuery)
+export default Form.create()(ListQuery)

@@ -7,5 +7,11 @@ export default {
   getSpotplanOrderList: '/spotplan/getOrderList',
   postAddSpotplanOrder: '/spotplan/addSpotplanOrder',
   getSpotplanEditOrder: '/spotplan/getSpotplanOrder',
+  postUpdateSpotplanOrder: '/spotplan/updateSpotplanOrder',
+  getSpotplanBrand: '/spotplan/getBrand',
+  getSpotplanList: '/spotplan/getSpotplanList',
+  getSpotplanPoInfo: '/spotplan/getSpotplanPoInfo',
+  getSpotplanAmount: '/spotplan/getSpotplanAmount',
+  getBasicSpotplanOrderInfo: '/spotplan/getBasicSpotplanOrderInfo',
 
 }
