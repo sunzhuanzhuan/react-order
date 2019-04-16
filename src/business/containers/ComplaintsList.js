@@ -22,7 +22,7 @@ export default class ComplaintsList extends Component {
     super(props);
     this.state = {
       ratioLoading: false,
-      orderId: '11211',
+      orderId: '',
       search: {
         page: 1,
         page_size: 10

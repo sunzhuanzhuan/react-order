@@ -4,6 +4,7 @@ import { linkTo } from '../../util/linkTo';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as actions from '../actions';
+import { parseUrlQuery } from '../../util/parseUrl';
 
 const formItemLayout = {
   labelCol: { span: 6 },
@@ -29,7 +30,8 @@ export default class MerchantList extends Component {
       addModal: false,
       search: {
         page: 1,
-        page_size: 10
+        page_size: 10,
+        ...parseUrlQuery(),
       }
     }
     this.columns = [
@@ -111,6 +113,10 @@ export default class MerchantList extends Component {
   }
 
   render() {
+    const { company_id } = this.state;
+    if (!company_id) {
+      return <div>参数错误!</div>
+    }
     const { form, business } = this.props;
     const { pagination = {}, rows = [] } = business.businessAccountList
     const { getFieldDecorator } = form;
