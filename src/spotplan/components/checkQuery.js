@@ -60,7 +60,7 @@ class CheckQuery extends React.Component {
         this.props.queryData(2, { ...params.keys }).then(() => {
           this.props.history.replace({
             pathname: this.props.location.pathname,
-            search: `?${qs.stringify({ step: search.step, spotplan_id: search.spotplan_id, ...params })}`,
+            search: `?${qs.stringify({ spotplan_id: search.spotplan_id, ...params })}`,
           })
           hide();
         }).catch(({ errorMsg }) => {

@@ -1,5 +1,7 @@
 import React from 'react'
-import { Row, Form, Select, Input, Button } from 'antd'
+import { Row, Form, Select, Input, Button, message } from 'antd'
+import { DETAIL_STATUS_CUSTOMER } from '../../constants'
+import qs from 'qs'
 
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -8,8 +10,70 @@ class DetailQuery extends React.Component {
     super();
     this.state = {}
   }
+  componentDidMount() {
+    const search = qs.parse(this.props.location.search.substring(1));
+    const { setFieldsValue } = this.props.form;
+    const obj = {};
+    const keys = search.keys || {};
+    const labels = search.labels ? Object.keys(search.labels) : [];
+
+    labels.length > 0 ? labels.forEach(item => {
+      obj[item] = { key: search.keys[item], label: search.labels[item] }
+    }) : null;
+    const settle_id = keys.order_id || keys.po_code;
+    if (keys.weibo_name) {
+      keys['weibo_name'] = keys['weibo_name'].join(' ');
+    }
+    if (settle_id) {
+      keys['settle_id'] = settle_id.join(' ');
+      delete keys['order_id']
+      delete keys['price_id']
+    }
+    setFieldsValue({ ...keys, ...obj });
+  }
+  handleReset = () => {
+    this.props.form.resetFields();
+  }
+  handleSearch = e => {
+    e.preventDefault();
+    this.props.form.validateFields((err, values) => {
+      if (!err) {
+        const search = qs.parse(this.props.location.search.substring(1));
+        const keys = {}, labels = {};
+        for (let key in values) {
+          if (Object.prototype.toString.call(values[key]) === '[object Object]') {
+            keys[key] = values[key].key;
+            labels[key] = values[key].label;
+          } else if (key == 'settle_id' && values[key]) {
+            values['settle_type'].key == 1 ? keys['order_id'] = values[key].trim().split(' ') : keys['price_id'] = values[key].trim().split(' ');
+          } else if (key == 'weibo_name' && values[key]) {
+            keys['weibo_name'] = values['weibo_name'].trim().split(' ')
+          } else {
+            keys[key] = values[key]
+          }
+        }
+        const params = {
+          keys: { ...keys },
+          labels: { ...labels }
+        };
+        Object.keys(params['keys']).forEach(item => { !params['keys'][item] && params['keys'][item] !== 0 ? delete params['keys'][item] : null });
+        const hide = message.loading('查询中，请稍候...');
+        this.props.queryData(2, { ...params.keys }).then(() => {
+          this.props.history.replace({
+            pathname: this.props.location.pathname,
+            search: `?${qs.stringify({ step: search.step, spotplan_id: search.spotplan_id, ...params })}`,
+          })
+          hide();
+        }).catch(({ errorMsg }) => {
+          message.error(errorMsg || '查询失败');
+          hide();
+        });
+      }
+    });
+  }
   render() {
     const { getFieldDecorator } = this.props.form;
+    const { spotplan_executor, spotplan_platform } = this.props;
     return <Form className='spotplan-check-form'>
       <Row>
         <FormItem label='Spotplan更新审核状态'>
@@ -19,13 +83,8 @@ class DetailQuery extends React.Component {
               getPopupContainer={() => document.querySelector('.spotplan-check-form')}
               labelInValue
               allowClear
-              showSearch
-              filterOption={(input, option) => (
-                option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-              )}
             >
-              <Option value={1} key={1}>订单ID</Option>
-              <Option value={2} key={2}>需求ID</Option>
+              {DETAIL_STATUS_CUSTOMER && DETAIL_STATUS_CUSTOMER.map(item => <Option value={item.value} key={item.value}>{item.key}</Option>)}
             </Select>
           )}
         </FormItem>
@@ -39,20 +98,20 @@ class DetailQuery extends React.Component {
               labelInValue
             >
               <Option value={1} key={1}>订单ID</Option>
-              <Option value={2} key={2}>需求ID</Option>
+              <Option value={2} key={2}>Price ID</Option>
             </Select>
           )}
           {getFieldDecorator('settle_id')(
-            <Input placeholder='请输入订单ID/priceID，多个空格隔开' className='left-little-gap' style={{ width: 240 }} />
+            <Input placeholder='请输入订单ID/PriceID，多个空格隔开' className='left-little-gap' style={{ width: 240 }} />
           )}
         </FormItem>
         <FormItem label='账号名称'>
-          {getFieldDecorator('account_name')(
+          {getFieldDecorator('weibo_name')(
             <Input placeholder='请输入账号名称，多个以空格隔开' style={{ width: 240 }} />
           )}
         </FormItem>
         <FormItem label='平台'>
-          {getFieldDecorator('plam_id')(
+          {getFieldDecorator('platform_id')(
             <Select style={{ width: 140 }}
               placeholder='请选择'
               getPopupContainer={() => document.querySelector('.spotplan-check-form')}
@@ -63,13 +122,12 @@ class DetailQuery extends React.Component {
                 option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
               )}
             >
-              <Option value={1} key={1}>订单ID</Option>
-              <Option value={2} key={2}>需求ID</Option>
+              {spotplan_platform && spotplan_platform.map(item => (<Option value={item.platform_id} key={item.platform_id}>{item.platform_name}</Option>))}
             </Select>
           )}
         </FormItem>
         <FormItem label='执行人'>
-          {getFieldDecorator('plam_id')(
+          {getFieldDecorator('executor_admin_id')(
             <Select style={{ width: 140 }}
               placeholder='请选择'
               getPopupContainer={() => document.querySelector('.spotplan-check-form')}
@@ -80,12 +138,12 @@ class DetailQuery extends React.Component {
                 option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
               )}
             >
-              <Option value={1} key={1}>订单ID</Option>
-              <Option value={2} key={2}>需求ID</Option>
+              {spotplan_executor && spotplan_executor.map(item => (<Option value={item.owner_admin_id} key={item.owner_admin_id}>{item.real_name}</Option>))}
             </Select>
           )}
         </FormItem>
-        <Button className='left-gap' type='primary'>查询</Button>
+        <Button className='left-gap' onClick={this.handleReset}>重置</Button>
+        <Button className='left-gap' type='primary' onClick={this.handleSearch}>查询</Button>
       </Row>
     </Form>
   }

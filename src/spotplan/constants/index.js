@@ -331,57 +331,14 @@ export const SpotplanListFunc = handleJump => [
     }
   }
 ];
-export const HistoryCols = [
-  {
-    title: '申请类型',
-    dataIndex: 'payment_slip_id',
-    key: 'payment_slip_id',
-    align: 'center',
-    width: 100
-  },
-  {
-    title: 'spotplan更新审核状态',
-    dataIndex: 'platform_name',
-    key: 'platform_name',
-    align: 'center',
-    width: 100
-  },
-  {
-    title: '更新前',
-    dataIndex: 'cooperation_platform_name',
-    key: 'cooperation_platform_name',
-    align: 'center',
-    width: 100
-  },
-  {
-    title: '更新后',
-    dataIndex: 'agent_name',
-    key: 'agent_name',
-    align: 'center',
-    width: 140
-  },
-  {
-    title: '申请人',
-    dataIndex: 'public_order_id',
-    key: 'public_order_id',
-    align: 'center',
-    width: 100
-  },
-  {
-    title: '时间',
-    dataIndex: 'payment_amount',
-    key: 'payment_amount',
-    align: 'center',
-    width: 100
-  }
-];
-export const DetailTableCols = [
+export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdateOrder, handleEditOrder, handleDelete) => [
   {
     title: '订单ID',
     dataIndex: 'order_id',
     key: 'order_id',
     align: 'center',
     width: 80,
+    fixed: 'left',
     render: (text, record) => {
       return <a href={record.order_info_path} target="_blank">{text}</a>
     }
@@ -391,7 +348,8 @@ export const DetailTableCols = [
     dataIndex: 'requirement_name',
     key: 'requirement_name',
     align: 'center',
-    width: 80,
+    width: 140,
+    fixed: 'left',
     render: (text, record) => {
       return <a href={record.requirement_path} target="_blank">{text}</a>
     }
@@ -503,18 +461,167 @@ export const DetailTableCols = [
     key: 'action',
     align: 'center',
     width: 100,
+    fixed: 'right',
     render: (text, record) => {
       return <>
-        <div><a href='javascript:;'>申请换号</a></div>
-        <div><a href='javascript:;'>申请终止合作</a></div>
-        <div><a href='javascript:;'>申请更新信息</a></div>
-        <div><a href='javascript:;'>编辑信息</a></div>
-        <div><a href='javascript:;'>删除订单</a></div>
+        <div><a href='javascript:;' onClick={() => {
+          handleChangeNumber(record.order_id)
+        }}>申请换号</a></div>
+        <div><a href='javascript:;' onClick={() => {
+          handleQuitOrder(record.order_id)
+        }}>申请终止合作</a></div>
+        <div><a href='javascript:;' onClick={() => {
+          handleUpdateOrder(record.order_id)
+        }}>申请更新信息</a></div>
+        <div><a href='javascript:;' onClick={() => {
+          handleEditOrder(record.order_id)
+        }}>编辑信息</a></div>
+        <div><a href='javascript:;' onClick={() => {
+          handleDelete(record.order_id)
+        }}>删除订单</a></div>
       </>
     }
   }
 ]
-
+export const HistoryCols = [
+  {
+    title: '申请类型',
+    dataIndex: 'payment_slip_id',
+    key: 'payment_slip_id',
+    align: 'center',
+    width: 100
+  },
+  {
+    title: 'spotplan更新审核状态',
+    dataIndex: 'platform_name',
+    key: 'platform_name',
+    align: 'center',
+    width: 100
+  },
+  {
+    title: '更新前',
+    dataIndex: 'cooperation_platform_name',
+    key: 'cooperation_platform_name',
+    align: 'center',
+    width: 100
+  },
+  {
+    title: '更新后',
+    dataIndex: 'agent_name',
+    key: 'agent_name',
+    align: 'center',
+    width: 140
+  },
+  {
+    title: '申请人',
+    dataIndex: 'public_order_id',
+    key: 'public_order_id',
+    align: 'center',
+    width: 100
+  },
+  {
+    title: '时间',
+    dataIndex: 'payment_amount',
+    key: 'payment_amount',
+    align: 'center',
+    width: 100
+  }
+];
+export const OrderCols = [
+  {
+    title: '订单ID',
+    dataIndex: 'order_id',
+    key: 'order_id',
+    align: 'center',
+    width: 100
+  },
+  {
+    title: '订单状态',
+    dataIndex: 'platform_name',
+    key: 'platform_name',
+    align: 'center',
+    width: 100
+  },
+  {
+    title: '需求名称',
+    dataIndex: 'requirement_name',
+    key: 'requirement_name',
+    align: 'center',
+    width: 100
+  },
+  {
+    title: '平台',
+    dataIndex: 'weibo_type_name',
+    key: 'weibo_type_name',
+    align: 'center',
+    width: 100
+  },
+  {
+    title: '账号名称',
+    dataIndex: 'public_order_id',
+    key: 'public_order_id',
+    align: 'center',
+    width: 100
+  },
+  {
+    title: '价格名称',
+    dataIndex: 'payment_amount',
+    key: 'payment_amount',
+    align: 'center',
+    width: 100
+  },
+  {
+    title: 'Cost（元）',
+    dataIndex: 'cost',
+    key: 'cost',
+    align: 'center',
+    width: 100
+  },
+  {
+    title: 'Costwithfee（元）',
+    dataIndex: 'costwithfee',
+    key: 'costwithfee',
+    align: 'center',
+    width: 100
+  }
+];
+export const UpdateCols = [
+  {
+    title: '订单ID',
+    dataIndex: 'order_id',
+    key: 'order_id',
+    align: 'center',
+    width: 100
+  },
+  {
+    title: '订单状态',
+    dataIndex: 'platform_name',
+    key: 'platform_name',
+    align: 'center',
+    width: 100
+  },
+  {
+    title: '需求名称',
+    dataIndex: 'requirement_name',
+    key: 'requirement_name',
+    align: 'center',
+    width: 100
+  },
+  {
+    title: '平台',
+    dataIndex: 'weibo_type_name',
+    key: 'weibo_type_name',
+    align: 'center',
+    width: 100
+  },
+  {
+    title: '账号名称',
+    dataIndex: 'public_order_id',
+    key: 'public_order_id',
+    align: 'center',
+    width: 100
+  }
+];
 //客户确认状态
 export const STATUS_CUSTOMER = [
   { key: '客户待确认', value: 11 },
@@ -523,6 +630,12 @@ export const STATUS_CUSTOMER = [
   { key: '客户取消', value: 14 },
   { key: '过时未确认', value: 15 },
   { key: '待支付', value: 36 }
+];
+//详情客户确认状态
+export const DETAIL_STATUS_CUSTOMER = [
+  { key: '客户待确认', value: 11 },
+  { key: '客户已确认', value: 12 },
+  { key: '客户已拒绝', value: 13 }
 ];
 //预约中状态
 export const STATUS_RESERVATION = [

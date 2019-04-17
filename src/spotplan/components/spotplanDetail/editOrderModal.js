@@ -8,15 +8,14 @@ const FormItem = Form.Item;
 const Option = Select.Option;
 const { TextArea } = Input;
 class EditOrderModal extends React.Component {
-  componentDidMount() {
-    const { data } = this.props;
-    this.props.form.setFieldsValue({
-      'price_name': data && data.price_name
-    })
-  }
   handleSubmit = () => {
-
-    this.props.onCancel();
+    this.props.form.validateFields((err, values) => {
+      if (!err) {
+        this.props.handleSubmit({ type: 3, reason: values.reason }).then(() => {
+          this.props.onCancel();
+        })
+      }
+    })
   }
   render() {
     const { getFieldDecorator } = this.props.form;

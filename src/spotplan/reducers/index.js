@@ -12,6 +12,8 @@ import {
   getSpotplanPoInfo_success,
   getSpotplanAmount_success,
   getBasicSpotplanOrderInfo_success,
+  getUpdateSpotplanOrder_success,
+  getUpdateSpotplanOrderLog_success,
 } from '../actions';
 
 export const spotplanCompanyInfo = handleActions({
@@ -76,6 +78,18 @@ export const spotplanAmount = handleActions({
 
 export const basicSpotplanOrderInfo = handleActions({
   [getBasicSpotplanOrderInfo_success]: (state, action) => {
+    return [...action.payload.data]
+  }
+}, [])
+
+export const updateSpotplanOrder = handleActions({
+  [getUpdateSpotplanOrder_success]: (state, action) => {
+    return { ...action.payload.data }
+  }
+}, {})
+
+export const updateSpotplanOrderLog = handleActions({
+  [getUpdateSpotplanOrderLog_success]: (state, action) => {
     return { ...action.payload.data }
   }
 }, {})
@@ -92,4 +106,6 @@ export default combineReducers({
   spotplanPoInfo,
   spotplanAmount,
   basicSpotplanOrderInfo,
+  updateSpotplanOrder,
+  updateSpotplanOrderLog,
 })

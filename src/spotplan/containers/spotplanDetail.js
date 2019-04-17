@@ -3,10 +3,14 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from "redux";
 import * as spotplanAction from "../actions";
 import { Breadcrumb, Row, Col, Button, Tooltip, Icon, Tabs, Checkbox, Modal, message } from 'antd'
+import { DetailTableFunc } from '../constants'
 import DetailQuery from '../components/spotplanDetail/detailQuery'
 import DetailTable from '../components/spotplanDetail/detailTable'
 import HistoryModal from '../components/spotplanDetail/historyModal'
 import EditOrderModal from '../components/spotplanDetail/editOrderModal'
+import ChangeModal from '../components/spotplanDetail/changeNumberModal'
+import QuitModal from '../components/spotplanDetail/quitOrderModal'
+import UpdateModal from '../components/spotplanDetail/updateModal'
 import './spotplan.less'
 import qs from 'qs'
 
@@ -17,15 +21,22 @@ class SpotPlanDetail extends React.Component {
     this.state = {
       historyVisible: false,
       editVisible: false,
+      changeVisible: false,
+      quitVisible: false,
+      updateVisible: false,
       type: 'all',
-      rowsKeys: {}
+      order_id: undefined,
+      selectedRowKeys: [],
+      rows: {}
     }
   }
   componentDidMount() {
     const search = qs.parse(this.props.location.search.substring(1));
-    const { getSpotplanPoInfo, getSpotplanAmount } = this.props.actions;
+    const { getSpotplanPoInfo, getSpotplanAmount, getSpotplanPlatform, getSpotplanExecutor } = this.props.actions;
     getSpotplanPoInfo({ spotplan_id: search.spotplan_id });
     getSpotplanAmount({ spotplan_id: search.spotplan_id });
+    getSpotplanPlatform();
+    getSpotplanExecutor();
     this.queryData({ spotplan_id: search.spotplan_id, ...search.keys });
   }
   queryData = (obj, func) => {
@@ -40,33 +51,61 @@ class SpotPlanDetail extends React.Component {
       message.error(errorMsg || '获取接口数据出错！');
     })
   }
-  onSelectChange = (selectedRowKeys, selectedRows) => {
-    const { type, rowsKeys } = this.state;
-    this.setState({ rowsKeys: { ...rowsKeys, [type]: selectedRowKeys } });
-  }
   handleTabsChange = value => {
-    const { rows } = this.state;
     const search = qs.parse(this.props.location.search.substring(1));
     if (value - 1) {
       this.queryData({ ...search.keys, spotplan_id: search.spotplan_id, type: value - 1 });
-      this.setState({ type: value - 1, rows: { ...rows, [value - 1]: {} } });
+      this.setState({ type: value - 1 });
       return
     }
     this.queryData({ ...search.keys, spotplan_id: search.spotplan_id });
-    this.setState({ type: 'all', rows: { ...rows, 'all': {} } });
+    this.setState({ type: 'all' });
   }
-  handleCheckAll = () => {
-    const { type, rows, rowsKeys } = this.state;
+  handleSelectChange = (selectedRowKeys, selectedRows) => {
+    const rows = selectedRows.reduce((data, current) => {
+      return { ...data, [current.order_id]: current }
+    }, {});
+    this.setState({ selectedRowKeys, rows });
+  }
+  handleCheckAll = (e) => {
+    const { rows } = this.state;
     const { spotplanEditList: { list = [] } } = this.props;
-    this.setState({ rows: { ...rows, [type]: {} } });
+    if (e.target.checked) {
+      const obj = list.reduce((data, current) => {
+        return { ...data, [current.order_id]: current }
+      }, { ...rows });
+      this.handleSelectChange(Object.keys(obj), Object.values(obj));
+    } else {
+      const obj = { ...rows };
+      list.forEach(item => delete obj[item.order_id]);
+      this.handleSelectChange(Object.keys(obj), Object.values(obj));
+    }
+  }
+  handleChangeNumber = order_id => {
+    const search = qs.parse(this.props.location.search.substring(1));
+    this.props.actions.getUpdateSpotplanOrder({ spotplan_id: search.spotplan_id, order_id }).then(() => {
+      this.setState({ order_id, changeVisible: true });
+    })
+  }
+  handleQuitOrder = order_id => {
+    const search = qs.parse(this.props.location.search.substring(1));
+    this.props.actions.getBasicSpotplanOrderInfo({ spotplan_id: search.spotplan_id, order_id }).then(() => {
+      this.setState({ order_id, quitVisible: true });
+    })
+  }
+  handleUpdateOrder = order_id => {
+    const search = qs.parse(this.props.location.search.substring(1));
+    this.props.actions.getBasicSpotplanOrderInfo({ spotplan_id: search.spotplan_id, order_id }).then(() => {
+      this.setState({ order_id, updateVisible: true });
+    })
   }
   handleEditOrder = order_id => {
     const search = qs.parse(this.props.location.search.substring(1));
     this.props.actions.getBasicSpotplanOrderInfo({ spotplan_id: search.spotplan_id, order_id }).then(() => {
-      this.setState({ editVisible: true });
+      this.setState({ order_id, editVisible: true });
     })
   }
-  handleDel = order_id => {
+  handleDelete = order_id => {
     const search = qs.parse(this.props.location.search.substring(1));
     Modal.confirm({
       title: '',
@@ -76,12 +115,38 @@ class SpotPlanDetail extends React.Component {
       }
     })
   }
+  handleSubmit = (obj) => {
+    const search = qs.parse(this.props.location.search.substring(1));
+    const { order_id } = this.state;
+    return this.props.actions.postChangeNumberSpotplanOrder({ spotplan_id: search.spotplan_id, order_ids: order_id, ...obj }).then(() => {
+      this.queryData({ ...search.keys, spotplan_id: search.spotplan_id });
+    })
+  }
+  handleSettleChange = () => {
+    const { selectedRowKeys } = this.state;
+    if (selectedRowKeys.length == 0) {
+      message.error('请先勾选需要进行换号申请的订单', 3);
+      return
+    }
+    this.setState({ changeVisible: true });
+  }
+  handleSettleQuit = () => {
+    const { selectedRowKeys } = this.state;
+    if (selectedRowKeys.length == 0) {
+      message.error('请先勾选需要进行申请终止合作的订单', 3);
+      return
+    }
+    this.setState({ quitVisible: true })
+  }
   render() {
-    const { historyVisible, editVisible, rowsKeys, type } = this.state;
-    const { spotplanPoInfo, spotplanAmount, spotplanEditList: { list = [] }, basicSpotplanOrderInfo } = this.props;
+    const search = qs.parse(this.props.location.search.substring(1));
+    const { historyVisible, editVisible, changeVisible, quitVisible, updateVisible, selectedRowKeys } = this.state;
+    const { spotplanExecutor, spotplanPlatform, spotplanPoInfo, spotplanAmount, spotplanEditList: { list = [] }, basicSpotplanOrderInfo, updateSpotplanOrder: { before_order = [], after_order = [] } } = this.props;
+    const checked = list.every(item => selectedRowKeys.includes(item.order_id.toString()));
+    const DetailTableCols = DetailTableFunc(this.handleChangeNumber, this.handleQuitOrder, this.handleUpdateOrder, this.handleEditOrder, this.handleDelete);
     const rowSelection = {
-      selectedRowKeys: rowsKeys[type],
-      onChange: this.onSelectChange,
+      selectedRowKeys: selectedRowKeys,
+      onChange: this.handleSelectChange,
     };
     return <div className='spotList-detail-container'>
       <NavBar />
@@ -89,43 +154,65 @@ class SpotPlanDetail extends React.Component {
       <div>
         <h3 className='top-gap' style={{ display: 'inline-block' }}>Spotplan基本信息</h3>
         <div style={{ display: 'inline-block', float: 'right' }}>
-          <Button type='primary'>+新增订单</Button>
+          <Button type='primary' href={`/order/spotplan/add?step=2&&spotplan_id=${search.spotplan_id}`}>+新增订单</Button>
           <Button type='primary' className='left-gap'>导出为Excel</Button>
         </div>
       </div>
       <BasicInfo data={spotplanPoInfo} handleClick={() => { this.setState({ historyVisible: true }) }} />
       <h3 className='top-gap'>订单列表</h3>
       <Statistics data={spotplanAmount} />
-      <DetailQuery />
+      <DetailQuery location={this.props.location} history={this.props.history}
+        queryData={this.queryData}
+        spotplan_executor={spotplanExecutor}
+        spotplan_platform={spotplanPlatform}
+      />
       <Tabs onChange={this.handleTabsChange} type="card">
-        <TabPane tab="全部（13）" key="1"><DetailTable dataSource={list} rowSelection={rowSelection} /></TabPane>
-        <TabPane tab="待确认合作（11）" key="2"><DetailTable dataSource={list} rowSelection={rowSelection} /></TabPane>
-        <TabPane tab="已确认合作（2）" key="3"><DetailTable dataSource={list} rowSelection={rowSelection} /></TabPane>
-        <TabPane tab="终止合作申请中（2）" key="4"><DetailTable dataSource={list} rowSelection={rowSelection} /></TabPane>
-        <TabPane tab="已终止合作（2）" key="5"><DetailTable dataSource={list} rowSelection={rowSelection} /></TabPane>
+        <TabPane tab="全部（13）" key="1"><DetailTable columns={DetailTableCols} dataSource={list} rowSelection={rowSelection} /></TabPane>
+        <TabPane tab="待确认合作（11）" key="2"><DetailTable columns={DetailTableCols} dataSource={list} rowSelection={rowSelection} /></TabPane>
+        <TabPane tab="已确认合作（2）" key="3"><DetailTable columns={DetailTableCols} dataSource={list} rowSelection={rowSelection} /></TabPane>
+        <TabPane tab="终止合作申请中（2）" key="4"><DetailTable columns={DetailTableCols} dataSource={list} rowSelection={rowSelection} /></TabPane>
+        <TabPane tab="已终止合作（2）" key="5"><DetailTable columns={DetailTableCols} dataSource={list} rowSelection={rowSelection} /></TabPane>
       </Tabs>
       <div className='top-gap'>
-        <Checkbox onChange={this.handleCheckAll}>全选</Checkbox>
-        <Button type='primary'>批量申请换号</Button>
-        <Button className='left-gap' type='primary'>批量申请终止合作</Button>
+        <Checkbox onChange={this.handleCheckAll} checked={checked}>全选</Checkbox>
+        <Button type='primary' onClick={this.handleSettleChange}>批量申请换号</Button>
+        <Button className='left-gap' type='primary' onClick={this.handleSettleQuit}>批量申请终止合作</Button>
       </div>
 
-      {historyVisible && <HistoryModal visible={historyVisible} onCancel={() => { this.setState({ historyVisible: false }) }} />}
+      {historyVisible && <HistoryModal visible={historyVisible}
+        onCancel={() => { this.setState({ historyVisible: false }) }} />}
       {editVisible && <EditOrderModal visible={editVisible}
         data={basicSpotplanOrderInfo}
-        onCancel={() => {
-          this.setState({ editVisible: false })
-        }}
+        onCancel={() => { this.setState({ editVisible: false }) }}
+      />}
+      {changeVisible && <ChangeModal visible={changeVisible}
+        onCancel={() => { this.setState({ changeVisible: false }) }}
+        handleSubmit={this.handleSubmit}
+        before_order={before_order}
+        after_order={after_order}
+      />}
+      {quitVisible && <QuitModal visible={quitVisible}
+        onCancel={() => { this.setState({ quitVisible: false }) }}
+        handleSubmit={this.handleSubmit}
+        dataSource={basicSpotplanOrderInfo}
+      />}
+      {updateVisible && <UpdateModal visible={updateVisible}
+        onCancel={() => { this.setState({ updateVisible: false }) }}
+        handleSubmit={this.handleSubmit}
+        dataSource={basicSpotplanOrderInfo}
       />}
     </div>
   }
 }
 const mapStateToProps = (state) => {
   return {
+    spotplanExecutor: state.spotplanReducers.spotplanExecutor,
+    spotplanPlatform: state.spotplanReducers.spotplanPlatform,
     spotplanPoInfo: state.spotplanReducers.spotplanPoInfo,
     spotplanAmount: state.spotplanReducers.spotplanAmount,
     basicSpotplanOrderInfo: state.spotplanReducers.basicSpotplanOrderInfo,
     spotplanEditList: state.spotplanReducers.spotplanEditList,
+    updateSpotplanOrder: state.spotplanReducers.updateSpotplanOrder,
   }
 }
 const mapDispatchToProps = dispatch => ({

@@ -1,6 +1,6 @@
 import React from 'react'
 import { Table } from 'antd'
-import { DetailTableCols } from '../../constants'
+
 export default class DetailTable extends React.Component {
   constructor() {
     super();
@@ -10,13 +10,14 @@ export default class DetailTable extends React.Component {
     console.log('mounted');
   }
   render() {
-    const { dataSource, rowSelection } = this.props;
+    const { columns, dataSource, rowSelection } = this.props;
     return <Table
       rowSelection={rowSelection}
-      rowKey='order_id'
-      columns={DetailTableCols}
+      rowKey={record => record.order_id.toString()}
+      columns={columns}
       dataSource={dataSource}
-      border
+      bordered
+      scroll={{ x: 1600 }}
     />
   }
 }

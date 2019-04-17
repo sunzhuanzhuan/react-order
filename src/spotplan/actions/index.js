@@ -102,3 +102,24 @@ export const {
   method: 'get',
 });
 
+export const {
+  getUpdateSpotplanOrder,
+  getUpdateSpotplanOrder_success
+} = createHttpAction('getUpdateSpotplanOrder', Interface.getUpdateSpotplanOrder, {
+  method: 'get',
+});
+
+export const {
+  getUpdateSpotplanOrderLog,
+  getUpdateSpotplanOrderLog_success
+} = createHttpAction('getUpdateSpotplanOrderLog', Interface.getUpdateSpotplanOrderLog, {
+  method: 'get',
+});
+
+export const {
+  postChangeNumberSpotplanOrder,
+  postChangeNumberSpotplanOrder_success
+} = createHttpAction('postChangeNumberSpotplanOrder', Interface.postChangeNumberSpotplanOrder, {
+  method: 'post',
+});
+
