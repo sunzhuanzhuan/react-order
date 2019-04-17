@@ -81,6 +81,12 @@ class SpotPlanDetail extends React.Component {
       this.handleSelectChange(Object.keys(obj), Object.values(obj));
     }
   }
+  handleHistory = () => {
+    const search = qs.parse(this.props.location.search.substring(1));
+    this.props.actions.getUpdateSpotplanOrderLog({ spotplan_id: search.spotplan_id }).then(() => {
+      this.setState({ historyVisible: true });
+    })
+  }
   handleChangeNumber = order_id => {
     const search = qs.parse(this.props.location.search.substring(1));
     this.props.actions.getUpdateSpotplanOrder({ spotplan_id: search.spotplan_id, order_id }).then(() => {
@@ -141,7 +147,7 @@ class SpotPlanDetail extends React.Component {
   render() {
     const search = qs.parse(this.props.location.search.substring(1));
     const { historyVisible, editVisible, changeVisible, quitVisible, updateVisible, selectedRowKeys } = this.state;
-    const { spotplanExecutor, spotplanPlatform, spotplanPoInfo, spotplanAmount, spotplanEditList: { list = [] }, basicSpotplanOrderInfo, updateSpotplanOrder: { before_order = [], after_order = [] } } = this.props;
+    const { spotplanExecutor, spotplanPlatform, spotplanPoInfo, spotplanAmount, spotplanEditList: { list = [] }, basicSpotplanOrderInfo, updateSpotplanOrder: { before_order = [], after_order = [] }, updateSpotplanOrderLog } = this.props;
     const checked = list.every(item => selectedRowKeys.includes(item.order_id.toString()));
     const DetailTableCols = DetailTableFunc(this.handleChangeNumber, this.handleQuitOrder, this.handleUpdateOrder, this.handleEditOrder, this.handleDelete);
     const rowSelection = {
@@ -158,7 +164,7 @@ class SpotPlanDetail extends React.Component {
           <Button type='primary' className='left-gap'>导出为Excel</Button>
         </div>
       </div>
-      <BasicInfo data={spotplanPoInfo} handleClick={() => { this.setState({ historyVisible: true }) }} />
+      <BasicInfo data={spotplanPoInfo} handleClick={this.handleHistory} />
       <h3 className='top-gap'>订单列表</h3>
       <Statistics data={spotplanAmount} />
       <DetailQuery location={this.props.location} history={this.props.history}
@@ -180,7 +186,9 @@ class SpotPlanDetail extends React.Component {
       </div>
 
       {historyVisible && <HistoryModal visible={historyVisible}
-        onCancel={() => { this.setState({ historyVisible: false }) }} />}
+        onCancel={() => { this.setState({ historyVisible: false }) }}
+        dataSource={updateSpotplanOrderLog}
+      />}
       {editVisible && <EditOrderModal visible={editVisible}
         data={basicSpotplanOrderInfo}
         onCancel={() => { this.setState({ editVisible: false }) }}
@@ -213,6 +221,7 @@ const mapStateToProps = (state) => {
     basicSpotplanOrderInfo: state.spotplanReducers.basicSpotplanOrderInfo,
     spotplanEditList: state.spotplanReducers.spotplanEditList,
     updateSpotplanOrder: state.spotplanReducers.updateSpotplanOrder,
+    updateSpotplanOrderLog: state.spotplanReducers.updateSpotplanOrderLog,
   }
 }
 const mapDispatchToProps = dispatch => ({

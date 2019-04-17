@@ -4,11 +4,11 @@ import { HistoryCols } from '../../constants'
 
 export default class HistoryModal extends React.Component {
   render() {
-    const { visible, onCancel } = this.props;
+    const { visible, onCancel, dataSource } = this.props;
     return <Modal
       wrapClassName='history-modal'
       key='historyModal'
-      width={700}
+      width={800}
       title='查看历史更新申请记录'
       visible={visible}
       maskClosable={false}
@@ -18,7 +18,7 @@ export default class HistoryModal extends React.Component {
           <Button key="back" type='primary' onClick={onCancel}>确认</Button>,
         ]}
     >
-      <Table border columns={HistoryCols} />
+      <Table border columns={HistoryCols} dataSource={dataSource} pagination={false} />
     </Modal>
   }
 }

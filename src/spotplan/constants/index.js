@@ -3,6 +3,21 @@ import { Modal, Input, Form, Select } from 'antd'
 const { TextArea } = Input;
 const FormItem = Form.Item;
 const Option = Select.Option;
+
+const APPLY_TYPE = {
+  1: '【换号】一换一',
+  2: '【换号】一换多',
+  3: '【换号】多换一',
+  4: '【换号】多换多',
+  5: '更新订单信息',
+  6: '终止合同'
+};
+const APPLY_STATUS = {
+  1: 'SP更新待提交客户审核',
+  2: 'SP更新待审核',
+  3: 'SP更新审核通过',
+  4: 'SP更新审核被拒',
+};
 export const CheckModalFunc = handleDel => [
   {
     title: '订单ID',
@@ -486,24 +501,30 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
 export const HistoryCols = [
   {
     title: '申请类型',
-    dataIndex: 'payment_slip_id',
-    key: 'payment_slip_id',
+    dataIndex: 'apply_type',
+    key: 'apply_type',
     align: 'center',
-    width: 100
+    width: 100,
+    render: text => {
+      return APPLY_TYPE[text]
+    }
   },
   {
     title: 'spotplan更新审核状态',
-    dataIndex: 'platform_name',
-    key: 'platform_name',
+    dataIndex: 'apply_status',
+    key: 'apply_status',
     align: 'center',
-    width: 100
+    width: 100,
+    render: text => {
+      return APPLY_STATUS[text]
+    }
   },
   {
     title: '更新前',
-    dataIndex: 'cooperation_platform_name',
-    key: 'cooperation_platform_name',
+    dataIndex: 'after_order_info',
+    key: 'after_order_info',
     align: 'center',
-    width: 100
+    width: 140
   },
   {
     title: '更新后',
@@ -514,17 +535,23 @@ export const HistoryCols = [
   },
   {
     title: '申请人',
-    dataIndex: 'public_order_id',
-    key: 'public_order_id',
+    dataIndex: 'creator_name',
+    key: 'creator_name',
     align: 'center',
     width: 100
   },
   {
     title: '时间',
-    dataIndex: 'payment_amount',
-    key: 'payment_amount',
+    dataIndex: 'time',
+    key: 'time',
     align: 'center',
-    width: 100
+    width: 100,
+    render: (text, record) => {
+      return <div>
+        <div>申请时间：{record.creator_at}</div>
+        <div>审核时间：{record.check_at}</div>
+      </div>
+    }
   }
 ];
 export const OrderCols = [
@@ -645,4 +672,4 @@ export const STATUS_RESERVATION = [
   { key: '流约', value: 4 },
   { key: '预约取消', value: 5 },
   { key: '终止申请中', value: 31 },
-]
+];

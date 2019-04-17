@@ -90,9 +90,9 @@ export const updateSpotplanOrder = handleActions({
 
 export const updateSpotplanOrderLog = handleActions({
   [getUpdateSpotplanOrderLog_success]: (state, action) => {
-    return { ...action.payload.data }
+    return [...action.payload.data]
   }
-}, {})
+}, [])
 
 export default combineReducers({
   spotplanCompanyInfo,

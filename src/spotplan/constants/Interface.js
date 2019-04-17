@@ -14,7 +14,7 @@ export default {
   getSpotplanAmount: '/spotplan/getSpotplanAmount',
   getBasicSpotplanOrderInfo: '/spotplan/getBasicSpotplanOrderInfo',
   getUpdateSpotplanOrder: '/spotplan/getUpdateSpotplanOrder',
-  getUpdateSpotplanOrderLog: '/spotplan/updateSpotplanOrderLog',
+  getUpdateSpotplanOrderLog: '/spotplan/getApplyList',
   postChangeNumberSpotplanOrder: '/spotplan/changeNumberSpotplanOrder',
 
 }
