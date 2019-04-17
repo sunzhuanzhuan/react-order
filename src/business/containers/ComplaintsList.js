@@ -5,6 +5,30 @@ import { bindActionCreators } from 'redux';
 import * as actions from '../actions';
 import { IconText } from '../../base/DataGroup';
 import Modal from 'antd/es/modal';
+import moment from 'moment';
+
+
+const CountDown = ({ date }) => {
+  function appendZero(obj) {
+    if (obj < 10) return '0' + '' + obj;
+    else return obj;
+  }
+  if (!date) return ''
+  let now = moment()
+  let diff = moment(date) - now
+    let duration = moment.duration(diff)
+  let days = duration.days()
+  let hours = duration.hours()
+  let minutes = duration.minutes()
+  let seconds = duration.seconds()
+  if (days > 0) {
+    return days + '天'
+  } else {
+    return <span style={{ color: 'red', fontWeight: '700' }}>
+      {appendZero(hours) + ':' + appendZero(minutes) + ':' + appendZero(seconds)}
+    </span>
+  }
+}
 
 const mapStateToProps = (state) => ({
   business: state.business
@@ -22,7 +46,7 @@ export default class ComplaintsList extends Component {
     super(props);
     this.state = {
       ratioLoading: false,
-      orderId: '',
+      id: '',
       search: {
         page: 1,
         page_size: 10
@@ -35,9 +59,9 @@ export default class ComplaintsList extends Component {
         dataIndex: 'created_time'
       }, {
         title: '帐号信息',
-        dataIndex: 'weibo_name',
+        dataIndex: 'sns_name',
         render: (name, record) => {
-          return <IconText text={name} platform={record.weibo_type} />
+          return <IconText text={name} platform={record.platform_id} />
         }
       }, {
         title: '订单ID',
@@ -57,7 +81,7 @@ export default class ComplaintsList extends Component {
         render: (ratio, record) => {
           if (record.progress === 1) {
             // 小于一天加红加粗
-            return ratio
+            return <CountDown date={record.refund_end_time}/>
           }
           if (record.progress === 5) {
             return '已处理'
@@ -74,7 +98,7 @@ export default class ComplaintsList extends Component {
           if (record.progress === 1) {
             return <Button ghost type='primary' onClick={() => this.handleRatio(record)}>输入比例</Button>
           }
-          return <span style={{ color: 'red' }}>{ratio}</span>
+          return <span style={{ color: 'red' }}>{ratio}%</span>
         }
       }, {
         title: '备注',
@@ -109,7 +133,7 @@ export default class ComplaintsList extends Component {
           .then(() => {
             message.success('处理成功', 1.3)
             this.getList()
-            this.setState({ orderId: '' })
+            this.setState({ id: '' })
           })
           .finally(() => {
             this.setState({ ratioLoading: false })
@@ -120,7 +144,8 @@ export default class ComplaintsList extends Component {
 
   handleRatio = (record) => {
     this.setState({
-      orderId: record.order_id
+      id: record.id,
+      orderId : record.order_id
     })
   }
 
@@ -150,15 +175,15 @@ export default class ComplaintsList extends Component {
       />
       <Modal
         title={'订单: ' + this.state.orderId}
-        visible={!!this.state.orderId}
+        visible={!!this.state.id}
         destroyOnClose
-        onCancel={() => this.setState({ orderId: '' })}
+        onCancel={() => this.setState({ id: '' })}
         onOk={this.submit}
         okButtonProps={{ loading: this.state.ratioLoading }}
       >
         <Form layout='inline'>
           <Form.Item label="退款比例">
-            {getFieldDecorator('ratio', {
+            {getFieldDecorator('refund_ratio', {
               rules: [
                 { required: true, message: '请输入退款比例' }
               ]
@@ -167,12 +192,12 @@ export default class ComplaintsList extends Component {
             )}
             <span style={{ margin: '0 14px 0 4px' }}>%</span>
           </Form.Item>
-          <Form.Item style={{display: 'inline-block', margin: '0'}}>
+          <Form.Item style={{ display: 'inline-block', margin: '0' }}>
             {getFieldDecorator('note')(
               <Input placeholder='添加退款备注内容' style={{ width: '240px' }} />
             )}
-            {getFieldDecorator('order_id', {
-              initialValue: this.state.orderId
+            {getFieldDecorator('id', {
+              initialValue: this.state.id
             })(
               <input type='hidden' />
             )}

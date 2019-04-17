@@ -31,7 +31,7 @@ export default class MerchantList extends Component {
       search: {
         page: 1,
         page_size: 10,
-        ...parseUrlQuery(),
+        ...parseUrlQuery()
       }
     }
     this.columns = [
@@ -84,7 +84,7 @@ export default class MerchantList extends Component {
         console.log('Received values of form: ', values);
         const { actions } = this.props
         this.setState({ addLoading: true })
-        actions.BSUpdateBusinessAccount(values)
+        actions.BSUpdateBusinessAccount({ ...values, company_id: this.state.search.company_id })
           .then(() => {
             message.success('添加成功', 1.3)
             this.getList()
@@ -113,7 +113,7 @@ export default class MerchantList extends Component {
   }
 
   render() {
-    const { company_id } = this.state;
+    const { company_id } = this.state.search;
     if (!company_id) {
       return <div>参数错误!</div>
     }
