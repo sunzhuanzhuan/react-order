@@ -14,7 +14,8 @@ class BasicInfo extends React.Component {
     this.state = {}
   }
   componentDidMount() {
-    this.props.queryData(1);
+    const { search } = this.props;
+    this.props.queryData(1, { company_id: search.company_id });
   }
   render() {
     const { getFieldDecorator } = this.props.form;

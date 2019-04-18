@@ -11,15 +11,19 @@ class EditOrderModal extends React.Component {
   handleSubmit = () => {
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        this.props.handleSubmit({ type: 3, reason: values.reason }).then(() => {
-          this.props.onCancel();
+        const { data, spotplan_id } = this.props;
+        this.props.actions.postUpdateSpotplanOrder({ ...values, spotplan_id, order_id: data[0].order_id }).then(() => {
+          message.success('操作成功！', 2);
+          this.props.handleClose().then(() => {
+            this.props.onCancel();
+          })
         })
       }
     })
   }
   render() {
     const { getFieldDecorator } = this.props.form;
-    const { visible, onCancel, data } = this.props;
+    const { visible, onCancel, data, spotplan_id } = this.props;
     const formItemLayout = {
       labelCol: { span: 8 },
       wrapperCol: { span: 16 }
@@ -38,12 +42,13 @@ class EditOrderModal extends React.Component {
         ]}
     >
       <Form>
-        <FormItem label='订单ID' {...formItemLayout}>{data && data.order_id}</FormItem>
-        <FormItem label='需求名称' {...formItemLayout}>{data && data.requirement_name}</FormItem>
-        <FormItem label='平台' {...formItemLayout}>{data && data.weibo_type_name}</FormItem>
-        <FormItem label='账号名称' {...formItemLayout}>{data && data.weibo_name}</FormItem>
+        <FormItem label='订单ID' {...formItemLayout}>{data && data[0].order_id}</FormItem>
+        <FormItem label='需求名称' {...formItemLayout}>{data && data[0].requirement_name}</FormItem>
+        <FormItem label='平台' {...formItemLayout}>{data && data[0].weibo_type_name}</FormItem>
+        <FormItem label='账号名称' {...formItemLayout}>{data && data[0].weibo_name}</FormItem>
         <FormItem label='价格名称' {...formItemLayout}>
           {getFieldDecorator('price_name', {
+            initialValue: data && data[0].price_name || '',
             rules: [{ required: true, message: '请填写名称' }]
           })(
             <Input style={{ width: 240 }} />
@@ -51,16 +56,18 @@ class EditOrderModal extends React.Component {
         </FormItem>
         <FormItem label='账号分类' {...formItemLayout}>
           {getFieldDecorator('account_category_name', {
+            initialValue: data && data[0].account_category_name || '',
             rules: [{ required: true, message: '请填写分类' }]
           })(
-            <Input style={{ width: 100 }} />
+            <Input style={{ width: 140 }} />
           )}
         </FormItem>
         <FormItem label='是否备选号' {...formItemLayout}>
           {getFieldDecorator('is_replace', {
+            initialValue: data && data[0].is_replace || undefined,
             rules: [{ required: true, message: '请选择是否备选' }]
           })(
-            <Select style={{ width: 100 }}
+            <Select style={{ width: 140 }}
               placeholder='请选择'
               getPopupContainer={() => document.querySelector('.history-modal')}
               allowClear
@@ -72,16 +79,16 @@ class EditOrderModal extends React.Component {
         </FormItem>
         <FormItem label='位置/直发or转发' {...formItemLayout}>
           {getFieldDecorator('release_form', {
+            initialValue: data && data[0].release_form || '',
             rules: [{ required: true, message: '请填写位置' }]
           })(
-            <Input style={{ width: 100 }} />
+            <TextArea autosize={{ minRows: 2, maxRows: 6 }} />
           )}
         </FormItem>
         <FormItem label='备注信息（非必填）' {...formItemLayout}>
           {getFieldDecorator('content', {
-            rules: [
-              { max: 200, message: '不能超过200字' }
-            ]
+            initialValue: data && data[0].content || '',
+            rules: [{ max: 200, message: '不能超过200字' }]
           })(
             <TextArea placeholder='填写备注信息' autosize={{ minRows: 4, maxRows: 6 }} />
           )}

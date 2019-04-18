@@ -26,8 +26,11 @@ class ChangeModal extends React.Component {
           message.error('请勾选需要替换的订单', 3);
           return
         }
-        this.props.handleSubmit({ type: 1, after_order_ids: selectedRowKeys.toString(), reason: values.reason }).then(() => {
-          this.props.onCancel();
+        this.props.handleSubmit({ type: 1, after_order_ids: selectedRowKeys, reason: values.reason }).then(() => {
+          message.success('操作成功！', 2);
+          this.props.handleClose().then(() => {
+            this.props.onCancel();
+          })
         })
       }
     })
@@ -71,7 +74,7 @@ class ChangeModal extends React.Component {
         <h4 style={{ padding: '10px 0' }}>当前订单信息</h4>
         <Table rowKey='order_id' border columns={OrderCols} dataSource={before_order} pagination={false} />
         <h4 style={{ padding: '10px 0' }}>勾选替换后的订单</h4>
-        {after_order && after_order.length == 0 ? <div>本Spotplan中没有可以用于替换的，状态为【客户待确认】的订单</div> : <Table rowKey='order_id' border columns={OrderCols} dataSource={after_order} rowSelection={rowSelection} pagination={false} />}
+        {after_order && after_order.length == 0 ? <div style={{ color: 'red' }}>本Spotplan中没有可以用于替换的，状态为【客户待确认】的订单</div> : <Table rowKey='order_id' border columns={OrderCols} dataSource={after_order} rowSelection={rowSelection} pagination={false} />}
       </>
     </Modal>
   }

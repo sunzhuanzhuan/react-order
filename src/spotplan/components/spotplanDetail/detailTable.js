@@ -17,7 +17,7 @@ export default class DetailTable extends React.Component {
       columns={columns}
       dataSource={dataSource}
       bordered
-      scroll={{ x: 1600 }}
+      scroll={{ x: 1540 }}
     />
   }
 }

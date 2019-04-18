@@ -48,7 +48,12 @@ export const spotplanOrderList = handleActions({
 
 export const spotplanEditList = handleActions({
   [getSpotplanEditOrder_success]: (state, action) => {
-    return { ...action.payload.data }
+    const data = action.payload.data;
+    if (data.type) {
+      return { ...state, [data.type]: data }
+    } else {
+      return { ...state, 'all': data }
+    }
   }
 }, {})
 

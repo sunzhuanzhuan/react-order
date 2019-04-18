@@ -1,7 +1,7 @@
 const proxy = require('http-proxy-middleware');
 module.exports = function (app) {
   app.use(proxy('/api/spotplan/',
-    { target: 'http://192.168.20.51:7300/mock/5caea28073f3100017a64392', changeOrigin: true }
+    { target: 'http://192.168.100.117:30017', changeOrigin: true }
   ));
   app.use(proxy('/api/common-file/',
     { target: 'http://weiboyi-files-service-test.192.168.100.203.nip.io', changeOrigin: true }

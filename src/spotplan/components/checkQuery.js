@@ -44,7 +44,12 @@ class CheckQuery extends React.Component {
             keys[key] = values[key].key;
             labels[key] = values[key].label;
           } else if (key == 'settle_id' && values[key]) {
-            values['settle_type'].key == 1 ? keys['order_id'] = values[key].trim().split(' ') : keys['requirement_id'] = values[key].trim().split(' ');
+            const array = values[key].trim().split(' ');
+            if (array.length > 200) {
+              message.error('最多能输入200个订单', 3);
+              return
+            }
+            values['settle_type'].key == 1 ? keys['order_id'] = array : keys['requirement_id'] = array;
           } else if (key == 'weibo_name' && values[key]) {
             keys['weibo_name'] = values['weibo_name'].trim().split(' ')
           } else {

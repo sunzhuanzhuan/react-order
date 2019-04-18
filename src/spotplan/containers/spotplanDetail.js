@@ -13,12 +13,14 @@ import QuitModal from '../components/spotplanDetail/quitOrderModal'
 import UpdateModal from '../components/spotplanDetail/updateModal'
 import './spotplan.less'
 import qs from 'qs'
+import numeral from 'numeral'
 
 const TabPane = Tabs.TabPane;
 class SpotPlanDetail extends React.Component {
   constructor() {
     super();
     this.state = {
+      loading: false,
       historyVisible: false,
       editVisible: false,
       changeVisible: false,
@@ -38,6 +40,10 @@ class SpotPlanDetail extends React.Component {
     getSpotplanPlatform();
     getSpotplanExecutor();
     this.queryData({ spotplan_id: search.spotplan_id, ...search.keys });
+    this.queryData({ type: 1, spotplan_id: search.spotplan_id, ...search.keys });
+    this.queryData({ type: 2, spotplan_id: search.spotplan_id, ...search.keys });
+    this.queryData({ type: 3, spotplan_id: search.spotplan_id, ...search.keys });
+    this.queryData({ type: 4, spotplan_id: search.spotplan_id, ...search.keys });
   }
   queryData = (obj, func) => {
     this.setState({ loading: true });
@@ -68,8 +74,9 @@ class SpotPlanDetail extends React.Component {
     this.setState({ selectedRowKeys, rows });
   }
   handleCheckAll = (e) => {
-    const { rows } = this.state;
-    const { spotplanEditList: { list = [] } } = this.props;
+    const { rows, type } = this.state;
+    const { spotplanEditList } = this.props;
+    const list = spotplanEditList[type] && spotplanEditList[type].list || [];
     if (e.target.checked) {
       const obj = list.reduce((data, current) => {
         return { ...data, [current.order_id]: current }
@@ -121,38 +128,72 @@ class SpotPlanDetail extends React.Component {
       }
     })
   }
+  handleClose = () => {
+    const search = qs.parse(this.props.location.search.substring(1));
+    return this.queryData({ spotplan_id: search.spotplan_id, ...search.keys });
+  }
   handleSubmit = (obj) => {
     const search = qs.parse(this.props.location.search.substring(1));
     const { order_id } = this.state;
-    return this.props.actions.postChangeNumberSpotplanOrder({ spotplan_id: search.spotplan_id, order_ids: order_id, ...obj }).then(() => {
-      this.queryData({ ...search.keys, spotplan_id: search.spotplan_id });
+    return this.props.actions.postChangeNumberSpotplanOrder({ spotplan_id: search.spotplan_id, order_ids: [order_id], ...obj }).then((res) => {
+      if (res.data) {
+        if (res.data.amount) {
+          Modal.error({
+            title: '错误提示',
+            width: 640,
+            content: <ErrorTip data={res.data.amount} />,
+            maskClosable: false,
+            okText: '确定',
+            onOk: () => {
+              this.queryData({ ...search.keys, spotplan_id: search.spotplan_id });
+            }
+          })
+        }
+      }
     })
   }
   handleSettleChange = () => {
-    const { selectedRowKeys } = this.state;
+    const { selectedRowKeys, rows } = this.state;
     if (selectedRowKeys.length == 0) {
       message.error('请先勾选需要进行换号申请的订单', 3);
       return
     }
-    this.setState({ changeVisible: true });
+    const flag = Object.values(rows).every(item => [12, 21, 25, 31].includes(parseInt(item.status)) && [0, 3, 4].includes(parseInt(item.last_apply_status)));
+    if (!flag) {
+      Modal.error({
+        title: '错误提示',
+        content: <div>你选择的订单中存在订单状态不为<span style={{ color: 'red' }}>【客户已确认、执行中、执行终止、终止合作申请中】</span>的订单，请先取消勾选再进行批量换号申请。</div>
+      });
+      return;
+    }
+    this.handleChangeNumber(selectedRowKeys)
   }
   handleSettleQuit = () => {
-    const { selectedRowKeys } = this.state;
+    const { selectedRowKeys, rows } = this.state;
     if (selectedRowKeys.length == 0) {
       message.error('请先勾选需要进行申请终止合作的订单', 3);
       return
     }
-    this.setState({ quitVisible: true })
+    const flag = Object.values(rows).every(item => [12, 21, 25, 31].includes(parseInt(item.status)) && [0, 3, 4].includes(parseInt(item.last_apply_status)));
+    if (!flag) {
+      Modal.error({
+        title: '错误提示',
+        content: <div>你选择的订单中存在订单状态不为<span style={{ color: 'red' }}>【客户已确认、执行中、执行终止、终止合作申请中】</span>的订单，请先取消勾选再进行批量申请终止合作。</div>
+      });
+      return;
+    }
+    this.handleQuitOrder(selectedRowKeys);
   }
   render() {
     const search = qs.parse(this.props.location.search.substring(1));
-    const { historyVisible, editVisible, changeVisible, quitVisible, updateVisible, selectedRowKeys } = this.state;
-    const { spotplanExecutor, spotplanPlatform, spotplanPoInfo, spotplanAmount, spotplanEditList: { list = [] }, basicSpotplanOrderInfo, updateSpotplanOrder: { before_order = [], after_order = [] }, updateSpotplanOrderLog } = this.props;
+    const { historyVisible, editVisible, changeVisible, quitVisible, updateVisible, selectedRowKeys, type, loading } = this.state;
+    const { spotplanExecutor, spotplanPlatform, spotplanPoInfo, spotplanAmount, spotplanEditList, basicSpotplanOrderInfo, updateSpotplanOrder: { before_order = [], after_order = [] }, updateSpotplanOrderLog } = this.props;
+    const list = spotplanEditList[type] && spotplanEditList[type].list || [];
     const checked = list.every(item => selectedRowKeys.includes(item.order_id.toString()));
     const DetailTableCols = DetailTableFunc(this.handleChangeNumber, this.handleQuitOrder, this.handleUpdateOrder, this.handleEditOrder, this.handleDelete);
     const rowSelection = {
       selectedRowKeys: selectedRowKeys,
-      onChange: this.handleSelectChange,
+      onChange: this.handleSelectChange
     };
     return <div className='spotList-detail-container'>
       <NavBar />
@@ -173,14 +214,24 @@ class SpotPlanDetail extends React.Component {
         spotplan_platform={spotplanPlatform}
       />
       <Tabs onChange={this.handleTabsChange} type="card">
-        <TabPane tab="全部（13）" key="1"><DetailTable columns={DetailTableCols} dataSource={list} rowSelection={rowSelection} /></TabPane>
-        <TabPane tab="待确认合作（11）" key="2"><DetailTable columns={DetailTableCols} dataSource={list} rowSelection={rowSelection} /></TabPane>
-        <TabPane tab="已确认合作（2）" key="3"><DetailTable columns={DetailTableCols} dataSource={list} rowSelection={rowSelection} /></TabPane>
-        <TabPane tab="终止合作申请中（2）" key="4"><DetailTable columns={DetailTableCols} dataSource={list} rowSelection={rowSelection} /></TabPane>
-        <TabPane tab="已终止合作（2）" key="5"><DetailTable columns={DetailTableCols} dataSource={list} rowSelection={rowSelection} /></TabPane>
+        <TabPane tab={`全部（${spotplanEditList['all'] && spotplanEditList['all'].total || 0}）`} key="1">
+          <DetailTable loading={loading} columns={DetailTableCols} dataSource={list} rowSelection={rowSelection} />
+        </TabPane>
+        <TabPane tab={`待确认合作（${spotplanEditList['1'] && spotplanEditList['1'].total || 0}）`} key="2">
+          <DetailTable loading={loading} columns={DetailTableCols} dataSource={list} rowSelection={rowSelection} />
+        </TabPane>
+        <TabPane tab={`已确认合作（${spotplanEditList['2'] && spotplanEditList['2'].total || 0}）`} key="3">
+          <DetailTable loading={loading} columns={DetailTableCols} dataSource={list} rowSelection={rowSelection} />
+        </TabPane>
+        <TabPane tab={`终止合作申请中（${spotplanEditList['3'] && spotplanEditList['3'].total || 0}）`} key="4">
+          <DetailTable loading={loading} columns={DetailTableCols} dataSource={list} rowSelection={rowSelection} />
+        </TabPane>
+        <TabPane tab={`已终止合作（${spotplanEditList['4'] && spotplanEditList['4'].total || 0}）`} key="5">
+          <DetailTable loading={loading} columns={DetailTableCols} dataSource={list} rowSelection={rowSelection} />
+        </TabPane>
       </Tabs>
       <div className='top-gap'>
-        <Checkbox onChange={this.handleCheckAll} checked={checked}>全选</Checkbox>
+        <Checkbox onChange={this.handleCheckAll} checked={list.length > 0 && checked}>全选</Checkbox>
         <Button type='primary' onClick={this.handleSettleChange}>批量申请换号</Button>
         <Button className='left-gap' type='primary' onClick={this.handleSettleQuit}>批量申请终止合作</Button>
       </div>
@@ -190,24 +241,29 @@ class SpotPlanDetail extends React.Component {
         dataSource={updateSpotplanOrderLog}
       />}
       {editVisible && <EditOrderModal visible={editVisible}
+        spotplan_id={search.spotplan_id}
         data={basicSpotplanOrderInfo}
         onCancel={() => { this.setState({ editVisible: false }) }}
+        handleClose={this.handleClose}
       />}
       {changeVisible && <ChangeModal visible={changeVisible}
         onCancel={() => { this.setState({ changeVisible: false }) }}
         handleSubmit={this.handleSubmit}
         before_order={before_order}
         after_order={after_order}
+        handleClose={this.handleClose}
       />}
       {quitVisible && <QuitModal visible={quitVisible}
         onCancel={() => { this.setState({ quitVisible: false }) }}
         handleSubmit={this.handleSubmit}
         dataSource={basicSpotplanOrderInfo}
+        handleClose={this.handleClose}
       />}
       {updateVisible && <UpdateModal visible={updateVisible}
         onCancel={() => { this.setState({ updateVisible: false }) }}
         handleSubmit={this.handleSubmit}
         dataSource={basicSpotplanOrderInfo}
+        handleClose={this.handleClose}
       />}
     </div>
   }
@@ -252,11 +308,11 @@ function BasicInfo({ data, handleClick }) {
     </Row>
     <Row className='info-row'>
       <Col span={3}>PO单号:</Col><Col span={4}>{data && data.customer_po_code}</Col>
-      <Col span={3}>发起更新申请次数:</Col><Col span={12}>{data && data.customer_po_amount}<a style={{ marginLeft: '40px' }} href='javascript:;' onClick={handleClick}>查看历史更新申请记录</a></Col>
+      <Col span={3}>发起更新申请次数:</Col><Col span={12}>{data && data.customer_po_amount || 0}<a style={{ marginLeft: '40px' }} href='javascript:;' onClick={handleClick}>查看历史更新申请记录</a></Col>
     </Row>
     <Row className='info-row'>
-      <Col span={3}>PO总额（不含税）:</Col><Col span={4}>{data && data.total_budget} 元</Col>
-      <Col span={3}>PO总额（含税）:</Col><Col span={12}>{data && data.total_budget} 元</Col>
+      <Col span={3}>PO总额（不含税）:</Col><Col span={4}>{data && data.total_budget || 0} 元</Col>
+      <Col span={3}>PO总额（含税）:</Col><Col span={12}>{data && data.total_budget || 0} 元</Col>
     </Row>
   </div>
 }
@@ -279,11 +335,41 @@ function Statistics({ data }) {
       </Col>
     </Row>
     <Row className='info-row'>
-      <Col span={3}><span className='primary-font'>{data & data.amount} 元</span></Col>
+      <Col span={3}><span className='primary-font'>{data && data.amount} 元</span></Col>
       <Col span={1}>=</Col>
-      <Col span={3}><span className='primary-font'>{data & data.confirmCostwithfee} 元</span></Col>
+      <Col span={3}><span className='primary-font'>{data && data.confirmCostwithfee} 元</span></Col>
       <Col span={1}>+</Col>
-      <Col span={4}><span className='primary-font'>{data & data.toBeconfirmCostwithfee} 元</span></Col>
+      <Col span={4}><span className='primary-font'>{data && data.toBeconfirmCostwithfee} 元</span></Col>
     </Row>
+  </div>
+}
+
+function ErrorTip({ data }) {
+  return <div>
+    <div>本次申请成功提交之后，<span style={{ fontWeight: 600 }}>预计消耗PO金额（不含税）为<span style={{ color: 'red' }}>{numeral(data.poAmountSum).format('0,0')} 元</span></span></div>
+    <div style={{ padding: '20px' }}>
+      <Row gutter={16}>
+        <Col span={4}></Col>
+        <Col span={6}><span style={{ color: 'rgba(0,0,0,0.3)' }}>已确认订单</span></Col>
+        <Col span={6}><span style={{ color: 'rgba(0,0,0,0.3)' }}>本次申请终止订单</span></Col>
+        <Col span={6}><span style={{ color: 'rgba(0,0,0,0.3)' }}>本次申请替换订单</span></Col>
+      </Row>
+      <Row gutter={16}>
+        <Col span={4}></Col>
+        <Col span={6}><span style={{ color: 'rgba(0,0,0,0.3)' }}>Costwithfee</span></Col>
+        <Col span={6}><span style={{ color: 'rgba(0,0,0,0.3)' }}>Costwithfee</span></Col>
+        <Col span={6}><span style={{ color: 'rgba(0,0,0,0.3)' }}>Costwithfee</span></Col>
+      </Row>
+      <Row gutter={16} style={{ lineHeight: '36px' }}>
+        <Col span={4}><span style={{ fontSize: '24px', fontWeight: 600 }}>等于</span></Col>
+        <Col span={5}>{numeral(data.confirm).format('0,0') || 0} 元</Col>
+        <Col span={1}>-</Col>
+        <Col span={5}>{numeral(data.termination).format('0,0') || 0} 元</Col>
+        <Col span={1}>+</Col>
+        <Col span={6}>{numeral(data.replace).format('0,0') || 0} 元</Col>
+      </Row>
+    </div>
+    <div style={{ color: 'red', lineHeight: '24px' }}>超出了本spotplan对应的PO总额（不含税）：{numeral(data.customer_po_amount).format('0,0') || 0} 元</div>
+    <div style={{ lineHeight: '24px' }}>请调整订单之后，重新提交，确保金额不超PO</div>
   </div>
 }

@@ -371,8 +371,8 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
   },
   {
     title: '订单状态',
-    dataIndex: 'b',
-    key: 'b',
+    dataIndex: 'status_name',
+    key: 'status_name',
     align: 'center',
     width: 80
   },
@@ -381,14 +381,10 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     dataIndex: 'last_apply_status',
     key: 'last_apply_status',
     align: 'center',
-    width: 100
-  },
-  {
-    title: '订单信息确认状态',
-    dataIndex: 'a',
-    key: 'a',
-    align: 'center',
-    width: 80
+    width: 100,
+    render: text => {
+      return text ? APPLY_STATUS[text] : '-'
+    }
   },
   {
     title: '平台',
@@ -409,8 +405,8 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
   },
   {
     title: '账号 ID',
-    dataIndex: 'id',
-    key: 'id',
+    dataIndex: 'weibo_id',
+    key: 'weibo_id',
     align: 'center',
     width: 80
   },
@@ -426,49 +422,70 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     dataIndex: 'price_name',
     key: 'price_name',
     align: 'center',
-    width: 100
+    width: 100,
+    render: text => {
+      return text || '-'
+    }
   },
   {
     title: 'Cost（元）',
     dataIndex: 'cost',
     key: 'cost',
     align: 'center',
-    width: 100
+    width: 100,
+    render: text => {
+      return text || '-'
+    }
   },
   {
     title: 'Costwithfee（元）',
     dataIndex: 'costwithfee',
     key: 'costwithfee',
     align: 'center',
-    width: 100
+    width: 100,
+    render: text => {
+      return text || '-'
+    }
   },
   {
     title: '账号分类',
     dataIndex: 'account_category_name',
     key: 'account_category_name',
     align: 'center',
-    width: 100
+    width: 100,
+    render: text => {
+      return text || '-'
+    }
   },
   {
     title: '是否备选号',
     dataIndex: 'is_replace',
     key: 'is_replace',
     align: 'center',
-    width: 80
+    width: 80,
+    render: text => {
+      return text == 1 ? '是' : text == 2 ? '否' : '-'
+    }
   },
   {
     title: '位置/直发or转发',
     dataIndex: 'release_form',
     key: 'release_form',
     align: 'center',
-    width: 100
+    width: 100,
+    render: text => {
+      return text || '-'
+    }
   },
   {
     title: '备注',
     dataIndex: 'content',
     key: 'content',
     align: 'center',
-    width: 100
+    width: 100,
+    render: text => {
+      return text || '-'
+    }
   },
   {
     title: '操作',
@@ -479,21 +496,21 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     fixed: 'right',
     render: (text, record) => {
       return <>
-        <div><a href='javascript:;' onClick={() => {
+        {[12, 21, 25, 31].includes(parseInt(record.status)) && [0, 3, 4].includes(parseInt(record.last_apply_status)) && <div><a href='javascript:;' onClick={() => {
           handleChangeNumber(record.order_id)
-        }}>申请换号</a></div>
-        <div><a href='javascript:;' onClick={() => {
+        }}>申请换号</a></div>}
+        {[12, 21, 25, 31].includes(parseInt(record.status)) && [0, 3, 4].includes(parseInt(record.last_apply_status)) && <div><a href='javascript:;' onClick={() => {
           handleQuitOrder(record.order_id)
-        }}>申请终止合作</a></div>
-        <div><a href='javascript:;' onClick={() => {
+        }}>申请终止合作</a></div>}
+        {[12, 21, 22, 26, 27, 28, 32, 33, 34].includes(parseInt(record.status)) && [0, 3, 4].includes(parseInt(record.last_apply_status)) && <div><a href='javascript:;' onClick={() => {
           handleUpdateOrder(record.order_id)
-        }}>申请更新信息</a></div>
-        <div><a href='javascript:;' onClick={() => {
+        }}>申请更新信息</a></div>}
+        {record.status == 11 && record.last_apply_status == 0 && <div><a href='javascript:;' onClick={() => {
           handleEditOrder(record.order_id)
-        }}>编辑信息</a></div>
-        <div><a href='javascript:;' onClick={() => {
+        }}>编辑信息</a></div>}
+        {record.status == 11 && record.last_apply_status == 0 && <div><a href='javascript:;' onClick={() => {
           handleDelete(record.order_id)
-        }}>删除订单</a></div>
+        }}>删除订单</a></div>}
       </>
     }
   }
@@ -524,7 +541,16 @@ export const HistoryCols = [
     dataIndex: 'after_order_info',
     key: 'after_order_info',
     align: 'center',
-    width: 140
+    width: 140,
+    render: (text, record) => {
+      return <div>
+        {text && text.map((item, index) => {
+          return <div key={index}>
+
+          </div>
+        })}
+      </div>
+    }
   },
   {
     title: '更新后',
@@ -564,8 +590,8 @@ export const OrderCols = [
   },
   {
     title: '订单状态',
-    dataIndex: 'platform_name',
-    key: 'platform_name',
+    dataIndex: 'status_name',
+    key: 'status_name',
     align: 'center',
     width: 100
   },
@@ -585,15 +611,15 @@ export const OrderCols = [
   },
   {
     title: '账号名称',
-    dataIndex: 'public_order_id',
-    key: 'public_order_id',
+    dataIndex: 'weibo_name',
+    key: 'weibo_name',
     align: 'center',
     width: 100
   },
   {
     title: '价格名称',
-    dataIndex: 'payment_amount',
-    key: 'payment_amount',
+    dataIndex: 'price_name',
+    key: 'price_name',
     align: 'center',
     width: 100
   },
@@ -622,8 +648,8 @@ export const UpdateCols = [
   },
   {
     title: '订单状态',
-    dataIndex: 'platform_name',
-    key: 'platform_name',
+    dataIndex: 'status_name',
+    key: 'status_name',
     align: 'center',
     width: 100
   },
@@ -643,8 +669,8 @@ export const UpdateCols = [
   },
   {
     title: '账号名称',
-    dataIndex: 'public_order_id',
-    key: 'public_order_id',
+    dataIndex: 'weibo_name',
+    key: 'weibo_name',
     align: 'center',
     width: 100
   }
