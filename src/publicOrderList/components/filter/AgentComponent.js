@@ -21,7 +21,7 @@ class AgentComponent extends React.Component {
   componentWillMount() {
     api.get("/operator-gateway/trinityAgent/v1/getAgentList", {
       params: {
-        agentStatus: 1, defaultAgent: 1
+        agentStatus: 1
       }
     })
       .then((response) => {
