@@ -18,12 +18,17 @@ class EditOrderModal extends React.Component {
             this.props.onCancel();
           })
         })
+      } else {
+        Modal.error({
+          title: '错误提示',
+          content: '请先将该订单必填项填写完整后再提交，该弹窗需要人工触发“X”，才能关闭'
+        })
       }
     })
   }
   render() {
     const { getFieldDecorator } = this.props.form;
-    const { visible, onCancel, data, spotplan_id } = this.props;
+    const { visible, onCancel, data } = this.props;
     const formItemLayout = {
       labelCol: { span: 8 },
       wrapperCol: { span: 16 }

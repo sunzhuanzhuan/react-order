@@ -158,11 +158,11 @@ class SpotplanAdd extends React.Component {
           {step == 1 && <BasicInfo ref={this.basicInfo} search={search} queryData={this.queryData} data={spotplanCompanyInfo} />}
           {step == 2 && <CheckOrder queryData={this.queryData} handleCheck={this.handleCheck}
             orderMaps={orderMaps} location={this.props.location} history={this.props.history} queryBasicInfo={this.queryBasicInfo} />}
-          {step == 3 && <EditOrder ref={this.editOrder} search={search} queryData={this.queryData} data={spotplanEditList} handleUpdate={this.handleUpdate} queryBasicInfo={this.queryBasicInfo} headerData={spotplanPoInfo}/>}
+          {step == 3 && <EditOrder ref={this.editOrder} search={search} queryData={this.queryData} data={spotplanEditList['all']} handleUpdate={this.handleUpdate} queryBasicInfo={this.queryBasicInfo} headerData={spotplanPoInfo} />}
         </div>
       </div>
       <BottomBlock current={step} handleSteps={this.handleSteps} orderMaps={orderMaps}
-        handlDel={this.handlDelCheck} data={spotplanEditList} />
+        handlDel={this.handlDelCheck} data={spotplanEditList} search={search} />
     </>
   }
 }

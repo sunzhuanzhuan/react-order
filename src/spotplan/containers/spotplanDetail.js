@@ -16,6 +16,33 @@ import qs from 'qs'
 import numeral from 'numeral'
 
 const TabPane = Tabs.TabPane;
+const tabPaneList = [
+  {
+    title: '全部',
+    type: 'all',
+    key: '1'
+  },
+  {
+    title: '待确认合作',
+    type: '1',
+    key: '2'
+  },
+  {
+    title: '已确认合作',
+    type: '2',
+    key: '3'
+  },
+  {
+    title: '终止合作申请中',
+    type: '3',
+    key: '4'
+  },
+  {
+    title: '已终止合作',
+    type: '4',
+    key: '5'
+  },
+]
 class SpotPlanDetail extends React.Component {
   constructor() {
     super();
@@ -29,7 +56,8 @@ class SpotPlanDetail extends React.Component {
       type: 'all',
       order_id: undefined,
       selectedRowKeys: [],
-      rows: {}
+      rows: {},
+      record: undefined
     }
   }
   componentDidMount() {
@@ -60,11 +88,11 @@ class SpotPlanDetail extends React.Component {
   handleTabsChange = value => {
     const search = qs.parse(this.props.location.search.substring(1));
     if (value - 1) {
-      this.queryData({ ...search.keys, spotplan_id: search.spotplan_id, type: value - 1 });
-      this.setState({ type: value - 1 });
+      this.queryData({ ...search.keys, spotplan_id: search.spotplan_id, type: value - 1, page: 1 });
+      this.setState({ type: (value - 1).toString() });
       return
     }
-    this.queryData({ ...search.keys, spotplan_id: search.spotplan_id });
+    this.queryData({ ...search.keys, spotplan_id: search.spotplan_id, page: 1 });
     this.setState({ type: 'all' });
   }
   handleSelectChange = (selectedRowKeys, selectedRows) => {
@@ -88,11 +116,16 @@ class SpotPlanDetail extends React.Component {
       this.handleSelectChange(Object.keys(obj), Object.values(obj));
     }
   }
-  handleHistory = () => {
+  handleHistory = (e, record) => {
     const search = qs.parse(this.props.location.search.substring(1));
-    this.props.actions.getUpdateSpotplanOrderLog({ spotplan_id: search.spotplan_id }).then(() => {
-      this.setState({ historyVisible: true });
-    })
+    if (record) {
+      this.setState({ historyVisible: true, record: [record] });
+    } else {
+      this.props.actions.getUpdateSpotplanOrderLog({ spotplan_id: search.spotplan_id }).then(() => {
+        this.setState({ historyVisible: true });
+      })
+    }
+
   }
   handleChangeNumber = order_id => {
     const search = qs.parse(this.props.location.search.substring(1));
@@ -186,11 +219,11 @@ class SpotPlanDetail extends React.Component {
   }
   render() {
     const search = qs.parse(this.props.location.search.substring(1));
-    const { historyVisible, editVisible, changeVisible, quitVisible, updateVisible, selectedRowKeys, type, loading } = this.state;
+    const { historyVisible, editVisible, changeVisible, quitVisible, updateVisible, selectedRowKeys, type, loading, record } = this.state;
     const { spotplanExecutor, spotplanPlatform, spotplanPoInfo, spotplanAmount, spotplanEditList, basicSpotplanOrderInfo, updateSpotplanOrder: { before_order = [], after_order = [] }, updateSpotplanOrderLog } = this.props;
     const list = spotplanEditList[type] && spotplanEditList[type].list || [];
     const checked = list.every(item => selectedRowKeys.includes(item.order_id.toString()));
-    const DetailTableCols = DetailTableFunc(this.handleChangeNumber, this.handleQuitOrder, this.handleUpdateOrder, this.handleEditOrder, this.handleDelete);
+    const DetailTableCols = DetailTableFunc(this.handleChangeNumber, this.handleQuitOrder, this.handleUpdateOrder, this.handleEditOrder, this.handleDelete, this.handleHistory);
     const rowSelection = {
       selectedRowKeys: selectedRowKeys,
       onChange: this.handleSelectChange
@@ -201,8 +234,8 @@ class SpotPlanDetail extends React.Component {
       <div>
         <h3 className='top-gap' style={{ display: 'inline-block' }}>Spotplan基本信息</h3>
         <div style={{ display: 'inline-block', float: 'right' }}>
-          <Button type='primary' href={`/order/spotplan/add?step=2&&spotplan_id=${search.spotplan_id}`}>+新增订单</Button>
-          <Button type='primary' className='left-gap'>导出为Excel</Button>
+          <Button type='primary' href={`/order/spotplan/add?step=2&&spotplan_id=${search.spotplan_id}&&noback=true`}>+新增订单</Button>
+          <Button type='primary' className='left-gap' href={`/api/spotplan/exportSpotplamExcel?spotplan_id=${search.spotplan_id}`}>导出为Excel</Button>
         </div>
       </div>
       <BasicInfo data={spotplanPoInfo} handleClick={this.handleHistory} />
@@ -214,21 +247,16 @@ class SpotPlanDetail extends React.Component {
         spotplan_platform={spotplanPlatform}
       />
       <Tabs onChange={this.handleTabsChange} type="card">
-        <TabPane tab={`全部（${spotplanEditList['all'] && spotplanEditList['all'].total || 0}）`} key="1">
-          <DetailTable loading={loading} columns={DetailTableCols} dataSource={list} rowSelection={rowSelection} />
-        </TabPane>
-        <TabPane tab={`待确认合作（${spotplanEditList['1'] && spotplanEditList['1'].total || 0}）`} key="2">
-          <DetailTable loading={loading} columns={DetailTableCols} dataSource={list} rowSelection={rowSelection} />
-        </TabPane>
-        <TabPane tab={`已确认合作（${spotplanEditList['2'] && spotplanEditList['2'].total || 0}）`} key="3">
-          <DetailTable loading={loading} columns={DetailTableCols} dataSource={list} rowSelection={rowSelection} />
-        </TabPane>
-        <TabPane tab={`终止合作申请中（${spotplanEditList['3'] && spotplanEditList['3'].total || 0}）`} key="4">
-          <DetailTable loading={loading} columns={DetailTableCols} dataSource={list} rowSelection={rowSelection} />
-        </TabPane>
-        <TabPane tab={`已终止合作（${spotplanEditList['4'] && spotplanEditList['4'].total || 0}）`} key="5">
-          <DetailTable loading={loading} columns={DetailTableCols} dataSource={list} rowSelection={rowSelection} />
-        </TabPane>
+        {tabPaneList.map(item => (<TabPane tab={`${item.title}（${spotplanEditList[item.type] && spotplanEditList[item.type].total || 0}）`} key={item.key}>
+          <DetailTable loading={loading} columns={DetailTableCols} dataSource={list} rowSelection={rowSelection}
+            type={type}
+            queryData={this.queryData}
+            options={{
+              total: spotplanEditList[item.type] && spotplanEditList[item.type].total || 0,
+              page: spotplanEditList[item.type] && spotplanEditList[item.type].page || 0,
+              pageSize: spotplanEditList[item.type] && spotplanEditList[item.type].pageSize || 0,
+            }} />
+        </TabPane>))}
       </Tabs>
       <div className='top-gap'>
         <Checkbox onChange={this.handleCheckAll} checked={list.length > 0 && checked}>全选</Checkbox>
@@ -237,8 +265,8 @@ class SpotPlanDetail extends React.Component {
       </div>
 
       {historyVisible && <HistoryModal visible={historyVisible}
-        onCancel={() => { this.setState({ historyVisible: false }) }}
-        dataSource={updateSpotplanOrderLog}
+        onCancel={() => { this.setState({ record: undefined, historyVisible: false }) }}
+        dataSource={record || updateSpotplanOrderLog}
       />}
       {editVisible && <EditOrderModal visible={editVisible}
         spotplan_id={search.spotplan_id}

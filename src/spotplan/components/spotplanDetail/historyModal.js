@@ -8,7 +8,7 @@ export default class HistoryModal extends React.Component {
     return <Modal
       wrapClassName='history-modal'
       key='historyModal'
-      width={800}
+      width={1100}
       title='查看历史更新申请记录'
       visible={visible}
       maskClosable={false}

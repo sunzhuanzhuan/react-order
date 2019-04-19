@@ -5,6 +5,7 @@ import * as spotplanAction from "../actions";
 import { Button, Modal, Table, Form } from 'antd'
 import { CheckModalFunc, EditOrderCols } from '../constants'
 import './bottomBlock.less'
+import qs from 'qs'
 
 class BottomBlock extends React.Component {
   constructor() {
@@ -17,7 +18,7 @@ class BottomBlock extends React.Component {
     this.setState({ visible: boolean })
   }
   render() {
-    const { current, handleSteps, orderMaps = {}, handlDel, data } = this.props;
+    const { current, handleSteps, orderMaps = {}, handlDel, data, search } = this.props;
     const { visible } = this.state;
     return <div className='bottom-block'>
       {current == 1 && <div className='right-block'><Button type='primary' onClick={() => {
@@ -26,10 +27,10 @@ class BottomBlock extends React.Component {
       </div>}
       {current == 2 && <>
         <div className='left-block'>
-          <Button onClick={() => {
+          {!search.noback && <Button onClick={() => {
             // this.props.history.goBack()
             handleSteps(1)
-          }}>上一步</Button>
+          }}>上一步</Button>}
         </div>
         <div className='right-block'>
           <span style={{ paddingRight: '20px' }}>已选订单：<a href='javascript:;' onClick={() => {

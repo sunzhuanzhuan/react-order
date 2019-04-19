@@ -1,5 +1,6 @@
 import React from 'react'
-import { Modal, Input, Form, Select } from 'antd'
+import { Modal, Input, Form, Select, Tooltip } from 'antd'
+import numeral from 'numeral'
 const { TextArea } = Input;
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -126,7 +127,10 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate) => [
     dataIndex: 'id',
     key: 'id',
     align: 'center',
-    width: 80
+    width: 80,
+    render: text => {
+      return text || '-'
+    }
   },
   {
     title: 'PriceID',
@@ -222,13 +226,12 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate) => [
     dataIndex: 'release_form',
     key: 'release_form',
     align: 'center',
-    width: 100,
     render: (text, record) => {
       return <FormItem>
         {getFieldDecorator(`${record.order_id}.release_form`, {
           rules: [{ required: true, message: '请填写位置' }]
         })(
-          <Input onBlur={(e) => {
+          <TextArea autosize={{ minRows: 4 }} style={{ width: 140 }} onBlur={(e) => {
             if (e.target.value != record.release_form) {
               handleUpdate({ order_id: record.order_id, price_id: record.price_id, is_replace: e.target.value })
             }
@@ -267,7 +270,10 @@ export const SpotplanListFunc = handleJump => [
     dataIndex: 'spotplan_id',
     key: 'spotplan_id',
     align: 'center',
-    width: 100
+    width: 100,
+    render: text => {
+      return <a href={`/order/spotplan/detail?spotplan_id=${text}`} target="_blank">{text}</a>
+    }
   },
   {
     title: 'PO单号',
@@ -276,7 +282,7 @@ export const SpotplanListFunc = handleJump => [
     align: 'center',
     width: 100,
     render: (text, record) => {
-      return text ? <a href={record.po_path} target="_blank">text</a> : '-'
+      return text ? <a href={record.po_path} target="_blank">{text}</a> : '-'
     }
   },
   {
@@ -346,7 +352,7 @@ export const SpotplanListFunc = handleJump => [
     }
   }
 ];
-export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdateOrder, handleEditOrder, handleDelete) => [
+export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdateOrder, handleEditOrder, handleDelete, handleHistory) => [
   {
     title: '订单ID',
     dataIndex: 'order_id',
@@ -382,8 +388,15 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     key: 'last_apply_status',
     align: 'center',
     width: 100,
-    render: text => {
-      return text ? APPLY_STATUS[text] : '-'
+    render: (text, record) => {
+      const node = text ? <div>
+        <div>申请类型：{APPLY_TYPE[record.record.apply_type]} <a href='javascript:;' onClick={(e) => {
+          handleHistory(e, record.record);
+        }}>查看详情</a></div>
+        {record.record.apply_type == 4 && <div>拒绝原因：暂时没写</div>}
+        {record.record.apply_type == 4 && <div>拒绝时间：暂时没写</div>}
+      </div> : ''
+      return text ? <Tooltip title={node}>{APPLY_STATUS[text]}</Tooltip> : '-'
     }
   },
   {
@@ -521,7 +534,7 @@ export const HistoryCols = [
     dataIndex: 'apply_type',
     key: 'apply_type',
     align: 'center',
-    width: 100,
+    width: 140,
     render: text => {
       return APPLY_TYPE[text]
     }
@@ -531,22 +544,33 @@ export const HistoryCols = [
     dataIndex: 'apply_status',
     key: 'apply_status',
     align: 'center',
-    width: 100,
-    render: text => {
-      return APPLY_STATUS[text]
+    width: 140,
+    render: (text, record) => {
+      const node = <div>
+        <div>申请类型：暂时没写</div>
+        {record.apply_type == 4 && <div>拒绝原因：暂时没写</div>}
+        {record.apply_type == 4 && <div>拒绝时间：暂时没写</div>}
+      </div>
+      return text ? <Tooltip title={node}>{APPLY_STATUS[text]}</Tooltip> : '-'
     }
   },
   {
     title: '更新前',
-    dataIndex: 'after_order_info',
-    key: 'after_order_info',
+    dataIndex: 'before_order_info',
+    key: 'before_order_info',
     align: 'center',
-    width: 140,
-    render: (text, record) => {
+    width: 240,
+    render: text => {
       return <div>
         {text && text.map((item, index) => {
           return <div key={index}>
-
+            <div style={{ textAlign: 'left' }}>【订单ID:{item.order_id}、{item.weibo_name}】</div>
+            {item.price_name && <div style={{ textAlign: 'left' }}>价格名称：{item.price_name}</div>}
+            {item.cost && <div style={{ textAlign: 'left' }}>Cost(元)：{numeral(item.cost).format('0,0')}</div>}
+            {item.service_rate && <div style={{ textAlign: 'left' }}>服务费率：{item.service_rate}%</div>}
+            {item.account_category_name && <div style={{ textAlign: 'left' }}>账号分类：{item.account_category_name}</div>}
+            {item.release_form && <div style={{ textAlign: 'left' }}>位置/直发or转发：{item.release_form}</div>}
+            {item.content && <div style={{ textAlign: 'left' }}>备注(非必填)：{item.content}</div>}
           </div>
         })}
       </div>
@@ -554,10 +578,26 @@ export const HistoryCols = [
   },
   {
     title: '更新后',
-    dataIndex: 'agent_name',
-    key: 'agent_name',
+    dataIndex: 'after_order_info',
+    key: 'after_order_info',
     align: 'center',
-    width: 140
+    width: 240,
+    render: (text, record) => {
+      return <div>
+        {text && text.map((item, index) => {
+          const before_item = record.before_order_info[index];
+          return <div key={index}>
+            <div style={{ textAlign: 'left' }}>【订单ID:{item.order_id}、{item.weibo_name}】</div>
+            {item.price_name && <div style={{ textAlign: 'left' }}>价格名称：<span style={item.price_name != before_item.price_name ? { color: 'red' } : {}}>{item.price_name}</span></div>}
+            {item.cost && <div style={{ textAlign: 'left' }}>Cost(元)：<span style={item.cost != before_item.cost ? { color: 'red' } : {}}>{numeral(item.cost).format('0,0')}</span></div>}
+            {item.service_rate && <div style={{ textAlign: 'left' }}>服务费率：<span style={item.service_rate != before_item.service_rate ? { color: 'red' } : {}}>{item.service_rate}%</span></div>}
+            {item.account_category_name && <div style={{ textAlign: 'left' }}>账号分类：<span style={item.account_category_name != before_item.account_category_name ? { color: 'red' } : {}}>{item.account_category_name}</span></div>}
+            {item.release_form && <div style={{ textAlign: 'left' }}>位置/直发or转发：<span style={item.release_form != before_item.release_form ? { color: 'red' } : {}}>{item.release_form}</span></div>}
+            {item.content && <div style={{ textAlign: 'left' }}>备注(非必填)：<span style={item.content != before_item.content ? { color: 'red' } : {}}>{item.content}</span></div>}
+          </div>
+        })}
+      </div>
+    }
   },
   {
     title: '申请人',
@@ -571,11 +611,11 @@ export const HistoryCols = [
     dataIndex: 'time',
     key: 'time',
     align: 'center',
-    width: 100,
+    width: 200,
     render: (text, record) => {
       return <div>
-        <div>申请时间：{record.creator_at}</div>
-        <div>审核时间：{record.check_at}</div>
+        <div>申请时间：{record.created_at || '-'}</div>
+        <div>审核时间：{record.check_at || '-'}</div>
       </div>
     }
   }

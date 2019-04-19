@@ -123,3 +123,10 @@ export const {
   method: 'post',
 });
 
+export const {
+  getExportSpotplamExcel,
+  getExportSpotplamExcel_success
+} = createHttpAction('getExportSpotplamExcel', Interface.getExportSpotplamExcel, {
+  method: 'get',
+});
+

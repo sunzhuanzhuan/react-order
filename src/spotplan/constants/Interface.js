@@ -16,5 +16,6 @@ export default {
   getUpdateSpotplanOrder: '/spotplan/getUpdateSpotplanOrder',
   getUpdateSpotplanOrderLog: '/spotplan/getApplyList',
   postChangeNumberSpotplanOrder: '/spotplan/changeNumberSpotplanOrder',
+  getExportSpotplamExcel: '/spotplan/exportSpotplamExcel',
 
 }

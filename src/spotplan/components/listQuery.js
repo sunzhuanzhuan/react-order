@@ -1,10 +1,14 @@
 import React from 'react'
 import { Row, Form, Select, Input, Button, DatePicker, message } from 'antd'
 import qs from 'qs'
+import moment from 'moment';
+import 'moment/locale/zh-cn';
+moment.locale('zh-cn');
 
 const { RangePicker } = DatePicker;
 const FormItem = Form.Item;
 const Option = Select.Option;
+const dateFormat = 'YYYY-MM-DD hh:mm:ss'
 class ListQuery extends React.Component {
   constructor() {
     super();
@@ -21,6 +25,10 @@ class ListQuery extends React.Component {
       obj[item] = { key: search.keys[item], label: search.labels[item] }
     }) : null;
     const settle_id = keys.order_id || keys.po_code;
+    if (keys.created_at) {
+      console.log('%ckeys.created_at: ', 'color: MidnightBlue; background: Aquamarine; font-size: 20px;', keys.created_at);
+      keys['created_at'] = [moment(keys.created_at[0], dateFormat), moment(keys.created_at[1], dateFormat)]
+    }
     if (settle_id) {
       keys['settle_id'] = settle_id.join(' ');
       delete keys['order_id']
@@ -42,6 +50,8 @@ class ListQuery extends React.Component {
             labels[key] = values[key].label;
           } else if (key == 'settle_id' && values[key]) {
             values['settle_type'].key == 1 ? keys['order_id'] = values[key].trim().split(' ') : keys['po_code'] = values[key].trim().split(' ');
+          } else if (key == 'created_at' && values[key].length > 0) {
+            keys[key] = [values[key][0].format(dateFormat), values[key][1].format(dateFormat)]
           } else {
             keys[key] = values[key]
           }
@@ -143,7 +153,7 @@ class ListQuery extends React.Component {
         </FormItem>
         <FormItem label='创建时间'>
           {getFieldDecorator('created_at')(
-            <RangePicker showTime style={{ width: 240 }} />
+            <RangePicker showTime style={{ width: 320 }} format={dateFormat} />
           )}
         </FormItem>
         <FormItem label='是否存在更新请求被拒订单'>
