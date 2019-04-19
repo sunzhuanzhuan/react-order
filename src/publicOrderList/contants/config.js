@@ -99,7 +99,7 @@ export const filterFormArr = [
   {
     label: "主账号名",
     type: "input",
-    id: "main_user_name"
+    id: "identity_name"
   },
   {
     label: "是否提前打款",
