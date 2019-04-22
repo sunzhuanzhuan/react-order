@@ -23,8 +23,7 @@ class CheckOrder extends React.Component {
     getSpotplanPlatform();
     getSpotplanProject();
     this.props.queryBasicInfo();
-    this.props.queryData(2, { order_id: 45680, ...search.keys });
-    // this.props.queryData(2, { spotplan_id: search.spotplan_id, ...search.keys });
+    this.props.queryData(2, { spotplan_id: search.spotplan_id, ...search.keys });
   }
   handlePageChange = (page) => {
     const search = qs.parse(this.props.location.search.substring(1));

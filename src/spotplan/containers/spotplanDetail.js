@@ -151,6 +151,10 @@ class SpotPlanDetail extends React.Component {
       this.setState({ order_id, editVisible: true });
     })
   }
+  handleUpdate = obj => {
+    const search = qs.parse(this.props.location.search.substring(1));
+    return this.props.actions.postUpdateSpotplanOrder({ spotplan_id: search.spotplan_id, ...obj })
+  }
   handleDelete = order_id => {
     const search = qs.parse(this.props.location.search.substring(1));
     Modal.confirm({
@@ -292,6 +296,7 @@ class SpotPlanDetail extends React.Component {
         handleSubmit={this.handleSubmit}
         dataSource={basicSpotplanOrderInfo}
         handleClose={this.handleClose}
+        handleUpdate={this.handleUpdate}
       />}
     </div>
   }

@@ -36,7 +36,10 @@ class UpdateModal extends React.Component {
     })
   }
   handleUpdate = obj => {
-
+    const { handleUpdate } = this.props;
+    handleUpdate({ ...obj }).then(() => {
+      message.success('更新完成！', 1);
+    })
   }
   render() {
     const { getFieldDecorator } = this.props.form;
@@ -101,7 +104,11 @@ class UpdateModal extends React.Component {
                 initialValue: dataSource && dataSource[0].cost || '',
                 rules: [{ required: true, message: '请填写值' }]
               })(
-                <Input placeholder='' style={{ width: 200 }} />
+                <Input placeholder='' style={{ width: 200 }} onBlur={(e) => {
+                  if (e.target.value != dataSource[0].cost) {
+                    this.handleUpdate({ order_id: dataSource[0].order_id, price_id: dataSource[0].price_id, cost: e.target.value })
+                  }
+                }} />
               )}
             </FormItem>
           </Col>
@@ -116,7 +123,11 @@ class UpdateModal extends React.Component {
                 initialValue: dataSource && dataSource[0].service_rate || '',
                 rules: [{ required: true, message: '请填写值' }]
               })(
-                <Input placeholder='' suffix='%' style={{ width: 200 }} />
+                <Input placeholder='' suffix='%' style={{ width: 200 }} onBlur={(e) => {
+                  if (e.target.value != dataSource[0].service_rate) {
+                    this.handleUpdate({ order_id: dataSource[0].order_id, price_id: dataSource[0].price_id, service_rate: e.target.value })
+                  }
+                }} />
               )}
             </FormItem>
           </Col>
@@ -137,7 +148,11 @@ class UpdateModal extends React.Component {
                 initialValue: dataSource && dataSource[0].account_category_name || '',
                 rules: [{ required: true, message: '请填写值' }]
               })(
-                <Input placeholder='' style={{ width: 200 }} />
+                <Input placeholder='' style={{ width: 200 }} onBlur={(e) => {
+                  if (e.target.value != dataSource[0].account_category_name) {
+                    this.handleUpdate({ order_id: dataSource[0].order_id, price_id: dataSource[0].price_id, account_category_name: e.target.value })
+                  }
+                }} />
               )}
             </FormItem>
           </Col>
@@ -152,7 +167,11 @@ class UpdateModal extends React.Component {
                 initialValue: dataSource && dataSource[0].release_form || '',
                 rules: [{ required: true, message: '请填写值' }]
               })(
-                <TextArea autosize={{ minRows: 2, maxRows: 6 }} />
+                <TextArea autosize={{ minRows: 2, maxRows: 6 }} onBlur={(e) => {
+                  if (e.target.value != dataSource[0].release_form) {
+                    this.handleUpdate({ order_id: dataSource[0].order_id, price_id: dataSource[0].price_id, release_form: e.target.value })
+                  }
+                }} />
               )}
             </FormItem>
           </Col>
@@ -166,7 +185,11 @@ class UpdateModal extends React.Component {
               {getFieldDecorator('content', {
                 initialValue: dataSource && dataSource[0].content || '',
               })(
-                <TextArea placeholder='请填写申请换号的原因，不超过200个字' autosize={{ minRows: 2, maxRows: 6 }} />
+                <TextArea placeholder='请填写申请换号的原因，不超过200个字' autosize={{ minRows: 2, maxRows: 6 }} onBlur={(e) => {
+                  if (e.target.value != dataSource[0].content) {
+                    this.handleUpdate({ order_id: dataSource[0].order_id, price_id: dataSource[0].price_id, content: e.target.value })
+                  }
+                }} />
               )}
             </FormItem>
           </Col>

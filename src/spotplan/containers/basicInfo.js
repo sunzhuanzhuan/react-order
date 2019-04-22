@@ -1,8 +1,5 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from "redux";
-import * as spotplanAction from "../actions";
-import { Form, Input, Select, message, Button } from 'antd';
+import { Form, Input, Select } from 'antd';
 
 const FormItem = Form.Item;
 const { TextArea } = Input;

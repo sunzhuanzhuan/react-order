@@ -66,17 +66,13 @@ class SpotplanAdd extends React.Component {
         ...orderMaps,
         [order_id]: price_id
       }
-    }, () => {
-      console.log(this.state.orderMaps);
     })
   }
   handlDelCheck = order_id => {
     const { orderMaps } = this.state;
     let obj = { ...orderMaps };
     delete obj[order_id];
-    this.setState({ orderMaps: obj }, () => {
-      console.log(this.state.orderMaps);
-    });
+    this.setState({ orderMaps: obj });
   }
   handleSteps = (num, type) => {
     const search = qs.parse(this.props.location.search.substring(1));

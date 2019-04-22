@@ -1,11 +1,7 @@
 import React from 'react'
-import { connect } from 'react-redux';
-import { bindActionCreators } from "redux";
-import * as spotplanAction from "../actions";
-import { Button, Modal, Table, Form } from 'antd'
-import { CheckModalFunc, EditOrderCols } from '../constants'
+import { Button, Modal, Table } from 'antd'
+import { CheckModalFunc } from '../constants'
 import './bottomBlock.less'
-import qs from 'qs'
 
 class BottomBlock extends React.Component {
   constructor() {
@@ -28,7 +24,6 @@ class BottomBlock extends React.Component {
       {current == 2 && <>
         <div className='left-block'>
           {!search.noback && <Button onClick={() => {
-            // this.props.history.goBack()
             handleSteps(1)
           }}>上一步</Button>}
         </div>
@@ -43,7 +38,6 @@ class BottomBlock extends React.Component {
       {current == 3 && <>
         <div className='left-block'>
           <Button onClick={() => {
-            // this.props.history.goBack()
             handleSteps(2, 'back')
           }}>上一步</Button>
         </div>
@@ -91,17 +85,11 @@ class CheckModal extends React.PureComponent {
           columns={CheckModalCols}
           dataSource={dataAry}
           bordered
+          scroll={dataAry.length > 10 ? { y: 1200 } : {}}
         />
       </>
     </Modal>
   }
 }
-const mapStateToProps = (state) => {
-  return {
-    // spotplanCompanyInfo: state.spotplanReducers.spotplanCompanyInfo,
-  }
-}
-const mapDispatchToProps = dispatch => ({
-  actions: bindActionCreators({ ...spotplanAction }, dispatch)
-});
-export default connect(mapStateToProps, mapDispatchToProps)(BottomBlock)
+
+export default BottomBlock
