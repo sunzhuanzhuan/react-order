@@ -195,7 +195,7 @@ class SpotPlanDetail extends React.Component {
       message.error('请先勾选需要进行换号申请的订单', 3);
       return
     }
-    const flag = Object.values(rows).every(item => [12, 21, 25, 31].includes(parseInt(item.status)) && [0, 3, 4].includes(parseInt(item.last_apply_status)));
+    const flag = Object.values(rows).every(item => [12, 21, 25, 31].includes(parseInt(item.customer_confirmation_status)) && [0, 3, 4].includes(parseInt(item.last_apply_status)));
     if (!flag) {
       Modal.error({
         title: '错误提示',
@@ -211,7 +211,7 @@ class SpotPlanDetail extends React.Component {
       message.error('请先勾选需要进行申请终止合作的订单', 3);
       return
     }
-    const flag = Object.values(rows).every(item => [12, 21, 25, 31].includes(parseInt(item.status)) && [0, 3, 4].includes(parseInt(item.last_apply_status)));
+    const flag = Object.values(rows).every(item => [12, 21, 25, 31].includes(parseInt(item.customer_confirmation_status)) && [0, 3, 4].includes(parseInt(item.last_apply_status)));
     if (!flag) {
       Modal.error({
         title: '错误提示',

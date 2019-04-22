@@ -38,7 +38,24 @@ class SpotplanAdd extends React.Component {
     const hide = message.loading('信息加载中，请稍候...');
     const actionMap = { 1: 'getSpotplanCompanyInfo', 2: 'getSpotplanOrderList', 3: 'getSpotplanEditOrder' };
     const actionName = actionMap[step];
-    return this.props.actions[actionName]({ ...obj }).then((res) => {
+    const _this = this;
+    function after() {
+      let timer = setTimeout(() => {
+        return _this.props.actions[actionName]({ ...obj }).then((res) => {
+          if (func && Object.prototype.toString.call(func) === '[object Function]') {
+            func(res.data);
+          }
+          _this.setState({ loading: false });
+          hide();
+          clearTimeout(timer);
+        }).catch(({ errorMsg }) => {
+          _this.setState({ loading: false });
+          message.error(errorMsg || '获取接口数据出错！');
+          clearTimeout(timer);
+        })
+      }, 5000)
+    }
+    return step == 3 ? after() : this.props.actions[actionName]({ ...obj }).then((res) => {
       if (func && Object.prototype.toString.call(func) === '[object Function]') {
         func(res.data);
       }

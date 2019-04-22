@@ -509,19 +509,19 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     fixed: 'right',
     render: (text, record) => {
       return <>
-        {[12, 21, 25, 31].includes(parseInt(record.status)) && [0, 3, 4].includes(parseInt(record.last_apply_status)) && <div><a href='javascript:;' onClick={() => {
+        {[12, 21, 25, 31].includes(parseInt(record.customer_confirmation_status)) && [0, 3, 4].includes(parseInt(record.last_apply_status)) && <div><a href='javascript:;' onClick={() => {
           handleChangeNumber(record.order_id)
         }}>申请换号</a></div>}
-        {[12, 21, 25, 31].includes(parseInt(record.status)) && [0, 3, 4].includes(parseInt(record.last_apply_status)) && <div><a href='javascript:;' onClick={() => {
+        {[12, 21, 25, 31].includes(parseInt(record.customer_confirmation_status)) && [0, 3, 4].includes(parseInt(record.last_apply_status)) && <div><a href='javascript:;' onClick={() => {
           handleQuitOrder(record.order_id)
         }}>申请终止合作</a></div>}
-        {[12, 21, 22, 26, 27, 28, 32, 33, 34].includes(parseInt(record.status)) && [0, 3, 4].includes(parseInt(record.last_apply_status)) && <div><a href='javascript:;' onClick={() => {
+        {[12, 21, 22, 26, 27, 28, 32, 33, 34].includes(parseInt(record.customer_confirmation_status)) && [0, 3, 4].includes(parseInt(record.last_apply_status)) && <div><a href='javascript:;' onClick={() => {
           handleUpdateOrder(record.order_id)
         }}>申请更新信息</a></div>}
-        {record.status == 11 && record.last_apply_status == 0 && <div><a href='javascript:;' onClick={() => {
+        {record.customer_confirmation_status == 11 && record.last_apply_status == 0 && <div><a href='javascript:;' onClick={() => {
           handleEditOrder(record.order_id)
         }}>编辑信息</a></div>}
-        {record.status == 11 && record.last_apply_status == 0 && <div><a href='javascript:;' onClick={() => {
+        {record.customer_confirmation_status == 11 && record.last_apply_status == 0 && <div><a href='javascript:;' onClick={() => {
           handleDelete(record.order_id)
         }}>删除订单</a></div>}
       </>
