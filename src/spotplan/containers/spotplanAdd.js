@@ -82,7 +82,7 @@ class SpotplanAdd extends React.Component {
         if (!err) {
           const hide = message.loading('操作中，请稍候...');
           this.props.actions.postAddSpotplan({ ...values, company_id: search.company_id }).then((res) => {
-            this.props.history.push('/order/spotplan/add?step=2&&spotplan_id=' + res.data.spotplan_id);
+            this.props.history.push(`/order/spotplan/add?step=2&&spotplan_id=${ res.data.spotplan_id}&&company_id=${search.company_id}`);
             hide();
           }).catch(({ errorMsg }) => {
             message.error(errorMsg || '操作失败，请重试！')
