@@ -5,6 +5,7 @@ import authReducers from '../auth/reducers'
 import loginReducer from '../login/reducer/index'
 import siderMenuReducer from '../siderMenu/reducers'
 import authorizationsReducers from './authorizations'
+import publicOrderListReducer from '../publicOrderList/reducers'
 import closingReportReducers from '../closingReport/reducer'
 import spotplanReducers from '../spotplan/reducers'
 export default combineReducers({
@@ -16,4 +17,5 @@ export default combineReducers({
   authorizationsReducers,
   closingReportReducers,
   spotplanReducers,
+  publicOrderListReducer
 });
