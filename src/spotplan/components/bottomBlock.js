@@ -85,7 +85,7 @@ class CheckModal extends React.PureComponent {
           columns={CheckModalCols}
           dataSource={dataAry}
           bordered
-          scroll={dataAry.length > 10 ? { y: 1200 } : {}}
+          scroll={dataAry.length > 10 ? { y: 560 } : {}}
         />
       </>
     </Modal>
