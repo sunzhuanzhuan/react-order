@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux';
 import { bindActionCreators } from "redux";
 import * as spotplanAction from "../actions";
-import { Pagination } from 'antd';
+import { Pagination, Empty } from 'antd';
 import CheckQuery from '../components/checkQuery'
 import OrderItem from '../components/orderItem'
 import Header from '../components/header'
@@ -49,6 +49,7 @@ class CheckOrder extends React.Component {
           spotplan_platform={spotplanPlatform}
           spotplan_project={spotplanProject}
         />
+        {rows.length == 0 && <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />}
         {rows.map((item, index) => (<OrderItem key={index} data={item} handleCheck={handleCheck} orderMaps={orderMaps} />))}
         {total > 50 && <Pagination className='pagination'
           current={page}
