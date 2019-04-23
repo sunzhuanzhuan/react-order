@@ -20,19 +20,19 @@ class DetailTable extends React.Component {
           search: `?${qs.stringify({ ...search, keys: { ...search.keys, page: current } })}`,
         });
       },
-      onShowSizeChange: (current, page_size) => {
-        this.queryData({ ...search.keys, page: 1, page_size, type: _type });
-        this.props.history.replace({
-          pathname: this.props.location.pathname,
-          search: `?${qs.stringify({ ...search, keys: { ...search.keys, page: current, page_size } })}`,
-        });
-      },
+      // onShowSizeChange: (current, page_size) => {
+      //   this.queryData({ ...search.keys, page: 1, page_size, type: _type });
+      //   this.props.history.replace({
+      //     pathname: this.props.location.pathname,
+      //     search: `?${qs.stringify({ ...search, keys: { ...search.keys, page: current, page_size } })}`,
+      //   });
+      // },
       total: parseInt(options && options.total),
       current: parseInt(options && options.page),
       pageSize: parseInt(options && options.page_size),
       showQuickJumper: true,
-      showSizeChanger: true,
-      pageSizeOptions: ['50', '100', '200'],
+      // showSizeChanger: true,
+      // pageSizeOptions: ['50', '100', '200'],
       size: 'small'
     };
     return <Table

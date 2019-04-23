@@ -1,5 +1,8 @@
 import React from 'react';
 import { Form, Input, Select } from 'antd';
+import moment from 'moment';
+import 'moment/locale/zh-cn';
+moment.locale('zh-cn');
 
 const FormItem = Form.Item;
 const { TextArea } = Input;
@@ -21,14 +24,20 @@ class BasicInfo extends React.Component {
       labelCol: { span: 4 },
       wrapperCol: { span: 20 }
     };
+    const date = moment(new Date()).format('YYYY-MM-DD-HH-mm').toString();
+    const str = date.split('-').reduce((str, current, index) => {
+      const timeMap = ['年', '月', '日', '时', '分'];
+      return str + current + timeMap[index]
+    }, '【Spotplan】')
+
     return <Form className='spotplan-add-form'>
       <FormItem label='公司简称' {...formItemLayout}>{company_name}</FormItem>
       <FormItem label='所属销售' {...formItemLayout}>{real_name}</FormItem>
       <FormItem label='所属项目' {...formItemLayout}>
         {getFieldDecorator('project_id', {
-          rules: [{ required: true, message: '请勾选要添加的权限' }]
+          rules: [{ required: true, message: '请选择所属项目' }]
         })(
-          <Select style={{ width: 200 }}
+          <Select style={{ width: 260 }}
             placeholder='请选择'
             getPopupContainer={() => document.querySelector('.spotplan-add-form')}
             allowClear
@@ -43,12 +52,12 @@ class BasicInfo extends React.Component {
       </FormItem>
       <FormItem label='Spotplan名称' {...formItemLayout}>
         {getFieldDecorator('spotplan_name', {
-          initialValue: '【Spotplan】年-月-日-时-分',
+          initialValue: str,
           rules: [
             { required: true, message: 'Spotplan名称不能为空' },
             { max: 50, message: 'Spotplan名称不能超过50个字' }]
         })(
-          <Input style={{ width: 200 }} />
+          <Input style={{ width: 260 }} />
         )}
         <div className='tip-style' > 为方便日后调用 / 查询，可以重新命名</div>
       </FormItem>

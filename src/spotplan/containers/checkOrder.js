@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux';
 import { bindActionCreators } from "redux";
 import * as spotplanAction from "../actions";
-import { Pagination, Empty, Skeleton  } from 'antd';
+import { Pagination, Empty, Skeleton } from 'antd';
 import CheckQuery from '../components/checkQuery'
 import OrderItem from '../components/orderItem'
 import Header from '../components/header'
@@ -27,15 +27,15 @@ class CheckOrder extends React.Component {
   }
   handlePageChange = (page) => {
     const search = qs.parse(this.props.location.search.substring(1));
-    this.props.queryData(2, { spotplan_id: search.spotplan_id, ...search.keys, page })
+    this.props.queryData(2, { company_id: search.company_id, ...search.keys, page })
   }
-  hanldeSizeChange = (current, size) => {
-    const search = qs.parse(this.props.location.search.substring(1));
-    this.props.queryData(2, { spotplan_id: search.spotplan_id, ...search.keys, page: 1, page_size: size })
-  }
+  // hanldeSizeChange = (current, size) => {
+  //   const search = qs.parse(this.props.location.search.substring(1));
+  //   this.props.queryData(2, { company_id: search.company_id, ...search.keys, page: 1, page_size: size })
+  // }
   render() {
-    const { spotplanExecutor, spotplanPlatform, spotplanProject, spotplanOrderList: { page, pageSize, total, rows = [] }, spotplanPoInfo, handleCheck, orderMaps, loading  } = this.props;
-    return <div className='splotplan-check-container'>
+    const { spotplanExecutor, spotplanPlatform, spotplanProject, spotplanOrderList: { page, pageSize, total, rows = [] }, spotplanPoInfo, handleCheck, orderMaps, loading } = this.props;
+    return <div className='splotplan-check-container' style={{ height: 700, overflowY: 'scroll', overflowX: 'hidden' }}>
       <Header data={spotplanPoInfo} />
       <h3 style={{ marginTop: '20px' }}>订单列表</h3>
       <div className='check-table-container'>
@@ -56,12 +56,12 @@ class CheckOrder extends React.Component {
             current={page}
             pageSize={pageSize}
             onChange={this.handlePageChange}
-            onShowSizeChange={this.hanldeSizeChange}
+            // onShowSizeChange={this.hanldeSizeChange}
             size="small"
             total={total}
-            showSizeChanger
+            // showSizeChanger
             showQuickJumper
-            pageSizeOptions={['50', '100', '200']}
+          // pageSizeOptions={['50', '100', '200']}
           />}
         </Skeleton>
       </div>
