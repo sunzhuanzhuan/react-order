@@ -23,6 +23,13 @@ export const {
 });
 
 export const {
+  getSpotplanCreatorList,
+  getSpotplanCreatorList_success
+} = createHttpAction('getSpotplanCreatorList', Interface.getSpotplanCreatorList, {
+  method: 'get'
+});
+
+export const {
   getSpotplanPlatform,
   getSpotplanPlatform_success
 } = createHttpAction('getSpotplanPlatform', Interface.getSpotplanPlatform, {
@@ -128,5 +135,12 @@ export const {
   getExportSpotplamExcel_success
 } = createHttpAction('getExportSpotplamExcel', Interface.getExportSpotplamExcel, {
   method: 'get',
+});
+
+export const {
+  postDeleteSpotplanOrder,
+  postDeleteSpotplanOrder_success
+} = createHttpAction('postDeleteSpotplanOrder', Interface.postDeleteSpotplanOrder, {
+  method: 'post',
 });
 

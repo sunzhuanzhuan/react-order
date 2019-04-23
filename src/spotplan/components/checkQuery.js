@@ -23,6 +23,9 @@ class CheckQuery extends React.Component {
     if (keys.weibo_name) {
       keys['weibo_name'] = keys['weibo_name'].join(' ');
     }
+    if (keys.platform_id) {
+      delete keys.platform_id;
+    }
     if (settle_id) {
       keys['settle_id'] = settle_id.join(' ');
       delete keys['order_id']
@@ -44,7 +47,9 @@ class CheckQuery extends React.Component {
             keys[key] = values[key].key;
             labels[key] = values[key].label;
           } else if (key == 'settle_id' && values[key]) {
-            const array = values[key].trim().split(' ');
+            const array = values[key].trim().split(' ').reduce((data, current) => {
+              return current ? [...data, current] : [...data]
+            }, []);
             const ary = array.reduce((data, current) => {
               const flag = /^[0-9]+$/.test(current);
               return flag ? [...data, current] : [...data]
@@ -55,7 +60,10 @@ class CheckQuery extends React.Component {
             }
             values['settle_type'].key == 1 ? keys['order_id'] = ary : keys['requirement_id'] = ary;
           } else if (key == 'weibo_name' && values[key]) {
-            keys['weibo_name'] = values['weibo_name'].trim().split(' ')
+            const array = values[key].trim().split(' ').reduce((data, current) => {
+              return current ? [...data, current] : [...data]
+            }, []);
+            keys['weibo_name'] = array
           } else {
             keys[key] = values[key]
           }
@@ -119,10 +127,10 @@ class CheckQuery extends React.Component {
         </FormItem>
         <FormItem label='平台'>
           {getFieldDecorator('platform_id')(
-            <Select style={{ width: 140 }}
+            <Select style={{ width: 260 }}
               placeholder='请选择'
+              mode='multiple'
               getPopupContainer={() => document.querySelector('.spotplan-check-form')}
-              labelInValue
               allowClear
               showSearch
               filterOption={(input, option) => (

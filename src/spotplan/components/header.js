@@ -17,7 +17,7 @@ export default class Header extends React.Component {
         </Row>
         <Row className='info-row'>
           <Col span={2}>创建人:</Col><Col span={2}>{data && data.creator_name}</Col>
-          <Col span={2}>所属项目/品牌:</Col><Col span={10}>{data && data.project_name} / {data && data.brand_name || '-'}</Col>
+          <Col span={2}>所属项目/品牌:</Col><Col span={10}><a href={data && data.project_path} target='_blank'>{data && data.project_name}</a> / {data && data.brand_name || '-'}</Col>
         </Row>
       </div>
     </>

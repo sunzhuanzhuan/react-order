@@ -3,6 +3,7 @@ import { handleActions } from 'redux-actions';
 import {
   getSpotplanCompanyInfo_success,
   getSpotplanExecutor_success,
+  getSpotplanCreatorList_success,
   getSpotplanPlatform_success,
   getSpotplanProject_success,
   getSpotplanOrderList_success,
@@ -24,6 +25,12 @@ export const spotplanCompanyInfo = handleActions({
 
 export const spotplanExecutor = handleActions({
   [getSpotplanExecutor_success]: (state, action) => {
+    return [...action.payload.data]
+  }
+}, [])
+
+export const spotplanCreatorList = handleActions({
+  [getSpotplanCreatorList_success]: (state, action) => {
     return [...action.payload.data]
   }
 }, [])
@@ -102,6 +109,7 @@ export const updateSpotplanOrderLog = handleActions({
 export default combineReducers({
   spotplanCompanyInfo,
   spotplanExecutor,
+  spotplanCreatorList,
   spotplanPlatform,
   spotplanProject,
   spotplanOrderList,

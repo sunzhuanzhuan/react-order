@@ -15,9 +15,10 @@ class SpotPlanList extends React.Component {
   }
   componentDidMount() {
     const search = qs.parse(this.props.location.search.substring(1));
-    const { getSpotplanProject, getSpotplanBrand } = this.props.actions;
+    const { getSpotplanProject, getSpotplanBrand, getSpotplanCreatorList } = this.props.actions;
     getSpotplanProject();
     getSpotplanBrand();
+    getSpotplanCreatorList();
     this.queryData({ ...search.keys })
   }
   queryData = (obj, func) => {
@@ -41,7 +42,7 @@ class SpotPlanList extends React.Component {
   render() {
     const search = qs.parse(this.props.location.search.substring(1));
     const { loading } = this.state;
-    const { spotplanProject, spotplanBrand, spotplanList: { total, page, pageSize, rows } } = this.props;
+    const { spotplanProject, spotplanBrand, spotplanCreatorList, spotplanList: { total, page, pageSize, rows } } = this.props;
     const SpotplanListCols = SpotplanListFunc(this.hanldeJump);
     const paginationObj = {
       onChange: (current) => {
@@ -81,6 +82,7 @@ class SpotPlanList extends React.Component {
         location={this.props.location}
         spotplan_project={spotplanProject}
         spotplan_brand={spotplanBrand}
+        spotplan_creatorList={spotplanCreatorList}
       />
       <h3 style={{ marginTop: '20px' }}>Spotplan列表</h3>
       <Table
@@ -98,6 +100,7 @@ const mapStateToProps = (state) => {
   return {
     spotplanProject: state.spotplanReducers.spotplanProject,
     spotplanBrand: state.spotplanReducers.spotplanBrand,
+    spotplanCreatorList: state.spotplanReducers.spotplanCreatorList,
     spotplanList: state.spotplanReducers.spotplanList,
   }
 }

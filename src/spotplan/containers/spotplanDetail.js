@@ -161,7 +161,10 @@ class SpotPlanDetail extends React.Component {
       title: '',
       content: '是否确认将该订单从本spotplan删除？',
       onOk: () => {
-        console.log('delete');
+        this.props.actions.postDeleteSpotplanOrder({ spotplan_id: search.spotplan_id, order_id }).then(() => {
+          message.success('操作成功');
+          this.queryData({ ...search.keys, spotplan_id: search.spotplan_id });
+        })
       }
     })
   }

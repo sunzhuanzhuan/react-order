@@ -2,6 +2,7 @@ export default {
   getSpotplanCompanyInfo: '/spotplan/getCompanyInfo',
   postAddSpotplan: '/spotplan/addSpotplan',
   getSpotplanExecutor: '/spotplan/getExecutor',
+  getSpotplanCreatorList: '/spotplan/getCreatorList',
   getSpotplanPlatform: '/spotplan/getPlatform',
   getSpotplanProject: '/spotplan/getProject',
   getSpotplanOrderList: '/spotplan/getOrderList',
@@ -17,5 +18,6 @@ export default {
   getUpdateSpotplanOrderLog: '/spotplan/getApplyList',
   postChangeNumberSpotplanOrder: '/spotplan/changeNumberSpotplanOrder',
   getExportSpotplamExcel: '/spotplan/exportSpotplamExcel',
+  postDeleteSpotplanOrder: '/spotplan/deleteSpotplanOrder',
 
 }

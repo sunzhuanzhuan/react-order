@@ -26,7 +26,6 @@ class ListQuery extends React.Component {
     }) : null;
     const settle_id = keys.order_id || keys.po_code;
     if (keys.created_at) {
-      console.log('%ckeys.created_at: ', 'color: MidnightBlue; background: Aquamarine; font-size: 20px;', keys.created_at);
       keys['created_at'] = [moment(keys.created_at[0], dateFormat), moment(keys.created_at[1], dateFormat)]
     }
     if (settle_id) {
@@ -49,8 +48,15 @@ class ListQuery extends React.Component {
             keys[key] = values[key].key;
             labels[key] = values[key].label;
           } else if (key == 'settle_id' && values[key]) {
-            values['settle_type'].key == 1 ? keys['order_id'] = values[key].trim().split(' ') : keys['po_code'] = values[key].trim().split(' ');
-          } else if (key == 'created_at' && values[key].length > 0) {
+            const array = values[key].trim().split(' ').reduce((data, current) => {
+              return current ? [...data, current] : [...data]
+            }, []);
+            if (array.length > 200) {
+              message.error('最多能输入200个订单', 3);
+              return
+            }
+            values['settle_type'].key == 1 ? keys['order_id'] = array : keys['po_code'] = array;
+          } else if (key == 'created_at' && values[key] && values[key].length > 0) {
             keys[key] = [values[key][0].format(dateFormat), values[key][1].format(dateFormat)]
           } else {
             keys[key] = values[key]
@@ -77,7 +83,7 @@ class ListQuery extends React.Component {
   }
   render() {
     const { getFieldDecorator } = this.props.form;
-    const { spotplan_project, spotplan_brand } = this.props;
+    const { spotplan_project, spotplan_brand, spotplan_creatorList } = this.props;
     return <Form className='spotplan-list-form'>
       <Row>
         <FormItem label='批量查询'>
@@ -146,8 +152,7 @@ class ListQuery extends React.Component {
                 option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
               )}
             >
-              <Option value={1} key={1}>1</Option>
-              <Option value={2} key={2}>2</Option>
+              {spotplan_creatorList && spotplan_creatorList.map(item => (<Option value={item.creator_id} key={item.creator_id}>{item.creator_name}</Option>))}
             </Select>
           )}
         </FormItem>

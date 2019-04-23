@@ -45,7 +45,9 @@ class DetailQuery extends React.Component {
             keys[key] = values[key].key;
             labels[key] = values[key].label;
           } else if (key == 'settle_id' && values[key]) {
-            const array = values[key].trim().split(' ');
+            const array = values[key].trim().split(' ').reduce((data, current) => {
+              return current ? [...data, current] : [...data]
+            }, []);
             if (array.length > 200) {
               message.error('最多能输入200个订单', 3);
               return
