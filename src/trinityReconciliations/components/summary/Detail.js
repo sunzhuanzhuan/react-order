@@ -24,8 +24,8 @@ export default class SummaryDetailInfo extends Component {
     <div className='bg'>
       <Row className='row'>
         <Col span={6}> 订单总数: {detailSummary.total_order_amount}</Col>
-        <Col span={6}> 调账订单:{detailSummary.adjustment_order} </Col>
-        <Col span={6}> 扣减订单: {detailSummary.deduction_order}</Col>
+        <Col span={6}> 调账订单:{detailSummary. adjustment_order_count } </Col>
+        <Col span={6}> 扣减订单: {detailSummary. deduction_order_count}</Col>
         <Col span={6}> 应实付总金额(元):{detailSummary.total_pay_amount} </Col>
       </Row>
       <Row className='row'>

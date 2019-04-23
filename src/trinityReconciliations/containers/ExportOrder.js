@@ -8,6 +8,9 @@ import { bindActionCreators } from "redux";
 import * as actionsStatement from '../actions'
 import qs from 'qs'
 import './payment.less';
+import SearForm from '../../components/SearchForm'
+import getPagination from '../../components/pagination'
+import {searchForm } from '../constants/search'
 
 const downloadUrl = url => {
   let iframe = document.createElement('iframe')
@@ -32,7 +35,7 @@ class ExportOrder extends Component {
 
   componentWillMount=()=> {
     const search = qs.parse(this.props.location.search.substring(1));
-    this.queryData({ page: 1, page_size: this.state.page_size, ...search.keys })
+    this.queryData({ page: 1, page_size: this.state.page_size})
   }
   handleCancelSelect=()=>{
       this.setState({
@@ -44,8 +47,9 @@ class ExportOrder extends Component {
   }
   //查询
   queryData = (obj, func) => {
+    const search = qs.parse(this.props.location.search.substring(1));
 		this.setState({ loading: true });
-		return this.props.actions.getOrderList({ ...obj }).then(() => {
+		return this.props.actions.getOrderList({ agent_id:search.agent_id, ...obj }).then(() => {
 			if (func && Object.prototype.toString.call(func) === '[object Function]') {
 				func();
 			}
@@ -82,45 +86,48 @@ class ExportOrder extends Component {
   }
   render() {
     const search = qs.parse(this.props.location.search.substring(1));
-    let {orderList:{list=[], page, total}}=this.props;
-    let {loading,page_size,selectedRowKeys}= this.state;
+    console.log(search);
+    let {orderList:{list=[], page, total,page_size}}=this.props;
+    let {loading,selectedRowKeys}= this.state;
     const column = exportOrderListFunc();
-    let {filterParams}=this.state
-    let paginationObj = {
-			onChange: (current) => {
+    const paginationObj = getPagination(this, search, { total, page, page_size });
+    // let paginationObj = {
+		// 	onChange: (current) => {
         
-        this.queryData({ ...filterParams, page: current, page_size });
-      },
-      onShowSizeChange: (current, pageSize) => {
+    //     this.queryData({ ...filterParams, page: current, page_size });
+    //   },
+    //   onShowSizeChange: (current, pageSize) => {
       
-				const curPage = Math.ceil(total / pageSize);
-				this.setState({ page_size: pageSize });
-				this.queryData({ ...filterParams, page: curPage, page_size: pageSize });
-			},
-			total: parseInt(total),
-      current: parseInt(page),
-      pageSize:page_size,
-      showQuickJumper: true,
-      showSizeChanger:true,
-      pageSizeOptions:['20','50','100','200']
-		};
+		// 		const curPage = Math.ceil(total / pageSize);
+		// 		this.setState({ page_size: pageSize });
+		// 		this.queryData({ ...filterParams, page: curPage, page_size: pageSize });
+		// 	},
+		// 	total: parseInt(total),
+    //   current: parseInt(page),
+    //   pageSize:page_size,
+    //   showQuickJumper: true,
+    //   showSizeChanger:true,
+    //   pageSizeOptions:['20','50','100','200']
+		// };
     // const dataTable=[{name:'哈哈哈哈',id:2},{name:'天天',id:3}];
     const rowSelection = {
       onChange:this.onSelectChange,
       selectedRowKeys:selectedRowKeys
      
     };
-    return <div>
+    return <div className='export-order-container'>
      <Row className='title'>导出订单</Row>
      <div className='agent'>收款平台/代理商:<span className="agent_name">{search.agent}</span></div>
-     <ExportOrderFilter
+     {/* <ExportOrderFilter
      search={this.props.actions.searchName}
      accountName={this.props.accountName}
      history={this.props.history}
      questAction={this.queryData}
      page_size={page_size}
      handlefilterParams={this.handlefilterParams}
-     />
+     /> */}
+     <SearForm data={searchForm} getAction={this.queryData}
+      responseLayout={{ xs: 24, sm: 24, md: 10, lg: 8, xxl: 6 }}  />
      <OrderTable
      loading={loading}
      columns={column}

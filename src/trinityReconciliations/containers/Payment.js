@@ -8,6 +8,8 @@ import qs from 'qs'
 import  * as actionsPayment from '../actions'
 import { connect } from 'react-redux';
 import { bindActionCreators } from "redux";
+import SearForm from '../../components/SearchForm';
+import {searchFormPayment} from '../constants/search'
 import './payment.less';
 
 
@@ -80,12 +82,14 @@ class Payment extends Component {
     return <div className="payBox">
      <Row className='title'>申请周期付款</Row>
      <div className='agent'>收款平台/代理商:<span className='agent_name'>{search.agent}</span></div>
-      <PaymentFilter
+      {/* <PaymentFilter
         summary_sheet_id={this.state.summary_sheet_id}
         handlefilterParams={this.handlefilterParams}
         questAction={this.queryData}
         page_size={page_size}
-      />
+      /> */}
+      <SearForm data={searchFormPayment} getAction={this.queryData}
+      responseLayout={{ xs: 24, sm: 24, md: 10, lg: 8, xxl: 6 }}  />
      <div className="paymentTable">
       <PaymentTable
       loading={loading}

@@ -28,8 +28,8 @@ export default {
   // },
   getToken: '/toolbox-gateway/file/v1/getToken',
   statement:{
-    orderList:'/finance/statement/orderList',
-    exportOrder:'/finance/statement/exportOrder',
+    orderList:'/finance/statementOrder/list',
+    exportOrder:'/finance/statementOrder/export',
     addOrder:'/finance/statement/import',
     list:'/finance/statement/list',
     listStatement:'/finance/statement/listStatement',
@@ -41,7 +41,7 @@ export default {
     detailSummaryList:'/finance/statement/detailSummaryList',
     deleteStatement:'/finance/statement/deleteStatement',
     confirmApply:'/finance/statement/deleteStatement',
-    searchName:'/finance/statement/search',
+    searchName:'/finance/commonApi/getAccountIds',
   },
   meta:{
     metadata:'/finance/statement/metadata'

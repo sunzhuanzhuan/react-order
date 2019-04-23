@@ -10,6 +10,8 @@ import { bindActionCreators } from "redux";
 import SummaryDetailInfo from '../components/summary/Detail'
 import InfoTable from '../components/summary/SummaryTable'
 import {summaryTotalDetailListFunc} from '../constants/exportOrder/column'
+import SearForm from '../../components/SearchForm';
+import {searchFormStatement} from '../constants/search'
 import './payment.less'
 const TabPane = Tabs.TabPane;
 
@@ -165,12 +167,14 @@ handleCancel = (e) => {
      <Row className='agent'>平台/代理商:<span className='agent_name'>{search.agent}</span></Row>
      <Tabs defaultActiveKey="1" onChange={this.handleChangeTab}>
       <TabPane tab="全部" key="1">
-        <SummaryFilter
+      <SearForm data={searchFormStatement} getAction={this.queryData}
+      responseLayout={{ xs: 24, sm: 24, md: 10, lg: 8, xxl: 6 }}  />
+        {/* <SummaryFilter
           onRef={this.onRef}
           handlefilterParams={this.handlefilterParams}
           questAction={this.queryData}
           page_size={page_size}
-        />
+        /> */}
         <SummaryTable
           loading={loading}
           columns={column}
@@ -179,12 +183,14 @@ handleCancel = (e) => {
       />
       </TabPane>
       <TabPane tab="对账完成" key="2">
-        <SummaryFilter
+      <SearForm data={searchFormStatement} getAction={this.queryData}
+      responseLayout={{ xs: 24, sm: 24, md: 10, lg: 8, xxl: 6 }}  />
+        {/* <SummaryFilter
          onRef={this.onRef}
          handlefilterParams={this.handlefilterParams}
          questAction={this.queryData}
          page_size={page_size}
-        />
+        /> */}
         <SummaryTable
            loading={loading}
            columns={column}
@@ -193,12 +199,14 @@ handleCancel = (e) => {
       />
       </TabPane>
       <TabPane tab="已释放" key="3">
-        <SummaryFilter
+      <SearForm data={searchFormStatement} getAction={this.queryData}
+      responseLayout={{ xs: 24, sm: 24, md: 10, lg: 8, xxl: 6 }}  />
+        {/* <SummaryFilter
         onRef={this.onRef}
         handlefilterParams={this.handlefilterParams}
         questAction={this.queryData}
         page_size={page_size}
-        />
+        /> */}
         <SummaryTable
           loading={loading}
           columns={shiColum}

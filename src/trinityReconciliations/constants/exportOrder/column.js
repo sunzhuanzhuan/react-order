@@ -13,15 +13,15 @@ export const exportOrderListFunc = () => {
 		},
 		{
 			title: '快接单下单价(元)',
-			dataIndex: 'public_order_price',
-			key: 'salepublic_order_price_id',
+			dataIndex: 'public_cost_price',
+			key: 'public_cost_price',
 			align: 'center',
 			width: 100,
 		},
 		{
-			title: '项目名称',
-			dataIndex: 'month',
-			key: 'month',
+			title: '需求名称',
+			dataIndex: 'requirement_name',
+			key: 'requirement_name',
 			align: 'center',
 			width: 100,
 		},
@@ -45,21 +45,18 @@ export const exportOrderListFunc = () => {
 			key: 'company_name',
 			align: 'center',
 			width: 100,
-			render: (text) => {
-				return parseFloat(text).toFixed(2)
-			}
 		},
 		{
 			title: '项目媒介',
-			dataIndex: 'vol_admin_name',
-			key: 'vol_admin_name',
+			dataIndex: 'project_user_name',
+			key: 'project_user_name',
 			align: 'center',
 			width: 100,
     },
     {
 			title: '资源媒介',
-			dataIndex: 'owner_admin_name',
-			key: 'owner_admin_name',
+			dataIndex: 'media_user_name',
+			key: 'media_user_name',
 			align: 'center',
 			width: 100,
 		},
@@ -72,8 +69,8 @@ export const exportOrderListFunc = () => {
     },
     {
 			title: '执行人',
-			dataIndex: 'executor_admin_name',
-			key: 'executor_admin_name',
+			dataIndex: 'executor_name',
+			key: 'executor_name',
 			align: 'center',
 			width: 100,
     },
@@ -86,8 +83,8 @@ export const exportOrderListFunc = () => {
 		},
 		{
 			title: '三方订单号',
-			dataIndex: 'public_order_id',
-			key: 'public_order_id',
+			dataIndex: 'ttp_order_id',
+			key: 'ttp_order_id',
 			align: 'center',
 			width: 100,
 		},
@@ -109,11 +106,14 @@ export const exportOrderListFunc = () => {
 			width: 100,
 		},
 		{
-			title: '打款状态',
-			dataIndex: 'payment_status',
-			key: 'payment_status',
+			title: '是否可扣减',
+			dataIndex: 'is_can_deduction',
+			key: 'is_can_deduction',
 			align: 'center',
-			width: 100,
+      width: 100,
+      render:(text)=>{
+        return text == 1?'是':"否"
+      }
 		}
 		
 
@@ -170,8 +170,8 @@ export const paymentListFunc = (handleSelectDetail,summary_sheet_id) => {
 		},
 		{
 			title: '扣减订单',
-			dataIndex: 'deduction_order',
-			key: 'deduction_order',
+			dataIndex: ' deduction_order_count',
+			key: ' deduction_order_count',
 			align: 'center',
 			width: 100
 		},
@@ -184,8 +184,8 @@ export const paymentListFunc = (handleSelectDetail,summary_sheet_id) => {
 		},
 		{
 			title: '调账订单',
-			dataIndex: 'adjustment_order',
-			key: 'adjustment_order',
+			dataIndex: ' adjustment_order_count ',
+			key: ' adjustment_order_count ',
 			align: 'center',
 			width: 100
 		},
@@ -280,8 +280,8 @@ export const summaryListFunc = (handleSelectDetail,handleOut) => {
 		},
 		{
 			title: '调账订单',
-			dataIndex: 'adjustment_order',
-			key: 'adjustment_order',
+			dataIndex: ' adjustment_order_count ',
+			key: ' adjustment_order_count ',
 			align: 'center',
 			width: 100,
 		},
@@ -297,8 +297,8 @@ export const summaryListFunc = (handleSelectDetail,handleOut) => {
 		},
 		{
 			title: '扣减订单',
-			dataIndex: 'deduction_order',
-			key: 'deduction_order',
+			dataIndex: ' deduction_order_count',
+			key: ' deduction_order_count',
 			align: 'center',
 			width: 100,
 		},
@@ -381,8 +381,8 @@ export const summaryShiListFunc = (handleSelectDetail) => {
 		},
 		{
 			title: '调账订单',
-			dataIndex: 'adjustment_order',
-			key: 'adjustment_order',
+			dataIndex: ' adjustment_order_count ',
+			key: ' adjustment_order_count ',
 			align: 'center',
 			width: 100,
 		},
@@ -395,8 +395,8 @@ export const summaryShiListFunc = (handleSelectDetail) => {
 		},
 		{
 			title: '扣减订单',
-			dataIndex: 'deduction_order',
-			key: 'deduction_order',
+			dataIndex: ' deduction_order_count',
+			key: ' deduction_order_count',
 			align: 'center',
 			width: 100,
 		},

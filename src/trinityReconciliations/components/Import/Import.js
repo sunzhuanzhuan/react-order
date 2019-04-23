@@ -253,7 +253,7 @@ export class OptionTable extends Component{
         三方对账单总数:{stateMentList.total_statement}
         </Col>
         <Col span={12}>
-        扣减订单:{stateMentList.deduction_order}
+        扣减订单:{stateMentList. deduction_order_count}
         </Col>
       </Row>
 
@@ -316,7 +316,7 @@ export class TotalTable extends Component{
 
       <Row className='info'>
         <Col span={12}>
-        扣减订单:{summaryList.deduction_order}
+        扣减订单:{summaryList. deduction_order_count}
         </Col>
         <Col span={12}>
         扣减总金额(元):{summaryList.deduction_amount} 

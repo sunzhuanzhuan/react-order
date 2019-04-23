@@ -7,6 +7,8 @@ import qs from 'qs'
 import { connect } from 'react-redux';
 import { bindActionCreators } from "redux";
 import  * as actionsStatement from '../actions'
+import SearForm from '../../components/SearchForm';
+import {searchFormStatement} from '../constants/search'
 
 
 
@@ -80,11 +82,13 @@ class Statement extends Component {
     
     return <div>
       <Row>对账单导入记录【所属平台:,总对账单数量:】</Row>
-      <Filter
+      {/* <Filter
       questAction={this.queryData}
       page_size={page_size}
       />
-     
+      */}
+       <SearForm data={searchFormStatement} getAction={this.queryData}
+      responseLayout={{ xs: 24, sm: 24, md: 10, lg: 8, xxl: 6 }}  />
      <StateTable
      loading={loading}
      columns={column}
