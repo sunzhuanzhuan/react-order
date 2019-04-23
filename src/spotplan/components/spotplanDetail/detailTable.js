@@ -37,7 +37,7 @@ class DetailTable extends React.Component {
     };
     return <Table
       rowSelection={rowSelection}
-      rowKey={record => record.order_id.toString()}
+      rowKey={record => { return record.order_id ? record.order_id.toString() : '' }}
       columns={columns}
       dataSource={dataSource}
       bordered

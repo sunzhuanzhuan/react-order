@@ -63,10 +63,10 @@ class DetailQuery extends React.Component {
         };
         Object.keys(params['keys']).forEach(item => { !params['keys'][item] && params['keys'][item] !== 0 ? delete params['keys'][item] : null });
         const hide = message.loading('查询中，请稍候...');
-        this.props.queryData(2, { ...params.keys }).then(() => {
+        this.props.queryData({ ...params.keys }).then(() => {
           this.props.history.replace({
             pathname: this.props.location.pathname,
-            search: `?${qs.stringify({ step: search.step, spotplan_id: search.spotplan_id, ...params })}`,
+            search: `?${qs.stringify({ spotplan_id: search.spotplan_id, ...params })}`,
           })
           hide();
         }).catch(({ errorMsg }) => {
@@ -82,7 +82,7 @@ class DetailQuery extends React.Component {
     return <Form className='spotplan-check-form'>
       <Row>
         <FormItem label='Spotplan更新审核状态'>
-          {getFieldDecorator('some_people')(
+          {getFieldDecorator('customer_confirmation_status')(
             <Select style={{ width: 140 }}
               placeholder='请选择'
               getPopupContainer={() => document.querySelector('.spotplan-check-form')}
@@ -95,7 +95,7 @@ class DetailQuery extends React.Component {
         </FormItem>
         <FormItem label='批量查询'>
           {getFieldDecorator('settle_type', {
-            initialValue: { key: '订单ID', value: 1 }
+            initialValue: { label: '订单ID', key: 1 }
           })(
             <Select style={{ width: 100 }}
               placeholder='请选择'
