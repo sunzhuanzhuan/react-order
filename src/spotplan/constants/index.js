@@ -90,7 +90,8 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate) => [
     dataIndex: 'order_id',
     key: 'order_id',
     align: 'center',
-    width: 80,
+    width: 100,
+    fixed: 'left',
     render: (text, record) => {
       return <a href={record.order_info_path} target="_blank">{text}</a>
     }
@@ -100,7 +101,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate) => [
     dataIndex: 'requirement_name',
     key: 'requirement_name',
     align: 'center',
-    width: 80,
+    width: 100,
     render: (text, record) => {
       return <a href={record.requirement_path} target="_blank">{text}</a>
     }
@@ -144,6 +145,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate) => [
     dataIndex: 'price_name',
     key: 'price_name',
     align: 'center',
+    width:210,
     render: (text, record) => {
       return <FormItem>
         {getFieldDecorator(`${record.order_id}.price_name`, {
@@ -226,6 +228,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate) => [
     dataIndex: 'release_form',
     key: 'release_form',
     align: 'center',
+    width:210,
     render: (text, record) => {
       return <FormItem>
         {getFieldDecorator(`${record.order_id}.release_form`, {
@@ -246,6 +249,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate) => [
     dataIndex: 'content',
     key: 'content',
     align: 'center',
+    width:210,
     render: (text, record) => {
       return <FormItem>
         {getFieldDecorator(`${record.order_id}.content`, {
@@ -546,11 +550,11 @@ export const HistoryCols = [
     align: 'center',
     width: 140,
     render: (text, record) => {
-      const node = <div>
-        <div>申请类型：暂时没写</div>
-        {record.apply_type == 4 && <div>拒绝原因：暂时没写</div>}
-        {record.apply_type == 4 && <div>拒绝时间：暂时没写</div>}
-      </div>
+      const node = text ? <div>
+        <div>申请类型：{APPLY_TYPE[record.record.apply_type]}</div>
+        {record.record.apply_type == 4 && <div>拒绝原因：暂时没写</div>}
+        {record.record.apply_type == 4 && <div>拒绝时间：暂时没写</div>}
+      </div> : ''
       return text ? <Tooltip title={node}>{APPLY_STATUS[text]}</Tooltip> : '-'
     }
   },

@@ -25,7 +25,8 @@ class SpotplanAdd extends React.Component {
   constructor() {
     super();
     this.state = {
-      orderMaps: {}
+      orderMaps: {},
+      loading: false
     }
     this.basicInfo = React.createRef();
     this.editOrder = React.createRef();
@@ -35,7 +36,6 @@ class SpotplanAdd extends React.Component {
   }
   queryData = (step, obj, func) => {
     this.setState({ loading: true });
-    const hide = message.loading('信息加载中，请稍候...');
     const actionMap = { 1: 'getSpotplanCompanyInfo', 2: 'getSpotplanOrderList', 3: 'getSpotplanEditOrder' };
     const actionName = actionMap[step];
     const _this = this;
@@ -46,7 +46,6 @@ class SpotplanAdd extends React.Component {
             func(res.data);
           }
           _this.setState({ loading: false });
-          hide();
           clearTimeout(timer);
         }).catch(({ errorMsg }) => {
           _this.setState({ loading: false });
@@ -60,7 +59,6 @@ class SpotplanAdd extends React.Component {
         func(res.data);
       }
       this.setState({ loading: false });
-      hide();
     }).catch(({ errorMsg }) => {
       this.setState({ loading: false });
       message.error(errorMsg || '获取接口数据出错！');
@@ -108,7 +106,7 @@ class SpotplanAdd extends React.Component {
       });
     }
     if (num == 2 && type == 'back') {
-      this.props.history.push('/order/spotplan/add?step=2&spotplan_id=' + search.spotplan_id);
+      this.props.history.goBack();
     }
     if (num == 3) {
       const { orderMaps } = this.state;
@@ -157,7 +155,7 @@ class SpotplanAdd extends React.Component {
   render() {
     const search = qs.parse(this.props.location.search.substring(1));
     const step = parseInt(search.step);
-    const { orderMaps } = this.state;
+    const { orderMaps, loading  } = this.state;
     const { spotplanCompanyInfo, spotplanEditList, spotplanPoInfo } = this.props;
     return <>
       <div className='spotplan-add'>
@@ -170,8 +168,8 @@ class SpotplanAdd extends React.Component {
         <div className='spotplan-add-container'>
           {step == 1 && <BasicInfo ref={this.basicInfo} search={search} queryData={this.queryData} data={spotplanCompanyInfo} />}
           {step == 2 && <CheckOrder queryData={this.queryData} handleCheck={this.handleCheck}
-            orderMaps={orderMaps} location={this.props.location} history={this.props.history} queryBasicInfo={this.queryBasicInfo} />}
-          {step == 3 && <EditOrder ref={this.editOrder} search={search} queryData={this.queryData} data={spotplanEditList['all']} handleUpdate={this.handleUpdate} queryBasicInfo={this.queryBasicInfo} headerData={spotplanPoInfo} />}
+            orderMaps={orderMaps} location={this.props.location} history={this.props.history} queryBasicInfo={this.queryBasicInfo} loading={loading} />}
+          {step == 3 && <EditOrder ref={this.editOrder} search={search} queryData={this.queryData} data={spotplanEditList['all']} handleUpdate={this.handleUpdate} queryBasicInfo={this.queryBasicInfo} headerData={spotplanPoInfo} loading={loading} />}
         </div>
       </div>
       <BottomBlock current={step} handleSteps={this.handleSteps} orderMaps={orderMaps}

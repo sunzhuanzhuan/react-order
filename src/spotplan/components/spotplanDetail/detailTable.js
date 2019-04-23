@@ -1,6 +1,6 @@
 import React from 'react'
 import { Table } from 'antd'
-import { withRouter }from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
 import qs from 'qs'
 
 class DetailTable extends React.Component {
@@ -10,18 +10,18 @@ class DetailTable extends React.Component {
   }
   render() {
     const search = qs.parse(this.props.location.search.substring(1));
-    const { columns, dataSource, rowSelection, options,type } = this.props;
-    const _type=type=='all'?'':type
+    const { columns, dataSource, rowSelection, options, type, loading } = this.props;
+    const _type = type == 'all' ? '' : type
     const paginationObj = {
       onChange: (current) => {
-        this.props.queryData({ ...search.keys, page: current, page_size: options && options.page_size,type:_type });
+        this.props.queryData({ ...search.keys, page: current, page_size: options && options.page_size, type: _type });
         this.props.history.replace({
           pathname: this.props.location.pathname,
           search: `?${qs.stringify({ ...search, keys: { ...search.keys, page: current } })}`,
         });
       },
       onShowSizeChange: (current, page_size) => {
-        this.queryData({ ...search.keys, page: 1, page_size,type:_type });
+        this.queryData({ ...search.keys, page: 1, page_size, type: _type });
         this.props.history.replace({
           pathname: this.props.location.pathname,
           search: `?${qs.stringify({ ...search, keys: { ...search.keys, page: current, page_size } })}`,
@@ -33,7 +33,7 @@ class DetailTable extends React.Component {
       showQuickJumper: true,
       showSizeChanger: true,
       pageSizeOptions: ['50', '100', '200'],
-      size:'small'
+      size: 'small'
     };
     return <Table
       rowSelection={rowSelection}
@@ -41,8 +41,9 @@ class DetailTable extends React.Component {
       columns={columns}
       dataSource={dataSource}
       bordered
-      scroll={{ x: 1540 }}
+      scroll={{ x: 1580 }}
       pagination={(options && options.page_size > 50) ? paginationObj : false}
+      loading={loading}
     />
   }
 }
