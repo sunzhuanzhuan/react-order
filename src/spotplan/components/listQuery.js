@@ -100,12 +100,12 @@ class ListQuery extends React.Component {
             </Select>
           )}
           {getFieldDecorator('settle_id')(
-            <Input placeholder='请输入spotplan ID / PO 单号，多个空格隔开' className='left-little-gap' style={{ width: 280 }} />
+            <Input placeholder='请输入spotplan ID / PO 单号，多个空格隔开' className='left-little-gap' style={{ width: 280 }} allowClear />
           )}
         </FormItem>
         <FormItem label='Spotplan名称'>
           {getFieldDecorator('spotplan_name')(
-            <Input placeholder='请输入spotplan名称' style={{ width: 240 }} />
+            <Input placeholder='请输入spotplan名称' style={{ width: 240 }} allowClear />
           )}
         </FormItem>
         <FormItem label='所属项目'>

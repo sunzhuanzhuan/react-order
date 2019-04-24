@@ -109,12 +109,12 @@ class DetailQuery extends React.Component {
             </Select>
           )}
           {getFieldDecorator('settle_id')(
-            <Input placeholder='请输入订单ID/PriceID，多个空格隔开' className='left-little-gap' style={{ width: 240 }} />
+            <Input placeholder='请输入订单ID/PriceID，多个空格隔开' className='left-little-gap' style={{ width: 240 }} allowClear />
           )}
         </FormItem>
         <FormItem label='账号名称'>
           {getFieldDecorator('weibo_name')(
-            <Input placeholder='请输入账号名称，多个以空格隔开' style={{ width: 240 }} />
+            <Input placeholder='请输入账号名称，多个以空格隔开' style={{ width: 240 }} allowClear />
           )}
         </FormItem>
         <FormItem label='平台'>

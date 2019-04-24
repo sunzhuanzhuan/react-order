@@ -23,8 +23,9 @@ class CheckQuery extends React.Component {
     if (keys.weibo_name) {
       keys['weibo_name'] = keys['weibo_name'].join(' ');
     }
-    if (keys.platform_id) {
+    if (keys.platform_id || keys.project_id) {
       delete keys.platform_id;
+      delete keys.project_id;
     }
     if (settle_id) {
       keys['settle_id'] = settle_id.join(' ');
@@ -74,7 +75,7 @@ class CheckQuery extends React.Component {
         };
         Object.keys(params['keys']).forEach(item => { !params['keys'][item] && params['keys'][item] !== 0 ? delete params['keys'][item] : null });
         const hide = message.loading('查询中，请稍候...');
-        this.props.queryData(2, { ...params.keys }).then(() => {
+        this.props.queryData(2, { company_id: search.company_id, ...params.keys }).then(() => {
           this.props.history.replace({
             pathname: this.props.location.pathname,
             search: `?${qs.stringify({ step: 2, company_id: search.company_id, spotplan_id: search.spotplan_id, ...params })}`,
@@ -106,7 +107,7 @@ class CheckQuery extends React.Component {
             </Select>
           )}
           {getFieldDecorator('settle_id')(
-            <Input placeholder='请输入订单ID/需求ID，多个空格隔开' className='left-little-gap' style={{ width: 240 }} />
+            <Input placeholder='请输入订单ID/需求ID，多个空格隔开' className='left-little-gap' style={{ width: 240 }} allowClear />
           )}
         </FormItem>
         <FormItem label='执行人'>
@@ -145,20 +146,20 @@ class CheckQuery extends React.Component {
       <Row>
         <FormItem label='账号名称'>
           {getFieldDecorator('weibo_name')(
-            <Input placeholder='请输入账号名称，多个以空格隔开' style={{ width: 240 }} />
+            <Input placeholder='请输入账号名称，多个以空格隔开' style={{ width: 240 }} allowClear />
           )}
         </FormItem>
         <FormItem label='需求名称'>
           {getFieldDecorator('requirement_name')(
-            <Input placeholder='请输入需求名称' style={{ width: 160 }} />
+            <Input placeholder='请输入需求名称' style={{ width: 160 }} allowClear />
           )}
         </FormItem>
         <FormItem label='所属项目'>
           {getFieldDecorator('project_id')(
             <Select style={{ width: 140 }}
+              mode='multiple'
               placeholder='请选择'
               getPopupContainer={() => document.querySelector('.spotplan-check-form')}
-              labelInValue
               allowClear
               showSearch
               filterOption={(input, option) => (

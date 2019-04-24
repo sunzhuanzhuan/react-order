@@ -145,7 +145,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate) => [
     dataIndex: 'price_name',
     key: 'price_name',
     align: 'center',
-    width:210,
+    width: 210,
     render: (text, record) => {
       return <FormItem>
         {getFieldDecorator(`${record.order_id}.price_name`, {
@@ -228,7 +228,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate) => [
     dataIndex: 'release_form',
     key: 'release_form',
     align: 'center',
-    width:210,
+    width: 210,
     render: (text, record) => {
       return <FormItem>
         {getFieldDecorator(`${record.order_id}.release_form`, {
@@ -249,7 +249,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate) => [
     dataIndex: 'content',
     key: 'content',
     align: 'center',
-    width:210,
+    width: 210,
     render: (text, record) => {
       return <FormItem>
         {getFieldDecorator(`${record.order_id}.content`, {
@@ -722,8 +722,8 @@ export const UpdateCols = [
 //客户确认状态
 export const STATUS_CUSTOMER = [
   { key: '客户待确认', value: 11 },
-  { key: '客户确认', value: 12 },
-  { key: '客户拒绝', value: 13 },
+  { key: '客户已确认', value: 12 },
+  { key: '客户已拒绝', value: 13 },
   { key: '客户取消', value: 14 },
   { key: '过时未确认', value: 15 },
   { key: '待支付', value: 36 }
