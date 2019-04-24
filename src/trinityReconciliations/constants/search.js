@@ -30,7 +30,7 @@ export const searchForm=[
     },
     field: {
       label: '账号名称',
-      value: 'weibo_name',
+      value: 'weibo_names',
     }
   },
   {
@@ -49,7 +49,7 @@ export const searchForm=[
     attr: {
       placeholder: ['开始时间', '结束时间'],
       format: 'YYYY-MM-DD',
-      style: { width: 104 }
+      style: { width: 140 }
     },
     field: {
       label: '下单时间',
@@ -64,19 +64,7 @@ export const searchForm=[
       allowClear: true
     },
     field: {
-      label: '三方下单价',
-      value: 'public_order_ids',
-    }
-  },
-  {
-    ctype: 'input',
-    attr: {
-      placeholder: '请输入',
-      style: { width: 160 },
-      allowClear: true
-    },
-    field: {
-      label: '三方下单价',
+      label: '三方订单号',
       value: 'public_order_ids',
     }
   },
@@ -84,10 +72,10 @@ export const searchForm=[
     ctype: 'select',
     attr: {
       placeholder: '不限',
-      style: { width: 160 },
+      style: { width: 180 },
       // labelInValue: true,
       allowClear: true,
-      mode:"multiple"
+      mode:"multiple",
     },
     field: {
       label: '对账状态',

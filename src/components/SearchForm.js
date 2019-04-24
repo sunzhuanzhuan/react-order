@@ -341,7 +341,17 @@ class SearchForm extends React.PureComponent {
 		// 若是有回调函数,则返回空对象
 		if (this.props.resetAction) {
 			this.props.resetAction(null);
-		}
+    }
+    //如果重置的话URL也要重置
+    const search = qs.parse(this.props.location.search.substring(1));
+    if(search.keys){
+        delete search.keys
+    }
+    this.props.history.replace({
+      pathname:window.location.pathname,
+      search: `?${qs.stringify({ ...search})}`,
+    })
+
 	};
 	render() {
 		const { data = null, children, beforeFooter, extraFooter, handleSearch } = this.props;

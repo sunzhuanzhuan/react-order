@@ -28,7 +28,8 @@ class ExportOrder extends Component {
     this.state = {
         page_size:20,
         loading:false,
-        filterParams:{}
+        filterParams:{},
+        order_ids:[]
     };
   }
 
@@ -44,12 +45,19 @@ class ExportOrder extends Component {
   }
   onSelectChange = (selectedRowKeys,selectedRow) => {
     this.setState({ selectedRowKeys,selectedRow });
+    selectedRow.map((item)=>{
+      this.state.order_ids.push(item.wby_order_id)
+    })
   }
   //查询
   queryData = (obj, func) => {
     const search = qs.parse(this.props.location.search.substring(1));
-		this.setState({ loading: true });
-		return this.props.actions.getOrderList({ agent_id:search.agent_id, ...obj }).then(() => {
+    this.setState({ loading: true });
+    const value=obj.public_order_ids?obj.public_order_ids.split(','):'';
+    const value1=obj.wby_order_ids?obj.wby_order_ids.split(','):'';
+    const value2=obj.weibo_names?obj.weibo_names.split(','):'';
+    return this.props.actions.getOrderList({ agent_id:search.agent_id, ...obj,
+      public_order_ids:value,wby_order_ids:value1 ,weibo_names:value2}).then(() => {
 			if (func && Object.prototype.toString.call(func) === '[object Function]') {
 				func();
 			}
@@ -119,7 +127,7 @@ class ExportOrder extends Component {
      <Row className='title'>导出订单</Row>
      <div className='agent'>收款平台/代理商:<span className="agent_name">{search.agent}</span></div>
      {/* <ExportOrderFilter
-     search={this.props.actions.searchName}
+     search={this.props.actions.searchName}ßß
      accountName={this.props.accountName}
      history={this.props.history}
      questAction={this.queryData}
@@ -128,7 +136,7 @@ class ExportOrder extends Component {
      /> */}
      <SearForm data={searchForm} getAction={this.queryData}
       responseLayout={{ xs: 24, sm: 24, md: 10, lg: 8, xxl: 6 }}  />
-     <OrderTable
+     <OrderTable style={{marginTop:'20px'}}
      loading={loading}
      columns={column}
      dataTable={list}
@@ -147,8 +155,10 @@ class ExportOrder extends Component {
      <Button>取消</Button>
     </Popconfirm>
      
-     <Button type="primary" style={{margin:'0 20px'}} onClick={this.handleExportOrder}>导出订单</Button>
-
+     {/* <Button type="primary" style={{margin:'0 20px'}} onClick={this.handleExportOrder}>导出订单</Button> */}
+     <Button type="primary" style={{margin:'0 20px'}} >
+     <a target='_blank' href={`/api/finance/statementOrder/export?wby_order_ids=${this.state.order_ids}`}>导出订单</a>
+     </Button> 
      </Row>
     </div>;
   }
