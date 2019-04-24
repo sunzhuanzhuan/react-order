@@ -156,9 +156,9 @@ class CheckQuery extends React.Component {
         </FormItem>
         <FormItem label='所属项目'>
           {getFieldDecorator('project_id', {
-            initialValue: project_id ? project_id : ''
+            initialValue: project_id ? [project_id] : []
           })(
-            <Select style={{ width: 140 }}
+            <Select className="multipleSelect"
               mode='multiple'
               placeholder='请选择'
               getPopupContainer={() => document.querySelector('.spotplan-check-form')}
@@ -172,6 +172,8 @@ class CheckQuery extends React.Component {
             </Select>
           )}
         </FormItem>
+      </Row>
+      <Row>
         <FormItem label='订单预约状态'>
           {getFieldDecorator('reservation_status', {
             initialValue: { key: 2, label: '应约' }
@@ -190,8 +192,6 @@ class CheckQuery extends React.Component {
             </Select>
           )}
         </FormItem>
-      </Row>
-      <Row>
         <FormItem label='客户确认状态'>
           {getFieldDecorator('customer_confirmation_status')(
             <Select style={{ width: 140 }}

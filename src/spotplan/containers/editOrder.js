@@ -41,6 +41,7 @@ class EditOrder extends React.Component {
             bordered
             loading={loading}
             scroll={{ x: 1500 }}
+            size='small'
           />
         </Form>
       </div>

@@ -77,7 +77,7 @@ export const CheckModalFunc = handleDel => [
           title: '',
           content: `是否确认删除该订单？`,
           onOk: () => {
-            handleDel(record.order_id)
+            handleDel(2, record.order_id)
           }
         })
       }}>删除</a>

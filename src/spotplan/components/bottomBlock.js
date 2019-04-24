@@ -2,6 +2,7 @@ import React from 'react'
 import { Button, Modal, Table } from 'antd'
 import { CheckModalFunc } from '../constants'
 import './bottomBlock.less'
+import numeral from 'numeral'
 
 class BottomBlock extends React.Component {
   constructor() {
@@ -42,9 +43,9 @@ class BottomBlock extends React.Component {
           }}>上一步</Button>
         </div>
         <div className='right-block'>
-          <span style={{ paddingRight: '20px' }}>已选订单：<span className='primary-font'>{data && data.total || 0}</span></span>
-          <span style={{ paddingRight: '20px' }}>Cost总计：<span className='primary-font'>{data && data.cost_num || 0}元</span></span>
-          <span style={{ paddingRight: '20px' }}>Costwithfee总计：<span className='primary-font'>{data && data.costwithfee_num || 0}元</span></span>
+          <span style={{ paddingRight: '20px' }}>已选订单：<span className='primary-font'>{data['all'] && data['all'].total || 0}</span></span>
+          <span style={{ paddingRight: '20px' }}>Cost总计：<span className='primary-font'>{data['all'] && numeral(data['all'].cost_num).format('0,0') || 0}元</span></span>
+          <span style={{ paddingRight: '20px' }}>Costwithfee总计：<span className='primary-font'>{data['all'] && numeral(data['all'].costwithfee_num).format('0,0') || 0}元</span></span>
           <Button onClick={() => {
             handleSteps(4)
           }}>存为草稿</Button>

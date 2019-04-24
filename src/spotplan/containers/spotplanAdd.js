@@ -7,7 +7,6 @@ import CheckOrder from './checkOrder'
 import EditOrder from './editOrder'
 import BottomBlock from '../components/bottomBlock'
 import { message, Steps, Modal } from 'antd'
-import { } from '../constants'
 import './spotplan.less'
 import qs from 'qs'
 
@@ -74,20 +73,26 @@ class SpotplanAdd extends React.Component {
       message.success('更新完成！', 1);
     })
   }
-  handleCheck = (order_id, price_id) => {
-    const { orderMaps } = this.state;
-    this.setState({
-      orderMaps: {
-        ...orderMaps,
-        [order_id]: price_id
-      }
-    })
-  }
-  handlDelCheck = order_id => {
+  handleCheck = (type, order_id, item) => {
     const { orderMaps } = this.state;
     let obj = { ...orderMaps };
-    delete obj[order_id];
-    this.setState({ orderMaps: obj });
+    if (type == 1) {
+      //勾选
+      obj[order_id] = item;
+    }
+    if (type == 2) {
+      //取消勾选
+      delete obj[order_id];
+    }
+    this.setState({ orderMaps: obj })
+  }
+  handleSettleDelCheck = order_ids => {
+    const { orderMaps } = this.state;
+    let obj = { ...orderMaps };
+    order_ids.forEach(item => {
+      delete obj[item]
+    })
+    this.setState({ orderMaps: obj })
   }
   handleSteps = (num, type) => {
     const search = qs.parse(this.props.location.search.substring(1));
@@ -111,8 +116,9 @@ class SpotplanAdd extends React.Component {
     if (num == 3) {
       const { orderMaps } = this.state;
       if (!Object.values(orderMaps).length) {
-        message.error('请先选择需要加入spotplan的订单!', 3);
-        return
+        this.setState({ orderMaps: {} }, () => {
+          this.props.history.push('/order/spotplan/add?step=3&spotplan_id=' + search.spotplan_id);
+        })
       }
       const hide = message.loading('操作中，请稍候...');
       let spotplan_order = [];
@@ -121,21 +127,25 @@ class SpotplanAdd extends React.Component {
       }
       this.props.actions.postAddSpotplanOrder({ spotplan_id: search.spotplan_id, spotplan_order }).then((res) => {
         const array = res.data.order_ids;
+        const type = res.data.type;
         hide();
         if (array) {
+          const content = type == 1 ? `如下订单：{${array.toString()}}已被其他Spotplan选择，是否确认从本spotplan中删除这些订单？` : `如下订单：{${array.toString()}}状态不是客户待确认，不能添加到本spotplan，是否确认从本spotplan中删除这些订单？`;
           Modal.confirm({
             title: '',
-            content: `如下订单：{${array.toString()}}已被其他Spotplan选择，是否确认从本spotplan中删除这些订单？`,
-            onOk: () => {
-              const ary = spotplan_order.filter(item => !array.includes(item));
-              this.props.actions.postAddSpotplanOrder({ spotplan_order: ary }).then(() => {
-                this.setState({ orderMaps: {} });
-                this.props.history.push('/order/spotplan/add?step=3&spotplan_id=' + search.spotplan_id);
-              })
+            content: content,
+            onOk: (close) => {
+              this.handleSettleDelCheck(array);
+              let timer = setTimeout(() => {
+                close();
+                clearTimeout(timer);
+              }, 2000);
             }
           })
         } else {
-          this.props.history.push('/order/spotplan/add?step=3&spotplan_id=' + search.spotplan_id);
+          this.setState({ orderMaps: {} }, () => {
+            this.props.history.push('/order/spotplan/add?step=3&spotplan_id=' + search.spotplan_id);
+          })
         }
       })
 
@@ -155,7 +165,7 @@ class SpotplanAdd extends React.Component {
   render() {
     const search = qs.parse(this.props.location.search.substring(1));
     const step = parseInt(search.step);
-    const { orderMaps, loading  } = this.state;
+    const { orderMaps, loading } = this.state;
     const { spotplanCompanyInfo, spotplanEditList, spotplanPoInfo } = this.props;
     return <>
       <div className='spotplan-add'>
@@ -173,7 +183,7 @@ class SpotplanAdd extends React.Component {
         </div>
       </div>
       <BottomBlock current={step} handleSteps={this.handleSteps} orderMaps={orderMaps}
-        handlDel={this.handlDelCheck} data={spotplanEditList} search={search} />
+        handlDel={this.handleCheck} data={spotplanEditList} search={search} />
     </>
   }
 }

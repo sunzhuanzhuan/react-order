@@ -1,8 +1,7 @@
 import React from 'react'
-import { Col, Radio, Tooltip } from 'antd'
+import { Col, Checkbox, Tooltip } from 'antd'
 import numeral from 'numeral'
 
-const RadioGroup = Radio.Group;
 export default class OrderItem extends React.Component {
   constructor() {
     super();
@@ -19,22 +18,21 @@ export default class OrderItem extends React.Component {
       weibo_type_name: data.weibo_type_name,
       weibo_name: data.weibo_name,
     };
-    this.props.handleCheck(data.order_id, params);
+    if (e.target.checked) {
+      this.props.handleCheck(1, data.order_id, params);
+    } else {
+      this.props.handleCheck(2, data.order_id, params);
+    }
   }
   render() {
     const { data, orderMaps } = this.props;
-    const radioStyle = {
-      display: 'block',
-      height: '30px',
-      lineHeight: '30px',
-    };
     return <div className='check-order-item'>
       <div className='order-item-title'>
         <div className='title-info'>
           <span>订单ID：</span><span className='primary-font'>{data && data.order_id}</span>
           <span>订单状态：</span><span>{data && data.status_name}</span>
           <span>需求名称：</span><span><a target='_blank' href={data && data.requirement_path}>{data && data.requirement_name}</a></span>
-          <span>账号名称：</span><span>{data && data.weibo_name}</span>
+          <span>账号名称：</span><span><a target='_blank' href={data && data.url}>{data && data.weibo_name}</a></span>
           <span>平台：</span><span>{data && data.weibo_type_name}</span>
           <span>执行人：</span><span>{data && data.executor_admin_name}</span>
           <span>项目：</span><span><a target='_blank' href={data && data.project_path}>{data && data.project_name}</a></span>
@@ -45,16 +43,13 @@ export default class OrderItem extends React.Component {
             title={data.flag == 2 ? `订单不是【客户待确认】状态` : `订单已经被Spotplan（ID：${data.binding_id}）绑定了`}>不可选原因</Tooltip>
         </div>}
       </div>
-      <RadioGroup
-        onChange={this.handleChange}
-        value={(data && orderMaps[data.order_id] && orderMaps[data.order_id].price_id) || ''}
+      {data && data.price.map((item, index) => (<Checkbox
+        checked={(data && orderMaps[data.order_id] && (orderMaps[data.order_id].price_id == item.price_id)) || false}
+        key={index} value={item.price_id}
+        disabled={!(data && data.flag == 1)} onChange={this.handleChange}
       >
-        {data && data.price.map((item, index) => (<Radio style={radioStyle} key={index} value={item.price_id}
-          disabled={!(data && data.flag == 1)}
-        >
-          <Item data={item} />
-        </Radio>))}
-      </RadioGroup>
+        <Item data={item} />
+      </Checkbox>))}
     </div>
   }
 }
