@@ -90,7 +90,7 @@ class CheckQuery extends React.Component {
   }
   render() {
     const { getFieldDecorator } = this.props.form;
-    const { customer_status, reservation_status, spotplan_executor, spotplan_platform, spotplan_project } = this.props;
+    const { customer_status, reservation_status, spotplan_executor, spotplan_platform, spotplan_project, project_id } = this.props;
     return <Form className='spotplan-check-form'>
       <Row>
         <FormItem label='批量查询'>
@@ -155,7 +155,9 @@ class CheckQuery extends React.Component {
           )}
         </FormItem>
         <FormItem label='所属项目'>
-          {getFieldDecorator('project_id')(
+          {getFieldDecorator('project_id', {
+            initialValue: project_id ? project_id : ''
+          })(
             <Select style={{ width: 140 }}
               mode='multiple'
               placeholder='请选择'
