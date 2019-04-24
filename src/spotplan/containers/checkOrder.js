@@ -49,6 +49,7 @@ class CheckOrder extends React.Component {
           spotplan_platform={spotplanPlatform}
           spotplan_project={spotplanProject}
           project_id={spotplanPoInfo && spotplanPoInfo.project_id}
+          getProject={this.props.actions.getSpotplanProject}
         />
         <Skeleton active loading={loading}>
           {rows.length == 0 && <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />}

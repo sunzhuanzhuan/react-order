@@ -129,8 +129,9 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate) => [
     key: 'id',
     align: 'center',
     width: 80,
-    render: text => {
-      return text || '-'
+    render: (text, record) => {
+      const flag = record.weibo_type == 23 ? true : false;
+      return flag ? '-' : text
     }
   },
   {
@@ -545,10 +546,10 @@ export const HistoryCols = [
   },
   {
     title: 'spotplan更新审核状态',
-    dataIndex: 'apply_status',
-    key: 'apply_status',
+    dataIndex: 'last_apply_status',
+    key: 'last_apply_status',
     align: 'center',
-    width: 140,
+    width: 100,
     render: (text, record) => {
       const node = text ? <div>
         <div>申请类型：{APPLY_TYPE[record.record.apply_type]}</div>

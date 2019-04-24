@@ -336,18 +336,18 @@ function BasicInfo({ data, handleClick }) {
     </Row>
     <Row className='info-row'>
       <Col span={3}>创建人:</Col><Col span={4}>{data && data.creator_name}</Col>
-      <Col span={3}>所属项目/品牌:</Col><Col span={12}>{data && data.project_name} / {data && data.brand_name || '-'}</Col>
+      <Col span={3}>所属项目/品牌:</Col><Col span={12}><a target='_blank' href={data && data.project_path}>{data && data.project_name}</a> / {data && data.brand_name || '-'}</Col>
     </Row>
     <Row className='info-row'>
       <Col span={3}>创建时间:</Col><Col span={4}>{data && data.created_at}</Col>
       <Col span={3}>更新时间:</Col><Col span={12}>{data && data.updated_at}</Col>
     </Row>
     <Row className='info-row'>
-      <Col span={3}>PO单号:</Col><Col span={4}>{data && data.customer_po_code}</Col>
-      <Col span={3}>发起更新申请次数:</Col><Col span={12}>{data && data.customer_po_amount || 0}<a style={{ marginLeft: '40px' }} href='javascript:;' onClick={handleClick}>查看历史更新申请记录</a></Col>
+      <Col span={3}>PO单号:</Col><Col span={4}>{(data && data.customer_po_code) ? <a target='_blank' href={data && data.po_path}>{data.customer_po_code}</a> : '-'}</Col>
+      <Col span={3}>发起更新申请次数:</Col><Col span={12}>{data && data.apply_num || 0}<a style={{ marginLeft: '40px' }} href='javascript:;' onClick={handleClick}>查看历史更新申请记录</a></Col>
     </Row>
     <Row className='info-row'>
-      <Col span={3}>PO总额（不含税）:</Col><Col span={4}>{data && data.total_budget || 0} 元</Col>
+      <Col span={3}>PO总额（不含税）:</Col><Col span={4}>{data && data.customer_po_amount || 0} 元</Col>
       <Col span={3}>PO总额（含税）:</Col><Col span={12}>{data && data.total_budget || 0} 元</Col>
     </Row>
   </div>

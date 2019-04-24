@@ -1,5 +1,6 @@
 import React from 'react'
 import { Row, Form, Select, Input, Button, message } from 'antd'
+import SearchSelect from './searchSelect'
 import qs from 'qs'
 
 const FormItem = Form.Item;
@@ -158,6 +159,15 @@ class CheckQuery extends React.Component {
           {getFieldDecorator('project_id', {
             initialValue: project_id ? [project_id] : []
           })(
+            // <SearchSelect
+            //   placeholder='请选择'
+            //   mode='multiple'
+            //   getPopupContainer={() => document.querySelector('.spotplan-check-form')}
+            //   action={this.props.getProject}
+            //   keyWord='name'
+            //   dataToList={res => { return res.data }}
+            //   item={['id', 'name']}
+            // />
             <Select className="multipleSelect"
               mode='multiple'
               placeholder='请选择'
