@@ -243,7 +243,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate) => [
         })(
           <TextArea autosize={{ minRows: 4 }} style={{ width: 140 }} onBlur={(e) => {
             if (e.target.value != record.release_form) {
-              handleUpdate({ order_id: record.order_id, price_id: record.price_id, is_replace: e.target.value })
+              handleUpdate({ order_id: record.order_id, price_id: record.price_id, release_form: e.target.value })
             }
           }} />
         )
