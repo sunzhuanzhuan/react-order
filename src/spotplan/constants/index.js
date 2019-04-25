@@ -62,7 +62,7 @@ export const CheckModalFunc = handleDel => [
     align: 'center',
     width: 180,
     render: (text, record) => {
-      return record.cost + '/' + record.costwithfee
+      return numeral(record.cost).format('0,0') + '/' + numeral(record.costwithfee).format('0,0')
     }
   },
   {
@@ -168,6 +168,9 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate) => [
     key: 'cost',
     align: 'center',
     width: 80,
+    render: text => {
+      return text && numeral(text).format('0,0') || '-'
+    }
   },
   {
     title: 'Costwithfee（元）',
@@ -175,6 +178,9 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate) => [
     key: 'costwithfee',
     align: 'center',
     width: 100,
+    render: text => {
+      return text && numeral(text).format('0,0') || '-'
+    }
   },
   {
     title: '账号分类',
@@ -452,7 +458,7 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     align: 'center',
     width: 100,
     render: text => {
-      return text || '-'
+      return text && numeral(text).format('0,0') || '-'
     }
   },
   {
@@ -462,7 +468,7 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     align: 'center',
     width: 100,
     render: text => {
-      return text || '-'
+      return text && numeral(text).format('0,0') || '-'
     }
   },
   {
@@ -673,14 +679,20 @@ export const OrderCols = [
     dataIndex: 'cost',
     key: 'cost',
     align: 'center',
-    width: 100
+    width: 100,
+    render: text => {
+      return text && numeral(text).format('0,0') || '-'
+    }
   },
   {
     title: 'Costwithfee（元）',
     dataIndex: 'costwithfee',
     key: 'costwithfee',
     align: 'center',
-    width: 100
+    width: 100,
+    render: text => {
+      return text && numeral(text).format('0,0') || '-'
+    }
   }
 ];
 export const UpdateCols = [

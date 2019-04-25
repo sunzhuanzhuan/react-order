@@ -15,15 +15,12 @@ export default class SearchSelect extends React.PureComponent {
     this.handleSearch = debounce(this.fetchData, 800);
   }
   componentDidMount() {
-    let { action, dataToList, form } = this.props
+    let { action, dataToList } = this.props;
     setTimeout(() => {
       action().then(dataToList).then((list) => {
         this.setState({ data: list });
-        const project_id = form.getFieldValue('project_id');
-        form.setFieldsValue({ project_id: `${project_id}` });
       });
     })
-
   }
   fetchData = (value) => {
     if (!value) {
@@ -38,6 +35,12 @@ export default class SearchSelect extends React.PureComponent {
   handleChange = (value) => {
     this.setState({ value, data: [] });
   }
+  handleBlur = () => {
+    let { action, dataToList } = this.props;
+    action().then(dataToList).then((list) => {
+      this.setState({ data: list });
+    });
+  }
   render() {
     const { data, value, loading } = this.state;
     const { item: [id, name] } = this.props;
@@ -50,6 +53,7 @@ export default class SearchSelect extends React.PureComponent {
       filterOption={false}
       onSearch={this.handleSearch}
       onChange={this.handleChange}
+      onBlur={this.handleBlur}
       notFoundContent={loading ? <div style={{ paddingLeft: '10px' }}><Spin size="small" /> </div> : null}
       style={{ width: 140 }}
       placeholder="请输入"

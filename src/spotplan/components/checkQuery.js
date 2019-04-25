@@ -163,7 +163,7 @@ class CheckQuery extends React.Component {
         </FormItem>
         <FormItem label='所属项目'>
           {getFieldDecorator('project_id', {
-            initialValue: project_id ? [project_id] : []
+            initialValue: project_id ? `${project_id}` : []
           })(
             <SearchSelect
               className="multipleSelect"
@@ -174,7 +174,6 @@ class CheckQuery extends React.Component {
               keyWord='name'
               dataToList={res => { return res.data }}
               item={['id', 'name']}
-              form={this.props.form}
             />
           )}
         </FormItem>

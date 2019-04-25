@@ -132,7 +132,6 @@ class DetailQuery extends React.Component {
               placeholder='请选择'
               mode='multiple'
               getPopupContainer={() => document.querySelector('.spotplan-check-form')}
-              labelInValue
               allowClear
               showSearch
               filterOption={(input, option) => (

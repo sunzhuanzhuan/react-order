@@ -186,6 +186,7 @@ class SpotPlanDetail extends React.Component {
             okText: '确定',
             onOk: () => {
               this.queryData({ ...search.keys, spotplan_id: search.spotplan_id });
+              this.props.getSpotplanPoInfo({ spotplan_id: search.spotplan_id });
             }
           })
         }
@@ -371,11 +372,11 @@ function Statistics({ data }) {
       </Col>
     </Row>
     <Row className='info-row'>
-      <Col span={3}><span className='primary-font'>{data && data.amount} 元</span></Col>
+      <Col span={3}><span className='primary-font'>{data && numeral(data.amount).format('0,0')} 元</span></Col>
       <Col span={1}>=</Col>
-      <Col span={3}><span className='primary-font'>{data && data.confirmCostwithfee} 元</span></Col>
+      <Col span={3}><span className='primary-font'>{data && numeral(data.confirmCostwithfee).format('0,0')} 元</span></Col>
       <Col span={1}>+</Col>
-      <Col span={4}><span className='primary-font'>{data && data.toBeconfirmCostwithfee} 元</span></Col>
+      <Col span={4}><span className='primary-font'>{data && numeral(data.toBeconfirmCostwithfee).format('0,0')} 元</span></Col>
     </Row>
   </div>
 }
