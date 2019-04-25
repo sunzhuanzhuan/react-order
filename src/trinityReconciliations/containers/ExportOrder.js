@@ -54,11 +54,12 @@ class ExportOrder extends Component {
   queryData = (obj, func) => {
     const search = qs.parse(this.props.location.search.substring(1));
     this.setState({ loading: true });
-    const value=obj.public_order_ids?obj.public_order_ids.split(','):'';
+    const value=obj.ttp_order_ids?obj.ttp_order_ids.split(','):'';
     const value1=obj.wby_order_ids?obj.wby_order_ids.split(','):'';
     const value2=obj.weibo_names?obj.weibo_names.split(','):'';
+    console.log(value)
     return this.props.actions.getOrderList({ agent_id:search.agent_id, ...obj,
-      public_order_ids:value,wby_order_ids:value1 ,weibo_names:value2}).then(() => {
+      ttp_order_ids:value,wby_order_ids:value1 ,weibo_names:value2}).then(() => {
 			if (func && Object.prototype.toString.call(func) === '[object Function]') {
 				func();
 			}

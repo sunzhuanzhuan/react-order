@@ -26,6 +26,7 @@ class Statement extends Component {
   componentWillMount=() =>{
     const search = qs.parse(this.props.location.search.substring(1));
     this.queryData({ page: 1, page_size: this.state.page_size})
+    this.props.actions.getAgentInfo({agent_id:search.agent_id})
   }
  //删除对账单
  handleDelete=(record)=>{
@@ -61,7 +62,7 @@ class Statement extends Component {
   render() {
     const search = qs.parse(this.props.location.search.substring(1));
     const column = stateListFunc(this.handleDelete);
-    let {statementList:{list=[],page,total }}=this.props;
+    let {statementList:{list=[],page,total },agentInfo}=this.props;
    
     let {page_size,loading,filterParams}=this.state;
     let paginationObj = {
@@ -84,7 +85,7 @@ class Statement extends Component {
 		};
     
     return <div>
-      <Row>对账单导入记录【所属平台:,总对账单数量:】</Row>
+      <Row>对账单导入记录【所属平台:{agentInfo.length>0?agentInfo[0].agentName:''},总对账单数量:{total}】</Row>
       {/* <Filter
       questAction={this.queryData}
       page_size={page_size}
@@ -107,7 +108,8 @@ class Statement extends Component {
 
 const mapStateToProps = (state) => {
 	return {
-		statementList: state.statement.statementList,
+    statementList: state.statement.statementList,
+    agentInfo:state.statement.agentInfo
 	}
 }
 const mapDispatchToProps = dispatch => ({

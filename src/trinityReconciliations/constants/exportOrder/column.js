@@ -226,7 +226,8 @@ const paymentStatus={
 }
 const statementStatus={
     1:'未对账',
-    3: "对账完成"
+    3: "对账完成",
+    4: "部分对账"
 }
 
 // 汇总单列表
@@ -580,6 +581,13 @@ export const stateListFunc = (handleDelete) => {
 			title: '操作人',
 			dataIndex: 'created_operated_name',
 			key: 'created_operated_name',
+			align: 'center',
+			width: 100,
+		},
+		{
+			title: '文件名',
+			dataIndex: 'attachment',
+			key: 'attachment',
 			align: 'center',
 			width: 100,
 		},

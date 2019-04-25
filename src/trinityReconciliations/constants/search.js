@@ -65,7 +65,7 @@ export const searchForm=[
     },
     field: {
       label: '三方订单号',
-      value: 'ttp_order_id',
+      value: 'ttp_order_ids',
     }
   },
   {
@@ -162,8 +162,8 @@ export const searchFormStatement=[
       allowClear: true
     },
     field: {
-      label: '汇总单名称',
-      value: 'summary_sheet_name',
+      label: '文件名',
+      value: 'attachment',
     }
   },
 ]
