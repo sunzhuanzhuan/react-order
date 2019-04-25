@@ -31,8 +31,9 @@ class Payment extends Component {
   }
   //查询
   queryData = (obj, func) => {
-		this.setState({ loading: true });
-		return this.props.actions.getSummaryList({ ...obj }).then(() => {
+    this.setState({ loading: true });
+    const search = qs.parse(this.props.location.search.substring(1));
+		return this.props.actions.getSummaryList({agent_id:search.agent_id, ...obj }).then(() => {
 			if (func && Object.prototype.toString.call(func) === '[object Function]') {
 				func();
 			}
@@ -89,7 +90,7 @@ class Payment extends Component {
         page_size={page_size}
       /> */}
       <SearForm data={searchFormPayment} getAction={this.queryData}
-      responseLayout={{ xs: 24, sm: 24, md: 10, lg: 8, xxl: 6 }}  />
+      responseLayout={{ xs: 24, sm: 24, md: 5, lg: 6, xxl: 6 }}  />
      <div className="paymentTable">
       <PaymentTable
       loading={loading}

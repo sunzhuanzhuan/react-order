@@ -24,23 +24,26 @@ class Statement extends Component {
 
 
   componentWillMount=() =>{
+    const search = qs.parse(this.props.location.search.substring(1));
     this.queryData({ page: 1, page_size: this.state.page_size})
   }
  //删除对账单
  handleDelete=(record)=>{
-  // console.log(record);
-  this.props.actions.deleteStatement().then((res)=>{
+  this.props.actions.deleteStatement({statement_id:record.statement_id}).then((res)=>{
       if(res.code == 1000){
-        message.success('删除成功')
+        message.success('删除成功');
+
       }else{
         message.error('删除失败')
       }
+      this.queryData({ page: 1, page_size: this.state.page_size})
   })
  }
   //查询
   queryData = (obj, func) => {
     this.setState({ loading: true });
-    return this.props.actions.getListStatement({ ...obj }).then(() => {
+    const search = qs.parse(this.props.location.search.substring(1));
+    return this.props.actions.getListStatement({ agent_id:search.agent_id,...obj }).then(() => {
       if (func && Object.prototype.toString.call(func) === '[object Function]') {
         func();
       }

@@ -20,26 +20,25 @@ class SummaryDetail extends Component {
 
 
   componentWillMount=()=> {
-    
-      this.props.actions.getDetailSummary();
-      this.props.actions.getDetailSummaryList()
+    const search = qs.parse(this.props.location.search.substring(1));
+      this.props.actions.getDetailSummary({summary_sheet_id:search.summary_sheet_id});
+      this.props.actions.getDetailSummaryList({summary_sheet_id:search.summary_sheet_id})
   }
  
   render() {
     const column = summaryTotalDetailListFunc();
-    let {detailSummary,detailSummaryList:{list=[],page,total,page_size}}=this.props;
-    console.log(list)
-    let paginationObj = {
-      onChange: (current) => {
+    let {detailSummary,detailSummaryList}=this.props;
+    // let paginationObj = {
+    //   onChange: (current) => {
         
-        // this.queryData({  page: current, page_size });
-      },
+    //     // this.queryData({  page: current, page_size });
+    //   },
      
-			total: parseInt(total),
-      current: parseInt(page),
-      pageSize:page_size,
+		// 	total: parseInt(total),
+    //   current: parseInt(page),
+    //   pageSize:page_size,
     
-		};
+		// };
     const search = qs.parse(this.props.location.search.substring(1));
     
     return <div>
@@ -48,11 +47,11 @@ class SummaryDetail extends Component {
      <SummaryDetailInfo
      detailSummary={detailSummary}
      />
-        <InfoTable
+       {detailSummaryList.length>0? <InfoTable
         columns={column}
-        dataTable={list}
-        paginationObj={paginationObj}
-        />
+        dataTable={detailSummaryList}
+        paginationObj={false}
+        />:null}
      
     </div>;
   }

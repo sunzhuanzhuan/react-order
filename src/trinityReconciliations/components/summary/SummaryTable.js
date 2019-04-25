@@ -25,7 +25,6 @@ class SummaryTable extends Component {
 	}
 	render(){
     let {columns,paginationObj,dataTable}=this.props;
-    
 
 		return <div className='top-gap'>
 				<Table

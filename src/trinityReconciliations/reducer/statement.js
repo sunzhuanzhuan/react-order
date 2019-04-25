@@ -33,7 +33,7 @@ export const detailSummary = handleActions({
 
 export const detailSummaryList = handleActions({
 	[getDetailSummaryList_success]: (state, action) => {
-    return {...action.payload.data }
+    return [...action.payload.data ]
 	}
 }, {})
 

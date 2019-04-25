@@ -142,8 +142,8 @@ export const paymentListFunc = (handleSelectDetail,summary_sheet_id) => {
 		},
 		{
 			title: '订单数量',
-			dataIndex: 'total_order_amount',
-			key: 'total_order_amount',
+			dataIndex: 'total_order_count',
+			key: 'total_order_count',
 			align: 'center',
 			width: 100,
 		},
@@ -156,8 +156,8 @@ export const paymentListFunc = (handleSelectDetail,summary_sheet_id) => {
 		},
 		{
 			title: '待付订单',
-			dataIndex: 'wait_pay_order',
-			key: 'wait_pay_order',
+			dataIndex: 'wait_pay_order_count',
+			key: 'wait_pay_order_count',
 			align: 'center',
 			width: 100,
 		},
@@ -173,7 +173,10 @@ export const paymentListFunc = (handleSelectDetail,summary_sheet_id) => {
 			dataIndex: ' deduction_order_count',
 			key: ' deduction_order_count',
 			align: 'center',
-			width: 100
+      width: 100,
+      render:(text,record)=>{
+        return record.deduction_order_count
+      }
 		},
 		{
 			title: '扣减金额',
@@ -187,7 +190,10 @@ export const paymentListFunc = (handleSelectDetail,summary_sheet_id) => {
 			dataIndex: ' adjustment_order_count ',
 			key: ' adjustment_order_count ',
 			align: 'center',
-			width: 100
+			width: 100,
+      render:(text,record)=>{
+        return record.adjustment_order_count
+      }
 		},
 		{
 			title: '调账金额',
@@ -212,11 +218,16 @@ const summaryStatus={
   3:'已释放',
 }
 const paymentStatus={
+  0:'-',
   1:'未打款',
   2:'打款失败',
   3:'打款成功',
   4:'打款撤销',
   5:'打款中'
+}
+const statementStatus={
+    1:'未对账',
+    3: "对账完成"
 }
 
 // 汇总单列表
@@ -246,8 +257,8 @@ export const summaryListFunc = (handleSelectDetail,handleOut) => {
     },
 		{
 			title: '订单数量',
-			dataIndex: 'total_order_amount',
-			key: 'total_order_amount',
+			dataIndex: 'total_order_count',
+			key: 'total_order_count',
 			align: 'center',
 			width: 100,
 		},
@@ -263,8 +274,8 @@ export const summaryListFunc = (handleSelectDetail,handleOut) => {
 		},
 		{
 			title: '待付订单',
-			dataIndex: 'wait_pay_order',
-			key: 'wait_pay_order',
+			dataIndex: 'wait_pay_order_count',
+			key: 'wait_pay_order_count',
 			align: 'center',
 			width: 100,
 		},
@@ -284,6 +295,9 @@ export const summaryListFunc = (handleSelectDetail,handleOut) => {
 			key: ' adjustment_order_count ',
 			align: 'center',
 			width: 100,
+      render:(text,record)=>{
+        return record.adjustment_order_count
+      }
 		},
 		{
 			title: '调账总金额(元)',
@@ -300,7 +314,10 @@ export const summaryListFunc = (handleSelectDetail,handleOut) => {
 			dataIndex: ' deduction_order_count',
 			key: ' deduction_order_count',
 			align: 'center',
-			width: 100,
+      width: 100,
+      render:(text,record)=>{
+        return record.deduction_order_count
+      }
 		},
 		{
 			title: '扣减金额(元)',
@@ -318,8 +335,9 @@ export const summaryListFunc = (handleSelectDetail,handleOut) => {
 			key: 'payment_status',
 			align: 'center',
 			width: 100,
-			render: (text) => {
-				return paymentStatus[text]
+			render: (text,record) => {
+        console.log(record.payment_status)
+				return paymentStatus[record.payment_status]
 			}
     },
     {
@@ -424,8 +442,8 @@ export const summaryTotalDetailListFunc = () => {
     },
 		{
 			title: '快接单下单价(元)',
-			dataIndex: 'public_order_price',
-			key: 'public_order_price',
+			dataIndex: 'public_cost_price',
+			key: 'public_cost_price',
 			align: 'center',
 			width: 100,
 		},
@@ -472,8 +490,8 @@ export const summaryTotalDetailListFunc = () => {
     },
     {
 			title: '三方订单号',
-			dataIndex: 'public_order_id',
-			key: 'public_order_id',
+			dataIndex: 'ttp_order_id',
+			key: 'ttp_order_id',
 			align: 'center',
 			width: 100,
 			render: (text) => {
@@ -486,14 +504,14 @@ export const summaryTotalDetailListFunc = () => {
 			key: 'adjustment_amount',
 			align: 'center',
 			width: 100,
-			render: (text) => {
-				return parseFloat(text).toFixed(2)
+			render: (text,record) => {
+				return parseFloat(record.adjustment_amount).toFixed(2)
 			}
     },
     {
 			title: '调账方式',
-			dataIndex: 'operation_type',
-			key: 'operation_type',
+			dataIndex: 'operation_type_name',
+			key: 'operation_type_name',
 			align: 'center',
 			width: 100,
 			render: (text) => {
@@ -506,9 +524,6 @@ export const summaryTotalDetailListFunc = () => {
 			key: 'reason',
 			align: 'center',
 			width: 100,
-			render: (text) => {
-				return parseFloat(text).toFixed(2)
-			}
     },
     {
 			title: '应实付金额',
@@ -516,8 +531,8 @@ export const summaryTotalDetailListFunc = () => {
 			key: 'total_pay_amount',
 			align: 'center',
 			width: 100,
-			render: (text) => {
-				return parseFloat(text).toFixed(2)
+			render: (text,record) => {
+				return <span>{record.total_pay_amount}</span>
 			}
     }
 	];
@@ -536,7 +551,7 @@ export const stateListFunc = (handleDelete) => {
         return <Popconfirm title={<div>
           <div>温馨提示:</div>
           <div>删除后将无法恢复</div>
-        </div>} onConfirm={handleDelete} okText="确定" cancelText="取消">
+        </div>} onConfirm={()=>handleDelete(record)} okText="确定" cancelText="取消">
        <a href='javascript:;'>删除对账单</a>
       </Popconfirm>
       }
@@ -564,8 +579,8 @@ export const stateListFunc = (handleDelete) => {
 		},
 		{
 			title: '操作人',
-			dataIndex: 'operated_name',
-			key: 'operated_name',
+			dataIndex: 'created_operated_name',
+			key: 'created_operated_name',
 			align: 'center',
 			width: 100,
 		},
@@ -574,7 +589,10 @@ export const stateListFunc = (handleDelete) => {
 			dataIndex: 'statement_status',
 			key: 'statement_status',
 			align: 'center',
-      width: 100
+      width: 100,
+      render:(text,record)=>{
+        return statementStatus[record.statement_status]
+      }
 		}
 	];
 }

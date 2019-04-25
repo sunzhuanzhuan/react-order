@@ -94,7 +94,7 @@ class ExportOrder extends Component {
   }
   render() {
     const search = qs.parse(this.props.location.search.substring(1));
-    console.log(search);
+    // console.log(search);
     let {orderList:{list=[], page, total,page_size}}=this.props;
     let {loading,selectedRowKeys}= this.state;
     const column = exportOrderListFunc();
@@ -157,7 +157,7 @@ class ExportOrder extends Component {
      
      {/* <Button type="primary" style={{margin:'0 20px'}} onClick={this.handleExportOrder}>导出订单</Button> */}
      <Button type="primary" style={{margin:'0 20px'}} >
-     <a target='_blank' href={`/api/finance/statementOrder/export?wby_order_ids=${this.state.order_ids}`}>导出订单</a>
+     <a target='_blank' href={`/api/finance/statementOrder/export?wby_order_ids=${this.state.order_ids}&agent_id=${search.agent_id}`}>导出订单</a>
      </Button> 
      </Row>
     </div>;

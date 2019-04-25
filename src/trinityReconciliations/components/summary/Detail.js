@@ -17,7 +17,6 @@ export default class SummaryDetailInfo extends Component {
  
   render() {
     let {detailSummary}=this.props
-    
     return <div className='detailBox'>
       
     <Row className='title'>汇总单信息</Row>
@@ -38,11 +37,11 @@ export default class SummaryDetailInfo extends Component {
     <div className='bg'>
       <Row className='row'>
         <Col span={6}> 对账单名称:{detailSummary.statement_name} </Col>
-        <Col span={6}> 总金额(元): {detailSummary.bill_total_amount}</Col>
+        <Col span={6}> 总金额(元): {detailSummary.total_pay_amount }</Col>
         <Col span={6}> 对账单:{detailSummary.attachment} </Col>
       </Row>
       <Row className='row'>
-        <Col span={6}> 订单总数{detailSummary.total_order} </Col>
+        <Col span={6}> 订单总数{detailSummary.total_order_count} </Col>
         <Col span={6}>  </Col>
         <Col span={6}>  </Col>
       </Row>

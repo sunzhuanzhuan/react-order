@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Row, Col, Form, Select, Button, Popconfirm, Upload, Icon, message } from "antd";
 import NewUpload from '../newUpload';
+import { withRouter } from 'react-router-dom'
 import './import.less';
 import qs from 'qs';
 
@@ -64,8 +65,9 @@ class ListQuery extends Component {
  
   handleChangeOption=(value)=>{
     console.log(value)
+    const agent_id  =qs.parse(this.props.location.search.substring(1)).agent_id
     
-    this.props.addOrder().then((res)=>{
+    this.props.addOrder( {attachment:value,agent_id:agent_id}).then((res)=>{
       console.log(res.data);
       this.props.form.setFieldsValue({public_order_id: '3' });
         this.setState({
@@ -164,7 +166,7 @@ class ListQuery extends Component {
               })(
                 <NewUpload
                 tok={getToken}
-                uploadUrl="/api/common-file/file/v1/uploadPriBucket"
+                uploadUrl="/api/common-file/file/v1/uploadPubBucket"
                 len={1}
                 size={50}
                 listType="text"
@@ -224,7 +226,7 @@ class ListQuery extends Component {
             <Button style={{marginRight:'20px'}}>取消</Button>
             <Popconfirm title="确认后将改变订单的对账状态，是否确认此操作？" onConfirm={this.handleSearch} okText="确定" cancelText="取消">
               <Button type="primary" className='left-gap'
-               disabled={!(stateMentList.bill_total_amount==summaryList.bill_total_amount)}>确认对账</Button>
+               disabled={!(stateMentList.total_pay_amount ==summaryList.total_pay_amount )}>确认对账</Button>
             </Popconfirm>
           
 					</Col>
@@ -236,7 +238,7 @@ class ListQuery extends Component {
     </div>;
   }
 }
-export default Form.create()(ListQuery);
+export default Form.create()(withRouter(ListQuery));
 
 
 // 对账单
@@ -259,7 +261,7 @@ export class OptionTable extends Component{
 
       <Row className='info'>
         <Col span={12}>
-        总金额(元):{stateMentList.bill_total_amount}
+        总金额(元):{stateMentList.total_pay_amount }
         </Col>
         <Col span={12}>
         扣减总金额(元):{stateMentList.deduction_amount}
@@ -301,7 +303,7 @@ export class TotalTable extends Component{
         订单总数:{summaryList.total_order}
         </Col>
         <Col span={12}>
-        总金额(元):{summaryList.bill_total_amount}
+        总金额(元):{summaryList.total_pay_amount }
         </Col>
       </Row>
 

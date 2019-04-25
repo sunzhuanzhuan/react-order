@@ -36,7 +36,8 @@ class Summary extends Component {
   //查询
   queryData = (obj, func) => {
 		this.setState({ loading: true });
-		return this.props.actions.getSummaryList({ ...obj }).then(() => {
+    const search = qs.parse(this.props.location.search.substring(1));
+		return this.props.actions.getSummaryList({agent_id:search.agent_id, ...obj }).then(() => {
 			if (func && Object.prototype.toString.call(func) === '[object Function]') {
 				func();
 			}
@@ -48,18 +49,19 @@ class Summary extends Component {
   }
  //选择查看详情
  handleSelectDetail=(record)=>{
+   console.log(111111)
   const search = qs.parse(this.props.location.search.substring(1));
-  this.props.actions.getDetailSummary().then(()=>{
-    this.props.actions.getDetailSummaryList().then(()=>{
+  // this.props.actions.getDetailSummary().then(()=>{
+  //   this.props.actions.getDetailSummaryList().then(()=>{
       this.props.history.push({
         pathname: '/order/trinity/reconciliations/detail',
         search: `?${qs.stringify({ 
           summary_sheet_name: record.summary_sheet_name,
           summary_sheet_id:record.summary_sheet_id,
-          agent:search.agent})}`,
+          agent_id:search.agent_id})}`,
       });
-    })
- });
+//     })
+//  });
   
  
  }
@@ -106,7 +108,7 @@ handleCancel = (e) => {
  handleChangeTab=(activeKey)=>{
     // console.log(activeKey);
     this.setState({activeKey})
-    this.child.handleClear()
+    // this.child.handleClear()
     if(activeKey == '2'){
       this.queryData({ page: 1, page_size: this.state.page_size,summary_status:'2' })
     }else if(activeKey == '3'){
@@ -127,7 +129,7 @@ handleCancel = (e) => {
     const columnDetail = summaryTotalDetailListFunc();
     const search = qs.parse(this.props.location.search.substring(1));
     const column = summaryListFunc(this.handleSelectDetail,this.handleOut);
-    const shiColum = summaryShiListFunc();
+    const shiColum = summaryShiListFunc(this.handleSelectDetail);
     let {detailSummary,detailSummaryList:{list:detailList=[],page:detailPage,total:detailTotal,page_size:detailPageSize}}=this.props;
     let {summaryList:{list=[],page,total }}=this.props;
     let {loading,page_size}= this.state;

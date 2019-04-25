@@ -65,7 +65,7 @@ export const searchForm=[
     },
     field: {
       label: '三方订单号',
-      value: 'public_order_ids',
+      value: 'ttp_order_id',
     }
   },
   {
@@ -125,19 +125,18 @@ export const searchFormPayment=[
     },
     field: {
       label: '生成时间',
-      value: ['ttp_place_order_at_start', 'ttp_place_order_at_end'],
+      value: ['created_at_start', 'created_at_end'],
     }
   },
   {
-    ctype: 'rangePicker',
+    ctype: 'rangeInput',
     attr: {
-      placeholder: ['开始时间', '结束时间'],
-      format: 'YYYY-MM-DD',
-      style: { width: 104 }
+      placeholder: '请输入',
+      style: { width: 100 }
     },
     field: {
-      label: '下单时间',
-      value: ['ttp_place_order_at_start', 'ttp_place_order_at_end'],
+      label: '应实付金额',
+      value: ['total_pay_amount_min','total_pay_amount_max'],
     }
   },
 ]
@@ -163,8 +162,8 @@ export const searchFormStatement=[
       allowClear: true
     },
     field: {
-      label: '文件名称',
-      value: 'statement_name',
+      label: '汇总单名称',
+      value: 'summary_sheet_name',
     }
   },
 ]

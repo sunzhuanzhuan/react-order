@@ -56,7 +56,7 @@ export const {
   deleteStatement,
   deleteStatement_success
 } = createHttpAction('deleteStatement', Interface.statement.deleteStatement, {
-  method: 'get'
+  method: 'post'
 });
 
 //申请周期付款，确认申请
@@ -80,7 +80,7 @@ export const {
 	addOrder,
 	addOrder_success
 } = createHttpAction('addOrder', Interface.statement.addOrder, {
-	method: 'get'
+	method: 'post'
 });
 
 
