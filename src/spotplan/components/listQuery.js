@@ -1,5 +1,6 @@
 import React from 'react'
 import { Row, Form, Select, Input, Button, DatePicker, message } from 'antd'
+import SearchSelect from '../components/searchSelect'
 import qs from 'qs'
 import moment from 'moment';
 import 'moment/locale/zh-cn';
@@ -110,20 +111,20 @@ class ListQuery extends React.Component {
         </FormItem>
         <FormItem label='所属项目'>
           {getFieldDecorator('project_id')(
-            <Select style={{ width: 140 }}
+            <SearchSelect
+              className="multipleSelect"
               placeholder='请选择'
+              mode='multiple'
               getPopupContainer={() => document.querySelector('.spotplan-list-form')}
-              labelInValue
-              allowClear
-              showSearch
-              filterOption={(input, option) => (
-                option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-              )}
-            >
-              {spotplan_project && spotplan_project.map(item => (<Option value={item.id} key={item.id}>{item.name}</Option>))}
-            </Select>
+              action={this.props.getProject}
+              keyWord='name'
+              dataToList={res => { return res.data }}
+              item={['id', 'name']}
+            />
           )}
         </FormItem>
+      </Row>
+      <Row>
         <FormItem label='所属品牌'>
           {getFieldDecorator('brand_id')(
             <Select style={{ width: 140 }}

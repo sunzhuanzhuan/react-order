@@ -83,6 +83,7 @@ class SpotPlanList extends React.Component {
         spotplan_project={spotplanProject}
         spotplan_brand={spotplanBrand}
         spotplan_creatorList={spotplanCreatorList}
+        getProject={this.props.actions.getSpotplanProject}
       />
       <h3 style={{ marginTop: '20px' }}>Spotplan列表</h3>
       <Table

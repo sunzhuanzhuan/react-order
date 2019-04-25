@@ -15,12 +15,7 @@ export default class SearchSelect extends React.PureComponent {
     this.handleSearch = debounce(this.fetchData, 800);
   }
   componentDidMount() {
-    let { action, dataToList } = this.props;
-    setTimeout(() => {
-      action().then(dataToList).then((list) => {
-        this.setState({ data: list });
-      });
-    })
+    this.handleBlur()
   }
   fetchData = (value) => {
     if (!value) {
