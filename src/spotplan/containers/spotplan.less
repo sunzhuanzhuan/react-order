@@ -54,57 +54,6 @@
                 .ant-form-item{
                     padding-left: 20px;
                 }
-                .multipleSelect {
-                    vertical-align: middle;
-                    min-width: 220px;
-                    max-width: 360px;
-                    ul {
-                        display: flex;
-                        display: -moz-box;
-                        /* 老版本语法: Firefox (buggy) */
-                        display: -ms-flexbox;
-                        /* 混合版本语法: IE 10 */
-                        display: -webkit-flex;
-                        /* 新版本语法: Chrome 21+ */
-                        display: -webkit-box;
-                        /* 老版本语法: Safari, iOS, Android browser, older WebKit browsers. */
-                        height: 0;
-                        flex: auto;
-                        >li {
-                            float: none !important;
-                            margin-right: 4px;
-                            .ant-select-selection__choice__content {
-                                overflow: inherit !important;
-                            }
-                        }
-                    }
-                    .ant-select-selection {
-                        width: 360px;
-                        overflow-x: auto;
-                        overflow-y: hidden;
-                    }
-                    .ant-select-selection--multiple .ant-select-selection__choice {
-                        overflow: inherit;
-                        float: none;
-                    }
-                    .ant-select-selection::-webkit-scrollbar {
-                        /*滚动条整体样式*/
-                        width: 5px;
-                        /*高宽分别对应横竖滚动条的尺寸*/
-                        height: 5px;
-                    }
-                    .ant-select-selection::-webkit-scrollbar-thumb {
-                        /*滚动条里面小方块*/
-                        border-radius: 5px;
-                        background: rgba(45, 166, 126, 0.8);
-                    }
-                    .ant-select-selection::-webkit-scrollbar-track {
-                        /*滚动条里面轨道*/
-                        -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
-                        border-radius: 0;
-                        background: rgba(0, 0, 0, 0.1);
-                    }
-                }
             }
             .check-order-item{
                 width:100%;
@@ -291,5 +240,58 @@
     }
     .ant-tooltip-inner{
         background-color: red ;
+    }
+}
+.spotplan-check-form{
+    .multipleSelect {
+        vertical-align: middle;
+        min-width: 220px;
+        max-width: 360px;
+        ul {
+            display: flex;
+            display: -moz-box;
+            /* 老版本语法: Firefox (buggy) */
+            display: -ms-flexbox;
+            /* 混合版本语法: IE 10 */
+            display: -webkit-flex;
+            /* 新版本语法: Chrome 21+ */
+            display: -webkit-box;
+            /* 老版本语法: Safari, iOS, Android browser, older WebKit browsers. */
+            height: 0;
+            flex: auto;
+            >li {
+                float: none !important;
+                margin-right: 4px;
+                .ant-select-selection__choice__content {
+                    overflow: inherit !important;
+                }
+            }
+        }
+        .ant-select-selection {
+            width: 360px;
+            overflow-x: auto;
+            overflow-y: hidden;
+        }
+        .ant-select-selection--multiple .ant-select-selection__choice {
+            overflow: inherit;
+            float: none;
+        }
+        .ant-select-selection::-webkit-scrollbar {
+            /*滚动条整体样式*/
+            width: 5px;
+            /*高宽分别对应横竖滚动条的尺寸*/
+            height: 5px;
+        }
+        .ant-select-selection::-webkit-scrollbar-thumb {
+            /*滚动条里面小方块*/
+            border-radius: 5px;
+            background: rgba(45, 166, 126, 0.8);
+        }
+        .ant-select-selection::-webkit-scrollbar-track {
+            /*滚动条里面轨道*/
+            -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+            border-radius: 0;
+            background: rgba(0, 0, 0, 0.1);
+        }
     }
 }

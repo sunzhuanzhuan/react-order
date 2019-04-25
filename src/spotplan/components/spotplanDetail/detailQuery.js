@@ -24,6 +24,9 @@ class DetailQuery extends React.Component {
     if (keys.weibo_name) {
       keys['weibo_name'] = keys['weibo_name'].join(' ');
     }
+    if (keys.platform_id) {
+      delete keys.platform_id;
+    }
     if (settle_id) {
       keys['settle_id'] = settle_id.join(' ');
       delete keys['order_id']
@@ -48,11 +51,15 @@ class DetailQuery extends React.Component {
             const array = values[key].trim().split(' ').reduce((data, current) => {
               return current ? [...data, current] : [...data]
             }, []);
+            const ary = array.reduce((data, current) => {
+              const flag = /^[0-9]+$/.test(current);
+              return flag ? [...data, current] : [...data]
+            }, []);
             if (array.length > 200) {
               message.error('最多能输入200个订单', 3);
               return
             }
-            values['settle_type'].key == 1 ? keys['order_id'] = array : keys['price_id'] = array;
+            values['settle_type'].key == 1 ? keys['order_id'] = ary : keys['price_id'] = ary;
           } else if (key == 'weibo_name' && values[key]) {
             keys['weibo_name'] = values['weibo_name'].trim().split(' ')
           } else {
@@ -65,7 +72,7 @@ class DetailQuery extends React.Component {
         };
         Object.keys(params['keys']).forEach(item => { !params['keys'][item] && params['keys'][item] !== 0 ? delete params['keys'][item] : null });
         const hide = message.loading('查询中，请稍候...');
-        this.props.queryData({ ...params.keys }).then(() => {
+        this.props.queryData({ spotplan_id: search.spotplan_id, ...params.keys }).then(() => {
           this.props.history.replace({
             pathname: this.props.location.pathname,
             search: `?${qs.stringify({ spotplan_id: search.spotplan_id, ...params })}`,
@@ -109,7 +116,7 @@ class DetailQuery extends React.Component {
             </Select>
           )}
           {getFieldDecorator('settle_id')(
-            <Input placeholder='请输入订单ID/PriceID，多个空格隔开' className='left-little-gap' style={{ width: 240 }} allowClear />
+            <Input placeholder='请输入订单ID/PriceID，多个空格隔开' className='left-little-gap' style={{ width: 264 }} allowClear />
           )}
         </FormItem>
         <FormItem label='账号名称'>
@@ -117,10 +124,13 @@ class DetailQuery extends React.Component {
             <Input placeholder='请输入账号名称，多个以空格隔开' style={{ width: 240 }} allowClear />
           )}
         </FormItem>
+      </Row>
+      <Row>
         <FormItem label='平台'>
           {getFieldDecorator('platform_id')(
-            <Select style={{ width: 140 }}
+            <Select className="multipleSelect"
               placeholder='请选择'
+              mode='multiple'
               getPopupContainer={() => document.querySelector('.spotplan-check-form')}
               labelInValue
               allowClear
@@ -152,7 +162,7 @@ class DetailQuery extends React.Component {
         <Button className='left-gap' onClick={this.handleReset}>重置</Button>
         <Button className='left-gap' type='primary' onClick={this.handleSearch}>查询</Button>
       </Row>
-    </Form>
+    </Form >
   }
 }
 export default Form.create()(DetailQuery)

@@ -66,6 +66,12 @@ class CheckQuery extends React.Component {
               return current ? [...data, current] : [...data]
             }, []);
             keys['weibo_name'] = array
+          } else if (key == 'project_id' && values[key]) {
+            if (typeof values[key] == 'string') {
+              keys[key] = [values[key]]
+            } else {
+              keys[key] = values[key]
+            }
           } else {
             keys[key] = values[key]
           }
@@ -159,27 +165,29 @@ class CheckQuery extends React.Component {
           {getFieldDecorator('project_id', {
             initialValue: project_id ? [project_id] : []
           })(
-            // <SearchSelect
-            //   placeholder='请选择'
-            //   mode='multiple'
-            //   getPopupContainer={() => document.querySelector('.spotplan-check-form')}
-            //   action={this.props.getProject}
-            //   keyWord='name'
-            //   dataToList={res => { return res.data }}
-            //   item={['id', 'name']}
-            // />
-            <Select className="multipleSelect"
-              mode='multiple'
+            <SearchSelect
+              className="multipleSelect"
               placeholder='请选择'
+              mode='multiple'
               getPopupContainer={() => document.querySelector('.spotplan-check-form')}
-              allowClear
-              showSearch
-              filterOption={(input, option) => (
-                option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-              )}
-            >
-              {spotplan_project && spotplan_project.map(item => (<Option value={item.id} key={item.id}>{item.name}</Option>))}
-            </Select>
+              action={this.props.getProject}
+              keyWord='name'
+              dataToList={res => { return res.data }}
+              item={['id', 'name']}
+              form={this.props.form}
+            />
+            // <Select className="multipleSelect"
+            //   mode='multiple'
+            //   placeholder='请选择'
+            //   getPopupContainer={() => document.querySelector('.spotplan-check-form')}
+            //   allowClear
+            //   showSearch
+            // filterOption={(input, option) => (
+            //   option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+            // )}
+            // >
+            //   {spotplan_project && spotplan_project.map(item => (<Option value={item.id} key={item.id}>{item.name}</Option>))}
+            // </Select>
           )}
         </FormItem>
       </Row>
