@@ -288,8 +288,8 @@ export const SpotplanListFunc = handleJump => [
   },
   {
     title: 'PO单号',
-    dataIndex: 'po_id',
-    key: 'po_id',
+    dataIndex: 'customer_po_code',
+    key: 'customer_po_code',
     align: 'center',
     width: 100,
     render: (text, record) => {

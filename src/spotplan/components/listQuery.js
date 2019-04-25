@@ -9,7 +9,7 @@ moment.locale('zh-cn');
 const { RangePicker } = DatePicker;
 const FormItem = Form.Item;
 const Option = Select.Option;
-const dateFormat = 'YYYY-MM-DD hh:mm:ss'
+const dateFormat = 'YYYY-MM-DD HH:mm:ss'
 class ListQuery extends React.Component {
   constructor() {
     super();
@@ -25,13 +25,13 @@ class ListQuery extends React.Component {
     labels.length > 0 ? labels.forEach(item => {
       obj[item] = { key: search.keys[item], label: search.labels[item] }
     }) : null;
-    const settle_id = keys.order_id || keys.po_code;
+    const settle_id = keys.spotplan_id || keys.po_code;
     if (keys.created_at) {
       keys['created_at'] = [moment(keys.created_at[0], dateFormat), moment(keys.created_at[1], dateFormat)]
     }
     if (settle_id) {
       keys['settle_id'] = settle_id.join(' ');
-      delete keys['order_id']
+      delete keys['spotplan_id']
       delete keys['po_code']
     }
     setFieldsValue({ ...keys, ...obj });
@@ -56,7 +56,7 @@ class ListQuery extends React.Component {
               message.error('最多能输入200个订单', 3);
               return
             }
-            values['settle_type'].key == 1 ? keys['order_id'] = array : keys['po_code'] = array;
+            values['settle_type'].key == 1 ? keys['spotplan_id'] = array : keys['po_code'] = array;
           } else if (key == 'created_at' && values[key] && values[key].length > 0) {
             keys[key] = [values[key][0].format(dateFormat), values[key][1].format(dateFormat)]
           } else {
