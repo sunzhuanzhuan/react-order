@@ -17,12 +17,13 @@ export default class SummaryDetailInfo extends Component {
  
   render() {
     let {detailSummary}=this.props
+    
     return <div className='detailBox'>
       
     <Row className='title'>汇总单信息</Row>
     <div className='bg'>
       <Row className='row'>
-        <Col span={6}> 订单总数: {detailSummary.total_order_amount}</Col>
+        <Col span={6}> 订单总数: {detailSummary.total_order_count}</Col>
         <Col span={6}> 调账订单:{detailSummary. adjustment_order_count } </Col>
         <Col span={6}> 扣减订单: {detailSummary. deduction_order_count}</Col>
         <Col span={6}> 应实付总金额(元):{detailSummary.total_pay_amount} </Col>

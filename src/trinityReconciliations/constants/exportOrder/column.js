@@ -213,8 +213,8 @@ export const paymentListFunc = (handleSelectDetail,summary_sheet_id) => {
 }
 
 const summaryStatus={
-  2:'对账成功',
-  3:'已释放',
+  3:'对账成功',
+  5:'已释放',
 }
 const paymentStatus={
   0:'-',
@@ -346,7 +346,7 @@ export const summaryListFunc = (handleSelectDetail,handleOut) => {
 			align: 'center',
 			width: 100,
 			render: (text, record) => {
-			return <span>{(record.summary_status == 2 && record.payment_status == 3) || (record.summary_status == 2 && record.payment_status == 5) ||(record.summary_status == 2 && record.payment_status == 1)?
+			return <span>{(record.summary_status == 3 && record.payment_status == 3) || (record.summary_status == 3 && record.payment_status == 4) ||(record.summary_status == 3 && record.payment_status == 0)?
           <a href='javascript:;' className='left-gap' onClick={() => {
             handleOut(record)
           }}>释放汇总单</a>:null
@@ -512,26 +512,26 @@ export const summaryTotalDetailListFunc = () => {
 			dataIndex: 'operation_type_name',
 			key: 'operation_type_name',
 			align: 'center',
-			width: 100,
-			render: (text) => {
-				return parseFloat(text).toFixed(2)
-			}
+			width: 100
     },
     {
 			title: '调账原因',
-			dataIndex: 'reason',
-			key: 'reason',
-			align: 'center',
-			width: 100,
-    },
-    {
-			title: '应实付金额',
-			dataIndex: 'total_pay_amount',
-			key: 'total_pay_amount',
+			dataIndex: 'adjustment_reason',
+			key: 'adjustment_reason',
 			align: 'center',
 			width: 100,
 			render: (text,record) => {
-				return <span>{record.total_pay_amount}</span>
+				return <span>{record.adjustment_reason}</span>
+			}
+    },
+    {
+			title: '应实付金额',
+			dataIndex: 'pay_amount',
+			key: 'pay_amount',
+			align: 'center',
+			width: 100,
+			render: (text,record) => {
+				return <span>{record.pay_amount}</span>
 			}
     }
 	];

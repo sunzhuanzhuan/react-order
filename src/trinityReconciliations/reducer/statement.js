@@ -1,13 +1,15 @@
 import { 
   getOrderList_success,
   getSummaryList_success,
-  getDetailSummary_success,
+  getDelSummary_success,
   getDetailSummaryList_success,
   getListStatement_success,
   getToken_success,
   searchName_success,
   getInputList_success,
-  getAgentInfo_success
+  getAgentInfo_success,
+  getDetaillummary_success
+
  } from '../actions'
 import { handleActions } from 'redux-actions';
 
@@ -27,7 +29,13 @@ export const summaryList = handleActions({
 
 //汇总单详情
 export const detailSummary = handleActions({
-	[getDetailSummary_success]: (state, action) => {
+	[getDetaillummary_success]: (state, action) => {
+    return {...action.payload.data }
+	}
+}, {})
+//释放汇总单
+export const delSummary = handleActions({
+	[getDelSummary_success]: (state, action) => {
     return {...action.payload.data }
 	}
 }, {})

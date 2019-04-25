@@ -38,6 +38,7 @@ export default {
     importSummary:'/finance/summary/import',
     releaseSummary:'/finance/summary/release',
     listSummary:'/finance/summary/list',
+    delSummary:'/finance/summary/release',
     detailSummary:'/finance/summary/detail',
     detailSummaryList:'/finance/summary/detailOrderList',
     deleteStatement:'/finance/statement/del',

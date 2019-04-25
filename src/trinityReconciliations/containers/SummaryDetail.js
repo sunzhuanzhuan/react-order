@@ -21,7 +21,7 @@ class SummaryDetail extends Component {
 
   componentWillMount=()=> {
     const search = qs.parse(this.props.location.search.substring(1));
-      this.props.actions.getDetailSummary({summary_sheet_id:search.summary_sheet_id});
+      this.props.actions.getDetaillummary({summary_sheet_id:search.summary_sheet_id});
       this.props.actions.getDetailSummaryList({summary_sheet_id:search.summary_sheet_id})
   }
  

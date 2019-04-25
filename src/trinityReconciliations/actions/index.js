@@ -27,11 +27,18 @@ export const {
   method: 'get'
 });
 
+//释放汇总单
+export const {
+  getDelummary,
+  getDelSummary_success
+} = createHttpAction('getDelummary', Interface.statement.delSummary, {
+  method: 'post'
+});
 //汇总单详情detailSummary
 export const {
-  getDetailSummary,
-  getDetailSummary_success
-} = createHttpAction('getDetailSummary', Interface.statement.detailSummary, {
+  getDetaillummary,
+  getDetaillummary_success
+} = createHttpAction('getDetaillummary', Interface.statement.detailSummary, {
   method: 'get'
 });
 

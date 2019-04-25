@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Tabs,Row,message,Modal } from 'antd';
-import SummaryFilter from '../components/summary/Filter'
+// import SummaryFilter from '../components/summary/Filter'
 import {summaryListFunc,summaryShiListFunc} from '../constants/exportOrder/column'
 import SummaryTable from '../components/summary/SummaryTable';
 import qs from 'qs'
@@ -56,7 +56,6 @@ class Summary extends Component {
       this.props.history.push({
         pathname: '/order/trinity/reconciliations/detail',
         search: `?${qs.stringify({ 
-          summary_sheet_name: record.summary_sheet_name,
           summary_sheet_id:record.summary_sheet_id,
           agent_id:search.agent_id})}`,
       });
@@ -67,17 +66,19 @@ class Summary extends Component {
  }
  //释放汇总单
  handleOut=(record)=>{
-  //  console.log(this);
-  this.props.actions.getDetailSummary().then(()=>{
-    this.props.actions.getDetailSummaryList().then((res)=>{
-      // console.log(res)
-      if(res.code == 1000){
-        this.setState({
-              visible: true,
-        });
-      }
+  const search = qs.parse(this.props.location.search.substring(1));
+  //  console.log(record);
+  this.props.actions.getDelummary({summary_sheet_id:record.summary_sheet_id}).then(()=>{
+    // this.props.actions.getDetailSummaryList().then((res)=>{
+    //   // console.log(res)
+    //   if(res.code == 1000){
+    //     this.setState({
+    //           visible: true,
+    //     });
+    //   }
     
-    })
+    // })
+    this.queryData({ page: 1, page_size: this.state.page_size, ...search.keys })
     })
    
   //  console.log(record);
@@ -109,10 +110,10 @@ handleCancel = (e) => {
     // console.log(activeKey);
     this.setState({activeKey})
     // this.child.handleClear()
-    if(activeKey == '2'){
-      this.queryData({ page: 1, page_size: this.state.page_size,summary_status:'2' })
-    }else if(activeKey == '3'){
-      this.queryData({ page: 1, page_size: this.state.page_size, summary_status:'3'})
+    if(activeKey == '3'){
+      this.queryData({ page: 1, page_size: this.state.page_size,summary_status:'3' })
+    }else if(activeKey == '5'){
+      this.queryData({ page: 1, page_size: this.state.page_size, summary_status:'5'})
     }else{
       this.queryData({ page: 1, page_size: this.state.page_size, })
     }
@@ -129,7 +130,7 @@ handleCancel = (e) => {
     const columnDetail = summaryTotalDetailListFunc();
     const search = qs.parse(this.props.location.search.substring(1));
     const column = summaryListFunc(this.handleSelectDetail,this.handleOut);
-    const shiColum = summaryShiListFunc(this.handleSelectDetail);
+    // const shiColum = summaryShiListFunc(this.handleSelectDetail);
     let {detailSummary,detailSummaryList:{list:detailList=[],page:detailPage,total:detailTotal,page_size:detailPageSize}}=this.props;
     let {summaryList:{list=[],page,total },agentInfo}=this.props;
     let {loading,page_size}= this.state;
@@ -184,7 +185,7 @@ handleCancel = (e) => {
           paginationObj={paginationObj}
       />
       </TabPane>
-      <TabPane tab="对账完成" key="2">
+      <TabPane tab="对账完成" key="3">
       <SearForm data={searchFormStatement} getAction={this.queryData}
       responseLayout={{ xs: 24, sm: 24, md: 10, lg: 8, xxl: 6 }}  />
         {/* <SummaryFilter
@@ -200,7 +201,7 @@ handleCancel = (e) => {
            paginationObj={paginationObj}
       />
       </TabPane>
-      <TabPane tab="已释放" key="3">
+      <TabPane tab="已释放" key="5">
       <SearForm data={searchFormStatement} getAction={this.queryData}
       responseLayout={{ xs: 24, sm: 24, md: 10, lg: 8, xxl: 6 }}  />
         {/* <SummaryFilter
@@ -211,7 +212,7 @@ handleCancel = (e) => {
         /> */}
         <SummaryTable
           loading={loading}
-          columns={shiColum}
+          columns={column}
           dataTable={list}
           paginationObj={paginationObj}
       />
