@@ -120,7 +120,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate) => [
     align: 'center',
     width: 100,
     render: (text, record) => {
-      return <a href={record.link_url} target="_blank">{text}</a>
+      return record.link_url && <a href={record.link_url} target="_blank">{text}</a> || text
     }
   },
   {
@@ -424,15 +424,19 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     align: 'center',
     width: 100,
     render: (text, record) => {
-      return <a href={record.link_url} target="_blank">{text}</a>
+      return record.link_url && <a href={record.link_url} target="_blank">{text}</a> || text
     }
   },
   {
-    title: '账号 ID',
+    title: '账号ID',
     dataIndex: 'weibo_id',
     key: 'weibo_id',
     align: 'center',
-    width: 80
+    width: 80,
+    render: (text, record) => {
+      const flag = record.weibo_type == 23 ? true : false;
+      return flag ? '-' : text
+    }
   },
   {
     title: 'PriceID',
