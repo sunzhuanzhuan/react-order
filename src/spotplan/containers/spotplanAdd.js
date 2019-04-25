@@ -136,10 +136,7 @@ class SpotplanAdd extends React.Component {
             content: content,
             onOk: (close) => {
               this.handleSettleDelCheck(array);
-              let timer = setTimeout(() => {
-                close();
-                clearTimeout(timer);
-              }, 2000);
+              close();
             }
           })
         } else {

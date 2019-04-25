@@ -135,7 +135,7 @@ class CheckQuery extends React.Component {
         </FormItem>
         <FormItem label='平台'>
           {getFieldDecorator('platform_id')(
-            <Select style={{ width: 260 }}
+            <Select className="multipleSelect"
               placeholder='请选择'
               mode='multiple'
               getPopupContainer={() => document.querySelector('.spotplan-check-form')}
@@ -176,18 +176,6 @@ class CheckQuery extends React.Component {
               item={['id', 'name']}
               form={this.props.form}
             />
-            // <Select className="multipleSelect"
-            //   mode='multiple'
-            //   placeholder='请选择'
-            //   getPopupContainer={() => document.querySelector('.spotplan-check-form')}
-            //   allowClear
-            //   showSearch
-            // filterOption={(input, option) => (
-            //   option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-            // )}
-            // >
-            //   {spotplan_project && spotplan_project.map(item => (<Option value={item.id} key={item.id}>{item.name}</Option>))}
-            // </Select>
           )}
         </FormItem>
       </Row>
