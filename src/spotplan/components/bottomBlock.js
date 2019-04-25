@@ -40,7 +40,7 @@ class BottomBlock extends React.Component {
         <div className='left-block'>
           <Button onClick={() => {
             handleSteps(2, 'back')
-          }}>上一步</Button>
+          }}>返回，添加订单</Button>
         </div>
         <div className='right-block'>
           <span style={{ paddingRight: '20px' }}>已选订单：<span className='primary-font'>{data['all'] && data['all'].total || 0}</span></span>

@@ -148,6 +148,10 @@ class SpotplanAdd extends React.Component {
 
     }
     if (num == 4) {
+      if (!this.props.spotplanEditList['all'].total) {
+        message.error('请先选择需要加入spotplan的订单', 3);
+        return
+      }
       if (type && type == 'submit') {
         this.editOrder.current.validateFields((err) => {
           if (!err) {
