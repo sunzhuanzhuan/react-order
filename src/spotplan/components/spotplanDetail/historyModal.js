@@ -18,7 +18,7 @@ export default class HistoryModal extends React.Component {
           <Button key="back" type='primary' onClick={onCancel}>确认</Button>,
         ]}
     >
-      <Table border columns={HistoryCols} dataSource={dataSource} pagination={false} />
+      <Table bordered columns={HistoryCols} dataSource={dataSource} pagination={false} />
     </Modal>
   }
 }

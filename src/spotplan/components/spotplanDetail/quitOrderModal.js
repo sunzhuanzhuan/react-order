@@ -43,7 +43,7 @@ class QuitModal extends React.Component {
           </FormItem>
         </Form>
         <h4 style={{ padding: '10px 0' }}>当前订单信息</h4>
-        <Table rowKey='order_id' border columns={OrderCols} dataSource={dataSource} pagination={false} />
+        <Table rowKey='order_id' bordered columns={OrderCols} dataSource={dataSource} pagination={false} />
       </>
     </Modal>
   }

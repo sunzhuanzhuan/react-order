@@ -72,7 +72,7 @@ class ChangeModal extends React.Component {
           </FormItem>
         </Form>
         <h4 style={{ padding: '10px 0' }}>当前订单信息</h4>
-        <Table rowKey='order_id' border columns={OrderCols} dataSource={before_order} pagination={false} />
+        <Table rowKey='order_id' columns={OrderCols} dataSource={before_order} pagination={false} bordered />
         <h4 style={{ padding: '10px 0' }}>勾选替换后的订单</h4>
         {after_order && after_order.length == 0 ? <div style={{ color: 'red' }}>本Spotplan中没有可以用于替换的，状态为【客户待确认】的订单</div> : <Table rowKey='order_id' border columns={OrderCols} dataSource={after_order} rowSelection={rowSelection} pagination={false} />}
       </>
