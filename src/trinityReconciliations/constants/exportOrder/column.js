@@ -213,15 +213,14 @@ export const paymentListFunc = (handleSelectDetail,summary_sheet_id) => {
 }
 
 const summaryStatus={
-  1:'未对账',
   2:'对账成功',
   3:'已释放',
 }
 const paymentStatus={
   0:'-',
   1:'未打款',
-  2:'打款失败',
-  3:'打款成功',
+  2:'打款成功',
+  3:'打款失败',
   4:'打款撤销',
   5:'打款中'
 }

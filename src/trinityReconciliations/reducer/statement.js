@@ -5,7 +5,9 @@ import {
   getDetailSummaryList_success,
   getListStatement_success,
   getToken_success,
-  searchName_success
+  searchName_success,
+  getInputList_success,
+  getAgentInfo_success
  } from '../actions'
 import { handleActions } from 'redux-actions';
 
@@ -58,3 +60,14 @@ export const accountName = handleActions({
 	[searchName_success]: (state, action) => (action.payload.data)
 }, "")
 
+
+//对账单inputlist
+//获取账号名称模糊搜索
+export const statementInputList = handleActions({
+	[getInputList_success]: (state, action) => (action.payload.data)
+}, [])
+
+//获取代理商信息
+export const agentInfo = handleActions({
+	[getAgentInfo_success]: (state, action) => (action.payload.data)
+}, [])

@@ -8,6 +8,7 @@ import qs from 'qs';
 const FormItem = Form.Item;
 const Option = Select.Option;
 
+let file_name=''
 
 class ListQuery extends Component {
   constructor(props, context) {
@@ -20,6 +21,10 @@ class ListQuery extends Component {
       fileList:[]
 
     };
+  }
+  beforeUpload=(res)=>{
+    file_name=res.name
+    
   }
   handleSearch = (e) => {
 		// const { questAction, page_size, handlefilterParams } = this.props;
@@ -67,13 +72,18 @@ class ListQuery extends Component {
     console.log(value)
     const agent_id  =qs.parse(this.props.location.search.substring(1)).agent_id
     
-    this.props.addOrder( {attachment:value,agent_id:agent_id}).then((res)=>{
-      console.log(res.data);
-      this.props.form.setFieldsValue({public_order_id: '3' });
-        this.setState({
-          visibleTable:true,
-          stateMentList:res.data
-        })
+    this.props.addOrder({statement_name:file_name,
+      attachment:value,agent_id:agent_id}).then((res)=>{
+      if(res.data == 1000){
+          this.props.getInputList({agent_id:agent_id}).then(()=>{
+            this.props.form.setFieldsValue({statement_id: res.data.statement_id });
+            this.setState({
+              visibleTable:true,
+              stateMentList:res.data
+            })
+          })
+      }
+      
     })
    
    
@@ -81,7 +91,8 @@ class ListQuery extends Component {
   handleChangeSelect=(value)=>{
     console.log(value)
     this.setState({
-      visibleTable:true
+      visibleTable:true,
+      statement_id:value
     })
   }
   handleClickTotal=(value)=>{
@@ -96,7 +107,7 @@ class ListQuery extends Component {
   
   render() {
     let { getFieldDecorator } = this.props.form;
-    let { getToken} =this.props;
+    let { getToken,statementInputList} =this.props;
     let {stateMentList,summaryList} = this.state
 		const formItemLayout = {
 			labelCol: { span: 6 },
@@ -115,6 +126,7 @@ class ListQuery extends Component {
 				let content = new window.FormData();
         content.append('file_path', obj.file); 
         content.append('commit', 1); 
+        content.append('statement_id', this.state.statement_id);
 				importSummary(content).then((res) => {
           
 					let ary = [...fileList,
@@ -144,7 +156,7 @@ class ListQuery extends Component {
 					
 					<Col span={11}>
 						<FormItem label='请选择关联三方对账单' {...formItemLayout}>
-              {getFieldDecorator('public_order_id', { initialValue:'',
+              {getFieldDecorator('statement_id', { initialValue:'',
               rules: [{ required: true, message: '请选择关联三方对账单' }],
              })(
 								<Select
@@ -152,9 +164,11 @@ class ListQuery extends Component {
                 onChange={this.handleChangeSelect}
               >
                <Option key={' '} >请选择</Option>
-               <Option key={'1'} >未对账</Option>
-               <Option key={'2'}>对账完成</Option>
-               <Option key={'3'}>部分对账</Option>
+              {
+                statementInputList.length>0?statementInputList.map((item)=>{
+                  return   <Option key={item.statement_id} value={item.statement_id}>{item.statement_name}</Option>
+                })
+              :null}
               </Select>
 							)}
 						</FormItem>
@@ -170,6 +184,7 @@ class ListQuery extends Component {
                 len={1}
                 size={50}
                 listType="text"
+                beforeUpload={this.beforeUpload}
                 uploadText="请选择要上传的三方对账单"
                 onChange={(file, originFile) =>{
                   console.log(file[0].filepath);

@@ -28,6 +28,7 @@ class Payment extends Component {
   componentWillMount=()=> {
     const search = qs.parse(this.props.location.search.substring(1));
     this.queryData({ page: 1, page_size: this.state.page_size, ...search.keys })
+    this.props.actions.getAgentInfo({agent_id:search.agent_id})
   }
   //查询
   queryData = (obj, func) => {
@@ -57,7 +58,7 @@ class Payment extends Component {
   render() {
     const search = qs.parse(this.props.location.search.substring(1));
     const column = paymentListFunc(this.handleSelectDetail,this.state.summary_sheet_id);
-    let {summaryList:{list=[],page,total }}=this.props;
+    let {agentInfo,summaryList:{list=[],page,total }}=this.props;
     let {loading,page_size,filterParams}= this.state;
    
     let paginationObj = {
@@ -82,7 +83,7 @@ class Payment extends Component {
     
     return <div className="payBox">
      <Row className='title'>申请周期付款</Row>
-     <div className='agent'>收款平台/代理商:<span className='agent_name'>{search.agent}</span></div>
+     <div className='agent'>收款平台/代理商:<span className='agent_name'>{agentInfo.length>0?agentInfo[0].agentName:''}</span></div>
       {/* <PaymentFilter
         summary_sheet_id={this.state.summary_sheet_id}
         handlefilterParams={this.handlefilterParams}
@@ -117,6 +118,7 @@ class Payment extends Component {
 const mapStateToProps = (state) => {
 	return {
 		summaryList: state.statement.summaryList,
+    agentInfo:state.statement.agentInfo
 	}
 }
 const mapDispatchToProps = dispatch => ({

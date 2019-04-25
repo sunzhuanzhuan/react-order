@@ -33,6 +33,7 @@ export default {
     addOrder:'/finance/statement/import',
     list:'/finance/statement/list',
     listStatement:'/finance/statement/list',
+    inputList:'/finance/statement/inputList',
     // deleteSummary:'/finance/statement/deleteStatement',
     importSummary:'/finance/summary/import',
     releaseSummary:'/finance/summary/release',
@@ -45,5 +46,8 @@ export default {
   },
   meta:{
     metadata:'/finance/statement/metadata'
+  },
+  agent:{
+    info:'/finance/commonApi/getAgentData'
   }
 }

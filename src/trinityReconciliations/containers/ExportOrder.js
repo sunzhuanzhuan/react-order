@@ -37,6 +37,7 @@ class ExportOrder extends Component {
   componentWillMount=()=> {
     const search = qs.parse(this.props.location.search.substring(1));
     this.queryData({ page: 1, page_size: this.state.page_size})
+    this.props.actions.getAgentInfo({agent_id:search.agent_id})
   }
   handleCancelSelect=()=>{
       this.setState({
@@ -95,7 +96,7 @@ class ExportOrder extends Component {
   render() {
     const search = qs.parse(this.props.location.search.substring(1));
     // console.log(search);
-    let {orderList:{list=[], page, total,page_size}}=this.props;
+    let {orderList:{list=[], page, total,page_size},agentInfo}=this.props;
     let {loading,selectedRowKeys}= this.state;
     const column = exportOrderListFunc();
     const paginationObj = getPagination(this, search, { total, page, page_size });
@@ -125,7 +126,7 @@ class ExportOrder extends Component {
     };
     return <div className='export-order-container'>
      <Row className='title'>导出订单</Row>
-     <div className='agent'>收款平台/代理商:<span className="agent_name">{search.agent}</span></div>
+     <div className='agent'>收款平台/代理商:<span className="agent_name">{agentInfo.length>0?agentInfo[0].agentName:''}</span></div>
      {/* <ExportOrderFilter
      search={this.props.actions.searchName}ßß
      accountName={this.props.accountName}
@@ -168,6 +169,7 @@ const mapStateToProps = (state) => {
 	return {
     orderList: state.statement.orderList,
     accountName: state.statement.accountName,
+    agentInfo:state.statement.agentInfo
 	}
 }
 const mapDispatchToProps = dispatch => ({

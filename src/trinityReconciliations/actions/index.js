@@ -109,8 +109,20 @@ export const {
   method: 'post',
 });
 
-
-
+//对账单inputlist
+export const {
+	getInputList,
+	getInputList_success
+} = createHttpAction('getInputList', Interface.statement.inputList, {
+  method: 'get',
+});
+//获取代理商信息
+export const {
+	getAgentInfo,
+	getAgentInfo_success
+} = createHttpAction('getAgentInfo', Interface.agent.info, {
+  method: 'get',
+});
 // // 使得添加页面提交可用
 // export const setAddSubmit = createAction('setAddSubmit', (data) => {
 //   return data;

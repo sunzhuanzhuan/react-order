@@ -131,7 +131,7 @@ handleCancel = (e) => {
     const column = summaryListFunc(this.handleSelectDetail,this.handleOut);
     const shiColum = summaryShiListFunc(this.handleSelectDetail);
     let {detailSummary,detailSummaryList:{list:detailList=[],page:detailPage,total:detailTotal,page_size:detailPageSize}}=this.props;
-    let {summaryList:{list=[],page,total }}=this.props;
+    let {summaryList:{list=[],page,total },agentInfo}=this.props;
     let {loading,page_size}= this.state;
     let paginationObjInfo = {
       onChange: (current) => {
@@ -166,7 +166,7 @@ handleCancel = (e) => {
     
     return <div>
      <Row className='title'>汇总单列表</Row>
-     <Row className='agent'>平台/代理商:<span className='agent_name'>{search.agent}</span></Row>
+     <Row className='agent'>平台/代理商:<span className='agent_name'>{agentInfo.length>0?agentInfo[0].agentName:''}</span></Row>
      <Tabs defaultActiveKey="1" onChange={this.handleChangeTab}>
       <TabPane tab="全部" key="1">
       <SearForm data={searchFormStatement} getAction={this.queryData}
@@ -245,6 +245,7 @@ const mapStateToProps = (state) => {
     summaryList: state.statement.summaryList,
     detailSummary: state.statement.detailSummary,
 		detailSummaryList: state.statement.detailSummaryList,
+    agentInfo:state.statement.agentInfo
 	}
 }
 const mapDispatchToProps = dispatch => ({
