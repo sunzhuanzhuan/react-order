@@ -102,7 +102,12 @@ export default class ComplaintsList extends Component {
         }
       }, {
         title: '备注',
-        dataIndex: 'note'
+        dataIndex: 'note',
+        render: (note) => {
+          return <span className="info-cut" title={note}>
+            {note}
+          </span>
+        }
       }, {
         title: '操作人',
         dataIndex: 'operator'
@@ -191,9 +196,8 @@ export default class ComplaintsList extends Component {
                 { required: true, message: '请输入退款比例' }
               ]
             })(
-              <InputNumber min={0} max={100} placeholder='25' />
+              <Input style={{ width: '120px' }} placeholder='25' addonAfter="%" />
             )}
-            <span style={{ margin: '0 14px 0 4px' }}>%</span>
           </Form.Item>
           <Form.Item style={{ display: 'inline-block', margin: '0' }}>
             {getFieldDecorator('note')(
