@@ -37,13 +37,23 @@ export default class MerchantList extends Component {
     this.columns = [
       {
         title: '商户名称',
-        dataIndex: 'title'
+        dataIndex: 'title',
+        render: (title) => {
+          return <span className="info-cut" title={title}>
+            {title}
+          </span>
+        }
       }, {
         title: '商户行业',
         dataIndex: 'industry_name'
       }, {
         title: '联系人',
-        dataIndex: 'contacter_name'
+        dataIndex: 'contacter_name',
+        render: (contacter_name) => {
+          return <span className="info-cut" title={contacter_name}>
+            {contacter_name}
+          </span>
+        }
       }, {
         title: '手机号',
         dataIndex: 'contacter_mobile'

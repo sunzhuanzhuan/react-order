@@ -59,7 +59,7 @@ export default class MerchantList extends Component {
                 <Row>
                     <Col span={6}>
                         <span className='info-title'>商户名称</span>
-                        <span className='info-value'>{businessAccountInfo.title || '-'}</span>
+                        <span className='info-value info-cut' title={businessAccountInfo.title || '-'}>{businessAccountInfo.title || '-'}</span>
                     </Col>
                     <Col span={6}>
                         <span className='info-title'>商户行业</span>
@@ -67,7 +67,7 @@ export default class MerchantList extends Component {
                     </Col>
                     <Col span={6}>
                         <span className='info-title'>商户联系人</span>
-                        <span className='info-value'>{businessAccountInfo.contacter_name || '-'}</span>
+                        <span className='info-value info-cut' title={businessAccountInfo.contacter_name || '-'}>{businessAccountInfo.contacter_name || '-'}</span>
                     </Col>
                     <Col span={6}>
                         <span className='info-title'>商户联系方式</span>
@@ -92,12 +92,12 @@ export default class MerchantList extends Component {
                     商户订单
                     <small>共计 <a>{pagination.total}</a> 个订单</small>
                 </h2>
-                <Button type='primary' href={'/hwcampaign/index/addminiflashactive?business_account_id=' + business_account_id } target='_blank'>创建新活动</Button>
+                <Button type='primary' href={'/hwcampaign/index/addminiflashactive?business_account_id=' + business_account_id} target='_blank'>创建新活动</Button>
             </header>
             <Spin spinning={listLoading} delay={300}>
                 {
                     rows.map(campaign => {
-                        return <CampaignCard key={campaign.campaign_id} data={campaign}/>
+                        return <CampaignCard key={campaign.campaign_id} data={campaign} />
                     })
                 }
             </Spin>

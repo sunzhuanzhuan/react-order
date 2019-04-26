@@ -16,7 +16,7 @@ const CountDown = ({ date }) => {
   if (!date) return ''
   let now = moment()
   let diff = moment(date) - now
-    let duration = moment.duration(diff)
+  let duration = moment.duration(diff)
   let days = duration.days()
   let hours = duration.hours()
   let minutes = duration.minutes()
@@ -81,7 +81,7 @@ export default class ComplaintsList extends Component {
         render: (ratio, record) => {
           if (record.progress === 1) {
             // 小于一天加红加粗
-            return <CountDown date={record.refund_end_time}/>
+            return <CountDown date={record.refund_end_time} />
           }
           if (record.progress === 5) {
             return '已处理'
@@ -145,7 +145,7 @@ export default class ComplaintsList extends Component {
   handleRatio = (record) => {
     this.setState({
       id: record.id,
-      orderId : record.order_id
+      orderId: record.order_id
     })
   }
 
@@ -185,10 +185,13 @@ export default class ComplaintsList extends Component {
           <Form.Item label="退款比例">
             {getFieldDecorator('refund_ratio', {
               rules: [
+                {
+                  pattern: /^(?:[1-9]?\d|100)$/, message: '退款比例必须为正整数'
+                },
                 { required: true, message: '请输入退款比例' }
               ]
             })(
-              <InputNumber min={0} max={100} precision={0} placeholder='25' />
+              <InputNumber min={0} max={100} placeholder='25' />
             )}
             <span style={{ margin: '0 14px 0 4px' }}>%</span>
           </Form.Item>
