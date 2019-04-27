@@ -153,7 +153,7 @@ class SpotPlanDetail extends React.Component {
   }
   handleUpdate = obj => {
     const search = qs.parse(this.props.location.search.substring(1));
-    return this.props.actions.postUpdateSpotplanOrder({ spotplan_id: search.spotplan_id, ...obj })
+    return this.props.actions.getServiceRateAmount({ spotplan_id: search.spotplan_id, ...obj })
   }
   handleDelete = order_id => {
     const search = qs.parse(this.props.location.search.substring(1));
@@ -173,23 +173,31 @@ class SpotPlanDetail extends React.Component {
     return this.queryData({ spotplan_id: search.spotplan_id, ...search.keys });
   }
   handleSubmit = (obj) => {
+    const hide = message.loading('操作中，请稍候...');
     const search = qs.parse(this.props.location.search.substring(1));
     const { order_id } = this.state;
     return this.props.actions.postChangeNumberSpotplanOrder({ spotplan_id: search.spotplan_id, order_ids: [order_id], ...obj }).then((res) => {
+      hide();
       if (res.data) {
         if (res.data.amount) {
+          const type = res.data.type;
+          let content = type ? type == 1 ? '存在已经被他人优先发起了更新申请的订单，请刷新后重新选择' : '存在状态不为【客户待确认】的替换订单，请刷新后重新选择' : <ErrorTip data={res.data.amount} />;
           Modal.error({
             title: '错误提示',
             width: 640,
-            content: <ErrorTip data={res.data.amount} />,
+            content: content,
             maskClosable: false,
             okText: '确定',
-            onOk: () => {
+            onOk: (close) => {
               this.queryData({ ...search.keys, spotplan_id: search.spotplan_id });
-              this.props.getSpotplanPoInfo({ spotplan_id: search.spotplan_id });
+              this.props.actions.getSpotplanPoInfo({ spotplan_id: search.spotplan_id });
+              close();
             }
           })
         }
+      } else {
+        this.queryData({ ...search.keys, spotplan_id: search.spotplan_id });
+        this.props.actions.getSpotplanPoInfo({ spotplan_id: search.spotplan_id });
       }
     })
   }
@@ -228,7 +236,7 @@ class SpotPlanDetail extends React.Component {
   render() {
     const search = qs.parse(this.props.location.search.substring(1));
     const { historyVisible, editVisible, changeVisible, quitVisible, updateVisible, selectedRowKeys, type, loading, record } = this.state;
-    const { spotplanExecutor, spotplanPlatform, spotplanPoInfo, spotplanAmount, spotplanEditList, basicSpotplanOrderInfo, updateSpotplanOrder: { before_order = [], after_order = [] }, updateSpotplanOrderLog } = this.props;
+    const { spotplanExecutor, spotplanPlatform, spotplanPoInfo, spotplanAmount, spotplanEditList, basicSpotplanOrderInfo, updateSpotplanOrder: { before_order = [], after_order = [] }, updateSpotplanOrderLog, serviceRateAmount } = this.props;
     const list = spotplanEditList[type] && spotplanEditList[type].list || [];
     const checked = list.every(item => selectedRowKeys.includes(item.order_id.toString()));
     const DetailTableCols = DetailTableFunc(this.handleChangeNumber, this.handleQuitOrder, this.handleUpdateOrder, this.handleEditOrder, this.handleDelete, this.handleHistory);
@@ -296,11 +304,15 @@ class SpotPlanDetail extends React.Component {
         handleClose={this.handleClose}
       />}
       {updateVisible && <UpdateModal visible={updateVisible}
-        onCancel={() => { this.setState({ updateVisible: false }) }}
+        onCancel={() => {
+          this.props.actions.restServiceRateAmount();
+          this.setState({ updateVisible: false });
+        }}
         handleSubmit={this.handleSubmit}
         dataSource={basicSpotplanOrderInfo}
         handleClose={this.handleClose}
         handleUpdate={this.handleUpdate}
+        serviceRateAmount={serviceRateAmount}
       />}
     </div>
   }
@@ -315,6 +327,7 @@ const mapStateToProps = (state) => {
     spotplanEditList: state.spotplanReducers.spotplanEditList,
     updateSpotplanOrder: state.spotplanReducers.updateSpotplanOrder,
     updateSpotplanOrderLog: state.spotplanReducers.updateSpotplanOrderLog,
+    serviceRateAmount: state.spotplanReducers.serviceRateAmount,
   }
 }
 const mapDispatchToProps = dispatch => ({

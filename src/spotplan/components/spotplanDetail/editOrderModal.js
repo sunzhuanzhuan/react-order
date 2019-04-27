@@ -14,9 +14,7 @@ class EditOrderModal extends React.Component {
         const { data, spotplan_id } = this.props;
         this.props.actions.postUpdateSpotplanOrder({ ...values, spotplan_id, order_id: data[0].order_id }).then(() => {
           message.success('操作成功！', 2);
-          this.props.handleClose().then(() => {
-            this.props.onCancel();
-          })
+          this.props.onCancel();
         })
       } else {
         Modal.error({

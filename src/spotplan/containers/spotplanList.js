@@ -15,10 +15,10 @@ class SpotPlanList extends React.Component {
   }
   componentDidMount() {
     const search = qs.parse(this.props.location.search.substring(1));
-    const { getSpotplanProject, getSpotplanBrand, getSpotplanCreatorList } = this.props.actions;
+    const { getSpotplanProject, getSpotplanBrand, getSpotplanExecutor } = this.props.actions;
     getSpotplanProject();
     getSpotplanBrand();
-    getSpotplanCreatorList();
+    getSpotplanExecutor();
     this.queryData({ ...search.keys })
   }
   queryData = (obj, func) => {
@@ -42,7 +42,7 @@ class SpotPlanList extends React.Component {
   render() {
     const search = qs.parse(this.props.location.search.substring(1));
     const { loading } = this.state;
-    const { spotplanProject, spotplanBrand, spotplanCreatorList, spotplanList: { total, page, pageSize, rows } } = this.props;
+    const { spotplanProject, spotplanBrand, spotplanExecutor, spotplanList: { total, page, pageSize, rows } } = this.props;
     const SpotplanListCols = SpotplanListFunc(this.hanldeJump);
     const paginationObj = {
       onChange: (current) => {
@@ -82,7 +82,7 @@ class SpotPlanList extends React.Component {
         location={this.props.location}
         spotplan_project={spotplanProject}
         spotplan_brand={spotplanBrand}
-        spotplan_creatorList={spotplanCreatorList}
+        spotplan_executor={spotplanExecutor}
         getProject={this.props.actions.getSpotplanProject}
       />
       <h3 style={{ marginTop: '20px' }}>Spotplan列表</h3>
@@ -101,7 +101,7 @@ const mapStateToProps = (state) => {
   return {
     spotplanProject: state.spotplanReducers.spotplanProject,
     spotplanBrand: state.spotplanReducers.spotplanBrand,
-    spotplanCreatorList: state.spotplanReducers.spotplanCreatorList,
+    spotplanExecutor: state.spotplanReducers.spotplanExecutor,
     spotplanList: state.spotplanReducers.spotplanList,
   }
 }

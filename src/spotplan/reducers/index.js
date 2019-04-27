@@ -106,6 +106,17 @@ export const updateSpotplanOrderLog = handleActions({
   }
 }, [])
 
+export const serviceRateAmount = (state = {}, action) => {
+  switch (action.type) {
+    case 'getServiceRateAmount_success':
+      return { ...action.payload.data }
+    case 'restServiceRateAmount_success':
+      return {}
+    default:
+      return state
+  }
+}
+
 export default combineReducers({
   spotplanCompanyInfo,
   spotplanExecutor,
@@ -121,4 +132,5 @@ export default combineReducers({
   basicSpotplanOrderInfo,
   updateSpotplanOrder,
   updateSpotplanOrderLog,
+  serviceRateAmount
 })

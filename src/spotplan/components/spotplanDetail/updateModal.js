@@ -28,9 +28,7 @@ class UpdateModal extends React.Component {
           }
         }).then(() => {
           message.success('操作成功！', 2);
-          this.props.handleClose().then(() => {
-            this.props.onCancel();
-          })
+          this.props.onCancel();
         })
       }
     })
@@ -43,7 +41,8 @@ class UpdateModal extends React.Component {
   }
   render() {
     const { getFieldDecorator } = this.props.form;
-    const { visible, onCancel, dataSource } = this.props;
+    const { visible, onCancel, dataSource, serviceRateAmount } = this.props;
+    console.log('%cserviceRateAmount: ', 'color: MidnightBlue; background: Aquamarine; font-size: 20px;', serviceRateAmount);
     return <Modal
       wrapClassName='change-modal'
       key='changeModal'
@@ -70,12 +69,12 @@ class UpdateModal extends React.Component {
         <h4 style={{ padding: '10px 0', fontWeight: 600 }}>当前订单信息</h4>
         <Table rowKey='order_id' columns={UpdateCols} dataSource={dataSource} pagination={false} bordered />
         <h4 style={{ padding: '10px 0', fontWeight: 600 }}>编辑需要修改的信息</h4>
-        <Row style={{ lineHeight: '48px', padding: '8px 0' }} gutter={16}>
+        <Row style={{ lineHeight: '58px', padding: '8px 0' }} gutter={16}>
           <Col span={8}></Col>
           <Col span={8}>修改前值</Col>
           <Col span={8}>修改后值</Col>
         </Row>
-        <Row style={{ lineHeight: '48px' }} gutter={16}>
+        <Row style={{ lineHeight: '58px' }} gutter={16}>
           <Col span={2}></Col>
           <Col span={6}>价格名称：</Col>
           <Col span={8}>{dataSource && dataSource[0].price_name}</Col>
@@ -85,16 +84,12 @@ class UpdateModal extends React.Component {
                 initialValue: dataSource && dataSource[0].price_name || '',
                 rules: [{ required: true, message: '请填写值' }]
               })(
-                <Input onBlur={(e) => {
-                  if (e.target.value != dataSource[0].price_name) {
-                    this.handleUpdate({ order_id: dataSource[0].order_id, price_id: dataSource[0].price_id, price_name: e.target.value })
-                  }
-                }} />
+                <Input />
               )}
             </FormItem>
           </Col>
         </Row>
-        <Row style={{ lineHeight: '48px' }} gutter={16}>
+        <Row style={{ lineHeight: '58px' }} gutter={16}>
           <Col span={2}></Col>
           <Col span={6}>Cost（元）：</Col>
           <Col span={8}>{dataSource && numeral(dataSource[0].cost).format('0,0')}</Col>
@@ -106,14 +101,17 @@ class UpdateModal extends React.Component {
               })(
                 <Input placeholder='' style={{ width: 200 }} onBlur={(e) => {
                   if (e.target.value != dataSource[0].cost) {
-                    this.handleUpdate({ order_id: dataSource[0].order_id, price_id: dataSource[0].price_id, cost: e.target.value })
+                    const serviceRate = this.props.form.getFieldValue('service_rate');
+                    if (serviceRate) {
+                      this.handleUpdate({ order_id: dataSource[0].order_id, price_id: dataSource[0].price_id, cost: e.target.value, service_rate: serviceRate })
+                    }
                   }
                 }} />
               )}
             </FormItem>
           </Col>
         </Row>
-        <Row style={{ lineHeight: '48px' }} gutter={16}>
+        <Row style={{ lineHeight: '58px' }} gutter={16}>
           <Col span={2}></Col>
           <Col span={6}>服务费率：</Col>
           <Col span={8}>{dataSource && dataSource[0].service_rate}%</Col>
@@ -121,24 +119,30 @@ class UpdateModal extends React.Component {
             <FormItem>
               {getFieldDecorator('service_rate', {
                 initialValue: dataSource && dataSource[0].service_rate || '',
-                rules: [{ required: true, message: '请填写值' }]
+                rules: [
+                  { required: true, message: '请填写值' },
+                  { pattern: /^(([1-9][0-9]|[1-9])(\.\d{1,2})?|0\.\d{1,2}|100(\.00?)?|0)$/, message: '仅可输入0到100之间的数字，小数点最多到后两位' }
+                ]
               })(
                 <Input placeholder='' suffix='%' style={{ width: 200 }} onBlur={(e) => {
-                  if (e.target.value != dataSource[0].service_rate) {
-                    this.handleUpdate({ order_id: dataSource[0].order_id, price_id: dataSource[0].price_id, service_rate: e.target.value })
+                  if (e.target.value != dataSource[0].cost) {
+                    const cost = this.props.form.getFieldValue('cost');
+                    if (cost) {
+                      this.handleUpdate({ order_id: dataSource[0].order_id, price_id: dataSource[0].price_id, cost, service_rate: e.target.value })
+                    }
                   }
                 }} />
               )}
             </FormItem>
           </Col>
         </Row>
-        <Row style={{ lineHeight: '48px' }} gutter={16}>
+        <Row style={{ lineHeight: '58px' }} gutter={16}>
           <Col span={2}></Col>
           <Col span={6}>Costwithfee（元）：</Col>
           <Col span={8}>{dataSource && numeral(dataSource[0].costwithfee).format('0,0')}</Col>
-          <Col span={8}>{dataSource && numeral(dataSource[0].costwithfee).format('0,0')}</Col>
+          <Col span={8}>{serviceRateAmount.costwithfee ? numeral(serviceRateAmount.costwithfee).format('0,0') : dataSource && numeral(dataSource[0].costwithfee).format('0,0')}</Col>
         </Row>
-        <Row style={{ lineHeight: '48px' }} gutter={16}>
+        <Row style={{ lineHeight: '58px' }} gutter={16}>
           <Col span={2}></Col>
           <Col span={6}>账号分类：</Col>
           <Col span={8}>{dataSource && dataSource[0].account_category_name}</Col>
@@ -148,18 +152,14 @@ class UpdateModal extends React.Component {
                 initialValue: dataSource && dataSource[0].account_category_name || '',
                 rules: [{ required: true, message: '请填写值' }]
               })(
-                <Input placeholder='' style={{ width: 200 }} onBlur={(e) => {
-                  if (e.target.value != dataSource[0].account_category_name) {
-                    this.handleUpdate({ order_id: dataSource[0].order_id, price_id: dataSource[0].price_id, account_category_name: e.target.value })
-                  }
-                }} />
+                <Input placeholder='' style={{ width: 200 }} />
               )}
             </FormItem>
           </Col>
         </Row>
         <Row gutter={16}>
           <Col span={2}></Col>
-          <Col span={6} style={{ lineHeight: '48px' }}>位置/直发or转发：</Col>
+          <Col span={6} style={{ lineHeight: '58px', paddingBottom: '12px' }}>位置/直发or转发：</Col>
           <Col span={8}>{dataSource && dataSource[0].release_form}</Col>
           <Col span={8}>
             <FormItem>
@@ -167,29 +167,21 @@ class UpdateModal extends React.Component {
                 initialValue: dataSource && dataSource[0].release_form || '',
                 rules: [{ required: true, message: '请填写值' }]
               })(
-                <TextArea autosize={{ minRows: 2, maxRows: 6 }} onBlur={(e) => {
-                  if (e.target.value != dataSource[0].release_form) {
-                    this.handleUpdate({ order_id: dataSource[0].order_id, price_id: dataSource[0].price_id, release_form: e.target.value })
-                  }
-                }} />
+                <TextArea autosize={{ minRows: 2, maxRows: 6 }} />
               )}
             </FormItem>
           </Col>
         </Row>
         <Row gutter={16}>
           <Col span={2}></Col>
-          <Col span={6} style={{ lineHeight: '48px' }}>备注（非必填）：</Col>
+          <Col span={6} style={{ lineHeight: '58px' }}>备注（非必填）：</Col>
           <Col span={8}>{dataSource && dataSource[0].content}</Col>
           <Col span={8}>
             <FormItem>
               {getFieldDecorator('content', {
                 initialValue: dataSource && dataSource[0].content || '',
               })(
-                <TextArea placeholder='请填写申请换号的原因，不超过200个字' autosize={{ minRows: 2, maxRows: 6 }} onBlur={(e) => {
-                  if (e.target.value != dataSource[0].content) {
-                    this.handleUpdate({ order_id: dataSource[0].order_id, price_id: dataSource[0].price_id, content: e.target.value })
-                  }
-                }} />
+                <TextArea placeholder='请填写申请换号的原因，不超过200个字' autosize={{ minRows: 2, maxRows: 6 }} />
               )}
             </FormItem>
           </Col>

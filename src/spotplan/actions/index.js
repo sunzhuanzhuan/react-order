@@ -1,3 +1,4 @@
+import api from '../../api/index'
 import Interface from '../constants/Interface'
 import { createHttpAction } from 'redux-action-extend'
 
@@ -143,4 +144,22 @@ export const {
 } = createHttpAction('postDeleteSpotplanOrder', Interface.postDeleteSpotplanOrder, {
   method: 'post',
 });
+
+export const getServiceRateAmount = (params) => (dispatch) => {
+  return api.get(Interface.getServiceRateAmount, { params }).then((response) => {
+    dispatch({
+      type: 'getServiceRateAmount_success',
+      payload: {
+        data: response.data
+      }
+    })
+  })
+}
+
+export const restServiceRateAmount = (params) => (dispatch) => {
+  dispatch({
+    type: 'restServiceRateAmount_success',
+  })
+}
+
 

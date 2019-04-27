@@ -598,7 +598,7 @@ export const HistoryCols = [
     align: 'center',
     width: 240,
     render: (text, record) => {
-      return <div>
+      return record.apply_type == 6 ? '-' : <div>
         {text && text.map((item, index) => {
           const before_item = record.before_order_info[index];
           return <div key={index}>
@@ -747,9 +747,10 @@ export const STATUS_CUSTOMER = [
 ];
 //详情客户确认状态
 export const DETAIL_STATUS_CUSTOMER = [
-  { key: '客户待确认', value: 11 },
-  { key: '客户已确认', value: 12 },
-  { key: '客户已拒绝', value: 13 }
+  { key: 'SP更新待提交客户审核', value: 1 },
+  { key: 'SP更新待审核', value: 2 },
+  { key: 'SP更新审核通过', value: 3 },
+  { key: 'SP更新审核被拒', value: 4 },
 ];
 //预约中状态
 export const STATUS_RESERVATION = [

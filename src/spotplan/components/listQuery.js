@@ -29,6 +29,9 @@ class ListQuery extends React.Component {
     if (keys.created_at) {
       keys['created_at'] = [moment(keys.created_at[0], dateFormat), moment(keys.created_at[1], dateFormat)]
     }
+    if (keys.brand_id) {
+      delete keys['brand_id']
+    }
     if (settle_id) {
       keys['settle_id'] = settle_id.join(' ');
       delete keys['spotplan_id']
@@ -84,7 +87,7 @@ class ListQuery extends React.Component {
   }
   render() {
     const { getFieldDecorator } = this.props.form;
-    const { spotplan_project, spotplan_brand, spotplan_creatorList } = this.props;
+    const { spotplan_project, spotplan_brand, spotplan_executor } = this.props;
     return <Form className='spotplan-list-form'>
       <Row>
         <FormItem label='批量查询'>
@@ -127,10 +130,10 @@ class ListQuery extends React.Component {
       <Row>
         <FormItem label='所属品牌'>
           {getFieldDecorator('brand_id')(
-            <Select style={{ width: 140 }}
+            <Select className="multipleSelect"
               placeholder='请选择'
+              mode='multiple'
               getPopupContainer={() => document.querySelector('.spotplan-list-form')}
-              labelInValue
               allowClear
               showSearch
               filterOption={(input, option) => (
@@ -153,7 +156,7 @@ class ListQuery extends React.Component {
                 option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
               )}
             >
-              {spotplan_creatorList && spotplan_creatorList.map(item => (<Option value={item.creator_id} key={item.creator_id}>{item.creator_name}</Option>))}
+              {spotplan_executor && spotplan_executor.map(item => (<Option value={item.creator_id} key={item.owner_admin_id}>{item.real_name}</Option>))}
             </Select>
           )}
         </FormItem>

@@ -27,10 +27,7 @@ class ChangeModal extends React.Component {
           return
         }
         this.props.handleSubmit({ type: 1, after_order_ids: selectedRowKeys, reason: values.reason }).then(() => {
-          message.success('操作成功！', 2);
-          this.props.handleClose().then(() => {
-            this.props.onCancel();
-          })
+          this.props.onCancel();
         })
       }
     })

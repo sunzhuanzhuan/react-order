@@ -19,10 +19,11 @@ class CheckOrder extends React.Component {
   componentDidMount() {
     const search = qs.parse(this.props.location.search.substring(1));
     const { getSpotplanExecutor, getSpotplanPlatform } = this.props.actions;
-    this.props.queryBasicInfo();
+    this.props.queryBasicInfo().then(() => {
+      this.props.queryData(2, { company_id: search.company_id, project_id: [this.props.spotplanPoInfo.project_id], reservation_status: 2, ...search.keys });
+    })
     getSpotplanExecutor();
     getSpotplanPlatform();
-    this.props.queryData(2, { company_id: search.company_id, ...search.keys });
   }
   handlePageChange = (page) => {
     const search = qs.parse(this.props.location.search.substring(1));
