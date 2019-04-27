@@ -473,9 +473,9 @@ export const summaryTotalDetailListFunc = () => {
 			dataIndex: 'm',
 			key: 'm',
 			align: 'center',
-      width: 100,
+      width: 150,
       render: (text,record) => {
-				return <span>项目媒介:{record.vol_admin_name}资源媒介:{record.owner_admin_name}</span>
+				return <span>项目媒介:{record.project_user_name}资源媒介:{record.media_user_name}</span>
 			}
 		},
 		{
@@ -485,7 +485,7 @@ export const summaryTotalDetailListFunc = () => {
 			align: 'center',
 			width: 100,
 			render: (text,record) => {
-				return <span>{record.sale_name}{record.executor_admin_name}{record.creater_name}</span>
+				return <span>{record.sale_name}/{record.executor_name}/{record.creater_name}</span>
 			}
     },
     {
@@ -493,10 +493,7 @@ export const summaryTotalDetailListFunc = () => {
 			dataIndex: 'ttp_order_id',
 			key: 'ttp_order_id',
 			align: 'center',
-			width: 100,
-			render: (text) => {
-				return parseFloat(text).toFixed(2)
-			}
+			width: 100
     },
     {
 			title: '调账金额',

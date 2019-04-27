@@ -43,7 +43,7 @@ class SummaryDetail extends Component {
     
     return <div>
     <Row className='title'>查看汇总单详情</Row>
-    <Row className='agent'>汇总单名称:<span className='agent_name'>{search.summary_sheet_name}</span></Row>
+    <Row className='agent'>汇总单名称:<span className='agent_name'>{detailSummary.summary_sheet_name}</span></Row>
      <SummaryDetailInfo
      detailSummary={detailSummary}
      />
