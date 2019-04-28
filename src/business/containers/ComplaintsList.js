@@ -16,6 +16,10 @@ const CountDown = ({ date }) => {
   if (!date) return ''
   let now = moment()
   let diff = moment(date) - now
+  console.log(diff, '=====>');
+  if(diff < 0){
+    return <span style={{ color: 'red' }}>过期未处理</span>
+  }
   let duration = moment.duration(diff)
   let days = duration.days()
   let hours = duration.hours()
