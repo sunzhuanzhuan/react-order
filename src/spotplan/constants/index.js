@@ -629,8 +629,8 @@ export const HistoryCols = [
     width: 200,
     render: (text, record) => {
       return <div>
-        <div>申请时间：{record.created_at || '-'}</div>
-        <div>审核时间：{record.check_at || '-'}</div>
+        <div style={{ textAlign: 'left' }}>申请时间：{record.created_at || '-'}</div>
+        <div style={{ textAlign: 'left' }}>审核时间：{record.check_at == '0000-00-00 00:00:00' ? '-' : record.check_at}</div>
       </div>
     }
   }
