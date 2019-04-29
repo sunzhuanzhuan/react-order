@@ -496,6 +496,40 @@ export const summaryTotalDetailListFunc = () => {
 			width: 100
     },
     {
+			title: '对账状态',
+			dataIndex: 'statement_status',
+			key: 'statement_status',
+			align: 'center',
+			width: 100
+    },
+    {
+			title: '扣减金额',
+			dataIndex: 'deduction_amount',
+			key: 'deduction_amount',
+			align: 'center',
+			width: 100,
+    },
+    {
+			title: '是否可扣减',
+			dataIndex: 'is_can_deduction',
+			key: 'is_can_deduction',
+			align: 'center',
+			width: 100,
+			render:(text)=>{
+        return text == 1?'是':"否"
+      }
+    },
+    {
+			title: '扣减原因',
+			dataIndex: 'deduction_reason',
+			key: 'deduction_reason',
+			align: 'center',
+			width: 100,
+			render: (text,record) => {
+				return <span>{record.deduction_reason}</span>
+			}
+    },
+    {
 			title: '调账金额',
 			dataIndex: 'adjustment_amount',
 			key: 'adjustment_amount',
@@ -509,6 +543,12 @@ export const summaryTotalDetailListFunc = () => {
 			title: '调账方式',
 			dataIndex: 'operation_type_name',
 			key: 'operation_type_name',
+			align: 'center',
+			width: 100
+    },{
+			title: '部分对账金额',
+			dataIndex: 'pay_amount',
+			key: 'pay_amount',
 			align: 'center',
 			width: 100
     },

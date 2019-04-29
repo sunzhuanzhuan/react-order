@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Row } from 'antd';
+import { Row,Button,Popconfirm } from 'antd';
 import SummaryDetailInfo from '../components/summary/Detail';
 import InfoTable from '../components/summary/SummaryTable';
 import {summaryTotalDetailListFunc} from '../constants/exportOrder/column'
@@ -17,7 +17,12 @@ class SummaryDetail extends Component {
 
     };
   }
-
+  handleRelease=()=>{
+    const search = qs.parse(this.props.location.search.substring(1));
+    this.props.actions.getDelummary({summary_sheet_id:search.summary_sheet_id}).then(()=>{
+      
+      })
+  }
 
   componentWillMount=()=> {
     const search = qs.parse(this.props.location.search.substring(1));
@@ -52,7 +57,22 @@ class SummaryDetail extends Component {
         dataTable={detailSummaryList}
         paginationObj={false}
         />:null}
-     
+     {
+       search.release?<div style={{textAlign:'center',marginTop:'40px'}}>
+       <Button  onClick={()=>{
+         this.props.history.push({
+          pathname: '/order/trinity/reconciliations/summary',
+          search: `?${qs.stringify({
+            agent_id:search.agent_id})}`,
+        });
+       }}>取消</Button>
+        <Popconfirm title="是否确认释放该汇总单，释放后，需重新进行对账！" onConfirm={this.handleRelease} okText="确定" cancelText="取消">
+   
+         <Button type="primary" style={{marginLeft:'50px'}}>确认</Button>
+         </Popconfirm>
+            
+       </div>:null
+     }
     </div>;
   }
 }

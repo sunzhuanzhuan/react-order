@@ -64,24 +64,16 @@ class Summary extends Component {
   
  
  }
- //释放汇总单
+ //进入详情才能释放汇总单
  handleOut=(record)=>{
   const search = qs.parse(this.props.location.search.substring(1));
-  //  console.log(record);
-  this.props.actions.getDelummary({summary_sheet_id:record.summary_sheet_id}).then(()=>{
-    // this.props.actions.getDetailSummaryList().then((res)=>{
-    //   // console.log(res)
-    //   if(res.code == 1000){
-    //     this.setState({
-    //           visible: true,
-    //     });
-    //   }
-    
-    // })
-    this.queryData({ page: 1, page_size: this.state.page_size, ...search.keys })
-    })
-   
-  //  console.log(record);
+  this.props.history.push({
+    pathname: '/order/trinity/reconciliations/detail',
+    search: `?${qs.stringify({ 
+      summary_sheet_id:record.summary_sheet_id,
+      release:1,
+      agent_id:search.agent_id})}`,
+  });
   
  }
 
