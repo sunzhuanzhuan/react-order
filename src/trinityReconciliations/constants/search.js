@@ -162,8 +162,8 @@ export const searchFormStatement=[
       allowClear: true
     },
     field: {
-      label: '文件名',
-      value: 'attachment',
+      label: '对账单名称',
+      value: 'statement_name',
     }
   },
 ]
@@ -190,7 +190,7 @@ export const searchFormSummary=[
     },
     field: {
       label: '汇总单编号',
-      value: 'ttp_place_order_at_start',
+      value: 'summary_sheet_name',
     }
   },
 ]

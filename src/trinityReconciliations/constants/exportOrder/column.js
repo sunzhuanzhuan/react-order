@@ -622,13 +622,6 @@ export const stateListFunc = (handleDelete) => {
 			width: 100,
 		},
 		{
-			title: '文件名',
-			dataIndex: 'attachment',
-			key: 'attachment',
-			align: 'center',
-			width: 100,
-		},
-		{
 			title: '对账单关联状态',
 			dataIndex: 'statement_status',
 			key: 'statement_status',

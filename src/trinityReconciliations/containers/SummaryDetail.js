@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Row,Button,Popconfirm } from 'antd';
+import { Row,Button,Popconfirm,PageHeader } from 'antd';
 import SummaryDetailInfo from '../components/summary/Detail';
 import InfoTable from '../components/summary/SummaryTable';
 import {summaryTotalDetailListFunc} from '../constants/exportOrder/column'
@@ -47,7 +47,16 @@ class SummaryDetail extends Component {
     const search = qs.parse(this.props.location.search.substring(1));
     
     return <div>
-    <Row className='title'>查看汇总单详情</Row>
+    <Row className='summaryDetail'><PageHeader
+    onBack={() =>{
+      this.props.history.push({
+        pathname: '/order/trinity/reconciliations/summary',
+        search: `?${qs.stringify({
+          agent_id:search.agent_id})}`,
+      });
+    }}
+    title="查看汇总单详情"
+  /></Row>
     <Row className='agent'>汇总单名称:<span className='agent_name'>{detailSummary.summary_sheet_name}</span></Row>
      <SummaryDetailInfo
      detailSummary={detailSummary}

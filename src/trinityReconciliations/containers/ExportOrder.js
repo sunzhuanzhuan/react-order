@@ -138,14 +138,16 @@ class ExportOrder extends Component {
      /> */}
      <SearForm data={searchForm} getAction={this.queryData}
       responseLayout={{ xs: 24, sm: 24, md: 10, lg: 8, xxl: 6 }}  />
-     <OrderTable style={{marginTop:'20px'}}
-     loading={loading}
-     columns={column}
-     dataTable={list}
-     page_size={page_size}
-     paginationObj={paginationObj}
-     rowSelection={rowSelection}
-     />
+      <div style={{marginTop:'20px'}}>
+      <OrderTable
+      loading={loading}
+      columns={column}
+      dataTable={list}
+      page_size={page_size}
+      paginationObj={paginationObj}
+      rowSelection={rowSelection}
+      />
+     </div>
      <Row style={{textAlign:'center'}}>
      <Popconfirm title={
        <div>
@@ -159,7 +161,7 @@ class ExportOrder extends Component {
      
      {/* <Button type="primary" style={{margin:'0 20px'}} onClick={this.handleExportOrder}>导出订单</Button> */}
      <Button type="primary" style={{margin:'0 20px'}} >
-     <a target='_blank' href={`/api/finance/statementOrder/export?wby_order_ids=${this.state.order_ids}&agent_id=${search.agent_id}`}>导出订单</a>
+     <a target='_blank' onClick={()=>window.location.reload()} href={`/api/finance/statementOrder/export?wby_order_ids=${this.state.order_ids}&agent_id=${search.agent_id}`}>导出订单</a>
      </Button> 
      </Row>
     </div>;

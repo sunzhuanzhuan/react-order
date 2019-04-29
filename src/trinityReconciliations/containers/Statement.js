@@ -10,6 +10,7 @@ import  * as actionsStatement from '../actions'
 import SearForm from '../../components/SearchForm';
 import {searchFormStatement} from '../constants/search'
 
+import './payment.less';
 
 
 class Statement extends Component {
@@ -85,20 +86,25 @@ class Statement extends Component {
 		};
     
     return <div>
-      <Row>对账单导入记录【所属平台:{agentInfo.length>0?agentInfo[0].agentName:''},总对账单数量:{total}】</Row>
+      <Row className='title'>对账单导入记录【所属平台:<span className='agent_name'>{agentInfo.length>0?agentInfo[0].agentName:''}</span>,
+      总对账单数量:<span className='agent_name'>{total}</span>】</Row>
       {/* <Filter
       questAction={this.queryData}
       page_size={page_size}
       />
       */}
-       <SearForm data={searchFormStatement} getAction={this.queryData}
-      responseLayout={{ xs: 24, sm: 24, md: 10, lg: 8, xxl: 6 }}  />
-     <StateTable
-     loading={loading}
-     columns={column}
-     dataTable={list}
-     paginationObj={paginationObj}
-     />
+       <div style={{marginTop:'20px'}}>
+        <SearForm data={searchFormStatement} getAction={this.queryData}
+        responseLayout={{ xs: 24, sm: 24, md: 10, lg: 8, xxl: 6 }}  />
+      </div>
+      <div style={{marginTop:'20px'}}>
+      <StateTable
+      loading={loading}
+      columns={column}
+      dataTable={list}
+      paginationObj={paginationObj}
+      />
+     </div>
      
     </div>;
   }

@@ -11,7 +11,7 @@ import SummaryDetailInfo from '../components/summary/Detail'
 import InfoTable from '../components/summary/SummaryTable'
 import {summaryTotalDetailListFunc} from '../constants/exportOrder/column'
 import SearForm from '../../components/SearchForm';
-import {searchFormStatement} from '../constants/search'
+import {searchFormSummary} from '../constants/search'
 import './payment.less'
 const TabPane = Tabs.TabPane;
 
@@ -162,7 +162,7 @@ handleCancel = (e) => {
      <Row className='agent'>平台/代理商:<span className='agent_name'>{agentInfo.length>0?agentInfo[0].agentName:''}</span></Row>
      <Tabs defaultActiveKey="1" onChange={this.handleChangeTab}>
       <TabPane tab="全部" key="1">
-      <SearForm data={searchFormStatement} getAction={this.queryData}
+      <SearForm data={searchFormSummary} getAction={this.queryData}
       responseLayout={{ xs: 24, sm: 24, md: 10, lg: 8, xxl: 6 }}  />
         {/* <SummaryFilter
           onRef={this.onRef}
@@ -170,15 +170,18 @@ handleCancel = (e) => {
           questAction={this.queryData}
           page_size={page_size}
         /> */}
-        <SummaryTable
-          loading={loading}
-          columns={column}
-          dataTable={list}
-          paginationObj={paginationObj}
-      />
+        <div style={{marginTop:'20px'}}>
+          <SummaryTable
+            loading={loading}
+            columns={column}
+            dataTable={list}
+            paginationObj={paginationObj}
+        />
+        </div>
+        
       </TabPane>
       <TabPane tab="对账完成" key="3">
-      <SearForm data={searchFormStatement} getAction={this.queryData}
+      <SearForm data={searchFormSummary} getAction={this.queryData}
       responseLayout={{ xs: 24, sm: 24, md: 10, lg: 8, xxl: 6 }}  />
         {/* <SummaryFilter
          onRef={this.onRef}
@@ -186,28 +189,32 @@ handleCancel = (e) => {
          questAction={this.queryData}
          page_size={page_size}
         /> */}
-        <SummaryTable
-           loading={loading}
-           columns={column}
-           dataTable={list}
-           paginationObj={paginationObj}
-      />
+        <div style={{marginTop:'20px'}}>
+          <SummaryTable
+            loading={loading}
+            columns={column}
+            dataTable={list}
+            paginationObj={paginationObj}
+        />
+      </div>
       </TabPane>
       <TabPane tab="已释放" key="5">
-      <SearForm data={searchFormStatement} getAction={this.queryData}
-      responseLayout={{ xs: 24, sm: 24, md: 10, lg: 8, xxl: 6 }}  />
+      <SearForm data={searchFormSummary} getAction={this.queryData}
+      responseLayout={{ xs: 24, sm: 24, md: 10, lg: 6, xxl: 6 }}  />
         {/* <SummaryFilter
         onRef={this.onRef}
         handlefilterParams={this.handlefilterParams}
         questAction={this.queryData}
         page_size={page_size}
         /> */}
-        <SummaryTable
-          loading={loading}
-          columns={column}
-          dataTable={list}
-          paginationObj={paginationObj}
-      />
+        <div style={{marginTop:'20px'}}>
+          <SummaryTable
+            loading={loading}
+            columns={column}
+            dataTable={list}
+            paginationObj={paginationObj}
+        />
+      </div>
       </TabPane>
     </Tabs>,
      
