@@ -188,6 +188,7 @@ export default class ComplaintsList extends Component {
         onCancel={() => this.setState({ id: '' })}
         onOk={this.submit}
         okButtonProps={{ loading: this.state.ratioLoading }}
+        maskClosable={false}
       >
         <Form layout='inline'>
           <Form.Item label="退款比例">
