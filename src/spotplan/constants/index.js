@@ -404,8 +404,8 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
         <div>申请类型：{APPLY_TYPE[record.record.apply_type]} <a href='javascript:;' onClick={(e) => {
           handleHistory(e, record.record);
         }}>查看详情</a></div>
-        {record.record.apply_type == 4 && <div>拒绝原因：暂时没写</div>}
-        {record.record.apply_type == 4 && <div>拒绝时间：暂时没写</div>}
+        {record.record.apply_type == 4 && <div>拒绝原因：{record.record.check_reason}</div>}
+        {record.record.apply_type == 4 && <div>拒绝时间：{record.record.check_at}</div>}
       </div> : ''
       return text ? <Tooltip title={node}>{APPLY_STATUS[text]}</Tooltip> : '-'
     }
@@ -556,15 +556,15 @@ export const HistoryCols = [
   },
   {
     title: 'spotplan更新审核状态',
-    dataIndex: 'last_apply_status',
-    key: 'last_apply_status',
+    dataIndex: 'apply_status',
+    key: 'apply_status',
     align: 'center',
     width: 100,
     render: (text, record) => {
       const node = text ? <div>
-        <div>申请类型：{APPLY_TYPE[record.record.apply_type]}</div>
-        {record.record.apply_type == 4 && <div>拒绝原因：暂时没写</div>}
-        {record.record.apply_type == 4 && <div>拒绝时间：暂时没写</div>}
+        <div>申请类型：{APPLY_TYPE[record.apply_type]}</div>
+        {/* {record.apply_type == 4 && <div>拒绝原因：暂时没写</div>}
+        {record.apply_type == 4 && <div>拒绝时间：暂时没写</div>} */}
       </div> : ''
       return text ? <Tooltip title={node}>{APPLY_STATUS[text]}</Tooltip> : '-'
     }
