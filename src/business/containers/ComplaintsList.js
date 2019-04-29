@@ -17,7 +17,7 @@ const CountDown = ({ date }) => {
   let now = moment()
   let diff = moment(date) - now
   if(diff < 0){
-    return <span style={{ color: 'red' }}>过期未处理</span>
+    return <span style={{ color: 'red', fontWeight: '700' }}>00:00:00</span>
   }
   let duration = moment.duration(diff)
   let days = duration.days()
@@ -194,7 +194,7 @@ export default class ComplaintsList extends Component {
             {getFieldDecorator('refund_ratio', {
               rules: [
                 {
-                  pattern: /^(?:[1-9]?\d|100)$/, message: '退款比例必须为正整数'
+                  pattern: /^(?:[1-9]?\d|100)$/, message: '退款比例必须为0-100的整数'
                 },
                 { required: true, message: '请输入退款比例' }
               ]
