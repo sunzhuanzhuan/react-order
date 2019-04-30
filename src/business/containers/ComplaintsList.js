@@ -205,7 +205,7 @@ export default class ComplaintsList extends Component {
           </Form.Item>
           <Form.Item style={{ display: 'inline-block', margin: '0' }}>
             {getFieldDecorator('note')(
-              <Input placeholder='添加退款备注内容' style={{ width: '240px' }} />
+              <Input placeholder='添加退款备注内容' style={{ width: '230px' }} />
             )}
             {getFieldDecorator('id', {
               initialValue: this.state.id
