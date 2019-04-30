@@ -189,6 +189,7 @@ export default class ComplaintsList extends Component {
         onOk={this.submit}
         okButtonProps={{ loading: this.state.ratioLoading }}
         maskClosable={false}
+        wrapClassName='no-explain-abs-warp'
       >
         <Form layout='inline'>
           <Form.Item label="退款比例">
@@ -205,7 +206,7 @@ export default class ComplaintsList extends Component {
           </Form.Item>
           <Form.Item style={{ display: 'inline-block', margin: '0' }}>
             {getFieldDecorator('note')(
-              <Input placeholder='添加退款备注内容' style={{ width: '230px' }} />
+              <Input placeholder='添加退款备注内容' style={{ width: '240px' }} />
             )}
             {getFieldDecorator('id', {
               initialValue: this.state.id
