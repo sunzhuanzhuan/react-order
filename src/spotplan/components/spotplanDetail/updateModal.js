@@ -6,6 +6,12 @@ import numeral from 'numeral'
 const FormItem = Form.Item;
 const { TextArea } = Input;
 class UpdateModal extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      costwithfee: undefined
+    }
+  }
   handleSubmit = () => {
     this.props.form.validateFields((err, values) => {
       if (!err) {
@@ -23,7 +29,7 @@ class UpdateModal extends React.Component {
             content: dataSource[0].content,
           },
           after_order: {
-            costwithfee: dataSource[0].costwithfee,
+            costwithfee: this.state.costwithfee || dataSource[0].costwithfee,
             ...values
           }
         }).then(() => {
@@ -36,18 +42,18 @@ class UpdateModal extends React.Component {
   handleUpdate = obj => {
     const { handleUpdate } = this.props;
     handleUpdate({ ...obj }).then(() => {
+      this.setState({ costwithfee: this.props.serviceRateAmount.costwithfee })
       message.success('更新完成！', 1);
     })
   }
   render() {
     const { getFieldDecorator } = this.props.form;
     const { visible, onCancel, dataSource, serviceRateAmount } = this.props;
-    console.log('%cserviceRateAmount: ', 'color: MidnightBlue; background: Aquamarine; font-size: 20px;', serviceRateAmount);
     return <Modal
       wrapClassName='change-modal'
       key='changeModal'
       width={840}
-      title='申请换号'
+      title='申请更新信息'
       visible={visible}
       maskClosable={false}
       onCancel={onCancel}
@@ -61,7 +67,7 @@ class UpdateModal extends React.Component {
         <FormItem label='填写原因'>
           {getFieldDecorator('reason', {
             rules: [{ required: true, message: '请填写原因' },
-            { max: 200, message: '不能超过200字' }]
+            { max: 400, message: '不能超过400字' }]
           })(
             <TextArea placeholder='请填写申请换号的原因，不超过200个字' autosize={{ minRows: 2, maxRows: 6 }} />
           )}

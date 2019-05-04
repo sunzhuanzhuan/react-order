@@ -14,6 +14,7 @@ import UpdateModal from '../components/spotplanDetail/updateModal'
 import './spotplan.less'
 import qs from 'qs'
 import numeral from 'numeral'
+import { isArray } from 'util';
 
 const TabPane = Tabs.TabPane;
 const tabPaneList = [
@@ -175,13 +176,14 @@ class SpotPlanDetail extends React.Component {
   handleSubmit = (obj) => {
     const hide = message.loading('操作中，请稍候...');
     const search = qs.parse(this.props.location.search.substring(1));
-    const { order_id } = this.state;
-    return this.props.actions.postChangeNumberSpotplanOrder({ spotplan_id: search.spotplan_id, order_ids: [order_id], ...obj }).then((res) => {
+    let { order_id } = this.state;
+    order_id = Array.isArray(order_id) ? order_id : [order_id];
+    return this.props.actions.postChangeNumberSpotplanOrder({ spotplan_id: search.spotplan_id, order_ids: order_id, ...obj }).then((res) => {
       hide();
       if (res.data) {
         if (res.data.amount) {
           const type = res.data.type;
-          let content = type ? type == 1 ? '存在已经被他人优先发起了更新申请的订单，请刷新后重新选择' : '存在状态不为【客户待确认】的替换订单，请刷新后重新选择' : <ErrorTip data={res.data.amount} />;
+          let content = type ? type == 1 ? '存在已经被他人优先发起了更新申请的订单，请刷新后重新选择' : type == 2 ? '存在状态不为【客户待确认】的替换订单，请刷新后重新选择' : null : <ErrorTip data={res.data.amount} />;
           Modal.error({
             title: '错误提示',
             width: 640,
@@ -251,7 +253,9 @@ class SpotPlanDetail extends React.Component {
         <h3 className='top-gap' style={{ display: 'inline-block' }}>Spotplan基本信息</h3>
         <div style={{ display: 'inline-block', float: 'right' }}>
           <Button type='primary' href={`/order/spotplan/add?step=2&spotplan_id=${search.spotplan_id}&noback=true&company_id=${spotplanPoInfo.company_id}`}>+新增订单</Button>
-          <Button type='primary' className='left-gap' href={`/api/spotplan/exportSpotplamExcel?spotplan_id=${search.spotplan_id}`}>导出为Excel</Button>
+          <Button type='primary' className='left-gap' href={`/api/spotplan/exportSpotplamExcel?spotplan_id=${search.spotplan_id}`} onClick={() => {
+            message.loading('导出数据中，请稍候...', 3);
+          }}>导出为Excel</Button>
         </div>
       </div>
       <BasicInfo data={spotplanPoInfo} handleClick={this.handleHistory} />
@@ -361,8 +365,8 @@ function BasicInfo({ data, handleClick }) {
       <Col span={3}>发起更新申请次数:</Col><Col span={12}>{data && data.apply_num || 0}<a style={{ marginLeft: '40px' }} href='javascript:;' onClick={handleClick}>查看历史更新申请记录</a></Col>
     </Row>
     <Row className='info-row'>
-      <Col span={3}>PO总额（不含税）:</Col><Col span={4}>{data && data.customer_po_amount || 0} 元</Col>
-      <Col span={3}>PO总额（含税）:</Col><Col span={12}>{data && data.total_budget || 0} 元</Col>
+      <Col span={3}>PO总额（不含税）:</Col><Col span={4}>{data && data.customer_po_amount ? data.customer_po_amount + '元' : '-'}</Col>
+      <Col span={3}>PO总额（含税）:</Col><Col span={12}>{data && data.total_budget ? data.total_budget + '元' : '-'}</Col>
     </Row>
   </div>
 }
@@ -373,7 +377,7 @@ function Statistics({ data }) {
       <Col span={4}>
         {data.flag == 2 ? <Tooltip
           overlayClassName='statistics-tip'
-          defaultVisible={true}
+          visible={true}
           getPopupContainer={() => document.querySelector('.spotplan-detail-statistics')}
           title={'金额已超PO总额（不含税）'}>预计消耗PO金额（不含税）</Tooltip> : '预计消耗PO金额（不含税）'}
       </Col>

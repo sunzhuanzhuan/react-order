@@ -91,7 +91,7 @@ class DetailQuery extends React.Component {
     return <Form className='spotplan-check-form'>
       <Row>
         <FormItem label='Spotplan更新审核状态'>
-          {getFieldDecorator('customer_confirmation_status')(
+          {getFieldDecorator('last_apply_status')(
             <Select style={{ width: 180 }}
               placeholder='请选择'
               getPopupContainer={() => document.querySelector('.spotplan-check-form')}

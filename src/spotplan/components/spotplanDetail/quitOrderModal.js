@@ -36,7 +36,7 @@ class QuitModal extends React.Component {
           <FormItem label='填写原因'>
             {getFieldDecorator('reason', {
               rules: [{ required: true, message: '请填写原因' },
-              { max: 200, message: '不能超过200字' }]
+              { max: 400, message: '不能超过400字' }]
             })(
               <TextArea placeholder='请填写申请换号的原因，不超过200个字' autosize={{ minRows: 2, maxRows: 6 }} />
             )}

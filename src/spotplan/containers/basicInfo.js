@@ -55,7 +55,7 @@ class BasicInfo extends React.Component {
           initialValue: str,
           rules: [
             { required: true, message: 'Spotplan名称不能为空' },
-            { max: 50, message: 'Spotplan名称不能超过50个字' }]
+            { max: 100, message: 'Spotplan名称不能超过100个字' }]
         })(
           <Input style={{ width: 260 }} />
         )}
@@ -64,7 +64,7 @@ class BasicInfo extends React.Component {
       <FormItem label='备注信息' {...formItemLayout}>
         {getFieldDecorator('content', {
           rules: [
-            { max: 100, message: '备注信息不能超过100个字 ' }
+            { max: 200, message: '备注信息不能超过200个字 ' }
           ]
         })(
           <TextArea autosize={{ minRows: 4, maxRows: 6 }} style={{ width: 400 }} />

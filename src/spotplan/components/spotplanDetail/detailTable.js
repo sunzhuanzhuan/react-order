@@ -1,6 +1,7 @@
 import React from 'react'
 import { Table } from 'antd'
 import { withRouter } from 'react-router-dom'
+import ScrollTable from '../../../components/Scolltable'
 import qs from 'qs'
 
 class DetailTable extends React.Component {
@@ -35,7 +36,8 @@ class DetailTable extends React.Component {
       // pageSizeOptions: ['50', '100', '200'],
       size: 'small'
     };
-    return <Table
+    return <ScrollTable scrollClassName='.ant-table-body' widthScroll={1580}>
+    <Table
       rowSelection={rowSelection}
       rowKey={record => { return record.order_id ? record.order_id.toString() : '' }}
       columns={columns}
@@ -44,7 +46,8 @@ class DetailTable extends React.Component {
       scroll={{ x: 1580 }}
       pagination={(options && options.page_size > 50) ? paginationObj : false}
       loading={loading}
-    />
+      />
+    </ScrollTable>
   }
 }
 

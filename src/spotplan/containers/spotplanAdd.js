@@ -94,6 +94,9 @@ class SpotplanAdd extends React.Component {
     })
     this.setState({ orderMaps: obj })
   }
+  handleDelete = obj => {
+    return this.props.actions.postDeleteSpotplanOrder({...obj})
+  }
   handleSteps = (num, type) => {
     const search = qs.parse(this.props.location.search.substring(1));
     if (num == 1) this.props.history.goBack();
@@ -180,7 +183,7 @@ class SpotplanAdd extends React.Component {
           {step == 1 && <BasicInfo ref={this.basicInfo} search={search} queryData={this.queryData} data={spotplanCompanyInfo} />}
           {step == 2 && <CheckOrder queryData={this.queryData} handleCheck={this.handleCheck}
             orderMaps={orderMaps} location={this.props.location} history={this.props.history} queryBasicInfo={this.queryBasicInfo} loading={loading} />}
-          {step == 3 && <EditOrder ref={this.editOrder} search={search} queryData={this.queryData} data={spotplanEditList['all']} handleUpdate={this.handleUpdate} queryBasicInfo={this.queryBasicInfo} headerData={spotplanPoInfo} loading={loading} />}
+          {step == 3 && <EditOrder ref={this.editOrder} search={search} queryData={this.queryData} data={spotplanEditList['all']} handleUpdate={this.handleUpdate} queryBasicInfo={this.queryBasicInfo} headerData={spotplanPoInfo} loading={loading} handleDelete={this.handleDelete}/>}
         </div>
       </div>
       <BottomBlock current={step} handleSteps={this.handleSteps} orderMaps={orderMaps}

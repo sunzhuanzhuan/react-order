@@ -1,5 +1,5 @@
 import React from 'react'
-import { Table, Form } from 'antd'
+import { Table, Form, Modal, message } from 'antd'
 import { EditOrderFunc } from '../constants'
 import Header from '../components/header'
 class EditOrder extends React.Component {
@@ -24,10 +24,23 @@ class EditOrder extends React.Component {
       });
     })
   }
+  handleDelete = order_id => {
+    const { search, handleDelete } = this.props;
+    Modal.confirm({
+      title: '',
+      content: '是否确认将该订单从本spotplan删除？',
+      onOk: () => {
+        handleDelete({ spotplan_id: search.spotplan_id, order_id }).then(() => {
+          message.success('操作成功');
+          this.props.queryData(3, { spotplan_id: search.spotplan_id }, this.handleEditTable);
+        })
+      }
+    })
+  }
   render() {
     const { getFieldDecorator } = this.props.form;
     const { data, handleUpdate, headerData, loading } = this.props;
-    const EditOrderCols = EditOrderFunc(getFieldDecorator, handleUpdate);
+    const EditOrderCols = EditOrderFunc(getFieldDecorator, handleUpdate, this.handleDelete);
     return <div className='splotplan-edit-container'>
       <Header data={headerData} />
       <h3 className='top-gap'>订单列表</h3>
@@ -40,7 +53,7 @@ class EditOrder extends React.Component {
             dataSource={data && data.list || []}
             bordered
             loading={loading}
-            scroll={{ x: 1500 }}
+            scroll={{ x: 1600 }}
             size='small'
           />
         </Form>

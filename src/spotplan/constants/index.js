@@ -11,7 +11,7 @@ const APPLY_TYPE = {
   3: '【换号】多换一',
   4: '【换号】多换多',
   5: '更新订单信息',
-  6: '终止合同'
+  6: '终止合作'
 };
 const APPLY_STATUS = {
   1: 'SP更新待提交客户审核',
@@ -84,7 +84,7 @@ export const CheckModalFunc = handleDel => [
     }
   }
 ];
-export const EditOrderFunc = (getFieldDecorator, handleUpdate) => [
+export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete) => [
   {
     title: '订单ID',
     dataIndex: 'order_id',
@@ -261,7 +261,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate) => [
       return <FormItem>
         {getFieldDecorator(`${record.order_id}.content`, {
           rules: [
-            { max: 200, message: '不能超过200字' }
+            { max: 400, message: '不能超过400字' }
           ]
         })(
           <TextArea autosize={{ minRows: 4 }} style={{ width: 140 }} placeholder='填写备注信息' onBlur={(e) => {
@@ -272,6 +272,19 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate) => [
         )
         }
       </FormItem>
+    }
+  },
+  {
+    title: '操作',
+    dataIndex: 'action',
+    key: 'action',
+    align: 'center',
+    fixed: 'right',
+    width: 100,
+    render: (text, record) => {
+      return <a href='javascript:;' onClick={() => {
+        handleDelete(record.order_id)
+      }}>删除订单</a>
     }
   }
 ];
@@ -404,8 +417,8 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
         <div>申请类型：{APPLY_TYPE[record.record.apply_type]} <a href='javascript:;' onClick={(e) => {
           handleHistory(e, record.record);
         }}>查看详情</a></div>
-        {record.record.apply_type == 4 && <div>拒绝原因：{record.record.check_reason}</div>}
-        {record.record.apply_type == 4 && <div>拒绝时间：{record.record.check_at}</div>}
+        {record.record.apply_status == 4 && <div>拒绝原因：{record.record.check_reason}</div>}
+        {record.record.apply_status == 4 && <div>拒绝时间：{record.record.check_at}</div>}
       </div> : ''
       return text ? <Tooltip title={node}>{APPLY_STATUS[text]}</Tooltip> : '-'
     }
@@ -562,9 +575,8 @@ export const HistoryCols = [
     width: 100,
     render: (text, record) => {
       const node = text ? <div>
-        <div>申请类型：{APPLY_TYPE[record.apply_type]}</div>
-        {/* {record.apply_type == 4 && <div>拒绝原因：暂时没写</div>}
-        {record.apply_type == 4 && <div>拒绝时间：暂时没写</div>} */}
+        {record.apply_status == 4 && <div>拒绝原因：{record.check_reason}</div>}
+        {/* {record.apply_status == 4 && <div>拒绝时间：{record.check_at}</div>} */}
       </div> : ''
       return text ? <Tooltip title={node}>{APPLY_STATUS[text]}</Tooltip> : '-'
     }
