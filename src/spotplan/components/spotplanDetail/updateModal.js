@@ -2,6 +2,7 @@ import React from 'react';
 import { Modal, Button, Table, Form, Input, Row, Col, message } from 'antd';
 import { UpdateCols } from '../../constants'
 import numeral from 'numeral'
+import debounce from 'lodash/debounce';
 
 const FormItem = Form.Item;
 const { TextArea } = Input;
@@ -11,6 +12,7 @@ class UpdateModal extends React.Component {
     this.state = {
       costwithfee: undefined
     }
+    this.handleChange = debounce(this.handleValueChange, 800);
   }
   handleSubmit = () => {
     this.props.form.validateFields((err, values) => {
@@ -38,6 +40,16 @@ class UpdateModal extends React.Component {
         })
       }
     })
+  }
+  handleValueChange = (e, dataSource, curName, otherName) => {
+    const err = this.props.form.getFieldError('service_rate');
+    if (!err) {
+      const curValue = this.props.form.getFieldValue(curName);
+      const otherValue = this.props.form.getFieldValue(otherName);
+      if (curValue) {
+        this.handleUpdate({ order_id: dataSource[0].order_id, price_id: dataSource[0].price_id, [curName]: curValue, [otherName]: otherValue })
+      }
+    }
   }
   handleUpdate = obj => {
     const { handleUpdate } = this.props;
@@ -105,13 +117,8 @@ class UpdateModal extends React.Component {
                 initialValue: dataSource && dataSource[0].cost || '',
                 rules: [{ required: true, message: '请填写值' }]
               })(
-                <Input placeholder='' style={{ width: 200 }} onBlur={(e) => {
-                  if (e.target.value != dataSource[0].cost) {
-                    const serviceRate = this.props.form.getFieldValue('service_rate');
-                    if (serviceRate) {
-                      this.handleUpdate({ order_id: dataSource[0].order_id, price_id: dataSource[0].price_id, cost: e.target.value, service_rate: serviceRate })
-                    }
-                  }
+                <Input placeholder='' style={{ width: 200 }} onChange={e => {
+                  this.handleChange(e, dataSource, 'service_rate', 'cost')
                 }} />
               )}
             </FormItem>
@@ -130,13 +137,8 @@ class UpdateModal extends React.Component {
                   { pattern: /^(([1-9][0-9]|[1-9])(\.\d{1,2})?|0\.\d{1,2}|100(\.00?)?|0)$/, message: '仅可输入0到100之间的数字，小数点最多到后两位' }
                 ]
               })(
-                <Input placeholder='' suffix='%' style={{ width: 200 }} onBlur={(e) => {
-                  if (e.target.value != dataSource[0].cost) {
-                    const cost = this.props.form.getFieldValue('cost');
-                    if (cost) {
-                      this.handleUpdate({ order_id: dataSource[0].order_id, price_id: dataSource[0].price_id, cost, service_rate: e.target.value })
-                    }
-                  }
+                <Input placeholder='' suffix='%' style={{ width: 200 }} onChange={e => {
+                  this.handleChange(e, dataSource, 'cost', 'service_rate')
                 }} />
               )}
             </FormItem>
