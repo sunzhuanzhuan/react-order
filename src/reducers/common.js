@@ -8,8 +8,17 @@ export const platforms = handleAction(getAllPlatform_success, (state, action) =>
 		...action.payload.data
 	]
 }, [])
+export const ui = handleAction('SET_SLIDER_MENU_COLLAPSE', (state, action) => {
+	return {
+    ...state,
+    sliderMenuCollapse: action.payload
+	}
+}, {
+  sliderMenuCollapse: true
+})
 
 
 export default combineReducers({
-	platforms
+	platforms,
+  ui
 })

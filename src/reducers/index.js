@@ -7,6 +7,8 @@ import siderMenuReducer from '../siderMenu/reducers'
 import authorizationsReducers from './authorizations'
 import trinityReconciliationsReducers from '../trinityReconciliations/reducer';
 import statement from '../trinityReconciliations/reducer'
+import publicOrderListReducer from '../publicOrderList/reducers'
+import closingReportReducers from '../closingReport/reducer'
 export default combineReducers({
 	commonReducers,
 	routing: routerReducer,
@@ -15,5 +17,7 @@ export default combineReducers({
 	siderMenuReducer,
 	authorizationsReducers,
   trinityReconciliationsReducers,
-  statement
+  statement,
+  closingReportReducers,
+  publicOrderListReducer
 });

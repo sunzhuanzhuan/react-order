@@ -31,7 +31,8 @@ class SiderDemo extends React.Component {
 	};
 	onCollapse = collapsed => {
 		this.setState({ collapsed });
-		setTimeout(() => {
+    this.props.onCollapse(collapsed)
+    setTimeout(() => {
 			events.emit('message', collapsed);
 		}, 200)
 	}
