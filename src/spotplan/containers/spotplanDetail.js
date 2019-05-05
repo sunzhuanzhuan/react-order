@@ -289,7 +289,7 @@ class SpotPlanDetail extends React.Component {
         </TabPane>))}
       </Tabs>
       <div className='top-gap'>
-        <Checkbox onChange={this.handleCheckAll} checked={list.length > 0 && checked}>全选</Checkbox>
+        <Checkbox onChange={this.handleCheckAll} disabled={checkList.length == 0} checked={checkList.length > 0 && checked}>全选</Checkbox>
         <Button type='primary' onClick={this.handleSettleChange}>批量申请换号</Button>
         <Button className='left-gap' type='primary' onClick={this.handleSettleQuit}>批量申请终止合作</Button>
       </div>
