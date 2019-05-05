@@ -69,7 +69,7 @@ class BasicInfo extends React.Component {
         })(
           <TextArea autosize={{ minRows: 4, maxRows: 6 }} style={{ width: 400 }} />
         )}
-        <div className='tip-style' >请输入备注信息，不要超过100个字</div>
+        <div className='tip-style' >请输入备注信息，不要超过200个字</div>
       </FormItem>
     </Form>
   }

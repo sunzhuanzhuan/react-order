@@ -64,7 +64,7 @@ class ChangeModal extends React.Component {
               rules: [{ required: true, message: '请填写原因' },
               { max: 400, message: '不能超过400字' }]
             })(
-              <TextArea placeholder='请填写申请换号的原因，不超过200个字' autosize={{ minRows: 2, maxRows: 6 }} />
+              <TextArea placeholder='请填写申请换号的原因，不超过400个字' autosize={{ minRows: 2, maxRows: 6 }} />
             )}
           </FormItem>
         </Form>
