@@ -345,7 +345,7 @@ export const SpotplanListFunc = () => [
     width: 100,
     render: (text, record) => {
       return <>
-        <div><span>{record.project_name ? <a href={record.project_path} target='_blank'>项目：{record.project_name}</a> : '项目：-'}</span></div>
+        <div><span>项目：{record.project_name ? <a href={record.project_path} target='_blank'>{record.project_name}</a> : '-'}</span></div>
         <div>品牌：<span>{record.brand_name || '-'}</span></div>
       </>
     }
