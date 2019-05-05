@@ -36,9 +36,6 @@ class SpotPlanList extends React.Component {
   handleReset = () => {
     this.props.form.resetFields();
   }
-  hanldeJump = (spotplan_id) => {
-    this.props.history.push('/order/spotplan/detail?spotplan_id=' + spotplan_id);
-  }
   render() {
     const search = qs.parse(this.props.location.search.substring(1));
     const { loading } = this.state;

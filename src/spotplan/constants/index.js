@@ -288,7 +288,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete) => 
     }
   }
 ];
-export const SpotplanListFunc = handleJump => [
+export const SpotplanListFunc = () => [
   {
     title: 'ID',
     dataIndex: 'spotplan_id',
@@ -370,9 +370,7 @@ export const SpotplanListFunc = handleJump => [
     align: 'center',
     width: 100,
     render: (text, record) => {
-      return <a href='javascript:;' onClick={() => {
-        handleJump(record.spotplan_id)
-      }}>查看详情</a>
+      return <a href={`/order/spotplan/detail?spotplan_id=${record.spotplan_id}`} target='_blank'>查看详情</a>
     }
   }
 ];

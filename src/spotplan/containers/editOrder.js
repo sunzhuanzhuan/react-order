@@ -2,6 +2,8 @@ import React from 'react'
 import { Table, Form, Modal, message } from 'antd'
 import { EditOrderFunc } from '../constants'
 import Header from '../components/header'
+import ScrollTable from '../../components/Scolltable'
+
 class EditOrder extends React.Component {
   constructor() {
     super();
@@ -46,16 +48,18 @@ class EditOrder extends React.Component {
       <h3 className='top-gap'>订单列表</h3>
       <div className='edit-table-container top-gap'>
         <Form>
-          <Table
-            className='edit-table'
-            rowKey='id'
-            columns={EditOrderCols}
-            dataSource={data && data.list || []}
-            bordered
-            loading={loading}
-            scroll={{ x: 1600 }}
-            size='small'
-          />
+          <ScrollTable scrollClassName='.ant-table-body' widthScroll={1600}>
+            <Table
+              className='edit-table'
+              rowKey='id'
+              columns={EditOrderCols}
+              dataSource={data && data.list || []}
+              bordered
+              loading={loading}
+              scroll={{ x: 1600 }}
+              size='small'
+            />
+          </ScrollTable>
         </Form>
       </div>
     </div>

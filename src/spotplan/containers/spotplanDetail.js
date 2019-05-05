@@ -14,7 +14,6 @@ import UpdateModal from '../components/spotplanDetail/updateModal'
 import './spotplan.less'
 import qs from 'qs'
 import numeral from 'numeral'
-import { isArray } from 'util';
 
 const TabPane = Tabs.TabPane;
 const tabPaneList = [
@@ -105,7 +104,10 @@ class SpotPlanDetail extends React.Component {
   handleCheckAll = (e) => {
     const { rows, type } = this.state;
     const { spotplanEditList } = this.props;
-    const list = spotplanEditList[type] && spotplanEditList[type].list || [];
+    const list = spotplanEditList[type] && spotplanEditList[type].list && spotplanEditList[type].list.reduce((data, current) => {
+      const flag = ([12, 21, 25, 31].includes(parseInt(current.customer_confirmation_status)) && [0, 3, 4].includes(parseInt(current.last_apply_status))) ? true : false;
+      return flag ? [...data, current] : data
+    }, []) || [];
     if (e.target.checked) {
       const obj = list.reduce((data, current) => {
         return { ...data, [current.order_id]: current }
@@ -181,9 +183,9 @@ class SpotPlanDetail extends React.Component {
     return this.props.actions.postChangeNumberSpotplanOrder({ spotplan_id: search.spotplan_id, order_ids: order_id, ...obj }).then((res) => {
       hide();
       if (res.data) {
-        if (res.data.amount) {
-          const type = res.data.type;
-          let content = type ? type == 1 ? '存在已经被他人优先发起了更新申请的订单，请刷新后重新选择' : type == 2 ? '存在状态不为【客户待确认】的替换订单，请刷新后重新选择' : null : <ErrorTip data={res.data.amount} />;
+        const type = res.data.type;
+        if (type) {
+          let content = res.data.amount ? <ErrorTip data={res.data.amount} /> : type == 1 ? '存在已经被他人优先发起了更新申请的订单，请刷新后重新选择' : type == 2 ? '存在状态不为【客户待确认】的替换订单，请刷新后重新选择' : null;
           Modal.error({
             title: '错误提示',
             width: 640,
@@ -240,11 +242,19 @@ class SpotPlanDetail extends React.Component {
     const { historyVisible, editVisible, changeVisible, quitVisible, updateVisible, selectedRowKeys, type, loading, record } = this.state;
     const { spotplanExecutor, spotplanPlatform, spotplanPoInfo, spotplanAmount, spotplanEditList, basicSpotplanOrderInfo, updateSpotplanOrder: { before_order = [], after_order = [] }, updateSpotplanOrderLog, serviceRateAmount } = this.props;
     const list = spotplanEditList[type] && spotplanEditList[type].list || [];
-    const checked = list.every(item => selectedRowKeys.includes(item.order_id.toString()));
+    const checkList = list.reduce((data, current) => {
+      const flag = ([12, 21, 25, 31].includes(parseInt(current.customer_confirmation_status)) && [0, 3, 4].includes(parseInt(current.last_apply_status))) ? true : false;
+      return flag ? [...data, current] : data
+    }, []);
+    const checked = checkList.every(item => selectedRowKeys.includes(item.order_id.toString()));
     const DetailTableCols = DetailTableFunc(this.handleChangeNumber, this.handleQuitOrder, this.handleUpdateOrder, this.handleEditOrder, this.handleDelete, this.handleHistory);
     const rowSelection = {
       selectedRowKeys: selectedRowKeys,
-      onChange: this.handleSelectChange
+      onChange: this.handleSelectChange,
+      getCheckboxProps: record => {
+        const flag = ([12, 21, 25, 31].includes(parseInt(record.customer_confirmation_status)) && [0, 3, 4].includes(parseInt(record.last_apply_status))) ? true : false;
+        return !flag ? { disabled: true } : {}
+      },
     };
     return <div className='spotList-detail-container'>
       <NavBar />
@@ -374,26 +384,26 @@ function BasicInfo({ data, handleClick }) {
 function Statistics({ data }) {
   return <div className='spotplan-detail-statistics'>
     <Row className='info-row'>
-      <Col span={4}>
+      <Col style={{ display: 'inline-block', width: 192 }}>
         {data.flag == 2 ? <Tooltip
           overlayClassName='statistics-tip'
           visible={true}
           getPopupContainer={() => document.querySelector('.spotplan-detail-statistics')}
           title={'金额已超PO总额（不含税）'}>预计消耗PO金额（不含税）</Tooltip> : '预计消耗PO金额（不含税）'}
       </Col>
-      <Col span={4}>Costwithfee（已确认合作订单）
+      <Col style={{ display: 'inline-block', width: 212, marginLeft: '10px' }}>Costwithfee（已确认合作订单）
       <Tooltip title={'已确认合作订单：客户确认使的订单，终止合作申请已被审核通过的订单除外'}><Icon type="question-circle" /></Tooltip>
       </Col>
-      <Col span={4}>Costwithfee（待确认合作订单）
+      <Col style={{ display: 'inline-block', width: 212, marginLeft: '30px' }}>Costwithfee（待确认合作订单）
         <Tooltip title={'待确认合作订单：客户待确认状态的订单'}><Icon type="question-circle" /></Tooltip>
       </Col>
     </Row>
     <Row className='info-row'>
-      <Col span={3}><span className='primary-font'>{data && numeral(data.amount).format('0,0')} 元</span></Col>
-      <Col span={1}>=</Col>
-      <Col span={3}><span className='primary-font'>{data && numeral(data.confirmCostwithfee).format('0,0')} 元</span></Col>
-      <Col span={1}>+</Col>
-      <Col span={4}><span className='primary-font'>{data && numeral(data.toBeconfirmCostwithfee).format('0,0')} 元</span></Col>
+      <Col style={{ display: 'inline-block', width: 180 }}><span className='primary-font'>{data && numeral(data.amount).format('0,0')} 元</span></Col>
+      <span style={{ padding: '0 6px' }}>=</span>
+      <Col style={{ display: 'inline-block', width: 200 }}><span className='primary-font'>{data && numeral(data.confirmCostwithfee).format('0,0')} 元</span></Col>
+      <span style={{ paddingLeft: '26px', paddingRight: '6px' }}>+</span>
+      <Col style={{ display: 'inline-block', width: 200 }}><span className='primary-font'>{data && numeral(data.toBeconfirmCostwithfee).format('0,0')} 元</span></Col>
     </Row>
   </div>
 }
