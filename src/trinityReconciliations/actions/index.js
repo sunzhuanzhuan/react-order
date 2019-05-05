@@ -14,9 +14,9 @@ export const {
 
 //汇总单列表(申请周期付款是一个接口)
 export const {
-  getSummaryList,
+  getTrinitySummaryList,
   getSummaryList_success
-} = createHttpAction('getSummaryList', Interface.statement.listSummary, {
+} = createHttpAction('getTrinitySummaryList', Interface.statement.listSummary, {
   method: 'get'
 });
 //释放汇总单
