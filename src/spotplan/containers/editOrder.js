@@ -17,13 +17,15 @@ class EditOrder extends React.Component {
   handleEditTable = data => {
     const { setFieldsValue } = this.props.form;
     data.list.forEach(item => {
+      // setTimeout(() => {
       setFieldsValue({
         [`${item.order_id}.price_name`]: item.price_name || undefined,
         [`${item.order_id}.account_category_name`]: item.account_category_name || undefined,
         [`${item.order_id}.is_replace`]: item.is_replace || undefined,
         [`${item.order_id}.release_form`]: item.release_form || undefined,
         [`${item.order_id}.content`]: item.content || undefined,
-      });
+      })
+      // }, 0);
     })
   }
   handleDelete = order_id => {
@@ -41,8 +43,18 @@ class EditOrder extends React.Component {
   }
   render() {
     const { getFieldDecorator } = this.props.form;
-    const { data, handleUpdate, headerData, loading } = this.props;
+    const { data, handleUpdate, headerData, loading, search } = this.props;
     const EditOrderCols = EditOrderFunc(getFieldDecorator, handleUpdate, this.handleDelete);
+    const paginationObj = {
+      onChange: (page) => {
+        this.props.queryData(3, { spotplan_id: search.spotplan_id }, this.handleEditTable, page);
+      },
+      total: parseInt(data && data.total),
+      current: parseInt(data && data.page),
+      pageSize: 50,
+      showQuickJumper: true,
+      size: 'small'
+    };
     return <div className='splotplan-edit-container'>
       <Header data={headerData} />
       <h3 className='top-gap'>订单列表</h3>
@@ -58,6 +70,7 @@ class EditOrder extends React.Component {
               loading={loading}
               scroll={{ x: 1600 }}
               size='small'
+              pagination={data && data.total > 50 ? paginationObj : false}
             />
           </ScrollTable>
         </Form>

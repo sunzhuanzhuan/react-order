@@ -184,21 +184,26 @@ class SpotPlanDetail extends React.Component {
       hide();
       if (res.data) {
         const type = res.data.type;
+        const amount = res.data.amount;
+        let content;
         if (type) {
-          let content = res.data.amount ? <ErrorTip data={res.data.amount} /> : type == 1 ? '存在已经被他人优先发起了更新申请的订单，请刷新后重新选择' : type == 2 ? '存在状态不为【客户待确认】的替换订单，请刷新后重新选择' : null;
-          Modal.error({
-            title: '错误提示',
-            width: 640,
-            content: content,
-            maskClosable: false,
-            okText: '确定',
-            onOk: (close) => {
-              this.queryData({ ...search.keys, spotplan_id: search.spotplan_id });
-              this.props.actions.getSpotplanPoInfo({ spotplan_id: search.spotplan_id });
-              close();
-            }
-          })
+          content = type == 1 ? obj.type == 1 ? '存在已经被他人优先发起了更新申请的订单，请刷新后重新选择' : '该订单的更新申请已被他人优先发起了，请刷新后查看' : type == 2 ? '存在状态不为【客户待确认】的替换订单，请刷新后重新选择' : null;
         }
+        if (amount) {
+          content = <ErrorTip data={res.data.amount} />
+        }
+        Modal.error({
+          title: '错误提示',
+          width: 640,
+          content: content,
+          maskClosable: false,
+          okText: '确定',
+          onOk: (close) => {
+            this.queryData({ ...search.keys, spotplan_id: search.spotplan_id });
+            this.props.actions.getSpotplanPoInfo({ spotplan_id: search.spotplan_id });
+            close();
+          }
+        })
       } else {
         this.queryData({ ...search.keys, spotplan_id: search.spotplan_id });
         this.props.actions.getSpotplanPoInfo({ spotplan_id: search.spotplan_id });

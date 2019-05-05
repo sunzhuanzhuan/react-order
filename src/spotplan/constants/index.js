@@ -152,7 +152,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete) => 
         {getFieldDecorator(`${record.order_id}.price_name`, {
           rules: [{ required: true, message: '请填写名称' }]
         })(
-          <TextArea autosize={{ minRows: 4 }} style={{ width: 140 }} placeholder='请填写名称' onBlur={(e) => {
+          <TextArea autosize={false} style={{ width: 140, height: 86, resize: 'none' }} placeholder='请填写名称' onBlur={(e) => {
             if (e.target.value != record.price_name) {
               handleUpdate({ order_id: record.order_id, price_id: record.price_id, price_name: e.target.value })
             }
@@ -241,7 +241,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete) => 
         {getFieldDecorator(`${record.order_id}.release_form`, {
           rules: [{ required: true, message: '请填写位置' }]
         })(
-          <TextArea autosize={{ minRows: 4 }} style={{ width: 140 }} onBlur={(e) => {
+          <TextArea autosize={false} style={{ width: 140, height: 86, resize: 'none' }} onBlur={(e) => {
             if (e.target.value != record.release_form) {
               handleUpdate({ order_id: record.order_id, price_id: record.price_id, release_form: e.target.value })
             }
@@ -264,7 +264,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete) => 
             { max: 400, message: '不能超过400字' }
           ]
         })(
-          <TextArea autosize={{ minRows: 4 }} style={{ width: 140 }} placeholder='填写备注信息' onBlur={(e) => {
+          <TextArea autosize={false} style={{ width: 140, height: 86, resize: 'none' }} placeholder='填写备注信息' onBlur={(e) => {
             if (e.target.value != record.content) {
               handleUpdate({ order_id: record.order_id, price_id: record.price_id, content: e.target.value })
             }
@@ -572,11 +572,11 @@ export const HistoryCols = [
     align: 'center',
     width: 100,
     render: (text, record) => {
-      const node = text ? <div>
-        {record.apply_status == 4 && <div>拒绝原因：{record.check_reason}</div>}
-        {/* {record.apply_status == 4 && <div>拒绝时间：{record.check_at}</div>} */}
-      </div> : ''
-      return text ? <Tooltip title={node}>{APPLY_STATUS[text]}</Tooltip> : '-'
+      const node = <div>
+        <div>拒绝原因：{record.check_reason}</div>
+        {/* <div>拒绝时间：{record.check_at}</div> */}
+      </div>
+      return text ? record.apply_status == 4 ? <Tooltip title={node}>{APPLY_STATUS[text]}</Tooltip> : APPLY_STATUS[text] : '-'
     }
   },
   {
