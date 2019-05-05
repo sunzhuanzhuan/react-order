@@ -8,6 +8,11 @@
 import React from 'react';
 import { Select, Button, message } from 'antd';
 import api from '../../api/index'
+import qs from 'qs'
+import BtnUpload from '../../components/btnUpload'
+import {
+	withRouter,
+} from "react-router-dom";
 const Option = Select.Option;
 import '../containers/PublicOrderList.less'
 
@@ -15,7 +20,8 @@ class StatementComponent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: []
+      data: [],
+      ageent_id:null
     }
   }
   componentWillMount() {
@@ -32,7 +38,10 @@ class StatementComponent extends React.Component {
   }
   //选择平台/代理商
   changePlatformAndAaent = (value) => {
-    console.log(value)
+    console.log(value);
+    this.setState({
+      agent_id:value
+    })
   }
   render() {
     return <div className="publicOrderList-chooseBox">
@@ -55,16 +64,90 @@ class StatementComponent extends React.Component {
         </Select>
       </div>
       <div>
-        <Button type="primary" className="publicOrderList-chooseBox-operateBtn">批量对账</Button>
-        <Button type="primary" className="publicOrderList-chooseBox-operateBtn">汇总单列表</Button>
-        <Button type="primary" className="publicOrderList-chooseBox-operateBtn">申请周期付款</Button>
-        <Button type="primary" className="publicOrderList-chooseBox-operateBtn">导入三方对账单</Button>
-        <Button type="primary" className="publicOrderList-chooseBox-operateBtn">三方对账单导入记录</Button>
-        <Button type="primary" className="publicOrderList-chooseBox-operateBtn">导出订单</Button>
+      <Button type="primary" className="publicOrderList-chooseBox-operateBtn" onClick={()=>{
+        if(this.state.agent_id){
+          this.props.history.push({
+            pathname: '/order/trinity/reconciliations/exportOrder',
+            search: `?${qs.stringify({ 
+              agent_id:this.state.agent_id})}`,
+          });
+        }else{
+          message.error("请选择平台/代理商信息")
+        }
+            
+        }}>导出订单</Button>
+        <div style={{display:'inline-block'}} className="publicOrderList-chooseBox-operateBtn">
+          <BtnUpload
+            uploadText={'导入三方对账单'}
+          />
+        </div>
+        
+        {/* <Button type="primary" className="publicOrderList-chooseBox-operateBtn" onClick={()=>{
+          if(this.state.agent_id){
+            this.props.history.push({
+              pathname: '/order/trinity/reconciliations/',
+              search: `?${qs.stringify({ 
+                agent_id:this.state.agent_id})}`,
+            });
+          }else{
+            message.error("请选择平台/代理商信息")
+          }
+           
+        }}>导入三方对账单</Button> */}
+        <Button type="primary" className="publicOrderList-chooseBox-operateBtn" onClick={()=>{
+          if(this.state.agent_id){
+            this.props.history.push({
+              pathname: '/order/trinity/reconciliations/importResult',
+              search: `?${qs.stringify({ 
+                agent_id:this.state.agent_id})}`,
+            });
+          }else{
+            message.error("请选择平台/代理商信息")
+          }
+            
+        }}>导入汇总结果</Button>
+       
+        <Button type="primary" className="publicOrderList-chooseBox-operateBtn" onClick={()=>{
+          if(this.state.agent_id){
+            this.props.history.push({
+              pathname: '/order/trinity/reconciliations/payment',
+              search: `?${qs.stringify({ 
+                agent_id:this.state.agent_id})}`,
+            });
+          }else{
+            message.error("请选择平台/代理商信息")
+          }
+            
+        }}>申请周期付款</Button>
+        <Button type="primary" className="publicOrderList-chooseBox-operateBtn" onClick={()=>{
+          if(this.state.agent_id){
+            this.props.history.push({
+              pathname: '/order/trinity/reconciliations/summary',
+              search: `?${qs.stringify({ 
+                agent_id:this.state.agent_id})}`,
+            });
+          }else{
+            message.error("请选择平台/代理商信息")
+          }
+           
+        }}>汇总单列表</Button>
+        <Button type="primary" className="publicOrderList-chooseBox-operateBtn" onClick={()=>{
+          if(this.state.agent_id){
+            this.props.history.push({
+              pathname: '/order/trinity/reconciliations/statement',
+              search: `?${qs.stringify({ 
+                agent_id:this.state.agent_id})}`,
+            });
+          }else{
+            message.error("请选择平台/代理商信息")
+          }
+           
+        }}>三方对账单列表</Button>
+       
       </div>
     </div>
   }
 }
 
-export default StatementComponent
+export default withRouter(StatementComponent)
 
