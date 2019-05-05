@@ -114,7 +114,7 @@ class CheckQuery extends React.Component {
             </Select>
           )}
           {getFieldDecorator('settle_id')(
-            <Input placeholder='请输入订单ID/需求ID，多个空格隔开' className='left-little-gap' style={{ width: 240 }} allowClear />
+            <Input placeholder='请输入订单ID/需求ID，多个空格隔开' className='left-little-gap' style={{ width: 260 }} allowClear />
           )}
         </FormItem>
         <FormItem label='执行人'>

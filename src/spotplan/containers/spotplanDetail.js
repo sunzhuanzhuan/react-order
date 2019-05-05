@@ -270,7 +270,7 @@ class SpotPlanDetail extends React.Component {
       </div>
       <BasicInfo data={spotplanPoInfo} handleClick={this.handleHistory} />
       <h3 className='top-gap'>订单列表</h3>
-      <Statistics data={spotplanAmount} />
+      <Statistics data={spotplanAmount} flag={(spotplanPoInfo && spotplanPoInfo.customer_po_amount) ? true : false} />
       <DetailQuery location={this.props.location} history={this.props.history}
         queryData={this.queryData}
         spotplan_executor={spotplanExecutor}
@@ -381,11 +381,11 @@ function BasicInfo({ data, handleClick }) {
   </div>
 }
 
-function Statistics({ data }) {
+function Statistics({ data, flag }) {
   return <div className='spotplan-detail-statistics'>
     <Row className='info-row'>
       <Col style={{ display: 'inline-block', width: 192 }}>
-        {data.flag == 2 ? <Tooltip
+        {(data.flag == 2 && flag) ? <Tooltip
           overlayClassName='statistics-tip'
           visible={true}
           getPopupContainer={() => document.querySelector('.spotplan-detail-statistics')}

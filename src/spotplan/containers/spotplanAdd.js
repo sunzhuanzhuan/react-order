@@ -39,19 +39,19 @@ class SpotplanAdd extends React.Component {
     const actionName = actionMap[step];
     const _this = this;
     function after() {
-      let timer = setTimeout(() => {
-        return _this.props.actions[actionName]({ ...obj }).then((res) => {
-          if (func && Object.prototype.toString.call(func) === '[object Function]') {
-            func(res.data);
-          }
-          _this.setState({ loading: false });
-          clearTimeout(timer);
-        }).catch(({ errorMsg }) => {
-          _this.setState({ loading: false });
-          message.error(errorMsg || '获取接口数据出错！');
-          clearTimeout(timer);
-        })
-      }, 5000)
+      // let timer = setTimeout(() => {
+      return _this.props.actions[actionName]({ ...obj }).then((res) => {
+        if (func && Object.prototype.toString.call(func) === '[object Function]') {
+          func(res.data);
+        }
+        _this.setState({ loading: false });
+        // clearTimeout(timer);
+      }).catch(({ errorMsg }) => {
+        _this.setState({ loading: false });
+        message.error(errorMsg || '获取接口数据出错！');
+        // clearTimeout(timer);
+      })
+      // }, 5000)
     }
     return step == 3 ? after() : this.props.actions[actionName]({ ...obj }).then((res) => {
       if (func && Object.prototype.toString.call(func) === '[object Function]') {
@@ -95,7 +95,7 @@ class SpotplanAdd extends React.Component {
     this.setState({ orderMaps: obj })
   }
   handleDelete = obj => {
-    return this.props.actions.postDeleteSpotplanOrder({...obj})
+    return this.props.actions.postDeleteSpotplanOrder({ ...obj })
   }
   handleSteps = (num, type) => {
     const search = qs.parse(this.props.location.search.substring(1));
@@ -183,7 +183,7 @@ class SpotplanAdd extends React.Component {
           {step == 1 && <BasicInfo ref={this.basicInfo} search={search} queryData={this.queryData} data={spotplanCompanyInfo} />}
           {step == 2 && <CheckOrder queryData={this.queryData} handleCheck={this.handleCheck}
             orderMaps={orderMaps} location={this.props.location} history={this.props.history} queryBasicInfo={this.queryBasicInfo} loading={loading} />}
-          {step == 3 && <EditOrder ref={this.editOrder} search={search} queryData={this.queryData} data={spotplanEditList['all']} handleUpdate={this.handleUpdate} queryBasicInfo={this.queryBasicInfo} headerData={spotplanPoInfo} loading={loading} handleDelete={this.handleDelete}/>}
+          {step == 3 && <EditOrder ref={this.editOrder} search={search} queryData={this.queryData} data={spotplanEditList['all']} handleUpdate={this.handleUpdate} queryBasicInfo={this.queryBasicInfo} headerData={spotplanPoInfo} loading={loading} handleDelete={this.handleDelete} />}
         </div>
       </div>
       <BottomBlock current={step} handleSteps={this.handleSteps} orderMaps={orderMaps}
