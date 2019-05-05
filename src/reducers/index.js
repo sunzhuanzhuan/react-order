@@ -6,7 +6,6 @@ import loginReducer from '../login/reducer/index'
 import siderMenuReducer from '../siderMenu/reducers'
 import authorizationsReducers from './authorizations'
 import trinityReconciliationsReducers from '../trinityReconciliations/reducer';
-import exportTemplateReducer from '../components/exportTemplate/reducer';
 import statement from '../trinityReconciliations/reducer'
 export default combineReducers({
 	commonReducers,
@@ -16,6 +15,5 @@ export default combineReducers({
 	siderMenuReducer,
 	authorizationsReducers,
   trinityReconciliationsReducers,
-  exportTemplateReducer,
   statement
 });
