@@ -34,7 +34,7 @@ class Payment extends Component {
   queryData = (obj, func) => {
     this.setState({ loading: true });
     const search = qs.parse(this.props.location.search.substring(1));
-		return this.props.actions.getSummaryList({agent_id:search.agent_id, ...obj }).then(() => {
+		return this.props.actions.getTrinitySummaryList({agent_id:search.agent_id, ...obj }).then(() => {
 			if (func && Object.prototype.toString.call(func) === '[object Function]') {
 				func();
 			}
