@@ -282,9 +282,9 @@ class SpotPlanDetail extends React.Component {
         spotplan_platform={spotplanPlatform}
       />
       <Tabs onChange={this.handleTabsChange} type="card">
-        {tabPaneList.map(item => (<TabPane tab={`${item.title}（${spotplanEditList[item.type] && spotplanEditList[item.type].total || 0}）`} key={item.key}>
+        {tabPaneList.map(item => (<TabPane tab={`${item.title}（${spotplanEditList[item.type] && spotplanEditList[item.type].total || 0}）`} key={item.key} forceRender={true}>
           <DetailTable loading={loading} columns={DetailTableCols} dataSource={list} rowSelection={rowSelection}
-            type={type}
+            type={item.type}
             queryData={this.queryData}
             options={{
               total: spotplanEditList[item.type] && spotplanEditList[item.type].total || 0,

@@ -15,7 +15,8 @@ export default class SearchSelect extends React.PureComponent {
     this.handleSearch = debounce(this.fetchData, 800);
   }
   componentDidMount() {
-    this.handleBlur()
+    this.fetchData(this.props.project_name);
+    this.handleBlur();
   }
   fetchData = (value) => {
     if (!value) {
