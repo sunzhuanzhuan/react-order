@@ -82,6 +82,10 @@ class DetailQuery extends React.Component {
           message.error(errorMsg || '查询失败');
           hide();
         });
+        this.props.queryData({ type: 1, spotplan_id: search.spotplan_id, ...params.keys });
+        this.props.queryData({ type: 2, spotplan_id: search.spotplan_id, ...params.keys });
+        this.props.queryData({ type: 3, spotplan_id: search.spotplan_id, ...params.keys });
+        this.props.queryData({ type: 4, spotplan_id: search.spotplan_id, ...params.keys });
       }
     });
   }
