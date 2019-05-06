@@ -16,11 +16,11 @@ class DetailTable extends React.Component {
     const num = type == 'all' ? 0 : parseInt(type);
     const paginationObj = {
       onChange: (current) => {
-        this.props.queryData({ ...search.keys, page: current, page_size: options && options.page_size, type: _type });
-        this.props.history.replace({
-          pathname: this.props.location.pathname,
-          search: `?${qs.stringify({ ...search, keys: { ...search.keys, page: current } })}`,
-        });
+        if (_type) {
+          this.props.queryData({ ...search.keys, spotplan_id: search.spotplan_id, type: _type, page: current });
+        } else {
+          this.props.queryData({ ...search.keys, spotplan_id: search.spotplan_id, page: current });
+        }
       },
       // onShowSizeChange: (current, page_size) => {
       //   this.queryData({ ...search.keys, page: 1, page_size, type: _type });
@@ -31,7 +31,7 @@ class DetailTable extends React.Component {
       // },
       total: parseInt(options && options.total),
       current: parseInt(options && options.page),
-      pageSize: parseInt(options && options.page_size),
+      pageSize: 50,
       showQuickJumper: true,
       // showSizeChanger: true,
       // pageSizeOptions: ['50', '100', '200'],
@@ -45,7 +45,7 @@ class DetailTable extends React.Component {
         dataSource={dataSource}
         bordered
         scroll={{ x: 1860 }}
-        pagination={(options && options.page_size > 50) ? paginationObj : false}
+        pagination={(options && options.total > 50) ? paginationObj : false}
         loading={loading}
       />
     </ScrollTable>

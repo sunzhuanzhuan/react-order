@@ -87,6 +87,7 @@ class CheckModal extends React.PureComponent {
           dataSource={dataAry}
           bordered
           scroll={dataAry.length > 10 ? { y: 560 } : {}}
+          pagination={false}
         />
       </>
     </Modal>
