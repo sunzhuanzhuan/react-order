@@ -8,9 +8,7 @@ const Option = Select.Option;
 class CheckQuery extends React.Component {
   constructor() {
     super();
-    this.state = {
-      resetFlag: false
-    }
+    this.state = {}
   }
   componentDidMount() {
     const search = qs.parse(this.props.location.search.substring(1));
@@ -38,7 +36,6 @@ class CheckQuery extends React.Component {
     setFieldsValue({ ...keys, ...obj });
   }
   handleReset = () => {
-    this.setState({ resetFlag: true });
     this.props.form.resetFields();
   }
   handleSearch = e => {
@@ -178,8 +175,6 @@ class CheckQuery extends React.Component {
               dataToList={res => { return res.data }}
               item={['id', 'name']}
               project_name={project_name}
-              resetFlag={this.state.resetFlag}
-              resetAction={() => { this.setState({ resetFlag: false }) }}
             />
           )}
         </FormItem>}
