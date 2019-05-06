@@ -8,7 +8,9 @@ const Option = Select.Option;
 class CheckQuery extends React.Component {
   constructor() {
     super();
-    this.state = {}
+    this.state = {
+      resetFlag: false
+    }
   }
   componentDidMount() {
     const search = qs.parse(this.props.location.search.substring(1));
@@ -36,6 +38,7 @@ class CheckQuery extends React.Component {
     setFieldsValue({ ...keys, ...obj });
   }
   handleReset = () => {
+    this.setState({ resetFlag: true });
     this.props.form.resetFields();
   }
   handleSearch = e => {
@@ -97,7 +100,7 @@ class CheckQuery extends React.Component {
   }
   render() {
     const { getFieldDecorator } = this.props.form;
-    const { customer_status, reservation_status, spotplan_executor, spotplan_platform, spotplan_project, project_id } = this.props;
+    const { customer_status, reservation_status, spotplan_executor, spotplan_platform, spotplan_project, project_id, project_name } = this.props;
     return <Form className='spotplan-check-form'>
       <Row>
         <FormItem label='批量查询'>
@@ -161,7 +164,7 @@ class CheckQuery extends React.Component {
             <Input placeholder='请输入需求名称' style={{ width: 160 }} allowClear />
           )}
         </FormItem>
-        <FormItem label='所属项目'>
+        {project_name && <FormItem label='所属项目'>
           {getFieldDecorator('project_id', {
             initialValue: project_id ? `${project_id}` : []
           })(
@@ -174,9 +177,12 @@ class CheckQuery extends React.Component {
               keyWord='name'
               dataToList={res => { return res.data }}
               item={['id', 'name']}
+              project_name={project_name}
+              resetFlag={this.state.resetFlag}
+              resetAction={() => { this.setState({ resetFlag: false }) }}
             />
           )}
-        </FormItem>
+        </FormItem>}
       </Row>
       <Row>
         <FormItem label='订单预约状态'>
