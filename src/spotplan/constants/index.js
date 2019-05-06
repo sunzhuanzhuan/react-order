@@ -149,7 +149,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete) => 
     width: 210,
     render: (text, record) => {
       const flag = (record.customer_confirmation_status == 11 && [0, 4].includes(parseInt(record.last_apply_status))) ? true : false;
-      return !flag ? <FormItem>
+      return flag ? <FormItem>
         {getFieldDecorator(`${record.order_id}.price_name`, {
           rules: [{ required: true, message: '请填写名称' }]
         })(
@@ -191,7 +191,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete) => 
     width: 100,
     render: (text, record) => {
       const flag = (record.customer_confirmation_status == 11 && [0, 4].includes(parseInt(record.last_apply_status))) ? true : false;
-      return !flag ? <FormItem>
+      return flag ? <FormItem>
         {getFieldDecorator(`${record.order_id}.account_category_name`, {
           rules: [{ required: true, message: '请填写分类' }]
         })(
@@ -213,7 +213,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete) => 
     width: 100,
     render: (text, record) => {
       const flag = (record.customer_confirmation_status == 11 && [0, 4].includes(parseInt(record.last_apply_status))) ? true : false;
-      return !flag ? <FormItem>
+      return flag ? <FormItem>
         {getFieldDecorator(`${record.order_id}.is_replace`, {
           rules: [{ required: true, message: '请选择是否备选' }]
         })(
@@ -241,7 +241,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete) => 
     width: 210,
     render: (text, record) => {
       const flag = (record.customer_confirmation_status == 11 && [0, 4].includes(parseInt(record.last_apply_status))) ? true : false;
-      return !flag ? <FormItem>
+      return flag ? <FormItem>
         {getFieldDecorator(`${record.order_id}.release_form`, {
           rules: [{ required: true, message: '请填写位置' }]
         })(
@@ -263,7 +263,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete) => 
     width: 210,
     render: (text, record) => {
       const flag = (record.customer_confirmation_status == 11 && [0, 4].includes(parseInt(record.last_apply_status))) ? true : false;
-      return !flag ? <FormItem>
+      return flag ? <FormItem>
         {getFieldDecorator(`${record.order_id}.content`, {
           rules: [
             { max: 400, message: '不能超过400字' }
@@ -288,7 +288,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete) => 
     width: 100,
     render: (text, record) => {
       const flag = (record.customer_confirmation_status == 11 && [0, 4].includes(parseInt(record.last_apply_status))) ? true : false;
-      return !flag ? <a href='javascript:;' onClick={() => {
+      return flag ? <a href='javascript:;' onClick={() => {
         handleDelete(record.order_id)
       }}>删除订单</a> : ''
     }
