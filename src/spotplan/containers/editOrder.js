@@ -47,7 +47,7 @@ class EditOrder extends React.Component {
     const EditOrderCols = EditOrderFunc(getFieldDecorator, handleUpdate, this.handleDelete);
     const paginationObj = {
       onChange: (page) => {
-        this.props.queryData(3, { spotplan_id: search.spotplan_id }, this.handleEditTable, page);
+        this.props.queryData(3, { spotplan_id: search.spotplan_id, page }, this.handleEditTable);
       },
       total: parseInt(data && data.total),
       current: parseInt(data && data.page),

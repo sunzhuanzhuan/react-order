@@ -45,7 +45,7 @@ class DetailTable extends React.Component {
         dataSource={dataSource}
         bordered
         scroll={{ x: 1860 }}
-        pagination={(options && options.page_size > 50) ? paginationObj : false}
+        pagination={(options && options.total > 50) ? paginationObj : false}
         loading={loading}
       />
     </ScrollTable>
