@@ -111,7 +111,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete) => 
     dataIndex: 'weibo_type_name',
     key: 'weibo_type_name',
     align: 'center',
-    width: 80
+    width: 120
   },
   {
     title: '账号名称',
@@ -128,7 +128,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete) => 
     dataIndex: 'id',
     key: 'id',
     align: 'center',
-    width: 80,
+    width: 120,
     render: (text, record) => {
       const flag = record.weibo_type == 23 ? true : false;
       return flag ? '-' : text
@@ -148,7 +148,8 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete) => 
     align: 'center',
     width: 210,
     render: (text, record) => {
-      return <FormItem>
+      const flag = (record.customer_confirmation_status == 11 && [0, 4].includes(parseInt(record.last_apply_status))) ? true : false;
+      return flag ? <FormItem>
         {getFieldDecorator(`${record.order_id}.price_name`, {
           rules: [{ required: true, message: '请填写名称' }]
         })(
@@ -159,7 +160,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete) => 
           }} />
         )
         }
-      </FormItem>
+      </FormItem> : text
     }
   },
   {
@@ -189,7 +190,8 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete) => 
     align: 'center',
     width: 100,
     render: (text, record) => {
-      return <FormItem>
+      const flag = (record.customer_confirmation_status == 11 && [0, 4].includes(parseInt(record.last_apply_status))) ? true : false;
+      return flag ? <FormItem>
         {getFieldDecorator(`${record.order_id}.account_category_name`, {
           rules: [{ required: true, message: '请填写分类' }]
         })(
@@ -200,7 +202,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete) => 
           }} />
         )
         }
-      </FormItem>
+      </FormItem> : text
     }
   },
   {
@@ -210,7 +212,8 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete) => 
     align: 'center',
     width: 100,
     render: (text, record) => {
-      return <FormItem>
+      const flag = (record.customer_confirmation_status == 11 && [0, 4].includes(parseInt(record.last_apply_status))) ? true : false;
+      return flag ? <FormItem>
         {getFieldDecorator(`${record.order_id}.is_replace`, {
           rules: [{ required: true, message: '请选择是否备选' }]
         })(
@@ -227,7 +230,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete) => 
             <Option value={2} >否</Option>
           </Select>
         )}
-      </FormItem>
+      </FormItem> : text == 1 ? '是' : '否'
     }
   },
   {
@@ -237,7 +240,8 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete) => 
     align: 'center',
     width: 210,
     render: (text, record) => {
-      return <FormItem>
+      const flag = (record.customer_confirmation_status == 11 && [0, 4].includes(parseInt(record.last_apply_status))) ? true : false;
+      return flag ? <FormItem>
         {getFieldDecorator(`${record.order_id}.release_form`, {
           rules: [{ required: true, message: '请填写位置' }]
         })(
@@ -248,7 +252,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete) => 
           }} />
         )
         }
-      </FormItem>
+      </FormItem> : text
     }
   },
   {
@@ -258,7 +262,8 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete) => 
     align: 'center',
     width: 210,
     render: (text, record) => {
-      return <FormItem>
+      const flag = (record.customer_confirmation_status == 11 && [0, 4].includes(parseInt(record.last_apply_status))) ? true : false;
+      return flag ? <FormItem>
         {getFieldDecorator(`${record.order_id}.content`, {
           rules: [
             { max: 400, message: '不能超过400字' }
@@ -271,7 +276,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete) => 
           }} />
         )
         }
-      </FormItem>
+      </FormItem> : text
     }
   },
   {
@@ -282,9 +287,10 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete) => 
     fixed: 'right',
     width: 100,
     render: (text, record) => {
-      return <a href='javascript:;' onClick={() => {
+      const flag = (record.customer_confirmation_status == 11 && [0, 4].includes(parseInt(record.last_apply_status))) ? true : false;
+      return flag ? <a href='javascript:;' onClick={() => {
         handleDelete(record.order_id)
-      }}>删除订单</a>
+      }}>删除订单</a> : ''
     }
   }
 ];
@@ -391,7 +397,7 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     dataIndex: 'requirement_name',
     key: 'requirement_name',
     align: 'center',
-    width: 140,
+    width: 150,
     fixed: 'left',
     render: (text, record) => {
       return <a href={record.requirement_path} target="_blank">{text}</a>
@@ -402,6 +408,7 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     dataIndex: 'status_name',
     key: 'status_name',
     align: 'center',
+    width: 100,
     render: text => {
       return <div style={{ minWidth: 80 }}>{text || '-'}</div>
     }
@@ -411,6 +418,7 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     dataIndex: 'last_apply_status',
     key: 'last_apply_status',
     align: 'center',
+    width: 120,
     render: (text, record) => {
       const node = text ? <div>
         <div>申请类型：{APPLY_TYPE[record.record.apply_type]} <a href='javascript:;' onClick={(e) => {
@@ -427,6 +435,7 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     dataIndex: 'weibo_type_name',
     key: 'weibo_type_name',
     align: 'center',
+    width: 100,
     render: text => {
       return <div style={{ minWidth: 80 }}>{text || '-'}</div>
     }
@@ -436,6 +445,7 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     dataIndex: 'weibo_name',
     key: 'weibo_name',
     align: 'center',
+    width: 120,
     render: (text, record) => {
       return <div style={{ minWidth: 100 }}>{record.link_url && <a href={record.link_url} target="_blank">{text}</a> || text}</div>
     }
@@ -445,6 +455,7 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     dataIndex: 'weibo_id',
     key: 'weibo_id',
     align: 'center',
+    width: 100,
     render: (text, record) => {
       const flag = record.weibo_type == 23 ? true : false;
       return <div style={{ minWidth: 80 }}>{flag ? '-' : text}</div>
@@ -455,6 +466,7 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     dataIndex: 'price_id',
     key: 'price_id',
     align: 'center',
+    width: 100,
     render: text => {
       return <div style={{ minWidth: 80 }}>{text || '-'}</div>
     }
@@ -464,6 +476,7 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     dataIndex: 'price_name',
     key: 'price_name',
     align: 'center',
+    width: 120,
     render: text => {
       return <div style={{ minWidth: 100 }}>{text || '-'}</div>
     }
@@ -473,6 +486,7 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     dataIndex: 'cost',
     key: 'cost',
     align: 'center',
+    width: 120,
     render: text => {
       return <div style={{ minWidth: 100 }}>{text && numeral(text).format('0,0') || '-'}</div>
     }
@@ -482,6 +496,7 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     dataIndex: 'costwithfee',
     key: 'costwithfee',
     align: 'center',
+    width: 120,
     render: text => {
       return <div style={{ minWidth: 100 }}>{text && numeral(text).format('0,0') || '-'}</div>
     }
@@ -491,6 +506,7 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     dataIndex: 'account_category_name',
     key: 'account_category_name',
     align: 'center',
+    width: 120,
     render: text => {
       return <div style={{ minWidth: 100 }}>{text || '-'}</div>
     }
@@ -500,6 +516,7 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     dataIndex: 'is_replace',
     key: 'is_replace',
     align: 'center',
+    width: 100,
     render: text => {
       return <div style={{ minWidth: 80 }}>{text == 1 ? '是' : text == 2 ? '否' : '-'}</div>
     }
@@ -509,6 +526,7 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     dataIndex: 'release_form',
     key: 'release_form',
     align: 'center',
+    width: 120,
     render: text => {
       return <div style={{ minWidth: 100 }}>{text || '-'}</div>
     }
@@ -518,6 +536,7 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     dataIndex: 'content',
     key: 'content',
     align: 'center',
+    width: 120,
     render: text => {
       return <div style={{ minWidth: 100 }}>{text || '-'}</div>
     }

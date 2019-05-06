@@ -37,14 +37,14 @@ class DetailTable extends React.Component {
       // pageSizeOptions: ['50', '100', '200'],
       size: 'small'
     };
-    return <ScrollTable scrollClassName='ant-table-body' widthScroll={1840} num={num}>
+    return <ScrollTable scrollClassName='ant-table-body' widthScroll={2100} num={num}>
       <Table
         rowSelection={rowSelection}
         rowKey={record => { return record.order_id ? record.order_id.toString() : '' }}
         columns={columns}
         dataSource={dataSource}
         bordered
-        scroll={{ x: 1840 }}
+        scroll={{ x: 1860 }}
         pagination={(options && options.page_size > 50) ? paginationObj : false}
         loading={loading}
       />

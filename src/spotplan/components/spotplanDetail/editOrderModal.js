@@ -15,6 +15,7 @@ class EditOrderModal extends React.Component {
         this.props.actions.postUpdateSpotplanOrder({ ...values, spotplan_id, order_id: data[0].order_id }).then(() => {
           message.success('操作成功！', 2);
           this.props.onCancel();
+          this.props.handleClose();
         })
       } else {
         Modal.error({
@@ -32,7 +33,7 @@ class EditOrderModal extends React.Component {
       wrapperCol: { span: 16 }
     };
     return <Modal
-      wrapClassName='history-modal'
+      wrapClassName='edit-order-modal'
       key='historyModal'
       width={640}
       title='编辑订单信息'
@@ -72,7 +73,7 @@ class EditOrderModal extends React.Component {
           })(
             <Select style={{ width: 140 }}
               placeholder='请选择'
-              getPopupContainer={() => document.querySelector('.history-modal')}
+              getPopupContainer={() => document.querySelector('.edit-order-modal')}
               allowClear
             >
               <Option value={1}>是</Option>

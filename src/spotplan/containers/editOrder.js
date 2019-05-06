@@ -60,7 +60,7 @@ class EditOrder extends React.Component {
       <h3 className='top-gap'>订单列表</h3>
       <div className='edit-table-container top-gap'>
         <Form>
-          <ScrollTable scrollClassName='.ant-table-body' widthScroll={1600}>
+          <ScrollTable scrollClassName='.ant-table-body' widthScroll={1800}>
             <Table
               className='edit-table'
               rowKey='id'
@@ -68,8 +68,7 @@ class EditOrder extends React.Component {
               dataSource={data && data.list || []}
               bordered
               loading={loading}
-              scroll={{ x: 1600 }}
-              size='small'
+              scroll={{ x: 1640 }}
               pagination={data && data.total > 50 ? paginationObj : false}
             />
           </ScrollTable>
