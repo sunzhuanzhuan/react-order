@@ -15,15 +15,8 @@ export default class SearchSelect extends React.PureComponent {
     this.handleSearch = debounce(this.fetchData, 800);
   }
   componentDidMount() {
-    this.initialData();
-  }
-  initialData = () => {
-    const { resetFlag, resetAction } = this.props;
     this.fetchData(this.props.project_name);
     this.handleBlur();
-    if (resetFlag) {
-      resetAction();
-    }
   }
   fetchData = (value) => {
     if (!value) {
@@ -46,10 +39,7 @@ export default class SearchSelect extends React.PureComponent {
   }
   render() {
     const { data, value, loading } = this.state;
-    const { item: [id, name], resetFlag } = this.props;
-    if (resetFlag) {
-      this.initialData();
-    }
+    const { item: [id, name] } = this.props;
     const options = data.map(d => <Option key={d[id]}>{d[name]}</Option>);
     return <Select
       showSearch
