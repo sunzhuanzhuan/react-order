@@ -8,15 +8,17 @@ import './index.less';
 import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
 import moment from 'moment';
 import numeral from 'numeral';
+import { linkTo } from '@/util/linkTo';
 // 导入语言包
 import zhCN from 'antd/lib/locale-provider/zh_CN';
 import 'moment/locale/zh-cn';
 import 'numeral/locales/chs';
 // 顶级根目录页面
 import App from './containers/App';
-import { linkTo } from '@/util/linkTo';
 // 项目
+import PublicOrderList from './publicOrderList/containers/PublicOrderList';
 import ClosingReport from './closingReport';
+import SpotPlan from './spotplan';
 import Business from './business';
 
 // 设置语言包
@@ -32,8 +34,10 @@ const redirectToOtherProjects = ({ location: { pathname = '/error', search = '' 
 const routes = () => (
   <App history={history}>
     <Switch>
+      {/* <Route path="/order/publicOrderList" component={PublicOrderList} /> */}
       <Route path="/order/closing-report" component={ClosingReport} />
       <Route path="/order/business" component={Business} />
+      <Route path="/order/spotplan" component={SpotPlan} />
       <Route render={() => linkTo('/error')} />
     </Switch>
   </App>
@@ -46,7 +50,7 @@ render(
         <Switch>
           {
             process.env.NODE_ENV === 'development' ?
-              <Route exact path="/" render={() => <Redirect to="/order/business/merchant/list" />} /> : null
+              <Route exact path="/" render={() => <Redirect to="/order/spotplan" />} /> : null
           }
           <Route path="/order" render={routes} />
           <Route render={redirectToOtherProjects} />
