@@ -287,9 +287,10 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete) => 
     fixed: 'right',
     width: 100,
     render: (text, record) => {
-      return <a href='javascript:;' onClick={() => {
+      const flag = (record.customer_confirmation_status == 11 && [0, 4].includes(parseInt(record.last_apply_status))) ? true : false;
+      return !flag ? <a href='javascript:;' onClick={() => {
         handleDelete(record.order_id)
-      }}>删除订单</a>
+      }}>删除订单</a> : ''
     }
   }
 ];
