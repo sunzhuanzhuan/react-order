@@ -111,7 +111,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete) => 
     dataIndex: 'weibo_type_name',
     key: 'weibo_type_name',
     align: 'center',
-    width: 80
+    width: 120
   },
   {
     title: '账号名称',
@@ -128,7 +128,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete) => 
     dataIndex: 'id',
     key: 'id',
     align: 'center',
-    width: 80,
+    width: 120,
     render: (text, record) => {
       const flag = record.weibo_type == 23 ? true : false;
       return flag ? '-' : text
@@ -148,7 +148,8 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete) => 
     align: 'center',
     width: 210,
     render: (text, record) => {
-      return <FormItem>
+      const flag = (record.customer_confirmation_status == 11 && [0, 4].includes(parseInt(record.last_apply_status))) ? true : false;
+      return !flag ? <FormItem>
         {getFieldDecorator(`${record.order_id}.price_name`, {
           rules: [{ required: true, message: '请填写名称' }]
         })(
@@ -159,7 +160,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete) => 
           }} />
         )
         }
-      </FormItem>
+      </FormItem> : text
     }
   },
   {
@@ -189,7 +190,8 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete) => 
     align: 'center',
     width: 100,
     render: (text, record) => {
-      return <FormItem>
+      const flag = (record.customer_confirmation_status == 11 && [0, 4].includes(parseInt(record.last_apply_status))) ? true : false;
+      return !flag ? <FormItem>
         {getFieldDecorator(`${record.order_id}.account_category_name`, {
           rules: [{ required: true, message: '请填写分类' }]
         })(
@@ -200,7 +202,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete) => 
           }} />
         )
         }
-      </FormItem>
+      </FormItem> : text
     }
   },
   {
@@ -210,7 +212,8 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete) => 
     align: 'center',
     width: 100,
     render: (text, record) => {
-      return <FormItem>
+      const flag = (record.customer_confirmation_status == 11 && [0, 4].includes(parseInt(record.last_apply_status))) ? true : false;
+      return !flag ? <FormItem>
         {getFieldDecorator(`${record.order_id}.is_replace`, {
           rules: [{ required: true, message: '请选择是否备选' }]
         })(
@@ -227,7 +230,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete) => 
             <Option value={2} >否</Option>
           </Select>
         )}
-      </FormItem>
+      </FormItem> : text == 1 ? '是' : '否'
     }
   },
   {
@@ -237,7 +240,8 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete) => 
     align: 'center',
     width: 210,
     render: (text, record) => {
-      return <FormItem>
+      const flag = (record.customer_confirmation_status == 11 && [0, 4].includes(parseInt(record.last_apply_status))) ? true : false;
+      return !flag ? <FormItem>
         {getFieldDecorator(`${record.order_id}.release_form`, {
           rules: [{ required: true, message: '请填写位置' }]
         })(
@@ -248,7 +252,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete) => 
           }} />
         )
         }
-      </FormItem>
+      </FormItem> : text
     }
   },
   {
@@ -258,7 +262,8 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete) => 
     align: 'center',
     width: 210,
     render: (text, record) => {
-      return <FormItem>
+      const flag = (record.customer_confirmation_status == 11 && [0, 4].includes(parseInt(record.last_apply_status))) ? true : false;
+      return !flag ? <FormItem>
         {getFieldDecorator(`${record.order_id}.content`, {
           rules: [
             { max: 400, message: '不能超过400字' }
@@ -271,7 +276,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete) => 
           }} />
         )
         }
-      </FormItem>
+      </FormItem> : text
     }
   },
   {
