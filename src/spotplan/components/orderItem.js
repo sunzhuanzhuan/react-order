@@ -55,22 +55,36 @@ export default class OrderItem extends React.Component {
 }
 
 function Item({ data }) {
-  return <div className='order-item-list'>
-    <Col className='list-item'>
-      <div className='title'>PriceID</div>
-      <div>{data && data.price_id}</div>
-    </Col>
-    <Col className='list-item'>
-      <div className='title'>价格名称</div>
-      <div>{data && data.price_name}</div>
-    </Col>
-    <Col className='list-item'>
-      <div className='title'>账号报价（应约价）</div>
-      <div>{data && numeral(data.cost).format('0,0')}</div>
-    </Col>
-    <Col className='list-item'>
-      <div className='title'>总价（应约价）</div>
-      <div>{data && numeral(data.costwithfee).format('0,0')}</div>
-    </Col>
-  </div>
+  return <table className='item-table'>
+    <tr>
+      <th style={{ width: '10%' }}>PriceID</th>
+      <th style={{ width: '50%', paddingRight: '10px' }}>价格名称</th>
+      <th style={{ width: '16%' }}>账号报价（应约价）</th>
+      <th style={{ width: '16%' }}>总价（应约价）</th>
+    </tr>
+    <tr>
+      <td style={{ width: '10%' }}>{data && data.price_id}</td>
+      <td style={{ width: '50%', paddingRight: '10px' }}>{data && data.price_name}</td>
+      <td style={{ width: '16%' }}>{data && numeral(data.cost).format('0,0')}</td>
+      <td style={{ width: '16%' }}>{data && numeral(data.costwithfee).format('0,0')}</td>
+    </tr>
+  </table>
+  // <div className='order-item-list'>
+  //   <Col className='list-item'>
+  //     <div className='title'>PriceID</div>
+  //     <div className='content'>{data && data.price_id}</div>
+  //   </Col>
+  //   <Col className='list-item'>
+  //     <div className='title'>价格名称</div>
+  //     <div className='content'>{data && data.price_name}</div>
+  //   </Col>
+  //   <Col className='list-item'>
+  //     <div className='title'>账号报价（应约价）</div>
+  //     <div className='content'>{data && numeral(data.cost).format('0,0')}</div>
+  //   </Col>
+  //   <Col className='list-item'>
+  //     <div className='title'>总价（应约价）</div>
+  //     <div className='content'>{data && numeral(data.costwithfee).format('0,0')}</div>
+  //   </Col>
+  // </div>
 }

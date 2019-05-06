@@ -57,7 +57,8 @@
             }
             .check-order-item{
                 width:100%;
-                margin-top: 20px;
+                // margin-top: 20px;
+                padding-top: 4px;
                 .list-item{
                     width: 100%;
                 }
@@ -105,23 +106,39 @@
                 .ant-checkbox-wrapper + .ant-checkbox-wrapper{
                     margin-left: 0;
                 }
+                .item-table{
+                    display: inline-block;
+                    width: 92%;
+                    padding-left: 30px;
+                    line-height: 30px;
+                    vertical-align: middle;
+                }
                 .order-item-list{
                     display: inline-block;
                     width: 92%;
                     padding-left: 30px;
-                    height: 60px;
+                    // height: 60px;
                     line-height: 30px;
                     vertical-align: middle;
                     .list-item{
                         display: inline-block;
-                        &:nth-child(1),&:nth-child(3),&:nth-child(4){
-                            width:20%;
+                        &:nth-child(1){
+                            float: left;
+                            width:10%;
+                        }
+                        &:nth-child(3),&:nth-child(4){
+                            float: left;
+                            width:16%;
                         }
                         &:nth-child(2){
-                            width:36%;
+                            float: left;
+                            width:54%;
                         }
                         .title{
                             color: rgba(0, 0, 0, 0.4);
+                        }
+                        .content{
+                            vertical-align: middle;
                         }
                     }
                     // display: inline-block;
