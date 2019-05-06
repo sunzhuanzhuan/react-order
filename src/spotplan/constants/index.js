@@ -391,7 +391,7 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     dataIndex: 'requirement_name',
     key: 'requirement_name',
     align: 'center',
-    width: 140,
+    width: 150,
     fixed: 'left',
     render: (text, record) => {
       return <a href={record.requirement_path} target="_blank">{text}</a>
@@ -402,6 +402,7 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     dataIndex: 'status_name',
     key: 'status_name',
     align: 'center',
+    width: 100,
     render: text => {
       return <div style={{ minWidth: 80 }}>{text || '-'}</div>
     }
@@ -411,6 +412,7 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     dataIndex: 'last_apply_status',
     key: 'last_apply_status',
     align: 'center',
+    width: 120,
     render: (text, record) => {
       const node = text ? <div>
         <div>申请类型：{APPLY_TYPE[record.record.apply_type]} <a href='javascript:;' onClick={(e) => {
@@ -427,6 +429,7 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     dataIndex: 'weibo_type_name',
     key: 'weibo_type_name',
     align: 'center',
+    width: 100,
     render: text => {
       return <div style={{ minWidth: 80 }}>{text || '-'}</div>
     }
@@ -436,6 +439,7 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     dataIndex: 'weibo_name',
     key: 'weibo_name',
     align: 'center',
+    width: 120,
     render: (text, record) => {
       return <div style={{ minWidth: 100 }}>{record.link_url && <a href={record.link_url} target="_blank">{text}</a> || text}</div>
     }
@@ -445,6 +449,7 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     dataIndex: 'weibo_id',
     key: 'weibo_id',
     align: 'center',
+    width: 100,
     render: (text, record) => {
       const flag = record.weibo_type == 23 ? true : false;
       return <div style={{ minWidth: 80 }}>{flag ? '-' : text}</div>
@@ -455,6 +460,7 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     dataIndex: 'price_id',
     key: 'price_id',
     align: 'center',
+    width: 100,
     render: text => {
       return <div style={{ minWidth: 80 }}>{text || '-'}</div>
     }
@@ -464,6 +470,7 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     dataIndex: 'price_name',
     key: 'price_name',
     align: 'center',
+    width: 120,
     render: text => {
       return <div style={{ minWidth: 100 }}>{text || '-'}</div>
     }
@@ -473,6 +480,7 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     dataIndex: 'cost',
     key: 'cost',
     align: 'center',
+    width: 120,
     render: text => {
       return <div style={{ minWidth: 100 }}>{text && numeral(text).format('0,0') || '-'}</div>
     }
@@ -482,6 +490,7 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     dataIndex: 'costwithfee',
     key: 'costwithfee',
     align: 'center',
+    width: 120,
     render: text => {
       return <div style={{ minWidth: 100 }}>{text && numeral(text).format('0,0') || '-'}</div>
     }
@@ -491,6 +500,7 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     dataIndex: 'account_category_name',
     key: 'account_category_name',
     align: 'center',
+    width: 120,
     render: text => {
       return <div style={{ minWidth: 100 }}>{text || '-'}</div>
     }
@@ -500,6 +510,7 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     dataIndex: 'is_replace',
     key: 'is_replace',
     align: 'center',
+    width: 100,
     render: text => {
       return <div style={{ minWidth: 80 }}>{text == 1 ? '是' : text == 2 ? '否' : '-'}</div>
     }
@@ -509,6 +520,7 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     dataIndex: 'release_form',
     key: 'release_form',
     align: 'center',
+    width: 120,
     render: text => {
       return <div style={{ minWidth: 100 }}>{text || '-'}</div>
     }
@@ -518,6 +530,7 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     dataIndex: 'content',
     key: 'content',
     align: 'center',
+    width: 120,
     render: text => {
       return <div style={{ minWidth: 100 }}>{text || '-'}</div>
     }

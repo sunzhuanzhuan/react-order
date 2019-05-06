@@ -73,7 +73,7 @@ class EditOrderModal extends React.Component {
           })(
             <Select style={{ width: 140 }}
               placeholder='请选择'
-              getPopupContainer={() => document.querySelector('.history-modal')}
+              getPopupContainer={() => document.querySelector('.edit-order-modal')}
               allowClear
             >
               <Option value={1}>是</Option>
