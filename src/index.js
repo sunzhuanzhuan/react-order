@@ -14,7 +14,6 @@ import 'moment/locale/zh-cn';
 import 'numeral/locales/chs';
 // 顶级根目录页面
 import App from './containers/App';
-import PublicOrderList from './publicOrderList/containers/PublicOrderList';
 import ClosingReport from './closingReport';
 import SpotPlan from './spotplan';
 import { linkTo } from '@/util/linkTo';
@@ -31,7 +30,6 @@ const redirectToOtherProjects = ({ location: { pathname = '/error', search = '' 
 const routes = () => (
   <App history={history}>
     <Switch>
-      <Route path="/order/publicOrderList" component={PublicOrderList} />
       <Route path="/order/closing-report" component={ClosingReport} />
       <Route path="/order/spotplan" component={SpotPlan} />
       <Route render={() => linkTo('/error')} />
