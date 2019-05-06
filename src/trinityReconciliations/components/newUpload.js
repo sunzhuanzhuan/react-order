@@ -86,26 +86,27 @@ export default class NewUpload extends Component {
 	// 上传前校验
 	beforeUpload = file => {
 		const { len, size, beforeUpload } = this.props
-		const isLtLength = this.length < len
-		if (!isLtLength) {
-			message.error('超出最大上传数量，多余项目不会上传!');
-		}
-		const isFile = this.accept.length === 0 || this.accept.some(type => (
-			// 如果传递的是后缀则判断后缀, 否则判断type
-			/^\./.test(type) ? file.name.toUpperCase().endsWith(type.toUpperCase()) : file.type === type
-		));
-		if (!isFile) {
-			message.error('上传格式有误!');
-		}
-		const isLt2M = file.size / 1024 / 1024 < size;
-		if (!isLt2M) {
-			message.error('上传大小有误!');
-		}
-		let result = isLtLength && isFile && isLt2M && beforeUpload(file, message)
-		if (result) {
-			this.length++
-			this.getToken()
-		}
+		// const isLtLength = this.length < len
+		// if (!isLtLength) {
+		// 	message.error('超出最大上传数量，多余项目不会上传!');
+		// }
+		// const isFile = this.accept.length === 0 || this.accept.some(type => (
+		// 	// 如果传递的是后缀则判断后缀, 否则判断type
+		// 	/^\./.test(type) ? file.name.toUpperCase().endsWith(type.toUpperCase()) : file.type === type
+		// ));
+		// if (!isFile) {
+		// 	message.error('上传格式有误!');
+		// }
+		// const isLt2M = file.size / 1024 / 1024 < size;
+		// if (!isLt2M) {
+		// 	message.error('上传大小有误!');
+		// }
+    // let result = isLtLength && isFile && isLt2M && beforeUpload(file, message)
+    let result = beforeUpload(file)
+		// if (result) {
+		// 	this.length++
+		// 	this.getToken()
+		// }
 		return result;
 	}
 	handleFileItem = url => {

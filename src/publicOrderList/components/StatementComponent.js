@@ -25,7 +25,7 @@ class StatementComponent extends React.Component {
     }
   }
   componentWillMount() {
-    api.get("/operator-gateway/trinityPlatform/v1/getCooperationPlatform")
+    api.get("/operator-gateway/trinityAgent/v1/getAgentList?agentStatus=1")
       .then((response) => {
         let data = response.data
         this.setState({
@@ -58,7 +58,7 @@ class StatementComponent extends React.Component {
           onChange={this.changePlatformAndAaent}>
           {
             this.state.data.map(item => {
-              return <Option key={item.id} value={item.id}>{item.cooperationPlatformName}</Option>
+              return <Option key={item.id} value={item.id}>{item.cooperationPlatformName}-{item.agentName}</Option>
             })
           }
         </Select>
@@ -78,6 +78,7 @@ class StatementComponent extends React.Component {
         }}>导出订单</Button>
         <div style={{display:'inline-block'}} className="publicOrderList-chooseBox-operateBtn">
           <BtnUpload
+            agent_id={this.state.agent_id}
             uploadText={'导入三方对账单'}
           />
         </div>

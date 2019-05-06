@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from "redux";
 import * as actionsStatement from '../trinityReconciliations/actions/index'
 
-
+let file_name = ''
 class btnUpload extends Component {
   constructor(props, context) {
     super(props, context);
@@ -17,24 +17,45 @@ class btnUpload extends Component {
     };
   }
   
-  beforeUpload=() =>{
-    return new Promise((resolve,reject)=>{
-      axios.get('/api/finance/statement/import').then((res)=>{
-        if(res.data.code == 1000){
-          message.success(res.data.msg);
-          resolve(true) 
-        }else{
-          reject(false)
-        }
-      })
-    }) 
+  beforeUpload=(res) =>{
+   console.log(res)
+    if(this.props.agent_id ){
+      file_name= res.name;
+      return true
+    }else{
+      message.error('请选择平台代理商');
+      return false
+    }
+    // return new Promise((resolve,reject)=>{
+    //   axios.get('/api/finance/statement/import').then((res)=>{
+    //     if(res.data.code == 1000){
+    //       message.success(res.data.msg);
+    //       resolve(true) 
+    //     }else{
+    //       reject(false)
+    //     }
+    //   })
+    // }) 
   }
   componentWillMount=()=>{
     console.log(this.props)
     
   }
   
-
+  handleChangeOption=(value)=>{
+    console.log(value)
+    this.props.actions.addOrder({statement_name:file_name,
+      attachment:value,agent_id:this.props.agent_id}).then((res)=>{
+      if(res.code == 1000){
+        message.success('上传成功')
+      }else{
+        message.error(res.data.msg)
+      }
+      
+    })
+   
+   
+  }
   render() {
     let {uploadText}=this.props;
     return <div>
@@ -50,9 +71,10 @@ class btnUpload extends Component {
                   console.log(file[0].filepath);
                   console.log(originFile);
                   console.log(file);
-                  // this.handleChangeOption(file[0].filepath)
+                  this.handleChangeOption(file[0].filepath)
                 }}
-                beforeUpload={()=>this.beforeUpload()}
+                beforeUpload={this.beforeUpload}
+                // beforeUpload={()=>this.beforeUpload()}
                 accept=".xlsx,.xls"
                 btnProps={{
                   type: 'primary'

@@ -27,41 +27,40 @@ class ListQuery extends Component {
     
   }
   handleSearch = (e) => {
-		// const { questAction, page_size, handlefilterParams } = this.props;
-		e.preventDefault();
-		this.props.form.validateFields((err, values) => {
-			if (!err) {
-        let {search }=this.props;
-				const hide = message.loading('上传中，请稍候...');
-				this.props.importSummary( ...this.state.fileList,{ commit: 2 }).then((res) => {
-					// handlefilterParams(params);
-          hide();
-          if(res.data.code == 1000){
-            message.success('上传成功，本次对账完成！');
-            this.props.history.push({
-              pathname: '/order/trinity/reconciliations/summary',
-              search: `?${qs.stringify({ agent: search.agent})}`,
+        e.preventDefault();
+        this.props.form.validateFields((err, values) => {
+          if (!err) {
+            let {search }=this.props;
+            const hide = message.loading('上传中，请稍候...');
+            this.props.importSummary( ...this.state.fileList,{ commit: 2 }).then((res) => {
+              // handlefilterParams(params);
+              hide();
+              if(res.data.code == 1000){
+                message.success('上传成功，本次对账完成！');
+                this.props.history.push({
+                  pathname: '/order/trinity/reconciliations/summary',
+                  search: `?${qs.stringify({ agent: search.agent})}`,
+                });
+              }else{
+                message.error('双方的对账金额不符，请重新对账后再上传对账！');
+                hide();
+                // this.props.history.push({
+                //   pathname: '/order/trinity/reconciliations/summary',
+                //   search: `?${qs.stringify({ agent: search.agent})}`,
+                // });
+              }
+              
+            }).catch(() => {
+              // this.props.history.push({
+              //   pathname: '/order/trinity/reconciliations/summary',
+              //   search: `?${qs.stringify({ agent: search.agent})}`,
+              // });
+              // message.error('双方的对账金额不符，请重新对账后再上传对账！');
+              // hide();
             });
-          }else{
-            message.error('双方的对账金额不符，请重新对账后再上传对账！');
-            hide();
-            // this.props.history.push({
-            //   pathname: '/order/trinity/reconciliations/summary',
-            //   search: `?${qs.stringify({ agent: search.agent})}`,
-            // });
+            
           }
-          
-				}).catch(() => {
-          // this.props.history.push({
-          //   pathname: '/order/trinity/reconciliations/summary',
-          //   search: `?${qs.stringify({ agent: search.agent})}`,
-          // });
-					// message.error('双方的对账金额不符，请重新对账后再上传对账！');
-					// hide();
         });
-        
-			}
-		});
 	}
 	handleClear = () => {
 		this.props.form.resetFields();
@@ -74,12 +73,14 @@ class ListQuery extends Component {
     
     this.props.addOrder({statement_name:file_name,
       attachment:value,agent_id:agent_id}).then((res)=>{
-      if(res.data == 1000){
+      if(res.code == 1000){
           this.props.getInputList({agent_id:agent_id}).then(()=>{
             this.props.form.setFieldsValue({statement_id: res.data.statement_id });
             this.setState({
               visibleTable:true,
-              stateMentList:res.data
+              stateMentList:res.data,
+              statement_id:res.data.statement_id,
+              
             })
           })
       }
@@ -93,6 +94,13 @@ class ListQuery extends Component {
     this.setState({
       visibleTable:true,
       statement_id:value
+    })
+    this.props.statementInputList.map((item)=>{
+      if(item.statement_id == value){
+        this.setState({
+          stateMentList:item
+        })
+      }
     })
   }
   handleClickTotal=(value)=>{
@@ -108,12 +116,13 @@ class ListQuery extends Component {
   render() {
     let { getFieldDecorator } = this.props.form;
     let { getToken,statementInputList} =this.props;
-    let {stateMentList,summaryList} = this.state
+    let {stateMentList,summaryList,statement_id} = this.state
 		const formItemLayout = {
 			labelCol: { span: 6 },
 			wrapperCol: { span: 18 },
 		};
     const props = {
+     
 			headers: { "Content-Type": "application/x-www-form-urlencoded" },
 			accept: ".xlsx,.xls",
 			showUploadList: true,
@@ -176,7 +185,7 @@ class ListQuery extends Component {
 					<Col span={13}>
 						<FormItem label='' {...formItemLayout}>
               {getFieldDecorator('payment_status', { initialValue: [] ,
-               rules: [{ required: true, message: '请选择要上传的三方对账单' }],
+               rules: [{ required: false, message: '请选择要上传的三方对账单' }],
               })(
                 <NewUpload
                 tok={getToken}
@@ -198,30 +207,28 @@ class ListQuery extends Component {
                 }}
                 bizzCode="ACCOUNT_STATEMENT_EXCEL_UPLOAD"
               />
-
-
               )
               }
 						</FormItem>
 					</Col>
-
+         
 				</Row>
-          <Row>
-          { 
-            this.state.visibleTable?<div style={{height:'200px',marginTop:'20px'}}>
-            <OptionTable stateMentList={stateMentList}/></div>
-            :<div style={{height:'200px'}}></div>
-          }
-       </Row>
           
-        <Row style={{marginTop:'20px'}}>
-        <Col span={11}>
+          <Row>
+            { 
+              this.state.visibleTable?<div style={{height:'200px',marginTop:'20px'}}>
+              <OptionTable stateMentList={stateMentList}/></div>
+              :<div style={{height:'200px'}}></div>
+            }
+        </Row>
+          <Row>
+           <Col span={24}>
 						<FormItem label='' {...formItemLayout}>
-              {getFieldDecorator('payment_status_1', { initialValue: [],
+              {getFieldDecorator('summary_sheet_name', { initialValue: [],
                rules: [{ required: true, message: '请选择要上传的汇总单' }],
             })(
               <Upload {...props}>
-              <Button type="primary" >
+              <Button type="primary">
                 <Icon type="upload" />请选择要上传的汇总单
               </Button>
             </Upload>
@@ -229,6 +236,7 @@ class ListQuery extends Component {
 						</FormItem>
 					</Col>
         </Row>
+        
         {
         this.state.stateTotal?<div style={{height:'200px',marginTop:'20px'}}>
         <TotalTable summaryList={summaryList}/></div>:<div style={{height:'200px'}}>
@@ -239,10 +247,10 @@ class ListQuery extends Component {
         <Col span={6}>
         
             <Button style={{marginRight:'20px'}}>取消</Button>
-            <Popconfirm title="确认后将改变订单的对账状态，是否确认此操作？" onConfirm={this.handleSearch} okText="确定" cancelText="取消">
-              <Button type="primary" className='left-gap'
-               disabled={!(stateMentList.total_pay_amount ==summaryList.total_pay_amount )}>确认对账</Button>
-            </Popconfirm>
+          {(stateMentList.total_pay_amount ==summaryList.total_pay_amount )?<Popconfirm title="确认后将改变订单的对账状态，是否确认此操作？" onConfirm={this.handleSearch} okText="确定" cancelText="取消">
+              <Button type="primary" className='left-gap'>确认对账</Button>
+            </Popconfirm>:<Button type="primary" className='left-gap'
+               disabled={true}>确认对账</Button>}
           
 					</Col>
           <Col span={8}></Col>
@@ -262,42 +270,43 @@ export class OptionTable extends Component{
 
   }
   render(){
-    let {stateMentList}= this.props
+    let {stateMentList}= this.props;
+    console.log(stateMentList)
     return <div className='statementBox'>
       <Row className='title'>对账单信息</Row>
-      <Row className='info'>
+      {/* <Row className='info'>
         <Col span={12}>
         三方对账单总数:{stateMentList.total_statement}
         </Col>
         <Col span={12}>
         扣减订单:{stateMentList. deduction_order_count}
         </Col>
-      </Row>
+      </Row> */}
 
       <Row className='info'>
         <Col span={12}>
         总金额(元):{stateMentList.total_pay_amount }
         </Col>
-        <Col span={12}>
+        {/* <Col span={12}>
         扣减总金额(元):{stateMentList.deduction_amount}
-        </Col>
+        </Col> */}
       </Row>
 
-      <Row className='info'>
+      {/* <Row className='info'>
         <Col span={12}>
         待付订单:{stateMentList.wait_pay_order}
         </Col>
         <Col span={12}>
         </Col>
-      </Row>
+      </Row> */}
 
-       <Row className='info'>
+       {/* <Row className='info'>
         <Col span={12}>
         应付总金额(元):{stateMentList.total_pay_amount}
         </Col>
         <Col span={12}>
         </Col>
-      </Row>
+      </Row> */}
     </div>
   }
 }
