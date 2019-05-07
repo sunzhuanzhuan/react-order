@@ -32,13 +32,17 @@ class ListQuery extends Component {
           if (!err) {
             let {search }=this.props;
             const hide = message.loading('上传中，请稍候...');
-            this.props.importSummary( ...this.state.fileList,{ commit: 2 }).then((res) => {
+            let content = new window.FormData();
+            content.append('file_path',this.state.file); 
+            content.append('commit', 2); 
+            content.append('statement_id', this.state.statement_id);
+            this.props.importSummary(content).then((res) => {
               // handlefilterParams(params);
               hide();
-              if(res.data.code == 1000){
+              if(res.code == 1000){
                 message.success('上传成功，本次对账完成！');
                 this.props.history.push({
-                  pathname: '/order/trinity/reconciliations/summary',
+                  pathname: '/order/publicOrderList',
                   search: `?${qs.stringify({ agent: search.agent})}`,
                 });
               }else{
@@ -122,7 +126,7 @@ class ListQuery extends Component {
 			wrapperCol: { span: 18 },
 		};
     const props = {
-     
+      // be
 			headers: { "Content-Type": "application/x-www-form-urlencoded" },
 			accept: ".xlsx,.xls",
 			showUploadList: true,
@@ -148,14 +152,15 @@ class ListQuery extends Component {
 					this.setState({ 
             fileList: ary,
             stateTotal:true,
-           summaryList:res.data
+           summaryList:res.data,
+           file:obj.file
            });
 					hide();
           message.success('上传成功！');
           
 				}).catch(({ errorMsg }) => {
 					hide();
-					message.error(errorMsg || '当前导入文件已存在，请勿重复导入！')
+					// message.error(errorMsg)
 				});
 			}
 		};

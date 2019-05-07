@@ -39,7 +39,7 @@ export default class SummaryDetailInfo extends Component {
       <Row className='row'>
         <Col span={6}> 对账单名称:{detailSummary.statement_name} </Col>
         <Col span={6}> 总金额(元): {detailSummary.total_pay_amount }</Col>
-        <Col span={6}> 对账单:<a >{detailSummary.attachment} </a></Col>
+        <Col span={6}> 对账单:{detailSummary.summary_sheet_name}</Col>
       </Row>
       {/* <Row className='row'>
         <Col span={6}> 订单总数{detailSummary.total_order_count} </Col>

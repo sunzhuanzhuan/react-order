@@ -242,7 +242,7 @@ handleCancel = (e) => {
 
 const mapStateToProps = (state) => {
 	return {
-    summaryList: state.statement.summaryList,
+    summaryList: state.statement.summaryTrinityList,
     detailSummary: state.statement.detailSummary,
 		detailSummaryList: state.statement.detailSummaryList,
     agentInfo:state.statement.agentInfo

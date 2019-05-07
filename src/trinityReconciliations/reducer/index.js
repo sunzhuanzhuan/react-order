@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux';
 import {
   orderList,
-  summaryList,
+  summaryTrinityList,
   detailSummaryList,
   detailSummary,
   statementList,
@@ -13,7 +13,7 @@ import {
 
 export default combineReducers({
   orderList,
-  summaryList,
+  summaryTrinityList,
   detailSummaryList,
   detailSummary,
   statementList,

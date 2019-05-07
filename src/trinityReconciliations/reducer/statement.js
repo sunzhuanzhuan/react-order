@@ -1,6 +1,6 @@
 import { 
   getOrderList_success,
-  getSummaryList_success,
+  getTrinitySummaryList_success,
   getDelSummary_success,
   getDetailSummaryList_success,
   getListStatement_success,
@@ -21,8 +21,8 @@ export const orderList = handleActions({
 }, {})
 
 //汇总当列表
-export const summaryList = handleActions({
-	[getSummaryList_success]: (state, action) => {
+export const summaryTrinityList = handleActions({
+	[getTrinitySummaryList_success]: (state, action) => {
 		return { ...action.payload.data }
 	}
 }, {})
