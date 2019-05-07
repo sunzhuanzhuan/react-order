@@ -400,7 +400,9 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     width: 150,
     fixed: 'left',
     render: (text, record) => {
-      return <a href={record.requirement_path} target="_blank">{text}</a>
+      return <div style={{ width: 100 }}>
+        <a href={record.requirement_path} target="_blank">{text}</a>
+      </div>
     }
   },
   {
@@ -410,7 +412,7 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     align: 'center',
     width: 100,
     render: text => {
-      return <div style={{ minWidth: 80 }}>{text || '-'}</div>
+      return <div>{text || '-'}</div>
     }
   },
   {
@@ -427,7 +429,7 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
         {record.record.apply_status == 4 && <div>拒绝原因：{record.record.check_reason}</div>}
         {record.record.apply_status == 4 && <div>拒绝时间：{record.record.check_at}</div>}
       </div> : ''
-      return <div style={{ minWidth: 100 }}>{text ? <Tooltip title={node}>{APPLY_STATUS[text]}</Tooltip> : '-'}</div>
+      return <div>{text ? <Tooltip title={node}>{APPLY_STATUS[text]}</Tooltip> : '-'}</div>
     }
   },
   {
@@ -437,7 +439,7 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     align: 'center',
     width: 100,
     render: text => {
-      return <div style={{ minWidth: 80 }}>{text || '-'}</div>
+      return <div>{text || '-'}</div>
     }
   },
   {
@@ -447,7 +449,7 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     align: 'center',
     width: 120,
     render: (text, record) => {
-      return <div style={{ minWidth: 100 }}>{record.link_url && <a href={record.link_url} target="_blank">{text}</a> || text}</div>
+      return <div>{record.link_url && <a href={record.link_url} target="_blank">{text}</a> || text}</div>
     }
   },
   {
@@ -458,7 +460,7 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     width: 100,
     render: (text, record) => {
       const flag = record.weibo_type == 23 ? true : false;
-      return <div style={{ minWidth: 80 }}>{flag ? '-' : text}</div>
+      return <div>{flag ? '-' : text}</div>
     }
   },
   {
@@ -468,7 +470,7 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     align: 'center',
     width: 100,
     render: text => {
-      return <div style={{ minWidth: 80 }}>{text || '-'}</div>
+      return <div>{text || '-'}</div>
     }
   },
   {
@@ -478,7 +480,7 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     align: 'center',
     width: 120,
     render: text => {
-      return <div style={{ minWidth: 100 }}>{text || '-'}</div>
+      return <div>{text || '-'}</div>
     }
   },
   {
@@ -488,7 +490,7 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     align: 'center',
     width: 120,
     render: text => {
-      return <div style={{ minWidth: 100 }}>{text && numeral(text).format('0,0') || '-'}</div>
+      return <div>{text && numeral(text).format('0,0') || '-'}</div>
     }
   },
   {
@@ -498,7 +500,7 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     align: 'center',
     width: 120,
     render: text => {
-      return <div style={{ minWidth: 100 }}>{text && numeral(text).format('0,0') || '-'}</div>
+      return <div>{text && numeral(text).format('0,0') || '-'}</div>
     }
   },
   {
@@ -508,7 +510,7 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     align: 'center',
     width: 120,
     render: text => {
-      return <div style={{ minWidth: 100 }}>{text || '-'}</div>
+      return <div>{text || '-'}</div>
     }
   },
   {
@@ -518,7 +520,7 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     align: 'center',
     width: 100,
     render: text => {
-      return <div style={{ minWidth: 80 }}>{text == 1 ? '是' : text == 2 ? '否' : '-'}</div>
+      return <div>{text == 1 ? '是' : text == 2 ? '否' : '-'}</div>
     }
   },
   {
@@ -528,7 +530,7 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     align: 'center',
     width: 120,
     render: text => {
-      return <div style={{ minWidth: 100 }}>{text || '-'}</div>
+      return <div>{text || '-'}</div>
     }
   },
   {
@@ -538,7 +540,7 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     align: 'center',
     width: 120,
     render: text => {
-      return <div style={{ minWidth: 100 }}>{text || '-'}</div>
+      return <div>{text || '-'}</div>
     }
   },
   {

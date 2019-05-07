@@ -171,7 +171,9 @@ class ListQuery extends React.Component {
               placeholder='请选择'
               getPopupContainer={() => document.querySelector('.spotplan-list-form')}
               labelInValue
+              allowClear
             >
+              <Option value=''>全部</Option>
               <Option value={1}>是</Option>
               <Option value={2}>否</Option>
             </Select>
