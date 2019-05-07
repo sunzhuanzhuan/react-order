@@ -35,7 +35,8 @@ class CheckOrder extends React.Component {
   // }
   render() {
     const { spotplanExecutor, spotplanPlatform, spotplanProject, spotplanOrderList: { page, pageSize, total, rows = [] }, spotplanPoInfo, handleCheck, orderMaps, loading } = this.props;
-    return <div className='splotplan-check-container' style={{ height: 700, overflowY: 'scroll', overflowX: 'hidden' }}>
+    const winHeight = document.documentElement.clientHeight - 120 + 'px';
+    return <div className='splotplan-check-container' style={{ height: winHeight, overflowY: 'scroll', overflowX: 'hidden' }}>
       <Header data={spotplanPoInfo} />
       <h3 style={{ marginTop: '20px' }}>订单列表</h3>
       <div className='check-table-container'>

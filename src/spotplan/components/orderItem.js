@@ -29,13 +29,13 @@ export default class OrderItem extends React.Component {
     return <div className='check-order-item'>
       <div className='order-item-title'>
         <div className='title-info'>
-          <span>订单ID：</span><span className='primary-font'>{data && data.order_id}</span>
-          <span>订单状态：</span><span>{data && data.status_name}</span>
-          <span>需求名称：</span><span><a target='_blank' href={data && data.requirement_path}>{data && data.requirement_name}</a></span>
-          <span>账号名称：</span><span><a target='_blank' href={data && data.url}>{data && data.weibo_name}</a></span>
-          <span>平台：</span><span>{data && data.weibo_type_name}</span>
-          <span>执行人：</span><span>{data && data.executor_admin_name}</span>
-          <span>项目：</span><span><a target='_blank' href={data && data.project_path}>{data && data.project_name}</a></span>
+          <span>订单ID:</span><span className='primary-font'>{data && data.order_id}</span>
+          <span>订单状态:</span><span>{data && data.status_name}</span>
+          <span>需求名称:</span><span><a target='_blank' href={data && data.requirement_path}>{data && data.requirement_name}</a></span>
+          <span>账号名称:</span><span><a target='_blank' href={data && data.url}>{data && data.weibo_name}</a></span>
+          <span>平台:</span><span>{data && data.weibo_type_name}</span>
+          <span>执行人:</span><span>{data && data.executor_admin_name}</span>
+          <span>项目:</span><span><a target='_blank' href={data && data.project_path}>{data && data.project_name}</a></span>
         </div>
         {data && (data.flag == 2 || data.flag == 3) && <div className='disabled-reason'>
           <Tooltip
@@ -55,22 +55,18 @@ export default class OrderItem extends React.Component {
 }
 
 function Item({ data }) {
-  return <div className='order-item-list'>
-    <Col className='list-item'>
-      <div className='title'>PriceID</div>
-      <div>{data && data.price_id}</div>
-    </Col>
-    <Col className='list-item'>
-      <div className='title'>价格名称</div>
-      <div>{data && data.price_name}</div>
-    </Col>
-    <Col className='list-item'>
-      <div className='title'>账号报价（应约价）</div>
-      <div>{data && numeral(data.cost).format('0,0')}</div>
-    </Col>
-    <Col className='list-item'>
-      <div className='title'>总价（应约价）</div>
-      <div>{data && numeral(data.costwithfee).format('0,0')}</div>
-    </Col>
-  </div>
+  return <table className='item-table'>
+    <tr>
+      <th>PriceID</th>
+      <th style={{ minWidth: '600px' }}>价格名称</th>
+      <th style={{ minWidth: '160px' }}>账号报价（应约价）</th>
+      <th style={{ minWidth: '160px' }}>总价（应约价）</th>
+    </tr>
+    <tr>
+      <td>{data && data.price_id}</td>
+      <td style={{ minWidth: '600px' }}>{data && data.price_name}</td>
+      <td style={{ minWidth: '160px' }}>{data && numeral(data.cost).format('0,0')}</td>
+      <td style={{ minWidth: '160px' }}>{data && numeral(data.costwithfee).format('0,0')}</td>
+    </tr>
+  </table>
 }
