@@ -244,7 +244,7 @@ export default class NewUpload extends Component {
 				</div>
 		} else {
 			uploadButton =
-				<Button className={'type-' + listType} disabled={disabled || this.props.disabled} {...btnProps}>
+				<Button className={'type-' + listType} disabled={disabled || this.props.disabled} {...btnProps}  >
 					<Icon className='upload-icon' type={this.state.loading ? 'loading' : 'upload'} />
 					<span className="upload-text">{uploadText}</span>
 				</Button>

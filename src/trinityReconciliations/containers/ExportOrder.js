@@ -36,7 +36,7 @@ class ExportOrder extends Component {
 
   componentWillMount=()=> {
     const search = qs.parse(this.props.location.search.substring(1));
-    this.queryData({ page: 1, page_size: this.state.page_size})
+    this.queryData({ page: 1, page_size: this.state.page_size,statement_status:['1','4']})
     this.props.actions.getAgentInfo({agent_id:search.agent_id})
   }
   handleCancelSelect=()=>{

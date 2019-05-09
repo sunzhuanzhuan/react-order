@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { Row, Col, Form, Select, Button, Popconfirm, Upload, Icon, message } from "antd";
+import { Row, Col, Form, Select, Button, Popconfirm, Upload, Icon, message ,Steps} from "antd";
 import NewUpload from '../newUpload';
 import { withRouter } from 'react-router-dom'
 import './import.less';
 import qs from 'qs';
+const Step = Steps.Step;
 
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -18,7 +19,8 @@ class ListQuery extends Component {
       stateMentList:{},
       stateTotal:false,
       summaryList:{},
-      fileList:[]
+      fileList:[],
+      currentStep:-1
 
     };
   }
@@ -84,6 +86,7 @@ class ListQuery extends Component {
               visibleTable:true,
               stateMentList:res.data,
               statement_id:res.data.statement_id,
+              currentStep:0
               
             })
           })
@@ -97,7 +100,8 @@ class ListQuery extends Component {
     console.log(value)
     this.setState({
       visibleTable:true,
-      statement_id:value
+      statement_id:value,
+      currentStep:0
     })
     this.props.statementInputList.map((item)=>{
       if(item.statement_id == value){
@@ -122,8 +126,8 @@ class ListQuery extends Component {
     let { getToken,statementInputList} =this.props;
     let {stateMentList,summaryList,statement_id} = this.state
 		const formItemLayout = {
-			labelCol: { span: 6 },
-			wrapperCol: { span: 18 },
+			labelCol: { span: 7 },
+			wrapperCol: { span: 17 },
 		};
     const props = {
       // be
@@ -153,7 +157,8 @@ class ListQuery extends Component {
             fileList: ary,
             stateTotal:true,
            summaryList:res.data,
-           file:obj.file
+           file:obj.file,
+           currentStep:1
            });
 					hide();
           message.success('上传成功！');
@@ -165,103 +170,110 @@ class ListQuery extends Component {
 			}
 		};
     return <div>
-     <Form>
-				<Row>
-					
-					<Col span={11}>
-						<FormItem label='请选择关联三方对账单' {...formItemLayout}>
-              {getFieldDecorator('statement_id', { initialValue:'',
-              rules: [{ required: true, message: '请选择关联三方对账单' }],
-             })(
-								<Select
-                style={{ width: '300px' }}
-                onChange={this.handleChangeSelect}
-              >
-               <Option key={' '} >请选择</Option>
-              {
-                statementInputList.length>0?statementInputList.map((item)=>{
-                  return   <Option key={item.statement_id} value={item.statement_id}>{item.statement_name}</Option>
-                })
-              :null}
-              </Select>
-							)}
-						</FormItem>
-					</Col>
-					<Col span={13}>
-						<FormItem label='' {...formItemLayout}>
-              {getFieldDecorator('payment_status', { initialValue: [] ,
-               rules: [{ required: false, message: '请选择要上传的三方对账单' }],
-              })(
-                <NewUpload
-                tok={getToken}
-                uploadUrl="/api/common-file/file/v1/uploadPubBucket"
-                len={1}
-                size={50}
-                listType="text"
-                beforeUpload={this.beforeUpload}
-                uploadText="请选择要上传的三方对账单"
-                onChange={(file, originFile) =>{
-                  console.log(file[0].filepath);
-                  console.log(originFile);
-                  console.log(file);
-                  this.handleChangeOption(file[0].filepath)
-                }}
-                accept=".xlsx,.xls"
-                btnProps={{
-                  type: 'primary'
-                }}
-                bizzCode="ACCOUNT_STATEMENT_EXCEL_UPLOAD"
-              />
-              )
-              }
-						</FormItem>
-					</Col>
-         
-				</Row>
-          
-          <Row>
-            { 
-              this.state.visibleTable?<div style={{height:'200px',marginTop:'20px'}}>
-              <OptionTable stateMentList={stateMentList}/></div>
-              :<div style={{height:'200px'}}></div>
-            }
-        </Row>
-          <Row>
-           <Col span={24}>
-						<FormItem label='' {...formItemLayout}>
-              {getFieldDecorator('summary_sheet_name', { initialValue: [],
-               rules: [{ required: true, message: '请选择要上传的汇总单' }],
-            })(
-              <Upload {...props}>
-              <Button type="primary">
-                <Icon type="upload" />请选择要上传的汇总单
-              </Button>
-            </Upload>
-							)}
-						</FormItem>
-					</Col>
-        </Row>
-        
-        {
-        this.state.stateTotal?<div style={{height:'200px',marginTop:'20px'}}>
-        <TotalTable summaryList={summaryList}/></div>:<div style={{height:'200px'}}>
-        </div>
-      }
-        <Row>
-        <Col span={10}></Col>
-        <Col span={6}>
-        
-            <Button style={{marginRight:'20px'}}>取消</Button>
-          {(stateMentList.total_pay_amount ==summaryList.total_pay_amount )?<Popconfirm title="确认后将改变订单的对账状态，是否确认此操作？" onConfirm={this.handleSearch} okText="确定" cancelText="取消">
-              <Button type="primary" className='left-gap'>确认对账</Button>
-            </Popconfirm>:<Button type="primary" className='left-gap'
-               disabled={true}>确认对账</Button>}
-          
-					</Col>
-          <Col span={8}></Col>
-        </Row>
-			</Form>
+      <div style={{float:'left',height:'100%',width:'15%'}}>
+        <Steps direction="vertical" current={this.state.currentStep}>
+          <Step style={{height:'200px'}} title="对账单" description="选择或者导入对账单" />
+          <Step style={{height:'200px'}}  title="汇总单" description="上传汇总单" />
+          <Step style={{height:'200px'}}  title="对账" description="确认对账" />
+      </Steps>
+      </div>
      
+     <div style={{float:'left',height:'100%',width:'80%'}}>
+      <Form>
+          <Row style={{height:'200px'}}>
+            <Col span={10}>
+              <FormItem label='请关联三方对账单' {...formItemLayout}>
+                {getFieldDecorator('statement_id', { initialValue:'',
+                rules: [{ required: true, message: '请选择关联三方对账单' }],
+              })(
+                  <Select
+                  style={{ width: '300px' }}
+                  onChange={this.handleChangeSelect}
+                >
+                <Option key={' '} >请选择</Option>
+                {
+                  statementInputList.length>0?statementInputList.map((item)=>{
+                    return   <Option key={item.statement_id} value={item.statement_id}>{item.statement_name}</Option>
+                  })
+                :null}
+                </Select>
+                )}
+              </FormItem>
+              </Col>
+              <Col span={5}>
+              <FormItem label='' {...formItemLayout}>
+                {getFieldDecorator('payment_status', { initialValue: [] ,
+                rules: [{ required: false, message: '请上传的三方对账单' }],
+                })(
+                  <NewUpload
+                  tok={getToken}
+                  uploadUrl="/api/common-file/file/v1/uploadPubBucket"
+                  len={1}
+                  size={50}
+                  listType="text"
+                  beforeUpload={this.beforeUpload}
+                  uploadText="导入三方对账单"
+                  onChange={(file, originFile) =>{
+                    console.log(file[0].filepath);
+                    console.log(originFile);
+                    console.log(file);
+                    this.handleChangeOption(file[0].filepath)
+                  }}
+                  accept=".xlsx,.xls"
+                  btnProps={{
+                    type: 'primary'
+                  }}
+                  bizzCode="ACCOUNT_STATEMENT_EXCEL_UPLOAD"
+                />
+                )
+                }
+              </FormItem>
+              
+              </Col>  
+              <div>
+              { 
+                this.state.visibleTable?<div style={{marginTop:'60px'}}>
+                <OptionTable stateMentList={stateMentList}/></div>
+                :<div></div>
+              }  
+              </div>          
+          </Row>
+            
+            
+            <Row style={{height:'200px'}}>
+            <Col span={10}>
+              <FormItem label='请上传的汇总单' {...formItemLayout}>
+                {getFieldDecorator('summary_sheet_name', { initialValue: [],
+                rules: [{ required: true, message: '请上传的汇总单' }],
+              })(
+                <Upload {...props}>
+                <Button type="primary">
+                  <Icon type="upload" />上传文件
+                </Button>
+              </Upload>
+                )}
+              </FormItem>
+              </Col>
+          </Row>
+          
+          {
+          this.state.stateTotal?<div style={{height:'200px',marginTop:'20px'}}>
+          <TotalTable summaryList={summaryList}/></div>:<div>
+          </div>
+        }
+          <Row>
+          <Col span={12}>
+          
+              <Button style={{marginRight:'20px'}}>取消</Button>
+            {(stateMentList.total_pay_amount ==summaryList.total_pay_amount )?<Popconfirm title="确认后将改变订单的对账状态，是否确认此操作？" onConfirm={this.handleSearch} okText="确定" cancelText="取消">
+                <Button type="primary" className='left-gap'>确认对账</Button>
+              </Popconfirm>:<Button type="primary" className='left-gap'
+                disabled={true}>确认对账</Button>}
+            
+            </Col>
+          </Row>
+        </Form>
+      </div>
      
     </div>;
   }

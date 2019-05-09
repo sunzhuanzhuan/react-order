@@ -66,11 +66,12 @@ class StatementComponent extends React.Component {
       <div>
       <Button type="primary" className="publicOrderList-chooseBox-operateBtn" onClick={()=>{
         if(this.state.agent_id){
-          this.props.history.push({
-            pathname: '/order/trinity/reconciliations/exportOrder',
-            search: `?${qs.stringify({ 
-              agent_id:this.state.agent_id})}`,
-          });
+          window.open('/order/trinity/reconciliations/exportOrder?agent_id='+this.state.agent_id)
+          // this.props.history.push({
+          //   pathname: '/order/trinity/reconciliations/exportOrder',
+          //   search: `?${qs.stringify({ 
+          //     agent_id:this.state.agent_id})}`,
+          // });
         }else{
           message.error("请选择平台/代理商信息")
         }
@@ -97,11 +98,12 @@ class StatementComponent extends React.Component {
         }}>导入三方对账单</Button> */}
         <Button type="primary" className="publicOrderList-chooseBox-operateBtn" onClick={()=>{
           if(this.state.agent_id){
-            this.props.history.push({
-              pathname: '/order/trinity/reconciliations/importResult',
-              search: `?${qs.stringify({ 
-                agent_id:this.state.agent_id})}`,
-            });
+            window.open('/order/trinity/reconciliations/importResult?agent_id='+this.state.agent_id)
+            // this.props.history.push({
+            //   pathname: '/order/trinity/reconciliations/importResult',
+            //   search: `?${qs.stringify({ 
+            //     agent_id:this.state.agent_id})}`,
+            // });
           }else{
             message.error("请选择平台/代理商信息")
           }
@@ -110,11 +112,12 @@ class StatementComponent extends React.Component {
        
         <Button type="primary" className="publicOrderList-chooseBox-operateBtn" onClick={()=>{
           if(this.state.agent_id){
-            this.props.history.push({
-              pathname: '/order/trinity/reconciliations/payment',
-              search: `?${qs.stringify({ 
-                agent_id:this.state.agent_id})}`,
-            });
+            window.open('/order/trinity/reconciliations/payment?agent_id='+this.state.agent_id)
+            // this.props.history.push({
+            //   pathname: '/order/trinity/reconciliations/payment',
+            //   search: `?${qs.stringify({ 
+            //     agent_id:this.state.agent_id})}`,
+            // });
           }else{
             message.error("请选择平台/代理商信息")
           }
@@ -122,11 +125,12 @@ class StatementComponent extends React.Component {
         }}>申请周期付款</Button>
         <Button type="primary" className="publicOrderList-chooseBox-operateBtn" onClick={()=>{
           if(this.state.agent_id){
-            this.props.history.push({
-              pathname: '/order/trinity/reconciliations/summary',
-              search: `?${qs.stringify({ 
-                agent_id:this.state.agent_id})}`,
-            });
+            window.open('/order/trinity/reconciliations/summary?agent_id='+this.state.agent_id)
+            // this.props.history.push({
+            //   pathname: '/order/trinity/reconciliations/summary',
+            //   search: `?${qs.stringify({ 
+            //     agent_id:this.state.agent_id})}`,
+            // });
           }else{
             message.error("请选择平台/代理商信息")
           }
@@ -134,11 +138,12 @@ class StatementComponent extends React.Component {
         }}>汇总单列表</Button>
         <Button type="primary" className="publicOrderList-chooseBox-operateBtn" onClick={()=>{
           if(this.state.agent_id){
-            this.props.history.push({
-              pathname: '/order/trinity/reconciliations/statement',
-              search: `?${qs.stringify({ 
-                agent_id:this.state.agent_id})}`,
-            });
+            window.open('/order/trinity/reconciliations/statement?agent_id='+this.state.agent_id)
+            // this.props.history.push({
+            //   pathname: '/order/trinity/reconciliations/statement',
+            //   search: `?${qs.stringify({ 
+            //     agent_id:this.state.agent_id})}`,
+            // });
           }else{
             message.error("请选择平台/代理商信息")
           }

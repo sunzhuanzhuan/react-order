@@ -7,6 +7,7 @@ import { bindActionCreators } from "redux";
 import qs from 'qs'
 import './payment.less';
 
+
 class ImportOrder extends Component {
   constructor(props, context) {
     super(props, context);
@@ -30,6 +31,7 @@ class ImportOrder extends Component {
     return <div>
      <Row className='title'>导入汇总结果</Row>
      <div className='agent'>收款平台/代理商:<span className="agent_name">{agentInfo.length>0?agentInfo[0].agentName:''}</span></div>
+     
     <ImportResult
     history= {this.props.history}
     getToken={this.props.actions.getToken}
