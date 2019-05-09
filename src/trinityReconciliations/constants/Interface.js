@@ -42,7 +42,7 @@ export default {
     detailSummary:'/finance/summary/detail',
     detailSummaryList:'/finance/summary/detailOrderList',
     deleteStatement:'/finance/statement/del',
-    confirmApply:'/finance/statement/import',
+    confirmApply:'/trinity/publicPaymentSlip/applyPeriodicPayment',
     searchName:'/finance/commonApi/getAccountIds',
   },
   meta:{

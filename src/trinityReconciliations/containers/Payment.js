@@ -20,7 +20,8 @@ class Payment extends Component {
       loading: false,
       page_size:20,
       filterParams:{},
-      summary_sheet_id:''
+      summary_sheet_id:'',
+      item:{}
     };
   }
 
@@ -46,15 +47,22 @@ class Payment extends Component {
   }
   //选择查看详情
   handleSelectDetail=(record)=>{
+    console.log(record)
     this.setState({
-      summary_sheet_id:record.summary_sheet_id
+      summary_sheet_id:record.summary_sheet_id,
+      item:record
     })
+    this.child.handleResetForm()
+    
   }
    //过滤条件
    handlefilterParams = (filterParams) => {
     this.setState({ filterParams });
   }
  
+  onRef = (ref) => {
+    this.child = ref
+  }
   render() {
     const search = qs.parse(this.props.location.search.substring(1));
     const column = paymentListFunc(this.handleSelectDetail,this.state.summary_sheet_id);
@@ -103,12 +111,14 @@ class Payment extends Component {
      </div>
      <Row style={{textAlign:'center'}} className="payment">
         <ReqireTicket
+        onRef={this.onRef}
         confirmApply={this.props.actions.confirmApply}
         queryData={this.queryData}
         summary_sheet_id={this.state.summary_sheet_id}
         handleSelectDetail={this.handleSelectDetail}
         filterParams={filterParams}
         page_size={page_size}
+        item={this.state.item}
         />
      </Row>
     </div>;
@@ -118,7 +128,7 @@ class Payment extends Component {
 
 const mapStateToProps = (state) => {
 	return {
-		summaryList: state.statement.summaryList,
+		summaryList: state.statement.summaryTrinityList,
     agentInfo:state.statement.agentInfo
 	}
 }

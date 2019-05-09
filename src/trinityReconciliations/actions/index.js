@@ -71,7 +71,7 @@ export const {
   confirmApply,
   confirmApply_success
 } = createHttpAction('confirmApply', Interface.statement.confirmApply, {
-  method: 'get'
+  method: 'post'
 });
 
 //导入token

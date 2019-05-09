@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { Row, Col, Form, Radio, Input,Button,message} from "antd";
+import { Row, Col, Form, Radio, InputNumber,Button,message,Input} from "antd";
 import ColumnGroup from 'antd/lib/table/ColumnGroup';
-
+import {withRouter} from 'react-router-dom'
+import qs from 'qs'
 const FormItem = Form.Item;
 const RadioGroup = Radio.Group;
 
@@ -10,17 +11,27 @@ class ListQuery extends Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-    
+      showReturnAmount:true
     };
   }
   handleSearch = (e) => {
-		const { confirmApply, summary_sheet_id,queryData,filterParams,page_size} = this.props;
+    const search = qs.parse(this.props.location.search.substring(1));
+		const { confirmApply, summary_sheet_id,queryData,filterParams,page_size,item} = this.props;
 		e.preventDefault();
 		this.props.form.validateFields((err, values) => {
 			if (!err) {
        
         if(summary_sheet_id !=''){
-          let params =  { summary_sheet_id:summary_sheet_id,...values };
+          if(values.return_invoice_type == 1){
+            values.return_invoice_amount == item.total_pay_amount
+          }else if(values.return_invoice_type == 3){
+            values.return_invoice_amount = 0
+          }else{
+            if( values.return_invoice_amount>=item.total_pay_amount){
+                message.error('最大值不可大于申请金额，不可为负数，仅可输入数字')
+            }
+          }
+          let params =  { summary_sheet_id:summary_sheet_id,...values,agent_id:search.agent_id };
             confirmApply({...params}).then((res)=>{
               if(res.code == 1000 ){
                 queryData({...filterParams,page:1,page_size:page_size})
@@ -44,9 +55,28 @@ class ListQuery extends Component {
     this.props.form.resetFields();
     this.props.handleSelectDetail({summary_sheet_id:''})
   }
+  handleResetForm =()=>{
+    this.props.form.resetFields();
+  }
   
-
-  componentWillMount() {}
+  handleChoseTypeByReturnInvoice=(e)=>{
+    if(e.target.value ==1){
+      this.props.form.setFieldsValue({
+        return_invoice_amount:this.props.item.total_pay_amount
+      })
+    }else if(e.target.value ==3){
+      this.props.form.setFieldsValue({
+        return_invoice_amount:0
+      })
+    }else{
+      this.props.form.setFieldsValue({
+        return_invoice_amount:''
+      })
+    }
+  }
+  componentDidMount() {
+    this.props.onRef(this)
+  }
 
   render() {
     let { getFieldDecorator } = this.props.form;
@@ -66,7 +96,7 @@ class ListQuery extends Component {
 							{getFieldDecorator('return_invoice_type',{
                 rules:[{required:true,message:'请输入回票方式'}]
               })(
-                <RadioGroup>
+                <RadioGroup onChange={this.handleChoseTypeByReturnInvoice}>
                   <Radio value={1}>全部回票</Radio>
                   <Radio value={2}>部分回票</Radio>
                   <Radio value={3}>不回票</Radio>
@@ -83,7 +113,7 @@ class ListQuery extends Component {
             {getFieldDecorator('return_invoice_amount',{
                rules:[{required:true,message:'请输入回票金额'}]
             })(
-				<Input style={{ width: 140 }} />
+				<InputNumber style={{ width: 140 }} decimalSeparator="." precision={2} />
 					)}
 						</FormItem>
 					</Col>
@@ -103,4 +133,4 @@ class ListQuery extends Component {
     </div>;
   }
 }
-export default Form.create()(ListQuery);
+export default Form.create()(withRouter(ListQuery));
