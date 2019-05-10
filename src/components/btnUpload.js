@@ -62,7 +62,7 @@ class btnUpload extends Component {
     
                 <NewUpload
                 tok={this.props.actions.getToken}
-                uploadUrl="/api/common-file/file/v1/uploadPriBucket"
+                uploadUrl="/api/common-file/file/v1/uploadPubBucket"
                 len={1}
                 size={50}
                 listType="text"

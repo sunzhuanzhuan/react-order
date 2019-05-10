@@ -26,10 +26,10 @@ class ListQuery extends Component {
             values.return_invoice_amount == item.total_pay_amount
           }else if(values.return_invoice_type == 3){
             values.return_invoice_amount = 0
-          }else{
-            if( values.return_invoice_amount>=item.total_pay_amount){
-                message.error('最大值不可大于申请金额，不可为负数，仅可输入数字')
-            }
+          }
+          if( values.return_invoice_amount>item.total_pay_amount){
+              message.error('最大值不可大于申请金额，不可为负数，仅可输入数字');
+              return
           }
           let params =  { summary_sheet_id:summary_sheet_id,...values,agent_id:search.agent_id };
             confirmApply({...params}).then((res)=>{
@@ -91,7 +91,7 @@ class ListQuery extends Component {
 				<Row style={{textAlign:'center'}}>
         <Col span={7}></Col>
         
-					<Col span={10}>
+					<Col span={8}>
 						<FormItem label='回汇票方式' {...formItemLayout}>
 							{getFieldDecorator('return_invoice_type',{
                 rules:[{required:true,message:'请输入回票方式'}]

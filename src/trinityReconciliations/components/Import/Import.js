@@ -90,7 +90,11 @@ class ListQuery extends Component {
               
             })
           })
+          message.success('上传成功')
+      }else{
+        message.error(res.data.msg)
       }
+
       
     })
    
@@ -240,7 +244,7 @@ class ListQuery extends Component {
           </Row>
             
             
-            <Row style={{height:'200px'}}>
+            <Row>
             <Col span={10}>
               <FormItem label='请上传的汇总单' {...formItemLayout}>
                 {getFieldDecorator('summary_sheet_name', { initialValue: [],
@@ -257,7 +261,7 @@ class ListQuery extends Component {
           </Row>
           
           {
-          this.state.stateTotal?<div style={{height:'200px',marginTop:'20px'}}>
+          this.state.stateTotal?<div>
           <TotalTable summaryList={summaryList}/></div>:<div>
           </div>
         }
@@ -341,7 +345,7 @@ export class TotalTable extends Component{
       <Row className='title'>汇总单信息</Row>
       <Row className='info'>
         <Col span={12}>
-        订单总数:{summaryList.total_order}
+        订单总数:{summaryList.total_order_count}
         </Col>
         <Col span={12}>
         总金额(元):{summaryList.total_pay_amount }
@@ -350,7 +354,7 @@ export class TotalTable extends Component{
 
       <Row className='info'>
         <Col span={12}>
-        待付订单:{summaryList.wait_pay_order}
+        待付订单:{summaryList.wait_pay_order_count}
         </Col>
         <Col span={12}>
         应付总金额(元):{summaryList.total_pay_amount}
