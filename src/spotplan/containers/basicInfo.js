@@ -99,8 +99,7 @@ class BasicInfo extends React.Component {
       <FormItem label='PO单号' {...formItemLayout}>
         {getFieldDecorator('po', {
           rules: [
-            { required: false, message: 'Spotplan名称不能为空' },
-            { max: 100, message: 'Spotplan名称不能超过100个字' }]
+            { max: 50, message: 'PO名称不能超过50个字符' }]
         })(
           <Input style={{ width: 260 }} placeholder="请输入PO单号" onChange={this.handleChangeValue}/>
         )}

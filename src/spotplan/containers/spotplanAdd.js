@@ -6,7 +6,7 @@ import BasicInfo from './basicInfo'
 import CheckOrder from './checkOrder'
 import EditOrder from './editOrder'
 import BottomBlock from '../components/bottomBlock'
-import { message, Steps, Modal } from 'antd'
+import { message, Steps, Modal,Button} from 'antd'
 import './spotplan.less'
 import qs from 'qs'
 
@@ -25,7 +25,8 @@ class SpotplanAdd extends React.Component {
     super();
     this.state = {
       orderMaps: {},
-      loading: false
+      loading: false,
+      visible:false
     }
     this.basicInfo = React.createRef();
     this.editOrder = React.createRef();
@@ -103,13 +104,21 @@ class SpotplanAdd extends React.Component {
     if (num == 2 && type == 'go') {
       this.basicInfo.current.validateFields((err, values) => {
         if (!err) {
-          const hide = message.loading('操作中，请稍候...');
-          this.props.actions.postAddSpotplan({ ...values, company_id: search.company_id }).then((res) => {
-            this.props.history.push(`/order/spotplan/add?step=2&spotplan_id=${res.data.spotplan_id}&company_id=${search.company_id}`);
-            hide();
-          }).catch(({ errorMsg }) => {
-            message.error(errorMsg || '操作失败，请重试！')
-          })
+          if(values.po){
+            console.log(!this.form.state.reslutBtn)
+              if(!this.form.state.reslutBtn){
+                this.setState({
+                  visible: true,
+                });
+              }
+          }
+          // const hide = message.loading('操作中，请稍候...');
+          // this.props.actions.postAddSpotplan({ ...values, company_id: search.company_id }).then((res) => {
+          //   this.props.history.push(`/order/spotplan/add?step=2&spotplan_id=${res.data.spotplan_id}&company_id=${search.company_id}`);
+          //   hide();
+          // }).catch(({ errorMsg }) => {
+          //   message.error(errorMsg || '操作失败，请重试！')
+          // })
         }
       });
     }
@@ -166,6 +175,11 @@ class SpotplanAdd extends React.Component {
       }
     }
   }
+  handleCancel = () => {
+    this.setState({
+      visible: false,
+    });
+  }
   render() {
     const search = qs.parse(this.props.location.search.substring(1));
     const step = parseInt(search.step);
@@ -180,7 +194,7 @@ class SpotplanAdd extends React.Component {
           </Steps>
         </div>
         <div className='spotplan-add-container'>
-          {step == 1 && <BasicInfo ref={this.basicInfo} search={search} queryData={this.queryData} data={spotplanCompanyInfo} />}
+          {step == 1 && <BasicInfo ref={this.basicInfo} search={search} queryData={this.queryData} data={spotplanCompanyInfo} wrappedComponentRef={(form) => this.form = form} />}
           {step == 2 && <CheckOrder queryData={this.queryData} handleCheck={this.handleCheck}
             orderMaps={orderMaps} location={this.props.location} history={this.props.history} queryBasicInfo={this.queryBasicInfo} loading={loading} />}
           {step == 3 && <EditOrder ref={this.editOrder} search={search} queryData={this.queryData} data={spotplanEditList['all']} handleUpdate={this.handleUpdate} queryBasicInfo={this.queryBasicInfo} headerData={spotplanPoInfo} loading={loading} handleDelete={this.handleDelete} />}
@@ -188,6 +202,16 @@ class SpotplanAdd extends React.Component {
       </div>
       <BottomBlock current={step} handleSteps={this.handleSteps} orderMaps={orderMaps}
         handlDel={this.handleCheck} data={spotplanEditList} search={search} />
+       {this.state.visible?<Modal
+          title="提示"
+          visible={this.state.visible}
+          onCancel={this.handleCancel}
+          footer={
+            <Button onClick={this.handleCancel}>关闭</Button>
+          }
+        >
+          <p>为确保填写的PO单号真实存在，请先点击【检验】，再进入“下一步”</p>
+        </Modal>:null} 
     </>
   }
 }
