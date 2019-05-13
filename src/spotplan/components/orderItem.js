@@ -56,17 +56,21 @@ export default class OrderItem extends React.Component {
 
 function Item({ data }) {
   return <table className='item-table'>
-    <tr>
-      <th>PriceID</th>
-      <th style={{ minWidth: '600px' }}>价格名称</th>
-      <th style={{ minWidth: '160px' }}>账号报价（应约价）</th>
-      <th style={{ minWidth: '160px' }}>总价（应约价）</th>
-    </tr>
-    <tr>
-      <td>{data && data.price_id}</td>
-      <td style={{ minWidth: '600px' }}>{data && data.price_name}</td>
-      <td style={{ minWidth: '160px' }}>{data && numeral(data.cost).format('0,0')}</td>
-      <td style={{ minWidth: '160px' }}>{data && numeral(data.costwithfee).format('0,0')}</td>
-    </tr>
+    <thead>
+      <tr>
+        <th>PriceID</th>
+        <th style={{ minWidth: '600px' }}>价格名称</th>
+        <th style={{ minWidth: '160px' }}>账号报价（应约价）</th>
+        <th style={{ minWidth: '160px' }}>总价（应约价）</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>{data && data.price_id}</td>
+        <td style={{ minWidth: '600px' }}>{data && data.price_name}</td>
+        <td style={{ minWidth: '160px' }}>{data && numeral(data.cost).format('0,0')}</td>
+        <td style={{ minWidth: '160px' }}>{data && numeral(data.costwithfee).format('0,0')}</td>
+      </tr>
+    </tbody>
   </table>
 }

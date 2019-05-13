@@ -11,7 +11,7 @@ class EditOrder extends React.Component {
   }
   componentDidMount() {
     const { search } = this.props;
-    this.props.queryBasicInfo();
+    this.props.queryBasicInfo({ spotplan_id: search.spotplan_id });
     this.props.queryData(3, { spotplan_id: search.spotplan_id }, this.handleEditTable);
   }
   handleEditTable = data => {

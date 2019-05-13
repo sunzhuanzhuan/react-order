@@ -122,11 +122,12 @@ class SpotplanAdd extends React.Component {
       if (!Object.values(orderMaps).length) {
         this.setState({ orderMaps: {} }, () => {
           if (search.noback) {
-            this.props.history.push(`/order/spotplan/add?step=3&spotplan_id${search.spotplan_id}&noback=true`);
+            this.props.history.push(`/order/spotplan/add?step=3&spotplan_id=${search.spotplan_id}&noback=true`);
           } else {
             this.props.history.push('/order/spotplan/add?step=3&spotplan_id=' + search.spotplan_id);
           }
         })
+        return
       }
       const hide = message.loading('操作中，请稍候...');
       let spotplan_order = [];
