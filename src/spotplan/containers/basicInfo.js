@@ -1,7 +1,8 @@
 import React from 'react';
-import { Form, Input, Select } from 'antd';
+import { Form, Input, Select ,Button,message} from 'antd';
 import moment from 'moment';
 import 'moment/locale/zh-cn';
+import api from '../../api/index'
 moment.locale('zh-cn');
 
 const FormItem = Form.Item;
@@ -11,11 +12,45 @@ const Option = Select.Option;
 class BasicInfo extends React.Component {
   constructor() {
     super();
-    this.state = {}
+    this.state = {
+      btnValidate:false,
+      validateMessage:false,
+      id:1907,
+      reslutBtn:false
+    }
   }
   componentDidMount() {
     const { search } = this.props;
     this.props.queryData(1, { company_id: search.company_id });
+  }
+  //校验按钮是否存在
+  handleChangeValue=(e)=>{
+    if(e.target.value != ''){
+      this.setState({btnValidate:true})
+    }else{
+      this.setState({btnValidate:false})
+    }
+  }
+  handleCheckPo=()=>{
+    api.get("/operator-gateway/trinityPlatform/v1/getCooperationPlatform")
+    .then((response) => {
+      let data = response.data
+      if(response.code == 200){
+        this.setState({
+          validateMessage:true,
+          reslutBtn:true
+        })
+      }else{
+        this.setState({
+          validateMessage:true,
+          reslutBtn:true
+        })
+      }
+      
+    })
+    .catch((error) => {
+      message.error("校验获取失败")
+    });
   }
   render() {
     const { getFieldDecorator } = this.props.form;
@@ -60,6 +95,20 @@ class BasicInfo extends React.Component {
           <Input style={{ width: 260 }} />
         )}
         <div className='tip-style' > 为方便日后调用 / 查询，可以重新命名</div>
+      </FormItem>
+      <FormItem label='PO单号' {...formItemLayout}>
+        {getFieldDecorator('po', {
+          rules: [
+            { required: false, message: 'Spotplan名称不能为空' },
+            { max: 100, message: 'Spotplan名称不能超过100个字' }]
+        })(
+          <Input style={{ width: 260 }} placeholder="请输入PO单号" onChange={this.handleChangeValue}/>
+        )}
+       {this.state.btnValidate? <Button style={{ marginLeft: '10px' }}  type="primary" onClick={this.handleCheckPo}>校验</Button>:null}
+       {this.state.reslutBtn?this.state.validateMessage?<div>
+         <span style={{ marginRight: '10px' }}>PO总额:￥1245.00 </span>
+         <a target="_blank" href={`http://192.168.100.142/sale/executionevidence/detail?id=${this.state.id}`}>查看PO详情</a>
+       </div>:<div style={{color:'red'}}>未在系统匹配到该公司存在该PO单号，请重新输入后再次检验</div>:null}
       </FormItem>
       <FormItem label='备注信息' {...formItemLayout}>
         {getFieldDecorator('content', {
