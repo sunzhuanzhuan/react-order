@@ -11,6 +11,7 @@ import EditOrderModal from '../components/spotplanDetail/editOrderModal'
 import ChangeModal from '../components/spotplanDetail/changeNumberModal'
 import QuitModal from '../components/spotplanDetail/quitOrderModal'
 import UpdateModal from '../components/spotplanDetail/updateModal'
+import AddModal from '../components/spotplanDetail/addOrderModal'
 import './spotplan.less'
 import qs from 'qs'
 import numeral from 'numeral'
@@ -54,6 +55,7 @@ class SpotPlanDetail extends React.Component {
       changeVisible: false,
       quitVisible: false,
       updateVisible: false,
+      addVisible:false,
       type: 'all',
       order_id: undefined,
       selectedRowKeys: [],
@@ -135,6 +137,14 @@ class SpotPlanDetail extends React.Component {
     }
 
   }
+    //新增账号
+    handleAddNumber=({order_id})=>{
+      const search = qs.parse(this.props.location.search.substring(1));
+      this.props.actions.getUpdateSpotplanOrder({ spotplan_id: search.spotplan_id, order_id }).then(() => {
+        this.setState({ order_id, addVisible: true });
+      })
+     
+    }
   handleChangeNumber = order_id => {
     const search = qs.parse(this.props.location.search.substring(1));
     this.props.actions.getUpdateSpotplanOrder({ spotplan_id: search.spotplan_id, order_id }).then(() => {
@@ -247,7 +257,8 @@ class SpotPlanDetail extends React.Component {
     }
     this.handleQuitOrder(selectedRowKeys);
   }
-  //切换PO的类型并保存按钮
+
+  //切换PO的类型
   handleChangeType=()=>{
     this.setState({
       visible: true,
@@ -299,7 +310,7 @@ class SpotPlanDetail extends React.Component {
   }
   render() {
     const search = qs.parse(this.props.location.search.substring(1));
-    const { historyVisible, editVisible, changeVisible, quitVisible, updateVisible, selectedRowKeys, type, loading, record } = this.state;
+    const { historyVisible, editVisible, changeVisible, quitVisible, updateVisible, selectedRowKeys, type, loading, record,addVisible } = this.state;
     const { spotplanExecutor, spotplanPlatform, spotplanPoInfo, spotplanAmount, spotplanEditList, basicSpotplanOrderInfo, updateSpotplanOrder: { before_order = [], after_order = [] }, updateSpotplanOrderLog, serviceRateAmount } = this.props;
     const list = spotplanEditList[type] && spotplanEditList[type].list || [];
     const checkList = list.reduce((data, current) => {
@@ -307,7 +318,7 @@ class SpotPlanDetail extends React.Component {
       return flag ? [...data, current] : data
     }, []);
     const checked = checkList.every(item => selectedRowKeys.includes(item.order_id.toString()));
-    const DetailTableCols = DetailTableFunc(this.handleChangeNumber, this.handleQuitOrder, this.handleUpdateOrder, this.handleEditOrder, this.handleDelete, this.handleHistory);
+    const DetailTableCols = DetailTableFunc(this.handleChangeNumber, this.handleQuitOrder, this.handleUpdateOrder, this.handleEditOrder, this.handleDelete, this.handleHistory,this.handleAddNumber);
     const rowSelection = {
       selectedRowKeys: selectedRowKeys,
       onChange: this.handleSelectChange,
@@ -391,6 +402,15 @@ class SpotPlanDetail extends React.Component {
         handleUpdate={this.handleUpdate}
         serviceRateAmount={serviceRateAmount}
       />}
+       {addVisible && <AddModal visible={addVisible}
+       onCancel={() => {
+        this.setState({ addVisible: false });
+      }}
+        handleSubmit={this.handleSubmit}
+        before_order={before_order}
+        after_order={after_order}
+        handleClose={this.handleClose}
+      />}
       {/* 编辑PO单弹出弹窗 */}
       {this.state.visible?<Modal
           title="编辑PO单号"
@@ -449,7 +469,7 @@ function BasicInfo({ data, handleClick,handleChangeType }) {
       <Col span={6}>
       {(data && data.customer_po_code) ? 
         <a target='_blank' href={data && data.po_path}>{data.customer_po_code}</a> : '-'}
-       <Button style={{marginLeft:'10px'}} type="primary" onClick={handleChangeType}>编辑PO单号</Button>
+       <Button style={{marginLeft:'10px'}} type="primary" onClick={handleChangeType}>编辑</Button>
       </Col>
       <Col span={3}>发起更新申请次数:</Col>
       <Col span={9}>{data && data.apply_num || 0}<a style={{ marginLeft: '40px' }} href='javascript:;' onClick={handleClick}>查看历史更新申请记录</a></Col>

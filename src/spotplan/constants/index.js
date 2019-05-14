@@ -380,7 +380,7 @@ export const SpotplanListFunc = () => [
     }
   }
 ];
-export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdateOrder, handleEditOrder, handleDelete, handleHistory) => [
+export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdateOrder, handleEditOrder, handleDelete, handleHistory,handleAddNumber) => [
   {
     title: '订单ID',
     dataIndex: 'order_id',
@@ -403,6 +403,17 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
       return <div style={{ width: 100 }}>
         <a href={record.requirement_path} target="_blank">{text}</a>
       </div>
+    }
+  }, {
+    title: 'Spotplan下发状态',
+    dataIndex: 'Spotplan_status_1',
+    key: 'Spotplan_status_1',
+    align: 'center',
+    width: 180,
+    render: (text, record) => {
+      return <Tooltip title={<div><p>成功下发时间</p><p>133</p></div>}>
+        <span>123</span>
+      </Tooltip>
     }
   },
   {
@@ -552,6 +563,9 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     fixed: 'right',
     render: (text, record) => {
       return <>
+        <a href='javascript:;' onClick={() => {
+          handleAddNumber(record.order_id)
+        }}>申请新增账号</a>
         {[12, 21, 25, 31].includes(parseInt(record.customer_confirmation_status)) && [0, 3, 4].includes(parseInt(record.last_apply_status)) && <div><a href='javascript:;' onClick={() => {
           handleChangeNumber(record.order_id)
         }}>申请换号</a></div>}
@@ -662,6 +676,77 @@ export const HistoryCols = [
     }
   }
 ];
+export const AddOrderCols = [
+  {
+    title: '订单ID',
+    dataIndex: 'order_id',
+    key: 'order_id',
+    align: 'center',
+    width: 100
+  },
+  {
+    title: '订单状态',
+    dataIndex: 'status_name',
+    key: 'status_name',
+    align: 'center',
+    width: 100
+  },
+  {
+    title: '需求名称',
+    dataIndex: 'requirement_name',
+    key: 'requirement_name',
+    align: 'center',
+    width: 100
+  },
+  {
+    title: '平台',
+    dataIndex: 'weibo_type_name',
+    key: 'weibo_type_name',
+    align: 'center',
+    width: 100
+  },
+  {
+    title: '账号名称',
+    dataIndex: 'weibo_name',
+    key: 'weibo_name',
+    align: 'center',
+    width: 100
+  },
+  {
+    title: '价格名称',
+    dataIndex: 'price_name',
+    key: 'price_name',
+    align: 'center',
+    width: 100
+  },
+  {
+    title: 'PriceID',
+    dataIndex: 'price_id',
+    key: 'price_id',
+    align: 'center',
+    width: 100
+  },
+  {
+    title: 'Cost（元）',
+    dataIndex: 'cost',
+    key: 'cost',
+    align: 'center',
+    width: 100,
+    render: text => {
+      return text && numeral(text).format('0,0.00') || '-'
+    }
+  },
+  {
+    title: 'Costwithfee（元）',
+    dataIndex: 'costwithfee',
+    key: 'costwithfee',
+    align: 'center',
+    width: 100,
+    render: text => {
+      return text && numeral(text).format('0,0.00') || '-'
+    }
+  }
+];
 export const OrderCols = [
   {
     title: '订单ID',
@@ -712,7 +797,7 @@ export const OrderCols = [
     align: 'center',
     width: 100,
     render: text => {
-      return text && numeral(text).format('0,0') || '-'
+      return text && numeral(text).format('0,0.00') || '-'
     }
   },
   {
@@ -722,7 +807,7 @@ export const OrderCols = [
     align: 'center',
     width: 100,
     render: text => {
-      return text && numeral(text).format('0,0') || '-'
+      return text && numeral(text).format('0,0.00') || '-'
     }
   }
 ];

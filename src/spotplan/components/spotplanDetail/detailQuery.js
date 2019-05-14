@@ -106,6 +106,18 @@ class DetailQuery extends React.Component {
             </Select>
           )}
         </FormItem>
+        <FormItem label='Spotplan下发状态'>
+          {getFieldDecorator('Spotplan_status_1')(
+            <Select style={{ width: 180 }}
+              placeholder='请选择'
+              getPopupContainer={() => document.querySelector('.spotplan-check-form')}
+              labelInValue
+              allowClear
+            >
+              {DETAIL_STATUS_CUSTOMER && DETAIL_STATUS_CUSTOMER.map(item => <Option value={item.value} key={item.value}>{item.key}</Option>)}
+            </Select>
+          )}
+        </FormItem>
         <FormItem label='批量查询'>
           {getFieldDecorator('settle_type', {
             initialValue: { label: '订单ID', key: 1 }
