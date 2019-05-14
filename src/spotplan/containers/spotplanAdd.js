@@ -105,20 +105,28 @@ class SpotplanAdd extends React.Component {
       this.basicInfo.current.validateFields((err, values) => {
         if (!err) {
           if(values.po){
-            console.log(!this.form.state.reslutBtn)
               if(!this.form.state.reslutBtn){
                 this.setState({
                   visible: true,
                 });
+                return 
+              }else{
+                if(!this.form.state.validateMessage){
+                  this.setState({
+                    visible: true,
+                  });
+                  return 
+                }
               }
+              
           }
-          // const hide = message.loading('操作中，请稍候...');
-          // this.props.actions.postAddSpotplan({ ...values, company_id: search.company_id }).then((res) => {
-          //   this.props.history.push(`/order/spotplan/add?step=2&spotplan_id=${res.data.spotplan_id}&company_id=${search.company_id}`);
-          //   hide();
-          // }).catch(({ errorMsg }) => {
-          //   message.error(errorMsg || '操作失败，请重试！')
-          // })
+          const hide = message.loading('操作中，请稍候...');
+          this.props.actions.postAddSpotplan({ ...values, company_id: search.company_id }).then((res) => {
+            this.props.history.push(`/order/spotplan/add?step=2&spotplan_id=${res.data.spotplan_id}&company_id=${search.company_id}`);
+            hide();
+          }).catch(({ errorMsg }) => {
+            message.error(errorMsg || '操作失败，请重试！')
+          })
         }
       });
     }
@@ -203,14 +211,19 @@ class SpotplanAdd extends React.Component {
       <BottomBlock current={step} handleSteps={this.handleSteps} orderMaps={orderMaps}
         handlDel={this.handleCheck} data={spotplanEditList} search={search} />
        {this.state.visible?<Modal
-          title="提示"
+          title="提示信息"
           visible={this.state.visible}
           onCancel={this.handleCancel}
           footer={
             <Button onClick={this.handleCancel}>关闭</Button>
           }
         >
-          <p>为确保填写的PO单号真实存在，请先点击【检验】，再进入“下一步”</p>
+         {
+           !this.form.state.reslutBtn?<p>为确保填写的PO单号真实存在，请先点击【检验】，再进入“下一步”</p>:null
+         } 
+         {
+          this.form.state.reslutBtn&& !this.form.state.validateMessage?<p>未在系统匹配到你填写的PO单号，请重新填写</p>:null
+         }
         </Modal>:null} 
     </>
   }

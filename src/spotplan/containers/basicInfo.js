@@ -42,7 +42,7 @@ class BasicInfo extends React.Component {
         })
       }else{
         this.setState({
-          validateMessage:true,
+          validateMessage:false,
           reslutBtn:true
         })
       }

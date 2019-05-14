@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux';
 import { bindActionCreators } from "redux";
 import * as spotplanAction from "../actions";
-import { Breadcrumb, Row, Col, Button, Tooltip, Icon, Tabs, Checkbox, Modal, message } from 'antd'
+import { Breadcrumb, Row, Col, Button, Tooltip, Icon, Tabs, Checkbox, Modal, message ,Input} from 'antd'
 import { DetailTableFunc } from '../constants'
 import DetailQuery from '../components/spotplanDetail/detailQuery'
 import DetailTable from '../components/spotplanDetail/detailTable'
@@ -57,7 +57,8 @@ class SpotPlanDetail extends React.Component {
       order_id: undefined,
       selectedRowKeys: [],
       rows: {},
-      record: undefined
+      record: undefined,
+      editPo: false
     }
   }
   componentDidMount() {
@@ -242,6 +243,10 @@ class SpotPlanDetail extends React.Component {
     }
     this.handleQuitOrder(selectedRowKeys);
   }
+  //切换PO的类型并保存按钮
+  handleChangeType=()=>{
+    this.setState({editPo:true})
+  }
   render() {
     const search = qs.parse(this.props.location.search.substring(1));
     const { historyVisible, editVisible, changeVisible, quitVisible, updateVisible, selectedRowKeys, type, loading, record } = this.state;
@@ -273,7 +278,11 @@ class SpotPlanDetail extends React.Component {
           }}>导出为Excel</Button>
         </div>
       </div>
-      <BasicInfo data={spotplanPoInfo} handleClick={this.handleHistory} />
+      <BasicInfo data={spotplanPoInfo}
+       handleClick={this.handleHistory}
+       state={this.state}
+       handleChangeType={this.handleChangeType}
+        />
       <h3 className='top-gap'>订单列表</h3>
       <Statistics data={spotplanAmount} flag={(spotplanPoInfo && spotplanPoInfo.customer_po_amount) ? true : false} />
       <DetailQuery location={this.props.location} history={this.props.history}
@@ -361,27 +370,35 @@ function NavBar() {
     <Breadcrumb.Item><a href="">Spotplan详情页</a></Breadcrumb.Item>
   </Breadcrumb>
 }
-function BasicInfo({ data, handleClick }) {
+function BasicInfo({ data, handleClick,handleChangeType,state }) {
   return <div className='info-container top-gap'>
     <Row className='info-row'>
-      <Col span={3}>SpotplanID:</Col><Col span={4}>{data && data.spotplan_id}</Col>
-      <Col span={3}>Spotplan名称:</Col><Col span={12}>{data && data.spotplan_name}</Col>
+      <Col span={3}>SpotplanID:</Col><Col span={6}>{data && data.spotplan_id}</Col>
+      <Col span={3}>Spotplan名称:</Col><Col span={9}>{data && data.spotplan_name}</Col>
     </Row>
     <Row className='info-row'>
-      <Col span={3}>创建人:</Col><Col span={4}>{data && data.creator_name}</Col>
-      <Col span={3}>所属项目/品牌:</Col><Col span={12}><a target='_blank' href={data && data.project_path}>{data && data.project_name}</a> / {data && data.brand_name || '-'}</Col>
+      <Col span={3}>创建人:</Col><Col span={6}>{data && data.creator_name}</Col>
+      <Col span={3}>所属项目/品牌:</Col><Col span={9}><a target='_blank' href={data && data.project_path}>{data && data.project_name}</a> / {data && data.brand_name || '-'}</Col>
     </Row>
     <Row className='info-row'>
-      <Col span={3}>创建时间:</Col><Col span={4}>{data && data.created_at}</Col>
-      <Col span={3}>更新时间:</Col><Col span={12}>{data && data.updated_at}</Col>
+      <Col span={3}>创建时间:</Col><Col span={6}>{data && data.created_at}</Col>
+      <Col span={3}>更新时间:</Col><Col span={9}>{data && data.updated_at}</Col>
     </Row>
     <Row className='info-row'>
-      <Col span={3}>PO单号:</Col><Col span={4}>{(data && data.customer_po_code) ? <a target='_blank' href={data && data.po_path}>{data.customer_po_code}</a> : '-'}</Col>
-      <Col span={3}>发起更新申请次数:</Col><Col span={12}>{data && data.apply_num || 0}<a style={{ marginLeft: '40px' }} href='javascript:;' onClick={handleClick}>查看历史更新申请记录</a></Col>
+      <Col span={3}>PO单号:</Col>
+      <Col span={6}>
+      { state.editPo?<Input style={{width:'100px'}}/>:
+        <span> {(data && data.customer_po_code) ? 
+        <a target='_blank' href={data && data.po_path}>{data.customer_po_code}</a> : '-'}
+        </span>}
+        <Button type="primary" style={{marginLeft:'10px'}} onClick={handleChangeType}>{ state.editPo?'保存':'编辑/修改 PO单号'}</Button>
+      </Col>
+      <Col span={3}>发起更新申请次数:</Col>
+      <Col span={9}>{data && data.apply_num || 0}<a style={{ marginLeft: '40px' }} href='javascript:;' onClick={handleClick}>查看历史更新申请记录</a></Col>
     </Row>
     <Row className='info-row'>
-      <Col span={3}>PO总额（不含税）:</Col><Col span={4}>{data && data.customer_po_amount ? data.customer_po_amount + '元' : '-'}</Col>
-      <Col span={3}>PO总额（含税）:</Col><Col span={12}>{data && data.total_budget ? data.total_budget + '元' : '-'}</Col>
+      <Col span={3}>PO总额（不含税）:</Col><Col span={6}>{data && data.customer_po_amount ? data.customer_po_amount + '元' : '-'}</Col>
+      <Col span={3}>PO总额（含税）:</Col><Col span={9}>{data && data.total_budget ? data.total_budget + '元' : '-'}</Col>
     </Row>
   </div>
 }
