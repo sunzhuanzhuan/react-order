@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux';
 import { bindActionCreators } from "redux";
 import * as spotplanAction from "../actions";
-import { Breadcrumb, Row, Col, Button, Tooltip, Icon, Tabs, Checkbox, Modal, message ,Input} from 'antd'
+import { Breadcrumb, Row, Col, Button, Tooltip, Icon, Tabs, Checkbox, Modal, message } from 'antd'
 import { DetailTableFunc } from '../constants'
 import DetailQuery from '../components/spotplanDetail/detailQuery'
 import DetailTable from '../components/spotplanDetail/detailTable'
@@ -14,6 +14,7 @@ import UpdateModal from '../components/spotplanDetail/updateModal'
 import './spotplan.less'
 import qs from 'qs'
 import numeral from 'numeral'
+import FormPO from '../components/poCheck'
 
 const TabPane = Tabs.TabPane;
 const tabPaneList = [
@@ -58,13 +59,16 @@ class SpotPlanDetail extends React.Component {
       selectedRowKeys: [],
       rows: {},
       record: undefined,
-      editPo: false
+      editPo: false,
+      editValue:''
     }
   }
   componentDidMount() {
     const search = qs.parse(this.props.location.search.substring(1));
     const { getSpotplanPoInfo, getSpotplanAmount, getSpotplanPlatform, getSpotplanExecutor } = this.props.actions;
-    getSpotplanPoInfo({ spotplan_id: search.spotplan_id });
+    getSpotplanPoInfo({ spotplan_id: search.spotplan_id }).then((res)=>{
+      this.setState({customer_po_code:res.data.customer_po_code || '-'})
+    });
     getSpotplanAmount({ spotplan_id: search.spotplan_id });
     getSpotplanPlatform();
     getSpotplanExecutor();
@@ -245,7 +249,53 @@ class SpotPlanDetail extends React.Component {
   }
   //切换PO的类型并保存按钮
   handleChangeType=()=>{
-    this.setState({editPo:true})
+    this.setState({
+      visible: true,
+    });
+  }
+  handleOk = () => {
+    
+    const search = qs.parse(this.props.location.search.substring(1));
+    this.formRef.props.form.validateFields((err, values)=>{
+      if (err) {
+        return;
+      }else{
+        if(values.po){
+          if(!this.formRef.state.reslutBtn){
+              message.error('为确保填写的PO单号真实存在，请先点击【检验】，再进入“下一步”');
+              this.setState({
+                visible: true,
+              });
+            return 
+          }else{
+            if(!this.formRef.state.validateMessage){
+              message.error('未在系统匹配到你填写的PO单号，请重新填写')
+              this.setState({
+                visible: true,
+              });
+              return 
+            }
+          }
+          const hide = message.loading('操作中，请稍候...');
+          this.props.actions.postAddSpotplan({ ...values, company_id: search.company_id }).then(() => {
+            this.queryData({ spotplan_id: search.spotplan_id, ...search.keys });
+            hide();
+          }).catch(({ errorMsg }) => {
+            message.error(errorMsg || '操作失败，请重试！')
+          }) 
+        }
+      }
+
+    })
+  }
+
+  handleCancel = () => {
+    this.setState({
+      visible: false,
+    });
+  }
+  saveFormRef = (formRef) => {
+    this.formRef = formRef;
   }
   render() {
     const search = qs.parse(this.props.location.search.substring(1));
@@ -280,7 +330,6 @@ class SpotPlanDetail extends React.Component {
       </div>
       <BasicInfo data={spotplanPoInfo}
        handleClick={this.handleHistory}
-       state={this.state}
        handleChangeType={this.handleChangeType}
         />
       <h3 className='top-gap'>订单列表</h3>
@@ -342,6 +391,15 @@ class SpotPlanDetail extends React.Component {
         handleUpdate={this.handleUpdate}
         serviceRateAmount={serviceRateAmount}
       />}
+      {/* 编辑PO单弹出弹窗 */}
+      {this.state.visible?<Modal
+          title="编辑PO单号"
+          visible={this.state.visible}
+          onOk={this.handleOk}
+          onCancel={this.handleCancel}
+        >
+        <FormPO  wrappedComponentRef={this.saveFormRef}/>
+        </Modal>:null}
     </div>
   }
 }
@@ -370,7 +428,9 @@ function NavBar() {
     <Breadcrumb.Item><a href="">Spotplan详情页</a></Breadcrumb.Item>
   </Breadcrumb>
 }
-function BasicInfo({ data, handleClick,handleChangeType,state }) {
+
+
+function BasicInfo({ data, handleClick,handleChangeType }) {
   return <div className='info-container top-gap'>
     <Row className='info-row'>
       <Col span={3}>SpotplanID:</Col><Col span={6}>{data && data.spotplan_id}</Col>
@@ -387,11 +447,9 @@ function BasicInfo({ data, handleClick,handleChangeType,state }) {
     <Row className='info-row'>
       <Col span={3}>PO单号:</Col>
       <Col span={6}>
-      { state.editPo?<Input style={{width:'100px'}}/>:
-        <span> {(data && data.customer_po_code) ? 
+      {(data && data.customer_po_code) ? 
         <a target='_blank' href={data && data.po_path}>{data.customer_po_code}</a> : '-'}
-        </span>}
-        <Button type="primary" style={{marginLeft:'10px'}} onClick={handleChangeType}>{ state.editPo?'保存':'编辑/修改 PO单号'}</Button>
+       <Button style={{marginLeft:'10px'}} type="primary" onClick={handleChangeType}>编辑PO单号</Button>
       </Col>
       <Col span={3}>发起更新申请次数:</Col>
       <Col span={9}>{data && data.apply_num || 0}<a style={{ marginLeft: '40px' }} href='javascript:;' onClick={handleClick}>查看历史更新申请记录</a></Col>
