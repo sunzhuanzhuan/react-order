@@ -206,34 +206,6 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete) => 
     }
   },
   {
-    title: '是否备选号',
-    dataIndex: 'is_replace',
-    key: 'is_replace',
-    align: 'center',
-    width: 100,
-    render: (text, record) => {
-      const flag = (record.customer_confirmation_status == 11 && [0, 4].includes(parseInt(record.last_apply_status))) ? true : false;
-      return flag ? <FormItem>
-        {getFieldDecorator(`${record.order_id}.is_replace`, {
-          rules: [{ required: true, message: '请选择是否备选' }]
-        })(
-          <Select
-            placeholder='请选择'
-            getPopupContainer={() => document.querySelector('.edit-table')}
-            onBlur={value => {
-              if (value != record.is_replace) {
-                handleUpdate({ order_id: record.order_id, price_id: record.price_id, is_replace: value })
-              }
-            }}
-          >
-            <Option value={1} >是</Option>
-            <Option value={2} >否</Option>
-          </Select>
-        )}
-      </FormItem> : text == 1 ? '是' : '否'
-    }
-  },
-  {
     title: '位置/直发or转发',
     dataIndex: 'release_form',
     key: 'release_form',
@@ -525,16 +497,6 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     }
   },
   {
-    title: '是否备选号',
-    dataIndex: 'is_replace',
-    key: 'is_replace',
-    align: 'center',
-    width: 100,
-    render: text => {
-      return <div>{text == 1 ? '是' : text == 2 ? '否' : '-'}</div>
-    }
-  },
-  {
     title: '位置/直发or转发',
     dataIndex: 'release_form',
     key: 'release_form',
@@ -782,6 +744,12 @@ export const OrderCols = [
     key: 'weibo_name',
     align: 'center',
     width: 100
+  },{
+    title: 'PriceID',
+    dataIndex: 'price_id',
+    key: 'price_id',
+    align: 'center',
+    width: 80
   },
   {
     title: '价格名称',
@@ -844,6 +812,12 @@ export const UpdateCols = [
     title: '账号名称',
     dataIndex: 'weibo_name',
     key: 'weibo_name',
+    align: 'center',
+    width: 100
+  },{
+    title: 'PriceID',
+    dataIndex: 'price_id',
+    key: 'price_id',
     align: 'center',
     width: 100
   }

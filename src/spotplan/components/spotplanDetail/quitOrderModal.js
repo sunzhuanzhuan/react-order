@@ -2,6 +2,7 @@ import React from 'react';
 import { Modal, Button, Table, Form, Input } from 'antd';
 import { OrderCols } from '../../constants'
 
+import numeral from 'numeral'
 const FormItem = Form.Item;
 const { TextArea } = Input;
 class QuitModal extends React.Component {
@@ -42,7 +43,9 @@ class QuitModal extends React.Component {
             )}
           </FormItem>
         </Form>
-        <h4 style={{ padding: '10px 0' }}>当前订单信息</h4>
+        <h2 style={{ padding: '10px 0' }}>当前订单信息</h2>
+        <h4 style={{ padding: '10px 0' }}>订单数量<span style={{color:'red' ,padding: '0 10px'}}>{dataSource.length}个</span> 
+        Costwithfee<span style={{color:'red',padding: '0 10px'}}>{ numeral(dataSource[0].costwithfee).format('0,0.00')}元</span></h4>
         <Table rowKey='order_id' bordered columns={OrderCols} dataSource={dataSource} pagination={false} />
       </>
     </Modal>

@@ -257,7 +257,20 @@ class SpotPlanDetail extends React.Component {
     }
     this.handleQuitOrder(selectedRowKeys);
   }
-
+  handleSettleAddOrder=()=>{
+    const { selectedRowKeys, rows } = this.state;
+    if (selectedRowKeys.length == 0) {
+      message.error('请先勾选需要进行批量申请新增账号的订单', 3);
+      return
+    }
+  }
+  handleSettleDeleteOrder=()=>{
+    const { selectedRowKeys, rows } = this.state;
+    if (selectedRowKeys.length == 0) {
+      message.error('请先勾选需要进行批量删除订单的订单', 3);
+      return
+    }
+  }
   //切换PO的类型
   handleChangeType=()=>{
     this.setState({
@@ -366,6 +379,8 @@ class SpotPlanDetail extends React.Component {
         <Checkbox onChange={this.handleCheckAll} disabled={checkList.length == 0} checked={checkList.length > 0 && checked}>全选</Checkbox>
         <Button type='primary' onClick={this.handleSettleChange}>批量申请换号</Button>
         <Button className='left-gap' type='primary' onClick={this.handleSettleQuit}>批量申请终止合作</Button>
+        <Button type='primary' className='left-gap' onClick={this.handleSettleAddOrder}>批量申请新增账号</Button>
+        <Button type='primary' className='left-gap' onClick={this.handleSettleDeleteOrder}>批量删除订单</Button>
       </div>
 
       {historyVisible && <HistoryModal visible={historyVisible}
@@ -484,26 +499,12 @@ function BasicInfo({ data, handleClick,handleChangeType }) {
 function Statistics({ data, flag }) {
   return <div className='spotplan-detail-statistics'>
     <Row className='info-row'>
-      <Col style={{ display: 'inline-block', width: 192 }}>
-        {(data.flag == 2 && flag) ? <Tooltip
-          overlayClassName='statistics-tip'
-          visible={true}
-          getPopupContainer={() => document.querySelector('.spotplan-detail-statistics')}
-          title={'金额已超PO总额（不含税）'}>预计消耗PO金额（不含税）</Tooltip> : '预计消耗PO金额（不含税）'}
+      
+      <Col style={{ display: 'inline-block', width: 212, marginLeft: '10px' }}>Costwithfee
+     123
       </Col>
-      <Col style={{ display: 'inline-block', width: 212, marginLeft: '10px' }}>Costwithfee（已确认合作订单）
-      <Tooltip title={'已确认合作订单：客户确认使的订单，终止合作申请已被审核通过的订单除外'}><Icon type="question-circle" /></Tooltip>
-      </Col>
-      <Col style={{ display: 'inline-block', width: 212, marginLeft: '30px' }}>Costwithfee（待确认合作订单）
-        <Tooltip title={'待确认合作订单：客户待确认状态的订单'}><Icon type="question-circle" /></Tooltip>
-      </Col>
-    </Row>
-    <Row className='info-row'>
-      <Col style={{ display: 'inline-block', width: 180 }}><span className='primary-font'>{data && numeral(data.amount).format('0,0')} 元</span></Col>
-      <span style={{ padding: '0 6px' }}>=</span>
-      <Col style={{ display: 'inline-block', width: 200 }}><span className='primary-font'>{data && numeral(data.confirmCostwithfee).format('0,0')} 元</span></Col>
-      <span style={{ paddingLeft: '26px', paddingRight: '6px' }}>+</span>
-      <Col style={{ display: 'inline-block', width: 200 }}><span className='primary-font'>{data && numeral(data.toBeconfirmCostwithfee).format('0,0')} 元</span></Col>
+     
+   
     </Row>
   </div>
 }

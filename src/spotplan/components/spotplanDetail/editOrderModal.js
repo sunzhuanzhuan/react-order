@@ -66,21 +66,6 @@ class EditOrderModal extends React.Component {
             <Input style={{ width: 140 }} />
           )}
         </FormItem>
-        <FormItem label='是否备选号' {...formItemLayout}>
-          {getFieldDecorator('is_replace', {
-            initialValue: data && data[0].is_replace || undefined,
-            rules: [{ required: true, message: '请选择是否备选' }]
-          })(
-            <Select style={{ width: 140 }}
-              placeholder='请选择'
-              getPopupContainer={() => document.querySelector('.edit-order-modal')}
-              allowClear
-            >
-              <Option value={1}>是</Option>
-              <Option value={2}>否</Option>
-            </Select>
-          )}
-        </FormItem>
         <FormItem label='位置/直发or转发' {...formItemLayout}>
           {getFieldDecorator('release_form', {
             initialValue: data && data[0].release_form || '',
