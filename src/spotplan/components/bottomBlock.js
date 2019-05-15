@@ -23,11 +23,11 @@ class BottomBlock extends React.Component {
       }}>下一步</Button>
       </div>}
       {current == 2 && <>
-        <div className='left-block'>
+        {/* <div className='left-block'>
           {!search.noback && <Button onClick={() => {
             handleSteps(1)
           }}>上一步</Button>}
-        </div>
+        </div> */}
         <div className='right-block'>
           <span style={{ paddingRight: '20px' }}>已选订单：<a href='javascript:;' onClick={() => {
             this.toggleVisible(true);

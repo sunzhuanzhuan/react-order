@@ -352,7 +352,7 @@ export const SpotplanListFunc = () => [
     }
   }
 ];
-export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdateOrder, handleEditOrder, handleDelete, handleHistory,handleAddNumber) => [
+export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdateOrder, handleEditOrder, handleDelete, handleHistory, handleAddNumber) => [
   {
     title: '订单ID',
     dataIndex: 'order_id',
@@ -483,7 +483,7 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     align: 'center',
     width: 120,
     render: text => {
-      return <div>{text && numeral(text).format('0,0') || '-'}</div>
+      return <div>{text && numeral(text).format('0,0.00') || '-'}</div>
     }
   },
   {
@@ -744,7 +744,7 @@ export const OrderCols = [
     key: 'weibo_name',
     align: 'center',
     width: 100
-  },{
+  }, {
     title: 'PriceID',
     dataIndex: 'price_id',
     key: 'price_id',
@@ -814,7 +814,7 @@ export const UpdateCols = [
     key: 'weibo_name',
     align: 'center',
     width: 100
-  },{
+  }, {
     title: 'PriceID',
     dataIndex: 'price_id',
     key: 'price_id',
