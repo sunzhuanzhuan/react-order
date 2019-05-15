@@ -238,7 +238,6 @@ class ListQuery extends Component {
               </FormItem>
 
             </Col>
-            <Row>
               <div>
                 {
                   this.state.visibleTable ? <div style={{ marginTop: '60px' }}>
@@ -246,8 +245,6 @@ class ListQuery extends Component {
                     : <div></div>
                 }
               </div>
-            </Row>
-
           </Row>
 
 
