@@ -105,7 +105,7 @@ class SpotplanAdd extends React.Component {
         if (!err) {
           const hide = message.loading('操作中，请稍候...');
           this.props.actions.postAddSpotplan({ ...values, company_id: search.company_id }).then((res) => {
-            this.props.history.push(`/order/spotplan/add?step=2&spotplan_id=${res.data.spotplan_id}&company_id=${search.company_id}`);
+            this.props.history.push(`/order/spotplan/add?step=2&spotplan_id=${res.data.spotplan_id}`);
             hide();
           }).catch(({ errorMsg }) => {
             message.error(errorMsg || '操作失败，请重试！')
@@ -114,14 +114,20 @@ class SpotplanAdd extends React.Component {
       });
     }
     if (num == 2 && type == 'back') {
-      this.props.history.goBack();
+      const url = search.noback ? `/order/spotplan/add?step=2&spotplan_id=${search.spotplan_id}&noback=true` : `/order/spotplan/add?step=2&spotplan_id=${search.spotplan_id}`;
+      this.props.history.push(url);
     }
     if (num == 3) {
       const { orderMaps } = this.state;
       if (!Object.values(orderMaps).length) {
         this.setState({ orderMaps: {} }, () => {
-          this.props.history.push('/order/spotplan/add?step=3&spotplan_id=' + search.spotplan_id);
+          if (search.noback) {
+            this.props.history.push(`/order/spotplan/add?step=3&spotplan_id=${search.spotplan_id}&noback=true`);
+          } else {
+            this.props.history.push('/order/spotplan/add?step=3&spotplan_id=' + search.spotplan_id);
+          }
         })
+        return
       }
       const hide = message.loading('操作中，请稍候...');
       let spotplan_order = [];
