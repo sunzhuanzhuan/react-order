@@ -7,7 +7,7 @@ import { createHttpAction } from '../../store/ajaxMiddleware'
 
 
 export const getAgent = (params) => (dispatch) => {
-  return api.get('/operator-gateway/trinityPlatform/v1/getAllCooperationPlatformAndAgent', { platformId: params.platformId }).then((response) => {
+  return api.get('/operator-gateway/trinityPlatform/v1/getAllCooperationPlatformAndAgent?platformId=' + params.platformId).then((response) => {
     dispatch({
       type: GET_AGENT,
       payload: {
