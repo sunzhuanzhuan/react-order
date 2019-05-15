@@ -179,7 +179,7 @@ class ListQuery extends Component {
       <div style={{ float: 'left', height: '100%', width: '15%' }}>
         <Steps direction="vertical" current={this.state.currentStep}>
           <Step style={{ height: '200px' }} title="对账单" description="选择或者导入对账单" />
-          <Step style={{ height: '200px' }} title="汇总单" description="上传汇总单" />
+          <Step style={{ height: '280px' }} title="汇总单" description="上传汇总单" />
           <Step style={{ height: '200px' }} title="对账" description="确认对账" />
         </Steps>
       </div>
@@ -238,17 +238,20 @@ class ListQuery extends Component {
               </FormItem>
 
             </Col>
-            <div>
-              {
-                this.state.visibleTable ? <div style={{ marginTop: '60px' }}>
-                  <OptionTable stateMentList={stateMentList} /></div>
-                  : <div></div>
-              }
-            </div>
+            <Row>
+              <div>
+                {
+                  this.state.visibleTable ? <div style={{ marginTop: '60px' }}>
+                    <OptionTable stateMentList={stateMentList} /></div>
+                    : <div></div>
+                }
+              </div>
+            </Row>
+
           </Row>
 
 
-          <Row style={{ height: '200px' }}>
+          <Row style={{ height: '280px' }}>
             <Col span={10}>
               <FormItem label='请上传的汇总单' {...formItemLayout}>
                 {getFieldDecorator('summary_sheet_name', {
@@ -256,18 +259,20 @@ class ListQuery extends Component {
                   rules: [{ required: true, message: '请上传的汇总单' }],
                 })(
                   <Upload {...props}>
-                    <Button type="primary">
+                    <Button type="primary" disabled={this.state.currentStep != 0}>
                       <Icon type="upload" />上传文件
                 </Button>
                   </Upload>
                 )}
               </FormItem>
             </Col>
-            {
-              this.state.stateTotal ? <div>
-                <TotalTable summaryList={summaryList} /></div> : <div>
-                </div>
-            }
+              <div>
+              {
+                this.state.stateTotal ? <div>
+                  <TotalTable summaryList={summaryList} /></div> : <div>
+                  </div>
+              }
+              </div>
           </Row>
 
 
@@ -348,7 +353,7 @@ export class TotalTable extends Component {
   render() {
     let { summaryList } = this.props
     return <div className="statementBox">
-      <Row className='title'>汇总单信息</Row>
+      <div className='title'>汇总单信息</div>
       <Row className='info'>
         <Col span={12}>
           订单总数:{summaryList.total_order_count}

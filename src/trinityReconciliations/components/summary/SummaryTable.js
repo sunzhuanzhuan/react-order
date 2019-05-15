@@ -12,37 +12,38 @@ import { Table, Pagination } from "antd";
 // import './list.less'
 
 class SummaryTable extends Component {
-	constructor(props) {
-		super(props)
+  constructor(props) {
+    super(props)
 
-	}
-	handleNewModal=({id})=>{
-		// console.log(record)
-		this.props.history.push({
-			pathname: '/finance/zhangwu/detail',
-			search: `?${qs.stringify({ id: id})}`,
-		});
-	}
-	render(){
-    let {columns,paginationObj,dataTable}=this.props;
+  }
+  handleNewModal = ({ id }) => {
+    // console.log(record)
+    this.props.history.push({
+      pathname: '/finance/zhangwu/detail',
+      search: `?${qs.stringify({ id: id })}`,
+    });
+  }
+  render() {
+    let { columns, paginationObj, dataTable } = this.props;
 
-		return <div className='top-gap'>
-				<Table
-					columns={columns}
-          dataSource={dataTable}
-					rowKey={(record)=>record.summary_sheet_id}
-					pagination={paginationObj}
-				></Table>
-			</div>
-	}
+    return <div className='top-gap'>
+      <Table
+        bordered
+        columns={columns}
+        dataSource={dataTable}
+        rowKey={(record) => record.summary_sheet_id}
+        pagination={paginationObj}
+      ></Table>
+    </div>
+  }
 }
 
 const mapStateToProps = () => {
-	return {
-	
-	}
+  return {
+
+  }
 }
 const mapDispatchToProps = dispatch => ({
-	actions: bindActionCreators({  }, dispatch)
+  actions: bindActionCreators({}, dispatch)
 });
 export default connect(mapStateToProps, mapDispatchToProps)(SummaryTable)

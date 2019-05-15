@@ -29,6 +29,7 @@ class List extends Component {
 
 		return <div className='top-gap'>
 				<Table
+          bordered
           loading={loading}
 					columns={columns}
           dataSource={dataTable}
