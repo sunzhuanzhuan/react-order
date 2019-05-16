@@ -34,6 +34,7 @@ class ApplyPrepayment extends Component {
         values.order_id = this.props.record.order_id
         values.cooperation_platform_id = values.multiAgentIds[0]
         values.agent_id = values.multiAgentIds[1]
+        values.settle_type = 1
         delete values.multiAgentIds
         this.setState({
           loading: true
