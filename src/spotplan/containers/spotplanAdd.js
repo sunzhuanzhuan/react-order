@@ -105,7 +105,7 @@ class SpotplanAdd extends React.Component {
     if (num == 2 && type == 'go') {
       this.basicInfo.current.validateFields((err, values) => {
         if (!err) {
-          if (values.po_code) {
+          if (values.po_id) {
             if (!this.form.state.reslutBtn || !this.form.state.isEdit) {
               this.setState({
                 visible: true,
@@ -119,8 +119,9 @@ class SpotplanAdd extends React.Component {
                 return
               }
             }
-
+            values.po_id = this.form.state.data.id;
           }
+
           const hide = message.loading('操作中，请稍候...');
           this.props.actions.postAddSpotplan({ ...values, company_id: search.company_id }).then((res) => {
             this.props.history.push(`/order/spotplan/add?step=2&spotplan_id=${res.data.spotplan_id}`);

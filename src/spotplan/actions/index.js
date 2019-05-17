@@ -15,7 +15,12 @@ export const {
 } = createHttpAction('postAddSpotplan', Interface.postAddSpotplan, {
   method: 'post'
 });
-
+export const {
+  postUpdateSpotplan,
+  postUpdateSpotplan_success
+} = createHttpAction('postUpdateSpotplan', Interface.postUpdateSpotplan, {
+  method: 'post'
+});
 export const {
   getSpotplanExecutor,
   getSpotplanExecutor_success

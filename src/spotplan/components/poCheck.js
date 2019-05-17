@@ -55,10 +55,10 @@ export default Form.create()(class extends React.Component {
     const { data } = this.state;
     const { spInfo } = this.props;
     return <>
-      <div>当前PO单号: {spInfo.po_code || '-'}</div>
+      <div>当前PO单号: {spInfo.customer_po_code || '-'}</div>
       <Form>
         <Form.Item label="修改后PO单号">
-          {getFieldDecorator('po_code', {
+          {getFieldDecorator('po_id', {
             rules: [{ max: 50, message: 'PO名称不能超过50个字符' }],
           })(
             <Input style={{ width: '400px' }} onChange={this.handleChangeValue} />

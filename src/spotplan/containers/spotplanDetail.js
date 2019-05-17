@@ -284,7 +284,7 @@ class SpotPlanDetail extends React.Component {
       if (err) {
         return;
       } else {
-        if (values.po_code) {
+        if (values.po_id) {
           if (!this.formRef.state.reslutBtn || !this.formRef.state.isEdit) {
             message.error('为确保填写的PO单号真实存在，请先点击【检验】，再进入“下一步”');
             this.setState({
@@ -299,10 +299,18 @@ class SpotPlanDetail extends React.Component {
               });
               return
             }
+            values.po_id = this.formRef.state.data.id;
           }
           const hide = message.loading('操作中，请稍候...');
-          this.props.actions.postAddSpotplan({ ...values, company_id: search.company_id }).then(() => {
+          this.setState({
+            visible: false,
+          });
+
+          this.props.actions.postUpdateSpotplan({ ...values, spotplan_id: search.spotplan_id }).then(() => {
             this.queryData({ spotplan_id: search.spotplan_id, ...search.keys });
+            this.props.actions.getSpotplanPoInfo({ spotplan_id: search.spotplan_id }).then((res) => {
+              this.setState({ customer_po_code: res.data.customer_po_code || '-' })
+            });
             hide();
           }).catch(({ errorMsg }) => {
             message.error(errorMsg || '操作失败，请重试！')

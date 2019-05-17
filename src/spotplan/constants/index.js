@@ -378,13 +378,13 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     }
   }, {
     title: 'Spotplan下发状态',
-    dataIndex: 'Spotplan_status_1',
-    key: 'Spotplan_status_1',
+    dataIndex: 'is_inward_send',
+    key: 'is_inward_send',
     align: 'center',
     width: 180,
     render: (text, record) => {
       return <Tooltip title={<div><p>成功下发时间</p><p>133</p></div>}>
-        <span>123</span>
+        <span>{record.is_inward_send == 1 ? 'SP下发成功' : '待下发SP'}</span>
       </Tooltip>
     }
   },
@@ -537,12 +537,22 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
         {[12, 21, 22, 26, 27, 28, 32, 33, 34].includes(parseInt(record.customer_confirmation_status)) && [0, 3, 4].includes(parseInt(record.last_apply_status)) && <div><a href='javascript:;' onClick={() => {
           handleUpdateOrder(record.order_id)
         }}>申请更新信息</a></div>}
-        {record.customer_confirmation_status == 11 && [0, 4].includes(parseInt(record.last_apply_status)) && <div><a href='javascript:;' onClick={() => {
+        {/* {record.customer_confirmation_status == 11 && [0, 4].includes(parseInt(record.last_apply_status)) && <div><a href='javascript:;' onClick={() => {
           handleEditOrder(record.order_id)
-        }}>编辑信息</a></div>}
-        {record.customer_confirmation_status == 11 && [0, 4].includes(parseInt(record.last_apply_status)) && <div><a href='javascript:;' onClick={() => {
+        }}>编辑信息</a></div>} */}
+        {
+          record.is_inward_send == 2 ? <div><a href='javascript:;' onClick={() => {
+            handleEditOrder(record.order_id)
+          }}>编辑信息</a></div> : null
+        }
+        {/* {record.customer_confirmation_status == 11 && [0, 4].includes(parseInt(record.last_apply_status)) && <div><a href='javascript:;' onClick={() => {
           handleDelete(record.order_id)
-        }}>删除订单</a></div>}
+        }}>删除订单</a></div>} */}
+        {
+          record.is_inward_send == 2 ? <div><a href='javascript:;' onClick={() => {
+            handleEditOrder(record.order_id)
+          }}>删除订单</a></div> : null
+        }
       </>
     }
   }

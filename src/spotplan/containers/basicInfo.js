@@ -101,7 +101,7 @@ class BasicInfo extends React.Component {
         <div className='tip-style' > 为方便日后调用 / 查询，可以重新命名</div>
       </FormItem>
       <FormItem label='PO单号' {...formItemLayout}>
-        {getFieldDecorator('po_code', {
+        {getFieldDecorator('po_id', {
           rules: [
             { max: 50, message: 'PO名称不能超过50个字符' }]
         })(

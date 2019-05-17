@@ -40,7 +40,7 @@ export default class OrderItem extends React.Component {
         {data && (data.flag == 2 || data.flag == 3) && <div className='disabled-reason'>
           <Tooltip
             getPopupContainer={() => document.querySelector('.order-item-title')}
-            title={data.flag == 2 ? `订单不是【客户待确认】状态` : `订单已经被Spotplan（ID：${data.binding_id}）绑定了`}>不可选原因</Tooltip>
+            title={data.flag == 2 ? `账号尚未应约` : `订单已经被Spotplan（ID：${data.binding_id}）绑定了`}>不可选原因</Tooltip>
         </div>}
       </div>
       {data && data.price.map((item, index) => (<Checkbox
