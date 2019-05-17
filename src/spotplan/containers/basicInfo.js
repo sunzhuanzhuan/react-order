@@ -27,25 +27,27 @@ class BasicInfo extends React.Component {
   //校验按钮是否存在
   handleChangeValue = (e) => {
     if (e.target.value != '') {
-      this.setState({ btnValidate: true, inputValue: e.target.value })
+      this.setState({ btnValidate: true, inputValue: e.target.value, isEdit: false })
     } else {
-      this.setState({ btnValidate: false })
+      this.setState({ btnValidate: false, reslutBtn: false })
     }
   }
   handleCheckPo = () => {
     api.get("/spotplan/getPOInfo?po_code=" + this.state.inputValue)
       .then((response) => {
         let data = response.data
-        if (response.code == 200) {
+        if (response.code == 200 && data && data.po_path) {
           this.setState({
             data: data,
             validateMessage: true,
-            reslutBtn: true
+            reslutBtn: true,
+            isEdit: true
           })
         } else {
           this.setState({
             validateMessage: false,
-            reslutBtn: true
+            reslutBtn: true,
+            isEdit: true
           })
         }
 
@@ -99,7 +101,7 @@ class BasicInfo extends React.Component {
         <div className='tip-style' > 为方便日后调用 / 查询，可以重新命名</div>
       </FormItem>
       <FormItem label='PO单号' {...formItemLayout}>
-        {getFieldDecorator('po', {
+        {getFieldDecorator('po_code', {
           rules: [
             { max: 50, message: 'PO名称不能超过50个字符' }]
         })(
@@ -107,7 +109,8 @@ class BasicInfo extends React.Component {
         )}
         {this.state.btnValidate ? <Button style={{ marginLeft: '10px' }} type="primary" onClick={this.handleCheckPo}>校验</Button> : null}
         {this.state.reslutBtn ? this.state.validateMessage ? <div>
-          <span style={{ marginRight: '10px' }}>PO总额:￥{this.state.data.amount} </span>
+          <span>所属项目/品牌: {this.state.data.project_name} / {this.state.data.brand_name}</span>
+          <span style={{ margin: '0 10px' }}>PO总额:￥{this.state.data.amount} </span>
           <a target="_blank" href={this.state.data.po_path}>查看PO详情</a>
         </div> : <div style={{ color: 'red' }}>未在系统匹配到该公司存在该PO单号，请重新输入后再次检验</div> : null}
       </FormItem>

@@ -284,8 +284,8 @@ class SpotPlanDetail extends React.Component {
       if (err) {
         return;
       } else {
-        if (values.po) {
-          if (!this.formRef.state.reslutBtn) {
+        if (values.po_code) {
+          if (!this.formRef.state.reslutBtn || !this.formRef.state.isEdit) {
             message.error('为确保填写的PO单号真实存在，请先点击【检验】，再进入“下一步”');
             this.setState({
               visible: true,
@@ -441,7 +441,7 @@ class SpotPlanDetail extends React.Component {
         onOk={this.handleOk}
         onCancel={this.handleCancel}
       >
-        <FormPO wrappedComponentRef={this.saveFormRef} />
+        <FormPO wrappedComponentRef={this.saveFormRef} spInfo={spotplanPoInfo} />
       </Modal> : null}
     </div>
   }

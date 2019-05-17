@@ -6,9 +6,10 @@ import BasicInfo from './basicInfo'
 import CheckOrder from './checkOrder'
 import EditOrder from './editOrder'
 import BottomBlock from '../components/bottomBlock'
-import { message, Steps, Modal,Button} from 'antd'
+import { message, Steps, Modal, Button } from 'antd'
 import './spotplan.less'
 import qs from 'qs'
+import api from '../../api/index'
 
 
 const Step = Steps.Step;
@@ -26,7 +27,7 @@ class SpotplanAdd extends React.Component {
     this.state = {
       orderMaps: {},
       loading: false,
-      visible:false
+      visible: false
     }
     this.basicInfo = React.createRef();
     this.editOrder = React.createRef();
@@ -104,21 +105,21 @@ class SpotplanAdd extends React.Component {
     if (num == 2 && type == 'go') {
       this.basicInfo.current.validateFields((err, values) => {
         if (!err) {
-          if(values.po){
-              if(!this.form.state.reslutBtn){
+          if (values.po_code) {
+            if (!this.form.state.reslutBtn || !this.form.state.isEdit) {
+              this.setState({
+                visible: true,
+              });
+              return
+            } else {
+              if (!this.form.state.validateMessage) {
                 this.setState({
                   visible: true,
                 });
-                return 
-              }else{
-                if(!this.form.state.validateMessage){
-                  this.setState({
-                    visible: true,
-                  });
-                  return 
-                }
+                return
               }
-              
+            }
+
           }
           const hide = message.loading('操作中，请稍候...');
           this.props.actions.postAddSpotplan({ ...values, company_id: search.company_id }).then((res) => {
@@ -216,21 +217,21 @@ class SpotplanAdd extends React.Component {
       </div>
       <BottomBlock current={step} handleSteps={this.handleSteps} orderMaps={orderMaps}
         handlDel={this.handleCheck} data={spotplanEditList} search={search} />
-       {this.state.visible?<Modal
-          title="提示信息"
-          visible={this.state.visible}
-          onCancel={this.handleCancel}
-          footer={
-            <Button onClick={this.handleCancel}>关闭</Button>
-          }
-        >
-         {
-           !this.form.state.reslutBtn?<p>为确保填写的PO单号真实存在，请先点击【检验】，再进入“下一步”</p>:null
-         } 
-         {
-          this.form.state.reslutBtn&& !this.form.state.validateMessage?<p>未在系统匹配到你填写的PO单号，请重新填写</p>:null
-         }
-        </Modal>:null} 
+      {this.state.visible ? <Modal
+        title="提示信息"
+        visible={this.state.visible}
+        onCancel={this.handleCancel}
+        footer={
+          <Button onClick={this.handleCancel}>关闭</Button>
+        }
+      >
+        {
+          !this.form.state.reslutBtn || !this.form.state.isEdit ? <p>为确保填写的PO单号真实存在，请先点击【检验】，再进入“下一步”</p> : null
+        }
+        {
+          this.form.state.reslutBtn && !this.form.state.validateMessage ? <p>未在系统匹配到你填写的PO单号，请重新填写</p> : null
+        }
+      </Modal> : null}
     </>
   }
 }
