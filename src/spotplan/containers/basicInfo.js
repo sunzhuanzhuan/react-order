@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Input, Select ,Button,message} from 'antd';
+import { Form, Input, Select, Button, message } from 'antd';
 import moment from 'moment';
 import 'moment/locale/zh-cn';
 import api from '../../api/index'
@@ -13,10 +13,11 @@ class BasicInfo extends React.Component {
   constructor() {
     super();
     this.state = {
-      btnValidate:false,
-      validateMessage:false,
-      id:1907,
-      reslutBtn:false
+      btnValidate: false,
+      validateMessage: false,
+      id: 1907,
+      reslutBtn: false,
+      data: []
     }
   }
   componentDidMount() {
@@ -24,33 +25,34 @@ class BasicInfo extends React.Component {
     this.props.queryData(1, { company_id: search.company_id });
   }
   //校验按钮是否存在
-  handleChangeValue=(e)=>{
-    if(e.target.value != ''){
-      this.setState({btnValidate:true})
-    }else{
-      this.setState({btnValidate:false})
+  handleChangeValue = (e) => {
+    if (e.target.value != '') {
+      this.setState({ btnValidate: true, inputValue: e.target.value })
+    } else {
+      this.setState({ btnValidate: false })
     }
   }
-  handleCheckPo=()=>{
-    api.get("/operator-gateway/trinityPlatform/v1/getCooperationPlatform")
-    .then((response) => {
-      let data = response.data
-      if(response.code == 200){
-        this.setState({
-          validateMessage:true,
-          reslutBtn:true
-        })
-      }else{
-        this.setState({
-          validateMessage:false,
-          reslutBtn:true
-        })
-      }
-      
-    })
-    .catch((error) => {
-      message.error("校验获取失败")
-    });
+  handleCheckPo = () => {
+    api.get("/spotplan/getPOInfo?po_code=" + this.state.inputValue)
+      .then((response) => {
+        let data = response.data
+        if (response.code == 200) {
+          this.setState({
+            data: data,
+            validateMessage: true,
+            reslutBtn: true
+          })
+        } else {
+          this.setState({
+            validateMessage: false,
+            reslutBtn: true
+          })
+        }
+
+      })
+      .catch((error) => {
+        message.error("校验获取失败")
+      });
   }
   render() {
     const { getFieldDecorator } = this.props.form;
@@ -101,13 +103,13 @@ class BasicInfo extends React.Component {
           rules: [
             { max: 50, message: 'PO名称不能超过50个字符' }]
         })(
-          <Input style={{ width: 260 }} placeholder="请输入PO单号" onChange={this.handleChangeValue}/>
+          <Input style={{ width: 260 }} placeholder="请输入PO单号" onChange={this.handleChangeValue} />
         )}
-       {this.state.btnValidate? <Button style={{ marginLeft: '10px' }}  type="primary" onClick={this.handleCheckPo}>校验</Button>:null}
-       {this.state.reslutBtn?this.state.validateMessage?<div>
-         <span style={{ marginRight: '10px' }}>PO总额:￥1245.00 </span>
-         <a target="_blank" href={`http://192.168.100.142/sale/executionevidence/detail?id=${this.state.id}`}>查看PO详情</a>
-       </div>:<div style={{color:'red'}}>未在系统匹配到该公司存在该PO单号，请重新输入后再次检验</div>:null}
+        {this.state.btnValidate ? <Button style={{ marginLeft: '10px' }} type="primary" onClick={this.handleCheckPo}>校验</Button> : null}
+        {this.state.reslutBtn ? this.state.validateMessage ? <div>
+          <span style={{ marginRight: '10px' }}>PO总额:￥{this.state.data.amount} </span>
+          <a target="_blank" href={this.state.data.po_path}>查看PO详情</a>
+        </div> : <div style={{ color: 'red' }}>未在系统匹配到该公司存在该PO单号，请重新输入后再次检验</div> : null}
       </FormItem>
       <FormItem label='备注信息' {...formItemLayout}>
         {getFieldDecorator('content', {
