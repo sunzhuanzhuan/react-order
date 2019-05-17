@@ -350,7 +350,9 @@ class SpotPlanDetail extends React.Component {
       <div>
         <h3 className='top-gap' style={{ display: 'inline-block' }}>Spotplan基本信息</h3>
         <div style={{ display: 'inline-block', float: 'right' }}>
-          <Button type='primary' href={`/order/spotplan/add?step=2&spotplan_id=${search.spotplan_id}&noback=true&company_id=${spotplanPoInfo.company_id}`}>+新增订单</Button>
+          <Button type='primary' onClick={() => {
+            this.props.history.push(`/order/spotplan/add?step=2&spotplan_id=${search.spotplan_id}&noback=true`);
+          }}>+新增订单</Button>
           <Button type='primary' className='left-gap' href={`/api/spotplan/exportSpotplamExcel?spotplan_id=${search.spotplan_id}`} onClick={() => {
             message.loading('导出数据中，请稍候...', 3);
           }}>导出为Excel</Button>

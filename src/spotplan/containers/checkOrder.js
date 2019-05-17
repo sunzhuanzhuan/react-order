@@ -20,19 +20,15 @@ class CheckOrder extends React.Component {
     const search = qs.parse(this.props.location.search.substring(1));
     const { getSpotplanExecutor, getSpotplanPlatform } = this.props.actions;
     this.props.queryBasicInfo().then(() => {
-      this.props.queryData(2, { company_id: search.company_id, project_id: [this.props.spotplanPoInfo.project_id], reservation_status: 2, ...search.keys });
+      this.props.queryData(2, { spotplan_id: search.spotplan_id, project_id: [this.props.spotplanPoInfo.project_id], reservation_status: 2, ...search.keys });
     })
     getSpotplanExecutor();
     getSpotplanPlatform();
   }
   handlePageChange = (page) => {
     const search = qs.parse(this.props.location.search.substring(1));
-    this.props.queryData(2, { company_id: search.company_id, ...search.keys, page })
+    this.props.queryData(2, { spotplan_id: search.spotplan_id, project_id: [this.props.spotplanPoInfo.project_id], reservation_status: 2, ...search.keys, page })
   }
-  // hanldeSizeChange = (current, size) => {
-  //   const search = qs.parse(this.props.location.search.substring(1));
-  //   this.props.queryData(2, { company_id: search.company_id, ...search.keys, page: 1, page_size: size })
-  // }
   render() {
     const { spotplanExecutor, spotplanPlatform, spotplanProject, spotplanOrderList: { page, pageSize, total, rows = [] }, spotplanPoInfo, handleCheck, orderMaps, loading } = this.props;
     const winHeight = document.documentElement.clientHeight - 120 + 'px';
