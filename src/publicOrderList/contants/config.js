@@ -165,7 +165,7 @@ const supportedOperations = {
   "can_label_place_order": "标注为三方已下单",
   "can_modify_public_order": "修改三方下单信息",
   "can_withdraw_public_order": "撤销三方下单标注",
-  "execute_handle": "执行申请处理",
+  "can_deal_execution_notification": "执行申请处理",
   "can_apply_prepay": "预付款申请",
   "cancel_execution_termination_request": "同意/拒绝执行终止"
 }
@@ -174,7 +174,7 @@ const supportedOperations = {
 export const columns = (props) => {
   const operationBtn = [
     "can_label_place_order", "can_modify_public_order",
-    "can_withdraw_public_order", "execute_handle",
+    "can_withdraw_public_order", "can_deal_execution_notification",
     "can_apply_prepay", "cancel_execution_termination_request"
   ]
   const host = props.babysitter_host.value
@@ -729,7 +729,7 @@ export const modalParams = {
     modalTitle: "撤销三方下单标注",
     children: WithdrawPublicOrder
   },
-  "execute_handle": {
+  "can_deal_execution_notification": {
     modalTitle: "执行申请处理",
     children: ExecuteHandle
   },
