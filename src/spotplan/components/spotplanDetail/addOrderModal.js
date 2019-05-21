@@ -40,7 +40,7 @@ class AddModal extends React.Component {
   render() {
     const { getFieldDecorator } = this.props.form;
     const { selectedRowKeys, rows } = this.state;
-    const { visible, onCancel, after_order } = this.props;
+    const { visible, onCancel, data } = this.props;
     const rowSelection = {
       selectedRowKeys,
       onChange: this.handleSelectChange,
@@ -67,9 +67,9 @@ class AddModal extends React.Component {
           <FormItem label='填写原因'>
             {getFieldDecorator('reason', {
               rules: [{ required: true, message: '请填写原因' },
-              { max: 400, message: '不能超过400字' }]
+              { max: 400, message: '不能超过200字' }]
             })(
-              <TextArea placeholder='请填写发起新增账号申请的原因，不超过400个字' autosize={{ minRows: 2, maxRows: 6 }} />
+              <TextArea placeholder='请填写发起新增账号申请的原因，不超过200个字' autosize={{ minRows: 2, maxRows: 6 }} />
             )}
           </FormItem>
         </Form>
@@ -77,7 +77,7 @@ class AddModal extends React.Component {
         <h2 style={{ padding: '10px 0' }}>已勾选订单</h2>
         <h4 style={{ padding: '10px 0' }}>订单数量<span style={{ color: 'red', padding: '0 10px' }}>{rows.length}个</span>
           Costwithfee<span style={{ color: 'red', padding: '0 10px' }}>{numeral(tatalAmount).format('0,0.00')}元</span></h4>
-        <Table rowKey='order_id' border columns={AddOrderCols} dataSource={after_order} rowSelection={rowSelection} pagination={{ pageSize: 10, total: after_order.length }} />
+        <Table rowKey='order_id' border columns={AddOrderCols} dataSource={data} rowSelection={rowSelection} pagination={{ pageSize: 10, total: data.length }} />
       </>
     </Modal>
   }

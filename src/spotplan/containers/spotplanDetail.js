@@ -141,7 +141,7 @@ class SpotPlanDetail extends React.Component {
   //新增账号
   handleAddNumber = ({ order_id }) => {
     const search = qs.parse(this.props.location.search.substring(1));
-    this.props.actions.getUpdateSpotplanOrder({ spotplan_id: search.spotplan_id, order_id }).then(() => {
+    this.props.actions.getBasicSpotplanOrderInfo({ spotplan_id: search.spotplan_id, order_id }).then(() => {
       this.setState({ order_id, addVisible: true });
     })
 
@@ -479,8 +479,7 @@ class SpotPlanDetail extends React.Component {
           this.setState({ addVisible: false });
         }}
         handleSubmit={this.handleSubmit}
-        before_order={before_order}
-        after_order={after_order}
+        data={basicSpotplanOrderInfo}
         handleClose={this.handleClose}
       />}
       {/* 编辑PO单弹出弹窗 */}
