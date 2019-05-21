@@ -15,7 +15,7 @@ export const filterFormArr = [
   {
     label: "需求名称",
     type: "input",
-    id: "equirement_name"
+    id: "requirement_name"
   },
   {
     label: "需求ID",
@@ -43,7 +43,7 @@ export const filterFormArr = [
   {
     label: "账号名称",
     type: "input",
-    id: "account_name"
+    id: "weibo_name"
   },
   {
     label: "平台",
@@ -87,13 +87,6 @@ export const filterFormArr = [
     type: "selectDependOnRequest",
     id: "media_owner_admin_id",
     url: "/user/getMediaUsers",
-    data: { key: "user_id", value: "real_name" }
-  },
-  {
-    label: "项目媒介",
-    type: "selectDependOnRequest",
-    id: "vol_admin_id",
-    url: "/user/getVolUsers",
     data: { key: "user_id", value: "real_name" }
   },
   {
@@ -645,45 +638,6 @@ export const columns = (props) => {
                 </Form>
               )} title="联系方式" trigger="click">
               <a href="#">{record.media_admin_user.name}</a>
-            </Popover>
-          </div>
-          <div>项目媒介：
-            <Popover
-              content={(
-                <Form layout="horizontal">
-                  <FormItem
-                    label="手机号"
-                    {...formLayout}
-                    style={{ width: '300px' }}
-                  >
-                    <span>{record.vol_admin_user.cell_phone ? record.vol_admin_user.cell_phone : "-"}</span>
-                  </FormItem>
-                  {
-                    record.vol_admin_user.qr_code ?
-                      <FormItem
-                        label="微信"
-                        {...formLayout}
-                      >
-                        <img src={record.vol_admin_user.qr_code} width="100" />
-                      </FormItem> : null
-                  }
-                  <FormItem
-                    label="qq"
-                    {...formLayout}
-                  >
-                    <span>{record.vol_admin_user.qq ? record.vol_admin_user.qq : "-"}</span>
-                  </FormItem>
-                  <FormItem
-                    label="email"
-                    {...formLayout}
-                  >
-                    <span>{record.vol_admin_user.email ? record.vol_admin_user.email : "-"}</span>
-                  </FormItem>
-                </Form>
-              )}
-              title="联系方式" trigger="click"
-            >
-              <a href="#">{record.vol_admin_user.name}</a>
             </Popover>
           </div>
         </div>

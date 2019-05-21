@@ -11,7 +11,7 @@ const ModalComponent = (props) => {
       title={modalParams.modalTitle}
       visible={visible}
       onCancel={handleCancel}
-      width={640}
+      width={700}
       maskClosable={false}
       footer={null}
       centered={true}
@@ -23,12 +23,11 @@ const ModalComponent = (props) => {
       【订单号：${orderDetail.id} 
       账号名称：${orderDetail.account.weibo_name}
       平台：${orderDetail.platform.platform_name} 
-      微任务/WEIQ下单价：-
       】`}
       visible={visible}
       footer={null}
       onCancel={handleCancelWithConfirm}
-      width={640}
+      width={700}
       centered={true}
       maskClosable={false}
       bodyStyle={{ maxHeight: '500px', overflowY: 'auto' }}
