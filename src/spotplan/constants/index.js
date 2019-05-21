@@ -11,7 +11,8 @@ const APPLY_TYPE = {
   3: '【换号】多换一',
   4: '【换号】多换多',
   5: '更新订单信息',
-  6: '终止合作'
+  6: '终止合作',
+  7: '新增账号'
 };
 const APPLY_STATUS = {
   1: 'SP更新待提交客户审核',
@@ -525,18 +526,33 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     fixed: 'right',
     render: (text, record) => {
       return <>
-        <a href='javascript:;' onClick={() => {
+        {record.added == 1 ? <a href='javascript:;' onClick={() => {
           handleAddNumber(record.order_id)
-        }}>申请新增账号</a>
-        {[12, 21, 25, 31].includes(parseInt(record.customer_confirmation_status)) && [0, 3, 4].includes(parseInt(record.last_apply_status)) && <div><a href='javascript:;' onClick={() => {
+        }}>申请新增账号</a> : null}
+        {/* {[12, 21, 25, 31].includes(parseInt(record.customer_confirmation_status)) && [0, 3, 4].includes(parseInt(record.last_apply_status)) && <div><a href='javascript:;' onClick={() => {
           handleChangeNumber(record.order_id)
-        }}>申请换号</a></div>}
-        {[12, 21, 25, 31].includes(parseInt(record.customer_confirmation_status)) && [0, 3, 4].includes(parseInt(record.last_apply_status)) && <div><a href='javascript:;' onClick={() => {
+        }}>申请换号</a></div>} */}
+        {
+          record.change == 1 ? <a href='javascript:;' onClick={() => {
+            handleChangeNumber(record.order_id)
+          }}>申请新增账号</a> : null
+        }
+        {
+          record.stopAndUpdate == 1 ? <a href='javascript:;' onClick={() => {
+            handleQuitOrder(record.order_id)
+          }}>申请终止合作</a> : null
+        }
+        {
+          record.stopAndUpdate == 1 ? <a href='javascript:;' onClick={() => {
+            handleUpdateOrder(record.order_id)
+          }}>申请更新信息</a> : null
+        }
+        {/* {[12, 21, 25, 31].includes(parseInt(record.customer_confirmation_status)) && [0, 3, 4].includes(parseInt(record.last_apply_status)) && <div><a href='javascript:;' onClick={() => {
           handleQuitOrder(record.order_id)
         }}>申请终止合作</a></div>}
         {[12, 21, 22, 26, 27, 28, 32, 33, 34].includes(parseInt(record.customer_confirmation_status)) && [0, 3, 4].includes(parseInt(record.last_apply_status)) && <div><a href='javascript:;' onClick={() => {
           handleUpdateOrder(record.order_id)
-        }}>申请更新信息</a></div>}
+        }}>申请更新信息</a></div>} */}
         {/* {record.customer_confirmation_status == 11 && [0, 4].includes(parseInt(record.last_apply_status)) && <div><a href='javascript:;' onClick={() => {
           handleEditOrder(record.order_id)
         }}>编辑信息</a></div>} */}

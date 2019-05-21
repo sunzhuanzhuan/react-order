@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux';
 import { bindActionCreators } from "redux";
 import * as spotplanAction from "../actions";
-import { Breadcrumb, Row, Col, Button, Tooltip, Icon, Tabs, Checkbox, Modal, message } from 'antd'
+import { Breadcrumb, Row, Col, Button, Icon, Tabs, Checkbox, Modal, message } from 'antd'
 import { DetailTableFunc } from '../constants'
 import DetailQuery from '../components/spotplanDetail/detailQuery'
 import DetailTable from '../components/spotplanDetail/detailTable'
@@ -103,9 +103,10 @@ class SpotPlanDetail extends React.Component {
     this.setState({ type: 'all', rows: {}, selectedRowKeys: [] });
   }
   handleSelectChange = (selectedRowKeys, selectedRows) => {
-    const rows = selectedRows.reduce((data, current) => {
+    let rows = selectedRows.reduce((data, current) => {
       return { ...data, [current.order_id]: current }
     }, {});
+    rows = Object.assign(this.state.rows, rows)
     this.setState({ selectedRowKeys, rows });
   }
   handleCheckAll = (e) => {
@@ -155,6 +156,13 @@ class SpotPlanDetail extends React.Component {
     const search = qs.parse(this.props.location.search.substring(1));
     this.props.actions.getBasicSpotplanOrderInfo({ spotplan_id: search.spotplan_id, order_id }).then(() => {
       this.setState({ order_id, quitVisible: true });
+    })
+  }
+  //批量新增账号
+  handleAddAccount = order_id => {
+    const search = qs.parse(this.props.location.search.substring(1));
+    this.props.actions.getBasicSpotplanOrderInfo({ spotplan_id: search.spotplan_id, order_id }).then(() => {
+      this.setState({ order_id, addVisible: true });
     })
   }
   handleUpdateOrder = order_id => {
@@ -231,7 +239,8 @@ class SpotPlanDetail extends React.Component {
       message.error('请先勾选需要进行换号申请的订单', 3);
       return
     }
-    const flag = Object.values(rows).every(item => [12, 21, 25, 31].includes(parseInt(item.customer_confirmation_status)) && [0, 3, 4].includes(parseInt(item.last_apply_status)));
+    const flag = Object.values(rows).every(item => item.change == 1);
+    // const flag = Object.values(rows).every(item => [12, 21, 25, 31].includes(parseInt(item.customer_confirmation_status)) && [0, 3, 4].includes(parseInt(item.last_apply_status)));
     if (!flag) {
       Modal.error({
         title: '错误提示',
@@ -247,7 +256,8 @@ class SpotPlanDetail extends React.Component {
       message.error('请先勾选需要进行申请终止合作的订单', 3);
       return
     }
-    const flag = Object.values(rows).every(item => [12, 21, 25, 31].includes(parseInt(item.customer_confirmation_status)) && [0, 3, 4].includes(parseInt(item.last_apply_status)));
+    const flag = Object.values(rows).every(item => item.spotAndUpdate == 1);
+    // const flag = Object.values(rows).every(item => [12, 21, 25, 31].includes(parseInt(item.customer_confirmation_status)) && [0, 3, 4].includes(parseInt(item.last_apply_status)));
     if (!flag) {
       Modal.error({
         title: '错误提示',
@@ -257,20 +267,51 @@ class SpotPlanDetail extends React.Component {
     }
     this.handleQuitOrder(selectedRowKeys);
   }
-  handleSettleAddOrder = () => {
+  handleSettleAddAccount = () => {
     const { selectedRowKeys, rows } = this.state;
     if (selectedRowKeys.length == 0) {
       message.error('请先勾选需要进行批量申请新增账号的订单', 3);
       return
     }
+    const flag = Object.values(rows).every(item => item.added == 1);
+    if (!flag) {
+      Modal.error({
+        title: '错误提示',
+        content: <div>你选择的订单中存在不能发起【新增账号申请】的订单，请重新选择。</div>
+      });
+      return;
+    }
+    this.handleAddAccount(selectedRowKeys)
   }
   handleSettleDeleteOrder = () => {
+
+    const search = qs.parse(this.props.location.search.substring(1));
     const { selectedRowKeys, rows } = this.state;
     if (selectedRowKeys.length == 0) {
       message.error('请先勾选需要进行批量删除订单的订单', 3);
       return
     }
+    const flag = Object.values(rows).every(item => item.is_inward_send == 2)
+    // const flag = Object.values(rows).every(item => [12, 21, 25, 31].includes(parseInt(item.customer_confirmation_status)) && [0, 3, 4].includes(parseInt(item.last_apply_status)));
+    if (!flag) {
+      Modal.error({
+        title: '错误提示',
+        content: <div>你选择的订单中存在不能发起删除的订单，请重新选择。</div>
+      });
+      return;
+    }
+    Modal.confirm({
+      title: '',
+      content: '是否确认删除选中的订单？',
+      onOk: () => {
+        this.props.actions.postDeleteSpotplanOrder({ spotplan_id: search.spotplan_id, order_id: selectedRowKeys }).then(() => {
+          message.success('操作成功');
+          this.queryData({ ...search.keys, spotplan_id: search.spotplan_id });
+        })
+      }
+    })
   }
+
   //切换PO的类型
   handleChangeType = () => {
     this.setState({
@@ -351,7 +392,6 @@ class SpotPlanDetail extends React.Component {
     let tatalAmount = Object.values(rows).reduce((pre, current) => {
       return (pre * 100 + current.costwithfee * 100) / 100
     }, 0);
-
     return <div className='spotList-detail-container'>
       <NavBar />
       <h2>Spotplan详情页</h2>
@@ -395,8 +435,9 @@ class SpotPlanDetail extends React.Component {
         <Checkbox onChange={this.handleCheckAll} disabled={checkList.length == 0} checked={checkList.length > 0 && checked}>全选</Checkbox>
         <Button type='primary' onClick={this.handleSettleChange}>批量申请换号</Button>
         <Button className='left-gap' type='primary' onClick={this.handleSettleQuit}>批量申请终止合作</Button>
-        <Button type='primary' className='left-gap' onClick={this.handleSettleAddOrder}>批量申请新增账号</Button>
+        <Button type='primary' className='left-gap' onClick={this.handleSettleAddAccount}>批量申请新增账号</Button>
         <Button type='primary' className='left-gap' onClick={this.handleSettleDeleteOrder}>批量删除订单</Button>
+
       </div>
 
       {historyVisible && <HistoryModal visible={historyVisible}
