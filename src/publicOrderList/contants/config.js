@@ -314,7 +314,7 @@ export const columns = (props) => {
           <div className="list-divItem">
             <span>账号名称：</span>
             <a href=
-              {`${window.location.host}/account/manage/update/${text.platform_id}?account_id=${text.account_id}`}
+              {`/account/manage/update/${text.platform_id}?account_id=${text.account_id}`}
               target="_blank"
             >{text.account_name}</a>
           </div>
