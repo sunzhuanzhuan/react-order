@@ -535,7 +535,7 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
         {
           record.change == 1 ? <a href='javascript:;' onClick={() => {
             handleChangeNumber(record.order_id)
-          }}>申请新增账号</a> : null
+          }}>申请换号</a> : null
         }
         {
           record.stopAndUpdate == 1 ? <a href='javascript:;' onClick={() => {
