@@ -384,7 +384,7 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     align: 'center',
     width: 180,
     render: (text, record) => {
-      return <Tooltip title={<div><p>成功下发时间</p><p>133</p></div>}>
+      return <Tooltip title={<div><p>成功下发时间</p><p>{record.inward_send_at}</p></div>}>
         <span>{record.is_inward_send == 1 ? 'SP下发成功' : '待下发SP'}</span>
       </Tooltip>
     }
@@ -542,13 +542,11 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
             handleQuitOrder(record.order_id)
           }}>申请终止合作</a> : null
         }
-        {/* {
-          record.stopAndUpdate == 1 ?  */}
-        <a href='javascript:;' onClick={() => {
-          handleUpdateOrder(record)
-        }}>申请更新信息</a>
-        {/* //   : null
-        // } */}
+        {
+          record.stopAndUpdate == 1 ?
+            <a href='javascript:;' onClick={() => {
+              handleUpdateOrder(record)
+            }}>申请更新信息</a> : null}
         {/* {[12, 21, 25, 31].includes(parseInt(record.customer_confirmation_status)) && [0, 3, 4].includes(parseInt(record.last_apply_status)) && <div><a href='javascript:;' onClick={() => {
           handleQuitOrder(record.order_id)
         }}>申请终止合作</a></div>}
@@ -568,7 +566,7 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
         }}>删除订单</a></div>} */}
         {
           record.is_inward_send == 2 ? <div><a href='javascript:;' onClick={() => {
-            handleEditOrder(record)
+            handleDelete(record)
           }}>删除订单</a></div> : null
         }
       </>

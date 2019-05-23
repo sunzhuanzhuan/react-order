@@ -183,13 +183,13 @@ class SpotPlanDetail extends React.Component {
     const search = qs.parse(this.props.location.search.substring(1));
     return this.props.actions.getServiceRateAmount({ spotplan_id: search.spotplan_id, ...obj })
   }
-  handleDelete = order_id => {
+  handleDelete = ({ order_id }) => {
     const search = qs.parse(this.props.location.search.substring(1));
     Modal.confirm({
       title: '',
       content: '是否确认将该订单从本spotplan删除？',
       onOk: () => {
-        this.props.actions.postDeleteSpotplanOrder({ spotplan_id: search.spotplan_id, order_id }).then(() => {
+        this.props.actions.postDeleteSpotplanOrder({ spotplan_id: search.spotplan_id, order_id: [order_id] }).then(() => {
           message.success('操作成功');
           this.queryData({ ...search.keys, spotplan_id: search.spotplan_id });
         })
@@ -204,7 +204,12 @@ class SpotPlanDetail extends React.Component {
     const hide = message.loading('操作中，请稍候...');
     const search = qs.parse(this.props.location.search.substring(1));
     let { order_id } = this.state;
-    order_id = Array.isArray(order_id) ? order_id : [order_id];
+    if (obj.type == 4) {
+      order_id = []
+    } else {
+      order_id = Array.isArray(order_id) ? order_id : [order_id];
+    }
+
     return this.props.actions.postChangeNumberSpotplanOrder({ spotplan_id: search.spotplan_id, order_ids: order_id, ...obj }).then((res) => {
       hide();
       if (res.data) {
