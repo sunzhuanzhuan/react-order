@@ -588,7 +588,7 @@ export const columns = (props) => {
       width: 100,
       render: (text) => {
         return <div>
-          <div><a href={`${host}/user/update/user_id/${text.user_id}`} target="_blank">{text.realname}</a></div>
+          <div><a href={`${host}/user/update/user_id/${text.user_id}`} target="_blank">{text.identity_name}</a></div>
           <Tooltip placement="top" title={text.cell_phone}>
             <div>手机号</div>
           </Tooltip>
