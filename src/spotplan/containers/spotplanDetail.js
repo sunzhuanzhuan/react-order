@@ -96,9 +96,11 @@ class SpotPlanDetail extends React.Component {
     const search = qs.parse(this.props.location.search.substring(1));
     if (value - 1) {
       this.queryData({ ...search.keys, spotplan_id: search.spotplan_id, type: value - 1, page: 1 });
+      this.props.actions.getSpotplanAmount({ spotplan_id: search.spotplan_id, type: value - 1 });
       this.setState({ type: (value - 1).toString(), rows: {}, selectedRowKeys: [] });
       return
     }
+    this.props.actions.getSpotplanAmount({ spotplan_id: search.spotplan_id });
     this.queryData({ ...search.keys, spotplan_id: search.spotplan_id, page: 1 });
     this.setState({ type: 'all', rows: {}, selectedRowKeys: [] });
   }
@@ -138,7 +140,7 @@ class SpotPlanDetail extends React.Component {
     }
 
   }
-  //新增账号
+  //表格操作按钮-新增账号
   handleAddNumber = ({ order_id }) => {
     const search = qs.parse(this.props.location.search.substring(1));
     this.props.actions.getBasicSpotplanOrderInfo({ spotplan_id: search.spotplan_id, order_id }).then(() => {
@@ -158,7 +160,7 @@ class SpotPlanDetail extends React.Component {
       this.setState({ order_id, quitVisible: true });
     })
   }
-  //批量新增账号
+  //批量-新增账号
   handleAddAccount = order_id => {
     const search = qs.parse(this.props.location.search.substring(1));
     this.props.actions.getBasicSpotplanOrderInfo({ spotplan_id: search.spotplan_id, order_id }).then(() => {
@@ -207,13 +209,15 @@ class SpotPlanDetail extends React.Component {
       hide();
       if (res.data) {
         const type = res.data.type;
-        const amount = res.data.amount;
         let content;
-        if (type) {
-          content = type == 1 ? obj.type == 1 ? '存在已经被他人优先发起了更新申请的订单，请刷新后重新选择' : '该订单的更新申请已被他人优先发起了，请刷新后查看' : type == 2 ? '存在状态不为【客户待确认】的替换订单，请刷新后重新选择' : null;
+        let errInfo = {
+          1: obj.type == 1 ? '存在已经被他人优先发起了更新申请的订单，请刷新后重新选择' : '该订单的更新申请已被他人优先发起了，请刷新后查看',
+          2: '存在状态不为【客户待确认】的替换订单，请刷新后重新选择',
+          3: '请先将如下订单的必填项编辑完整:' + res.data.order_ids.toString()
         }
-        if (amount) {
-          content = <ErrorTip data={res.data.amount} />
+        if (type) {
+          // content = type == 1 ? obj.type == 1 ? '存在已经被他人优先发起了更新申请的订单，请刷新后重新选择' : '该订单的更新申请已被他人优先发起了，请刷新后查看' : type == 2 ? '存在状态不为【客户待确认】的替换订单，请刷新后重新选择' : null;
+          content = errInfo[type]
         }
         Modal.error({
           title: '错误提示',
@@ -556,8 +560,8 @@ function Statistics({ data, flag }) {
   return <div className='spotplan-detail-statistics'>
     <Row className='info-row'>
 
-      <Col style={{ display: 'inline-block', width: 212, marginLeft: '10px' }}>Costwithfee
-     123
+      <Col style={{ display: 'inline-block', width: 212, marginLeft: '10px' }}>Costwithfee:
+          {data.costwithfee}
       </Col>
 
 
