@@ -30,7 +30,7 @@ export const filterFormArr = [
   {
     label: "订单状态",
     type: "select",
-    id: "order_status",
+    id: "status",
     data: [
       { key: "请选择", value: "0" },
       { key: "应约", value: "2" },
@@ -469,8 +469,8 @@ export const columns = (props) => {
       align: 'center',
       width: 100,
       render: (text, record) => {
-        return record.public_order && record.public_order.public_order_statement && record.public_order.public_order_statement.statement_status && record.public_order.settle_type == "2" ?
-          <span>{statementStatus[record.public_order.public_order_statement.statement_status]}</span> : null
+        return record.public_order && record.public_order.public_order_trade && record.public_order.public_order_trade.statement_status && record.public_order.settle_type == "2" ?
+          <span>{statementStatus[record.public_order.public_order_trade.statement_status]}</span> : null
       }
     },
     {
