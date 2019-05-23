@@ -94,10 +94,14 @@ class AddAgent extends Component {
             visible: false
           })
           if (this.props.type == "multi") {
-            this.props.addAgentSuccessCallback({
-              cooperationPlatformId: this.state.cooperationPlatformId,
-              agentId: res.data
-            })
+            if (this.props.applyPrepayment != '' && values.settleType == 2) {
+              this.props.actions.getAgent({ platformId: this.props.platformId })
+            } else {
+              this.props.addAgentSuccessCallback({
+                cooperationPlatformId: this.state.cooperationPlatformId,
+                agentId: res.data
+              })
+            }
           } else {
             this.props.actions.getAgent({ platformId: this.props.platformId })
           }

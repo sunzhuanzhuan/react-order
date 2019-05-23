@@ -173,7 +173,11 @@ class ExecuteHandle extends Component {
                     label="回票金额"
                     {...formLayout}
                   >
-                    <span>{orderDetail.public_order.public_advance_payment_apply.return_invoice_amount}</span>
+                    {getFieldDecorator("return_invoice_amount", {
+                      initialValue: orderDetail.public_order.public_order_sku_valid.public_cost_price
+                    })(
+                      <span>{orderDetail.public_order.public_order_sku_valid.public_cost_price}</span>
+                    )}
                   </FormItem>
               }
             </div>

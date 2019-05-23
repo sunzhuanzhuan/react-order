@@ -15,7 +15,7 @@ export const filterFormArr = [
   {
     label: "需求名称",
     type: "input",
-    id: "equirement_name"
+    id: "requirement_name"
   },
   {
     label: "需求ID",
@@ -43,7 +43,7 @@ export const filterFormArr = [
   {
     label: "账号名称",
     type: "input",
-    id: "account_name"
+    id: "weibo_name"
   },
   {
     label: "平台",
@@ -87,13 +87,6 @@ export const filterFormArr = [
     type: "selectDependOnRequest",
     id: "media_owner_admin_id",
     url: "/user/getMediaUsers",
-    data: { key: "user_id", value: "real_name" }
-  },
-  {
-    label: "项目媒介",
-    type: "selectDependOnRequest",
-    id: "vol_admin_id",
-    url: "/user/getVolUsers",
     data: { key: "user_id", value: "real_name" }
   },
   {
@@ -165,7 +158,7 @@ const supportedOperations = {
   "can_label_place_order": "标注为三方已下单",
   "can_modify_public_order": "修改三方下单信息",
   "can_withdraw_public_order": "撤销三方下单标注",
-  "execute_handle": "执行申请处理",
+  "can_deal_execution_notification": "执行申请处理",
   "can_apply_prepay": "预付款申请",
   "cancel_execution_termination_request": "同意/拒绝执行终止"
 }
@@ -174,7 +167,7 @@ const supportedOperations = {
 export const columns = (props) => {
   const operationBtn = [
     "can_label_place_order", "can_modify_public_order",
-    "can_withdraw_public_order", "execute_handle",
+    "can_withdraw_public_order", "can_deal_execution_notification",
     "can_apply_prepay", "cancel_execution_termination_request"
   ]
   const host = props.babysitter_host.value
@@ -314,7 +307,7 @@ export const columns = (props) => {
           <div className="list-divItem">
             <span>账号名称：</span>
             <a href=
-              {`${window.location.host}/account/manage/update/${text.platform_id}?account_id=${text.account_id}`}
+              {`/account/manage/update/${text.platform_id}?account_id=${text.account_id}`}
               target="_blank"
             >{text.account_name}</a>
           </div>
@@ -647,45 +640,6 @@ export const columns = (props) => {
               <a href="#">{record.media_admin_user.name}</a>
             </Popover>
           </div>
-          <div>项目媒介：
-            <Popover
-              content={(
-                <Form layout="horizontal">
-                  <FormItem
-                    label="手机号"
-                    {...formLayout}
-                    style={{ width: '300px' }}
-                  >
-                    <span>{record.vol_admin_user.cell_phone ? record.vol_admin_user.cell_phone : "-"}</span>
-                  </FormItem>
-                  {
-                    record.vol_admin_user.qr_code ?
-                      <FormItem
-                        label="微信"
-                        {...formLayout}
-                      >
-                        <img src={record.vol_admin_user.qr_code} width="100" />
-                      </FormItem> : null
-                  }
-                  <FormItem
-                    label="qq"
-                    {...formLayout}
-                  >
-                    <span>{record.vol_admin_user.qq ? record.vol_admin_user.qq : "-"}</span>
-                  </FormItem>
-                  <FormItem
-                    label="email"
-                    {...formLayout}
-                  >
-                    <span>{record.vol_admin_user.email ? record.vol_admin_user.email : "-"}</span>
-                  </FormItem>
-                </Form>
-              )}
-              title="联系方式" trigger="click"
-            >
-              <a href="#">{record.vol_admin_user.name}</a>
-            </Popover>
-          </div>
         </div>
       }
     },
@@ -729,7 +683,7 @@ export const modalParams = {
     modalTitle: "撤销三方下单标注",
     children: WithdrawPublicOrder
   },
-  "execute_handle": {
+  "can_deal_execution_notification": {
     modalTitle: "执行申请处理",
     children: ExecuteHandle
   },

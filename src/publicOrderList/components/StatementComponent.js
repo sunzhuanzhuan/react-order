@@ -47,8 +47,8 @@ class StatementComponent extends React.Component {
     return <div className="publicOrderList-chooseBox">
       <ul>
         <li>对账、调账、周期付款批量操作：</li>
-        <li>1.选择要对账的平台/代理商进行对账，关联三方对账单，逐条订单进行关联，对有差额的订单进行调账；</li>
-        <li>2.对生成的汇总单设置对账完成；</li>
+        <li>1.选择要对账的平台/代理商进行对账，下载订单；</li>
+        <li>2.线下对账后上传到系统；</li>
         <li>3.申请周期付款，由财务进行打款操作。</li>
       </ul>
       <div>
