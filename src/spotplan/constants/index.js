@@ -383,9 +383,9 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     align: 'center',
     width: 180,
     render: (text, record) => {
-      return <Tooltip title={<div><p>成功下发时间</p><p>{record.inward_send_at}</p></div>}>
+      return record.inward_send_at != '0000-00-00 00:00:00' ? <Tooltip title={<div><p>成功下发时间</p><p>{record.inward_send_at}</p></div>}>
         <span>{record.is_inward_send == 1 ? 'SP下发成功' : '待下发SP'}</span>
-      </Tooltip>
+      </Tooltip> : <span>{record.is_inward_send == 1 ? 'SP下发成功' : '待下发SP'}</span>
     }
   },
   {
@@ -556,17 +556,17 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
           handleEditOrder(record.order_id)
         }}>编辑信息</a></div>} */}
         {
-          record.is_inward_send == 2 ? <div><a href='javascript:;' onClick={() => {
+          record.is_inward_send == 1 || record.last_apply_status == 1 || record.last_apply_status == 2 ? null : <div><a href='javascript:;' onClick={() => {
             handleEditOrder(record)
-          }}>编辑信息</a></div> : null
+          }}>编辑信息</a></div>
         }
         {/* {record.customer_confirmation_status == 11 && [0, 4].includes(parseInt(record.last_apply_status)) && <div><a href='javascript:;' onClick={() => {
           handleDelete(record.order_id)
         }}>删除订单</a></div>} */}
         {
-          record.is_inward_send == 2 ? <div><a href='javascript:;' onClick={() => {
+          record.is_inward_send == 1 || record.last_apply_status == 1 || record.last_apply_status == 2 ? null : <div><a href='javascript:;' onClick={() => {
             handleDelete(record)
-          }}>删除订单</a></div> : null
+          }}>删除订单</a></div>
         }
       </>
     }
