@@ -149,8 +149,8 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete) => 
     align: 'center',
     width: 210,
     render: (text, record) => {
-      const flag = (record.customer_confirmation_status == 11 && [0, 4].includes(parseInt(record.last_apply_status))) ? true : false;
-      return flag ? <FormItem>
+      // const flag = (record.customer_confirmation_status == 11 && [0, 4].includes(parseInt(record.last_apply_status))) ? true : false;
+      return record.is_inward_send == 2 ? <FormItem>
         {getFieldDecorator(`${record.order_id}.price_name`, {
           rules: [{ required: true, message: '请填写名称' }]
         })(
@@ -191,8 +191,8 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete) => 
     align: 'center',
     width: 100,
     render: (text, record) => {
-      const flag = (record.customer_confirmation_status == 11 && [0, 4].includes(parseInt(record.last_apply_status))) ? true : false;
-      return flag ? <FormItem>
+      // const flag = (record.customer_confirmation_status == 11 && [0, 4].includes(parseInt(record.last_apply_status))) ? true : false;
+      return record.is_inward_send == 2 ? <FormItem>
         {getFieldDecorator(`${record.order_id}.account_category_name`, {
           rules: [{ required: true, message: '请填写分类' }]
         })(
@@ -213,8 +213,8 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete) => 
     align: 'center',
     width: 210,
     render: (text, record) => {
-      const flag = (record.customer_confirmation_status == 11 && [0, 4].includes(parseInt(record.last_apply_status))) ? true : false;
-      return flag ? <FormItem>
+      // const flag = (record.customer_confirmation_status == 11 && [0, 4].includes(parseInt(record.last_apply_status))) ? true : false;
+      return record.is_inward_send == 2 ? <FormItem>
         {getFieldDecorator(`${record.order_id}.release_form`, {
           rules: [{ required: true, message: '请填写位置' }]
         })(
@@ -235,8 +235,8 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete) => 
     align: 'center',
     width: 210,
     render: (text, record) => {
-      const flag = (record.customer_confirmation_status == 11 && [0, 4].includes(parseInt(record.last_apply_status))) ? true : false;
-      return flag ? <FormItem>
+      // const flag = (record.customer_confirmation_status == 11 && [0, 4].includes(parseInt(record.last_apply_status))) ? true : false;
+      return record.is_inward_send == 2 ? <FormItem>
         {getFieldDecorator(`${record.order_id}.content`, {
           rules: [
             { max: 400, message: '不能超过400字' }
@@ -260,10 +260,9 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete) => 
     fixed: 'right',
     width: 100,
     render: (text, record) => {
-      const flag = (record.customer_confirmation_status == 11 && [0, 4].includes(parseInt(record.last_apply_status))) ? true : false;
-      return flag ? <a href='javascript:;' onClick={() => {
-        handleDelete(record.order_id)
-      }}>删除订单</a> : ''
+      return record.is_inward_send == 2 ? <div><a href='javascript:;' onClick={() => {
+        handleDelete(record)
+      }}>删除订单</a></div> : null
     }
   }
 ];
@@ -526,27 +525,27 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     fixed: 'right',
     render: (text, record) => {
       return <>
-        {record.added == 1 ? <a href='javascript:;' onClick={() => {
+        {record.added == 1 ? <div> <a href='javascript:;' onClick={() => {
           handleAddNumber(record)
-        }}>申请新增账号</a> : null}
+        }}>申请新增账号</a> </div> : null}
         {/* {[12, 21, 25, 31].includes(parseInt(record.customer_confirmation_status)) && [0, 3, 4].includes(parseInt(record.last_apply_status)) && <div><a href='javascript:;' onClick={() => {
           handleChangeNumber(record.order_id)
         }}>申请换号</a></div>} */}
         {
-          record.change == 1 ? <a href='javascript:;' onClick={() => {
+          record.change == 1 ? <div> <a href='javascript:;' onClick={() => {
             handleChangeNumber(record)
-          }}>申请换号</a> : null
+          }}>申请换号</a></div> : null
         }
         {
-          record.stopAndUpdate == 1 ? <a href='javascript:;' onClick={() => {
-            handleQuitOrder(record.order_id)
-          }}>申请终止合作</a> : null
+          record.stopAndUpdate == 1 ? <div>  <a href='javascript:;' onClick={() => {
+            handleQuitOrder(record)
+          }}>申请终止合作</a> </div> : null
         }
         {
           record.stopAndUpdate == 1 ?
-            <a href='javascript:;' onClick={() => {
+            <div> <a href='javascript:;' onClick={() => {
               handleUpdateOrder(record)
-            }}>申请更新信息</a> : null}
+            }}>申请更新信息</a> </div> : null}
         {/* {[12, 21, 25, 31].includes(parseInt(record.customer_confirmation_status)) && [0, 3, 4].includes(parseInt(record.last_apply_status)) && <div><a href='javascript:;' onClick={() => {
           handleQuitOrder(record.order_id)
         }}>申请终止合作</a></div>}
