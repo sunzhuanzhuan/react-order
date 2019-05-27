@@ -11,7 +11,7 @@ const ModalComponent = (props) => {
       title={modalParams.modalTitle}
       visible={visible}
       onCancel={handleCancel}
-      width={700}
+      width={950}
       maskClosable={false}
       footer={null}
       centered={true}
@@ -27,7 +27,7 @@ const ModalComponent = (props) => {
       visible={visible}
       footer={null}
       onCancel={handleCancelWithConfirm}
-      width={700}
+      width={950}
       centered={true}
       maskClosable={false}
       bodyStyle={{ maxHeight: '500px', overflowY: 'auto' }}

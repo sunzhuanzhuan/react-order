@@ -150,7 +150,7 @@ class AddAgent extends Component {
         onCancel={this.handleCancel}
         footer={null}
         destroyOnClose={true}
-        width={600}
+        width={700}
         bodyStyle={{ height: '500px', overflowY: 'auto' }}
         centered={true}
       >
