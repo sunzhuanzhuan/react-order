@@ -228,8 +228,8 @@ export const columns = (props) => {
   return [
     {
       title: '操作',
-      dataIndex: 'supported_operations',
-      key: 'supported_operations',
+      dataIndex: 'support_operates',
+      key: 'support_operates',
       align: 'center',
       fixed: 'left',
       width: 100,
@@ -346,8 +346,8 @@ export const columns = (props) => {
       align: 'center',
       width: 100,
       render: (text, record) => {
-        return record.public_order ?
-          <span>{record.public_order.cooperation_platform_name}</span> : null
+        return record.public_order && record.public_order.cooperation_platform ?
+          <span>{record.public_order.cooperation_platform.cooperationPlatformName}</span> : null
       }
     },
     {
