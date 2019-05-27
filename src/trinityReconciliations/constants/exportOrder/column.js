@@ -570,7 +570,10 @@ export const summaryTotalDetailListFunc = () => {
       dataIndex: 'pay_amount',
       key: 'pay_amount',
       align: 'center',
-      width: 100
+      width: 100,
+      render: (text, record) => {
+        return record.operation_type_name == 4 ? parseFloat(record.pay_amount).toFixed(2) : '-'
+      }
     },
     {
       title: '调账原因',
