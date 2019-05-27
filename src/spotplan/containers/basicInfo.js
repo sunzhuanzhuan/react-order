@@ -33,7 +33,8 @@ class BasicInfo extends React.Component {
     }
   }
   handleCheckPo = () => {
-    api.get("/spotplan/getPOInfo?po_code=" + this.state.inputValue)
+    const { search } = this.props;
+    api.get("/spotplan/getPOInfo?po_code=" + this.state.inputValue + '&company_id=' + search.company_id)
       .then((response) => {
         let data = response.data
         if (response.code == 200 && data && data.po_path) {

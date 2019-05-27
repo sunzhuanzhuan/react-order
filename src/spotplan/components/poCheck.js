@@ -26,7 +26,8 @@ export default Form.create()(class extends React.Component {
     }
   }
   handleCheckPo = (value) => {
-    api.get("/spotplan/getPOInfo?po_code=" + value)
+    const { spInfo } = this.props;
+    api.get("/spotplan/getPOInfo?po_code=" + value + '&company_id=' + spInfo.company_id)
       .then((response) => {
         let data = response.data
         if (response.code == 200 && data && data.po_path) {
