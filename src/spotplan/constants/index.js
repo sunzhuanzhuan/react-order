@@ -376,6 +376,16 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
         <a href={record.requirement_path} target="_blank">{text}</a>
       </div>
     }
+  },
+  {
+    title: '订单状态',
+    dataIndex: 'status_name',
+    key: 'status_name',
+    align: 'center',
+    width: 100,
+    render: text => {
+      return <div>{text || '-'}</div>
+    }
   }, {
     title: 'Spotplan下发状态',
     dataIndex: 'is_inward_send',
@@ -386,16 +396,6 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
       return record.inward_send_at != '0000-00-00 00:00:00' ? <Tooltip title={<div><p>成功下发时间</p><p>{record.inward_send_at}</p></div>}>
         <span>{record.is_inward_send == 1 ? 'SP下发成功' : '待下发SP'}</span>
       </Tooltip> : <span>{record.is_inward_send == 1 ? 'SP下发成功' : '待下发SP'}</span>
-    }
-  },
-  {
-    title: '订单状态',
-    dataIndex: 'status_name',
-    key: 'status_name',
-    align: 'center',
-    width: 100,
-    render: text => {
-      return <div>{text || '-'}</div>
     }
   },
   {
@@ -603,8 +603,8 @@ export const HistoryCols = [
     key: 'before_order_info',
     align: 'center',
     width: 240,
-    render: text => {
-      return <div>
+    render: (text, record) => {
+      return record.apply_type != 7 ? <div>
         {text && text.map((item, index) => {
           return <div key={index}>
             <div style={{ textAlign: 'left' }}>【订单ID:{item.order_id}、{item.weibo_name}】</div>
@@ -616,7 +616,7 @@ export const HistoryCols = [
             {item.content && <div style={{ textAlign: 'left' }}>备注(非必填)：{item.content}</div>}
           </div>
         })}
-      </div>
+      </div> : '-'
     }
   },
   {
@@ -700,16 +700,16 @@ export const AddOrderCols = [
     width: 100
   },
   {
-    title: '价格名称',
-    dataIndex: 'price_name',
-    key: 'price_name',
+    title: 'PriceID',
+    dataIndex: 'price_id',
+    key: 'price_id',
     align: 'center',
     width: 100
   },
   {
-    title: 'PriceID',
-    dataIndex: 'price_id',
-    key: 'price_id',
+    title: '价格名称',
+    dataIndex: 'price_name',
+    key: 'price_name',
     align: 'center',
     width: 100
   },

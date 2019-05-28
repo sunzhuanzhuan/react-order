@@ -143,8 +143,6 @@ class DetailQuery extends React.Component {
             <Input placeholder='请输入账号名称，多个以空格隔开' style={{ width: 240 }} allowClear />
           )}
         </FormItem>
-      </Row>
-      <Row>
         <FormItem label='平台'>
           {getFieldDecorator('platform_id')(
             <Select className="multipleSelect"

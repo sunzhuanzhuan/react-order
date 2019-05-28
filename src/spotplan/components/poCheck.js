@@ -56,7 +56,7 @@ export default Form.create()(class extends React.Component {
     const { data } = this.state;
     const { spInfo } = this.props;
     return <>
-      <div>当前PO单号: {spInfo.customer_po_code || '-'}</div>
+      <div>当前PO单号:<a target='_blank' href={spInfo.po_path}> {spInfo.customer_po_code || '-'}</a></div>
       <Form>
         <Form.Item label="修改后PO单号">
           {getFieldDecorator('po_id', {
@@ -70,7 +70,7 @@ export default Form.create()(class extends React.Component {
             <span>所属项目/品牌: {data.project_name} / {data.brand_name}</span>
             <span style={{ margin: '0 10px' }}>PO总额:￥{data.amount || ''} </span>
             <a target="_blank" href={data.po_path || ''}>查看PO详情</a>
-          </div> : <div style={{ color: 'red' }}>未在系统匹配到该公司存在该PO单号，请重新输入后再次检验</div> : null}
+          </div> : <div style={{ color: 'red' }}>未在系统匹配到该公司存在该PO单号，请重新输入后再次校验</div> : null}
         </Form.Item>
       </Form>
     </>

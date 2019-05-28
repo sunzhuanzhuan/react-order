@@ -227,7 +227,7 @@ class SpotplanAdd extends React.Component {
         }
       >
         {
-          !this.form.state.reslutBtn || !this.form.state.isEdit ? <p>为确保填写的PO单号真实存在，请先点击【检验】，再进入“下一步”</p> : null
+          !this.form.state.reslutBtn || !this.form.state.isEdit ? <p>为确保填写的PO单号真实存在，请先点击【校验】，再进入“下一步”</p> : null
         }
         {
           this.form.state.reslutBtn && !this.form.state.validateMessage ? <p>未在系统匹配到你填写的PO单号，请重新填写</p> : null

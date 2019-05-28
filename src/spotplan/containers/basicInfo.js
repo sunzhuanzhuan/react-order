@@ -113,17 +113,17 @@ class BasicInfo extends React.Component {
           <span>所属项目/品牌: {this.state.data.project_name} / {this.state.data.brand_name}</span>
           <span style={{ margin: '0 10px' }}>PO总额:￥{this.state.data.amount} </span>
           <a target="_blank" href={this.state.data.po_path}>查看PO详情</a>
-        </div> : <div style={{ color: 'red' }}>未在系统匹配到该公司存在该PO单号，请重新输入后再次检验</div> : null}
+        </div> : <div style={{ color: 'red' }}>未在系统匹配到该公司存在该PO单号，请重新输入后再次校验</div> : null}
       </FormItem>
       <FormItem label='备注信息' {...formItemLayout}>
         {getFieldDecorator('content', {
           rules: [
-            { max: 200, message: '备注信息不能超过200个字 ' }
+            { max: 240, message: '备注信息不能超过120个汉字 ' }
           ]
         })(
           <TextArea autosize={{ minRows: 4, maxRows: 6 }} style={{ width: 400 }} />
         )}
-        <div className='tip-style' >请输入备注信息，不要超过200个字</div>
+        <div className='tip-style' >请输入备注信息，不能超过120个汉字</div>
       </FormItem>
     </Form>
   }

@@ -37,15 +37,15 @@ class QuitModal extends React.Component {
           <FormItem label='填写原因'>
             {getFieldDecorator('reason', {
               rules: [{ required: true, message: '请填写原因' },
-              { max: 400, message: '不能超过400字' }]
+              { max: 240, message: '不能超过120汉字' }]
             })(
-              <TextArea placeholder='请填写申请换号的原因，不超过400个字' autosize={{ minRows: 2, maxRows: 6 }} />
+              <TextArea placeholder='请填写申请换号的原因，不能超过120汉字' autosize={{ minRows: 2, maxRows: 6 }} />
             )}
           </FormItem>
         </Form>
         <h2 style={{ padding: '10px 0' }}>当前订单信息</h2>
-        <h4 style={{ padding: '10px 0' }}>订单数量<span style={{color:'red' ,padding: '0 10px'}}>{dataSource.length}个</span> 
-        Costwithfee<span style={{color:'red',padding: '0 10px'}}>{ numeral(dataSource[0].costwithfee).format('0,0.00')}元</span></h4>
+        <h4 style={{ padding: '10px 0' }}>订单数量<span style={{ color: 'red', padding: '0 10px' }}>{dataSource.length}个</span>
+          Costwithfee<span style={{ color: 'red', padding: '0 10px' }}>{numeral(dataSource[0].costwithfee).format('0,0.00')}元</span></h4>
         <Table rowKey='order_id' bordered columns={OrderCols} dataSource={dataSource} pagination={false} />
       </>
     </Modal>

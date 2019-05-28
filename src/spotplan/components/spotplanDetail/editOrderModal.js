@@ -77,7 +77,7 @@ class EditOrderModal extends React.Component {
         <FormItem label='备注信息（非必填）' {...formItemLayout}>
           {getFieldDecorator('content', {
             initialValue: data && data[0].content || '',
-            rules: [{ max: 400, message: '不能超过400字' }]
+            rules: [{ max: 240, message: '不能超过120个汉字' }]
           })(
             <TextArea placeholder='填写备注信息' autosize={{ minRows: 4, maxRows: 6 }} />
           )}

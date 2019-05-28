@@ -79,9 +79,9 @@ class UpdateModal extends React.Component {
         <FormItem label='填写原因'>
           {getFieldDecorator('reason', {
             rules: [{ required: true, message: '请填写原因' },
-            { max: 400, message: '不能超过400字' }]
+            { max: 240, message: '不能超过120汉字' }]
           })(
-            <TextArea placeholder='请填写申请换号的原因，不超过400个字' autosize={{ minRows: 2, maxRows: 6 }} />
+            <TextArea placeholder='请填写申请换号的原因，不能超过120汉字' autosize={{ minRows: 2, maxRows: 6 }} />
           )}
         </FormItem>
         <h4 style={{ padding: '10px 0', fontWeight: 600 }}>当前订单信息</h4>

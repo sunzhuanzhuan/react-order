@@ -108,16 +108,30 @@ class SpotPlanDetail extends React.Component {
     let rows = selectedRows.reduce((data, current) => {
       return { ...data, [current.order_id]: current }
     }, {});
-    rows = Object.assign(this.state.rows, rows)
+    rows = Object.assign(this.state.rows, rows);
+    console.log(rows)
+    if (selectedRowKeys.length != 0) {
+      Object.values(rows).map((item) => {
+        if (selectedRowKeys.indexOf(item.order_id + '') < 0) {
+          delete rows[item.order_id]
+        }
+      })
+    } else {
+      rows = {}
+    }
+
     this.setState({ selectedRowKeys, rows });
   }
   handleCheckAll = (e) => {
-    const { rows, type } = this.state;
     const { spotplanEditList } = this.props;
-    const list = spotplanEditList[type] && spotplanEditList[type].list && spotplanEditList[type].list.reduce((data, current) => {
-      const flag = ([12, 21, 25, 31].includes(parseInt(current.customer_confirmation_status)) && [0, 3, 4].includes(parseInt(current.last_apply_status))) ? true : false;
-      return flag ? [...data, current] : data
-    }, []) || [];
+    const { rows, type } = this.state;
+    const list = spotplanEditList[type] && spotplanEditList[type].list;
+    // const { rows, type } = this.state;
+    // const { spotplanEditList } = this.props;
+    // const list = spotplanEditList[type] && spotplanEditList[type].list && spotplanEditList[type].list.reduce((data, current) => {
+    //   const flag = ([12, 21, 25, 31].includes(parseInt(current.customer_confirmation_status)) && [0, 3, 4].includes(parseInt(current.last_apply_status))) ? true : false;
+    //   return flag ? [...data, current] : data
+    // }, []) || [];
     if (e.target.checked) {
       const obj = list.reduce((data, current) => {
         return { ...data, [current.order_id]: current }
@@ -127,6 +141,7 @@ class SpotPlanDetail extends React.Component {
       const obj = { ...rows };
       list.forEach(item => delete obj[item.order_id]);
       this.handleSelectChange(Object.keys(obj), Object.values(obj));
+
     }
   }
   handleHistory = (e, record) => {
@@ -167,7 +182,7 @@ class SpotPlanDetail extends React.Component {
       this.setState({ order_id, addVisible: true });
     })
   }
-  handleUpdateOrder = order_id => {
+  handleUpdateOrder = ({ order_id }) => {
     const search = qs.parse(this.props.location.search.substring(1));
     this.props.actions.getBasicSpotplanOrderInfo({ spotplan_id: search.spotplan_id, order_id }).then(() => {
       this.setState({ order_id, updateVisible: true });
@@ -336,7 +351,7 @@ class SpotPlanDetail extends React.Component {
       } else {
         if (values.po_id) {
           if (!this.formRef.state.reslutBtn || !this.formRef.state.isEdit) {
-            message.error('为确保填写的PO单号真实存在，请先点击【检验】，再进入“下一步”');
+            message.error('为确保填写的PO单号真实存在，请先点击【校验】，再进入“下一步”');
             this.setState({
               visible: true,
             });
@@ -384,11 +399,11 @@ class SpotPlanDetail extends React.Component {
     const { historyVisible, editVisible, changeVisible, quitVisible, updateVisible, selectedRowKeys, type, loading, record, addVisible, rows } = this.state;
     const { spotplanExecutor, spotplanPlatform, spotplanPoInfo, spotplanAmount, spotplanEditList, basicSpotplanOrderInfo, updateSpotplanOrder: { before_order = [], after_order = [] }, updateSpotplanOrderLog, serviceRateAmount } = this.props;
     const list = spotplanEditList[type] && spotplanEditList[type].list || [];
-    const checkList = list.reduce((data, current) => {
-      const flag = ([12, 21, 25, 31].includes(parseInt(current.customer_confirmation_status)) && [0, 3, 4].includes(parseInt(current.last_apply_status))) ? true : false;
-      return flag ? [...data, current] : data
-    }, []);
-    const checked = checkList.every(item => selectedRowKeys.includes(item.order_id.toString()));
+    // const checkList = list.reduce((data, current) => {
+    //   const flag = ([12, 21, 25, 31].includes(parseInt(current.customer_confirmation_status)) && [0, 3, 4].includes(parseInt(current.last_apply_status))) ? true : false;
+    //   return flag ? [...data, current] : data
+    // }, []);
+    // const checked = checkList.every(item => selectedRowKeys.includes(item.order_id.toString()));
     const DetailTableCols = DetailTableFunc(this.handleChangeNumber, this.handleQuitOrder, this.handleUpdateOrder, this.handleEditOrder, this.handleDelete, this.handleHistory, this.handleAddNumber);
     const rowSelection = {
       selectedRowKeys: selectedRowKeys,
@@ -439,9 +454,9 @@ class SpotPlanDetail extends React.Component {
         </TabPane>))}
       </Tabs>
       <div className='top-gap'>
-        <h4 style={{ padding: '10px 0' }}>勾选订单数量<span style={{ color: 'red', padding: '0 10px' }}>{Object.values(rows).length}个</span>
+        <h4 style={{ padding: '10px 0' }}>勾选订单数量<span style={{ color: 'red', padding: '0 10px' }}>{selectedRowKeys.length}个</span>
           Costwithfee<span style={{ color: 'red', padding: '0 10px' }}>{numeral(tatalAmount).format('0,0.00')}元</span></h4>
-        <Checkbox onChange={this.handleCheckAll} disabled={checkList.length == 0} checked={checkList.length > 0 && checked}>全选</Checkbox>
+        <Checkbox onChange={this.handleCheckAll}>全选</Checkbox>
         <Button type='primary' onClick={this.handleSettleChange}>批量申请换号</Button>
         <Button className='left-gap' type='primary' onClick={this.handleSettleQuit}>批量申请终止合作</Button>
         <Button type='primary' className='left-gap' onClick={this.handleSettleAddAccount}>批量申请新增账号</Button>
@@ -549,7 +564,7 @@ function BasicInfo({ data, handleClick, handleChangeType }) {
       <Col span={6}>
         {(data && data.customer_po_code) ?
           <a target='_blank' href={data && data.po_path}>{data.customer_po_code}</a> : '-'}
-        <Button style={{ marginLeft: '10px' }} type="primary" onClick={handleChangeType}>编辑</Button>
+        {(data && data.customer_po_amount) == '' ? <Button style={{ marginLeft: '10px' }} type="primary" onClick={handleChangeType}>编辑</Button> : null}
       </Col>
       <Col span={3}>发起更新申请次数:</Col>
       <Col span={9}>{data && data.apply_num || 0}<a style={{ marginLeft: '40px' }} href='javascript:;' onClick={handleClick}>查看历史更新申请记录</a></Col>
