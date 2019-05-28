@@ -572,7 +572,6 @@ export const summaryTotalDetailListFunc = () => {
       align: 'center',
       width: 100,
       render: (text, record) => {
-        console.log(record)
         return record.operation_type == 4 ? parseFloat(record.pay_amount).toFixed(2) : '-'
       }
     },
