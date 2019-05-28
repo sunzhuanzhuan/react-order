@@ -30,7 +30,7 @@ export const filterFormArr = [
   {
     label: "订单状态",
     type: "select",
-    id: "order_status",
+    id: "status",
     data: [
       { key: "请选择", value: "0" },
       { key: "应约", value: "2" },
@@ -228,8 +228,8 @@ export const columns = (props) => {
   return [
     {
       title: '操作',
-      dataIndex: 'supported_operations',
-      key: 'supported_operations',
+      dataIndex: 'support_operates',
+      key: 'support_operates',
       align: 'center',
       fixed: 'left',
       width: 100,
@@ -346,8 +346,8 @@ export const columns = (props) => {
       align: 'center',
       width: 100,
       render: (text, record) => {
-        return record.public_order ?
-          <span>{record.public_order.cooperation_platform_name}</span> : null
+        return record.public_order && record.public_order.cooperation_platform ?
+          <span>{record.public_order.cooperation_platform.cooperationPlatformName}</span> : null
       }
     },
     {
@@ -469,8 +469,8 @@ export const columns = (props) => {
       align: 'center',
       width: 100,
       render: (text, record) => {
-        return record.public_order && record.public_order.public_order_statement && record.public_order.public_order_statement.statement_status && record.public_order.settle_type == "2" ?
-          <span>{statementStatus[record.public_order.public_order_statement.statement_status]}</span> : null
+        return record.public_order && record.public_order.public_order_trade && record.public_order.public_order_trade.statement_status && record.public_order.settle_type == "2" ?
+          <span>{statementStatus[record.public_order.public_order_trade.statement_status]}</span> : null
       }
     },
     {
@@ -588,7 +588,7 @@ export const columns = (props) => {
       width: 100,
       render: (text) => {
         return <div>
-          <div><a href={`${host}/user/update/user_id/${text.user_id}`} target="_blank">{text.realname}</a></div>
+          <div><a href={`${host}/user/update/user_id/${text.user_id}`} target="_blank">{text.identity_name}</a></div>
           <Tooltip placement="top" title={text.cell_phone}>
             <div>手机号</div>
           </Tooltip>
