@@ -56,7 +56,7 @@ export default Form.create()(class extends React.Component {
     const { data } = this.state;
     const { spInfo } = this.props;
     return <>
-      <div>当前PO单号:<a target='_blank' href={spInfo.po_path}> {spInfo.customer_po_code || '-'}</a></div>
+      <div>当前PO单号:{spInfo && spInfo.customer_po_code ? <a target='_blank' href={spInfo.po_path}> {spInfo.customer_po_code || '-'}</a> : '-'}</div>
       <Form>
         <Form.Item label="修改后PO单号">
           {getFieldDecorator('po_id', {

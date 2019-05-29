@@ -81,7 +81,7 @@ class UpdateModal extends React.Component {
             rules: [{ required: true, message: '请填写原因' },
             { max: 120, message: '不能超过120汉字' }]
           })(
-            <TextArea placeholder='请填写申请换号的原因，不能超过120汉字' autosize={{ minRows: 2, maxRows: 6 }} />
+            <TextArea placeholder='请填写更新信息的原因，不能超过120汉字' autosize={{ minRows: 2, maxRows: 6 }} />
           )}
         </FormItem>
         <h4 style={{ padding: '10px 0', fontWeight: 600 }}>当前订单信息</h4>

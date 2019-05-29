@@ -282,7 +282,7 @@ class SpotPlanDetail extends React.Component {
       message.error('请先勾选需要进行申请终止合作的订单', 3);
       return
     }
-    const flag = Object.values(rows).every(item => item.spotAndUpdate == 1);
+    const flag = Object.values(rows).every(item => item.stopAndUpdate == 1);
     // const flag = Object.values(rows).every(item => [12, 21, 25, 31].includes(parseInt(item.customer_confirmation_status)) && [0, 3, 4].includes(parseInt(item.last_apply_status)));
     if (!flag) {
       Modal.error({
@@ -317,7 +317,7 @@ class SpotPlanDetail extends React.Component {
       message.error('请先勾选需要进行批量删除订单的订单', 3);
       return
     }
-    const flag = Object.values(rows).every(item => item.is_inward_send == 2)
+    const flag = Object.values(rows).every(item => item.is_inward_send != 1 && item.last_apply_status != 1 && item.last_apply_status != 2);
     // const flag = Object.values(rows).every(item => [12, 21, 25, 31].includes(parseInt(item.customer_confirmation_status)) && [0, 3, 4].includes(parseInt(item.last_apply_status)));
     if (!flag) {
       Modal.error({
@@ -332,18 +332,10 @@ class SpotPlanDetail extends React.Component {
       onOk: () => {
         this.props.actions.postDeleteSpotplanOrder({ spotplan_id: search.spotplan_id, order_id: selectedRowKeys }).then(() => {
           message.success('操作成功');
-          const { getSpotplanPoInfo, getSpotplanAmount, getSpotplanPlatform, getSpotplanExecutor } = this.props.actions;
-          getSpotplanPoInfo({ spotplan_id: search.spotplan_id }).then((res) => {
-            this.setState({ customer_po_code: res.data.customer_po_code || '-' })
-          });
-          getSpotplanAmount({ spotplan_id: search.spotplan_id });
-          getSpotplanPlatform();
-          getSpotplanExecutor();
-          this.queryData({ spotplan_id: search.spotplan_id, ...search.keys });
-          this.queryData({ type: 1, spotplan_id: search.spotplan_id, ...search.keys });
-          this.queryData({ type: 2, spotplan_id: search.spotplan_id, ...search.keys });
-          this.queryData({ type: 3, spotplan_id: search.spotplan_id, ...search.keys });
-          this.queryData({ type: 4, spotplan_id: search.spotplan_id, ...search.keys });
+          setTimeout(() => {
+            window.location.reload()
+          }, 3000)
+
         })
       }
     })
