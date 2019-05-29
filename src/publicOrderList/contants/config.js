@@ -49,12 +49,7 @@ export const filterFormArr = [
     label: "平台",
     type: "multidim-select",
     id: "platform_id",
-    data: [
-      { key: "美拍--M计划", value: "25" },
-      { key: "快手--快接单", value: "103" },
-      { key: "新浪微博--微任务/WEIQ", value: "1" },
-      { key: "抖音--星图", value: "115" }
-    ]
+    url: "/operator-gateway/trinityPlatform/v1/getPlatform"
   },
   {
     label: "下单平台/代理商",

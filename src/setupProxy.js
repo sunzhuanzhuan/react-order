@@ -3,9 +3,9 @@ module.exports = function (app) {
   app.use(proxy('/api/finance/payment/paymentTypeList',
     { target: ' http://192.168.20.51:7300/mock/5c7fa2bd73f3100017a6412e', changeOrigin: true }
   ));
-  // app.use(proxy('/api/trinity/publicOrder/',
-  //   { target: ' http://192.168.20.51:7300/mock/5c8f48b273f3100017a64287', changeOrigin: true }
-  // ));
+  app.use(proxy('/api/operator-gateway/trinityPlatform/v1/getPlatform',
+    { target: 'http://47.93.10.229:17071', changeOrigin: true }
+  ));
   app.use(proxy('/api/operator-gateway/trinityPlatform/',
     { target: 'http://47.93.10.229:17071', changeOrigin: true }
   ));
