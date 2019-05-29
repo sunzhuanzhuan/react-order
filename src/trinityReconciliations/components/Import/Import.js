@@ -238,13 +238,13 @@ class ListQuery extends Component {
               </FormItem>
 
             </Col>
-              <div>
-                {
-                  this.state.visibleTable ? <div style={{ marginTop: '60px' }}>
-                    <OptionTable stateMentList={stateMentList} /></div>
-                    : <div></div>
-                }
-              </div>
+            <div>
+              {
+                this.state.visibleTable ? <div style={{ marginTop: '60px' }}>
+                  <OptionTable stateMentList={stateMentList} /></div>
+                  : <div></div>
+              }
+            </div>
           </Row>
 
 
@@ -263,13 +263,13 @@ class ListQuery extends Component {
                 )}
               </FormItem>
             </Col>
-              <div>
+            <div>
               {
                 this.state.stateTotal ? <div>
                   <TotalTable summaryList={summaryList} /></div> : <div>
                   </div>
               }
-              </div>
+            </div>
           </Row>
 
 
@@ -365,7 +365,7 @@ export class TotalTable extends Component {
           待付订单:{summaryList.wait_pay_order_count}
         </Col>
         <Col span={12}>
-          应付总金额(元):{summaryList.total_pay_amount}
+          待付总金额(元):{summaryList.wait_pay_amount}
         </Col>
       </Row>
 
