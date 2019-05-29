@@ -118,7 +118,7 @@ class BasicInfo extends React.Component {
       <FormItem label='备注信息' {...formItemLayout}>
         {getFieldDecorator('content', {
           rules: [
-            { max: 240, message: '备注信息不能超过120个汉字 ' }
+            { max: 120, message: '备注信息不能超过120个汉字 ' }
           ]
         })(
           <TextArea autosize={{ minRows: 4, maxRows: 6 }} style={{ width: 400 }} />
