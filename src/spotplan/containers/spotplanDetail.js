@@ -601,7 +601,7 @@ function Statistics({ data, flag }) {
     <Row className='info-row'>
 
       <Col style={{ display: 'inline-block', width: 212, marginLeft: '10px' }}>
-        Costwithfee总计: <span style={{ color: 'red' }}> {data.costwithfee}元</span>
+        Costwithfee总计: <span style={{ color: 'red' }}> {numeral(data.costwithfee).format('0,0.00')}元</span>
       </Col>
 
 
