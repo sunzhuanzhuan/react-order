@@ -51,10 +51,10 @@ class LabelPublicOrder extends Component {
         let agentId = this.props.orderDetail.public_order.agent_id || undefined
         values.ttp_place_order_at = values.ttp_place_order_at.format("YYYY-MM-DD HH:mm:ss")
         if (this.state.type == "single") {
-          values.ttp_cooperation_platform_id = this.props.orderDetail.public_order.cooperation_platform_id
+          values.cooperation_platform_id = this.props.orderDetail.public_order.cooperation_platform_id
           values.agent_id = agentId
         } else {
-          values.ttp_cooperation_platform_id = values.multiAgentIds[0]
+          values.cooperation_platform_id = values.multiAgentIds[0]
           values.agent_id = values.multiAgentIds[1]
           delete values.multiAgentIds
         }

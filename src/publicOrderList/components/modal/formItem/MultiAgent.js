@@ -25,11 +25,14 @@ class MultiAgent extends React.Component {
   }
   componentWillMount() {
     // 初始是否加载
-    if (this.props.is_agentDetail_initial_loading) {
-      this.setState({
-        is_agentDetail_loading: true
-      })
-    }
+    // if (this.props.is_agentDetail_initial_loading) {
+    //   this.setState({
+    //     is_agentDetail_loading: true
+    //   })
+    // }
+    this.setState({
+      is_agentDetail_loading: true
+    })
     // 清空代理商列表和详情
     this.props.actions.resetAgent()
     this.props.actions.resetAgentDetail()

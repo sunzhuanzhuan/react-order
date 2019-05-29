@@ -55,10 +55,10 @@ class ModifyPublicOrder extends Component {
       if (!err) {
         values.ttp_place_order_at = values.ttp_place_order_at.format("YYYY-MM-DD HH:mm:ss")
         if (this.state.type == "single") {
-          values.ttp_cooperation_platform_id = this.state.cooperationPlatform
+          values.cooperation_platform_id = this.state.cooperationPlatform
           values.agent_id = this.state.agent_id
         } else {
-          values.ttp_cooperation_platform_id = values.multiAgentIds[0]
+          values.cooperation_platform_id = values.multiAgentIds[0]
           values.agent_id = values.multiAgentIds[1]
           delete values.multiAgentIds
         }
