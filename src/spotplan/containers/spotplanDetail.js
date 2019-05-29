@@ -564,7 +564,7 @@ function BasicInfo({ data, handleClick, handleChangeType }) {
       <Col span={6}>
         {(data && data.customer_po_code) ?
           <a target='_blank' href={data && data.po_path}>{data.customer_po_code}</a> : '-'}
-        {(data && data.customer_po_amount) == '' ? <Button style={{ marginLeft: '10px' }} type="primary" onClick={handleChangeType}>编辑</Button> : null}
+        {(data && data.customer_po_amount) == null ? <Button style={{ marginLeft: '10px' }} type="primary" onClick={handleChangeType}>编辑</Button> : null}
       </Col>
       <Col span={3}>发起更新申请次数:</Col>
       <Col span={9}>{data && data.apply_num || 0}<a style={{ marginLeft: '40px' }} href='javascript:;' onClick={handleClick}>查看历史更新申请记录</a></Col>
