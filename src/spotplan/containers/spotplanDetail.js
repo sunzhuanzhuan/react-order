@@ -250,6 +250,7 @@ class SpotPlanDetail extends React.Component {
               this.queryData({ ...search.keys, spotplan_id: search.spotplan_id });
               this.props.actions.getSpotplanPoInfo({ spotplan_id: search.spotplan_id });
               close();
+
             }
           })
         }

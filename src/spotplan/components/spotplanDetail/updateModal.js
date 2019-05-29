@@ -37,6 +37,10 @@ class UpdateModal extends React.Component {
         }).then(() => {
           message.success('操作成功！', 2);
           this.props.onCancel();
+          setTimeout(() => {
+            window.location.reload()
+          }, 1000)
+
         })
       }
     })
@@ -188,7 +192,7 @@ class UpdateModal extends React.Component {
             <FormItem>
               {getFieldDecorator('content', {
                 initialValue: dataSource && dataSource[0].content || '',
-                rules: [{ max: 400, message: '不能超过400字' }]
+                rules: [{ max: 120, message: '不能超过120字' }]
               })(
                 <TextArea placeholder='请填写申请换号的原因，不超过400个字' autosize={{ minRows: 2, maxRows: 6 }} />
               )}

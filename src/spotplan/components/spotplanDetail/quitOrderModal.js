@@ -11,6 +11,10 @@ class QuitModal extends React.Component {
       if (!err) {
         this.props.handleSubmit({ type: 3, reason: values.reason }).then(() => {
           this.props.onCancel();
+          setTimeout(() => {
+            window.location.reload()
+          }, 1000)
+
         })
       }
     })

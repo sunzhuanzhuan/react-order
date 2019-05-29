@@ -29,6 +29,10 @@ class ChangeModal extends React.Component {
         }
         this.props.handleSubmit({ type: 1, after_order_ids: selectedRowKeys, reason: values.reason }).then(() => {
           this.props.onCancel();
+          setTimeout(() => {
+            window.location.reload()
+          }, 1000)
+
         })
       }
     })

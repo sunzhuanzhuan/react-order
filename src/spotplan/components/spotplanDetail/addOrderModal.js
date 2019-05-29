@@ -25,6 +25,9 @@ class AddModal extends React.Component {
         })
         this.props.handleSubmit({ type: 4, after_order_ids: orders, reason: values.reason }).then(() => {
           this.props.onCancel();
+          setTimeout(() => {
+            window.location.reload()
+          }, 1000)
 
         })
       }
