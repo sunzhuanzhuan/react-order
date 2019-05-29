@@ -600,8 +600,8 @@ function Statistics({ data, flag }) {
   return <div className='spotplan-detail-statistics'>
     <Row className='info-row'>
 
-      <Col style={{ display: 'inline-block', width: 212, marginLeft: '10px' }}>Costwithfee 总计:
-          {data.costwithfee}
+      <Col style={{ display: 'inline-block', width: 212, marginLeft: '10px' }}>
+        Costwithfee总计: <span style={{ color: 'red' }}> {data.costwithfee}元</span>
       </Col>
 
 
