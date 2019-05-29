@@ -239,7 +239,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete) => 
       return record.is_inward_send == 1 || record.last_apply_status == 1 || record.last_apply_status == 2 ? text : <FormItem>
         {getFieldDecorator(`${record.order_id}.content`, {
           rules: [
-            { max: 400, message: '不能超过400字' }
+            { max: 120, message: '不能超过120字' }
           ]
         })(
           <TextArea autosize={false} style={{ width: 140, height: 86, resize: 'none' }} placeholder='填写备注信息' onBlur={(e) => {
