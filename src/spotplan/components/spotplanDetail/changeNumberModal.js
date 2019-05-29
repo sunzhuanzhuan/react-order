@@ -41,6 +41,9 @@ class ChangeModal extends React.Component {
       selectedRowKeys,
       onChange: this.handleSelectChange,
     }
+    let tatalAmountBefore = before_order.reduce((pre, current) => {
+      return (pre * 100 + current.costwithfee * 100) / 100
+    }, 0);
     let tatalAmount = rows.reduce((pre, current) => {
       return (pre * 100 + current.costwithfee * 100) / 100
     }, 0);
@@ -74,7 +77,7 @@ class ChangeModal extends React.Component {
         </Form>
         <h4 style={{ padding: '10px 0' }}>当前订单信息</h4>
         <h4 style={{ padding: '10px 0' }}>订单数量<span style={{ color: 'red', padding: '0 10px' }}>{before_order.length}个</span>
-          Costwithfee总计:<span style={{ color: 'red', padding: '0 10px' }}>{numeral(before_order[0].costwithfee).format('0,0.00')}元</span></h4>
+          Costwithfee总计:<span style={{ color: 'red', padding: '0 10px' }}>{numeral(tatalAmountBefore).format('0,0.00')}元</span></h4>
         <Table rowKey='order_id' columns={OrderCols} dataSource={before_order} pagination={false} bordered />
         <h4 style={{ padding: '10px 0' }}>勾选替换后的订单</h4>
         <h4 style={{ padding: '10px 0' }}>勾选订单数量<span style={{ color: 'red', padding: '0 10px' }}>{rows.length}个</span>
