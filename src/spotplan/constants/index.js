@@ -503,7 +503,10 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     align: 'center',
     width: 120,
     render: text => {
-      return <div>{text || '-'}</div>
+      return <Tooltip title={<div style={{ width: '120px' }}>{text}</div>}>
+        <div style={{ width: '120px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{text || '-'}
+        </div>
+      </Tooltip>
     }
   },
   {
@@ -513,7 +516,10 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     align: 'center',
     width: 120,
     render: text => {
-      return <div>{text || '-'}</div>
+      return <Tooltip title={<div style={{ width: '120px' }}>{text}</div>}>
+        <div style={{ width: '120px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{text || '-'}
+        </div>
+      </Tooltip>
     }
   },
   {
