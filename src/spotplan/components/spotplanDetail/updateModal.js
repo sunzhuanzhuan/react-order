@@ -34,12 +34,16 @@ class UpdateModal extends React.Component {
             costwithfee: this.state.costwithfee || dataSource[0].costwithfee,
             ...values
           }
-        }).then(() => {
-          message.success('操作成功！', 2);
-          this.props.onCancel();
-          setTimeout(() => {
-            window.location.reload()
-          }, 1000)
+        }).then((res) => {
+          if (!res.data.type) {
+            message.success('操作成功！', 2);
+            this.props.onCancel();
+            setTimeout(() => {
+              window.location.reload()
+            }, 1000)
+          } else {
+            this.props.onCancel();
+          }
 
         })
       }

@@ -23,11 +23,16 @@ class AddModal extends React.Component {
         this.props.data.map((item) => {
           orders.push(item.order_id)
         })
-        this.props.handleSubmit({ type: 4, after_order_ids: orders, reason: values.reason }).then(() => {
-          this.props.onCancel();
-          setTimeout(() => {
-            window.location.reload()
-          }, 1000)
+        this.props.handleSubmit({ type: 4, after_order_ids: orders, reason: values.reason }).then((res) => {
+          if (!res.data.type) {
+            message.success('操作成功！', 2);
+            this.props.onCancel();
+            setTimeout(() => {
+              window.location.reload()
+            }, 1000)
+          } else {
+            this.props.onCancel();
+          }
 
         })
       }

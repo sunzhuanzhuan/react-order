@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, Button, Table, Form, Input } from 'antd';
+import { Modal, Button, Table, Form, Input, message } from 'antd';
 import { OrderCols } from '../../constants'
 
 import numeral from 'numeral'
@@ -9,12 +9,16 @@ class QuitModal extends React.Component {
   handleSubmit = () => {
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        this.props.handleSubmit({ type: 3, reason: values.reason }).then(() => {
-          this.props.onCancel();
-          setTimeout(() => {
-            window.location.reload()
-          }, 1000)
-
+        this.props.handleSubmit({ type: 3, reason: values.reason }).then((res) => {
+          if (!res.data.type) {
+            message.success('操作成功！', 2);
+            this.props.onCancel();
+            setTimeout(() => {
+              window.location.reload()
+            }, 1000)
+          } else {
+            this.props.onCancel();
+          }
         })
       }
     })

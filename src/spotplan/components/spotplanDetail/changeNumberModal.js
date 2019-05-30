@@ -27,12 +27,16 @@ class ChangeModal extends React.Component {
           message.error('请勾选需要替换的订单', 3);
           return
         }
-        this.props.handleSubmit({ type: 1, after_order_ids: selectedRowKeys, reason: values.reason }).then(() => {
-          this.props.onCancel();
-          setTimeout(() => {
-            window.location.reload()
-          }, 1000)
-
+        this.props.handleSubmit({ type: 1, after_order_ids: selectedRowKeys, reason: values.reason }).then((res) => {
+          if (!res.data.type) {
+            message.success('操作成功！', 2);
+            this.props.onCancel();
+            setTimeout(() => {
+              window.location.reload()
+            }, 1000)
+          } else {
+            this.props.onCancel();
+          }
         })
       }
     })
