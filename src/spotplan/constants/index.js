@@ -504,7 +504,7 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     width: 120,
     render: text => {
       return <Tooltip title={<div style={{ width: '120px' }}>{text}</div>}>
-        <div style={{ width: '120px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{text || '-'}
+        <div style={{ width: '100px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{text || '-'}
         </div>
       </Tooltip>
     }
@@ -517,7 +517,7 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     width: 120,
     render: text => {
       return <Tooltip title={<div style={{ width: '120px' }}>{text}</div>}>
-        <div style={{ width: '120px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{text || '-'}
+        <div style={{ width: '100px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{text || '-'}
         </div>
       </Tooltip>
     }
