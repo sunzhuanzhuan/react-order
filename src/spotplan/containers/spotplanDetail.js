@@ -533,6 +533,7 @@ class SpotPlanDetail extends React.Component {
         visible={this.state.visible}
         onOk={this.handleOk}
         onCancel={this.handleCancel}
+        maskClosable={false}
       >
         <FormPO wrappedComponentRef={this.saveFormRef} spInfo={spotplanPoInfo} />
       </Modal> : null}

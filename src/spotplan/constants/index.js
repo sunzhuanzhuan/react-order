@@ -91,7 +91,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete) => 
     dataIndex: 'order_id',
     key: 'order_id',
     align: 'center',
-    width: 100,
+    width: 110,
     fixed: 'left',
     render: (text, record) => {
       return <a href={record.order_info_path} target="_blank">{text}</a>
@@ -503,10 +503,10 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     align: 'center',
     width: 120,
     render: text => {
-      return <Tooltip title={<div style={{ width: '120px' }}>{text}</div>}>
+      return text ? <Tooltip title={<div style={{ width: '120px' }}>{text}</div>}>
         <div style={{ width: '100px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{text || '-'}
         </div>
-      </Tooltip>
+      </Tooltip> : '-'
     }
   },
   {
@@ -516,10 +516,10 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     align: 'center',
     width: 120,
     render: text => {
-      return <Tooltip title={<div style={{ width: '120px' }}>{text}</div>}>
+      return text ? <Tooltip title={<div style={{ width: '120px' }}>{text}</div>}>
         <div style={{ width: '100px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{text || '-'}
         </div>
-      </Tooltip>
+      </Tooltip> : '-'
     }
   },
   {
