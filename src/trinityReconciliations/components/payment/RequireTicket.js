@@ -82,15 +82,23 @@ class ListQuery extends Component {
     this.props.onRef(this)
   }
   validator = (rule, value, callback) => {
-    if (value == 0) {
-      callback('请输入大于0的金额');
-      return;
+    const item = this.props.form.getFieldsValue(['return_invoice_type'])
+    if (item.return_invoice_type == 2) {
+      console.log(item.return_invoice_type)
+      if (value == 0) {
+        callback('请输入大于0的金额');
+        return;
+      } else if (value >= this.props.item.total_pay_amount) {
+        callback('输入的部分回款金额应小于应实付金额')
+        return;
+      } else {
+        callback()
+      }
+
+    } else {
+      callback()
     }
-    if (value >= this.props.item.total_pay_amount) {
-      callback('输入的部分回款金额应小于应实付金额')
-      return;
-    }
-    callback()
+
   }
   render() {
     let { getFieldDecorator } = this.props.form;
