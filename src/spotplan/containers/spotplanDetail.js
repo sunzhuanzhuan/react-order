@@ -247,9 +247,14 @@ class SpotPlanDetail extends React.Component {
             maskClosable: false,
             okText: '确定',
             onOk: (close) => {
-              this.queryData({ ...search.keys, spotplan_id: search.spotplan_id });
-              this.props.actions.getSpotplanPoInfo({ spotplan_id: search.spotplan_id });
-              close();
+              if (type == 3) {
+                close();
+              } else {
+                this.queryData({ ...search.keys, spotplan_id: search.spotplan_id });
+                this.props.actions.getSpotplanPoInfo({ spotplan_id: search.spotplan_id });
+                close();
+              }
+
 
             }
           })

@@ -35,7 +35,7 @@ class ChangeModal extends React.Component {
               window.location.reload()
             }, 1000)
           } else {
-            this.props.onCancel();
+            // this.props.onCancel();
           }
         })
       }
