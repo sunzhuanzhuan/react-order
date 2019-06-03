@@ -42,7 +42,9 @@ class UpdateModal extends React.Component {
               window.location.reload()
             }, 1000)
           } else {
-            // this.props.onCancel();
+            if (res.data.type != 3) {
+              this.props.onCancel();
+            }
           }
 
         })
