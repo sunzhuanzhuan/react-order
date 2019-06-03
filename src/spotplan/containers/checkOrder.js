@@ -27,7 +27,7 @@ class CheckOrder extends React.Component {
   }
   handlePageChange = (page) => {
     const search = qs.parse(this.props.location.search.substring(1));
-    this.props.queryData(2, { spotplan_id: search.spotplan_id, project_id: [this.props.spotplanPoInfo.project_id], reservation_status: 2, ...search.keys, page })
+    this.props.queryData(2, { spotplan_id: search.spotplan_id, reservation_status: 2, ...search.keys, page })
   }
   render() {
     const { spotplanExecutor, spotplanPlatform, spotplanProject, spotplanOrderList: { page, pageSize, total, rows = [] }, spotplanPoInfo, handleCheck, orderMaps, loading } = this.props;
