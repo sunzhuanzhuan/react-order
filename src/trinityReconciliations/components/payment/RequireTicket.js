@@ -81,7 +81,17 @@ class ListQuery extends Component {
   componentDidMount() {
     this.props.onRef(this)
   }
-
+  validator = (rule, value, callback) => {
+    if (value == 0) {
+      callback('请输入大于0的金额');
+      return;
+    }
+    if (value >= this.props.item.total_pay_amount) {
+      callback('输入的部分回款金额应小于应实付金额')
+      return;
+    }
+    callback()
+  }
   render() {
     let { getFieldDecorator } = this.props.form;
 
@@ -98,7 +108,8 @@ class ListQuery extends Component {
           <Col span={8}>
             <FormItem label='回汇票方式' {...formItemLayout}>
               {getFieldDecorator('return_invoice_type', {
-                rules: [{ required: true, message: '请输入回票方式' }]
+                rules: [{ required: true, message: '请输入回票方式' }],
+
               })(
                 <RadioGroup onChange={this.handleChoseTypeByReturnInvoice}>
                   <Radio value={1}>全部回票</Radio>
@@ -115,7 +126,8 @@ class ListQuery extends Component {
           <Col span={10} style={{ textAlign: 'left' }}>
             <FormItem label='回票金额(元)' {...formItemLayout}>
               {getFieldDecorator('return_invoice_amount', {
-                rules: [{ required: true, message: '请输入回票金额' }]
+                rules: [{ required: true, message: '请输入回票金额' },
+                { validator: this.validator }]
               })(
                 <InputNumber disabled={this.state.disabled} style={{ width: 140 }} decimalSeparator="." precision={2} />
               )}

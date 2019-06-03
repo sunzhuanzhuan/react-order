@@ -109,6 +109,15 @@ handleCancel = (e) => {
     }else{
       this.queryData({ page: 1, page_size: this.state.page_size, })
     }
+     //如果重置的话URL也要重置
+     const search = qs.parse(this.props.location.search.substring(1));
+     if(search.keys){
+         delete search.keys
+     }
+     this.props.history.replace({
+       pathname:window.location.pathname,
+       search: `?${qs.stringify({ ...search})}`,
+     })
  }
   //过滤条件
   handlefilterParams = (filterParams) => {
@@ -125,7 +134,7 @@ handleCancel = (e) => {
     // const shiColum = summaryShiListFunc(this.handleSelectDetail);
     let {detailSummary,detailSummaryList:{list:detailList=[],page:detailPage,total:detailTotal,page_size:detailPageSize}}=this.props;
     let {summaryList:{list=[],page,total },agentInfo}=this.props;
-    let {loading,page_size}= this.state;
+    let {loading,page_size,activeKey}= this.state;
     let paginationObjInfo = {
       onChange: (current) => {
         
@@ -161,9 +170,9 @@ handleCancel = (e) => {
      <Row className='title'>汇总单列表</Row>
      <Row className='agent'>平台/代理商:<span className='agent_name'>{agentInfo.length>0?agentInfo[0].agentName:''}</span></Row>
      <Tabs defaultActiveKey="1" onChange={this.handleChangeTab}>
-      <TabPane tab="全部" key="1">
-      <SearForm data={searchFormSummary} getAction={this.queryData}
-      responseLayout={{ xs: 24, sm: 24, md: 10, lg: 8, xxl: 6 }}  />
+      <TabPane tab="全部" key="1" forceRender={true}>
+      {activeKey== '1'?<SearForm data={searchFormSummary} getAction={this.queryData}
+      responseLayout={{ xs: 24, sm: 24, md: 10, lg: 8, xxl: 6 }}  />:null}
         {/* <SummaryFilter
           onRef={this.onRef}
           handlefilterParams={this.handlefilterParams}
@@ -180,9 +189,9 @@ handleCancel = (e) => {
         </div>
         
       </TabPane>
-      <TabPane tab="对账完成" key="3">
-      <SearForm data={searchFormSummary} getAction={this.queryData}
-      responseLayout={{ xs: 24, sm: 24, md: 10, lg: 8, xxl: 6 }}  />
+      <TabPane tab="对账完成" key="3" forceRender={true}>
+      {activeKey== '3'?<SearForm data={searchFormSummary} getAction={this.queryData}
+      responseLayout={{ xs: 24, sm: 24, md: 10, lg: 8, xxl: 6 }}  />:null}
         {/* <SummaryFilter
          onRef={this.onRef}
          handlefilterParams={this.handlefilterParams}
@@ -198,9 +207,9 @@ handleCancel = (e) => {
         />
       </div>
       </TabPane>
-      <TabPane tab="已释放" key="5">
-      <SearForm data={searchFormSummary} getAction={this.queryData}
-      responseLayout={{ xs: 24, sm: 24, md: 10, lg: 6, xxl: 6 }}  />
+      <TabPane tab="已释放" key="5" forceRender={true}>
+      {activeKey== '5'?<SearForm data={searchFormSummary} getAction={this.queryData}
+      responseLayout={{ xs: 24, sm: 24, md: 10, lg: 6, xxl: 6 }}  />:null}
         {/* <SummaryFilter
         onRef={this.onRef}
         handlefilterParams={this.handlefilterParams}

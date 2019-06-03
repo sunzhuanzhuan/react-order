@@ -162,7 +162,7 @@ export const paymentListFunc = (handleSelectDetail, summary_sheet_id) => {
       width: 100,
     },
     {
-      title: '代付金额',
+      title: '待付金额',
       dataIndex: 'wait_pay_amount',
       key: 'wait_pay_amount',
       align: 'center',
@@ -608,12 +608,12 @@ export const stateListFunc = (handleDelete) => {
       align: 'center',
       width: 100,
       render: (text, record) => {
-        return <Popconfirm title={<div>
+        return record.statement_status == 1 ? <Popconfirm title={<div>
           <div>温馨提示:</div>
           <div>删除后将无法恢复</div>
         </div>} onConfirm={() => handleDelete(record)} okText="确定" cancelText="取消">
           <a href='javascript:;'>删除对账单</a>
-        </Popconfirm>
+        </Popconfirm> : null
       }
     },
     {
