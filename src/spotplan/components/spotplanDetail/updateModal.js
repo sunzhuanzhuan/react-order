@@ -200,7 +200,7 @@ class UpdateModal extends React.Component {
                 initialValue: dataSource && dataSource[0].content || '',
                 rules: [{ max: 120, message: '不能超过120字' }]
               })(
-                <TextArea placeholder='请填写申请换号的原因，不超过400个字' autosize={{ minRows: 2, maxRows: 6 }} />
+                <TextArea placeholder='填写备注信息' autosize={{ minRows: 2, maxRows: 6 }} />
               )}
             </FormItem>
           </Col>
