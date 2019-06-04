@@ -106,6 +106,21 @@ class DetailQuery extends React.Component {
             </Select>
           )}
         </FormItem>
+        <FormItem label='Spotplan下发状态'>
+          {getFieldDecorator('spotplan_is_inward_send')(
+            <Select style={{ width: 180 }}
+              placeholder='请选择'
+              getPopupContainer={() => document.querySelector('.spotplan-check-form')}
+              labelInValue
+              allowClear
+            >
+              <Option value={null} key={null}>请选择</Option>
+              <Option value={1} key={1}>SP下发成功</Option>
+              <Option value={2} key={2}>待下发SP</Option>
+              {/* {DETAIL_STATUS_CUSTOMER && DETAIL_STATUS_CUSTOMER.map(item => <Option value={item.value} key={item.value}>{item.key}</Option>)} */}
+            </Select>
+          )}
+        </FormItem>
         <FormItem label='批量查询'>
           {getFieldDecorator('settle_type', {
             initialValue: { label: '订单ID', key: 1 }
@@ -128,8 +143,6 @@ class DetailQuery extends React.Component {
             <Input placeholder='请输入账号名称，多个以空格隔开' style={{ width: 240 }} allowClear />
           )}
         </FormItem>
-      </Row>
-      <Row>
         <FormItem label='平台'>
           {getFieldDecorator('platform_id')(
             <Select className="multipleSelect"

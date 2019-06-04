@@ -34,7 +34,7 @@ class EditOrder extends React.Component {
       title: '',
       content: '是否确认将该订单从本spotplan删除？',
       onOk: () => {
-        handleDelete({ spotplan_id: search.spotplan_id, order_id }).then(() => {
+        handleDelete({ spotplan_id: search.spotplan_id, order_id:[order_id] }).then(() => {
           message.success('操作成功');
           this.props.queryData(3, { spotplan_id: search.spotplan_id }, this.handleEditTable);
         })
@@ -69,7 +69,7 @@ class EditOrder extends React.Component {
               dataSource={data && data.list || []}
               bordered
               loading={loading}
-              scroll={{ x: 1640 }}
+              scroll={{ x: 1544 }}
               pagination={data && data.total > 50 ? paginationObj : false}
             />
           </ScrollTable>

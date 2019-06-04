@@ -6,9 +6,10 @@ import BasicInfo from './basicInfo'
 import CheckOrder from './checkOrder'
 import EditOrder from './editOrder'
 import BottomBlock from '../components/bottomBlock'
-import { message, Steps, Modal } from 'antd'
+import { message, Steps, Modal, Button } from 'antd'
 import './spotplan.less'
 import qs from 'qs'
+import api from '../../api/index'
 
 
 const Step = Steps.Step;
@@ -25,7 +26,8 @@ class SpotplanAdd extends React.Component {
     super();
     this.state = {
       orderMaps: {},
-      loading: false
+      loading: false,
+      visible: false
     }
     this.basicInfo = React.createRef();
     this.editOrder = React.createRef();
@@ -103,6 +105,23 @@ class SpotplanAdd extends React.Component {
     if (num == 2 && type == 'go') {
       this.basicInfo.current.validateFields((err, values) => {
         if (!err) {
+          if (values.po_id) {
+            if (!this.form.state.reslutBtn || !this.form.state.isEdit) {
+              this.setState({
+                visible: true,
+              });
+              return
+            } else {
+              if (!this.form.state.validateMessage) {
+                this.setState({
+                  visible: true,
+                });
+                return
+              }
+            }
+            values.po_id = this.form.state.data.id;
+          }
+
           const hide = message.loading('操作中，请稍候...');
           this.props.actions.postAddSpotplan({ ...values, company_id: search.company_id }).then((res) => {
             this.props.history.push(`/order/spotplan/add?step=2&spotplan_id=${res.data.spotplan_id}`);
@@ -172,6 +191,11 @@ class SpotplanAdd extends React.Component {
       }
     }
   }
+  handleCancel = () => {
+    this.setState({
+      visible: false,
+    });
+  }
   render() {
     const search = qs.parse(this.props.location.search.substring(1));
     const step = parseInt(search.step);
@@ -186,7 +210,7 @@ class SpotplanAdd extends React.Component {
           </Steps>
         </div>
         <div className='spotplan-add-container'>
-          {step == 1 && <BasicInfo ref={this.basicInfo} search={search} queryData={this.queryData} data={spotplanCompanyInfo} />}
+          {step == 1 && <BasicInfo ref={this.basicInfo} search={search} queryData={this.queryData} data={spotplanCompanyInfo} wrappedComponentRef={(form) => this.form = form} />}
           {step == 2 && <CheckOrder queryData={this.queryData} handleCheck={this.handleCheck}
             orderMaps={orderMaps} location={this.props.location} history={this.props.history} queryBasicInfo={this.queryBasicInfo} loading={loading} />}
           {step == 3 && <EditOrder ref={this.editOrder} search={search} queryData={this.queryData} data={spotplanEditList['all']} handleUpdate={this.handleUpdate} queryBasicInfo={this.queryBasicInfo} headerData={spotplanPoInfo} loading={loading} handleDelete={this.handleDelete} />}
@@ -194,6 +218,21 @@ class SpotplanAdd extends React.Component {
       </div>
       <BottomBlock current={step} handleSteps={this.handleSteps} orderMaps={orderMaps}
         handlDel={this.handleCheck} data={spotplanEditList} search={search} />
+      {this.state.visible ? <Modal
+        title="提示信息"
+        visible={this.state.visible}
+        onCancel={this.handleCancel}
+        footer={
+          <Button onClick={this.handleCancel}>关闭</Button>
+        }
+      >
+        {
+          !this.form.state.reslutBtn || !this.form.state.isEdit ? <p>为确保填写的PO单号真实存在，请先点击【校验】，再进入“下一步”</p> : null
+        }
+        {
+          this.form.state.reslutBtn && !this.form.state.validateMessage ? <p>未在系统匹配到你填写的PO单号，请重新填写</p> : null
+        }
+      </Modal> : null}
     </>
   }
 }

@@ -12,10 +12,17 @@ class EditOrderModal extends React.Component {
     this.props.form.validateFields((err, values) => {
       if (!err) {
         const { data, spotplan_id } = this.props;
-        this.props.actions.postUpdateSpotplanOrder({ ...values, spotplan_id, order_id: data[0].order_id }).then(() => {
-          message.success('操作成功！', 2);
-          this.props.onCancel();
-          this.props.handleClose();
+        this.props.actions.postUpdateSpotplanOrder({ ...values, spotplan_id, order_id: data[0].order_id }).then((res) => {
+
+          if (!res.data.type) {
+            message.success('操作成功！', 2);
+            this.props.onCancel();
+            setTimeout(() => {
+              window.location.reload()
+            }, 1000)
+          } else {
+            this.props.onCancel();
+          }
         })
       } else {
         Modal.error({
@@ -66,21 +73,6 @@ class EditOrderModal extends React.Component {
             <Input style={{ width: 140 }} />
           )}
         </FormItem>
-        <FormItem label='是否备选号' {...formItemLayout}>
-          {getFieldDecorator('is_replace', {
-            initialValue: data && data[0].is_replace || undefined,
-            rules: [{ required: true, message: '请选择是否备选' }]
-          })(
-            <Select style={{ width: 140 }}
-              placeholder='请选择'
-              getPopupContainer={() => document.querySelector('.edit-order-modal')}
-              allowClear
-            >
-              <Option value={1}>是</Option>
-              <Option value={2}>否</Option>
-            </Select>
-          )}
-        </FormItem>
         <FormItem label='位置/直发or转发' {...formItemLayout}>
           {getFieldDecorator('release_form', {
             initialValue: data && data[0].release_form || '',
@@ -92,7 +84,7 @@ class EditOrderModal extends React.Component {
         <FormItem label='备注信息（非必填）' {...formItemLayout}>
           {getFieldDecorator('content', {
             initialValue: data && data[0].content || '',
-            rules: [{ max: 400, message: '不能超过400字' }]
+            rules: [{ max: 120, message: '不能超过120个汉字' }]
           })(
             <TextArea placeholder='填写备注信息' autosize={{ minRows: 4, maxRows: 6 }} />
           )}

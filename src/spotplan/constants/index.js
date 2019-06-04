@@ -11,7 +11,8 @@ const APPLY_TYPE = {
   3: '【换号】多换一',
   4: '【换号】多换多',
   5: '更新订单信息',
-  6: '终止合作'
+  6: '终止合作',
+  7: '新增账号'
 };
 const APPLY_STATUS = {
   1: 'SP更新待提交客户审核',
@@ -90,7 +91,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete) => 
     dataIndex: 'order_id',
     key: 'order_id',
     align: 'center',
-    width: 100,
+    width: 110,
     fixed: 'left',
     render: (text, record) => {
       return <a href={record.order_info_path} target="_blank">{text}</a>
@@ -125,8 +126,8 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete) => 
   },
   {
     title: '账号ID',
-    dataIndex: 'id',
-    key: 'id',
+    dataIndex: 'weibo_id',
+    key: 'weibo_id',
     align: 'center',
     width: 120,
     render: (text, record) => {
@@ -148,8 +149,8 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete) => 
     align: 'center',
     width: 210,
     render: (text, record) => {
-      const flag = (record.customer_confirmation_status == 11 && [0, 4].includes(parseInt(record.last_apply_status))) ? true : false;
-      return flag ? <FormItem>
+      // const flag = (record.customer_confirmation_status == 11 && [0, 4].includes(parseInt(record.last_apply_status))) ? true : false;
+      return record.is_inward_send == 1 || record.last_apply_status == 1 || record.last_apply_status == 2 ? text : <FormItem>
         {getFieldDecorator(`${record.order_id}.price_name`, {
           rules: [{ required: true, message: '请填写名称' }]
         })(
@@ -160,7 +161,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete) => 
           }} />
         )
         }
-      </FormItem> : text
+      </FormItem>
     }
   },
   {
@@ -190,8 +191,8 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete) => 
     align: 'center',
     width: 100,
     render: (text, record) => {
-      const flag = (record.customer_confirmation_status == 11 && [0, 4].includes(parseInt(record.last_apply_status))) ? true : false;
-      return flag ? <FormItem>
+      // const flag = (record.customer_confirmation_status == 11 && [0, 4].includes(parseInt(record.last_apply_status))) ? true : false;
+      return record.is_inward_send == 1 || record.last_apply_status == 1 || record.last_apply_status == 2 ? text : <FormItem>
         {getFieldDecorator(`${record.order_id}.account_category_name`, {
           rules: [{ required: true, message: '请填写分类' }]
         })(
@@ -202,35 +203,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete) => 
           }} />
         )
         }
-      </FormItem> : text
-    }
-  },
-  {
-    title: '是否备选号',
-    dataIndex: 'is_replace',
-    key: 'is_replace',
-    align: 'center',
-    width: 100,
-    render: (text, record) => {
-      const flag = (record.customer_confirmation_status == 11 && [0, 4].includes(parseInt(record.last_apply_status))) ? true : false;
-      return flag ? <FormItem>
-        {getFieldDecorator(`${record.order_id}.is_replace`, {
-          rules: [{ required: true, message: '请选择是否备选' }]
-        })(
-          <Select
-            placeholder='请选择'
-            getPopupContainer={() => document.querySelector('.edit-table')}
-            onBlur={value => {
-              if (value != record.is_replace) {
-                handleUpdate({ order_id: record.order_id, price_id: record.price_id, is_replace: value })
-              }
-            }}
-          >
-            <Option value={1} >是</Option>
-            <Option value={2} >否</Option>
-          </Select>
-        )}
-      </FormItem> : text == 1 ? '是' : '否'
+      </FormItem>
     }
   },
   {
@@ -240,8 +213,8 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete) => 
     align: 'center',
     width: 210,
     render: (text, record) => {
-      const flag = (record.customer_confirmation_status == 11 && [0, 4].includes(parseInt(record.last_apply_status))) ? true : false;
-      return flag ? <FormItem>
+      // const flag = (record.customer_confirmation_status == 11 && [0, 4].includes(parseInt(record.last_apply_status))) ? true : false;
+      return record.is_inward_send == 1 || record.last_apply_status == 1 || record.last_apply_status == 2 ? text : <FormItem>
         {getFieldDecorator(`${record.order_id}.release_form`, {
           rules: [{ required: true, message: '请填写位置' }]
         })(
@@ -252,7 +225,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete) => 
           }} />
         )
         }
-      </FormItem> : text
+      </FormItem>
     }
   },
   {
@@ -262,11 +235,11 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete) => 
     align: 'center',
     width: 210,
     render: (text, record) => {
-      const flag = (record.customer_confirmation_status == 11 && [0, 4].includes(parseInt(record.last_apply_status))) ? true : false;
-      return flag ? <FormItem>
+      // const flag = (record.customer_confirmation_status == 11 && [0, 4].includes(parseInt(record.last_apply_status))) ? true : false;
+      return record.is_inward_send == 1 || record.last_apply_status == 1 || record.last_apply_status == 2 ? text : <FormItem>
         {getFieldDecorator(`${record.order_id}.content`, {
           rules: [
-            { max: 400, message: '不能超过400字' }
+            { max: 120, message: '不能超过120字' }
           ]
         })(
           <TextArea autosize={false} style={{ width: 140, height: 86, resize: 'none' }} placeholder='填写备注信息' onBlur={(e) => {
@@ -276,7 +249,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete) => 
           }} />
         )
         }
-      </FormItem> : text
+      </FormItem>
     }
   },
   {
@@ -287,10 +260,9 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete) => 
     fixed: 'right',
     width: 100,
     render: (text, record) => {
-      const flag = (record.customer_confirmation_status == 11 && [0, 4].includes(parseInt(record.last_apply_status))) ? true : false;
-      return flag ? <a href='javascript:;' onClick={() => {
+      return record.is_inward_send == 1 || record.last_apply_status == 1 || record.last_apply_status == 2 ? null : <div><a href='javascript:;' onClick={() => {
         handleDelete(record.order_id)
-      }}>删除订单</a> : ''
+      }}>删除订单</a></div>
     }
   }
 ];
@@ -380,7 +352,7 @@ export const SpotplanListFunc = () => [
     }
   }
 ];
-export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdateOrder, handleEditOrder, handleDelete, handleHistory) => [
+export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdateOrder, handleEditOrder, handleDelete, handleHistory, handleAddNumber) => [
   {
     title: '订单ID',
     dataIndex: 'order_id',
@@ -413,6 +385,17 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     width: 100,
     render: text => {
       return <div>{text || '-'}</div>
+    }
+  }, {
+    title: 'Spotplan下发状态',
+    dataIndex: 'is_inward_send',
+    key: 'is_inward_send',
+    align: 'center',
+    width: 180,
+    render: (text, record) => {
+      return record.inward_send_at != '0000-00-00 00:00:00' ? <Tooltip title={<div><p>成功下发时间</p><p>{record.inward_send_at}</p></div>}>
+        <span>{record.is_inward_send == 1 ? 'SP下发成功' : '待下发SP'}</span>
+      </Tooltip> : <span>{record.is_inward_send == 1 ? 'SP下发成功' : '待下发SP'}</span>
     }
   },
   {
@@ -500,7 +483,7 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     align: 'center',
     width: 120,
     render: text => {
-      return <div>{text && numeral(text).format('0,0') || '-'}</div>
+      return <div>{text && numeral(text).format('0,0.00') || '-'}</div>
     }
   },
   {
@@ -514,23 +497,16 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     }
   },
   {
-    title: '是否备选号',
-    dataIndex: 'is_replace',
-    key: 'is_replace',
-    align: 'center',
-    width: 100,
-    render: text => {
-      return <div>{text == 1 ? '是' : text == 2 ? '否' : '-'}</div>
-    }
-  },
-  {
     title: '位置/直发or转发',
     dataIndex: 'release_form',
     key: 'release_form',
     align: 'center',
     width: 120,
     render: text => {
-      return <div>{text || '-'}</div>
+      return text ? <Tooltip title={<div style={{ width: '120px' }}>{text}</div>}>
+        <div style={{ width: '100px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{text || '-'}
+        </div>
+      </Tooltip> : '-'
     }
   },
   {
@@ -540,7 +516,10 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     align: 'center',
     width: 120,
     render: text => {
-      return <div>{text || '-'}</div>
+      return text ? <Tooltip title={<div style={{ width: '120px' }}>{text}</div>}>
+        <div style={{ width: '100px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{text || '-'}
+        </div>
+      </Tooltip> : '-'
     }
   },
   {
@@ -552,21 +531,35 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     fixed: 'right',
     render: (text, record) => {
       return <>
-        {[12, 21, 25, 31].includes(parseInt(record.customer_confirmation_status)) && [0, 3, 4].includes(parseInt(record.last_apply_status)) && <div><a href='javascript:;' onClick={() => {
-          handleChangeNumber(record.order_id)
-        }}>申请换号</a></div>}
-        {[12, 21, 25, 31].includes(parseInt(record.customer_confirmation_status)) && [0, 3, 4].includes(parseInt(record.last_apply_status)) && <div><a href='javascript:;' onClick={() => {
-          handleQuitOrder(record.order_id)
-        }}>申请终止合作</a></div>}
-        {[12, 21, 22, 26, 27, 28, 32, 33, 34].includes(parseInt(record.customer_confirmation_status)) && [0, 3, 4].includes(parseInt(record.last_apply_status)) && <div><a href='javascript:;' onClick={() => {
-          handleUpdateOrder(record.order_id)
-        }}>申请更新信息</a></div>}
-        {record.customer_confirmation_status == 11 && [0, 4].includes(parseInt(record.last_apply_status)) && <div><a href='javascript:;' onClick={() => {
-          handleEditOrder(record.order_id)
-        }}>编辑信息</a></div>}
-        {record.customer_confirmation_status == 11 && [0, 4].includes(parseInt(record.last_apply_status)) && <div><a href='javascript:;' onClick={() => {
-          handleDelete(record.order_id)
-        }}>删除订单</a></div>}
+        {record.added == 1 ? <div> <a href='javascript:;' onClick={() => {
+          handleAddNumber(record.order_id)
+        }}>申请新增账号</a> </div> : null}
+        {
+          record.change == 1 ? <div> <a href='javascript:;' onClick={() => {
+            handleChangeNumber(record.order_id)
+          }}>申请换号</a></div> : null
+        }
+        {
+          record.stopAndUpdate == 1 ? <div>  <a href='javascript:;' onClick={() => {
+            handleQuitOrder(record.order_id)
+          }}>申请终止合作</a> </div> : null
+        }
+        {
+          record.stopAndUpdate == 1 ?
+            <div> <a href='javascript:;' onClick={() => {
+              handleUpdateOrder(record.order_id)
+            }}>申请更新信息</a> </div> : null}
+
+        {
+          record.is_inward_send == 1 || record.last_apply_status == 1 || record.last_apply_status == 2 ? null : <div><a href='javascript:;' onClick={() => {
+            handleEditOrder(record.order_id)
+          }}>编辑信息</a></div>
+        }
+        {
+          record.is_inward_send == 1 || record.last_apply_status == 1 || record.last_apply_status == 2 ? null : <div><a href='javascript:;' onClick={() => {
+            handleDelete(record.order_id)
+          }}>删除订单</a></div>
+        }
       </>
     }
   }
@@ -602,8 +595,8 @@ export const HistoryCols = [
     key: 'before_order_info',
     align: 'center',
     width: 240,
-    render: text => {
-      return <div>
+    render: (text, record) => {
+      return record.apply_type != 7 ? <div>
         {text && text.map((item, index) => {
           return <div key={index}>
             <div style={{ textAlign: 'left' }}>【订单ID:{item.order_id}、{item.weibo_name}】</div>
@@ -615,7 +608,7 @@ export const HistoryCols = [
             {item.content && <div style={{ textAlign: 'left' }}>备注(非必填)：{item.content}</div>}
           </div>
         })}
-      </div>
+      </div> : '-'
     }
   },
   {
@@ -662,7 +655,7 @@ export const HistoryCols = [
     }
   }
 ];
-export const OrderCols = [
+export const AddOrderCols = [
   {
     title: '订单ID',
     dataIndex: 'order_id',
@@ -699,6 +692,13 @@ export const OrderCols = [
     width: 100
   },
   {
+    title: 'PriceID',
+    dataIndex: 'price_id',
+    key: 'price_id',
+    align: 'center',
+    width: 100
+  },
+  {
     title: '价格名称',
     dataIndex: 'price_name',
     key: 'price_name',
@@ -712,7 +712,7 @@ export const OrderCols = [
     align: 'center',
     width: 100,
     render: text => {
-      return text && numeral(text).format('0,0') || '-'
+      return text && numeral(text).format('0,0.00') || '-'
     }
   },
   {
@@ -722,7 +722,77 @@ export const OrderCols = [
     align: 'center',
     width: 100,
     render: text => {
-      return text && numeral(text).format('0,0') || '-'
+      return text && numeral(text).format('0,0.00') || '-'
+    }
+  }
+];
+export const OrderCols = [
+  {
+    title: '订单ID',
+    dataIndex: 'order_id',
+    key: 'order_id',
+    align: 'center',
+    width: 100
+  },
+  {
+    title: '订单状态',
+    dataIndex: 'status_name',
+    key: 'status_name',
+    align: 'center',
+    width: 100
+  },
+  {
+    title: '需求名称',
+    dataIndex: 'requirement_name',
+    key: 'requirement_name',
+    align: 'center',
+    width: 100
+  },
+  {
+    title: '平台',
+    dataIndex: 'weibo_type_name',
+    key: 'weibo_type_name',
+    align: 'center',
+    width: 100
+  },
+  {
+    title: '账号名称',
+    dataIndex: 'weibo_name',
+    key: 'weibo_name',
+    align: 'center',
+    width: 100
+  }, {
+    title: 'PriceID',
+    dataIndex: 'price_id',
+    key: 'price_id',
+    align: 'center',
+    width: 80
+  },
+  {
+    title: '价格名称',
+    dataIndex: 'price_name',
+    key: 'price_name',
+    align: 'center',
+    width: 100
+  },
+  {
+    title: 'Cost（元）',
+    dataIndex: 'cost',
+    key: 'cost',
+    align: 'center',
+    width: 100,
+    render: text => {
+      return text && numeral(text).format('0,0.00') || '-'
+    }
+  },
+  {
+    title: 'Costwithfee（元）',
+    dataIndex: 'costwithfee',
+    key: 'costwithfee',
+    align: 'center',
+    width: 100,
+    render: text => {
+      return text && numeral(text).format('0,0.00') || '-'
     }
   }
 ];
@@ -759,6 +829,12 @@ export const UpdateCols = [
     title: '账号名称',
     dataIndex: 'weibo_name',
     key: 'weibo_name',
+    align: 'center',
+    width: 100
+  }, {
+    title: 'PriceID',
+    dataIndex: 'price_id',
+    key: 'price_id',
     align: 'center',
     width: 100
   }

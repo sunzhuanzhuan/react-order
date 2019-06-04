@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux';
 import { bindActionCreators } from "redux";
 import * as spotplanAction from "../actions";
-import { Breadcrumb, Row, Col, Button, Tooltip, Icon, Tabs, Checkbox, Modal, message } from 'antd'
+import { Breadcrumb, Row, Col, Button, Icon, Tabs, Checkbox, Modal, message } from 'antd'
 import { DetailTableFunc } from '../constants'
 import DetailQuery from '../components/spotplanDetail/detailQuery'
 import DetailTable from '../components/spotplanDetail/detailTable'
@@ -11,9 +11,11 @@ import EditOrderModal from '../components/spotplanDetail/editOrderModal'
 import ChangeModal from '../components/spotplanDetail/changeNumberModal'
 import QuitModal from '../components/spotplanDetail/quitOrderModal'
 import UpdateModal from '../components/spotplanDetail/updateModal'
+import AddModal from '../components/spotplanDetail/addOrderModal'
 import './spotplan.less'
 import qs from 'qs'
 import numeral from 'numeral'
+import FormPO from '../components/poCheck'
 
 const TabPane = Tabs.TabPane;
 const tabPaneList = [
@@ -53,17 +55,22 @@ class SpotPlanDetail extends React.Component {
       changeVisible: false,
       quitVisible: false,
       updateVisible: false,
+      addVisible: false,
       type: 'all',
       order_id: undefined,
       selectedRowKeys: [],
       rows: {},
-      record: undefined
+      record: undefined,
+      editPo: false,
+      editValue: ''
     }
   }
   componentDidMount() {
     const search = qs.parse(this.props.location.search.substring(1));
     const { getSpotplanPoInfo, getSpotplanAmount, getSpotplanPlatform, getSpotplanExecutor } = this.props.actions;
-    getSpotplanPoInfo({ spotplan_id: search.spotplan_id });
+    getSpotplanPoInfo({ spotplan_id: search.spotplan_id }).then((res) => {
+      this.setState({ customer_po_code: res.data.customer_po_code || '-' })
+    });
     getSpotplanAmount({ spotplan_id: search.spotplan_id });
     getSpotplanPlatform();
     getSpotplanExecutor();
@@ -89,25 +96,42 @@ class SpotPlanDetail extends React.Component {
     const search = qs.parse(this.props.location.search.substring(1));
     if (value - 1) {
       this.queryData({ ...search.keys, spotplan_id: search.spotplan_id, type: value - 1, page: 1 });
-      this.setState({ type: (value - 1).toString() });
+      this.props.actions.getSpotplanAmount({ spotplan_id: search.spotplan_id, type: value - 1 });
+      this.setState({ type: (value - 1).toString(), rows: {}, selectedRowKeys: [] });
       return
     }
+    this.props.actions.getSpotplanAmount({ spotplan_id: search.spotplan_id });
     this.queryData({ ...search.keys, spotplan_id: search.spotplan_id, page: 1 });
-    this.setState({ type: 'all' });
+    this.setState({ type: 'all', rows: {}, selectedRowKeys: [] });
   }
   handleSelectChange = (selectedRowKeys, selectedRows) => {
-    const rows = selectedRows.reduce((data, current) => {
+    let rows = selectedRows.reduce((data, current) => {
       return { ...data, [current.order_id]: current }
     }, {});
+    rows = Object.assign(this.state.rows, rows);
+    console.log(rows)
+    if (selectedRowKeys.length != 0) {
+      Object.values(rows).map((item) => {
+        if (selectedRowKeys.indexOf(item.order_id + '') < 0) {
+          delete rows[item.order_id]
+        }
+      })
+    } else {
+      rows = {}
+    }
+
     this.setState({ selectedRowKeys, rows });
   }
   handleCheckAll = (e) => {
-    const { rows, type } = this.state;
     const { spotplanEditList } = this.props;
-    const list = spotplanEditList[type] && spotplanEditList[type].list && spotplanEditList[type].list.reduce((data, current) => {
-      const flag = ([12, 21, 25, 31].includes(parseInt(current.customer_confirmation_status)) && [0, 3, 4].includes(parseInt(current.last_apply_status))) ? true : false;
-      return flag ? [...data, current] : data
-    }, []) || [];
+    const { rows, type } = this.state;
+    const list = spotplanEditList[type] && spotplanEditList[type].list;
+    // const { rows, type } = this.state;
+    // const { spotplanEditList } = this.props;
+    // const list = spotplanEditList[type] && spotplanEditList[type].list && spotplanEditList[type].list.reduce((data, current) => {
+    //   const flag = ([12, 21, 25, 31].includes(parseInt(current.customer_confirmation_status)) && [0, 3, 4].includes(parseInt(current.last_apply_status))) ? true : false;
+    //   return flag ? [...data, current] : data
+    // }, []) || [];
     if (e.target.checked) {
       const obj = list.reduce((data, current) => {
         return { ...data, [current.order_id]: current }
@@ -117,6 +141,7 @@ class SpotPlanDetail extends React.Component {
       const obj = { ...rows };
       list.forEach(item => delete obj[item.order_id]);
       this.handleSelectChange(Object.keys(obj), Object.values(obj));
+
     }
   }
   handleHistory = (e, record) => {
@@ -130,6 +155,14 @@ class SpotPlanDetail extends React.Component {
     }
 
   }
+  //表格操作按钮-新增账号
+  handleAddNumber = order_id => {
+    const search = qs.parse(this.props.location.search.substring(1));
+    this.props.actions.getBasicSpotplanOrderInfo({ spotplan_id: search.spotplan_id, order_id }).then(() => {
+      this.setState({ order_id, addVisible: true });
+    })
+
+  }
   handleChangeNumber = order_id => {
     const search = qs.parse(this.props.location.search.substring(1));
     this.props.actions.getUpdateSpotplanOrder({ spotplan_id: search.spotplan_id, order_id }).then(() => {
@@ -140,6 +173,13 @@ class SpotPlanDetail extends React.Component {
     const search = qs.parse(this.props.location.search.substring(1));
     this.props.actions.getBasicSpotplanOrderInfo({ spotplan_id: search.spotplan_id, order_id }).then(() => {
       this.setState({ order_id, quitVisible: true });
+    })
+  }
+  //批量-新增账号
+  handleAddAccount = order_id => {
+    const search = qs.parse(this.props.location.search.substring(1));
+    this.props.actions.getBasicSpotplanOrderInfo({ spotplan_id: search.spotplan_id, order_id }).then(() => {
+      this.setState({ order_id, addVisible: true });
     })
   }
   handleUpdateOrder = order_id => {
@@ -164,7 +204,7 @@ class SpotPlanDetail extends React.Component {
       title: '',
       content: '是否确认将该订单从本spotplan删除？',
       onOk: () => {
-        this.props.actions.postDeleteSpotplanOrder({ spotplan_id: search.spotplan_id, order_id }).then(() => {
+        this.props.actions.postDeleteSpotplanOrder({ spotplan_id: search.spotplan_id, order_id: [order_id] }).then(() => {
           message.success('操作成功');
           this.queryData({ ...search.keys, spotplan_id: search.spotplan_id });
         })
@@ -179,35 +219,51 @@ class SpotPlanDetail extends React.Component {
     const hide = message.loading('操作中，请稍候...');
     const search = qs.parse(this.props.location.search.substring(1));
     let { order_id } = this.state;
-    order_id = Array.isArray(order_id) ? order_id : [order_id];
+    if (obj.type == 4) {
+      order_id = []
+    } else {
+      order_id = Array.isArray(order_id) ? order_id : [order_id];
+    }
+
     return this.props.actions.postChangeNumberSpotplanOrder({ spotplan_id: search.spotplan_id, order_ids: order_id, ...obj }).then((res) => {
       hide();
       if (res.data) {
         const type = res.data.type;
-        const amount = res.data.amount;
         let content;
+
         if (type) {
-          content = type == 1 ? obj.type == 1 ? '存在已经被他人优先发起了更新申请的订单，请刷新后重新选择' : '该订单的更新申请已被他人优先发起了，请刷新后查看' : type == 2 ? '存在状态不为【客户待确认】的替换订单，请刷新后重新选择' : null;
-        }
-        if (amount) {
-          content = <ErrorTip data={res.data.amount} />
-        }
-        Modal.error({
-          title: '错误提示',
-          width: 640,
-          content: content,
-          maskClosable: false,
-          okText: '确定',
-          onOk: (close) => {
-            this.queryData({ ...search.keys, spotplan_id: search.spotplan_id });
-            this.props.actions.getSpotplanPoInfo({ spotplan_id: search.spotplan_id });
-            close();
+          let errInfo = {
+            1: obj.type == 1 ? '存在已经被他人优先发起了更新申请的订单，请刷新后重新选择' : '该订单的更新申请已被他人优先发起了，请刷新后查看',
+            2: '勾选的替换后的账号状态不正确，请刷新后重新选择',
+            3: '请先将如下订单的必填项编辑完整:' + res.data.order_ids.toString()
           }
-        })
+          // content = type == 1 ? obj.type == 1 ? '存在已经被他人优先发起了更新申请的订单，请刷新后重新选择' : '该订单的更新申请已被他人优先发起了，请刷新后查看' : type == 2 ? '存在状态不为【客户待确认】的替换订单，请刷新后重新选择' : null;
+          content = errInfo[type]
+
+          Modal.error({
+            title: '错误提示',
+            width: 640,
+            content: content,
+            maskClosable: false,
+            okText: '确定',
+            onOk: (close) => {
+              if (type == 3) {
+                close();
+              } else {
+                this.queryData({ ...search.keys, spotplan_id: search.spotplan_id });
+                this.props.actions.getSpotplanPoInfo({ spotplan_id: search.spotplan_id });
+                close();
+              }
+
+
+            }
+          })
+        }
       } else {
         this.queryData({ ...search.keys, spotplan_id: search.spotplan_id });
         this.props.actions.getSpotplanPoInfo({ spotplan_id: search.spotplan_id });
       }
+      return res
     })
   }
   handleSettleChange = () => {
@@ -216,11 +272,12 @@ class SpotPlanDetail extends React.Component {
       message.error('请先勾选需要进行换号申请的订单', 3);
       return
     }
-    const flag = Object.values(rows).every(item => [12, 21, 25, 31].includes(parseInt(item.customer_confirmation_status)) && [0, 3, 4].includes(parseInt(item.last_apply_status)));
+    const flag = Object.values(rows).every(item => item.change == 1);
+    // const flag = Object.values(rows).every(item => [12, 21, 25, 31].includes(parseInt(item.customer_confirmation_status)) && [0, 3, 4].includes(parseInt(item.last_apply_status)));
     if (!flag) {
       Modal.error({
         title: '错误提示',
-        content: <div>你选择的订单中存在订单状态不为<span style={{ color: 'red' }}>【客户已确认、执行中、执行终止、终止合作申请中】</span>的订单，请先取消勾选再进行批量换号申请。</div>
+        content: <div>你选择的订单中存在不能发布换号申请的订单，请重新选择</div>
       });
       return;
     }
@@ -232,35 +289,159 @@ class SpotPlanDetail extends React.Component {
       message.error('请先勾选需要进行申请终止合作的订单', 3);
       return
     }
-    const flag = Object.values(rows).every(item => [12, 21, 25, 31].includes(parseInt(item.customer_confirmation_status)) && [0, 3, 4].includes(parseInt(item.last_apply_status)));
+    const flag = Object.values(rows).every(item => item.stopAndUpdate == 1);
+    // const flag = Object.values(rows).every(item => [12, 21, 25, 31].includes(parseInt(item.customer_confirmation_status)) && [0, 3, 4].includes(parseInt(item.last_apply_status)));
     if (!flag) {
       Modal.error({
         title: '错误提示',
-        content: <div>你选择的订单中存在订单状态不为<span style={{ color: 'red' }}>【客户已确认、执行中、执行终止、终止合作申请中】</span>的订单，请先取消勾选再进行批量申请终止合作。</div>
+        content: <div>你选择的订单中存在不能发起终止合作申请的订单，请重新选择</div>
       });
       return;
     }
     this.handleQuitOrder(selectedRowKeys);
   }
+  handleSettleAddAccount = () => {
+    const { selectedRowKeys, rows } = this.state;
+    if (selectedRowKeys.length == 0) {
+      message.error('请先勾选需要进行批量申请新增账号的订单', 3);
+      return
+    }
+    const flag = Object.values(rows).every(item => item.added == 1);
+    if (!flag) {
+      Modal.error({
+        title: '错误提示',
+        content: <div>你选择的订单中存在不能发起【新增账号申请】的订单，请重新选择。</div>
+      });
+      return;
+    }
+    this.handleAddAccount(selectedRowKeys)
+  }
+  handleSettleDeleteOrder = () => {
+
+    const search = qs.parse(this.props.location.search.substring(1));
+    const { selectedRowKeys, rows } = this.state;
+    if (selectedRowKeys.length == 0) {
+      message.error('请先勾选需要进行批量删除订单的订单', 3);
+      return
+    }
+    const flag = Object.values(rows).every(item => item.is_inward_send != 1 && item.last_apply_status != 1 && item.last_apply_status != 2);
+    // const flag = Object.values(rows).every(item => [12, 21, 25, 31].includes(parseInt(item.customer_confirmation_status)) && [0, 3, 4].includes(parseInt(item.last_apply_status)));
+    if (!flag) {
+      Modal.error({
+        title: '错误提示',
+        content: <div>你选择的订单中存在不能发起删除的订单，请重新选择。</div>
+      });
+      return;
+    }
+    Modal.confirm({
+      title: '',
+      content: '是否确认删除选中的订单？',
+      onOk: () => {
+        this.props.actions.postDeleteSpotplanOrder({ spotplan_id: search.spotplan_id, order_id: selectedRowKeys }).then(() => {
+          message.success('操作成功');
+          setTimeout(() => {
+            window.location.reload()
+          }, 3000)
+
+        })
+      }
+    })
+  }
+
+  //切换PO的类型
+  handleChangeType = () => {
+    this.setState({
+      visible: true,
+    });
+  }
+  handleOk = () => {
+
+    const search = qs.parse(this.props.location.search.substring(1));
+    this.formRef.props.form.validateFields((err, values) => {
+      if (err) {
+        return;
+      } else {
+        if (values.po_id) {
+          if (!this.formRef.state.reslutBtn || !this.formRef.state.isEdit) {
+            message.error('为确保填写的PO单号真实存在，请先点击【校验】，再进入“下一步”');
+            this.setState({
+              visible: true,
+            });
+            return
+          } else {
+            if (!this.formRef.state.validateMessage) {
+              message.error('未在系统匹配到你填写的PO单号，请重新填写')
+              this.setState({
+                visible: true,
+              });
+              return
+            }
+            values.po_id = this.formRef.state.data.id;
+          }
+          const hide = message.loading('操作中，请稍候...');
+          this.setState({
+            visible: false,
+          });
+
+          this.props.actions.postUpdateSpotplan({ ...values, spotplan_id: search.spotplan_id }).then(() => {
+            this.queryData({ spotplan_id: search.spotplan_id, ...search.keys });
+            this.props.actions.getSpotplanPoInfo({ spotplan_id: search.spotplan_id }).then((res) => {
+              this.setState({ customer_po_code: res.data.customer_po_code || '-' })
+            });
+            hide();
+          }).catch(({ errorMsg }) => {
+            message.error(errorMsg || '操作失败，请重试！')
+          })
+        } else {
+          const hide = message.loading('操作中，请稍候...');
+          this.setState({
+            visible: false,
+          });
+          this.props.actions.postUpdateSpotplan({ po_id: '', spotplan_id: search.spotplan_id }).then(() => {
+            this.queryData({ spotplan_id: search.spotplan_id, ...search.keys });
+            this.props.actions.getSpotplanPoInfo({ spotplan_id: search.spotplan_id }).then((res) => {
+              this.setState({ customer_po_code: res.data.customer_po_code || '-' })
+            });
+            hide();
+          }).catch(({ errorMsg }) => {
+            message.error(errorMsg || '操作失败，请重试！')
+          })
+        }
+      }
+
+    })
+  }
+
+  handleCancel = () => {
+    this.setState({
+      visible: false,
+    });
+  }
+  saveFormRef = (formRef) => {
+    this.formRef = formRef;
+  }
   render() {
     const search = qs.parse(this.props.location.search.substring(1));
-    const { historyVisible, editVisible, changeVisible, quitVisible, updateVisible, selectedRowKeys, type, loading, record } = this.state;
+    const { historyVisible, editVisible, changeVisible, quitVisible, updateVisible, selectedRowKeys, type, loading, record, addVisible, rows } = this.state;
     const { spotplanExecutor, spotplanPlatform, spotplanPoInfo, spotplanAmount, spotplanEditList, basicSpotplanOrderInfo, updateSpotplanOrder: { before_order = [], after_order = [] }, updateSpotplanOrderLog, serviceRateAmount } = this.props;
     const list = spotplanEditList[type] && spotplanEditList[type].list || [];
-    const checkList = list.reduce((data, current) => {
-      const flag = ([12, 21, 25, 31].includes(parseInt(current.customer_confirmation_status)) && [0, 3, 4].includes(parseInt(current.last_apply_status))) ? true : false;
-      return flag ? [...data, current] : data
-    }, []);
-    const checked = checkList.every(item => selectedRowKeys.includes(item.order_id.toString()));
-    const DetailTableCols = DetailTableFunc(this.handleChangeNumber, this.handleQuitOrder, this.handleUpdateOrder, this.handleEditOrder, this.handleDelete, this.handleHistory);
+    // const checkList = list.reduce((data, current) => {
+    //   const flag = ([12, 21, 25, 31].includes(parseInt(current.customer_confirmation_status)) && [0, 3, 4].includes(parseInt(current.last_apply_status))) ? true : false;
+    //   return flag ? [...data, current] : data
+    // }, []);
+    const checked = list.every(item => selectedRowKeys.includes(item.order_id.toString()));
+    const DetailTableCols = DetailTableFunc(this.handleChangeNumber, this.handleQuitOrder, this.handleUpdateOrder, this.handleEditOrder, this.handleDelete, this.handleHistory, this.handleAddNumber);
     const rowSelection = {
       selectedRowKeys: selectedRowKeys,
       onChange: this.handleSelectChange,
-      getCheckboxProps: record => {
-        const flag = ([12, 21, 25, 31].includes(parseInt(record.customer_confirmation_status)) && [0, 3, 4].includes(parseInt(record.last_apply_status))) ? true : false;
-        return !flag ? { disabled: true } : {}
-      },
+      // getCheckboxProps: record => {
+      //   const flag = ([12, 21, 25, 31].includes(parseInt(record.customer_confirmation_status)) && [0, 3, 4].includes(parseInt(record.last_apply_status))) ? true : false;
+      //   return !flag ? { disabled: true } : {}
+      // },
     };
+    let tatalAmount = Object.values(rows).reduce((pre, current) => {
+      return (pre * 100 + current.costwithfee * 100) / 100
+    }, 0);
     return <div className='spotList-detail-container'>
       <NavBar />
       <h2>Spotplan详情页</h2>
@@ -275,7 +456,10 @@ class SpotPlanDetail extends React.Component {
           }}>导出为Excel</Button>
         </div>
       </div>
-      <BasicInfo data={spotplanPoInfo} handleClick={this.handleHistory} />
+      <BasicInfo data={spotplanPoInfo}
+        handleClick={this.handleHistory}
+        handleChangeType={this.handleChangeType}
+      />
       <h3 className='top-gap'>订单列表</h3>
       <Statistics data={spotplanAmount} flag={(spotplanPoInfo && spotplanPoInfo.customer_po_amount) ? true : false} />
       <DetailQuery location={this.props.location} history={this.props.history}
@@ -296,9 +480,14 @@ class SpotPlanDetail extends React.Component {
         </TabPane>))}
       </Tabs>
       <div className='top-gap'>
-        <Checkbox onChange={this.handleCheckAll} disabled={checkList.length == 0} checked={checkList.length > 0 && checked}>全选</Checkbox>
-        <Button type='primary' onClick={this.handleSettleChange}>批量申请换号</Button>
-        <Button className='left-gap' type='primary' onClick={this.handleSettleQuit}>批量申请终止合作</Button>
+        <h4 style={{ padding: '10px 0' }}>勾选订单数量<span style={{ color: 'red', padding: '0 10px' }}>{selectedRowKeys.length}个</span>
+          Costwithfee总计:<span style={{ color: 'red', padding: '0 10px' }}>{numeral(tatalAmount).format('0,0.00')}元</span></h4>
+        <Checkbox onChange={this.handleCheckAll} checked={list.length > 0 && checked}>全选</Checkbox>
+        {(spotplanPoInfo && spotplanPoInfo.customer_po_amount) == null ? null : <Button type='primary' onClick={this.handleSettleChange}>批量申请换号</Button>}
+        {(spotplanPoInfo && spotplanPoInfo.customer_po_amount) == null ? null : <Button className='left-gap' type='primary' onClick={this.handleSettleQuit}>批量申请终止合作</Button>}
+        {(spotplanPoInfo && spotplanPoInfo.customer_po_amount) == null ? null : <Button type='primary' className='left-gap' onClick={this.handleSettleAddAccount}>批量申请新增账号</Button>}
+        <Button type='primary' className='left-gap' onClick={this.handleSettleDeleteOrder}>批量删除订单</Button>
+
       </div>
 
       {historyVisible && <HistoryModal visible={historyVisible}
@@ -335,6 +524,24 @@ class SpotPlanDetail extends React.Component {
         handleUpdate={this.handleUpdate}
         serviceRateAmount={serviceRateAmount}
       />}
+      {addVisible && <AddModal visible={addVisible}
+        onCancel={() => {
+          this.setState({ addVisible: false });
+        }}
+        handleSubmit={this.handleSubmit}
+        data={basicSpotplanOrderInfo}
+        handleClose={this.handleClose}
+      />}
+      {/* 编辑PO单弹出弹窗 */}
+      {this.state.visible ? <Modal
+        title="编辑PO单号"
+        visible={this.state.visible}
+        onOk={this.handleOk}
+        onCancel={this.handleCancel}
+        maskClosable={false}
+      >
+        <FormPO wrappedComponentRef={this.saveFormRef} spInfo={spotplanPoInfo} />
+      </Modal> : null}
     </div>
   }
 }
@@ -363,27 +570,35 @@ function NavBar() {
     <Breadcrumb.Item><a href="">Spotplan详情页</a></Breadcrumb.Item>
   </Breadcrumb>
 }
-function BasicInfo({ data, handleClick }) {
+
+
+function BasicInfo({ data, handleClick, handleChangeType }) {
   return <div className='info-container top-gap'>
     <Row className='info-row'>
-      <Col span={3}>SpotplanID:</Col><Col span={4}>{data && data.spotplan_id}</Col>
-      <Col span={3}>Spotplan名称:</Col><Col span={12}>{data && data.spotplan_name}</Col>
+      <Col span={3}>SpotplanID:</Col><Col span={6}>{data && data.spotplan_id}</Col>
+      <Col span={3}>Spotplan名称:</Col><Col span={9}>{data && data.spotplan_name}</Col>
     </Row>
     <Row className='info-row'>
-      <Col span={3}>创建人:</Col><Col span={4}>{data && data.creator_name}</Col>
-      <Col span={3}>所属项目/品牌:</Col><Col span={12}><a target='_blank' href={data && data.project_path}>{data && data.project_name}</a> / {data && data.brand_name || '-'}</Col>
+      <Col span={3}>创建人:</Col><Col span={6}>{data && data.creator_name}</Col>
+      <Col span={3}>所属项目/品牌:</Col><Col span={9}><a target='_blank' href={data && data.project_path}>{data && data.project_name}</a> / {data && data.brand_name || '-'}</Col>
     </Row>
     <Row className='info-row'>
-      <Col span={3}>创建时间:</Col><Col span={4}>{data && data.created_at}</Col>
-      <Col span={3}>更新时间:</Col><Col span={12}>{data && data.updated_at}</Col>
+      <Col span={3}>创建时间:</Col><Col span={6}>{data && data.created_at}</Col>
+      <Col span={3}>更新时间:</Col><Col span={9}>{data && data.updated_at}</Col>
     </Row>
     <Row className='info-row'>
-      <Col span={3}>PO单号:</Col><Col span={4}>{(data && data.customer_po_code) ? <a target='_blank' href={data && data.po_path}>{data.customer_po_code}</a> : '-'}</Col>
-      <Col span={3}>发起更新申请次数:</Col><Col span={12}>{data && data.apply_num || 0}<a style={{ marginLeft: '40px' }} href='javascript:;' onClick={handleClick}>查看历史更新申请记录</a></Col>
+      <Col span={3}>PO单号:</Col>
+      <Col span={6}>
+        {(data && data.customer_po_code) ?
+          <a target='_blank' href={data && data.po_path}>{data.customer_po_code}</a> : '-'}
+        {(data && data.customer_po_amount) == null ? <Button style={{ marginLeft: '10px' }} type="primary" onClick={handleChangeType}>编辑</Button> : null}
+      </Col>
+      <Col span={3}>发起更新申请次数:</Col>
+      <Col span={9}>{data && data.apply_num || 0}<a style={{ marginLeft: '40px' }} href='javascript:;' onClick={handleClick}>查看历史更新申请记录</a></Col>
     </Row>
     <Row className='info-row'>
-      <Col span={3}>PO总额（不含税）:</Col><Col span={4}>{data && data.customer_po_amount ? data.customer_po_amount + '元' : '-'}</Col>
-      <Col span={3}>PO总额（含税）:</Col><Col span={12}>{data && data.total_budget ? data.total_budget + '元' : '-'}</Col>
+      <Col span={3}>PO总额（不含税）:</Col><Col span={6}>{data && data.customer_po_amount ? data.customer_po_amount + '元' : '-'}</Col>
+      <Col span={3}>PO总额（含税）:</Col><Col span={9}>{data && data.total_budget ? data.total_budget + '元' : '-'}</Col>
     </Row>
   </div>
 }
@@ -391,26 +606,12 @@ function BasicInfo({ data, handleClick }) {
 function Statistics({ data, flag }) {
   return <div className='spotplan-detail-statistics'>
     <Row className='info-row'>
-      <Col style={{ display: 'inline-block', width: 192 }}>
-        {(data.flag == 2 && flag) ? <Tooltip
-          overlayClassName='statistics-tip'
-          visible={true}
-          getPopupContainer={() => document.querySelector('.spotplan-detail-statistics')}
-          title={'金额已超PO总额（不含税）'}>预计消耗PO金额（不含税）</Tooltip> : '预计消耗PO金额（不含税）'}
+
+      <Col style={{ display: 'inline-block', width: 212, marginLeft: '10px' }}>
+        Costwithfee总计: <span style={{ color: 'red' }}> {numeral(data.costwithfee).format('0,0.00')}元</span>
       </Col>
-      <Col style={{ display: 'inline-block', width: 212, marginLeft: '10px' }}>Costwithfee（已确认合作订单）
-      <Tooltip title={'已确认合作订单：客户确认使的订单，终止合作申请已被审核通过的订单除外'}><Icon type="question-circle" /></Tooltip>
-      </Col>
-      <Col style={{ display: 'inline-block', width: 212, marginLeft: '30px' }}>Costwithfee（待确认合作订单）
-        <Tooltip title={'待确认合作订单：客户待确认状态的订单'}><Icon type="question-circle" /></Tooltip>
-      </Col>
-    </Row>
-    <Row className='info-row'>
-      <Col style={{ display: 'inline-block', width: 180 }}><span className='primary-font'>{data && numeral(data.amount).format('0,0')} 元</span></Col>
-      <span style={{ padding: '0 6px' }}>=</span>
-      <Col style={{ display: 'inline-block', width: 200 }}><span className='primary-font'>{data && numeral(data.confirmCostwithfee).format('0,0')} 元</span></Col>
-      <span style={{ paddingLeft: '26px', paddingRight: '6px' }}>+</span>
-      <Col style={{ display: 'inline-block', width: 200 }}><span className='primary-font'>{data && numeral(data.toBeconfirmCostwithfee).format('0,0')} 元</span></Col>
+
+
     </Row>
   </div>
 }

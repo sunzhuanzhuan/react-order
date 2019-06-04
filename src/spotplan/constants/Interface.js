@@ -1,6 +1,7 @@
 export default {
   getSpotplanCompanyInfo: '/spotplan/getCompanyInfo',
   postAddSpotplan: '/spotplan/addSpotplan',
+  postUpdateSpotplan: '/spotplan/updateSpPO',
   getSpotplanExecutor: '/spotplan/getExecutor',
   getSpotplanCreatorList: '/spotplan/getCreatorList',
   getSpotplanPlatform: '/spotplan/getPlatform',
