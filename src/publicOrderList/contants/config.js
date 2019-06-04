@@ -444,7 +444,7 @@ export const columns = (props) => {
                 </div>
                 <div>
                   <span>打款结果：</span>
-                  <span>{paymentResult[record.prepayment.payment_result]}</span>
+                  <span>{record.prepayment ? paymentResult[record.prepayment.payment_result] : null}</span>
                 </div>
               </div> : null
           }
