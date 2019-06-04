@@ -63,29 +63,23 @@ class LabelPublicOrder extends Component {
           params: { id: values.agent_id }
         }).then((res) => {
           let settleType = res.data.settleType
-          if (settleType == 2 || (settleType == 1 && agentId)) {
+          this.setState({
+            loading: true
+          })
+          values.settle_type = settleType
+          this.props.actions.labelPlaceOrder({ ...values }).then(() => {
+            message.success('您所提交的信息已经保存成功！', 2)
             this.setState({
-              loading: true
+              loading: false
             })
-            values.settle_type = settleType
-            this.props.actions.labelPlaceOrder({ ...values }).then(() => {
-              message.success('您所提交的信息已经保存成功！', 2)
-              this.setState({
-                loading: false
-              })
-              this.props.handleCancel()
-              this.props.getList()
-            }).catch(() => {
-              message.error("标记三方已下单失败")
-              this.setState({
-                loading: false
-              })
+            this.props.handleCancel()
+            this.props.getList()
+          }).catch(() => {
+            message.error("标记三方已下单失败")
+            this.setState({
+              loading: false
             })
-          } else {
-            Modal.error({
-              title: '您选择的代理商为预付类型，请先申请预付款后再进行下单标注！'
-            });
-          }
+          })
         })
       }
     });
