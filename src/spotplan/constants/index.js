@@ -126,8 +126,8 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete) => 
   },
   {
     title: '账号ID',
-    dataIndex: 'id',
-    key: 'id',
+    dataIndex: 'weibo_id',
+    key: 'weibo_id',
     align: 'center',
     width: 120,
     render: (text, record) => {
