@@ -63,7 +63,7 @@ class PublicOrderList extends Component {
     let data = params.data
     //获取弹框详情
     this.props.actions.resetOrderDetail()
-    if (key == "cancel_execution_termination_request") {
+    if (key == "can_cancel_execution_termination_request") {
       //执行终止处理弹框
       this.props.actions.getInterruptExecution({ order_id: data.order_id })
     } else {

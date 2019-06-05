@@ -36,7 +36,7 @@ class SingleAgent extends React.Component {
     })
   }
   render() {
-    const { agentDetail, form, platformId, formLayout, platformName } = this.props
+    const { agentDetail, form, platformId, formLayout, platformName, hideAdd } = this.props
     const { getFieldDecorator } = form
     const { is_agentDetail_loading } = this.state
     return (
@@ -52,7 +52,7 @@ class SingleAgent extends React.Component {
               <span>{agentDetail.agentName}</span>
             )}
           </FormItem>
-          <AddAgent platformId={platformId} platformName={platformName} />
+          {hideAdd ? null : <AddAgent platformId={platformId} platformName={platformName} />}
         </div>
         {/* 是否加载中 */}
         {
