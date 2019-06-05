@@ -483,7 +483,7 @@ export const columns = (props) => {
                 </div>
                 <div>
                   <span>打款结果：</span>
-                  <span>{paymentResult[(record.prepayment || []).payment_result]}</span>
+                  <span>{record.prepayment ? paymentResult[record.prepayment.payment_result] : null}</span>
                 </div>
               </div> : null
           }
@@ -521,7 +521,7 @@ export const columns = (props) => {
               <span>{record.public_order.last_public_summary_order_relation.adjustment_amount ?
                 record.public_order.last_public_summary_order_relation.adjustment_amount : "-"
               }
-            </span>
+              </span>
             </div>
             <div>
               <span>调账方式：</span>
@@ -529,7 +529,7 @@ export const columns = (props) => {
                 operationType[record.public_order.last_public_summary_order_relation.operation_type]
                 : "-"
               }
-            </span>
+              </span>
             </div>
             <div>
               <span>调账原因：</span>
@@ -537,7 +537,7 @@ export const columns = (props) => {
                 record.public_order.last_public_summary_order_relation.adjustment_reason
                 : "-"
               }
-            </span>
+              </span>
             </div>
           </div> : null
       }
@@ -568,14 +568,14 @@ export const columns = (props) => {
               <span>{record.public_order.last_public_summary_order_relation.deduction_amount ?
                 record.public_order.last_public_summary_order_relation.deduction_amount : "-"
               }
-            </span>
+              </span>
             </div>
             <div>
               <span>扣减原因：</span>
               <span>{record.public_order.last_public_summary_order_relation.deduction_reason ?
                 record.public_order.last_public_summary_order_relation.deduction_reason : "-"
               }
-            </span>
+              </span>
             </div>
           </div> : null
       }
