@@ -169,7 +169,7 @@ export const filterFormArr = [
   {
     label: "是否标注已下单",
     type: "select",
-    id: "is_labeled_place_order",
+    id: "is_labelled_place_order",
     data: [{ key: "请选择", value: "0" }, { key: "是", value: "1" }, {
       key: "否",
       value: "2"
@@ -386,13 +386,13 @@ export const columns = (props) => {
     },
     {
       title: '是否标注三方已下单',
-      dataIndex: 'is_labeled_place_order',
-      key: 'is_labeled_place_order',
+      dataIndex: 'is_labelled_place_order',
+      key: 'is_labelled_place_order',
       align: 'center',
       width: 100,
       render: (text, record) => {
         return record.public_order ?
-          <span>{record.public_order.is_labeled_place_order == "1" ? "是" : "否"}</span> :
+          <span>{record.public_order.is_labelled_place_order == "1" ? "是" : "否"}</span> :
           null
       }
     },
@@ -403,7 +403,7 @@ export const columns = (props) => {
       align: 'center',
       width: 300,
       render: (text, record) => {
-        return record.public_order ? (text.is_labeled_place_order == "1" ?
+        return record.public_order ? (text.is_labelled_place_order == "1" ?
           <div className="list-div">
             <div className="list-divItem">
               <span>下单时间：</span>
