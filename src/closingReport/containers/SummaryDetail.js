@@ -344,7 +344,7 @@ export default class Test extends Component {
                   </div>
                   : null
               }
-              <Checkbox.Group onChange={this.onCheckboxChange} value={cardChecked}>
+              <Checkbox.Group style={{display: 'block'}} onChange={this.onCheckboxChange} value={cardChecked}>
                 {statistics[tableActive].map(key => {
                   let item = source[key]
                   return <OrderCard
