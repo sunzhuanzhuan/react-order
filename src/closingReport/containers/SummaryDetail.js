@@ -160,6 +160,13 @@ export default class Test extends Component {
     }).finally(_msg)
   }
 
+  exportData = () => {
+    const { actions } = this.props
+    let { summary_id } = parseUrlQuery()
+    let hide = message.loading('导出中...')
+    actions.exportPlatformDataInfoExcel({ summary_id }).finally(hide)
+  }
+
   render() {
     if (!this.state.summaryId) {
       linkTo('/error')
@@ -208,7 +215,11 @@ export default class Test extends Component {
         onBack={() => this.props.history.push('/order/closing-report/list/summary-order')}
         title="投放数据汇总单详情页"
         extra={
-          <Button type='primary' ghost onClick={() => this.setState({ addModal: true })}>添加订单</Button>}
+          <div>
+            <Button type='primary' ghost onClick={this.exportData} style={{marginRight: '10px'}}>导出数据</Button>
+            <Button type='primary' ghost onClick={() => this.setState({ addModal: true })}>添加订单</Button>
+          </div>
+        }
       >
         <div style={{ padding: '20px 15px' }}>
           <span>

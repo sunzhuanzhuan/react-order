@@ -222,3 +222,8 @@ export const {
 } = createHttpAction('getOrderIsFinish', Interface.getOrderIsFinish, {
   method: 'get'
 })
+
+// 详情页导出excel
+export const {
+  exportPlatformDataInfoExcel
+} = createHttpAction('exportPlatformDataInfoExcel', Interface.exportPlatformDataInfoExcel)
