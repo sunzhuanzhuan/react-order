@@ -137,10 +137,14 @@ export default class Test extends Component {
   reload = () => {
     const { actions } = this.props
     let { summary_id } = parseUrlQuery()
-    this.onCheckboxChange([])
     this.setState({ loading: true })
     actions.getSummaryOrderInfo({ summary_id }).then(() => {
-      this.setState({ loading: false })
+      this.setState({
+        loading: false,
+        cardChecked: [],
+        indeterminate: false,
+        checkAll: false
+      })
     })
   }
 
@@ -206,7 +210,7 @@ export default class Test extends Component {
     this.props.actions.getOrderIsFinish({ order_id: orders }).then(({ data }) => {
       if (data.flag === 2) {
         Modal.info({
-          title: '请先将所有平台的数据都完善之后再提交'
+          title: '请先将选中的订单数据完善之后再提交'
         })
       } else if (data.flag === 1) {
         Modal.confirm({
