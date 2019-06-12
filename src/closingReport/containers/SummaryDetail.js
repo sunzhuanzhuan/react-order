@@ -42,6 +42,7 @@ export default class Test extends Component {
       selectedRowKeys: [],
       addModal: false
     }
+    this.canExport = true;
     this.cardConfig = {
       orderActions: (data) => {
         //return { add, del, check }
@@ -161,10 +162,15 @@ export default class Test extends Component {
   }
 
   exportData = () => {
+    if(!this.canExport || this.state.loading) return;
+    this.canExport = false
     const { actions } = this.props
     let { summary_id } = parseUrlQuery()
     let hide = message.loading('导出中...')
-    actions.exportPlatformDataInfoExcel({ summary_id }).finally(hide)
+    actions.exportPlatformDataInfoExcel({ summary_id }).finally(() => {
+      this.canExport = true
+      hide()
+    })
   }
 
   render() {
