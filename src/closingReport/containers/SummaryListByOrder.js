@@ -156,7 +156,7 @@ export default class SummaryListByOrder extends Component {
       Modal.confirm({
         title: '是否确认重新提交审核？',
         onOk: hide => {
-          return actions.submitCheckSummaryByOrder({ order_id }).then(() => {
+          return actions.submitCheckSummaryByOrder({ order_id: [order_id] }).then(() => {
             message.success('提交审核成功!')
             this.getList()
           }).finally(hide)
@@ -166,7 +166,7 @@ export default class SummaryListByOrder extends Component {
       if (this.isChecking) return
       this.isChecking = true
       let hide = message.loading('处理中...', 0)
-      actions.getOrderIsFinish({ order_id }).then(({ data }) => {
+      actions.getOrderIsFinish({ order_id: [order_id] }).then(({ data }) => {
         if (data.flag === 2) {
           Modal.info({
             title: '请先将所有平台的数据都完善之后再提交'
@@ -175,7 +175,7 @@ export default class SummaryListByOrder extends Component {
           Modal.confirm({
             title: '是否确认将本订单的投放数据提交审核？',
             onOk: hide => {
-              return actions.submitCheckSummaryByOrder({ order_id }).then(() => {
+              return actions.submitCheckSummaryByOrder({ order_id: [order_id] }).then(() => {
                 message.success('提交审核成功!')
                 this.getList()
               }).finally(hide)
@@ -194,7 +194,7 @@ export default class SummaryListByOrder extends Component {
     this.orderDel = true
     const hide = message.loading('删除中...', 0)
     this.props.actions.deleteSummaryOrder({
-      order_id, summary_id
+      order_id: [order_id], summary_id
     }).then(() => {
       this.getList()
     }).finally(() => {

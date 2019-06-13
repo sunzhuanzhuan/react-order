@@ -1,5 +1,14 @@
 import React, { Component } from 'react'
-import { PageHeader, Button, Tabs, Divider, Modal, message, Empty } from 'antd'
+import {
+  PageHeader,
+  Button,
+  Tabs,
+  Divider,
+  Modal,
+  message,
+  Empty,
+  Checkbox
+} from 'antd'
 import OrderCard from '../components/OrderCard'
 import { SH2 } from '@/base/SectionHeader'
 import { linkTo } from '../../util/linkTo'
@@ -40,17 +49,27 @@ export default class Test extends Component {
         type: ''
       },
       selectedRowKeys: [],
-      addModal: false
+      addModal: false,
+      cardChecked: [],
+      indeterminate: false,
+      checkAll: false
     }
     this.cardConfig = {
       orderActions: (data) => {
         //return { add, del, check }
         if (![1, 4, 6].includes(data.summary_status)) {
-          return {}
+          return {
+            checkbox: {
+              disabled: true
+            }
+          }
         }
         // 当订单的投放数据审核状态为【待提交内审】【内审被拒，待修改】【品牌方审核被拒，待修改】时，
         // 订单操作逻辑同在 逻辑B 的基础上增加【提交审核】操作
         return {
+          checkbox: {
+            disabled: data.summary_status !== 1
+          },
           add: true,
           del: data.summary_status === 1,
           check: {
@@ -120,7 +139,12 @@ export default class Test extends Component {
     let { summary_id } = parseUrlQuery()
     this.setState({ loading: true })
     actions.getSummaryOrderInfo({ summary_id }).then(() => {
-      this.setState({ loading: false })
+      this.setState({
+        loading: false,
+        cardChecked: [],
+        indeterminate: false,
+        checkAll: false
+      })
     })
   }
 
@@ -159,6 +183,64 @@ export default class Test extends Component {
       }
     }).finally(_msg)
   }
+  onCheckboxChange = (checkedValue) => {
+    this.setState({
+      cardChecked: checkedValue,
+      indeterminate: !!checkedValue.length && checkedValue.length < this.statistics['status_1'].length,
+      checkAll: checkedValue.length === this.statistics['status_1'].length
+    })
+  }
+  onCheckAllChange = e => {
+    this.setState({
+      cardChecked: e.target.checked ? this.statistics['status_1'] : [],
+      indeterminate: false,
+      checkAll: e.target.checked
+    });
+  };
+
+  getBatchOrders = (keys) => {
+    const { closingReport: { summaryOrders } } = this.props
+    const { source = {} } = summaryOrders
+    return keys.map(key => source[key].order_id)
+  }
+
+  batchSubmitCheck = () => {
+    let orders = this.getBatchOrders(this.state.cardChecked)
+    let hide = message.loading('处理中...', 0)
+    this.props.actions.getOrderIsFinish({ order_id: orders }).then(({ data }) => {
+      if (data.flag === 2) {
+        Modal.info({
+          title: '请先将选中的订单数据完善之后再提交'
+        })
+      } else if (data.flag === 1) {
+        Modal.confirm({
+          title: '是否确认批量提交内审？',
+          onOk: hide => {
+            return this.props.actions.submitCheckSummaryByOrder({ order_id: orders }).then(() => {
+              message.success('提交审核成功!')
+              this.reload()
+            }).finally(hide)
+          }
+        })
+      }
+    }).finally(() => {
+      hide()
+    })
+  }
+  batchDelete = () => {
+    let orders = this.getBatchOrders(this.state.cardChecked)
+    Modal.confirm({
+      title: '删除后，订单内数据将全部清空。确认批量删除么?',
+      onOk: hide => {
+        return this.props.actions.deleteSummaryOrder({
+          order_id: orders, summary_id: this.state.summaryId
+        }).then(() => {
+          message.success('删除成功!')
+          this.reload()
+        }).finally(hide)
+      }
+    })
+  }
 
   render() {
     if (!this.state.summaryId) {
@@ -167,13 +249,13 @@ export default class Test extends Component {
     const { closingReport: { companySource, summaryOrders, platformData }, actions, common } = this.props
     const { list = [], source = {} } = summaryOrders
     const { summaryName, creatorName, companyId } = companySource
-    const { loading, detailModal, tableActive, selectedRowKeys, addModal, summaryId } = this.state
+    const { loading, detailModal, tableActive, selectedRowKeys, addModal, summaryId, indeterminate, cardChecked, checkAll } = this.state
     const connect = {
       actions,
       platformData,
       companySource
     }
-    let statistics = {
+    let statistics = this.statistics = {
       all: list,
       status_1: [],
       status_4: [],
@@ -237,17 +319,47 @@ export default class Test extends Component {
           <TabPane tab={`品牌方审核被拒,待修改 ${statistics['status_6'].length}`} key="status_6" />
         </Tabs>
         {
-          statistics[tableActive].length ? statistics[tableActive].map(key => {
-            let item = source[key]
-            return <OrderCard
-              key={key}
-              {...connect}
-              display={this.cardConfig}
-              optional={companySource.platformByCompany}
-              data={item}
-              onDetail={this.handleDetail}
-            />
-          }) : <Empty />
+          statistics[tableActive].length ?
+            <div>
+              {
+                (statistics['status_1'].length > 0 && (tableActive === 'all' || tableActive === 'status_1')) ?
+                  <div style={{marginBottom: '10px'}}>
+                    <Checkbox
+                      indeterminate={indeterminate}
+                      onChange={this.onCheckAllChange}
+                      checked={checkAll}
+                    >全选</Checkbox>
+                    <Button
+                      disabled={!cardChecked.length}
+                      type='primary'
+                      style={{ marginRight: '10px' }}
+                      onClick={this.batchSubmitCheck}
+                    >
+                      批量提交审核
+                    </Button>
+                    <Button
+                      disabled={!cardChecked.length}
+                      type='primary'
+                      ghost
+                      onClick={this.batchDelete}
+                    >
+                      批量删除
+                    </Button>
+                  </div>
+                  : null
+              }
+              <Checkbox.Group style={{display: 'block'}} onChange={this.onCheckboxChange} value={cardChecked}>
+                {statistics[tableActive].map(key => {
+                  let item = source[key]
+                  return <OrderCard
+                    key={key}
+                    {...connect}
+                    display={this.cardConfig}
+                    optional={companySource.platformByCompany}
+                    data={item}
+                    onDetail={this.handleDetail}
+                  />
+                })}</Checkbox.Group></div> : <Empty />
         }
         <DetailModal
           {...connect}
