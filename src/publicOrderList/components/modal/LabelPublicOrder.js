@@ -31,7 +31,7 @@ class LabelPublicOrder extends Component {
     let orderDetail = this.props.orderDetail
     let settle_type_statistic = orderDetail.public_order.settle_type_statistic
     let agent_id = orderDetail.public_order.agent_id || undefined
-    if (settle_type_statistic == 1 || agent_id) {
+    if (agent_id) {
       //全为预付型
       this.setState({
         type: 'single',
