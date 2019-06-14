@@ -11,8 +11,12 @@ class EditOrder extends React.Component {
   }
   componentDidMount() {
     const { search } = this.props;
-    this.props.queryBasicInfo({ spotplan_id: search.spotplan_id });
-    this.props.queryData(3, { spotplan_id: search.spotplan_id }, this.handleEditTable);
+    let that = this;
+    setTimeout(() => {
+      that.props.queryBasicInfo({ spotplan_id: search.spotplan_id });
+      that.props.queryData(3, { spotplan_id: search.spotplan_id }, that.handleEditTable);
+    }, 2000)
+
   }
   handleEditTable = data => {
     const { setFieldsValue } = this.props.form;
@@ -30,13 +34,17 @@ class EditOrder extends React.Component {
   }
   handleDelete = order_id => {
     const { search, handleDelete } = this.props;
+    let that = this;
     Modal.confirm({
       title: '',
       content: '是否确认将该订单从本spotplan删除？',
       onOk: () => {
-        handleDelete({ spotplan_id: search.spotplan_id, order_id:[order_id] }).then(() => {
+        handleDelete({ spotplan_id: search.spotplan_id, order_id: [order_id] }).then(() => {
           message.success('操作成功');
-          this.props.queryData(3, { spotplan_id: search.spotplan_id }, this.handleEditTable);
+          setTimeout(() => {
+            that.props.queryData(3, { spotplan_id: search.spotplan_id }, that.handleEditTable);
+          }, 2000)
+
         })
       }
     })
