@@ -78,6 +78,7 @@ class WithdrawPublicOrder extends Component {
             </div> : <SingleAgent
               formLayout={formLayout}
               form={form}
+              hideAdd
               agent_id={this.state.agent_id}
               platformId={record.account.platform_id}
               platformName={orderDetail.platform.platform_name}

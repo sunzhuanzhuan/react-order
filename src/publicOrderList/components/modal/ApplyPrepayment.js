@@ -93,7 +93,7 @@ class ApplyPrepayment extends Component {
   //最大回票金额
   maxReturnInvoiceAmount = (rule, value, callback) => {
     let maxNum = this.props.orderDetail.public_order.public_order_sku_valid.public_cost_price
-    if (value > maxNum) {
+    if (value * 100 > maxNum * 100) {
       callback('请输入不大于三方下单价的有效数字，小数点后最多两位！')
     }
     callback()
@@ -165,6 +165,7 @@ class ApplyPrepayment extends Component {
               {...formLayout}
             >
               {getFieldDecorator("return_invoice_amount", {
+                validateFirst: true,
                 rules: [{
                   required: true, message: '本项为必填项，请输入！',
                 }, {
