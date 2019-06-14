@@ -11,7 +11,7 @@ import api from '../../api/index'
 import qs from 'qs'
 import BtnUpload from '../../components/btnUpload'
 import {
-	withRouter,
+  withRouter,
 } from "react-router-dom";
 const Option = Select.Option;
 import '../containers/PublicOrderList.less'
@@ -21,7 +21,7 @@ class StatementComponent extends React.Component {
     super(props);
     this.state = {
       data: [],
-      ageent_id:null
+      ageent_id: null
     }
   }
   componentWillMount() {
@@ -40,7 +40,7 @@ class StatementComponent extends React.Component {
   changePlatformAndAaent = (value) => {
     console.log(value);
     this.setState({
-      agent_id:value
+      agent_id: value
     })
   }
   render() {
@@ -64,92 +64,56 @@ class StatementComponent extends React.Component {
         </Select>
       </div>
       <div>
-      <Button type="primary" className="publicOrderList-chooseBox-operateBtn" onClick={()=>{
-        if(this.state.agent_id){
-          window.open('/order/trinity/reconciliations/exportOrder?agent_id='+this.state.agent_id)
-          // this.props.history.push({
-          //   pathname: '/order/trinity/reconciliations/exportOrder',
-          //   search: `?${qs.stringify({ 
-          //     agent_id:this.state.agent_id})}`,
-          // });
-        }else{
-          message.error("请选择平台/代理商信息")
-        }
-            
+        <Button type="primary" className="publicOrderList-chooseBox-operateBtn" onClick={() => {
+          if (this.state.agent_id) {
+            window.open('/order/trinity/reconciliations/exportOrder?agent_id=' + this.state.agent_id)
+          } else {
+            message.error("请先选择要导出订单的平台/代理商！")
+          }
+
         }}>导出订单</Button>
-        <div style={{display:'inline-block'}} className="publicOrderList-chooseBox-operateBtn">
+        <div style={{ display: 'inline-block' }} className="publicOrderList-chooseBox-operateBtn">
           <BtnUpload
             agent_id={this.state.agent_id}
             uploadText={'导入三方对账单'}
           />
         </div>
-        
-        {/* <Button type="primary" className="publicOrderList-chooseBox-operateBtn" onClick={()=>{
-          if(this.state.agent_id){
-            this.props.history.push({
-              pathname: '/order/trinity/reconciliations/',
-              search: `?${qs.stringify({ 
-                agent_id:this.state.agent_id})}`,
-            });
-          }else{
-            message.error("请选择平台/代理商信息")
+
+        <Button type="primary" className="publicOrderList-chooseBox-operateBtn" onClick={() => {
+          if (this.state.agent_id) {
+            window.open('/order/trinity/reconciliations/importResult?agent_id=' + this.state.agent_id)
+
+          } else {
+            message.error("请先选择要导入汇总结果的平台/代理商！")
           }
-           
-        }}>导入三方对账单</Button> */}
-        <Button type="primary" className="publicOrderList-chooseBox-operateBtn" onClick={()=>{
-          if(this.state.agent_id){
-            window.open('/order/trinity/reconciliations/importResult?agent_id='+this.state.agent_id)
-            // this.props.history.push({
-            //   pathname: '/order/trinity/reconciliations/importResult',
-            //   search: `?${qs.stringify({ 
-            //     agent_id:this.state.agent_id})}`,
-            // });
-          }else{
-            message.error("请选择平台/代理商信息")
-          }
-            
+
         }}>导入汇总结果</Button>
-       
-        <Button type="primary" className="publicOrderList-chooseBox-operateBtn" onClick={()=>{
-          if(this.state.agent_id){
-            window.open('/order/trinity/reconciliations/payment?agent_id='+this.state.agent_id)
-            // this.props.history.push({
-            //   pathname: '/order/trinity/reconciliations/payment',
-            //   search: `?${qs.stringify({ 
-            //     agent_id:this.state.agent_id})}`,
-            // });
-          }else{
-            message.error("请选择平台/代理商信息")
+
+        <Button type="primary" className="publicOrderList-chooseBox-operateBtn" onClick={() => {
+          if (this.state.agent_id) {
+            window.open('/order/trinity/reconciliations/payment?agent_id=' + this.state.agent_id)
+          } else {
+            message.error("请先选择要申请周期付款的平台/代理商！")
           }
-            
+
         }}>申请周期付款</Button>
-        <Button type="primary" className="publicOrderList-chooseBox-operateBtn" onClick={()=>{
-          if(this.state.agent_id){
-            window.open('/order/trinity/reconciliations/summary?agent_id='+this.state.agent_id)
-            // this.props.history.push({
-            //   pathname: '/order/trinity/reconciliations/summary',
-            //   search: `?${qs.stringify({ 
-            //     agent_id:this.state.agent_id})}`,
-            // });
-          }else{
-            message.error("请选择平台/代理商信息")
+        <Button type="primary" className="publicOrderList-chooseBox-operateBtn" onClick={() => {
+          if (this.state.agent_id) {
+            window.open('/order/trinity/reconciliations/summary?agent_id=' + this.state.agent_id)
+          } else {
+            message.error("请先选择要查看的平台/代理商的汇总单列表！")
           }
-           
+
         }}>汇总单列表</Button>
-        <Button type="primary" className="publicOrderList-chooseBox-operateBtn" onClick={()=>{
-          if(this.state.agent_id){
-            window.open('/order/trinity/reconciliations/statement?agent_id='+this.state.agent_id)
-            // this.props.history.push({
-            //   pathname: '/order/trinity/reconciliations/statement',
-            //   search: `?${qs.stringify({ 
-            //     agent_id:this.state.agent_id})}`,
-            // });
-          }else{
-            message.error("请选择平台/代理商信息")
+        <Button type="primary" className="publicOrderList-chooseBox-operateBtn" onClick={() => {
+          if (this.state.agent_id) {
+            window.open('/order/trinity/reconciliations/statement?agent_id=' + this.state.agent_id)
+          } else {
+            message.error("请先选择要查看三方对账单导入的平台/代理商！")
           }
-           
+
         }}>三方对账单列表</Button>
-       
+
       </div>
     </div>
   }
