@@ -29,7 +29,8 @@ class ExportOrder extends Component {
       page_size: 20,
       loading: false,
       filterParams: {},
-      order_ids: []
+      order_ids: [],
+      selectedRowKeys: [],
     };
   }
 
@@ -105,7 +106,7 @@ class ExportOrder extends Component {
     // console.log(search);
     let { orderList: { list = [], page, total, page_size }, agentInfo } = this.props;
     let { loading, selectedRowKeys } = this.state;
-    const column = exportOrderListFunc();
+    const column = exportOrderListFunc(agentInfo);
     const paginationObj = getPagination(this, search, { total, page, page_size });
     // let paginationObj = {
     // 	onChange: (current) => {
@@ -165,10 +166,10 @@ class ExportOrder extends Component {
           <Button>取消</Button>
         </Popconfirm>
 
-        {/* <Button type="primary" style={{margin:'0 20px'}} onClick={this.handleExportOrder}>导出订单</Button> */}
-        <Button type="primary" style={{ margin: '0 20px' }} >
-          <a target='_blank' onClick={() => window.location.reload()} href={`/api/finance/statementOrder/export?wby_order_ids=${this.state.order_ids}&agent_id=${search.agent_id}`}>导出订单</a>
-        </Button>
+        {selectedRowKeys.length == 0 ? <Button type="primary" style={{ margin: '0 20px' }} onClick={() => message.error('请先选择订单')}>导出订单</Button> :
+          <Button type="primary" style={{ margin: '0 20px' }}>
+            <a target='_blank' onClick={() => window.location.reload()} href={`/api/finance/statementOrder/export?wby_order_ids=${this.state.order_ids}&agent_id=${search.agent_id}`}>导出订单</a>
+          </Button>}
       </Row>
     </div>;
   }

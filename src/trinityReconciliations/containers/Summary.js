@@ -32,12 +32,19 @@ class Summary extends Component {
   componentWillMount=()=> {
     const search = qs.parse(this.props.location.search.substring(1));
     this.queryData({ page: 1, page_size: this.state.page_size, ...search.keys })
+    this.props.actions.getAgentInfo({ agent_id: search.agent_id })
   }
   //查询
   queryData = (obj, func) => {
 		this.setState({ loading: true });
     const search = qs.parse(this.props.location.search.substring(1));
-		return this.props.actions.getTrinitySummaryList({agent_id:search.agent_id, ...obj }).then(() => {
+    let summaryStatus=null
+    if(this.state.activeKey =='1'){
+      summaryStatus =null
+    }else{
+      summaryStatus=this.state.activeKey
+    }
+		return this.props.actions.getTrinitySummaryList({summary_status:summaryStatus,agent_id:search.agent_id, ...obj }).then(() => {
 			if (func && Object.prototype.toString.call(func) === '[object Function]') {
 				func();
 			}
@@ -99,6 +106,7 @@ handleCancel = (e) => {
 }
  //切换tab
  handleChangeTab=(activeKey)=>{
+   this.props.actions.removeSummaryList()
     // console.log(activeKey);
     this.setState({activeKey})
     // this.child.handleClear()
@@ -107,7 +115,7 @@ handleCancel = (e) => {
     }else if(activeKey == '5'){
       this.queryData({ page: 1, page_size: this.state.page_size, summary_status:'5'})
     }else{
-      this.queryData({ page: 1, page_size: this.state.page_size, })
+      this.queryData({ page: 1, page_size: this.state.page_size,summary_status:null })
     }
      //如果重置的话URL也要重置
      const search = qs.parse(this.props.location.search.substring(1));

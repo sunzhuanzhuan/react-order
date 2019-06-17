@@ -2,7 +2,7 @@ import React from "react";
 import qs from 'qs';
 import { Popconfirm, Radio } from 'antd';
 
-export const exportOrderListFunc = () => {
+export const exportOrderListFunc = (agentInfo) => {
   return [
     {
       title: '订单号',
@@ -12,7 +12,7 @@ export const exportOrderListFunc = () => {
       width: 100,
     },
     {
-      title: '快接单下单价(元)',
+      title: agentInfo.length > 0 ? agentInfo[0].platformName == '新浪微博' ? 'VQV代言' : agentInfo[0].cooperationPlatformName : '',
       dataIndex: 'public_cost_price',
       key: 'public_cost_price',
       align: 'center',
@@ -43,13 +43,6 @@ export const exportOrderListFunc = () => {
       title: '公司简称',
       dataIndex: 'company_name',
       key: 'company_name',
-      align: 'center',
-      width: 100,
-    },
-    {
-      title: '项目媒介',
-      dataIndex: 'project_user_name',
-      key: 'project_user_name',
       align: 'center',
       width: 100,
     },
@@ -274,6 +267,12 @@ export const summaryListFunc = (handleSelectDetail, handleOut) => {
           handleSelectDetail(record)
         }}>{record.summary_sheet_name}</a>
       }
+    }, {
+      title: '生成日期',
+      dataIndex: 'created_at',
+      key: 'created_at',
+      align: 'center',
+      width: 100,
     },
     {
       title: '汇总单状态',
@@ -505,7 +504,7 @@ export const summaryTotalDetailListFunc = () => {
       align: 'center',
       width: 150,
       render: (text, record) => {
-        return <span>项目媒介:{record.project_user_name}资源媒介:{record.media_user_name}</span>
+        return <span>资源媒介:{record.media_user_name}</span>
       }
     },
     {

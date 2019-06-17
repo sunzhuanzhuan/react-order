@@ -76,25 +76,25 @@ export const {
 
 //导入token
 export const {
-	getToken,
-	getToken_success
+  getToken,
+  getToken_success
 } = createHttpAction('getToken', Interface.getToken, {
-	method: 'get'
+  method: 'get'
 });
 
 //导入三方对账单
 export const {
-	addOrder,
-	addOrder_success
+  addOrder,
+  addOrder_success
 } = createHttpAction('addOrder', Interface.statement.addOrder, {
-	method: 'post'
+  method: 'post'
 });
 
 
 //导入三方汇总单
 export const {
-	importSummary,
-	importSummary_success
+  importSummary,
+  importSummary_success
 } = createHttpAction('importSummary', Interface.statement.importSummary, {
   method: 'post',
 });
@@ -102,34 +102,39 @@ export const {
 //导入订单模糊搜索
 
 export const {
-	searchName,
-	searchName_success
+  searchName,
+  searchName_success
 } = createHttpAction('searchName', Interface.statement.searchName, {
   method: 'get',
 });
 
 //导出Excel订单
 export const {
-	exportOrder,
-	exportOrder_success
+  exportOrder,
+  exportOrder_success
 } = createHttpAction('exportOrder', Interface.statement.exportOrder, {
   method: 'post',
 });
 
 //对账单inputlist
 export const {
-	getInputList,
-	getInputList_success
+  getInputList,
+  getInputList_success
 } = createHttpAction('getInputList', Interface.statement.inputList, {
   method: 'get',
 });
 //获取代理商信息
 export const {
-	getAgentInfo,
-	getAgentInfo_success
+  getAgentInfo,
+  getAgentInfo_success
 } = createHttpAction('getAgentInfo', Interface.agent.info, {
   method: 'get',
 });
+//清空redux
+export const REMOVE_SUMMARY_LIST = 'REMOVE_SUMMARY_LIST'
+export const removeSummaryList = () => ({
+  type: REMOVE_SUMMARY_LIST,
+})
 // // 使得添加页面提交可用
 // export const setAddSubmit = createAction('setAddSubmit', (data) => {
 //   return data;

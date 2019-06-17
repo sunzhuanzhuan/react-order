@@ -1,14 +1,14 @@
-const isConfig=[
-  {key:'全部',value:''},
-  {key:'是',value:1},
-  {key:'否',value:2}
+const isConfig = [
+  { key: '全部', value: '' },
+  { key: '是', value: 1 },
+  { key: '否', value: 2 }
 ];
-const status_type=[
-  {key:'未对账',value:'1'},
-  {key:'对账完成',value:'3'},
-  {key:'部分对账',value:'4'}
+const status_type = [
+  { key: '未对账', value: '1' },
+  { key: '对账完成', value: '3' },
+  { key: '部分对账', value: '4' }
 ]
-export const searchForm=[
+export const searchForm = [
   {
     ctype: 'input',
     attr: {
@@ -75,12 +75,12 @@ export const searchForm=[
       style: { width: 180 },
       // labelInValue: true,
       allowClear: true,
-      mode:"multiple",
+      mode: "multiple",
     },
     field: {
       label: '对账状态',
       value: 'statement_status',
-      params:{ initialValue: ['1', '4'] }
+      params: { initialValue: ['1', '4'] }
     },
     selectOptionsChildren: status_type,
     // selectItem: { key: 'display', value: 'id' }
@@ -103,7 +103,7 @@ export const searchForm=[
 ]
 
 
-export const searchFormPayment=[
+export const searchFormPayment = [
   {
     ctype: 'input',
     attr: {
@@ -136,12 +136,12 @@ export const searchFormPayment=[
     },
     field: {
       label: '应实付金额',
-      value: ['total_pay_amount_min','total_pay_amount_max'],
+      value: ['total_pay_amount_min', 'total_pay_amount_max'],
     }
   },
 ]
 
-export const searchFormStatement=[
+export const searchFormStatement = [
 
   {
     ctype: 'rangePicker',
@@ -168,7 +168,7 @@ export const searchFormStatement=[
   },
 ]
 
-export const searchFormSummary=[
+export const searchFormSummary = [
 
   {
     ctype: 'rangePicker',
@@ -189,7 +189,7 @@ export const searchFormSummary=[
       allowClear: true
     },
     field: {
-      label: '汇总单编号',
+      label: '汇总单名称',
       value: 'summary_sheet_name',
     }
   },
