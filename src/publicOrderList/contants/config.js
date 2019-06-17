@@ -110,7 +110,7 @@ export const filterFormArr = [
   {
     label: "是否提前打款",
     type: "select",
-    id: "is_pre_deposit",
+    id: "is_prepayment",
     data: [{ key: "请选择", value: "0" }, { key: "是", value: "1" }, {
       key: "否",
       value: "2"
@@ -411,7 +411,7 @@ export const columns = (props) => {
             </div>
             <div className="list-divItem">
               <span>本单使用下单平台/代理商：</span>
-              <span>{`${text.cooperation_platform.cooperationPlatformName || ''}/${text.agent.agentName || ''}`}</span>
+              <span>{`${(text.cooperation_platform || {}).cooperationPlatformName || ''}/${(text.agent || {}).agentName || ''}`}</span>
             </div>
             <div className="list-divItem">
               <span>三方订单号:</span>
@@ -434,12 +434,12 @@ export const columns = (props) => {
               : "-"
             }
           </div>
-          <div>打款状态：
+          {record.public_order.settle_type === 1 && <div>打款状态：
             {(record.public_order.public_order_trade && Object.keys(record.public_order.public_order_trade).length != 0 )?
               paymentResult[record.public_order.public_order_trade.last_payment_status] || '-'
               : "-"
             }
-          </div>
+          </div>}
         </div> : null
       }
     },
