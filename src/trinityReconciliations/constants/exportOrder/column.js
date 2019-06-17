@@ -220,6 +220,16 @@ export const paymentListFunc = (handleSelectDetail, summary_sheet_id) => {
       }
     },
     {
+      title: '关联三方对账单',
+      dataIndex: 'statement_name',
+      key: 'statement_name',
+      align: 'center',
+      width: 100,
+      render: (text) => {
+        return text || '-'
+      }
+    },
+    {
       title: '打款状态',
       dataIndex: 'payment_status',
       key: 'payment_status',

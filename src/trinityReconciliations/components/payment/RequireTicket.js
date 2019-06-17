@@ -110,7 +110,7 @@ class ListQuery extends Component {
 
     return <div>
       <Form>
-        <Row style={{ textAlign: 'center' }}>
+        <Row style={{ textAlign: 'center', height: '60px' }}>
           <Col span={7}></Col>
 
           <Col span={8}>
@@ -129,7 +129,7 @@ class ListQuery extends Component {
           </Col>
           <Col span={7}></Col>
         </Row>
-        <Row style={{ textAlign: 'center' }}>
+        <Row style={{ textAlign: 'center', height: '60px' }}>
           <Col span={7}></Col>
           <Col span={10} style={{ textAlign: 'left' }}>
             <FormItem label='回票金额(元)' {...formItemLayout}>
@@ -143,7 +143,7 @@ class ListQuery extends Component {
           </Col>
           <Col span={7}></Col>
         </Row>
-        <Row style={{ textAlign: 'center' }}>
+        <Row style={{ textAlign: 'center', height: '50px' }}>
           <Col span={10}></Col>
           <Col span={7} style={{ textAlign: 'left' }}>
             <Button onClick={this.handleClear}>取消</Button>

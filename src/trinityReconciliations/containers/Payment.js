@@ -90,7 +90,7 @@ class Payment extends Component {
     // console.log(this.props.actions.confirmApply)
 
     return <div className="payBox">
-      <Row className='title'>申请周期付款</Row>
+      <Row className='title'>申请周期付款  <span className='cooperation'>[下单平台: {agentInfo.length > 0 ? agentInfo[0].cooperationPlatformName : ''}]</span></Row>
       <div className='agent'>收款平台/代理商:<span className='agent_name'>
         {agentInfo.length > 0 ? agentInfo[0].agentName : ''}</span></div>
       {/* <PaymentFilter
