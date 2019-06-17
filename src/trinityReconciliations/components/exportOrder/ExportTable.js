@@ -30,7 +30,7 @@ class List extends Component {
         columns={columns}
         dataSource={dataTable}
         rowSelection={rowSelection}
-        rowKey={(record) => { record.wby_order_id }}
+        rowKey={record => { return record.wby_order_id ? record.wby_order_id.toString() : '' }}
         pagination={paginationObj}
       // questAction={this.props.actions.getMissionList}
 

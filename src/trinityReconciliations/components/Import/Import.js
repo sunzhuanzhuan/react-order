@@ -129,7 +129,7 @@ class ListQuery extends Component {
 
   render() {
     let { getFieldDecorator } = this.props.form;
-    let { getToken, statementInputList } = this.props;
+    let { getToken, statementInputList, search } = this.props;
     let { stateMentList, summaryList, statement_id } = this.state
     const formItemLayout = {
       labelCol: { span: 7 },
@@ -196,6 +196,7 @@ class ListQuery extends Component {
                   <Select
                     style={{ width: '300px' }}
                     onChange={this.handleChangeSelect}
+                    placeholder='请选择'
                   >
                     <Option key={' '} >请选择</Option>
                     {
@@ -276,7 +277,10 @@ class ListQuery extends Component {
           <Row>
             <Col span={12}>
 
-              <Button style={{ marginRight: '20px' }}>取消</Button>
+              <Button style={{ marginRight: '20px' }} onClik={this.props.history.push({
+                pathname: '/order/publicOrderList',
+                search: `?${qs.stringify({ agent: search.agent })}`,
+              })}>取消</Button>
               {(stateMentList.total_pay_amount == summaryList.total_pay_amount) ? <Popconfirm title="确认后将改变订单的对账状态，是否确认此操作？" onConfirm={this.handleSearch} okText="确定" cancelText="取消">
                 <Button type="primary" className='left-gap'>确认对账</Button>
               </Popconfirm> : <Button type="primary" className='left-gap'
@@ -287,7 +291,7 @@ class ListQuery extends Component {
         </Form>
       </div>
 
-    </div>;
+    </div >;
   }
 }
 export default Form.create()(withRouter(ListQuery));
