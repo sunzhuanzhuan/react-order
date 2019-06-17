@@ -179,6 +179,7 @@ class ApplyPrepayment extends Component {
                   placeholder="请输入回票金额" />
               )}
             </FormItem> :
+            this.state.invoiceType == '1' ?
             <FormItem
               label="回票金额"
               {...formLayout}
@@ -188,7 +189,7 @@ class ApplyPrepayment extends Component {
               })(
                 <span>{orderDetail.public_order.public_order_sku_valid.public_cost_price}</span>
               )}
-            </FormItem>
+            </FormItem> : null
         }
         <FormItem
           label="预计推广时间"
