@@ -41,19 +41,19 @@ class SpotplanAdd extends React.Component {
     const actionName = actionMap[step];
     const _this = this;
     function after() {
-      // let timer = setTimeout(() => {
-      return _this.props.actions[actionName]({ ...obj }).then((res) => {
-        if (func && Object.prototype.toString.call(func) === '[object Function]') {
-          func(res.data);
-        }
-        _this.setState({ loading: false });
-        // clearTimeout(timer);
-      }).catch(({ errorMsg }) => {
-        _this.setState({ loading: false });
-        message.error(errorMsg || '获取接口数据出错！');
-        // clearTimeout(timer);
-      })
-      // }, 5000)
+      let timer = setTimeout(() => {
+        return _this.props.actions[actionName]({ ...obj }).then((res) => {
+          if (func && Object.prototype.toString.call(func) === '[object Function]') {
+            func(res.data);
+          }
+          _this.setState({ loading: false });
+          clearTimeout(timer);
+        }).catch(({ errorMsg }) => {
+          _this.setState({ loading: false });
+          message.error(errorMsg || '获取接口数据出错！');
+          clearTimeout(timer);
+        })
+      }, 2000)
     }
     return step == 3 ? after() : this.props.actions[actionName]({ ...obj }).then((res) => {
       if (func && Object.prototype.toString.call(func) === '[object Function]') {

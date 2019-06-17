@@ -156,7 +156,7 @@ class ListQuery extends React.Component {
                 option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
               )}
             >
-              {spotplan_executor && spotplan_executor.map(item => (<Option value={item.creator_id} key={item.owner_admin_id}>{item.real_name}</Option>))}
+              {spotplan_executor && spotplan_executor.map(item => (<Option value={item.owner_admin_id} key={item.owner_admin_id}>{item.real_name}</Option>))}
             </Select>
           )}
         </FormItem>
