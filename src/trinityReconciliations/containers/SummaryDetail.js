@@ -37,11 +37,12 @@ class SummaryDetail extends Component {
     const search = qs.parse(this.props.location.search.substring(1));
     this.props.actions.getDetaillummary({ summary_sheet_id: search.summary_sheet_id });
     this.props.actions.getDetailSummaryList({ summary_sheet_id: search.summary_sheet_id })
+    this.props.actions.getAgentInfo({ agent_id: search.agent_id })
   }
 
   render() {
     const column = summaryTotalDetailListFunc();
-    let { detailSummary, detailSummaryList } = this.props;
+    let { detailSummary, detailSummaryList, agentInfo } = this.props;
     // let paginationObj = {
     //   onChange: (current) => {
 
@@ -67,7 +68,10 @@ class SummaryDetail extends Component {
         }}
         title="查看汇总单详情"
       /></Row>
-      <Row className='agent'>汇总单名称:<span className='agent_name'>{detailSummary.summary_sheet_name}</span></Row>
+      <Row className='agent'>
+        汇总单名称:<span className='agent_name'>{detailSummary.summary_sheet_name}</span>
+        平台/代理商:<span className='agent_name'>{agentInfo.length > 0 ? agentInfo[0].agentName : ''}</span>
+      </Row>
       <SummaryDetailInfo
         detailSummary={detailSummary}
       />
@@ -101,6 +105,7 @@ const mapStateToProps = (state) => {
   return {
     detailSummary: state.statement.detailSummary,
     detailSummaryList: state.statement.detailSummaryList,
+    agentInfo: state.statement.agentInfo
   }
 }
 const mapDispatchToProps = dispatch => ({

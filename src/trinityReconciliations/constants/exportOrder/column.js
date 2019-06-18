@@ -12,7 +12,7 @@ export const exportOrderListFunc = (agentInfo) => {
       width: 100,
     },
     {
-      title: agentInfo.length > 0 ? agentInfo[0].platformName == '新浪微博' ? 'VQV代言' : agentInfo[0].cooperationPlatformName : '',
+      title: agentInfo.length > 0 ? agentInfo[0].cooperationPlatformName : '',
       dataIndex: 'public_cost_price',
       key: 'public_cost_price',
       align: 'center',
@@ -236,7 +236,7 @@ export const paymentListFunc = (handleSelectDetail, summary_sheet_id) => {
 }
 
 const summaryStatus = {
-  3: '对账成功',
+  3: '对账完成',
   5: '已释放',
 }
 const paymentStatus = {

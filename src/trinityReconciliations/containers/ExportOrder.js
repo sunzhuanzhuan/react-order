@@ -52,8 +52,11 @@ class ExportOrder extends Component {
   }
   onSelectChange = (selectedRowKeys, selectedRow) => {
     this.setState({ selectedRowKeys, selectedRow });
-    selectedRow.map((item) => {
-      this.state.order_ids.push(item.wby_order_id)
+    // selectedRow.map((item) => {
+    //   this.state.order_ids.push(item.wby_order_id)
+    // })
+    this.setState({
+      order_ids: selectedRowKeys
     })
   }
   //查询
