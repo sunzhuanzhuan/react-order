@@ -23,5 +23,6 @@ export default {
   getCompanyTotalInfo: prefix + '/getCompanyTotalInfo',
   getSummaryTotalInfo: prefix + '/getSummaryTotalInfo',
   submitCheckSummaryByOrder: prefix + '/checkOrder',
-  submitCheckSummary: prefix + '/checkSummaryOrder'
+  submitCheckSummary: prefix + '/checkSummaryOrder',
+  exportPlatformDataInfoExcel: prefix + '/exportPlatformDataInfoExcel'
 }
