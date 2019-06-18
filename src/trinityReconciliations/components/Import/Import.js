@@ -38,33 +38,37 @@ class ListQuery extends Component {
         content.append('file_path', this.state.file);
         content.append('commit', 2);
         content.append('statement_id', this.state.statement_id);
-        this.props.importSummary(content).then((res) => {
-          // handlefilterParams(params);
-          hide();
-          if (res.code == 1000) {
-            message.success('上传成功，本次对账完成！');
-            this.props.history.push({
-              pathname: '/order/publicOrderList',
-              search: `?${qs.stringify({ agent: search.agent })}`,
-            });
-          } else {
-            message.error('双方的对账金额不符，请重新对账后再上传对账！');
+        if (Object.values(this.state.stateMentList) == 0) {
+          message.error('请选择或者导入对账单')
+        } else {
+
+          this.props.importSummary(content).then((res) => {
+            // handlefilterParams(params);
             hide();
+            if (res.code == 1000) {
+              message.success('上传成功，本次对账完成！');
+              this.props.history.push({
+                pathname: '/order/publicOrderList',
+                search: `?${qs.stringify({ agent: search.agent })}`,
+              });
+            } else {
+              message.error('双方的对账金额不符，请重新对账后再上传对账！');
+              hide();
+              // this.props.history.push({
+              //   pathname: '/order/trinity/reconciliations/summary',
+              //   search: `?${qs.stringify({ agent: search.agent})}`,
+              // });
+            }
+
+          }).catch(() => {
             // this.props.history.push({
             //   pathname: '/order/trinity/reconciliations/summary',
             //   search: `?${qs.stringify({ agent: search.agent})}`,
             // });
-          }
-
-        }).catch(() => {
-          // this.props.history.push({
-          //   pathname: '/order/trinity/reconciliations/summary',
-          //   search: `?${qs.stringify({ agent: search.agent})}`,
-          // });
-          // message.error('双方的对账金额不符，请重新对账后再上传对账！');
-          // hide();
-        });
-
+            // message.error('双方的对账金额不符，请重新对账后再上传对账！');
+            // hide();
+          });
+        }
       }
     });
   }
@@ -209,9 +213,9 @@ class ListQuery extends Component {
                   rules: [{ required: true, message: '请选择关联三方对账单' }],
                 })(
                   <Select
+                    placeholder="请关联三方对账单"
                     style={{ width: '300px' }}
                     onChange={this.handleChangeSelect}
-                    placeholder="请选择"
                   >
                     <Option key={' '} >请选择</Option>
                     {
