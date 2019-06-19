@@ -9,7 +9,8 @@ import {
   getInputList_success,
   getAgentInfo_success,
   getDetaillummary_success,
-  REMOVE_SUMMARY_LIST
+  REMOVE_SUMMARY_LIST,
+  REMOVE_DETAIL_LIST
 
 } from '../actions'
 import { handleActions } from 'redux-actions';
@@ -49,7 +50,10 @@ export const delSummary = handleActions({
 export const detailSummaryList = handleActions({
   [getDetailSummaryList_success]: (state, action) => {
     return [...action.payload.data]
-  }
+  },
+  [REMOVE_DETAIL_LIST]: (state, action) => {
+    return []
+  },
 }, {})
 
 

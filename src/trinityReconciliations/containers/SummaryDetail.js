@@ -39,7 +39,9 @@ class SummaryDetail extends Component {
     this.props.actions.getDetailSummaryList({ summary_sheet_id: search.summary_sheet_id })
     this.props.actions.getAgentInfo({ agent_id: search.agent_id })
   }
-
+  componentWillUnmount = () => {
+    this.props.actions.removeDetailList()
+  }
   render() {
     const column = summaryTotalDetailListFunc();
     let { detailSummary, detailSummaryList, agentInfo } = this.props;

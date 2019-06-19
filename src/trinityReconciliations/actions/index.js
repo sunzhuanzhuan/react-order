@@ -135,6 +135,13 @@ export const REMOVE_SUMMARY_LIST = 'REMOVE_SUMMARY_LIST'
 export const removeSummaryList = () => ({
   type: REMOVE_SUMMARY_LIST,
 })
+//清空detailist
+export const REMOVE_DETAIL_LIST = 'REMOVE_DETAIL_LIST'
+export const removeDetailList = () => ({
+  type: REMOVE_DETAIL_LIST,
+})
+
+
 // // 使得添加页面提交可用
 // export const setAddSubmit = createAction('setAddSubmit', (data) => {
 //   return data;
