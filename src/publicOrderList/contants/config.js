@@ -119,7 +119,8 @@ export const filterFormArr = [
   {
     label: "提前打款状态",
     type: "select",
-    id: "pre_deposit_status",
+    id: "prepayment_status" +
+      "",
     data: [{ key: "请选择", value: "0" }, { key: "未处理", value: "1" }, {
       key: "已同意",
       value: "2"
@@ -128,7 +129,7 @@ export const filterFormArr = [
   {
     label: "提前打款结果",
     type: "select",
-    id: "pre_deposit_result",
+    id: "prepayment_result",
     data: [{ key: "请选择", value: "0" }, {
       key: "未处理",
       value: "1"
@@ -152,19 +153,22 @@ export const filterFormArr = [
     id: "last_payment_status",
     data: [
       { key: "请选择", value: "0" },
-      { key: "未处理", value: "1" },
-      { key: "已同意", value: "2" },
-      { key: "已驳回", value: "3" }
+      { key: "待打款", value: "1" },
+      { key: "打款成功", value: "2" },
+      { key: "打款失败", value: "3" },
+      { key: "打款撤销", value: "4" }
     ]
   },
   {
     label: "对账状态",
     type: "select",
     id: "statement_status",
-    data: [{ key: "请选择", value: "0" }, { key: "未对账", value: "1" }, {
-      key: "对账中",
-      value: "2"
-    }, { key: "对账成功", value: "3" }, { key: "部分对账", value: "4" }]
+    data: [
+      { key: "请选择", value: "0" },
+      { key: "未对账", value: "1" },
+      // { key: "对账中", value: "2" },
+      { key: "对账成功", value: "3" },
+      { key: "部分对账", value: "4" }]
   },
   {
     label: "是否标注已下单",
@@ -231,7 +235,7 @@ export const columns = (props) => {
     "3": "已驳回"
   }
   const paymentResult = {
-    "1": "未处理",
+    "1": "待打款",
     "2": "打款成功",
     "3": "打款失败",
     "4": "打款撤销"
@@ -307,7 +311,7 @@ export const columns = (props) => {
             : '#'
           } target="_blank"
           >{record.requirement_id}</a>
-          <div>{reservationRequirementStatus[record.reservation_requirement_status]}</div>
+          <div>{record.requirement_status_display}</div>
         </div>
       }
     },
@@ -326,7 +330,7 @@ export const columns = (props) => {
             record.review_execution_doc_url ?
               <a href={record.review_execution_doc_url} target="_blank">执行链接</a> : null
           }
-          <div>{orderStatus[record.order_status]}</div>
+          <div>{record.status_display}</div>
         </div>
       }
     },

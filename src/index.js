@@ -34,7 +34,7 @@ const redirectToOtherProjects = ({ location: { pathname = '/error', search = '' 
 const routes = () => (
   <App history={history}>
     <Switch>
-      {/* <Route path="/order/publicOrderList" component={PublicOrderList} /> */}
+      <Route path="/order/publicOrderList" component={PublicOrderList} />
       <Route path="/order/closing-report" component={ClosingReport} />
       <Route path="/order/business" component={Business} />
       <Route path="/order/spotplan" component={SpotPlan} />
@@ -50,7 +50,7 @@ render(
         <Switch>
           {
             process.env.NODE_ENV === 'development' ?
-              <Route exact path="/" render={() => <Redirect to="/order/spotplan" />} /> : null
+              <Route exact path="/" render={() => <Redirect to="/order/publicOrderList" />} /> : null
           }
           <Route path="/order" render={routes} />
           <Route render={redirectToOtherProjects} />
