@@ -1,0 +1,279 @@
+@import "../../indexNbTheme";
+.spotplan-add{
+    position: relative;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    h3::before{
+        vertical-align: middle;
+        left: 0;
+        content: '';
+        display: inline-block;
+        height: 15px;
+        width: 4px;
+        border-radius: 2px;
+        background: @primary-color;
+        margin-right: 10px;
+    }
+    &::-webkit-scrollbar {
+        display: none;
+    }
+    .steps-container{
+        width:60%;
+        margin-left: 22%;
+    }
+    .spotplan-add-container{
+        display: flex;
+        justify-content: center;
+        .spotplan-add-form{
+            margin-left: 17%;
+            width:60%;
+            padding-top: 50px;
+            .tip-style{
+                line-height: 22px;
+                color: rgba(0, 0, 0, 0.4);
+                margin:0;
+            }
+        }
+    }
+
+    .splotplan-check-container{
+        width:100%;
+        padding-bottom: 60px;
+        .check-table-container{
+            h3::before{
+                display: none;
+            }
+            .pagination{
+                float: right;
+                margin-top: 20px;
+            }
+            .spotplan-check-form{
+                .ant-form-item,.ant-form-item-label,.ant-form-item-control-wrapper{
+                    display: inline-block;
+                }
+                .ant-form-item{
+                    padding-left: 20px;
+                }
+            }
+            .check-order-item{
+                width:100%;
+                // margin-top: 20px;
+                padding-top: 4px;
+                .list-item{
+                    width: 100%;
+                }
+                .order-item-title{
+                    padding: 10px;
+                    background-color: #e1e1e1;
+                    border-radius: 6px;
+                    .title-info{
+                        display: flex;
+                        span{
+                            display: inline-block;
+                            &:nth-child(2){
+                                padding-left: 10px;
+                                flex:3
+                            }
+                            &:nth-child(4),&:nth-child(10),&:nth-child(12){
+                                padding-left: 10px;
+                                flex: 4
+                            }
+                            &:nth-child(8),&:nth-child(14){
+                                padding-left: 10px;
+                                flex: 6
+                            }
+                            &:nth-child(6){
+                                padding-left: 10px;
+                                flex:12
+                            }
+                        }
+                    }
+                    .disabled-reason{
+                        color: #fff;
+                        span{
+                            text-align: center;
+                            display: inline-block;
+                            width: 80px;
+                            height: 20px;
+                            line-height: 20px;
+                            background-color: red;
+                            border-radius: 4px;
+                        }
+                    }
+                }
+                .ant-checkbox-wrapper{
+                    width: 100%;
+                }
+                .ant-checkbox-wrapper + .ant-checkbox-wrapper{
+                    margin-left: 0;
+                }
+                .item-table{
+                    display: inline-block;
+                    width: 92%;
+                    padding-left: 30px;
+                    line-height: 30px;
+                    vertical-align: middle;
+                    tr{
+                       th,td{
+                           padding: 0 10px;
+                           text-align: center;
+                       }
+                    }
+                }
+            }
+        }
+    }
+    .splotplan-edit-container{
+        width: 100%;
+        padding-bottom: 40px;
+    }
+    .primary-font{
+        color:@primary-color;
+    }
+    .left-little-gap{
+        margin-left: 10px;
+    }
+    .left-gap{
+        margin-left: 20px;
+    }
+    .top-gap{
+        margin-top: 20px;
+    }
+}
+
+.spotList-list-container{
+    h3::before{
+        vertical-align: middle;
+        left: 0;
+        content: '';
+        display: inline-block;
+        height: 15px;
+        width: 4px;
+        border-radius: 2px;
+        background: @primary-color;
+        margin-right: 10px;
+    }
+    .ant-form-item,.ant-form-item-label,.ant-form-item-control-wrapper{
+        display: inline-block;
+    }
+    .ant-form-item{
+        padding-left: 20px;
+    }
+    .left-little-gap{
+        margin-left: 10px;
+    }
+    .left-gap{
+        margin-left: 20px;
+    }
+    .top-gap{
+        margin-top: 20px;
+    }
+}
+
+.spotList-detail-container{
+    h3::before{
+        vertical-align: middle;
+        left: 0;
+        content: '';
+        display: inline-block;
+        height: 15px;
+        width: 4px;
+        border-radius: 2px;
+        background: @primary-color;
+        margin-right: 10px;
+    }
+    .ant-form-item,.ant-form-item-label,.ant-form-item-control-wrapper{
+        display: inline-block;
+    }
+    .ant-form-item{
+        padding-left: 20px;
+    }
+    .info-container{
+        padding: 0 10px;
+        .info-row{
+            line-height: 32px;
+            font-size: 14px;
+        }
+    }
+    .spotplan-detail-statistics{
+        background-color: #e1e1e1;
+        padding: 10px 20px;
+        margin: 10px 0;
+    }
+    .primary-font{
+        color:@primary-color;
+    }
+    .left-little-gap{
+        margin-left: 10px;
+    }
+    .left-gap{
+        margin-left: 20px;
+    }
+    .top-gap{
+        margin-top: 20px;
+    }
+}
+
+.statistics-tip{
+    .ant-tooltip-arrow{
+        border-top-color:red;
+    }
+    .ant-tooltip-inner{
+        background-color: red ;
+    }
+}
+.multipleSelect {
+    vertical-align: middle;
+    min-width: 220px;
+    max-width: 360px;
+    ul {
+        display: flex;
+        display: -moz-box;
+        /* 老版本语法: Firefox (buggy) */
+        display: -ms-flexbox;
+        /* 混合版本语法: IE 10 */
+        display: -webkit-flex;
+        /* 新版本语法: Chrome 21+ */
+        display: -webkit-box;
+        /* 老版本语法: Safari, iOS, Android browser, older WebKit browsers. */
+        height: 0;
+        flex: auto;
+        >li {
+            float: none !important;
+            margin-right: 4px;
+            .ant-select-selection__choice__content {
+                overflow: inherit !important;
+            }
+        }
+    }
+    .ant-select-selection {
+        width: 360px;
+        overflow-x: auto;
+        overflow-y: hidden;
+    }
+    .ant-select-selection--multiple .ant-select-selection__choice {
+        overflow: inherit;
+        float: none;
+    }
+    .ant-select-selection::-webkit-scrollbar {
+        /*滚动条整体样式*/
+        width: 5px;
+        /*高宽分别对应横竖滚动条的尺寸*/
+        height: 5px;
+    }
+    .ant-select-selection::-webkit-scrollbar-thumb {
+        /*滚动条里面小方块*/
+        border-radius: 5px;
+        background: rgba(45, 166, 126, 0.8);
+    }
+    .ant-select-selection::-webkit-scrollbar-track {
+        /*滚动条里面轨道*/
+        -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+        border-radius: 0;
+        background: rgba(0, 0, 0, 0.1);
+    }
+}
+
+.edit-order-modal{
+    margin-top: -40px;
+}

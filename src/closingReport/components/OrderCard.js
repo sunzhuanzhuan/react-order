@@ -1,5 +1,14 @@
 import React, { Component } from 'react'
-import { Badge, Icon, Divider, Select, Modal, message, Popconfirm } from 'antd'
+import {
+  Badge,
+  Icon,
+  Divider,
+  Select,
+  Modal,
+  message,
+  Popconfirm,
+  Checkbox
+} from 'antd'
 import './OrderCard.less'
 import IconText from '../base/IconText'
 import update from 'immutability-helper'
@@ -120,7 +129,7 @@ export default class OrderCard extends Component {
   removeOrder = (id, order_id, summary_id = this.props.companySource.summaryId) => {
     const hide = message.loading('删除中...', 0)
     this.props.actions.deleteSummaryOrder({
-      order_id, summary_id
+      order_id : [order_id], summary_id
     }).then(() => {
       this.props.actions.removeSummaryOrder({ id })
     }).finally(hide)
@@ -132,7 +141,7 @@ export default class OrderCard extends Component {
     Modal.confirm({
       title: '是否确认将本订单的投放数据提交审核？',
       onOk: hide => {
-        return actions.submitCheckSummaryByOrder({ order_id: data.order_id }).then(() => {
+        return actions.submitCheckSummaryByOrder({ order_id: [data.order_id] }).then(() => {
           message.success('提交审核成功!')
           successCallback && successCallback()
         }).finally(hide)
@@ -144,12 +153,15 @@ export default class OrderCard extends Component {
   render() {
     const { addModal } = this.state
     const { optional, data, display } = this.props
-    const { add, del, check } = display.orderActions(data) || {}
+    const { add, del, check, checkbox } = display.orderActions(data) || {}
     const { platform = [] } = data
     /*.filter((p) => {  return !platform.find(id => id === p.platform_id)});*/
 
     return <div className='order-card-container'>
       <header className='order-card-head'>
+        {checkbox && <div className='check-wrap'>
+          <Checkbox disabled={checkbox.disabled} value={data.key}/>
+        </div>}
         {display.orderStatus &&
         <OrderSummaryStatus status={data.summary_status} reason={data.externa_reason} />}
         <ul className='head-center'>
