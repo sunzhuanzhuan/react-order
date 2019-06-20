@@ -619,7 +619,7 @@ export const stateListFunc = (handleDelete) => {
       render: (text, record) => {
         return record.statement_status == 1 ? <Popconfirm title={<div>
           <div>温馨提示:</div>
-          <div>删除后将无法恢复</div>
+          <div>删除对账单将无法恢复，是否确认此操作</div>
         </div>} onConfirm={() => handleDelete(record)} okText="确定" cancelText="取消">
           <a href='javascript:;'>删除对账单</a>
         </Popconfirm> : null
