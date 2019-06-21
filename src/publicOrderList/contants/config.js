@@ -167,7 +167,7 @@ export const filterFormArr = [
       { key: "请选择", value: "0" },
       { key: "未对账", value: "1" },
       // { key: "对账中", value: "2" },
-      { key: "对账成功", value: "3" },
+      { key: "对账完成", value: "3" },
       { key: "部分对账", value: "4" }]
   },
   {
@@ -243,7 +243,7 @@ export const columns = (props) => {
   const statementStatus = {
     "1": "未对账",
     "2": "对账中",
-    "3": "对账成功",
+    "3": "对账完成",
     "4": "部分对账"
   }
   // 调账方式
@@ -592,7 +592,7 @@ export const columns = (props) => {
       width: 150,
       render: (text, record) => {
         return record.public_order && record.public_order.public_order_trade ?
-          <span>{record.public_order.public_order_trade.paying_amount}</span> : null
+          <span>{record.public_order.public_order_trade.actual_payable_amount}</span> : null
       }
     },
     {
