@@ -18,7 +18,7 @@ class btnUpload extends Component {
   }
 
   beforeUpload = (res) => {
-    console.log(res)
+    // console.log(res)
     if (this.props.agent_id) {
       file_name = res.name;
       return true
@@ -38,7 +38,7 @@ class btnUpload extends Component {
     // }) 
   }
   componentWillMount = () => {
-    console.log(this.props)
+    // console.log(this.props)
 
   }
 
@@ -70,10 +70,10 @@ class btnUpload extends Component {
         listType="text"
         uploadText={uploadText || '请上传'}
         onChange={(file, originFile) => {
-          console.log(file[0].filepath);
-          console.log(originFile);
+          // console.log(file[0].filepath);
+          // console.log(originFile);
           console.log(file);
-          this.handleChangeOption(file[0].filepath)
+          this.handleChangeOption(file[file.length - 1].filepath)
         }}
         beforeUpload={this.beforeUpload}
         // beforeUpload={()=>this.beforeUpload()}

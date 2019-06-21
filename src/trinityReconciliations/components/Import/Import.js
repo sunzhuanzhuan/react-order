@@ -245,7 +245,7 @@ class ListQuery extends Component {
                       console.log(file[0].filepath);
                       console.log(originFile);
                       console.log(file);
-                      this.handleChangeOption(file[0].filepath)
+                      this.handleChangeOption(file[file.length - 1].filepath)
                     }}
                     accept=".xlsx,.xls"
                     btnProps={{
