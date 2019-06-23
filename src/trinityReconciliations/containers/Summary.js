@@ -136,7 +136,7 @@ handleCancel = (e) => {
     this.child = ref;
   }
   render() {
-    const columnDetail = summaryTotalDetailListFunc();
+    const columnDetail = this.state.visible?summaryTotalDetailListFunc():[];
     const search = qs.parse(this.props.location.search.substring(1));
     const column = summaryListFunc(this.handleSelectDetail,this.handleOut);
     // const shiColum = summaryShiListFunc(this.handleSelectDetail);

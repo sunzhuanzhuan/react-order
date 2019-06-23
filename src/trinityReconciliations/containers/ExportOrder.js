@@ -39,6 +39,7 @@ class ExportOrder extends Component {
     const search = qs.parse(this.props.location.search.substring(1));
     if (search.keys) {
       this.queryData({ page: 1, page_size: this.state.page_size, ...search.keys })
+      this.props.actions.getAgentInfo({ agent_id: search.agent_id })
     } else {
       this.queryData({ page: 1, page_size: this.state.page_size, statement_status: ['1', '4'] })
       this.props.actions.getAgentInfo({ agent_id: search.agent_id })

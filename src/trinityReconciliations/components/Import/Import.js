@@ -209,7 +209,7 @@ class ListQuery extends Component {
             <Col span={10}>
               <FormItem label='请关联三方对账单' {...formItemLayout}>
                 {getFieldDecorator('statement_id', {
-                  initialValue: '',
+                  initialValue: ' ',
                   rules: [{ required: true, message: '请选择关联三方对账单' }],
                 })(
                   <Select

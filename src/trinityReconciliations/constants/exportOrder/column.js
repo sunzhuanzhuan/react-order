@@ -460,7 +460,7 @@ export const summaryShiListFunc = (handleSelectDetail) => {
   ];
 }
 
-export const summaryTotalDetailListFunc = () => {
+export const summaryTotalDetailListFunc = (agentInfo) => {
   return [
     {
       title: '订单号',
@@ -470,7 +470,7 @@ export const summaryTotalDetailListFunc = () => {
       width: 100
     },
     {
-      title: '快接单下单价(元)',
+      title: agentInfo.length > 0 ? agentInfo[0].cooperationPlatformName : '',
       dataIndex: 'public_cost_price',
       key: 'public_cost_price',
       align: 'center',

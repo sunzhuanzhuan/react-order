@@ -43,8 +43,8 @@ class SummaryDetail extends Component {
     this.props.actions.removeDetailList()
   }
   render() {
-    const column = summaryTotalDetailListFunc();
     let { detailSummary, detailSummaryList, agentInfo } = this.props;
+    const column = summaryTotalDetailListFunc(agentInfo);
     // let paginationObj = {
     //   onChange: (current) => {
 
