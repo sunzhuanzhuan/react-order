@@ -32,6 +32,8 @@ export default class SwitchRequiredInput extends Component {
   }
 
   handleNumberChange = (value) => {
+    // 单独处理为0的情况
+    if(value === 0) value = '0'
     if (!('value' in this.props)) {
       this.setState({ input: value })
     }
@@ -73,7 +75,7 @@ export default class SwitchRequiredInput extends Component {
       case 'number':
         inputComponent = <InputNumber {...props}
           onChange={this.handleNumberChange}
-          min={1}
+          min={0}
           max={9999999999}
           precision={0}
           formatter={value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
