@@ -105,8 +105,7 @@ class ApplyPrepayment extends Component {
       labelCol: { span: 6 },
       wrapperCol: { span: 18 },
     }
-    const cooperationPlatformName = orderDetail.platform.platform_id == "1" ?
-      "微任务/WEIQ" : orderDetail.public_order.cooperation_platform_name
+    const trinity_platform_name = orderDetail.trinity_platform_name
     return <div className="modalBox-singleAgent">
       <Form layout="horizontal">
         <FormItem
@@ -128,7 +127,7 @@ class ApplyPrepayment extends Component {
           <span>{orderDetail.requirement.sale_manager_info.real_name}</span>
         </FormItem>
         <FormItem
-          label={`${cooperationPlatformName}下单金额（元）`}
+          label={`${trinity_platform_name}下单金额（元）`}
           {...formLayout}
         >
           <span>{orderDetail.public_order.public_order_sku_valid.public_cost_price}</span>

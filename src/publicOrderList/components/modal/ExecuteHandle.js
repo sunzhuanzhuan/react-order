@@ -192,7 +192,7 @@ class ExecuteHandle extends Component {
           <div className="executeHandle-comment">
             <Input disabled={true}
               style={{ width: '400px', border: 'none' }}
-              defaultValue={orderDetail.public_order.execution_notification_comment}
+              defaultValue={`${orderDetail.public_order.execution_notification_comment}--${orderDetail.public_order.apply_execution_notification_operator.name}`}
             />
             {getFieldDecorator("comment", {
               rules: [{
