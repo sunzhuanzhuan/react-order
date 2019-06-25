@@ -8,6 +8,11 @@
 import React from 'react';
 import { Select, Button, message } from 'antd';
 import api from '../../api/index'
+import qs from 'qs'
+import BtnUpload from '../../components/btnUpload'
+import {
+  withRouter,
+} from "react-router-dom";
 const Option = Select.Option;
 import '../containers/PublicOrderList.less'
 
@@ -15,11 +20,12 @@ class StatementComponent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: []
+      data: [],
+      ageent_id: null
     }
   }
   componentWillMount() {
-    api.get("/operator-gateway/trinityPlatform/v1/getCooperationPlatform")
+    api.get("/operator-gateway/trinityAgent/v1/getAgentList?agentStatus=1")
       .then((response) => {
         let data = response.data
         this.setState({
@@ -32,7 +38,10 @@ class StatementComponent extends React.Component {
   }
   //选择平台/代理商
   changePlatformAndAaent = (value) => {
-    console.log(value)
+    console.log(value);
+    this.setState({
+      agent_id: value
+    })
   }
   render() {
     return <div className="publicOrderList-chooseBox">
@@ -49,22 +58,66 @@ class StatementComponent extends React.Component {
           onChange={this.changePlatformAndAaent}>
           {
             this.state.data.map(item => {
-              return <Option key={item.id} value={item.id}>{item.cooperationPlatformName}</Option>
+              return <Option key={item.id} value={item.id}>{item.cooperationPlatformName}-{item.agentName}</Option>
             })
           }
         </Select>
       </div>
       <div>
-        <Button type="primary" className="publicOrderList-chooseBox-operateBtn">批量对账</Button>
-        <Button type="primary" className="publicOrderList-chooseBox-operateBtn">汇总单列表</Button>
-        <Button type="primary" className="publicOrderList-chooseBox-operateBtn">申请周期付款</Button>
-        <Button type="primary" className="publicOrderList-chooseBox-operateBtn">导入三方对账单</Button>
-        <Button type="primary" className="publicOrderList-chooseBox-operateBtn">三方对账单导入记录</Button>
-        <Button type="primary" className="publicOrderList-chooseBox-operateBtn">导出订单</Button>
+        <Button type="primary" className="publicOrderList-chooseBox-operateBtn" onClick={() => {
+          if (this.state.agent_id) {
+            window.open('/order/trinity/reconciliations/exportOrder?agent_id=' + this.state.agent_id)
+          } else {
+            message.error("请先选择要导出订单的平台/代理商！")
+          }
+
+        }}>导出订单</Button>
+        <div style={{ display: 'inline-block' }} className="publicOrderList-chooseBox-operateBtn">
+          <BtnUpload
+            agent_id={this.state.agent_id}
+            uploadText={'导入三方对账单'}
+          />
+        </div>
+
+        <Button type="primary" className="publicOrderList-chooseBox-operateBtn" onClick={() => {
+          if (this.state.agent_id) {
+            window.open('/order/trinity/reconciliations/importResult?agent_id=' + this.state.agent_id)
+
+          } else {
+            message.error("请先选择要导入汇总结果的平台/代理商！")
+          }
+
+        }}>导入汇总结果</Button>
+
+        <Button type="primary" className="publicOrderList-chooseBox-operateBtn" onClick={() => {
+          if (this.state.agent_id) {
+            window.open('/order/trinity/reconciliations/payment?agent_id=' + this.state.agent_id)
+          } else {
+            message.error("请先选择要申请周期付款的平台/代理商！")
+          }
+
+        }}>申请周期付款</Button>
+        <Button type="primary" className="publicOrderList-chooseBox-operateBtn" onClick={() => {
+          if (this.state.agent_id) {
+            window.open('/order/trinity/reconciliations/summary?agent_id=' + this.state.agent_id)
+          } else {
+            message.error("请先选择要查看的平台/代理商的汇总单列表！")
+          }
+
+        }}>汇总单列表</Button>
+        <Button type="primary" className="publicOrderList-chooseBox-operateBtn" onClick={() => {
+          if (this.state.agent_id) {
+            window.open('/order/trinity/reconciliations/statement?agent_id=' + this.state.agent_id)
+          } else {
+            message.error("请先选择要查看三方对账单导入的平台/代理商！")
+          }
+
+        }}>三方对账单列表</Button>
+
       </div>
     </div>
   }
 }
 
-export default StatementComponent
+export default withRouter(StatementComponent)
 

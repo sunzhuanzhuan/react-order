@@ -64,7 +64,7 @@ instance.interceptors.response.use(function (response) {
   if (data.code == 200 || data.code == 1000 || data.code == 999) {
     return data;
   } else if ((data.code === 401 || data.code === "5005")) {
-    linkTo('/login' + '?fromUrlInner=' + encodeURIComponent(location.pathname + location.search))
+    // linkTo('/login' + '?fromUrlInner=' + encodeURIComponent(location.pathname + location.search))
     // window.location.href = 'http://192.168.100.196:8090/login' + '?fromUrlInner=' + encodeURIComponent(location.pathname + location.search)
     // window.myHistory && window.myHistory.push('/login' + '?fromUrlInner=' + encodeURIComponent(location.pathname + location.search));
     // window.location.href = decodeURIComponent(urlParam.fromUrl);
