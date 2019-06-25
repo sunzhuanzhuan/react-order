@@ -132,6 +132,12 @@ export const paymentListFunc = (handleSelectDetail, summary_sheet_id) => {
       key: 'summary_sheet_name',
       align: 'center',
       width: 100,
+    }, {
+      title: '汇总单ID',
+      dataIndex: 'summary_sheet_id',
+      key: 'summary_sheet_id',
+      align: 'center',
+      width: 100,
     },
     {
       title: '订单数量',
@@ -283,6 +289,12 @@ export const summaryListFunc = (handleSelectDetail, handleOut) => {
       render: (text) => {
         return summaryStatus[text]
       }
+    }, {
+      title: '汇总单ID',
+      dataIndex: 'summary_sheet_id',
+      key: 'summary_sheet_id',
+      align: 'center',
+      width: 100,
     },
     {
       title: '订单数量',
@@ -473,6 +485,12 @@ export const summaryTotalDetailListFunc = (agentInfo) => {
       title: agentInfo.length > 0 ? agentInfo[0].cooperationPlatformName : '',
       dataIndex: 'public_cost_price',
       key: 'public_cost_price',
+      align: 'center',
+      width: 100,
+    }, {
+      title: '汇总单ID',
+      dataIndex: 'summary_sheet_id',
+      key: 'summary_sheet_id',
       align: 'center',
       width: 100,
     },
