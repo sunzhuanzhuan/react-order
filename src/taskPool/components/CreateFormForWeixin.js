@@ -1,16 +1,19 @@
 import React from 'react'
 import BraftEditor from 'braft-editor'
+import { convertRawToHTML, convertHTMLToRaw } from "braft-convert";
 import { Form, Input, Button } from 'antd'
 import htmlContent from '../constants/_html'
-import 'braft-editor/dist/index.css'
 import { previewHtml } from "@/taskPool/constants/utils";
+import 'braft-editor/dist/index.css'
+import { parseUrlQuery } from "@/util/parseUrl";
 
 const FormItem = Form.Item
 
-const handleHtmlForWeixin = (htmlContent) => {
+const handleHtmlToRawForWeixin = (htmlContent) => {
   let content = htmlContent.replace(/↵/g, "\n")
   let template = `<div id="template">${content}</div>`
   let doc = new window.DOMParser().parseFromString(template, 'text/html');
+  // 处理图片
   let images = doc.getElementsByTagName('img')
   let length = images.length;
   for (let i = 0; i < length; ++i) {
@@ -19,11 +22,29 @@ const handleHtmlForWeixin = (htmlContent) => {
     let realSrc = imageItem.getAttribute('src');
     if (!src_ || realSrc) continue;
     imageItem.src = src_;
-    imageItem.style.cssText += ";margin: 0 auto;";
+    imageItem.parentElement.classList.add('media-wrap')
   }
+  // 处理嵌入式媒体
+  let embeds = doc.getElementsByTagName('iframe')
+  for (let i = 0; i < embeds.length; ++i) {
+    let embed = embeds[i];
+    let src_ = embed.getAttribute('src') || embed.getAttribute('data-src') || "";
+    let w_ = 677 || embed.getAttribute('data-w')
+    let h_ = w_ / embed.getAttribute('data-ratio')
+    let vid = parseUrlQuery(src_).vid;
+    if (!vid) {
+      continue;
+    }
+    vid = vid.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, "");
+    embed.src = `//v.qq.com/txp/iframe/player.html?origin=https%3A%2F%2Fmp.weixin.qq.com&amp;vid=${vid}&amp;autoplay=false&amp;full=true&amp;show1080p=false&amp;isDebugIframe=false`;
+    // embed.style = `width:100%;height:auto;display:block;overflow:hidden;`
+    embed.style = `width:${w_}px;height:${h_}px;display:block;overflow:hidden;`
+    embed.parentElement.classList.add('media-wrap', 'embed-wrap')
+  }
+
   let result = doc.getElementById('template').innerHTML
-  console.log(result, '===>');
-  return result
+  console.log(result, convertHTMLToRaw(result, '===>'));
+  return convertHTMLToRaw(result)
 
 }
 
@@ -33,7 +54,7 @@ export default class CreateFormForWeixin extends React.Component {
   componentDidMount() {
     // 异步设置编辑器内容
     setTimeout(() => {
-      const content = handleHtmlForWeixin(htmlContent)
+      const content = handleHtmlToRawForWeixin(htmlContent)
       this.props.form.setFieldsValue({
         content: BraftEditor.createEditorState(content)
       })
@@ -69,7 +90,8 @@ export default class CreateFormForWeixin extends React.Component {
           title: values.title,
           content: values.content.toRAW() // or values.content.toHTML()
         }
-        console.log(submitData)
+        // console.log(submitData)
+        console.log(values.content.toHTML())
       }
     })
 
@@ -115,7 +137,7 @@ export default class CreateFormForWeixin extends React.Component {
               }]
             })(
               <BraftEditor
-                className="my-editor"
+                className="antd-editor-weixin"
                 controls={controls}
                 extendControls={extendControls}
                 placeholder="请输入正文内容"

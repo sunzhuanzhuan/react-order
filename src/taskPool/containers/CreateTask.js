@@ -28,7 +28,7 @@ export default class CreateTask extends Component {
       </main>
       <footer>
         <Button type="primary" onClick={() => message.success('Processing complete!')}>
-          Done
+          -----
         </Button>
       </footer>
     </div>
