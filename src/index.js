@@ -20,6 +20,7 @@ import PublicOrderList from './publicOrderList/containers/PublicOrderList';
 import ClosingReport from './closingReport';
 import SpotPlan from './spotplan';
 import Business from './business';
+import Task from './taskPool';
 
 // 设置语言包
 numeral.locale('chs');
@@ -38,6 +39,7 @@ const routes = () => (
       <Route path="/order/closing-report" component={ClosingReport} />
       <Route path="/order/business" component={Business} />
       <Route path="/order/spotplan" component={SpotPlan} />
+      <Route path="/order/task" component={Task} />
       <Route render={() => linkTo('/error')} />
     </Switch>
   </App>
@@ -50,7 +52,7 @@ render(
         <Switch>
           {
             process.env.NODE_ENV === 'development' ?
-              <Route exact path="/" render={() => <Redirect to="/order/spotplan" />} /> : null
+              <Route exact path="/" render={() => <Redirect to="/order/task/create" />} /> : null
           }
           <Route path="/order" render={routes} />
           <Route render={redirectToOtherProjects} />
