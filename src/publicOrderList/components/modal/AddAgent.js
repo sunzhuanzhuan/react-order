@@ -403,7 +403,7 @@ class AddAgent extends Component {
                     rules: [{
                       required: true, message: '本项为必填项，请输入！',
                     }, {
-                      pattern: /^[0-9]{16,19}$/, message: '仅可输入16-19位数字'
+                      pattern: /^[0-9]+$/, message: '仅可输入数字'
                     }]
                   })(
                     <Input style={{ width: '350px' }} placeholder="请输入帐号" />
