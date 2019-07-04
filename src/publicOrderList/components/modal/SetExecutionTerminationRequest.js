@@ -56,7 +56,7 @@ class SetExecutionTerminationRequest extends Component {
           operation_content: [
             {
               key: "执行终止",
-              value: v.confirmor_type == 1 ? "同意" : "拒绝"
+              value: v.status == 1 ? "同意" : "拒绝"
             },
             {
               key: "原因",
