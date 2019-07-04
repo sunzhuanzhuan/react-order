@@ -25,7 +25,8 @@ class SetExecutionTerminationRequest extends Component {
       //申请执行终止
       let termination_reason_str = ""
       let termination_reason = orderDetail.execution_termination_request.termination_reason.split(",")
-      orderDetail.termination_reason_list["1"].forEach(v => {
+      let reneger = orderDetail.execution_termination_request.reneger
+      orderDetail.termination_reason_list[reneger].forEach(v => {
         if (termination_reason.indexOf((v.value).toString()) != -1) {
           termination_reason_str = v.text + ";" + termination_reason_str
         }
