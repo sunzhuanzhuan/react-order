@@ -171,6 +171,7 @@ module.exports = {
       PnpWebpackPlugin.moduleLoader(module)
     ]
   },
+ 
   module: {
     strictExportPresence: true,
     rules: [

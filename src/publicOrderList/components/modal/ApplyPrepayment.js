@@ -34,6 +34,7 @@ class ApplyPrepayment extends Component {
         values.order_id = this.props.record.order_id
         values.cooperation_platform_id = values.multiAgentIds[0]
         values.agent_id = values.multiAgentIds[1]
+        values.settle_type = 1
         delete values.multiAgentIds
         this.setState({
           loading: true
@@ -92,7 +93,7 @@ class ApplyPrepayment extends Component {
   //最大回票金额
   maxReturnInvoiceAmount = (rule, value, callback) => {
     let maxNum = this.props.orderDetail.public_order.public_order_sku_valid.public_cost_price
-    if (value > maxNum) {
+    if (value * 100 > maxNum * 100) {
       callback('请输入不大于三方下单价的有效数字，小数点后最多两位！')
     }
     callback()
@@ -104,6 +105,7 @@ class ApplyPrepayment extends Component {
       labelCol: { span: 6 },
       wrapperCol: { span: 18 },
     }
+    const trinity_platform_name = orderDetail.trinity_platform_name
     return <div className="modalBox-singleAgent">
       <Form layout="horizontal">
         <FormItem
@@ -125,7 +127,7 @@ class ApplyPrepayment extends Component {
           <span>{orderDetail.requirement.sale_manager_info.real_name}</span>
         </FormItem>
         <FormItem
-          label="快接单下单金额（元）"
+          label={`${trinity_platform_name}下单金额（元）`}
           {...formLayout}
         >
           <span>{orderDetail.public_order.public_order_sku_valid.public_cost_price}</span>
@@ -136,6 +138,7 @@ class ApplyPrepayment extends Component {
           platformId={record.account.platform_id}
           is_agentDetail_initial_loading={false}
           platformName={orderDetail.platform.platform_name}
+          type="applyPrepayment"
         />
         <FormItem
           label="回票方式"
@@ -161,6 +164,7 @@ class ApplyPrepayment extends Component {
               {...formLayout}
             >
               {getFieldDecorator("return_invoice_amount", {
+                validateFirst: true,
                 rules: [{
                   required: true, message: '本项为必填项，请输入！',
                 }, {
@@ -174,6 +178,7 @@ class ApplyPrepayment extends Component {
                   placeholder="请输入回票金额" />
               )}
             </FormItem> :
+            this.state.invoiceType == '1' ?
             <FormItem
               label="回票金额"
               {...formLayout}
@@ -183,7 +188,7 @@ class ApplyPrepayment extends Component {
               })(
                 <span>{orderDetail.public_order.public_order_sku_valid.public_cost_price}</span>
               )}
-            </FormItem>
+            </FormItem> : null
         }
         <FormItem
           label="预计推广时间"

@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
+import Scolltable from '../../components/Scolltable'
 import { Form, Tabs, Table, message, Modal } from 'antd';
 import StatementComponent from '../components/StatementComponent'
 import FilterForm from '../components/filter/FilterForm'
@@ -62,7 +63,7 @@ class PublicOrderList extends Component {
     let data = params.data
     //获取弹框详情
     this.props.actions.resetOrderDetail()
-    if (key == "cancel_execution_termination_request") {
+    if (key == "can_cancel_execution_termination_request") {
       //执行终止处理弹框
       this.props.actions.getInterruptExecution({ order_id: data.order_id })
     } else {
@@ -166,22 +167,24 @@ class PublicOrderList extends Component {
           <TabPane tab="待贴链接" key="2"></TabPane>
           <TabPane tab="待上传数据截图" key="5"></TabPane>
         </Tabs>
-        <Table
-          dataSource={Object.keys(publicOrderList).length != 0 ? publicOrderList.items : []}
-          columns={columns({ showModal: this.showModal, babysitter_host: babysitter_host })}
-          scroll={{ x: 2700 }}
-          loading={this.state.tableLoading}
-          pagination={{
-            current: Object.keys(publicOrderList).length != 0 ? parseInt(publicOrderList.pagination.current_page) : 0,
-            pageSize: Object.keys(publicOrderList).length != 0 ? parseInt(publicOrderList.pagination.page_size) : 0,
-            total: Object.keys(publicOrderList).length != 0 ? parseInt(publicOrderList.pagination.total) : 0,
-            onChange: this.changeTablePage,
-            showSizeChanger: true,
-            onShowSizeChange: this.onShowSizeChange,
-            pageSizeOptions: ["10", "20", "50", "100"],
-          }}
+        <Scolltable scrollClassName='.ant-table-body' widthScroll={3000}>
+          <Table
+            dataSource={Object.keys(publicOrderList).length != 0 ? publicOrderList.items : []}
+            columns={columns({ showModal: this.showModal, babysitter_host: babysitter_host })}
+            scroll={{ x: 2700 }}
+            loading={this.state.tableLoading}
+            pagination={{
+              current: Object.keys(publicOrderList).length != 0 ? parseInt(publicOrderList.pagination.current_page) : 0,
+              pageSize: Object.keys(publicOrderList).length != 0 ? parseInt(publicOrderList.pagination.page_size) : 0,
+              total: Object.keys(publicOrderList).length != 0 ? parseInt(publicOrderList.pagination.total) : 0,
+              onChange: this.changeTablePage,
+              showSizeChanger: true,
+              onShowSizeChange: this.onShowSizeChange,
+              pageSizeOptions: ["10", "20", "50", "100"],
+            }}
 
-        />
+          />
+        </Scolltable>
         {/* 弹框组件 */}
         {
           this.state.key == '' ?

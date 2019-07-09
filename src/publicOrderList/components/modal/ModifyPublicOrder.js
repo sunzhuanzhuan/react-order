@@ -1,4 +1,4 @@
-/* 
+/*
 
 *这是修改三方已下单组件
 
@@ -51,18 +51,41 @@ class ModifyPublicOrder extends Component {
   //提交-修改三方已下单
   submit = (e) => {
     e.preventDefault();
+    const { orderDetail } = this.props
+    const orderSettleType = (orderDetail.public_order.agent || {}).settleType
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         values.ttp_place_order_at = values.ttp_place_order_at.format("YYYY-MM-DD HH:mm:ss")
         if (this.state.type == "single") {
-          values.ttp_cooperation_platform_id = this.state.cooperationPlatform
+          values.cooperation_platform_id = this.state.cooperationPlatform
           values.agent_id = this.state.agent_id
         } else {
-          values.ttp_cooperation_platform_id = values.multiAgentIds[0]
+          values.cooperation_platform_id = values.multiAgentIds[0]
           values.agent_id = values.multiAgentIds[1]
           delete values.multiAgentIds
         }
         values.public_order_id = this.props.record.public_order.public_order_id
+        // 判断默认是否是
+        if(orderSettleType == 1){
+          this.setState({
+            loading: true
+          })
+          values.settle_type = 1
+          this.props.actions.modifyLabelPlaceOrder({ ...values }).then(() => {
+            message.success('您所提交的信息已经保存成功！', 2)
+            this.setState({
+              loading: false
+            })
+            this.props.handleCancel()
+            this.props.getList()
+          }).catch(() => {
+            message.error("修改三方已下单失败")
+            this.setState({
+              loading: false
+            })
+          })
+          return
+        }
         api.get("/operator-gateway/trinityAgent/v1/getAgentById", {
           params: { id: values.agent_id }
         }).then((res) => {
