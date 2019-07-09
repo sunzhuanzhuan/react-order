@@ -100,6 +100,11 @@ class ListQuery extends Component {
     }
 
   }
+  handleBackList = () => {
+    this.props.history.push({
+      pathname: '/order/publicOrderList'
+    })
+  }
   render() {
     let { getFieldDecorator } = this.props.form;
 
@@ -146,9 +151,10 @@ class ListQuery extends Component {
         <Row style={{ textAlign: 'center', height: '50px' }}>
           <Col span={10}></Col>
           <Col span={7} style={{ textAlign: 'left' }}>
-            <Button onClick={this.handleClear}>取消</Button>
-            <Button type="primary" style={{ marginLeft: '20px' }}
+            <Button onClick={this.handleClear}>取消已选</Button>
+            <Button type="primary" style={{ margin: '0 20px' }}
               onClick={this.handleSearch}>确认申请</Button>
+            <Button onClick={this.handleBackList}>返回列表</Button>
           </Col>
           <Col span={7}></Col>
         </Row>

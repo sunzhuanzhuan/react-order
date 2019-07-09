@@ -105,6 +105,11 @@ class ExportOrder extends Component {
     })
     // console.log(order_ids)
   }
+  handleBackList = () => {
+    this.props.history.push({
+      pathname: '/order/publicOrderList'
+    })
+  }
   render() {
     const search = qs.parse(this.props.location.search.substring(1));
     // console.log(search);
@@ -167,15 +172,16 @@ class ExportOrder extends Component {
           </div>
         }
           onConfirm={this.handleCancelSelect} onCancel={this.cancel} okText="确定" cancelText="取消">
-          <Button>取消</Button>
+          <Button>取消已选</Button>
         </Popconfirm>
 
         {selectedRowKeys.length == 0 ? <Button type="primary" style={{ margin: '0 20px' }} onClick={() => message.error('请先选择订单')}>导出订单</Button> :
           <Button type="primary" style={{ margin: '0 20px' }}>
             <a target='_blank' onClick={() => window.location.reload()} href={`/api/finance/statementOrder/export?wby_order_ids=${this.state.order_ids}&agent_id=${search.agent_id}`}>导出订单</a>
           </Button>}
+        <Button onClick={this.handleBackList}>返回列表</Button>
       </Row>
-    </div>;
+    </div >;
   }
 }
 
