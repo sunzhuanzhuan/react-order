@@ -8,7 +8,7 @@ import { bindActionCreators } from 'redux'
 import * as actions from '../actions'
 import { connect } from 'react-redux'
 import OrderSummaryStatus from '../base/OrderSummaryStatus'
-import { datetimeValidate } from '../util'
+import { datetimeValidate, judgeSPStatus } from '../util'
 import ScrollTable from '../../components/Scolltable'
 
 const mapStateToProps = (state) => ({
@@ -104,7 +104,8 @@ export default class SummaryListByOrder extends Component {
         render: (date, record) => {
           return datetimeValidate(date) ? <div>
             <div>提交：{date}</div>
-            {datetimeValidate(record.internal_check_at) && <div>内审：{record.internal_check_at}</div>}
+            {datetimeValidate(record.internal_check_at) &&
+            <div>内审：{record.internal_check_at}</div>}
             {datetimeValidate(record.external_check_at) &&
             <div>品牌审核：{record.external_check_at}</div>}
           </div> : '-'
@@ -138,7 +139,8 @@ export default class SummaryListByOrder extends Component {
               </Popconfirm>
             </div>}*/}
             {[4, 6].includes(summary_status) &&
-            <div><a onClick={() => this.submitCheck(order_id, true)}>提交审核</a></div>}
+            <div><a onClick={() => this.submitCheck(order_id, true)}>提交审核</a>
+            </div>}
           </div>
         }
       }]
@@ -216,6 +218,7 @@ export default class SummaryListByOrder extends Component {
   }
 
   componentDidMount() {
+    judgeSPStatus([], [123, 345, 456], false)
     this.getList()
   }
 
@@ -246,7 +249,7 @@ export default class SummaryListByOrder extends Component {
         <Table
           loading={this.state.listLoading}
           dataSource={list.map(key => source[key])}
-          scroll={{ x: 1800}}
+          scroll={{ x: 1800 }}
           pagination={pagination}
           columns={this.columns}
         />
