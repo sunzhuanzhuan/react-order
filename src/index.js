@@ -15,7 +15,7 @@ import 'moment/locale/zh-cn';
 import 'numeral/locales/chs';
 // 顶级根目录页面
 import App from './containers/App';
-// 项目
+import Reconciliations from './trinityReconciliations';
 import PublicOrderList from './publicOrderList/containers/PublicOrderList';
 import ClosingReport from './closingReport';
 import SpotPlan from './spotplan';
@@ -35,7 +35,8 @@ const redirectToOtherProjects = ({ location: { pathname = '/error', search = '' 
 const routes = () => (
   <App history={history}>
     <Switch>
-      {/* <Route path="/order/publicOrderList" component={PublicOrderList} /> */}
+      <Route path="/order/trinity/reconciliations" component={Reconciliations} />
+      <Route path="/order/publicOrderList" component={PublicOrderList} />
       <Route path="/order/closing-report" component={ClosingReport} />
       <Route path="/order/business" component={Business} />
       <Route path="/order/spotplan" component={SpotPlan} />

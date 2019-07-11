@@ -12,9 +12,19 @@ import {
 
 
 export const agentList = (state = [], action) => {
+  function dealData(array) {
+    let newArray = array.map(v => {
+      return {
+        ...v,
+        agentVOList: v.agentVOList.filter(item => item.settleType == 1)
+      }
+    })
+    let resultArr = newArray.filter(v => v.agentVOList.length != 0)
+    return resultArr
+  }
   switch (action.type) {
     case GET_AGENT:
-      return [...action.payload.data]
+      return action.payload.type != '' ? dealData(action.payload.data) : [...action.payload.data]
     case RESET_AGENT:
       return []
     default:

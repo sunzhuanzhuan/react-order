@@ -31,7 +31,7 @@ class LabelPublicOrder extends Component {
     let orderDetail = this.props.orderDetail
     let settle_type_statistic = orderDetail.public_order.settle_type_statistic
     let agent_id = orderDetail.public_order.agent_id || undefined
-    if (settle_type_statistic == 1 || agent_id) {
+    if (agent_id) {
       //全为预付型
       this.setState({
         type: 'single',
@@ -51,10 +51,10 @@ class LabelPublicOrder extends Component {
         let agentId = this.props.orderDetail.public_order.agent_id || undefined
         values.ttp_place_order_at = values.ttp_place_order_at.format("YYYY-MM-DD HH:mm:ss")
         if (this.state.type == "single") {
-          values.ttp_cooperation_platform_id = this.props.orderDetail.public_order.cooperation_platform_id
+          values.cooperation_platform_id = this.props.orderDetail.public_order.cooperation_platform_id
           values.agent_id = agentId
         } else {
-          values.ttp_cooperation_platform_id = values.multiAgentIds[0]
+          values.cooperation_platform_id = values.multiAgentIds[0]
           values.agent_id = values.multiAgentIds[1]
           delete values.multiAgentIds
         }
@@ -63,29 +63,23 @@ class LabelPublicOrder extends Component {
           params: { id: values.agent_id }
         }).then((res) => {
           let settleType = res.data.settleType
-          if (settleType == 2 || (settleType == 1 && agentId)) {
+          this.setState({
+            loading: true
+          })
+          values.settle_type = settleType
+          this.props.actions.labelPlaceOrder({ ...values }).then(() => {
+            message.success('您所提交的信息已经保存成功！', 2)
             this.setState({
-              loading: true
+              loading: false
             })
-            values.settle_type = settleType
-            this.props.actions.labelPlaceOrder({ ...values }).then(() => {
-              message.success('您所提交的信息已经保存成功！', 2)
-              this.setState({
-                loading: false
-              })
-              this.props.handleCancel()
-              this.props.getList()
-            }).catch(() => {
-              message.error("标记三方已下单失败")
-              this.setState({
-                loading: false
-              })
+            this.props.handleCancel()
+            this.props.getList()
+          }).catch(() => {
+            message.error("标记三方已下单失败")
+            this.setState({
+              loading: false
             })
-          } else {
-            Modal.error({
-              title: '您选择的代理商为预付类型，请先申请预付款后再进行下单标注！'
-            });
-          }
+          })
         })
       }
     });

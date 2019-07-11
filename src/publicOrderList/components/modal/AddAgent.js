@@ -94,10 +94,14 @@ class AddAgent extends Component {
             visible: false
           })
           if (this.props.type == "multi") {
-            this.props.addAgentSuccessCallback({
-              cooperationPlatformId: this.state.cooperationPlatformId,
-              agentId: res.data
-            })
+            if (this.props.applyPrepayment != '' && values.settleType == 2) {
+              this.props.actions.getAgent({ platformId: this.props.platformId })
+            } else {
+              this.props.addAgentSuccessCallback({
+                cooperationPlatformId: this.state.cooperationPlatformId,
+                agentId: res.data
+              })
+            }
           } else {
             this.props.actions.getAgent({ platformId: this.props.platformId })
           }
@@ -146,7 +150,7 @@ class AddAgent extends Component {
         onCancel={this.handleCancel}
         footer={null}
         destroyOnClose={true}
-        width={600}
+        width={700}
         bodyStyle={{ height: '500px', overflowY: 'auto' }}
         centered={true}
       >
@@ -399,7 +403,7 @@ class AddAgent extends Component {
                     rules: [{
                       required: true, message: '本项为必填项，请输入！',
                     }, {
-                      pattern: /^[0-9]{16,19}$/, message: '仅可输入16-19位数字'
+                      pattern: /^[0-9]+$/, message: '仅可输入数字'
                     }]
                   })(
                     <Input style={{ width: '350px' }} placeholder="请输入帐号" />

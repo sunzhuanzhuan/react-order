@@ -25,16 +25,19 @@ class MultiAgent extends React.Component {
   }
   componentWillMount() {
     // 初始是否加载
-    if (this.props.is_agentDetail_initial_loading) {
-      this.setState({
-        is_agentDetail_loading: true
-      })
-    }
+    // if (this.props.is_agentDetail_initial_loading) {
+    //   this.setState({
+    //     is_agentDetail_loading: true
+    //   })
+    // }
+    this.setState({
+      is_agentDetail_loading: true
+    })
     // 清空代理商列表和详情
     this.props.actions.resetAgent()
     this.props.actions.resetAgentDetail()
     //获取媒体平台下所有启用合作平台及启用代理商
-    this.props.actions.getAgent({ platformId: this.props.platformId }).then(() => {
+    this.props.actions.getAgent({ type: this.props.type || '', platformId: this.props.platformId }).then(() => {
       if (this.props.agent_id) {
         // 有代理商id的初始值-说明是修改
         this.props.actions.getAgentDetail({ id: this.props.agent_id }).then(() => {
@@ -150,6 +153,7 @@ class MultiAgent extends React.Component {
             platformName={platformName}
             addAgentSuccessCallback={this.addAgentSuccessCallback}
             type="multi"
+            applyPrepayment={this.props.type || ''}
           />
         </div>
         {/* 是否加载中 */}

@@ -4,18 +4,36 @@ import ModifyPublicOrder from '../components/modal/ModifyPublicOrder'
 import WithdrawPublicOrder from '../components/modal/WithdrawPublicOrder'
 import ExecuteHandle from '../components/modal/ExecuteHandle'
 import ApplyPrepayment from '../components/modal/ApplyPrepayment'
-import SetExecutionTerminationRequest from '../components/modal/SetExecutionTerminationRequest'
+import SetExecutionTerminationRequest
+  from '../components/modal/SetExecutionTerminationRequest'
 import { Button, Tooltip, Popover, Form } from 'antd';
 import './config.less'
 
 const FormItem = Form.Item;
+
+const executionStatusMap = {
+  "0": "请选择",
+  "21": "执行中",
+  "22": "已执行",
+  "23": "待执行",
+  "24": "执行取消",
+  "31": "终止申请中",
+  "25": "执行终止",
+  "26": "待质检",
+  "27": "质检中",
+  "28": "质检完成",
+  "32": "已完成",
+  "35": "已结案",
+  "33": "赔偿申请中",
+  "34": "赔偿通过"
+}
 
 // 筛选项配置数组
 export const filterFormArr = [
   {
     label: "需求名称",
     type: "input",
-    id: "equirement_name"
+    id: "requirement_name"
   },
   {
     label: "需求ID",
@@ -30,7 +48,7 @@ export const filterFormArr = [
   {
     label: "订单状态",
     type: "select",
-    id: "order_status",
+    id: "status",
     data: [
       { key: "请选择", value: "0" },
       { key: "应约", value: "2" },
@@ -43,18 +61,13 @@ export const filterFormArr = [
   {
     label: "账号名称",
     type: "input",
-    id: "account_name"
+    id: "weibo_name"
   },
   {
     label: "平台",
     type: "multidim-select",
     id: "platform_id",
-    data: [
-      { key: "美拍--M计划", value: "25" },
-      { key: "快手--快接单", value: "103" },
-      { key: "新浪微博--微任务/WEIQ", value: "1" },
-      { key: "抖音--星图", value: "115" }
-    ]
+    url: "/operator-gateway/trinityPlatform/v1/getPlatform"
   },
   {
     label: "下单平台/代理商",
@@ -90,13 +103,6 @@ export const filterFormArr = [
     data: { key: "user_id", value: "real_name" }
   },
   {
-    label: "项目媒介",
-    type: "selectDependOnRequest",
-    id: "vol_admin_id",
-    url: "/user/getVolUsers",
-    data: { key: "user_id", value: "real_name" }
-  },
-  {
     label: "主账号名",
     type: "input",
     id: "identity_name"
@@ -104,26 +110,42 @@ export const filterFormArr = [
   {
     label: "是否提前打款",
     type: "select",
-    id: "is_pre_deposit",
-    data: [{ key: "请选择", value: "0" }, { key: "是", value: "1" }, { key: "否", value: "2" }],
+    id: "is_prepayment",
+    data: [{ key: "请选择", value: "0" }, { key: "是", value: "1" }, {
+      key: "否",
+      value: "2"
+    }]
   },
   {
     label: "提前打款状态",
     type: "select",
-    id: "pre_deposit_status",
-    data: [{ key: "请选择", value: "0" }, { key: "未处理", value: "1" }, { key: "已同意", value: "2" }, { key: "已驳回", value: "3" }],
+    id: "prepayment_status" +
+      "",
+    data: [{ key: "请选择", value: "0" }, { key: "未处理", value: "1" }, {
+      key: "已同意",
+      value: "2"
+    }, { key: "已驳回", value: "3" }]
   },
   {
     label: "提前打款结果",
     type: "select",
-    id: "pre_deposit_result",
-    data: [{ key: "请选择", value: "0" }, { key: "未处理", value: "1" }, { key: "打款成功", value: "2" }, { key: "打款失败", value: "3" }, { key: "打款撤销", value: "4" }],
+    id: "prepayment_result",
+    data: [{ key: "请选择", value: "0" }, {
+      key: "未处理",
+      value: "1"
+    }, { key: "打款成功", value: "2" }, { key: "打款失败", value: "3" }, {
+      key: "打款撤销",
+      value: "4"
+    }]
   },
   {
     label: "预付款申请状态",
     type: "select",
     id: "public_advance_payment_apply_status",
-    data: [{ key: "请选择", value: "0" }, { key: "待审核", value: "1" }, { key: "已同意", value: "2" }, { key: "已拒绝", value: "3" }],
+    data: [{ key: "请选择", value: "0" }, { key: "待审核", value: "1" }, {
+      key: "已同意",
+      value: "2"
+    }, { key: "已拒绝", value: "3" }]
   },
   {
     label: "打款状态",
@@ -131,22 +153,31 @@ export const filterFormArr = [
     id: "last_payment_status",
     data: [
       { key: "请选择", value: "0" },
-      { key: "未处理", value: "1" },
-      { key: "已同意", value: "2" },
-      { key: "已驳回", value: "3" }
+      { key: "待打款", value: "1" },
+      { key: "打款成功", value: "2" },
+      { key: "打款失败", value: "3" },
+      { key: "打款撤销", value: "4" }
     ]
   },
   {
     label: "对账状态",
     type: "select",
     id: "statement_status",
-    data: [{ key: "请选择", value: "0" }, { key: "未对账", value: "1" }, { key: "对账中", value: "2" }, { key: "对账成功", value: "3" }, { key: "部分对账", value: "4" }],
+    data: [
+      { key: "请选择", value: "0" },
+      { key: "未对账", value: "1" },
+      // { key: "对账中", value: "2" },
+      { key: "对账完成", value: "3" },
+      { key: "部分对账", value: "4" }]
   },
   {
     label: "是否标注已下单",
     type: "select",
-    id: "is_labeled_place_order",
-    data: [{ key: "请选择", value: "0" }, { key: "是", value: "1" }, { key: "否", value: "2" }],
+    id: "is_labelled_place_order",
+    data: [{ key: "请选择", value: "0" }, { key: "是", value: "1" }, {
+      key: "否",
+      value: "2"
+    }]
   },
   {
     label: "预付款申请时间",
@@ -165,17 +196,17 @@ const supportedOperations = {
   "can_label_place_order": "标注为三方已下单",
   "can_modify_public_order": "修改三方下单信息",
   "can_withdraw_public_order": "撤销三方下单标注",
-  "execute_handle": "执行申请处理",
+  "can_deal_execution_notification": "执行申请处理",
   "can_apply_prepay": "预付款申请",
-  "cancel_execution_termination_request": "同意/拒绝执行终止"
+  "can_cancel_execution_termination_request": "同意/拒绝执行终止"
 }
 
 // 列表页column
 export const columns = (props) => {
   const operationBtn = [
     "can_label_place_order", "can_modify_public_order",
-    "can_withdraw_public_order", "execute_handle",
-    "can_apply_prepay", "cancel_execution_termination_request"
+    "can_withdraw_public_order", "can_deal_execution_notification",
+    "can_apply_prepay", "can_cancel_execution_termination_request"
   ]
   const host = props.babysitter_host.value
   const reservationRequirementStatus = {
@@ -204,7 +235,7 @@ export const columns = (props) => {
     "3": "已驳回"
   }
   const paymentResult = {
-    "1": "未处理",
+    "1": "待打款",
     "2": "打款成功",
     "3": "打款失败",
     "4": "打款撤销"
@@ -212,7 +243,7 @@ export const columns = (props) => {
   const statementStatus = {
     "1": "未对账",
     "2": "对账中",
-    "3": "对账成功",
+    "3": "对账完成",
     "4": "部分对账"
   }
   // 调账方式
@@ -230,13 +261,13 @@ export const columns = (props) => {
   }
   const formLayout = {
     labelCol: { span: 6 },
-    wrapperCol: { span: 18 },
+    wrapperCol: { span: 18 }
   }
   return [
     {
       title: '操作',
-      dataIndex: 'supported_operations',
-      key: 'supported_operations',
+      dataIndex: 'support_operates',
+      key: 'support_operates',
       align: 'center',
       fixed: 'left',
       width: 100,
@@ -270,17 +301,17 @@ export const columns = (props) => {
         return <div className="list-item">
           <Tooltip placement="top" title={text}>
             <a href={host ?
-              `${host}/pack/reservationrequirement/orderlistformedia/special_type/0/page/${record.requirement_id}`
+              `${host}/pack/reservationrequirement/infoformanager?reservation_requirement_id=${record.requirement_id}`
               : '#'
             } target="_blank"
             >{text}</a>
           </Tooltip>
           <a href={host ?
-            `${host}/pack/reservationrequirement/orderlistformedia/special_type/0/page/${record.requirement_id}`
+            `${host}/pack/reservationrequirement/infoformanager?reservation_requirement_id=${record.requirement_id}`
             : '#'
           } target="_blank"
           >{record.requirement_id}</a>
-          <div>{reservationRequirementStatus[record.reservation_requirement_status]}</div>
+          <div>{record.requirement_status_display}</div>
         </div>
       }
     },
@@ -299,7 +330,7 @@ export const columns = (props) => {
             record.review_execution_doc_url ?
               <a href={record.review_execution_doc_url} target="_blank">执行链接</a> : null
           }
-          <div>{orderStatus[record.order_status]}</div>
+          <div>{record.status_display}</div>
         </div>
       }
     },
@@ -314,7 +345,7 @@ export const columns = (props) => {
           <div className="list-divItem">
             <span>账号名称：</span>
             <a href=
-              {`${window.location.host}/account/manage/update/${text.platform_id}?account_id=${text.account_id}`}
+              {`/account/manage/update/${text.platform_id}?account_id=${text.account_id}`}
               target="_blank"
             >{text.account_name}</a>
           </div>
@@ -353,19 +384,19 @@ export const columns = (props) => {
       align: 'center',
       width: 100,
       render: (text, record) => {
-        return record.public_order ?
-          <span>{record.public_order.cooperation_platform_name}</span> : null
+        return record.public_order && record.public_order.cooperation_platform ?
+          <span>{record.public_order.cooperation_platform.cooperationPlatformName}</span> : null
       }
     },
     {
       title: '是否标注三方已下单',
-      dataIndex: 'is_labeled_place_order',
-      key: 'is_labeled_place_order',
+      dataIndex: 'is_labelled_place_order',
+      key: 'is_labelled_place_order',
       align: 'center',
       width: 100,
       render: (text, record) => {
         return record.public_order ?
-          <span>{record.public_order.is_labeled_place_order == "1" ? "是" : "否"}</span> :
+          <span>{record.public_order.is_labelled_place_order == "1" ? "是" : "否"}</span> :
           null
       }
     },
@@ -376,7 +407,7 @@ export const columns = (props) => {
       align: 'center',
       width: 300,
       render: (text, record) => {
-        return record.public_order ? (text.is_labeled_place_order == "1" ?
+        return record.public_order ? (text.is_labelled_place_order == "1" ?
           <div className="list-div">
             <div className="list-divItem">
               <span>下单时间：</span>
@@ -384,7 +415,7 @@ export const columns = (props) => {
             </div>
             <div className="list-divItem">
               <span>本单使用下单平台/代理商：</span>
-              <span>{`${text.cooperation_platform_name}-${text.agent_name}`}</span>
+              <span>{`${(text.cooperation_platform || {}).cooperationPlatformName || ''}/${(text.agent || {}).agentName || ''}`}</span>
             </div>
             <div className="list-divItem">
               <span>三方订单号:</span>
@@ -402,17 +433,17 @@ export const columns = (props) => {
       render: (text, record) => {
         return record.public_order ? <div>
           <div>申请状态：
-          {record.public_order.public_advance_payment_apply && Object.keys(record.public_order.public_advance_payment_apply).length != 0 ?
+            {record.public_order.public_advance_payment_apply && Object.keys(record.public_order.public_advance_payment_apply).length != 0 ?
               publicAdvancePaymentApplyStatus[record.public_order.public_advance_payment_apply.status]
               : "-"
             }
           </div>
-          <div>打款状态：
-          {record.public_order.public_order_trade && Object.keys(record.public_order.public_order_trade).length != 0 ?
-              publicOrderTradeStatus[record.public_order.public_order_trade.statement_status]
+          {record.public_order.settle_type === 1 && <div>打款状态：
+            {(record.public_order.public_order_trade && Object.keys(record.public_order.public_order_trade).length != 0 )?
+              paymentResult[record.public_order.public_order_trade.last_payment_status] || '-'
               : "-"
             }
-          </div>
+          </div>}
         </div> : null
       }
     },
@@ -456,7 +487,7 @@ export const columns = (props) => {
                 </div>
                 <div>
                   <span>打款结果：</span>
-                  <span>{paymentResult[record.prepayment.payment_result]}</span>
+                  <span>{record.prepayment ? paymentResult[record.prepayment.payment_result] : null}</span>
                 </div>
               </div> : null
           }
@@ -476,8 +507,8 @@ export const columns = (props) => {
       align: 'center',
       width: 100,
       render: (text, record) => {
-        return record.public_order && record.public_order.public_order_statement && record.public_order.public_order_statement.statement_status && record.public_order.settle_type == "2" ?
-          <span>{statementStatus[record.public_order.public_order_statement.statement_status]}</span> : null
+        return record.public_order && record.public_order.public_order_trade && record.public_order.public_order_trade.statement_status && record.public_order.settle_type == "2" ?
+          <span>{statementStatus[record.public_order.public_order_trade.statement_status]}</span> : null
       }
     },
     {
@@ -487,31 +518,32 @@ export const columns = (props) => {
       align: 'center',
       width: 200,
       render: (text, record) => {
-        return record.public_order && record.public_order.last_public_summary_order_relation ? <div>
+        return record.public_order && record.public_order.last_public_summary_order_relation ?
           <div>
-            <span>调账金额：</span>
-            <span>{record.public_order.last_public_summary_order_relation.adjustment_amount ?
-              record.public_order.last_public_summary_order_relation.adjustment_amount : "-"
-            }
-            </span>
-          </div>
-          <div>
-            <span>调账方式：</span>
-            <span>{record.public_order.last_public_summary_order_relation.operation_type ?
-              operationType[record.public_order.last_public_summary_order_relation.operation_type]
-              : "-"
-            }
-            </span>
-          </div>
-          <div>
-            <span>调账原因：</span>
-            <span>{record.public_order.last_public_summary_order_relation.adjustment_reason ?
-              record.public_order.last_public_summary_order_relation.adjustment_reason
-              : "-"
-            }
-            </span>
-          </div>
-        </div> : null
+            <div>
+              <span>调账金额：</span>
+              <span>{record.public_order.last_public_summary_order_relation.adjustment_amount ?
+                record.public_order.last_public_summary_order_relation.adjustment_amount : "-"
+              }
+              </span>
+            </div>
+            <div>
+              <span>调账方式：</span>
+              <span>{record.public_order.last_public_summary_order_relation.operation_type ?
+                operationType[record.public_order.last_public_summary_order_relation.operation_type]
+                : "-"
+              }
+              </span>
+            </div>
+            <div>
+              <span>调账原因：</span>
+              <span>{record.public_order.last_public_summary_order_relation.adjustment_reason ?
+                record.public_order.last_public_summary_order_relation.adjustment_reason
+                : "-"
+              }
+              </span>
+            </div>
+          </div> : null
       }
     },
     {
@@ -533,22 +565,23 @@ export const columns = (props) => {
       align: 'center',
       width: 200,
       render: (text, record) => {
-        return record.public_order && record.public_order.last_public_summary_order_relation ? <div>
+        return record.public_order && record.public_order.last_public_summary_order_relation ?
           <div>
-            <span>扣减金额：</span>
-            <span>{record.public_order.last_public_summary_order_relation.deduction_amount ?
-              record.public_order.last_public_summary_order_relation.deduction_amount : "-"
-            }
-            </span>
-          </div>
-          <div>
-            <span>扣减原因：</span>
-            <span>{record.public_order.last_public_summary_order_relation.deduction_reason ?
-              record.public_order.last_public_summary_order_relation.deduction_reason : "-"
-            }
-            </span>
-          </div>
-        </div> : null
+            <div>
+              <span>扣减金额：</span>
+              <span>{record.public_order.last_public_summary_order_relation.deduction_amount ?
+                record.public_order.last_public_summary_order_relation.deduction_amount : "-"
+              }
+              </span>
+            </div>
+            <div>
+              <span>扣减原因：</span>
+              <span>{record.public_order.last_public_summary_order_relation.deduction_reason ?
+                record.public_order.last_public_summary_order_relation.deduction_reason : "-"
+              }
+              </span>
+            </div>
+          </div> : null
       }
     },
     {
@@ -559,7 +592,7 @@ export const columns = (props) => {
       width: 150,
       render: (text, record) => {
         return record.public_order && record.public_order.public_order_trade ?
-          <span>{record.public_order.public_order_trade.paying_amount}</span> : null
+          <span>{record.public_order.public_order_trade.actual_payable_amount}</span> : null
       }
     },
     {
@@ -595,7 +628,9 @@ export const columns = (props) => {
       width: 100,
       render: (text) => {
         return <div>
-          <div><a href={`${host}/user/update/user_id/${text.user_id}`} target="_blank">{text.realname}</a></div>
+          <div>
+            <a href={`${host}/user/update/user_id/${text.user_id}`} target="_blank">{text.identity_name}</a>
+          </div>
           <Tooltip placement="top" title={text.cell_phone}>
             <div>手机号</div>
           </Tooltip>
@@ -647,45 +682,6 @@ export const columns = (props) => {
               <a href="#">{record.media_admin_user.name}</a>
             </Popover>
           </div>
-          <div>项目媒介：
-            <Popover
-              content={(
-                <Form layout="horizontal">
-                  <FormItem
-                    label="手机号"
-                    {...formLayout}
-                    style={{ width: '300px' }}
-                  >
-                    <span>{record.vol_admin_user.cell_phone ? record.vol_admin_user.cell_phone : "-"}</span>
-                  </FormItem>
-                  {
-                    record.vol_admin_user.qr_code ?
-                      <FormItem
-                        label="微信"
-                        {...formLayout}
-                      >
-                        <img src={record.vol_admin_user.qr_code} width="100" />
-                      </FormItem> : null
-                  }
-                  <FormItem
-                    label="qq"
-                    {...formLayout}
-                  >
-                    <span>{record.vol_admin_user.qq ? record.vol_admin_user.qq : "-"}</span>
-                  </FormItem>
-                  <FormItem
-                    label="email"
-                    {...formLayout}
-                  >
-                    <span>{record.vol_admin_user.email ? record.vol_admin_user.email : "-"}</span>
-                  </FormItem>
-                </Form>
-              )}
-              title="联系方式" trigger="click"
-            >
-              <a href="#">{record.vol_admin_user.name}</a>
-            </Popover>
-          </div>
         </div>
       }
     },
@@ -711,6 +707,14 @@ export const columns = (props) => {
       align: 'center',
       width: 50,
       render: text => <span>{form[text]}</span>
+    },
+    {
+      title: '执行状态',
+      dataIndex: 'execution_status',
+      key: 'execution_status',
+      align: 'center',
+      width: 50,
+      render: text => <span>{executionStatusMap[text]}</span>
     }
   ]
 }
@@ -729,7 +733,7 @@ export const modalParams = {
     modalTitle: "撤销三方下单标注",
     children: WithdrawPublicOrder
   },
-  "execute_handle": {
+  "can_deal_execution_notification": {
     modalTitle: "执行申请处理",
     children: ExecuteHandle
   },
@@ -737,7 +741,7 @@ export const modalParams = {
     modalTitle: "预付款申请",
     children: ApplyPrepayment
   },
-  "cancel_execution_termination_request": {
+  "can_cancel_execution_termination_request": {
     modalTitle: "同意/拒绝执行终止",
     children: SetExecutionTerminationRequest
   }

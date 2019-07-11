@@ -1,11 +1,13 @@
 import React from 'react'
 import BraftEditor from 'braft-editor'
 import { convertRawToHTML, convertHTMLToRaw } from "braft-convert";
-import { Form, Input, Button } from 'antd'
+import { Form, Input, Button, Modal, message } from 'antd'
 import htmlContent from '../constants/_html'
 import { previewHtml } from "@/taskPool/constants/utils";
 import 'braft-editor/dist/index.css'
 import { parseUrlQuery } from "@/util/parseUrl";
+import axios from "axios";
+const { CancelToken, isCancel } = axios;
 
 const FormItem = Form.Item
 
@@ -29,7 +31,7 @@ const handleHtmlToRawForWeixin = (htmlContent) => {
   for (let i = 0; i < embeds.length; ++i) {
     let embed = embeds[i];
     let src_ = embed.getAttribute('src') || embed.getAttribute('data-src') || "";
-    let w_ = 677 || embed.getAttribute('data-w')
+    let w_ = 660 || embed.getAttribute('data-w')
     let h_ = w_ / embed.getAttribute('data-ratio')
     let vid = parseUrlQuery(src_).vid;
     if (!vid) {
@@ -43,13 +45,70 @@ const handleHtmlToRawForWeixin = (htmlContent) => {
   }
 
   let result = doc.getElementById('template').innerHTML
-  console.log(result, convertHTMLToRaw(result, '===>'));
   return convertHTMLToRaw(result)
 
 }
 
+const editorConfig = {
+  controls: ['bold', 'italic', 'underline', 'text-color', 'separator', 'link', 'separator', 'media']
+}
+
+const myUploadFn = (param) => {
+  let cancel;
+  let formData = new window.FormData();
+  let config = {
+    headers: {
+      'Authorization': "eyJhbGciOiJIUzUxMiJ9.eyJ0b2tlbiI6IndlcXEtcXA4dXB5QmVlWEZzQXlhQmNJRVNoWUlURlhTdUxVMTM4SzV5YlVKSmtPSCJ9.mpK3jpsuXH62K2yW8sU9xIXQnClynqhGbQ8cTwJgrOhSaDUkiXLdxAWIpdIBOVZTWxX6opMD8gvND-zrin7s1g",
+      'sessionId': "weqq-qp8upyBeeXFsAyaBcIEShYITFXSuLU138K5ybUJJkOH",
+    },
+    cancelToken: new CancelToken(c => { cancel = c;}),
+    onUploadProgress: ({ total, loaded }) => {
+      param.progress(parseFloat(Math.round(loaded / total * 100).toFixed(2)))
+    }
+  };
+  formData.append("file", param.file);
+  formData.append( "bizzCode", 'VIDEO_TEST');
+  console.log(param, '===>>');
+  axios.post("/api/common-file/file/v1/uploadPubBucket", formData, config)
+    .then(({ data: response }) => {
+      if (response.code === '1000') {
+        // 处理文件显示
+        response.url = response.data;
+        param.success({
+          url: response.data,
+          meta: {
+            id: 'xxx',
+            title: param.file.name,
+            alt: param.file.name,
+          }
+        })
+      } else {
+        param.error({
+          msg: 'unable to upload.'
+        })
+      }
+    })
+    .catch(error => {
+      if (isCancel(error)) {
+        param.error({
+          msg: '取消上传.'
+        })
+      } else {
+        param.error({
+          msg: 'unable to upload.'
+        })
+      }
+    });
+
+}
+
+
 @Form.create()
 export default class CreateFormForWeixin extends React.Component {
+
+  state = {
+    previewContent: null
+  }
 
   componentDidMount() {
     // 异步设置编辑器内容
@@ -70,15 +129,20 @@ export default class CreateFormForWeixin extends React.Component {
   }
 
   preview = () => {
-
+    /*
+    this.setState({
+      previewContent: <div
+        className="braft-output-content"
+        dangerouslySetInnerHTML={{ __html: this.buildPreviewHtml() }}
+      />
+    });
+    */
     if (window.previewWindow) {
       window.previewWindow.close()
     }
-
     window.previewWindow = window.open()
     window.previewWindow.document.write(this.buildPreviewHtml())
     window.previewWindow.document.close()
-
   }
   handleSubmit = (event) => {
 
@@ -100,7 +164,6 @@ export default class CreateFormForWeixin extends React.Component {
   render() {
 
     const { getFieldDecorator } = this.props.form
-    const controls = ['bold', 'italic', 'underline', 'text-color', 'separator', 'link', 'separator', 'media']
     const extendControls = [
       {
         key: 'custom-button',
@@ -138,8 +201,11 @@ export default class CreateFormForWeixin extends React.Component {
             })(
               <BraftEditor
                 className="antd-editor-weixin"
-                controls={controls}
                 extendControls={extendControls}
+                // excludeControls={['undo', 'redo', 'separator']}
+                media={{
+                  uploadFn: myUploadFn
+                }}
                 placeholder="请输入正文内容"
               />
             )}
@@ -148,6 +214,22 @@ export default class CreateFormForWeixin extends React.Component {
             <Button type="primary" htmlType="submit">提交</Button>
           </FormItem>
         </Form>
+        <Modal
+          visible={!!this.state.previewContent}
+          bodyStyle={{
+            padding: "50px  16px 16px",
+          }}
+          footer={null}
+          width={720}
+          zIndex={99999}
+          onCancel={() => {
+            this.setState({
+              previewContent: null
+            });
+          }}
+        >
+          {this.state.previewContent}
+        </Modal>
       </div>
     )
 

@@ -75,6 +75,8 @@ class ExecuteHandle extends Component {
       labelCol: { span: 6 },
       wrapperCol: { span: 18 },
     }
+    const cooperationPlatformName = orderDetail.platform.platform_id == "1" ?
+      "微任务/WEIQ" : orderDetail.public_order.cooperation_platform_name
     return <div className="modalBox-singleAgent">
       <Form layout="horizontal">
         <FormItem
@@ -96,7 +98,7 @@ class ExecuteHandle extends Component {
           <span>{orderDetail.requirement.sale_manager_info.real_name}</span>
         </FormItem>
         <FormItem
-          label="快接单下单金额（元）"
+          label={`${cooperationPlatformName}下单金额（元）`}
           {...formLayout}
         >
           <span>{orderDetail.public_order.public_order_sku_valid.public_cost_price}</span>
@@ -173,7 +175,11 @@ class ExecuteHandle extends Component {
                     label="回票金额"
                     {...formLayout}
                   >
-                    <span>{orderDetail.public_order.public_advance_payment_apply.return_invoice_amount}</span>
+                    {getFieldDecorator("return_invoice_amount", {
+                      initialValue: orderDetail.public_order.public_order_sku_valid.public_cost_price
+                    })(
+                      <span>{orderDetail.public_order.public_order_sku_valid.public_cost_price}</span>
+                    )}
                   </FormItem>
               }
             </div>
@@ -186,7 +192,7 @@ class ExecuteHandle extends Component {
           <div className="executeHandle-comment">
             <Input disabled={true}
               style={{ width: '400px', border: 'none' }}
-              defaultValue={orderDetail.public_order.execution_notification_comment}
+              defaultValue={`${orderDetail.public_order.execution_notification_comment}--${orderDetail.public_order.apply_execution_notification_operator.name}`}
             />
             {getFieldDecorator("comment", {
               rules: [{
