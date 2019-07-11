@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import './index.less'
 import { Route } from 'react-router-dom';
 import CreateTask from './containers/CreateTask'
+import TaskManageList from './containers/TaskManageList'
 
 class Business extends Component {
   render() {
@@ -10,6 +11,9 @@ class Business extends Component {
         {/*<Route path="/order/task/list" component={MerchantList} />*/}
         {/*<Route path="/order/task/review" component={MerchantList} />*/}
         <Route path="/order/task/create" component={CreateTask} />
+        <Route path="/order/task/detail" component={CreateTask} />
+        <Route path="/order/task/manage" component={TaskManageList} />
+        <Route path="/order/task/review" component={CreateTask} />
       </div>
     )
   }
