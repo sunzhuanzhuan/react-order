@@ -158,7 +158,11 @@ export default class SummaryListByOrder extends Component {
       Modal.confirm({
         title: '是否确认重新提交审核？',
         onOk: hide => {
-          return actions.submitCheckSummaryByOrder({ order_id: [order_id] }).then(() => {
+          return actions.submitCheckSummaryByOrder({ order_id: [order_id] }).then(({ data }) => {
+            let check = (data || {}).check
+            if (check) {
+              return judgeSPStatus(check)
+            }
             message.success('提交审核成功!')
             this.getList()
           }).finally(hide)
@@ -177,7 +181,11 @@ export default class SummaryListByOrder extends Component {
           Modal.confirm({
             title: '是否确认将本订单的投放数据提交审核？',
             onOk: hide => {
-              return actions.submitCheckSummaryByOrder({ order_id: [order_id] }).then(() => {
+              return actions.submitCheckSummaryByOrder({ order_id: [order_id] }).then(({ data }) => {
+                let check = (data || {}).check
+                if (check) {
+                  return judgeSPStatus(check)
+                }
                 message.success('提交审核成功!')
                 this.getList()
               }).finally(hide)
@@ -218,7 +226,6 @@ export default class SummaryListByOrder extends Component {
   }
 
   componentDidMount() {
-    judgeSPStatus([], [123, 345, 456], false)
     this.getList()
   }
 

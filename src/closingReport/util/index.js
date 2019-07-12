@@ -128,25 +128,19 @@ export function batchText2Array(batchText, notNumber) {
   return batchText;
 }
 
-export function judgeSPStatus(aList = [], bList = [], isMultiple) {
+export function judgeSPStatus(list, isMultiple) {
   if (isMultiple) {
     Modal.info({
       icon: null,
       title: '该批订单中存在未下发SP、或者未创建SP的订单，请创建并下发成功之后再次提交审核',
       content: <div>
-        {aList.length > 0 && <div>
-          未下发SP订单ID：{aList.join('、')}
-        </div>}
-        {bList.length > 0 && <div>
-          未创建SP订单ID：{bList.join('、')}
+        {list.length > 0 && <div>
+          订单ID：{list.join('、')}
         </div>}
       </div>
     })
   } else {
-    let title = '该订单还没有创建SP，请创建SP并下发成功之后再次提交审核'
-    if (aList.length > 0) {
-      title = '该订单还没有下发SP，请下发成功之后再次提交审核'
-    }
+    let title = '该订单还没有下发SP，请下发成功之后再次提交审核'
     Modal.info({
       icon: null,
       title
