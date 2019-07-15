@@ -1,36 +1,81 @@
 import React, { Component } from "react"
-import { PageHeader, Steps, Icon, Button, message } from 'antd'
-import CreateFormForWeixin from "../components/CreateFormForWeixin";
+import { PageHeader, Steps, Icon, Empty } from 'antd'
+import { FormBase, FormBudget } from "../components/CreateForms/index";
+import { parseUrlQuery } from "@/util/parseUrl";
 
 const { Step } = Steps;
+let forms = {
+  '9': [
+    FormBase,
+    FormBudget.weixin
+  ],
+  '1': [
+    FormBase,
+    FormBudget.weibo
+  ]
+}
+
+const formLayout = {
+  labelCol: { span: 4 },
+  wrapperCol: { span: 18 },
+  labelAlign: "left",
+  colon: false
+}
+
 
 export default class CreateTask extends Component {
-  state = {
-    current: 0
+  constructor(props) {
+    super(props);
+    const { step = 1, company } = parseUrlQuery()
+    this.state = {
+      current: step - 1,
+      base: {
+        platformId: 9,
+        company: company,
+        name: '',
+        classification: 1
+      },
+      budget: {},
+      content: {}
+    }
   }
 
-  componentDidMount() {
+
+  next = () => {
+    this.setState({
+      current: this.state.current + 1
+    });
   }
+
+  prev = () => {
+    this.setState({
+      current: this.state.current - 1
+    });
+  }
+
 
   render() {
+    const { current, base, budget, content } = this.state
+    const { platformId = 9 } = base
+    const FormComponent = forms[platformId][current] || Empty
     return <div className='task-pool-page-container create-page'>
+      <PageHeader onBack={() => null} title="新建任务" />
       <header>
-        <PageHeader onBack={() => null} title="创建任务" subTitle="create new task" />
-        {/*<Steps current={0}>
-          <Step title="任务基本信息" icon={<Icon type="user" />} />
-          <Step title="设置预算" icon={<Icon type="solution" />} />
-          <Step title="撰写内容" icon={<Icon type="loading" />} />
-          <Step title="预览" icon={<Icon type="smile-o" />} />
-        </Steps>*/}
+        <Steps current={current}>
+          <Step title="任务基本信息" icon={<Icon type="profile" />} />
+          <Step title="设置预算" icon={<Icon type="pay-circle" />} />
+          <Step title="撰写内容" icon={<Icon type="edit" />} />
+          <Step title="预览" icon={<Icon type="read" />} />
+        </Steps>
       </header>
       <main>
-        <CreateFormForWeixin/>
+        <FormComponent
+          formLayout={formLayout}
+          next={this.next}
+          prev={this.prev}
+          data={{ base, budget, content }}
+        />
       </main>
-      <footer>
-        <Button type="primary" onClick={() => message.success('Processing complete!')}>
-          -----
-        </Button>
-      </footer>
     </div>
   }
 }

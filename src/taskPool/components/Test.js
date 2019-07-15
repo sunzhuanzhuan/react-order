@@ -1,3 +1,6 @@
+/**
+ * 创建任务表单
+ */
 import React from 'react'
 import BraftEditor from 'braft-editor'
 import { convertRawToHTML, convertHTMLToRaw } from "braft-convert";
@@ -104,7 +107,7 @@ const myUploadFn = (param) => {
 
 
 @Form.create()
-export default class CreateFormForWeixin extends React.Component {
+export default class Test extends React.Component {
 
   state = {
     previewContent: null
