@@ -1,0 +1,345 @@
+/**
+ * 创建任务-撰写内容表单
+ */
+import React from 'react'
+import BraftEditor from "braft-editor";
+import moment from "moment";
+import {
+  Form,
+  Radio,
+  Button,
+  DatePicker,
+  InputNumber,
+  Input,
+  Icon,
+  message
+} from 'antd'
+import { InputCount } from "@/base/Input";
+import { previewHtml } from "@/taskPool/constants/utils";
+import axios from "axios";
+import { OssUpload } from "wbyui";
+
+import cookie from "js-cookie";
+import 'braft-editor/dist/index.css'
+import UploadMaterial from "@/taskPool/components/CreateForms/UploadMaterial";
+
+
+const FormItem = Form.Item
+
+const controls = [
+  'undo', 'redo', 'separator',
+  'headings', 'font-size', 'line-height', 'letter-spacing', 'emoji', 'hr',
+  'text-color', 'bold', 'italic', 'underline', 'strike-through', 'separator',
+  'superscript', 'subscript', 'remove-styles', 'text-indent', 'separator', 'text-align',
+  'list-ul', 'list-ol', 'blockquote', 'code', 'link', 'media'
+]
+
+/**
+ * 微信平台
+ */
+@Form.create()
+class ContentForWeixin extends React.Component {
+  state = {}
+
+  customUpload = (param) => {
+    const { data } = this.props
+    let formData = new window.FormData();
+    let config = {
+      headers: {
+        'Authorization': data.authToken,
+        'sessionId': cookie.get('token')
+      },
+      onUploadProgress: ({ total, loaded }) => {
+        param.progress(parseFloat(Math.round(loaded / total * 100).toFixed(2)))
+      }
+    };
+    formData.append("file", param.file);
+    formData.append("bizzCode", 'VIDEO_TEST');
+    axios.post("/api/common-file/file/v1/uploadPubBucket", formData, config)
+      .then(({ data: response }) => {
+        if (response.code === '1000') {
+          // 处理文件显示
+          response.url = response.data;
+          param.success({
+            url: response.data,
+            meta: {
+              id: 'xxx',
+              title: param.file.name,
+              alt: param.file.name
+            }
+          })
+        } else {
+          message.error(response.msg)
+          param.error({
+            msg: response.msg
+          })
+        }
+      })
+      .catch(error => {
+        console.warn(error);
+        message.error("上传失败")
+        param.error({
+          msg: '上传失败.'
+        })
+      });
+
+  }
+
+  componentDidMount() { }
+
+  handleSubmit = (e) => {
+    e && e.preventDefault()
+    this.props.next()
+  }
+
+  buildPreviewHtml = () => {
+    let content = this.props.form.getFieldValue('content')
+    let _html = content.toHTML()
+    return previewHtml(_html)
+
+  }
+
+  validatorContent = (rules, value, callback) => {
+    if (value.isEmpty()) {
+      callback('请输入正文内容')
+    } else {
+      callback()
+    }
+  }
+
+  preview = () => {
+    if (window.previewWindow) {
+      window.previewWindow.close()
+    }
+    window.previewWindow = window.open()
+    window.previewWindow.document.write(this.buildPreviewHtml())
+    window.previewWindow.document.close()
+  }
+
+  render() {
+
+    const { form, formLayout, data } = this.props
+    const { getFieldDecorator, getFieldValue } = form
+    return (
+      <Form onSubmit={this.handleSubmit}  {...formLayout}>
+        <FormItem label="内容发布位置">
+          {getFieldDecorator('platforsssm', {
+            rules: [{
+              required: true,
+              message: '请选择内容发布位置'
+            }]
+          })(
+            <Radio.Group>
+              <Radio value={1}>多图文第一条</Radio>
+              <Radio value={2}>不限</Radio>
+            </Radio.Group>
+          )}
+        </FormItem>
+        <FormItem label="标题">
+          {getFieldDecorator('title', {
+            rules: [
+              { required: true, message: '请填写标题' },
+              { max: 64, message: '最多输入64个字' }
+            ]
+          })(
+            <InputCount max={64} placeholder="请输入标题" />
+          )}
+        </FormItem>
+        <FormItem label="封面">
+          {getFieldDecorator('pic', {
+            initialValue: [],
+            valuePropName: 'fileList',
+            getValueFromEvent: e => e && e.fileList,
+            rules: [
+              { required: true, type: "array", message: '请上传文章封面' }
+            ]
+          })(
+            <OssUpload
+              authToken={data.authToken}
+              listType='picture-card'
+              rule={{
+                bizzCode: 'B_GZA_ORDER_IMG_NORMAL_UPLOAD',
+                max: 5,
+                suffix: 'jpg,jpeg,gif,png'
+              }}
+              len={1}
+              tipContent={getFieldValue('platforsssm') === 1 ? '图片尺寸比例为2.35:1' : '图片尺寸比例为1:1'}
+            />
+          )}
+        </FormItem>
+        <FormItem label={<span>&nbsp;&nbsp;&nbsp;作者</span>}>
+          {getFieldDecorator('author', {
+            rules: [
+              { max: 8, message: '最多输入8个字' }
+            ]
+          })(
+            <InputCount max={8} placeholder="请输入作者" />
+          )}
+        </FormItem>
+        <FormItem label={<span>&nbsp;&nbsp;&nbsp;摘要</span>}>
+          {getFieldDecorator('asdasdw', {
+            initialValue: '',
+            rules: [
+              { max: 120, message: '最多输入120字的摘要' }
+            ]
+          })(
+            <Input.TextArea
+              placeholder='如果不填写会默认抓取正文前54个字'
+              autosize={{
+                minRows: 4,
+                maxRows: 4
+              }}
+            />
+          )}
+        </FormItem>
+        <FormItem label="文章正文">
+          {getFieldDecorator('content', {
+            validateTrigger: 'onBlur',
+            rules: [{
+              required: true,
+              validator: this.validatorContent
+            }]
+          })(
+            <BraftEditor
+              className="form-editor-container"
+              controls={controls}
+              media={{
+                uploadFn: this.customUpload
+              }}
+              placeholder="请输入正文内容"
+            />
+          )}
+        </FormItem>
+        <footer>
+          <FormItem label=' '>
+            <Button onClick={this.props.prev}>上一步</Button>
+            <Button type="primary" htmlType="submit">下一步</Button>
+          </FormItem>
+        </footer>
+      </Form>
+    )
+  }
+}
+
+const validatorUploadMaterial = (rule, value, callback) => {
+  if (!value) return callback('请上传素材')
+  if (!value.type) return callback('请选择素材类型')
+  if (value.type === 1) {
+    if (value.images.length > 0) {
+      callback()
+    } else {
+      callback('请上传素材')
+    }
+  }
+  if (value.type === 2) {
+    if (value.video) {
+      callback()
+    } else {
+      callback('请上传素材')
+    }
+  }
+}
+
+
+/**
+ * 微博平台
+ */
+@Form.create()
+class ContentForWeibo extends React.Component {
+  state = {}
+
+  componentDidMount() { }
+
+  handleSubmit = (e) => {
+    e && e.preventDefault()
+    this.props.form.validateFields()
+    // this.props.next()
+  }
+
+  render() {
+
+    const { form, formLayout, data } = this.props
+    const { getFieldDecorator, getFieldValue, getFieldsValue } = form
+    return (
+      <Form onSubmit={this.handleSubmit}  {...formLayout}>
+        <FormItem label="内容形式">
+          {getFieldDecorator('platforsssm', {
+            rules: [{
+              required: true,
+              message: '请选择内容发布位置'
+            }]
+          })(
+            <Radio.Group>
+              <Radio value={1}>直发</Radio>
+              <Radio value={2}>转发</Radio>
+            </Radio.Group>
+          )}
+        </FormItem>
+        {getFieldValue('platforsssm') === 1 && <FormItem label="内容描述">
+          {getFieldDecorator('ssss', {
+            rules: [
+              { required: true, message: '请填写内容' },
+              { max: 140, message: '最多输入140个字' }
+            ]
+          })(
+            <Input.TextArea
+              placeholder='微博内容'
+              autosize={{
+                minRows: 4,
+                maxRows: 4
+              }}
+            />
+          )}
+        </FormItem>}
+        {getFieldValue('platforsssm') === 1 && <FormItem label="素材">
+          {getFieldDecorator('file', {
+            initialValue: undefined,
+            rules: [
+              {
+                required: true,
+                type: "object",
+                validator: validatorUploadMaterial
+              }
+            ]
+          })(
+            <UploadMaterial authToken={data.authToken} />
+          )}
+        </FormItem>}
+        {getFieldValue('platforsssm') === 2 && <FormItem label="微博地址">
+          {getFieldDecorator('ssss', {
+            rules: [
+              { required: true, message: '请填写微博地址' },
+              { type: "url", message: '请填写正确的链接' },
+            ]
+          })(
+            <Input placeholder='输入微博文章链接' />
+          )}
+        </FormItem>}
+        {getFieldValue('platforsssm') === 2 && <FormItem label="转发语">
+          {getFieldDecorator('ss222ss', {
+
+          })(
+            <Input.TextArea
+              placeholder='输入转发语'
+              autosize={{
+                minRows: 2,
+                maxRows: 2
+              }}
+            />
+          )}
+        </FormItem>}
+        <footer>
+          <FormItem label=' '>
+            <Button onClick={this.props.prev}>上一步</Button>
+            <Button type="primary" htmlType="submit">下一步</Button>
+          </FormItem>
+        </footer>
+      </Form>
+    )
+  }
+}
+
+export default {
+  weixin: ContentForWeixin,
+  weibo: ContentForWeibo
+}

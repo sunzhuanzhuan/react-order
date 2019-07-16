@@ -1,17 +1,27 @@
 import React, { Component } from "react"
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import * as commonAction from '@/actions/index'
+import * as action from '../actions/index'
 import { PageHeader, Steps, Icon, Empty } from 'antd'
-import { FormBase, FormBudget } from "../components/CreateForms/index";
+import {
+  FormBase,
+  FormBudget,
+  FormContent
+} from "../components/CreateForms/index";
 import { parseUrlQuery } from "@/util/parseUrl";
 
 const { Step } = Steps;
 let forms = {
   '9': [
     FormBase,
-    FormBudget.weixin
+    FormBudget.weixin,
+    FormContent.weixin
   ],
   '1': [
     FormBase,
-    FormBudget.weibo
+    FormBudget.weibo,
+    FormContent.weibo
   ]
 }
 
@@ -23,14 +33,15 @@ const formLayout = {
 }
 
 
-export default class CreateTask extends Component {
+class CreateTask extends Component {
   constructor(props) {
     super(props);
-    const { step = 1, company } = parseUrlQuery()
+    const { step = 1, company, platformId } = parseUrlQuery()
     this.state = {
       current: step - 1,
+      authToken: '',
       base: {
-        platformId: 9,
+        platformId: Number(platformId) || 9,
         company: company,
         name: '',
         classification: 1
@@ -40,6 +51,13 @@ export default class CreateTask extends Component {
     }
   }
 
+  componentDidMount() {
+    const { actions } = this.props
+    // 获取上传图片token
+    actions.getNewToken().then(({ data: authToken }) => {
+      this.setState({ authToken })
+    })
+  }
 
   next = () => {
     this.setState({
@@ -73,9 +91,24 @@ export default class CreateTask extends Component {
           formLayout={formLayout}
           next={this.next}
           prev={this.prev}
-          data={{ base, budget, content }}
+          data={{ ...this.state }}
         />
       </main>
     </div>
   }
 }
+
+const mapStateToProps = (state) => {
+  return {
+    // accountManage: state.accountManageReducer,
+  }
+}
+
+const mapDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators({ ...commonAction, ...action }, dispatch)
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(CreateTask)
