@@ -1,6 +1,6 @@
 import React from 'react'
 import { Badge, Typography } from "antd";
-import moment from "moment";
+import { getCountDownTimeText } from "@/taskPool/constants/utils";
 
 const { Text } = Typography;
 const statusKeyToProps = {
@@ -20,25 +20,6 @@ const statusKeyToProps = {
     status: 'error',
     text: '任务已过期'
   }
-}
-
-function getCountDownTimeText(date) {
-  const diff = moment(date) - moment()
-  const duration = moment.duration(diff, 'milliseconds')
-  if (diff < 300000) {
-    return '小于5分钟'
-  }
-  const obj = {
-    diff,
-    days: duration.days(),
-    hours: duration.hours(),
-    minutes: duration.minutes()
-  }
-  let text = ''
-  text += obj.days ? obj.days + '天 ' : '';
-  text += obj.hours ? obj.hours + '小时 ' : '';
-  text += obj.minutes ? obj.minutes + '分钟' : '';
-  return text
 }
 
 const TaskStatus = ({ status = 1 }) => {
