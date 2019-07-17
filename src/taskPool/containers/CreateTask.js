@@ -79,7 +79,7 @@ class CreateTask extends Component {
     const { platformId = 9 } = base
     const FormComponent = forms[platformId][current] || Empty
     return <div className='task-pool-page-container create-page'>
-      <PageHeader onBack={() => null} title="新建任务" />
+      <PageHeader onBack={() => this.props.history.push('/order/task/manage')} title="新建任务" />
       <header>
         <Steps current={current}>
           <Step title="任务基本信息" icon={<Icon type="profile" />} />

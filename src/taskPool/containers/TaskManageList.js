@@ -79,6 +79,8 @@ export default class TaskManageList extends Component {
       {
         title: '预算消耗',
         dataIndex: 'real_name_6',
+        width: 220,
+        align: "right",
         render: (name, record) => {
           return <TaskBudgetConsumptions/>
         }
@@ -91,7 +93,7 @@ export default class TaskManageList extends Component {
             <a>查看</a>
             <span>
               <Divider type="vertical" />
-              <a>下线</a>
+              <a onClick={() => this.offline(name)}>下线</a>
             </span>
           </div>
         }
@@ -108,12 +110,20 @@ export default class TaskManageList extends Component {
     })*/
   }
 
+  // 下线
+  offline = (id) => {
+    Modal.confirm({
+      title: '确认要下线此任务吗?',
+      content: "任务下线后，不可重新上线。已领取任务的博主，可执行。未消耗的余额，会在之后返还到您的任务账户余额中。"
+    })
+  }
+
   componentDidMount() {
     this.getList()
   }
 
   render() {
-    const { actions } = this.props
+    const { actions, history } = this.props
     const data = [
       {}
     ]
@@ -129,7 +139,9 @@ export default class TaskManageList extends Component {
     return <div className='select-orders flex-form-layout'>
       <Title level={4}>任务管理</Title>
       <div style={{ padding: '0 0 16px 0' }}>
-        <Button type="primary">
+        <Button type="primary" onClick={() => {
+          history.push('/order/task/create')
+        }}>
           <Icon type="plus" />新建任务
         </Button>
       </div>
