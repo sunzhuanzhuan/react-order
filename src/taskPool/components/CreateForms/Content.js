@@ -159,11 +159,11 @@ class ContentForWeixin extends React.Component {
               listType='picture-card'
               rule={{
                 bizzCode: 'B_GZA_ORDER_IMG_NORMAL_UPLOAD',
-                max: 5,
+                max: 2,
                 suffix: 'jpg,jpeg,gif,png'
               }}
               len={1}
-              tipContent={getFieldValue('platforsssm') === 1 ? '图片尺寸比例为2.35:1' : '图片尺寸比例为1:1'}
+              tipContent={getFieldValue('platforsssm') === 1 ? '图片尺寸比例为2.35:1,最大不能超过2MB' : '图片尺寸比例为1:1,最大不能超过2MB'}
             />
           )}
         </FormItem>

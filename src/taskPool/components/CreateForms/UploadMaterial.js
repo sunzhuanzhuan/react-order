@@ -68,11 +68,11 @@ export default class UploadMaterial extends Component {
             }}
             rule={{
               bizzCode: 'B_GZA_ORDER_IMG_NORMAL_UPLOAD',
-              max: 5,
+              max: 2,
               suffix: 'jpg,jpeg,gif,png'
             }}
             len={9}
-            tipContent={'最多可上传9张图片'}
+            tipContent={'最多可上传9张图片, 最大不能超过2MB'}
           />
         }
         {
@@ -81,14 +81,14 @@ export default class UploadMaterial extends Component {
             fileList={videos}
             rule={{
               bizzCode: 'VIDEO_TEST',
-              max: 200,
-              suffix: '.mp4,jpeg,gif,png'
+              max: 20,
+              suffix: '.mp4'
             }}
             onChange={e => {
               this.onChange(e && e.fileList[0], 'video')
             }}
             len={1}
-            tipContent={''}
+            tipContent={'视频最大不能超过20MB'}
           >
             <a><Icon type="upload" /> {videos.length > 0 ? "重新上传" : "上传视频"}</a>
           </OssUpload>
