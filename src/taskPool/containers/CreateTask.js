@@ -7,7 +7,7 @@ import { PageHeader, Steps, Icon, Empty } from 'antd'
 import {
   FormBase,
   FormBudget,
-  FormContent
+  FormContent, FormPreview
 } from "../components/CreateForms/index";
 import { parseUrlQuery } from "@/util/parseUrl";
 
@@ -16,12 +16,14 @@ let forms = {
   '9': [
     FormBase,
     FormBudget.weixin,
-    FormContent.weixin
+    FormContent.weixin,
+    FormPreview.weixin,
   ],
   '1': [
     FormBase,
     FormBudget.weibo,
-    FormContent.weibo
+    FormContent.weibo,
+    FormPreview.weibo
   ]
 }
 
