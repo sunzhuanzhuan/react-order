@@ -1,4 +1,5 @@
 @import "../indexNbTheme";
+
 .text-red {
   color: red !important;
 }
@@ -6,13 +7,16 @@
 .text-gray {
   color: #999 !important;
 }
+
 .task-pool-page-container {
   .ant-page-header {
     padding: 0 0 10px 0;
   }
+
   .ant-page-header-heading-extra {
     top: -4px;
   }
+
   &.create-page {
 
 
@@ -62,6 +66,29 @@
     border-radius: 4px;
     margin-bottom: 6px;
   }
+
+  &.detail-page {
+    .ant-descriptions-item {
+      vertical-align: top;
+
+      .ant-descriptions-item-label {
+        vertical-align: top;
+      }
+    }
+
+    .content-wrap {
+      display: flex;
+
+      .image-wrap {
+        width: 140px;
+        margin-right: 10px;
+        img {
+          width: 100%;
+        }
+      }
+
+    }
+  }
 }
 
 .center-success-modal {
@@ -71,12 +98,15 @@
       margin: 0 0 10px 0;
       font-size: 36px;
     }
-    .ant-modal-confirm-content{
-      margin: 10px auto 0!important;
+
+    .ant-modal-confirm-content {
+      margin: 10px auto 0 !important;
     }
+
     .ant-modal-confirm-btns {
       float: none;
     }
+
     text-align: center;
   }
 }

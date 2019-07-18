@@ -14,11 +14,15 @@ export const getCountDownTimeText = (date) => {
   }
   const obj = {
     diff,
+    years: duration.years(),
+    months: duration.months(),
     days: duration.days(),
     hours: duration.hours(),
     minutes: duration.minutes()
   }
   let text = ''
+  text += obj.years ? obj.years + '年 ' : '';
+  text += obj.months ? obj.months + '个月 ' : '';
   text += obj.days ? obj.days + '天 ' : '';
   text += obj.hours ? obj.hours + '小时 ' : '';
   text += obj.minutes ? obj.minutes + '分钟' : '';

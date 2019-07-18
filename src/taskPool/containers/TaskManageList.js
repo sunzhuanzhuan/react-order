@@ -112,6 +112,7 @@ export default class TaskManageList extends Component {
 
   // 下线
   offline = (id) => {
+    // 判断是否有一个下线请求处理中
     Modal.confirm({
       title: '确认要下线此任务吗?',
       content: "任务下线后，不可重新上线。已领取任务的博主，可执行。未消耗的余额，会在之后返还到您的任务账户余额中。"
@@ -136,7 +137,7 @@ export default class TaskManageList extends Component {
       },
       showQuickJumper: true
     }
-    return <div className='select-orders flex-form-layout'>
+    return <div className='task-pool-page-container manage-page'>
       <Title level={4}>任务管理</Title>
       <div style={{ padding: '0 0 16px 0' }}>
         <Button type="primary" onClick={() => {
