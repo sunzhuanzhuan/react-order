@@ -4,6 +4,7 @@ import { Route } from 'react-router-dom';
 import CreateTask from './containers/CreateTask'
 import TaskDetail from './containers/TaskDetail'
 import TaskManageList from './containers/TaskManageList'
+import TaskReviewList from './containers/TaskReviewList'
 
 class Business extends Component {
   render() {
@@ -14,7 +15,8 @@ class Business extends Component {
         <Route path="/order/task/create" component={CreateTask} />
         <Route path="/order/task/detail/:id" component={TaskDetail} />
         <Route path="/order/task/manage" component={TaskManageList} />
-        <Route path="/order/task/review" component={CreateTask} />
+        <Route path="/order/task/review" component={TaskReviewList} />
+        <Route path="/order/task/remittance_record" component={TaskReviewList} />
       </div>
     )
   }
