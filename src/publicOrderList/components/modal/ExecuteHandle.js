@@ -75,8 +75,7 @@ class ExecuteHandle extends Component {
       labelCol: { span: 6 },
       wrapperCol: { span: 18 },
     }
-    const cooperationPlatformName = orderDetail.platform.platform_id == "1" ?
-      "微任务/WEIQ" : orderDetail.public_order.cooperation_platform_name
+    const cooperationPlatformName = orderDetail.trinity_platform_name
     return <div className="modalBox-singleAgent">
       <Form layout="horizontal">
         <FormItem
