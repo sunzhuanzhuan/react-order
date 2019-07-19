@@ -13,19 +13,7 @@ import {
 
 const { Title } = Typography;
 
-
-const mapStateToProps = (state) => ({
-  common: state.commonReducers,
-  closingReport: state.closingReportReducers
-})
-const mapDispatchToProps = (dispatch) => ({
-  actions: bindActionCreators({
-    ...actions
-  }, dispatch)
-})
-
-@connect(mapStateToProps, mapDispatchToProps)
-export default class TaskManageList extends Component {
+class TaskManageList extends Component {
   constructor(props, context) {
     super(props, context)
     this.state = {
@@ -155,3 +143,16 @@ export default class TaskManageList extends Component {
     </div>
   }
 }
+
+
+const mapStateToProps = (state) => ({
+  common: state.commonReducers,
+  closingReport: state.closingReportReducers
+})
+const mapDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators({
+    ...actions
+  }, dispatch)
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(TaskManageList)
