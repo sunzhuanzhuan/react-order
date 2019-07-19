@@ -76,7 +76,7 @@ export default class CreateReport extends Component {
           return actions.submitCheckSummary({ summary_id: summaryId }).then(({ data }) => {
             let check = (data || {}).check
             if (check) {
-              return judgeSPStatus(check)
+              return judgeSPStatus(check, true)
             }
             message.success('提交审核成功!')
             this.linkTo('/order/closing-report/detail/summary?summary_id=' + summaryId)
