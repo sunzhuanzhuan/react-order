@@ -82,10 +82,10 @@ class CreateTask extends Component {
       <PageHeader onBack={() => this.props.history.push('/order/task/manage')} title="新建任务" />
       <header>
         <Steps current={current}>
-          <Step title="任务基本信息" icon={<Icon type="profile" />} />
-          <Step title="设置预算" icon={<Icon type="pay-circle" />} />
-          <Step title="撰写内容" icon={<Icon type="edit" />} />
-          <Step title="预览" icon={<Icon type="read" />} />
+          <Step title="任务基本信息" {/*icon={<Icon type="profile" />}*/} />
+          <Step title="设置预算" {/*icon={<Icon type="pay-circle" />}*/} />
+          <Step title="撰写内容" {/*icon={<Icon type="edit" />}*/} />
+          <Step title="预览" /*icon={<Icon type="read" />}*/ />
         </Steps>
       </header>
       <main>
