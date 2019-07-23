@@ -9,6 +9,7 @@ import OrderList from './OrderList'
 import { parseUrlQuery } from '@/util/parseUrl'
 import difference from 'lodash/difference'
 import { linkTo } from '../../util/linkTo';
+import { judgeSPStatus } from "@/closingReport/util";
 
 
 const Step = Steps.Step
@@ -72,7 +73,11 @@ export default class CreateReport extends Component {
       Modal.confirm({
         title: '是否确认将本【投放数据汇总单】提交审核？',
         onOk: hide => {
-          return actions.submitCheckSummary({ summary_id: summaryId }).then(() => {
+          return actions.submitCheckSummary({ summary_id: summaryId }).then(({ data }) => {
+            let check = (data || {}).check
+            if (check) {
+              return judgeSPStatus(check, true)
+            }
             message.success('提交审核成功!')
             this.linkTo('/order/closing-report/detail/summary?summary_id=' + summaryId)
           }).finally(hide)
