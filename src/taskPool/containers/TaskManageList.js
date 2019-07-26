@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Modal, Table, message, Icon, Typography, Button, Divider } from 'antd'
 import { SH2 } from '@/base/SectionHeader'
 import { bindActionCreators } from 'redux'
+import * as commonActions from '@/actions'
 import * as actions from '../actions'
 import { connect } from 'react-redux'
 import { IconInfoBlock } from "@/base/DataGroup";
@@ -10,6 +11,7 @@ import {
   TaskInfo,
   TaskStatus
 } from "@/taskPool/base/ColumnsDataGroup";
+import { NavLink } from "react-router-dom";
 
 const { Title } = Typography;
 
@@ -18,92 +20,103 @@ class TaskManageList extends Component {
     super(props, context)
     this.state = {
       search: {
-        page: 1,
-        pageSize: 50
+        currentPage: 1,
+        pageSize: 10
       }
     }
     this.columns = [
       {
         title: '任务信息',
-        dataIndex: 'real_name_1',
+        dataIndex: 'orderName',
+        width: 220,
         render: (name, record) => {
-          return <TaskInfo platformId={9} name="任务消息任务消息任务消息任务消息任务消息任务消息" id={3333} />
+          return <TaskInfo platformId={record.platformId} name={name} id={record.id} />
         }
       },
       {
         title: '客户名称',
-        dataIndex: 'real_name_2',
+        dataIndex: 'companyName',
         render: (name, record) => {
           return <div>
-            小南瓜爸爸001
+            {name}
           </div>
         }
       },
       {
         title: '创建人',
-        dataIndex: 'real_name_3',
+        dataIndex: 'createdName',
         render: (name, record) => {
           return <div>
-            小南瓜爸爸001
+            {name}
           </div>
         }
       },
       {
         title: '已领博主数',
-        dataIndex: 'real_name_4',
-        render: (name, record) => {
+        dataIndex: 'mcnCount',
+        render: (mcnCount, record) => {
           return <div>
-            38个
+            {mcnCount || 0} 个
           </div>
         }
       },
       {
         title: '任务状态',
-        dataIndex: 'real_name_5',
-        render: (name, record) => {
-          return <TaskStatus status={4} />
+        dataIndex: 'orderState',
+        render: (state, record) => {
+          return <TaskStatus status={state} date={record.orderEndDate} />
         }
       },
       {
         title: '预算消耗',
-        dataIndex: 'real_name_6',
+        dataIndex: 'totalAmount',
         width: 220,
         align: "right",
-        render: (name, record) => {
-          return <TaskBudgetConsumptions/>
+        render: (totalAmount, record) => {
+          return <TaskBudgetConsumptions total={totalAmount} used={record.usedAmount} state={record.orderStatus} />
         }
       },
       {
         title: '操作',
-        dataIndex: 'real_name_7',
-        render: (name, record) => {
+        dataIndex: 'id',
+        render: (id, record) => {
           return <div>
-            <a>查看</a>
-            <span>
+            <NavLink to={'/order/task/detail/' + id}>查看</NavLink>
+            {record.orderState === 1 && <span>
               <Divider type="vertical" />
-              <a onClick={() => this.offline(name)}>下线</a>
-            </span>
+              <a onClick={() => this.offline(id)}>下线</a>
+            </span>}
           </div>
         }
       }
     ]
+    this.isOfflineRequest = false
   }
 
   getList = (params = {}) => {
     const { actions } = this.props
     let search = { ...this.state.search, ...params }
-    // this.setState({ listLoading: true, search })
-    /*actions.getSummaryListByOrder(search).finally(() => {
+    this.setState({ listLoading: true, search })
+    actions.TPTaskManageList(search).finally(() => {
       this.setState({ listLoading: false })
-    })*/
+    })
   }
 
   // 下线
   offline = (id) => {
     // 判断是否有一个下线请求处理中
+    /*if (this.isOfflineRequest) return
+    this.isOfflineRequest = true*/
+    const { actions } = this.props
     Modal.confirm({
       title: '确认要下线此任务吗?',
-      content: "任务下线后，不可重新上线。已领取任务的博主，可执行。未消耗的余额，会在之后返还到您的任务账户余额中。"
+      content: "任务下线后，不可重新上线。已领取任务的博主，可执行。未消耗的余额，会在之后返还到您的任务账户余额中。",
+      onOk: () => {
+        return actions.TPOffline({ id }).then(() => {
+          message.success('下线成功')
+          this.getList()
+        })
+      }
     })
   }
 
@@ -112,18 +125,23 @@ class TaskManageList extends Component {
   }
 
   render() {
-    const { actions, history } = this.props
-    const data = [
-      {}
-    ]
+    const { actions, history, taskPoolReducers } = this.props
+    // const { search: { currentPage } } = this.state
+    const { taskManageList: { keys, source, total, pageNum, pageSize } } = taskPoolReducers
+
+    const dataSource = keys.map(key => source[key])
     const pagination = {
-      total: 10,
-      pageSize: 10,
-      current: 1,
+      total,
+      pageSize,
+      current: pageNum,
       onChange: (current) => {
-        this.getList({ page: current })
+        this.getList({ currentPage: current })
       },
-      showQuickJumper: true
+      showQuickJumper: true,
+      showSizeChanger: true,
+      onShowSizeChange: (current, pageSize) => {
+        this.getList({ pageSize })
+      }
     }
     return <div className='task-pool-page-container manage-page'>
       <Title level={4}>任务管理</Title>
@@ -136,7 +154,7 @@ class TaskManageList extends Component {
       </div>
       <Table
         loading={this.state.listLoading}
-        dataSource={data}
+        dataSource={dataSource}
         pagination={pagination}
         columns={this.columns}
       />
@@ -147,10 +165,11 @@ class TaskManageList extends Component {
 
 const mapStateToProps = (state) => ({
   common: state.commonReducers,
-  closingReport: state.closingReportReducers
+  taskPoolReducers: state.taskPoolReducers
 })
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators({
+    ...commonActions,
     ...actions
   }, dispatch)
 })

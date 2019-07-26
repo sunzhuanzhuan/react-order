@@ -1,5 +1,6 @@
 import React from 'react'
 import numeral from "@/util/numeralExpand"
+import IconFont from "@/base/IconFont";
 
 const StatisticsData = (props) => {
   let { value, format, iconType } = props
@@ -13,7 +14,7 @@ const StatisticsData = (props) => {
   return (
     <div className='statistics-data-wrap' style={props.style}>
       {iconType && <span className='left'>
-        <i>sss</i>
+        <IconFont type={iconType}/>
       </span>}
       <span className='right'>
         {valueText}

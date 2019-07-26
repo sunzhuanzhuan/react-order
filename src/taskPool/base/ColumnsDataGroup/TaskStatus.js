@@ -8,7 +8,7 @@ const statusKeyToProps = {
     status: 'processing',
     text: '任务进行中'
   },
-  '2': {
+  '4': {
     status: 'success',
     text: '任务已结束'
   },
@@ -16,19 +16,19 @@ const statusKeyToProps = {
     status: 'default',
     text: '任务已下线'
   },
-  '4': {
+  '2': {
     status: 'error',
     text: '任务已过期'
   }
 }
 
-const TaskStatus = ({ status = 1 }) => {
+const TaskStatus = ({ status, date }) => {
   return (
     <div>
       <Badge {...(statusKeyToProps[status] || {})} />
       <br />
       {status === 1 && <Text>
-        剩余：{getCountDownTimeText('2019-07-11 17:14:00')}
+        剩余：{getCountDownTimeText(date)}
       </Text>}
     </div>
   )
