@@ -10,6 +10,8 @@ import {
   FormContent, FormPreview
 } from "../components/CreateForms/index";
 import { parseUrlQuery } from "@/util/parseUrl";
+import * as commonActions from "@/actions";
+import * as actions from "@/taskPool/actions";
 
 const { Step } = Steps;
 let forms = {
@@ -38,15 +40,19 @@ const formLayout = {
 class CreateTask extends Component {
   constructor(props) {
     super(props);
-    const { step = 1, company, platformId } = parseUrlQuery()
+    const { step = 1, company = '', platformId } = parseUrlQuery()
+    const [companyId, companyName] = company.split("::")
+    const hasCompany = !!(companyId && companyName)
     this.state = {
       current: step - 1,
       authToken: '',
+      disabled: hasCompany,
       base: {
         platformId: Number(platformId) || 9,
-        company: company,
-        name: '',
-        classification: 1
+        company: hasCompany ? {
+          label: companyName,
+          key: companyId
+        } : undefined,
       },
       budget: {},
       content: {}
@@ -61,9 +67,14 @@ class CreateTask extends Component {
     })
   }
 
-  next = () => {
+  saveFormsData = () => {
+    this.setState({});
+  }
+
+  next = (key, data) => {
     this.setState({
-      current: this.state.current + 1
+      current: this.state.current + 1,
+      [key]: data
     });
   }
 
@@ -76,6 +87,7 @@ class CreateTask extends Component {
 
   render() {
     const { current, base, budget, content } = this.state
+    const { actions } = this.props
     const { platformId = 9 } = base
     const FormComponent = forms[platformId][current] || Empty
     return <div className='task-pool-page-container create-page'>
@@ -93,22 +105,24 @@ class CreateTask extends Component {
           formLayout={formLayout}
           next={this.next}
           prev={this.prev}
-          data={{ ...this.state }}
+          data={this.state}
+          actions={actions}
         />
       </main>
     </div>
   }
 }
 
-const mapStateToProps = (state) => {
-  return {
-    // accountManage: state.accountManageReducer,
-  }
-}
-
+const mapStateToProps = (state) => ({
+  common: state.commonReducers,
+  taskPoolReducers: state.taskPoolReducers
+})
 const mapDispatchToProps = (dispatch) => ({
-  actions: bindActionCreators({ ...commonAction, ...action }, dispatch)
-});
+  actions: bindActionCreators({
+    ...commonActions,
+    ...actions
+  }, dispatch)
+})
 
 export default connect(
   mapStateToProps,

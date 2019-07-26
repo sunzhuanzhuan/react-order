@@ -2,29 +2,53 @@
  * 创建任务-基本信息表单
  */
 import React from 'react'
-import { Form, Radio, Button, Select } from 'antd'
+import { Form, Radio, Button, Select, Cascader } from 'antd'
 import RemoteSearchSelect from "@/taskPool/base/RemoteSearchSelect";
 import { InputCount } from "@/base/Input";
 import { WBYPlatformIcon } from "wbyui";
 
 const FormItem = Form.Item
 
-
+const options = [
+  {
+    value: 'zhejiang',
+    label: 'Zhejiang',
+    children: [
+      {
+        value: 'hangzhou',
+        label: 'Hangzhou'
+      }
+    ]
+  },
+  {
+    value: 'jiangsu',
+    label: 'Jiangsu',
+    children: [
+      {
+        value: 'nanjing',
+        label: 'Nanjing'
+      }
+    ]
+  }
+];
 @Form.create()
 export default class Base extends React.Component {
   state = {}
 
-  componentDidMount() { }
-
   handleSubmit = (e) => {
     e && e.preventDefault()
-    this.props.next()
-    // this.props.form.validateFields()
+    this.props.form.validateFields((err, values) => {
+      if (!err) {
+        let newVal = Object.assign({}, values)
+        this.props.next("base", newVal)
+      }
+    });
   }
 
   render() {
 
-    const { form, formLayout, data: { base } } = this.props
+    const { form, formLayout, data, actions } = this.props
+    const { base } = data
     const { getFieldDecorator } = form
     return (
       <Form onSubmit={this.handleSubmit}  {...formLayout}>
@@ -36,33 +60,46 @@ export default class Base extends React.Component {
               message: '请选择任务所属公司'
             }]
           })(
-            <RemoteSearchSelect placeholder="请选择任务所属公司" disabled />
+            <RemoteSearchSelect
+              action={actions.TPFuzzyQueryCompany}
+              placeholder="请选择任务所属公司"
+              disabled={data.disabled}
+            />
           )}
         </FormItem>
         <FormItem label="任务发布平台">
-          {getFieldDecorator('platform', {
+          {getFieldDecorator('platformId', {
             initialValue: base.platformId,
             rules: [{
               required: true,
-              message: '请选择任务所属公司'
+              message: '请选择平台'
             }]
           })(
             <Radio.Group>
               <Radio value={9}>
                 <WBYPlatformIcon weibo_type={9} widthSize={22} />
-                <span style={{verticalAlign: 'text-bottom', marginLeft: 8, userSelect: 'none'}}>微信公众号</span>
+                <span style={{
+                  verticalAlign: 'text-bottom',
+                  marginLeft: 8,
+                  userSelect: 'none'
+                }}>微信公众号</span>
               </Radio>
               <Radio value={1}>
                 <WBYPlatformIcon weibo_type={1} widthSize={22} />
-                <span style={{verticalAlign: 'text-bottom', marginLeft: 8, userSelect: 'none'}}>新浪微博</span>
+                <span style={{
+                  verticalAlign: 'text-bottom',
+                  marginLeft: 8,
+                  userSelect: 'none'
+                }}>新浪微博</span>
               </Radio>
             </Radio.Group>
           )}
         </FormItem>
         <FormItem label="任务名称">
-          {getFieldDecorator('name', {
+          {getFieldDecorator('orderName', {
+            initialValue: base.orderName,
             rules: [
-              { required: true, message: '请填写任务名称' },
+              { required: true, message: '请输入任务名称' },
               { max: 20, message: '最多输入20个字' }
             ]
           })(
@@ -70,16 +107,17 @@ export default class Base extends React.Component {
           )}
         </FormItem>
         <FormItem label="行业分类">
-          {getFieldDecorator('class', {
+          {getFieldDecorator('industry', {
+            initialValue: base.industry,
             rules: [{
               required: true,
-              message: '请选择任务所属公司'
+              message: '请选择行业'
             }]
           })(
-            <Select placeholder='请选择行业分类'>
-              <Select.Option value={1}>1</Select.Option>
-              <Select.Option value={2}>2</Select.Option>
-            </Select>
+            <Cascader
+              options={options}
+              placeholder='请选择行业'
+            />
           )}
         </FormItem>
         <footer>

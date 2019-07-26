@@ -30,17 +30,21 @@ export default class RemoteSearchSelect extends Component {
   triggerChange = changedValue => {
     const { onChange } = this.props;
     if (onChange) {
-      onChange(Object.assign({}, changedValue));
+      onChange(changedValue);
     }
   };
 
   search = (value) => {
-    let { action, wordKey = 'name' } = this.props
+    let { action, wordKey = 'form' } = this.props
     this.lastFetchId += 1;
     const fetchId = this.lastFetchId;
     this.setState({ data: [], searchIng: true });
-    action({ [wordKey]: value })
-      .then(({ data: list }) => {
+    action({
+      "page": { "currentPage": 1, "pageSize": 30 },
+      [wordKey]: value
+    })
+      .then(({ data}) => data.list)
+      .then((list) => {
         if (fetchId !== this.lastFetchId) {
           return;
         }
@@ -75,7 +79,7 @@ export default class RemoteSearchSelect extends Component {
 
   render() {
     const {
-      optionKeys = ['label', 'value']
+      optionKeys = ['companyName', 'companyId']
     } = this.props;
     const [labelKey, valueKey] = optionKeys
     const { searchIng, data, value } = this.state;

@@ -122,19 +122,6 @@ class ContentForWeixin extends React.Component {
     const { getFieldDecorator, getFieldValue } = form
     return (
       <Form onSubmit={this.handleSubmit}  {...formLayout}>
-        <FormItem label="内容发布位置">
-          {getFieldDecorator('platforsssm', {
-            rules: [{
-              required: true,
-              message: '请选择内容发布位置'
-            }]
-          })(
-            <Radio.Group>
-              <Radio value={1}>多图文第一条</Radio>
-              <Radio value={2}>不限</Radio>
-            </Radio.Group>
-          )}
-        </FormItem>
         <FormItem label="标题">
           {getFieldDecorator('title', {
             rules: [
