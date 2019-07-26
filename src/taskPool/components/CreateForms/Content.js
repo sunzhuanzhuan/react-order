@@ -89,7 +89,12 @@ class ContentForWeixin extends React.Component {
 
   handleSubmit = (e) => {
     e && e.preventDefault()
-    this.props.next()
+    this.props.form.validateFields((err, values) => {
+      if (!err) {
+        let newVal = Object.assign({}, values)
+        this.props.next("content", newVal)
+      }
+    });
   }
 
   buildPreviewHtml = () => {
@@ -119,11 +124,13 @@ class ContentForWeixin extends React.Component {
   render() {
 
     const { form, formLayout, data } = this.props
+    const { base, budget, content } = data
     const { getFieldDecorator, getFieldValue } = form
     return (
       <Form onSubmit={this.handleSubmit}  {...formLayout}>
         <FormItem label="标题">
           {getFieldDecorator('title', {
+            initialValue: content.title,
             rules: [
               { required: true, message: '请填写标题' },
               { max: 64, message: '最多输入64个字' }
@@ -133,8 +140,8 @@ class ContentForWeixin extends React.Component {
           )}
         </FormItem>
         <FormItem label="封面">
-          {getFieldDecorator('pic', {
-            initialValue: [],
+          {getFieldDecorator('coverImage', {
+            initialValue: content.coverImage,
             valuePropName: 'fileList',
             getValueFromEvent: e => e && e.fileList,
             rules: [
@@ -150,12 +157,13 @@ class ContentForWeixin extends React.Component {
                 suffix: 'jpg,jpeg,gif,png'
               }}
               len={1}
-              tipContent={getFieldValue('platforsssm') === 1 ? '图片尺寸比例为2.35:1,最大不能超过2MB' : '图片尺寸比例为1:1,最大不能超过2MB'}
+              tipContent={budget.taskContentStyle === 11 ? '图片尺寸比例为2.35:1,最大不能超过2MB' : '图片尺寸比例为1:1,最大不能超过2MB'}
             />
           )}
         </FormItem>
         <FormItem label={<span>&nbsp;&nbsp;&nbsp;作者</span>}>
           {getFieldDecorator('author', {
+            initialValue: content.author,
             rules: [
               { max: 8, message: '最多输入8个字' }
             ]
@@ -164,8 +172,8 @@ class ContentForWeixin extends React.Component {
           )}
         </FormItem>
         <FormItem label={<span>&nbsp;&nbsp;&nbsp;摘要</span>}>
-          {getFieldDecorator('asdasdw', {
-            initialValue: '',
+          {getFieldDecorator('remark', {
+            initialValue: content.remark,
             rules: [
               { max: 120, message: '最多输入120字的摘要' }
             ]
@@ -173,14 +181,15 @@ class ContentForWeixin extends React.Component {
             <Input.TextArea
               placeholder='如果不填写会默认抓取正文前54个字'
               autosize={{
-                minRows: 4,
-                maxRows: 4
+                minRows: 3,
+                maxRows: 3
               }}
             />
           )}
         </FormItem>
         <FormItem label="文章正文">
           {getFieldDecorator('content', {
+            initialValue: content.content,
             validateTrigger: 'onBlur',
             rules: [{
               required: true,
