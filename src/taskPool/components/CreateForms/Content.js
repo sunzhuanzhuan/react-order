@@ -94,7 +94,7 @@ class ContentForWeixin extends React.Component {
 
   handleSubmit = (e) => {
     e && e.preventDefault()
-    this.props.form.validateFields((err, values) => {
+    this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         let newVal = Object.assign({}, values)
         this.props.next("content", newVal)
@@ -177,8 +177,8 @@ class ContentForWeixin extends React.Component {
           )}
         </FormItem>
         <FormItem label="文章正文">
-          {getFieldDecorator('content', {
-            initialValue: content.content,
+          {getFieldDecorator('richContent', {
+            initialValue: content.richContent,
             validateTrigger: 'onBlur',
             rules: [{
               required: true,
@@ -243,7 +243,7 @@ class ContentForWeibo extends React.Component {
 
   handleSubmit = (e) => {
     e && e.preventDefault()
-    this.props.form.validateFields((err, values) => {
+    this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         let newVal = Object.assign({}, values)
         this.props.next("content", newVal)

@@ -79,6 +79,7 @@ class TaskManageList extends Component {
       {
         title: '操作',
         dataIndex: 'id',
+        align: 'center',
         render: (id, record) => {
           return <div>
             <NavLink to={'/order/task/detail/' + id}>查看</NavLink>

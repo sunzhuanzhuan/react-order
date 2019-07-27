@@ -10,6 +10,7 @@ import {
   InputNumber,
   Descriptions, Typography, Modal
 } from 'antd'
+import { withRouter } from 'react-router-dom'
 import moment from "moment";
 import { WBYPlatformIcon } from "wbyui";
 
@@ -18,38 +19,68 @@ const { Text } = Typography;
 const FormItem = Form.Item
 
 const target = {
-  "11":"多图文第一条","12":"不限","21":"粉丝覆盖","22":"粉丝传播"
+  "11": "多图文第一条", "12": "不限", "21": "粉丝覆盖", "22": "粉丝传播"
 }
 const contentStyle = {
-  "11":"多图文第一条","12":"不限","21":"直发","22":"转发"
+  "11": "多图文第一条", "12": "不限", "21": "直发", "22": "转发"
 }
 
 /**
  * 微信平台
  */
+@withRouter
 class PreviewForWeixin extends React.Component {
-  state = {}
+  state = { submitLoading: false }
 
   success = () => {
     Modal.success({
       className: 'center-success-modal',
       title: '提交成功',
-      content: '您可在....按时打算'
+      content: '您可在任务管理页随时查看进度',
+      onOk: () => {
+        this.props.history.push('/order/task/manage')
+      }
     })
-  }
-
-  componentDidMount() {
-    // this.success()
   }
 
   handleSubmit = (e) => {
     e && e.preventDefault()
-    this.props.next()
+    const { data, actions } = this.props
+    const { base, budget, content } = data
+
+    this.setState({
+      submitLoading: true
+    });
+
+    // 处理提交数据
+    let body = Object.assign({}, base, budget)
+
+    body.companyId = body.company.key
+    body.companyName = body.company.label
+    delete body.company
+
+    body.industry = body.industry[1]
+
+    body.adOrderWeixinContent = {
+      "author": content.author,
+      "content": content.richContent.toRAW(),
+      "coverImageUrl": content.coverImage.url,
+      "coverImageName": content.coverImage.name,
+      "remark": content.remark,
+      "title": content.title
+    }
+
+    actions.TPAddTask(body).then(this.success).finally(() => {
+      this.setState({
+        submitLoading: false
+      });
+    })
   }
 
   render() {
 
     const { data } = this.props
+    const { submitLoading } = this.state
     const { base, budget, content } = data
     const header = <div className='form-preview-header'>
       <WBYPlatformIcon weibo_type={9} widthSize={26} />
@@ -76,7 +107,7 @@ class PreviewForWeixin extends React.Component {
         <Text type="danger">确认无误即可提交。博主领取并执行任务后，会自动扣除预算。</Text>
         <footer>
           <Button onClick={this.props.prev}>上一步</Button>
-          <Button type="primary">提交</Button>
+          <Button type="primary" loading={submitLoading} onClick={this.handleSubmit}>提交</Button>
         </footer>
       </div>
     )
@@ -86,19 +117,72 @@ class PreviewForWeixin extends React.Component {
 /**
  * 微博平台
  */
+@withRouter
 class PreviewForWeibo extends React.Component {
-  state = {}
+  state = { submitLoading: false }
 
   componentDidMount() { }
 
+  success = () => {
+    Modal.success({
+      className: 'center-success-modal',
+      title: '提交成功',
+      content: '您可在任务管理页随时查看进度',
+      onOk: () => {
+        this.props.history.push('/order/task/manage')
+      }
+    })
+  }
+
   handleSubmit = (e) => {
     e && e.preventDefault()
-    // this.props.next()
+    const { data, actions } = this.props
+    const { base, budget, content } = data
+
+    this.setState({
+      submitLoading: true
+    });
+
+    // 处理提交数据
+    let body = Object.assign({}, base, budget)
+    const { type, images, video } = content.attachment
+
+    body.companyId = body.company.key
+    body.companyName = body.company.label
+    delete body.company
+
+    body.industry = body.industry[1]
+
+    body.adOrderWeiboContent = {
+      "content": content.content,
+      "forwardWord": content.forwardWord,
+      "mediaType": type,
+      "url": content.url
+    }
+
+    if (type === 1) {
+      body.adOrderWeiboContent.attachmentList = images.map(item => ({
+        attachmentName: item.name,
+        attachmentUrl: item.url
+      }))
+    } else if (type === 2) {
+      body.adOrderWeiboContent.attachmentList = [{
+        attachmentName: video.name,
+        attachmentUrl: video.url
+      }]
+    }
+
+    actions.TPAddTask(body).then(this.success).finally(() => {
+      this.setState({
+        submitLoading: false
+      });
+    })
   }
 
   render() {
 
     const { data } = this.props
+    const { submitLoading } = this.state
     const { base, budget, content } = data
     const header = <div className='form-preview-header'>
       <WBYPlatformIcon weibo_type={1} widthSize={26} />
@@ -122,17 +206,18 @@ class PreviewForWeibo extends React.Component {
               {content.content}
             </div>
             {content.attachment.type === 1 && <div>
-              {content.attachment.images.map(item => <img key={item.uid} src={item.url} alt="" />)}
+              {content.attachment.images.map(item =>
+                <img key={item.uid} src={item.url} alt="" />)}
             </div>}
             {content.attachment.type === 2 && <div>
-              {content.attachment.video}
+              {content.attachment.video.url}
             </div>}
           </Descriptions.Item>
         </Descriptions>
         <Text type="danger">确认无误即可提交。博主领取并执行任务后，会自动扣除预算。</Text>
         <footer>
           <Button onClick={this.props.prev}>上一步</Button>
-          <Button type="primary">提交</Button>
+          <Button type="primary" loading={submitLoading} onClick={this.handleSubmit}>提交</Button>
         </footer>
       </div>
     )

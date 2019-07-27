@@ -13,6 +13,8 @@ import { parseUrlQuery } from "@/util/parseUrl";
 import * as commonActions from "@/actions";
 import * as actions from "@/taskPool/actions";
 import moment from "moment";
+import BraftEditor from 'braft-editor'
+
 
 const { Step } = Steps;
 let forms = {
@@ -64,8 +66,8 @@ class CreateTask extends Component {
           label: "可口可乐有限公司",
         },
         industry: [
-          "zhejiang",
-          "hangzhou"
+          "1",
+          "11"
         ],
         orderName: "刘治兵",
         platformId: 1,
@@ -92,6 +94,7 @@ class CreateTask extends Component {
           type:1,
           video: "",
         },
+        richContent: BraftEditor.createEditorState("<p>Hello <b>World!</b></p>"),
         content: "123123",
         taskContentStyle: 21,
       }
