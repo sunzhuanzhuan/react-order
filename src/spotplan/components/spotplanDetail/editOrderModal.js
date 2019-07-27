@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux';
 import { bindActionCreators } from "redux";
 import * as spotplanAction from "../../actions";
-import { Modal, Button, Select, Input, Form, message } from 'antd';
+import { Modal, Button, Select, Input, Form, message,DatePicker } from 'antd';
 
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -81,7 +81,26 @@ class EditOrderModal extends React.Component {
             <TextArea autosize={{ minRows: 2, maxRows: 6 }} />
           )}
         </FormItem>
-        <FormItem label='备注信息（非必填）' {...formItemLayout}>
+        <FormItem label='发文位置（非必填）' {...formItemLayout}>
+        {getFieldDecorator('publish_articles_address')(
+          <Select placeholder="请选择" style={{ width: 120 }}>
+            <Option value="1">头条</Option>
+            <Option value="2">次条</Option>
+            <Option value="3">三条</Option>
+            <Option value="4">四条</Option>
+            <Option value="5">五条</Option>
+            <Option value="6">六条</Option>
+            <Option value="7">七条</Option>
+            <Option value="8">八条</Option>
+          </Select>
+        )}
+      </FormItem>
+      <FormItem label='发文位置（非必填）' {...formItemLayout}>
+        {getFieldDecorator('publish_articles_at')(
+          <DatePicker showTime placeholder="请输入" style={{ width: 150 }} />
+        )}
+      </FormItem>
+        <FormItem label='发文时间（非必填)' {...formItemLayout}>
           {getFieldDecorator('content', {
             initialValue: data && data[0].content || '',
             rules: [{ max: 120, message: '不能超过120个汉字' }]

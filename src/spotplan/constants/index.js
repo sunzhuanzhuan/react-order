@@ -1,5 +1,5 @@
 import React from 'react'
-import { Modal, Input, Form, Select, Tooltip } from 'antd'
+import { Modal, Input, Form, Select, Tooltip, DatePicker } from 'antd'
 import numeral from 'numeral'
 const { TextArea } = Input;
 const FormItem = Form.Item;
@@ -253,6 +253,42 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete) => 
     }
   },
   {
+    title: '发文位置（非必填）',
+    dataIndex: 'publish_articles_address',
+    key: 'publish_articles_address',
+    align: 'center',
+    width: 210,
+    render: (text, record) => {
+      return <FormItem>
+        {getFieldDecorator(`${record.order_id}.publish_articles_address`)(
+          <Select placeholder="请选择" style={{ width: 120 }}>
+            <Option value="1">头条</Option>
+            <Option value="2">次条</Option>
+            <Option value="3">三条</Option>
+            <Option value="4">四条</Option>
+            <Option value="5">五条</Option>
+            <Option value="6">六条</Option>
+            <Option value="7">七条</Option>
+            <Option value="8">八条</Option>
+          </Select>
+        )}
+      </FormItem>
+    }
+  }, {
+    title: '发文时间（非必填）',
+    dataIndex: 'publish_articles_at',
+    key: 'publish_articles_at',
+    align: 'center',
+    width: 210,
+    render: (text, record) => {
+      return <FormItem>
+        {getFieldDecorator(`${record.order_id}.publish_articles_at`)(
+          <DatePicker showTime placeholder="请输入" style={{ width: 150 }} />
+        )}
+      </FormItem>
+    }
+  },
+  {
     title: '操作',
     dataIndex: 'action',
     key: 'action',
@@ -352,7 +388,7 @@ export const SpotplanListFunc = () => [
     }
   }
 ];
-export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdateOrder, handleEditOrder, handleDelete, handleHistory, handleAddNumber) => [
+export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdateOrder, handleEditOrder, handleDelete, handleHistory, handleAddNumber, handleUpdateArtical) => [
   {
     title: '订单ID',
     dataIndex: 'order_id',
@@ -508,6 +544,24 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
         </div>
       </Tooltip> : '-'
     }
+  }, {
+    title: '发文位置（非必填）',
+    dataIndex: 'publish_articles_address',
+    key: 'publish_articles_address',
+    align: 'center',
+    width: 120,
+    render: text => {
+      return text ? text : '-'
+    }
+  }, {
+    title: '发文时间',
+    dataIndex: 'publish_articles_at',
+    key: 'publish_articles_at',
+    align: 'center',
+    width: 120,
+    render: text => {
+      return text ? text : '-'
+    }
   },
   {
     title: '备注',
@@ -549,6 +603,11 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
             <div> <a href='javascript:;' onClick={() => {
               handleUpdateOrder(record.order_id)
             }}>申请更新信息</a> </div> : null}
+        {
+          record.stopAndUpdate == 1 ?
+            <div> <a href='javascript:;' onClick={() => {
+              handleUpdateArtical(record.order_id)
+            }}>更新发文时间</a> </div> : null}
 
         {
           record.is_inward_send == 1 || record.last_apply_status == 1 || record.last_apply_status == 2 ? null : <div><a href='javascript:;' onClick={() => {
@@ -793,6 +852,86 @@ export const OrderCols = [
     width: 100,
     render: text => {
       return text && numeral(text).format('0,0.00') || '-'
+    }
+  }
+];
+export const ArticalCols = [
+  {
+    title: '订单ID',
+    dataIndex: 'order_id',
+    key: 'order_id',
+    align: 'center',
+    width: 100
+  },
+  {
+    title: '订单状态',
+    dataIndex: 'status_name',
+    key: 'status_name',
+    align: 'center',
+    width: 100
+  },
+  {
+    title: '需求名称',
+    dataIndex: 'requirement_name',
+    key: 'requirement_name',
+    align: 'center',
+    width: 100
+  },
+  {
+    title: '平台',
+    dataIndex: 'weibo_type_name',
+    key: 'weibo_type_name',
+    align: 'center',
+    width: 100
+  },
+  {
+    title: '账号名称',
+    dataIndex: 'weibo_name',
+    key: 'weibo_name',
+    align: 'center',
+    width: 100
+  }, {
+    title: 'PriceID',
+    dataIndex: 'price_id',
+    key: 'price_id',
+    align: 'center',
+    width: 100
+  },
+  {
+    title: '价格名称',
+    dataIndex: 'price_name',
+    key: 'price_name',
+    align: 'center',
+    width: 100
+  },
+  {
+    title: 'Cost（元）',
+    dataIndex: 'cost',
+    key: 'cost',
+    align: 'center',
+    width: 100,
+    render: text => {
+      return text && numeral(text).format('0,0.00') || '-'
+    }
+  },
+  {
+    title: 'Costwithfee（元）',
+    dataIndex: 'costwithfee',
+    key: 'costwithfee',
+    align: 'center',
+    width: 100,
+    render: text => {
+      return text && numeral(text).format('0,0.00') || '-'
+    }
+  },
+  {
+    title: '发文时间',
+    dataIndex: 'publish_articles_at',
+    key: 'publish_articles_at',
+    align: 'center',
+    width: 100,
+    render: text => {
+      return text ? text : '-'
     }
   }
 ];

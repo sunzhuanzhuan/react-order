@@ -56,6 +56,7 @@ class SpotPlanDetail extends React.Component {
       quitVisible: false,
       updateVisible: false,
       addVisible: false,
+      updateArticalVisible: false,
       type: 'all',
       order_id: undefined,
       selectedRowKeys: [],
@@ -173,6 +174,12 @@ class SpotPlanDetail extends React.Component {
     const search = qs.parse(this.props.location.search.substring(1));
     this.props.actions.getBasicSpotplanOrderInfo({ spotplan_id: search.spotplan_id, order_id }).then(() => {
       this.setState({ order_id, quitVisible: true });
+    })
+  }
+  handleUpdateArtical = order_id => {
+    const search = qs.parse(this.props.location.search.substring(1));
+    this.props.actions.getBasicSpotplanOrderInfo({ spotplan_id: search.spotplan_id, order_id }).then(() => {
+      this.setState({ order_id, updateArticalVisible: true });
     })
   }
   //批量-新增账号
@@ -316,6 +323,22 @@ class SpotPlanDetail extends React.Component {
     }
     this.handleAddAccount(selectedRowKeys)
   }
+  handleSettleUpdateArtical = () => {
+    const { selectedRowKeys, rows } = this.state;
+    if (selectedRowKeys.length == 0) {
+      message.error('请先勾选订单', 3);
+      return
+    }
+    const flag = Object.values(rows).every(item => item.stopAndUpdate == 1);
+    if (!flag) {
+      Modal.error({
+        title: '错误提示',
+        content: <div>你选择的订单中存在不能发起【更新发文时间】的订单，请重新选择。</div>
+      });
+      return;
+    }
+    this.handleUpdateArtical(selectedRowKeys)
+  }
   handleSettleDeleteOrder = () => {
 
     const search = qs.parse(this.props.location.search.substring(1));
@@ -422,7 +445,7 @@ class SpotPlanDetail extends React.Component {
   }
   render() {
     const search = qs.parse(this.props.location.search.substring(1));
-    const { historyVisible, editVisible, changeVisible, quitVisible, updateVisible, selectedRowKeys, type, loading, record, addVisible, rows } = this.state;
+    const { historyVisible, editVisible, updateArticalVisible, changeVisible, quitVisible, updateVisible, selectedRowKeys, type, loading, record, addVisible, rows } = this.state;
     const { spotplanExecutor, spotplanPlatform, spotplanPoInfo, spotplanAmount, spotplanEditList, basicSpotplanOrderInfo, updateSpotplanOrder: { before_order = [], after_order = [] }, updateSpotplanOrderLog, serviceRateAmount } = this.props;
     const list = spotplanEditList[type] && spotplanEditList[type].list || [];
     // const checkList = list.reduce((data, current) => {
@@ -430,7 +453,7 @@ class SpotPlanDetail extends React.Component {
     //   return flag ? [...data, current] : data
     // }, []);
     const checked = list.every(item => selectedRowKeys.includes(item.order_id.toString()));
-    const DetailTableCols = DetailTableFunc(this.handleChangeNumber, this.handleQuitOrder, this.handleUpdateOrder, this.handleEditOrder, this.handleDelete, this.handleHistory, this.handleAddNumber);
+    const DetailTableCols = DetailTableFunc(this.handleChangeNumber, this.handleQuitOrder, this.handleUpdateOrder, this.handleEditOrder, this.handleDelete, this.handleHistory, this.handleAddNumber, this.handleUpdateArtical);
     const rowSelection = {
       selectedRowKeys: selectedRowKeys,
       onChange: this.handleSelectChange,
@@ -486,6 +509,7 @@ class SpotPlanDetail extends React.Component {
         {(spotplanPoInfo && spotplanPoInfo.customer_po_amount) == null ? null : <Button type='primary' onClick={this.handleSettleChange}>批量申请换号</Button>}
         {(spotplanPoInfo && spotplanPoInfo.customer_po_amount) == null ? null : <Button className='left-gap' type='primary' onClick={this.handleSettleQuit}>批量申请终止合作</Button>}
         {(spotplanPoInfo && spotplanPoInfo.customer_po_amount) == null ? null : <Button type='primary' className='left-gap' onClick={this.handleSettleAddAccount}>批量申请新增账号</Button>}
+        {(spotplanPoInfo && spotplanPoInfo.customer_po_amount) == null ? null : <Button type='primary' className='left-gap' onClick={this.handleSettleUpdateArtical}>批量更新发文时间</Button>}
         <Button type='primary' className='left-gap' onClick={this.handleSettleDeleteOrder}>批量删除订单</Button>
 
       </div>
@@ -509,6 +533,12 @@ class SpotPlanDetail extends React.Component {
       />}
       {quitVisible && <QuitModal visible={quitVisible}
         onCancel={() => { this.setState({ quitVisible: false }) }}
+        handleSubmit={this.handleSubmit}
+        dataSource={basicSpotplanOrderInfo}
+        handleClose={this.handleClose}
+      />}
+      {updateArticalVisible && <QuitModal visible={updateArticalVisible}
+        onCancel={() => { this.setState({ updateArticalVisible: false }) }}
         handleSubmit={this.handleSubmit}
         dataSource={basicSpotplanOrderInfo}
         handleClose={this.handleClose}
