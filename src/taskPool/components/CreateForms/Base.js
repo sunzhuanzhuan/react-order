@@ -11,21 +11,21 @@ const FormItem = Form.Item
 
 const options = [
   {
-    value: 'zhejiang',
+    value: '1',
     label: 'Zhejiang',
     children: [
       {
-        value: 'hangzhou',
+        value: '11',
         label: 'Hangzhou'
       }
     ]
   },
   {
-    value: 'jiangsu',
+    value: '2',
     label: 'Jiangsu',
     children: [
       {
-        value: 'nanjing',
+        value: '22',
         label: 'Nanjing'
       }
     ]

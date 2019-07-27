@@ -12,6 +12,7 @@ import {
 import { parseUrlQuery } from "@/util/parseUrl";
 import * as commonActions from "@/actions";
 import * as actions from "@/taskPool/actions";
+import moment from "moment";
 
 const { Step } = Steps;
 let forms = {
@@ -45,17 +46,55 @@ class CreateTask extends Component {
     const hasCompany = !!(companyId && companyName)
     this.state = {
       current: step - 1,
-      authToken: '',
+      /*authToken: '',
       disabled: hasCompany,
       base: {
-        platformId: Number(platformId) || 9,
+        platformId: Number(platformId) || 1,
         company: hasCompany ? {
           label: companyName,
           key: companyId
         } : undefined,
       },
       budget: {},
-      content: {}
+      content: {}*/
+      authToken: "eyJhbGciOiJIUzUxMiJ9.eyJ0b2tlbiI6Imp2NTBBQ19ycDl0cDlCeXFWam4xdjNTb3ZoZ3lMcVQzM2tmOGI5aTBOTENfWUZkeiJ9.7_EKsPXVrWBqnWA_mpyOUoqUqg4kh0xr6hO22zN_sU6ferIFhdYhmcgSsSSY5fosMbOgsxveqiwJEJK80off-g",
+      base:{
+        company: {
+          key: "2",
+          label: "可口可乐有限公司",
+        },
+        industry: [
+          "zhejiang",
+          "hangzhou"
+        ],
+        orderName: "刘治兵",
+        platformId: 1,
+      },
+      budget: {
+        taskContentStyle: 11,
+        actionNum:12333,
+        followerCountLimit: 2222,
+        orderEndDate: moment(),
+        retainTime: 24,
+        taskTarget: 22,
+        totalAmount: 12333,
+      },
+      content: {
+        coverImage: [{
+          uid: "rc-upload-1564223659679-2",
+          url:  "http://prd-wby-img.oss-cn-beijing.aliyuncs.com/B_GZA_ORDER_IMG_NORMAL_UPLOAD/891914dc09094f7db8be44ac8cf9c11a.jpg",
+        }],
+        attachment: {
+          images: [{
+            uid: "rc-upload-1564223659679-2",
+            url:  "http://prd-wby-img.oss-cn-beijing.aliyuncs.com/B_GZA_ORDER_IMG_NORMAL_UPLOAD/891914dc09094f7db8be44ac8cf9c11a.jpg",
+          }],
+          type:1,
+          video: "",
+        },
+        content: "123123",
+        taskContentStyle: 21,
+      }
     }
   }
 
@@ -78,9 +117,10 @@ class CreateTask extends Component {
     });
   }
 
-  prev = () => {
+  prev = (key, data) => {
     this.setState({
-      current: this.state.current - 1
+      current: this.state.current - 1,
+      [key]: data
     });
   }
 

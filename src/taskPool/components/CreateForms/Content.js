@@ -41,6 +41,13 @@ const controls = [
 class ContentForWeixin extends React.Component {
   state = {}
 
+  // 暂存 & 上一步
+  cached = () => {
+    let newVal = Object.assign({}, this.props.form.getFieldsValue())
+    this.props.prev("content", newVal)
+  }
+
+  // 富文本编辑自定义上传
   customUpload = (param) => {
     const { data } = this.props
     let formData = new window.FormData();
@@ -85,8 +92,6 @@ class ContentForWeixin extends React.Component {
 
   }
 
-  componentDidMount() { }
-
   handleSubmit = (e) => {
     e && e.preventDefault()
     this.props.form.validateFields((err, values) => {
@@ -97,28 +102,12 @@ class ContentForWeixin extends React.Component {
     });
   }
 
-  buildPreviewHtml = () => {
-    let content = this.props.form.getFieldValue('content')
-    let _html = content.toHTML()
-    return previewHtml(_html)
-
-  }
-
   validatorContent = (rules, value, callback) => {
     if (value.isEmpty()) {
       callback('请输入正文内容')
     } else {
       callback()
     }
-  }
-
-  preview = () => {
-    if (window.previewWindow) {
-      window.previewWindow.close()
-    }
-    window.previewWindow = window.open()
-    window.previewWindow.document.write(this.buildPreviewHtml())
-    window.previewWindow.document.close()
   }
 
   render() {
@@ -208,7 +197,7 @@ class ContentForWeixin extends React.Component {
         </FormItem>
         <footer>
           <FormItem label=' '>
-            <Button onClick={this.props.prev}>上一步</Button>
+            <Button onClick={this.cached}>上一步</Button>
             <Button type="primary" htmlType="submit">下一步</Button>
           </FormItem>
         </footer>
@@ -246,33 +235,46 @@ class ContentForWeibo extends React.Component {
 
   componentDidMount() { }
 
+  // 暂存 & 上一步
+  cached = () => {
+    let newVal = Object.assign({}, this.props.form.getFieldsValue())
+    this.props.prev("content", newVal)
+  }
+
   handleSubmit = (e) => {
     e && e.preventDefault()
-    this.props.form.validateFields()
-    // this.props.next()
+    this.props.form.validateFields((err, values) => {
+      if (!err) {
+        let newVal = Object.assign({}, values)
+        this.props.next("content", newVal)
+      }
+    });
   }
 
   render() {
 
     const { form, formLayout, data } = this.props
+    const { base, budget, content } = data
     const { getFieldDecorator, getFieldValue, getFieldsValue } = form
     return (
       <Form onSubmit={this.handleSubmit}  {...formLayout}>
         <FormItem label="内容形式">
-          {getFieldDecorator('platforsssm', {
+          {getFieldDecorator('taskContentStyle', {
+            initialValue: content.taskContentStyle || 21,
             rules: [{
               required: true,
               message: '请选择内容发布位置'
             }]
           })(
             <Radio.Group>
-              <Radio value={1}>直发</Radio>
-              <Radio value={2}>转发</Radio>
+              <Radio value={21}>直发</Radio>
+              <Radio value={22} disabled>转发</Radio>
             </Radio.Group>
           )}
         </FormItem>
-        {getFieldValue('platforsssm') === 1 && <FormItem label="内容描述">
-          {getFieldDecorator('ssss', {
+        {getFieldValue('taskContentStyle') === 21 && <FormItem label="内容描述">
+          {getFieldDecorator('content', {
+            initialValue: content.content,
             rules: [
               { required: true, message: '请填写内容' },
               { max: 140, message: '最多输入140个字' }
@@ -287,9 +289,9 @@ class ContentForWeibo extends React.Component {
             />
           )}
         </FormItem>}
-        {getFieldValue('platforsssm') === 1 && <FormItem label="素材">
-          {getFieldDecorator('file', {
-            initialValue: undefined,
+        {getFieldValue('taskContentStyle') === 21 && <FormItem label="素材">
+          {getFieldDecorator('attachment', {
+            initialValue: content.attachment,
             rules: [
               {
                 required: true,
@@ -301,8 +303,9 @@ class ContentForWeibo extends React.Component {
             <UploadMaterial authToken={data.authToken} />
           )}
         </FormItem>}
-        {getFieldValue('platforsssm') === 2 && <FormItem label="微博地址">
-          {getFieldDecorator('ssss', {
+        {getFieldValue('taskContentStyle') === 22 && <FormItem label="微博地址">
+          {getFieldDecorator('url', {
+            initialValue: content.url,
             rules: [
               { required: true, message: '请填写微博地址' },
               { type: "url", message: '请填写正确的链接' },
@@ -311,9 +314,9 @@ class ContentForWeibo extends React.Component {
             <Input placeholder='输入微博文章链接' />
           )}
         </FormItem>}
-        {getFieldValue('platforsssm') === 2 && <FormItem label="转发语">
-          {getFieldDecorator('ss222ss', {
-
+        {getFieldValue('taskContentStyle') === 22 && <FormItem label="转发语">
+          {getFieldDecorator('forwardWord', {
+            initialValue: content.forwardWord,
           })(
             <Input.TextArea
               placeholder='输入转发语'
@@ -326,7 +329,7 @@ class ContentForWeibo extends React.Component {
         </FormItem>}
         <footer>
           <FormItem label=' '>
-            <Button onClick={this.props.prev}>上一步</Button>
+            <Button onClick={this.cached}>上一步</Button>
             <Button type="primary" htmlType="submit">下一步</Button>
           </FormItem>
         </footer>

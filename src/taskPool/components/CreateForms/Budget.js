@@ -35,6 +35,13 @@ class BudgetForWeixin extends React.Component {
     })
   }
 
+  // 暂存 & 上一步
+  cached = () => {
+    let newVal = Object.assign({}, this.props.form.getFieldsValue())
+    newVal.actionNum = this.state.actionNum
+    this.props.prev("budget", newVal)
+  }
+
   calculation = (amount, taskOrderType) => {
     if(amount <= 0){
       return this.setState({
@@ -57,6 +64,7 @@ class BudgetForWeixin extends React.Component {
     this.props.form.validateFields((err, values) => {
       if (!err) {
         let newVal = Object.assign({}, values)
+        newVal.actionNum = this.state.actionNum
         this.props.next("budget", newVal)
       }
     });
@@ -98,7 +106,7 @@ class BudgetForWeixin extends React.Component {
               <InputNumber
                 precision={2}
                 min={1}
-                max={balance}
+                max={balance || 999999999}
                 step={1000}
                 style={{ flex: "auto" }}
                 onChange={val => {
@@ -158,7 +166,7 @@ class BudgetForWeixin extends React.Component {
         </FormItem>
         <footer>
           <FormItem label=' '>
-            <Button onClick={this.props.prev}>上一步</Button>
+            <Button onClick={this.cached}>上一步</Button>
             <Button type="primary" htmlType="submit">下一步</Button>
           </FormItem>
         </footer>
@@ -193,6 +201,13 @@ class BudgetForWeibo extends React.Component {
         balance: data
       });
     })
+  }
+
+  // 暂存 & 上一步
+  cached = () => {
+    let newVal = Object.assign({}, this.props.form.getFieldsValue())
+    newVal.actionNum = this.state.actionNum
+    this.props.prev("budget", newVal)
   }
 
   calculation = (amount) => {
@@ -260,7 +275,7 @@ class BudgetForWeibo extends React.Component {
               <InputNumber
                 precision={2}
                 min={1}
-                max={balance}
+                max={balance || 99999999}
                 step={1000}
                 style={{ flex: "auto" }}
                 onChange={val => {
@@ -340,7 +355,7 @@ class BudgetForWeibo extends React.Component {
         </FormItem>
         <footer>
           <FormItem label=' '>
-            <Button onClick={this.props.prev}>上一步</Button>
+            <Button onClick={this.cached}>上一步</Button>
             <Button type="primary" htmlType="submit">下一步</Button>
           </FormItem>
         </footer>

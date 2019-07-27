@@ -17,10 +17,16 @@ const { Text } = Typography;
 
 const FormItem = Form.Item
 
+const target = {
+  "11":"多图文第一条","12":"不限","21":"粉丝覆盖","22":"粉丝传播"
+}
+const contentStyle = {
+  "11":"多图文第一条","12":"不限","21":"直发","22":"转发"
+}
+
 /**
  * 微信平台
  */
-@Form.create()
 class PreviewForWeixin extends React.Component {
   state = {}
 
@@ -33,7 +39,7 @@ class PreviewForWeixin extends React.Component {
   }
 
   componentDidMount() {
-    this.success()
+    // this.success()
   }
 
   handleSubmit = (e) => {
@@ -43,8 +49,8 @@ class PreviewForWeixin extends React.Component {
 
   render() {
 
-    const { form, formLayout } = this.props
-    const { getFieldDecorator } = form
+    const { data } = this.props
+    const { base, budget, content } = data
     const header = <div className='form-preview-header'>
       <WBYPlatformIcon weibo_type={9} widthSize={26} />
       <span className='title'>这里是任务名称</span>
@@ -52,15 +58,15 @@ class PreviewForWeixin extends React.Component {
     return (
       <div className="form-preview-container">
         <Descriptions title={header} column={1}>
-          <Descriptions.Item label="所属公司">Zhou Maomao</Descriptions.Item>
-          <Descriptions.Item label="行业分类">1810000000</Descriptions.Item>
-          <Descriptions.Item label="预算">Hangzhou, Zhejiang</Descriptions.Item>
-          <Descriptions.Item label="任务结束时间">empty</Descriptions.Item>
-          <Descriptions.Item label="发布后保留时长">24小时</Descriptions.Item>
-          <Descriptions.Item label="内容发布位置">24小时</Descriptions.Item>
+          <Descriptions.Item label="所属公司">{base.company.label}</Descriptions.Item>
+          <Descriptions.Item label="行业分类">{base.industry}</Descriptions.Item>
+          <Descriptions.Item label="内容发布位置">{contentStyle[budget.taskContentStyle]}</Descriptions.Item>
+          <Descriptions.Item label="预算">{budget.totalAmount}</Descriptions.Item>
+          <Descriptions.Item label="任务结束时间">{budget.orderEndDate.format('YYYY-MM-DD HH:mm:ss')}</Descriptions.Item>
+          <Descriptions.Item label="发布后保留时长">{budget.retainTime}小时</Descriptions.Item>
           <Descriptions.Item label="文章封面">
             <div className='image-wrap'>
-              <img src="https://mmbiz.qpic.cn/mmbiz_png/5r2fdOVlScpTy1TGoAmCIW6cvw8YGRygsBB4vwBgX1uv7zOEKZswEEcoNfiaufdPQ9R4YwA1amvPcw2fTMcxEHA/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1" alt="" />
+              <img src={content.coverImage[0].url} alt="" />
             </div>
           </Descriptions.Item>
           <Descriptions.Item label="推广文章">
@@ -80,7 +86,6 @@ class PreviewForWeixin extends React.Component {
 /**
  * 微博平台
  */
-@Form.create()
 class PreviewForWeibo extends React.Component {
   state = {}
 
@@ -88,33 +93,40 @@ class PreviewForWeibo extends React.Component {
 
   handleSubmit = (e) => {
     e && e.preventDefault()
-    this.props.next()
+    // this.props.next()
   }
 
   render() {
 
-    const { form, formLayout } = this.props
-    const { getFieldDecorator } = form
+    const { data } = this.props
+    const { base, budget, content } = data
     const header = <div className='form-preview-header'>
       <WBYPlatformIcon weibo_type={1} widthSize={26} />
-      <span className='title'>这里是任务名称</span>
+      <span className='title'>{base.orderName}</span>
     </div>
     return (
       <div className="form-preview-container">
         <Descriptions title={header} column={1}>
-          <Descriptions.Item label="所属公司">Zhou Maomao</Descriptions.Item>
-          <Descriptions.Item label="行业分类">1810000000</Descriptions.Item>
-          <Descriptions.Item label="预算">Hangzhou, Zhejiang</Descriptions.Item>
-          <Descriptions.Item label="任务结束时间">empty</Descriptions.Item>
-          <Descriptions.Item label="发布后保留时长">24小时</Descriptions.Item>
-          <Descriptions.Item label="内容发布位置">24小时</Descriptions.Item>
-          <Descriptions.Item label="文章封面">
-            <div className='image-wrap'>
-              <img src="https://mmbiz.qpic.cn/mmbiz_png/5r2fdOVlScpTy1TGoAmCIW6cvw8YGRygsBB4vwBgX1uv7zOEKZswEEcoNfiaufdPQ9R4YwA1amvPcw2fTMcxEHA/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1" alt="" />
-            </div>
-          </Descriptions.Item>
+          <Descriptions.Item label="所属公司">{base.company.label}</Descriptions.Item>
+          <Descriptions.Item label="行业分类">{base.industry}</Descriptions.Item>
+          <Descriptions.Item label="任务目标">{target[budget.taskTarget]}</Descriptions.Item>
+          <Descriptions.Item label="预算">{budget.totalAmount}</Descriptions.Item>
+          <Descriptions.Item label="任务结束时间">{budget.orderEndDate.format('YYYY-MM-DD HH:mm:ss')}</Descriptions.Item>
+          <Descriptions.Item label="发布后保留时长">{budget.retainTime}小时</Descriptions.Item>
+          <Descriptions.Item label="内容形式">{contentStyle[content.taskContentStyle]}</Descriptions.Item>
           <Descriptions.Item label="推广文章">
             <a>预览</a>
+          </Descriptions.Item>
+          <Descriptions.Item label="推广文章">
+            <div>
+              {content.content}
+            </div>
+            {content.attachment.type === 1 && <div>
+              {content.attachment.images.map(item => <img key={item.uid} src={item.url} alt="" />)}
+            </div>}
+            {content.attachment.type === 2 && <div>
+              {content.attachment.video}
+            </div>}
           </Descriptions.Item>
         </Descriptions>
         <Text type="danger">确认无误即可提交。博主领取并执行任务后，会自动扣除预算。</Text>
