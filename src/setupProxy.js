@@ -1,6 +1,6 @@
 const proxy = require('http-proxy-middleware');
 module.exports = function (app) {
-  app.use(proxy('/api/rabc/',
+  app.use(proxy('/api/rbac/',
      { target: 'http://zeebin.top:9090/mock/32', changeOrigin: true }
    ));
   app.use(proxy('/api/operator-gateway/',

@@ -1,5 +1,6 @@
 import { createHttpAction } from 'redux-action-extend'
 import Interface from '../constants/Interface';
+import { createAction } from "redux-actions";
 
 // 新增任务
 export const {
@@ -7,18 +8,21 @@ export const {
 } = createHttpAction('TPAddTask', Interface.addTask, {
   method: 'post'
 });
+
 // 下线任务
 export const {
   TPOffline
 } = createHttpAction('TPOffline', Interface.offline, {
   method: 'post'
 });
+
 // 根据公司名称模糊查询公司列表
 export const {
   TPFuzzyQueryCompany
 } = createHttpAction('TPFuzzyQueryCompany', Interface.fuzzyQueryCompany, {
   method: 'post'
 });
+
 // 查询任务大厅余额
 export const {
   TPQueryAvailableBalance
@@ -30,10 +34,35 @@ export const {
 } = createHttpAction('TPQueryActionNum', Interface.queryActionNum, {
   method: 'post'
 });
+
 // 任务管理列表
 export const {
   TPTaskManageList,
   TPTaskManageList_success
 } = createHttpAction('TPTaskManageList', Interface.taskManageList, {
+  method: 'post'
+});
+
+// 任务详情
+export const {
+  TPTaskDetail,
+  TPTaskDetail_success
+} = createHttpAction('TPTaskDetail', Interface.taskDetail);
+
+// 修改任务详情
+export const TPChangeTaskDetail = createAction('TPChangeTaskDetail', (data) => {
+  return { data }
+})
+
+// 清除任务详情
+export const TPTaskDetailClear = createAction('TPTaskDetailClear', (data) => {
+  return { data }
+})
+
+// 查询博主领取列表
+export const {
+  TPMcnOrderList,
+  TPMcnOrderList_success
+} = createHttpAction('TPMcnOrderList', Interface.mcnOrderList, {
   method: 'post'
 });

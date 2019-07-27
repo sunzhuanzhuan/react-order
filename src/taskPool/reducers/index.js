@@ -1,7 +1,11 @@
 import { combineReducers } from 'redux'
 import { handleActions, handleAction } from 'redux-actions';
 import {
-  TPTaskManageList_success
+  TPTaskManageList_success,
+  TPTaskDetail_success,
+  TPChangeTaskDetail,
+  TPTaskDetailClear,
+  TPMcnOrderList_success,
 } from '../actions'
 
 // 处理列表数据为map表
@@ -34,6 +38,35 @@ function initList() {
 export const taskManageList = handleActions({
   [TPTaskManageList_success]: handleResponseList('id')
 }, initList())
+
+// 任务详情
+export const taskDetail = handleActions({
+  [TPTaskDetail_success]: (state, action) => {
+    return {
+      ...action.payload.data
+    }
+  },
+  [TPChangeTaskDetail]: (state, action) => {
+    return {
+      ...state,
+      ...action.payload.data
+    }
+  },
+  [TPTaskDetailClear]: (state, action) => {
+    return {}
+  }
+}, {})
+
+
+// 任务管理列表
+export const mcnOrderList = handleActions({
+  [TPMcnOrderList_success]: handleResponseList('id')
+}, initList())
+
+
+
 export default combineReducers({
-  taskManageList
+  taskManageList,
+  taskDetail,
+  mcnOrderList
 })

@@ -1,8 +1,8 @@
 import React, { Component } from "react"
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import * as commonAction from '@/actions/index'
-import * as action from '../actions/index'
+import * as commonActions from '@/actions/index'
+import * as actions from '../actions'
 import { PageHeader, Steps, Icon, Empty } from 'antd'
 import {
   FormBase,
@@ -10,8 +10,6 @@ import {
   FormContent, FormPreview
 } from "../components/CreateForms/index";
 import { parseUrlQuery } from "@/util/parseUrl";
-import * as commonActions from "@/actions";
-import * as actions from "@/taskPool/actions";
 import moment from "moment";
 import BraftEditor from 'braft-editor'
 

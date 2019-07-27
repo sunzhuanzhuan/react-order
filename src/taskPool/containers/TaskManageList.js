@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Modal, Table, message, Icon, Typography, Button, Divider } from 'antd'
 import { SH2 } from '@/base/SectionHeader'
 import { bindActionCreators } from 'redux'
+import { NavLink } from "react-router-dom";
 import * as commonActions from '@/actions'
 import * as actions from '../actions'
 import { connect } from 'react-redux'
@@ -11,7 +12,6 @@ import {
   TaskInfo,
   TaskStatus
 } from "@/taskPool/base/ColumnsDataGroup";
-import { NavLink } from "react-router-dom";
 
 const { Title } = Typography;
 
@@ -20,9 +20,12 @@ class TaskManageList extends Component {
     super(props, context)
     this.state = {
       search: {
-        currentPage: 1,
-        pageSize: 10
-      }
+        page: {
+          currentPage: 1,
+          pageSize: 10
+        }
+      },
+      listLoading: false
     }
     this.columns = [
       {
@@ -127,7 +130,7 @@ class TaskManageList extends Component {
 
   render() {
     const { actions, history, taskPoolReducers } = this.props
-    // const { search: { currentPage } } = this.state
+    const { listLoading, search } = this.state
     const { taskManageList: { keys, source, total, pageNum, pageSize } } = taskPoolReducers
 
     const dataSource = keys.map(key => source[key])
@@ -135,13 +138,17 @@ class TaskManageList extends Component {
       total,
       pageSize,
       current: pageNum,
-      onChange: (current) => {
-        this.getList({ currentPage: current })
-      },
       showQuickJumper: true,
       showSizeChanger: true,
-      onShowSizeChange: (current, pageSize) => {
-        this.getList({ pageSize })
+      onChange: (currentPage) => {
+        this.getList({
+          page: { ...search.page, currentPage }
+        })
+      },
+      onShowSizeChange: (currentPage, pageSize) => {
+        this.getList({
+          page: { ...search.page, pageSize }
+        })
       }
     }
     return <div className='task-pool-page-container manage-page'>
@@ -154,7 +161,7 @@ class TaskManageList extends Component {
         </Button>
       </div>
       <Table
-        loading={this.state.listLoading}
+        loading={listLoading}
         dataSource={dataSource}
         pagination={pagination}
         columns={this.columns}

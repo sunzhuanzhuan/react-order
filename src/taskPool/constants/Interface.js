@@ -6,4 +6,6 @@ export default {
   fuzzyQueryCompany: prefix + "/company/v1/fuzzyQuery",
   queryAvailableBalance: prefix + "/finance/v1/queryAvailableBalance",
   queryActionNum: prefix + "/adOrder/v1/queryActionNum",
+  taskDetail: prefix + "/adOrder/v1/detail",
+  mcnOrderList: prefix + "/adOrder/v1/mcnOrderList",
 }

@@ -1,8 +1,8 @@
 import React, { Component } from "react"
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import * as commonAction from '@/actions/index'
-import * as action from '../actions/index'
+import * as commonActions from '@/actions'
+import * as actions from '../actions'
 import {
   PageHeader,
   Descriptions,
@@ -10,21 +10,22 @@ import {
   Divider,
   Table,
   Modal,
-  Badge
+  Badge, message
 } from 'antd'
 import Section from "@/base/Section";
 import { KolInfo, QAStatus } from "@/taskPool/base/ColumnsDataGroup";
 import Yuan from "@/base/Yuan";
 import { WBYPlatformIcon } from "wbyui";
 import { getCountDownTimeText } from "@/taskPool/constants/utils";
+import { mcnOrderList, taskDetail } from "@/taskPool/reducers";
 
 const columns = [
   {
     title: '博主',
     align: "center",
-    dataIndex: 'real_name_1',
+    dataIndex: 'snsName',
     render: (name, record) => {
-      return <KolInfo />
+      return <KolInfo title={name} avatar={record.avatarUrl}/>
     }
   },
   {
@@ -38,7 +39,7 @@ const columns = [
   {
     title: '执行状态',
     align: "center",
-    dataIndex: 'real_name_3',
+    dataIndex: 'orderState',
     render: (name, record) => {
       return "已执行"
     }
@@ -46,25 +47,25 @@ const columns = [
   {
     title: '质检状态',
     align: "center",
-    dataIndex: 'real_name_4',
-    render: (name, record) => {
-      return <QAStatus />
+    dataIndex: 'orderState1',
+    render: (status, record) => {
+      return <QAStatus status={status}/>
     }
   },
   {
     title: '阅读数',
     align: "center",
-    dataIndex: 'real_name_5',
-    render: (name, record) => {
-      return "1986"
+    dataIndex: 'realActionNum',
+    render: (realActionNum, record) => {
+      return <div>{realActionNum}</div>
     }
   },
   {
     title: '结算价格',
     align: "center",
-    dataIndex: 'real_name_6',
-    render: (name, record) => {
-      return <Yuan value={22222} format={"0,0.00"} style={{ color: "#333" }} />
+    dataIndex: 'realAmount',
+    render: (realAmount, record) => {
+      return <Yuan value={realAmount} format={"0,0.00"} style={{ color: "#333" }} />
     }
   },
   {
@@ -101,70 +102,111 @@ const statusKeyToProps = {
     text: '已过期'
   }
 }
+
 class TaskDetail extends Component {
   constructor(props) {
     super(props);
-    this.state = {}
+    this.state = {
+      search: {
+        page: {
+          currentPage: 1,
+          pageSize: 9999
+        }
+      },
+      listLoading: false,
+      detailLoading: false
+    }
   }
 
   // 下线
   offline = (id) => {
+    const { actions } = this.props
     Modal.confirm({
       title: '确认要下线此任务吗?',
-      content: "任务下线后，不可重新上线。已领取任务的博主，可执行。未消耗的余额，会在之后返还到您的任务账户余额中。"
+      content: "任务下线后，不可重新上线。已领取任务的博主，可执行。未消耗的余额，会在之后返还到您的任务账户余额中。",
+      onOk: () => {
+        return actions.TPOffline({ id }).then(() => {
+          message.success('下线成功')
+          this.getDetail()
+        })
+      }
+    })
+  }
+
+  getDetail = () => {
+    const { actions, match } = this.props
+    const { id } = match.params
+    this.setState({ detailLoading: true });
+    actions.TPTaskDetail({ id }).finally(() => {
+      this.setState({ detailLoading: false })
+    })
+  }
+
+  getList = (params = {}) => {
+    const { actions } = this.props
+    let search = { ...this.state.search, ...params }
+    this.setState({ listLoading: true, search })
+    actions.TPMcnOrderList(search).finally(() => {
+      this.setState({ listLoading: false })
     })
   }
 
   componentDidMount() {
-    const { actions } = this.props
+    this.getDetail()
+    this.getList()
   }
 
   render() {
-    const { current } = this.state
-    const data = [
-      {}
-    ]
+    const { actions, history, taskPoolReducers } = this.props
+    const { listLoading, search } = this.state
+    const { mcnOrderList: { keys, source }, taskDetail } = taskPoolReducers
+
+    const dataSource = keys.map(key => source[key])
     return <div className='task-pool-page-container detail-page'>
       <PageHeader
         onBack={() => this.props.history.push('/order/task/manage')}
         title="任务详情"
         extra={
-          <Button type="primary" ghost onClick={() => this.offline()}>
+          taskDetail.orderState === 1 ? <Button type="primary" ghost onClick={() => this.offline()}>
             下线
-          </Button>
+          </Button> : '已下线'
         }
       />
       <Section>
         <Section.Header title="基本信息" level={5} />
         <Section.Content>
           <Descriptions title="">
-            <Descriptions.Item label="任务ID">12345</Descriptions.Item>
-            <Descriptions.Item label="任务名称">新东方鞋业</Descriptions.Item>
+            <Descriptions.Item label="任务ID">{taskDetail.id}</Descriptions.Item>
+            <Descriptions.Item label="任务名称">{taskDetail.orderName}</Descriptions.Item>
             <Descriptions.Item label="发布平台">
-              <div style={{ top: "-5px", position: "relative", userSelect: "none"}}>
-                <WBYPlatformIcon weibo_type={1} widthSize={22} />
+              <div style={{
+                top: "-5px",
+                position: "relative",
+                userSelect: "none"
+              }}>
+                <WBYPlatformIcon weibo_type={taskDetail.platformId} widthSize={22} />
                 &nbsp;
                 <span>新浪微博</span>
               </div>
             </Descriptions.Item>
-            <Descriptions.Item label="行业分类">美容美妆</Descriptions.Item>
+            <Descriptions.Item label="行业分类">{taskDetail.industry}</Descriptions.Item>
             <Descriptions.Item label="任务目标">阅读数</Descriptions.Item>
             <Descriptions.Item label="发布位置">多图文第一条</Descriptions.Item>
             <Descriptions.Item label="内容形式">直发</Descriptions.Item>
             <Descriptions.Item label="任务开始时间">
-              2019-12-12 12:00:00
+              {taskDetail.createdAt}
             </Descriptions.Item>
             <Descriptions.Item label="任务结束时间">
-              2019-12-22 12:00:00
+              {taskDetail.orderEndDate}
             </Descriptions.Item>
             <Descriptions.Item label="任务剩余时间">
-              {getCountDownTimeText("2019-08-08 12:00:00")}
+              {getCountDownTimeText(taskDetail.orderEndDate)}
             </Descriptions.Item>
-            <Descriptions.Item label="发布后保留时长">24小时</Descriptions.Item>
+            <Descriptions.Item label="发布后保留时长">{taskDetail.retainTime}小时</Descriptions.Item>
             <Descriptions.Item label="推广文章">
               <div className="content-wrap">
-                <div className='image-wrap' >
-                  <img src="https://mmbiz.qpic.cn/mmbiz_png/5r2fdOVlScpTy1TGoAmCIW6cvw8YGRygsBB4vwBgX1uv7zOEKZswEEcoNfiaufdPQ9R4YwA1amvPcw2fTMcxEHA/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1" alt="" />
+                <div className='image-wrap'>
+                  <img src={(taskDetail.adOrderWeixinContent || {}).coverImageUrl} alt="" />
                 </div>
                 <a>查看文章</a>
               </div>
@@ -177,16 +219,16 @@ class TaskDetail extends Component {
         <Section.Content>
           <Descriptions title="">
             <Descriptions.Item label="任务状态">
-              <Badge {...statusKeyToProps[1]}/>
+              <Badge {...statusKeyToProps[taskDetail.orderState]} />
             </Descriptions.Item>
-            <Descriptions.Item label="已领取博主数">22 位</Descriptions.Item>
+            <Descriptions.Item label="已领取博主数">{taskDetail.mcnCount} 位</Descriptions.Item>
             <Descriptions.Item label="消耗/预算">
-              <Yuan value={200000}/>
+              <Yuan value={taskDetail.usedAmount} />
               /
-              <Yuan value={200000}/>
+              <Yuan value={taskDetail.totalAmount} />
             </Descriptions.Item>
-            <Descriptions.Item label="预估最低阅读数">12345</Descriptions.Item>
-            <Descriptions.Item label="已达成阅读数">200000</Descriptions.Item>
+            <Descriptions.Item label="预估最低阅读数">{taskDetail.actionNum}</Descriptions.Item>
+            <Descriptions.Item label="已达成阅读数">{taskDetail.actionNum}</Descriptions.Item>
           </Descriptions>
         </Section.Content>
       </Section>
@@ -195,8 +237,8 @@ class TaskDetail extends Component {
           <span className='text-red'>33</span>} 位</span>} level={5} />
         <Section.Content>
           <Table
-            loading={this.state.listLoading}
-            dataSource={data}
+            loading={listLoading}
+            dataSource={dataSource}
             columns={columns}
             pagination={false}
             size="default"
@@ -207,16 +249,16 @@ class TaskDetail extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
-  return {
-    // accountManage: state.accountManageReducer,
-  }
-}
-
+const mapStateToProps = (state) => ({
+  common: state.commonReducers,
+  taskPoolReducers: state.taskPoolReducers
+})
 const mapDispatchToProps = (dispatch) => ({
-  actions: bindActionCreators({ ...commonAction, ...action }, dispatch)
-});
-
+  actions: bindActionCreators({
+    ...commonActions,
+    ...actions
+  }, dispatch)
+})
 export default connect(
   mapStateToProps,
   mapDispatchToProps
