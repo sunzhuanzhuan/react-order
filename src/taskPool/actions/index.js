@@ -66,3 +66,25 @@ export const {
 } = createHttpAction('TPMcnOrderList', Interface.mcnOrderList, {
   method: 'post'
 });
+
+// 异常任务管理列表
+export const {
+  TPGetMcnReviewOrderList,
+  TPGetMcnReviewOrderList_success
+} = createHttpAction('TPGetMcnReviewOrderList', Interface.getMcnReviewOrderList, {
+  method: 'post'
+});
+
+// 异常任务通过
+export const {
+  TPApprovedSuccess,
+} = createHttpAction('TPApprovedSuccess', Interface.approvedSuccess, {
+  method: 'post'
+});
+
+// 异常任务拒绝
+export const {
+  TPApprovedFailure,
+} = createHttpAction('TPApprovedFailure', Interface.approvedFailure, {
+  method: 'post'
+});

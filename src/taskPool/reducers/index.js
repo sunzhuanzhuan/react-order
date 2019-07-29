@@ -6,10 +6,11 @@ import {
   TPChangeTaskDetail,
   TPTaskDetailClear,
   TPMcnOrderList_success,
+  TPGetMcnReviewOrderList_success,
 } from '../actions'
 
 // 处理列表数据为map表
-function handleResponseList(primary_key) {
+function handleResponseList(primary_key = 'id') {
   return (state, action) => {
     let response = action.payload.data || {}, source = {}
     const { total = 0, pageNum = 1, pageSize = 50, list = [] } = response
@@ -58,9 +59,17 @@ export const taskDetail = handleActions({
 }, {})
 
 
-// 任务管理列表
+// 任务详情, 博主领取列表
 export const mcnOrderList = handleActions({
-  [TPMcnOrderList_success]: handleResponseList('id')
+  [TPMcnOrderList_success]: handleResponseList('id'),
+  [TPTaskDetailClear]: (state, action) => {
+    return initList()
+  }
+}, initList())
+
+// 异常订单审核列表
+export const mcnReviewOrderList = handleActions({
+  [TPGetMcnReviewOrderList_success]: handleResponseList(),
 }, initList())
 
 
@@ -68,5 +77,6 @@ export const mcnOrderList = handleActions({
 export default combineReducers({
   taskManageList,
   taskDetail,
-  mcnOrderList
+  mcnOrderList,
+  mcnReviewOrderList
 })

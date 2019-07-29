@@ -95,7 +95,7 @@ class TaskReviewList extends Component {
     ]
     const pagination = {
       total: 10,
-      pageSize: 10,
+      pageSize: 20,
       current: 1,
       onChange: (current) => {
         this.getList({ page: current })

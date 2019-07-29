@@ -1,13 +1,22 @@
 import React, { Component } from 'react'
-import { Modal, Table, Badge, Icon, Typography, Button, Divider } from 'antd'
+import {
+  Modal,
+  Table,
+  Badge,
+  Icon,
+  Typography,
+  Button,
+  Divider,
+  Tag
+} from 'antd'
 import { SH2 } from '@/base/SectionHeader'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import * as commonAction from "@/actions";
-import * as action from "@/taskPool/actions";
+import * as commonActions from '@/actions'
+import * as actions from '../actions'
 import { IconInfoBlock } from "@/base/DataGroup";
 import {
-  KolInfo, StatisticsData,
+  KolInfo, StatisticsData
 } from "@/taskPool/base/ColumnsDataGroup";
 import Yuan from "@/base/Yuan";
 import { ReviewPass, ReviewReject } from '../components/ReviewModal'
@@ -20,85 +29,90 @@ class TaskReviewList extends Component {
     super(props, context)
     this.state = {
       search: {
-        page: 1,
-        pageSize: 50
+        page: {
+          currentPage: 1,
+          pageSize: 20
+        }
       },
+      listLoading: false,
       taskId: '',
-      actionType: 'reject',
-      platform: '',
+      actionType: '',
+      platform: ''
     }
     this.columns = [
       {
         title: '任务信息',
-        dataIndex: 'real_name_1',
-        align: "center",
+        dataIndex: 'orderName',
         render: (name, record) => {
           return <div>
-            <span>1.</span>
-            <a>这里显示的是好…</a>
+            <Tag>{record.qualityInspectionCount}</Tag>
+            <a>{name}</a>
           </div>
         }
       },
       {
         title: '领取时间',
-        dataIndex: 'real_name_2',
+        dataIndex: 'createdAt',
         align: "center",
-        render: (name, record) => {
+        render: (date, record) => {
           return <div>
-            2019-06-18 20:30
+            {date}
           </div>
         }
       },
       {
         title: '博主信息',
-        dataIndex: 'real_name_3',
+        dataIndex: 'snsName',
         align: "center",
         render: (name, record) => {
-          return <KolInfo />
+          return <KolInfo title={name} avatar={record.avatarUrl} />
         }
       },
       {
         title: '结算价格',
-        dataIndex: 'real_name_4',
+        dataIndex: 'maxAmount',
         align: "center",
-        render: (name, record) => {
-          return <Yuan value={40000} />
+        render: (maxAmount, record) => {
+          return <Yuan value={maxAmount} />
         }
       },
       {
         title: '最低/实际',
-        dataIndex: 'real_name_5',
+        dataIndex: 'expectActionNum',
         align: "center",
-        render: (name, record) => {
-          return <StatisticsData format={"0,0"} value={[]} />
+        render: (expectActionNum, record) => {
+          return <StatisticsData format={"0,0"} value={[expectActionNum, record.realActionNum]} />
         }
       },
       {
         title: '预览',
-        dataIndex: 'real_name_6',
+        dataIndex: 'contentUrl',
         align: "center",
-        render: (name, record) => {
-          return <a href="">查看文章</a>
+        render: (contentUrl, record) => {
+          return <a href={contentUrl}>查看文章</a>
         }
       },
       {
         title: '操作',
-        dataIndex: 'real_name_7',
+        dataIndex: 'isApprove',
         align: "center",
-        render: (name, record) => {
-          return <div>
-            <Button type="primary" size="small" onClick={() => this.review('pass', name, 1)}>通过</Button>
-            <Button type="danger" ghost size="small" style={{ marginLeft: "10px" }} onClick={() => this.review('reject', name)}>不通过</Button>
+        render: (isApprove, record) => {
+          return isApprove === 1 ? <div>
+            <Button type="primary" size="small" onClick={() => this.review('pass', record.id, record.platformId)}>通过</Button>
+            <Button type="danger" ghost size="small" style={{ marginLeft: "10px" }} onClick={() => this.review('reject', record.id)}>不通过</Button>
+          </div> : <div>
+            {isApprove === 2 && "质检通过"}
+            {isApprove === 3 && "质检不通过"}
           </div>
         }
       },
       {
         title: '备注',
-        dataIndex: 'real_name_61',
+        dataIndex: 'remark',
         align: "center",
-        render: (name, record) => {
+        render: (remark, record) => {
           return <div style={{ maxWidth: 200, wordBreak: "break-all" }}>
-            安师大收到sssssssssssssssssssssssssssssssssssssssssssssssss
+            {remark}
           </div>
         }
       }
@@ -108,18 +122,9 @@ class TaskReviewList extends Component {
   getList = (params = {}) => {
     const { actions } = this.props
     let search = { ...this.state.search, ...params }
-    // this.setState({ listLoading: true, search })
-    /*actions.getSummaryListByOrder(search).finally(() => {
+    this.setState({ listLoading: true, search })
+    actions.TPGetMcnReviewOrderList(search).finally(() => {
       this.setState({ listLoading: false })
-    })*/
-  }
-
-  // 下线
-  offline = (id) => {
-    // 判断是否有一个下线请求处理中
-    Modal.confirm({
-      title: '确认要下线此任务吗?',
-      content: "任务下线后，不可重新上线。已领取任务的博主，可执行。未消耗的余额，会在之后返还到您的任务账户余额中。"
     })
   }
 
@@ -140,42 +145,54 @@ class TaskReviewList extends Component {
   }
 
   render() {
-    const { actions, history } = this.props
-    const { actionType, taskId, platform } = this.state
-    const data = [
-      {}
-    ]
+    const { actions, taskPoolData } = this.props
+    const { actionType, taskId, platform, listLoading, search } = this.state
+    const { mcnReviewOrderList: { keys, source, total, pageNum, pageSize } } = taskPoolData
+    const dataSource = keys.map(key => source[key])
+
     const pagination = {
-      total: 10,
-      pageSize: 10,
-      current: 1,
-      onChange: (current) => {
-        this.getList({ page: current })
+      total,
+      pageSize,
+      current: pageNum,
+      showQuickJumper: true,
+      showSizeChanger: true,
+      onChange: (currentPage) => {
+        this.getList({
+          page: { ...search.page, currentPage }
+        })
       },
-      showQuickJumper: true
+      onShowSizeChange: (currentPage, pageSize) => {
+        this.getList({
+          page: { ...search.page, pageSize }
+        })
+      }
     }
     return <div className='task-pool-page-container review-page'>
       <Title level={4}>异常任务审核</Title>
       <Table
-        loading={this.state.listLoading}
-        dataSource={data}
+        loading={listLoading}
+        dataSource={dataSource}
         pagination={pagination}
         columns={this.columns}
       />
-      {actionType === "pass" && <ReviewPass id={taskId} platform={platform} actions={actions} cancel={this.cancel}/>}
-      {actionType === "reject" && <ReviewReject id={taskId} actions={actions} cancel={this.cancel}/>}
+      {actionType === "pass" &&
+      <ReviewPass id={taskId} platform={platform} actions={actions} cancel={this.cancel} reload={this.getList} />}
+      {actionType === "reject" &&
+      <ReviewReject id={taskId} actions={actions} cancel={this.cancel} reload={this.getList} />}
     </div>
   }
 }
-const mapStateToProps = (state) => {
-  return {
-    // accountManage: state.accountManageReducer,
-  }
-}
 
+const mapStateToProps = (state) => ({
+  common: state.commonReducers,
+  taskPoolData: state.taskPoolReducers
+})
 const mapDispatchToProps = (dispatch) => ({
-  actions: bindActionCreators({ ...commonAction, ...action }, dispatch)
-});
+  actions: bindActionCreators({
+    ...commonActions,
+    ...actions
+  }, dispatch)
+})
 
 export default connect(
   mapStateToProps,

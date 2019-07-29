@@ -8,4 +8,7 @@ export default {
   queryActionNum: prefix + "/adOrder/v1/queryActionNum",
   taskDetail: prefix + "/adOrder/v1/detail",
   mcnOrderList: prefix + "/adOrder/v1/mcnOrderList",
+  getMcnReviewOrderList: prefix + "/mcnGrapLog/v1/getMcnReviewOrderList",
+  approvedSuccess: prefix + "/mcnGrapLog/v1/approvedSuccess",
+  approvedFailure: prefix + "/mcnGrapLog/v1/approvedFailure",
 }

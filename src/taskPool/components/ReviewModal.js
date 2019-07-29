@@ -9,7 +9,7 @@ import {
   Radio,
   Select,
   DatePicker,
-  InputNumber, Input, Checkbox
+  InputNumber, Input, Checkbox, message
 } from "antd";
 import { OssUpload } from "wbyui";
 
@@ -39,10 +39,17 @@ export class ReviewPass extends Component {
     e && e.preventDefault()
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        setTimeout(() => {
-          console.log('Received values of form: ', values, this.props.id);
-
-        }, 100);
+        const { actions } = this.props
+        let newVal = { ...values }
+        newVal.snapshotUrl = values.pic[0].url
+        newVal.id = this.props.id
+        delete newVal.pic
+        this.setState({ loading: true });
+        actions.TPApprovedSuccess(newVal).then(() => {
+          message.success('审核成功')
+          this.props.cancel()
+          this.props.reload()
+        }).catch(() => this.setState({ loading: false }))
       }
     });
   }
@@ -63,12 +70,22 @@ export class ReviewPass extends Component {
     >
       <Form onSubmit={this.handleSubmit}  {...formLayout}>
         <FormItem label="发布时间">
-          {getFieldDecorator('company', {})(
+          {getFieldDecorator('publishedTime', {
+            rules: [{
+              required: true,
+              message: '请填写发布时间'
+            }]
+          })(
             <DatePicker style={{ width: '100%' }} />
           )}
         </FormItem>
         {platform === 9 && <FormItem label="此刻阅读数">
-          {getFieldDecorator('compan222y', {})(
+          {getFieldDecorator('readNumber', {
+            rules: [{
+              required: true,
+              message: '请填写阅读数'
+            }]
+          })(
             <InputNumber
               step={500}
               precision={0}
@@ -79,7 +96,12 @@ export class ReviewPass extends Component {
           )}
         </FormItem>}
         {platform === 1 && <FormItem label="点赞数">
-          {getFieldDecorator('compan333222y', {})(
+          {getFieldDecorator('likeNumber', {
+            rules: [{
+              required: true,
+              message: '请填写点赞数'
+            }]
+          })(
             <InputNumber
               step={500}
               precision={0}
@@ -90,7 +112,12 @@ export class ReviewPass extends Component {
           )}
         </FormItem>}
         {platform === 1 && <FormItem label="转发数">
-          {getFieldDecorator('co222mpan222y', {})(
+          {getFieldDecorator('transferNumber', {
+            rules: [{
+              required: true,
+              message: '请填写转发数'
+            }]
+          })(
             <InputNumber
               step={500}
               precision={0}
@@ -101,7 +128,12 @@ export class ReviewPass extends Component {
           )}
         </FormItem>}
         {platform === 1 && <FormItem label="评论数">
-          {getFieldDecorator('c123ompan222y', {})(
+          {getFieldDecorator('commentNumber', {
+            rules: [{
+              required: true,
+              message: '请填写评论数'
+            }]
+          })(
             <InputNumber
               step={500}
               precision={0}
@@ -113,9 +145,13 @@ export class ReviewPass extends Component {
         </FormItem>}
         <FormItem label="截图">
           {getFieldDecorator('pic', {
-            initialValue: [],
             valuePropName: 'fileList',
-            getValueFromEvent: e => e && e.fileList
+            getValueFromEvent: e => e && e.fileList,
+            rules: [{
+              required: true,
+              type: "array",
+              message: '请上传截图'
+            }]
           })(
             <OssUpload
               authToken={this.state.authToken || ''}
@@ -153,10 +189,18 @@ export class ReviewReject extends Component {
     e && e.preventDefault()
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        setTimeout(() => {
-          console.log('Received values of form: ', values, this.props.id);
-
-        }, 100);
+        const { actions } = this.props
+        let newVal = { ...values }
+        newVal.snapshotUrl = values.pic[0].url
+        newVal.id = this.props.id
+        newVal.approveReason = values.approveReason.toString()
+        delete newVal.pic
+        this.setState({ loading: true });
+        actions.TPApprovedFailure(newVal).then(() => {
+          message.success('审核成功')
+          this.props.cancel()
+          this.props.reload()
+        }).catch(() => this.setState({ loading: false }))
       }
     });
   }
@@ -177,25 +221,25 @@ export class ReviewReject extends Component {
     >
       <Form onSubmit={this.handleSubmit}  {...formLayout}>
         <FormItem label="选择原因">
-          {getFieldDecorator('compa2ny', {})(
+          {getFieldDecorator('approveReason', {})(
             <Checkbox.Group onChange={(value) => {
-              value.length && setTimeout(() => validateFields(['comp3any']),0);
+              value.length && setTimeout(() => validateFields(['remark']), 0);
             }}>
-              <Checkbox value="A">内容已被删除</Checkbox>
-              <p/>
-              <Checkbox value="B">内容发布错误</Checkbox>
-              <p/>
-              <Checkbox value="C">发布账号错误</Checkbox>
+              <Checkbox value="内容已被删除">内容已被删除</Checkbox>
+              <p />
+              <Checkbox value="内容发布错误">内容发布错误</Checkbox>
+              <p />
+              <Checkbox value="发布账号错误">发布账号错误</Checkbox>
             </Checkbox.Group>
           )}
         </FormItem>
         <FormItem label="备注">
-          {getFieldDecorator('comp3any', {
+          {getFieldDecorator('remark', {
             rules: [
               {
                 validator: (rule, value, callback) => {
-                  let reason = getFieldValue('compa2ny')
-                  if(value || (reason && reason.length)){
+                  let reason = getFieldValue('approveReason')
+                  if (value || (reason && reason.length)) {
                     return callback()
                   }
                   callback('请选择一个原因或输入其他原因')
@@ -214,9 +258,13 @@ export class ReviewReject extends Component {
         </FormItem>
         <FormItem label="截图">
           {getFieldDecorator('pic', {
-            initialValue: [],
             valuePropName: 'fileList',
-            getValueFromEvent: e => e && e.fileList
+            getValueFromEvent: e => e && e.fileList,
+            rules: [{
+              required: true,
+              type: "array",
+              message: '请上传截图'
+            }]
           })(
             <OssUpload
               authToken={this.state.authToken || ''}

@@ -126,7 +126,7 @@ class TaskDetail extends Component {
       search: {
         page: {
           currentPage: 1,
-          pageSize: 9999
+          pageSize: 20
         }
       },
       listLoading: false,
@@ -134,6 +134,10 @@ class TaskDetail extends Component {
     }
   }
 
+  componentWillUnmount(){
+    const { actions } = this.props
+    actions.TPTaskDetailClear()
+  }
   // 下线
   offline = (id) => {
     const { actions } = this.props
