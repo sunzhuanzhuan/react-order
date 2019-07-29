@@ -13,6 +13,10 @@ import {
 import { withRouter } from 'react-router-dom'
 import moment from "moment";
 import { WBYPlatformIcon } from "wbyui";
+import {
+  openNewWindowPreview, openNewWindowPreviewForWeibo,
+  openNewWindowPreviewForWeixin
+} from "@/taskPool/constants/utils";
 
 const { Text } = Typography;
 
@@ -77,6 +81,18 @@ class PreviewForWeixin extends React.Component {
     })
   }
 
+  preview = () => {
+    const { data } = this.props
+    const { base, budget, content } = data
+    openNewWindowPreviewForWeixin({
+      title: content.title,
+      content: content.richContent.toHTML(),
+      remark: content.remark,
+      author: content.author
+    })
+  }
+
+
   render() {
 
     const { data } = this.props
@@ -84,7 +100,7 @@ class PreviewForWeixin extends React.Component {
     const { base, budget, content } = data
     const header = <div className='form-preview-header'>
       <WBYPlatformIcon weibo_type={9} widthSize={26} />
-      <span className='title'>这里是任务名称</span>
+      <span className='title'>{base.orderName}</span>
     </div>
     return (
       <div className="form-preview-container">
@@ -101,7 +117,7 @@ class PreviewForWeixin extends React.Component {
             </div>
           </Descriptions.Item>
           <Descriptions.Item label="推广文章">
-            <a>预览</a>
+            <a onClick={this.preview}>预览</a>
           </Descriptions.Item>
         </Descriptions>
         <Text type="danger">确认无误即可提交。博主领取并执行任务后，会自动扣除预算。</Text>
@@ -122,6 +138,18 @@ class PreviewForWeibo extends React.Component {
   state = { submitLoading: false }
 
   componentDidMount() { }
+
+  preview = () => {
+    const { data } = this.props
+    const { base, budget, content } = data
+    let { type, images, video } = content.attachment
+    openNewWindowPreviewForWeibo({
+      content: content.content,
+      video: video && video.url,
+      images: images.map(item => item.url),
+      mediaType: type
+    })
+  }
 
   success = () => {
     Modal.success({
@@ -180,7 +208,7 @@ class PreviewForWeibo extends React.Component {
   }
 
   render() {
-
+    // TODO: 行业接口调用, 根据code显示汉字
     const { data } = this.props
     const { submitLoading } = this.state
     const { base, budget, content } = data
@@ -199,19 +227,7 @@ class PreviewForWeibo extends React.Component {
           <Descriptions.Item label="发布后保留时长">{budget.retainTime}小时</Descriptions.Item>
           <Descriptions.Item label="内容形式">{contentStyle[content.taskContentStyle]}</Descriptions.Item>
           <Descriptions.Item label="推广文章">
-            <a>预览</a>
-          </Descriptions.Item>
-          <Descriptions.Item label="推广文章">
-            <div>
-              {content.content}
-            </div>
-            {content.attachment.type === 1 && <div>
-              {content.attachment.images.map(item =>
-                <img key={item.uid} src={item.url} alt="" />)}
-            </div>}
-            {content.attachment.type === 2 && <div>
-              {content.attachment.video.url}
-            </div>}
+            <a onClick={this.preview}>预览</a>
           </Descriptions.Item>
         </Descriptions>
         <Text type="danger">确认无误即可提交。博主领取并执行任务后，会自动扣除预算。</Text>

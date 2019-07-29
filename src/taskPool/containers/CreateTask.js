@@ -46,7 +46,7 @@ class CreateTask extends Component {
     const hasCompany = !!(companyId && companyName)
     this.state = {
       current: step - 1,
-      /*authToken: '',
+      authToken: '',
       disabled: hasCompany,
       base: {
         platformId: Number(platformId) || 1,
@@ -56,8 +56,8 @@ class CreateTask extends Component {
         } : undefined,
       },
       budget: {},
-      content: {}*/
-      authToken: "eyJhbGciOiJIUzUxMiJ9.eyJ0b2tlbiI6Imp2NTBBQ19ycDl0cDlCeXFWam4xdjNTb3ZoZ3lMcVQzM2tmOGI5aTBOTENfWUZkeiJ9.7_EKsPXVrWBqnWA_mpyOUoqUqg4kh0xr6hO22zN_sU6ferIFhdYhmcgSsSSY5fosMbOgsxveqiwJEJK80off-g",
+      content: {}
+      /*authToken: "eyJhbGciOiJIUzUxMiJ9.eyJ0b2tlbiI6Imp2NTBBQ19ycDl0cDlCeXFWam4xdjNTb3ZoZ3lMcVQzM2tmOGI5aTBOTENfWUZkeiJ9.7_EKsPXVrWBqnWA_mpyOUoqUqg4kh0xr6hO22zN_sU6ferIFhdYhmcgSsSSY5fosMbOgsxveqiwJEJK80off-g",
       base:{
         company: {
           key: "2",
@@ -89,13 +89,18 @@ class CreateTask extends Component {
             uid: "rc-upload-1564223659679-2",
             url:  "http://prd-wby-img.oss-cn-beijing.aliyuncs.com/B_GZA_ORDER_IMG_NORMAL_UPLOAD/891914dc09094f7db8be44ac8cf9c11a.jpg",
           }],
-          type:1,
-          video: "",
+          type:2,
+          video: {
+            url: "http://prd-wby-img.oss-cn-beijing.aliyuncs.com/VIDEO_TEST/c28934d21d7d470787558fdafccb7f6c.mp4"
+          },
         },
+        title: "唐诗宋词里的十二时辰，一起了解下？",
+        author:"张三",
+        remark:"张唐诗宋词里,的十二时辰唐诗宋词里的十二时辰唐诗宋词里的十二时辰三",
         richContent: BraftEditor.createEditorState("<p>Hello <b>World!</b></p>"),
         content: "123123",
         taskContentStyle: 21,
-      }
+      }*/
     }
   }
 

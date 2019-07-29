@@ -176,6 +176,13 @@ class ContentForWeixin extends React.Component {
             />
           )}
         </FormItem>
+        <FormItem label="阅读原文链接">
+          {getFieldDecorator('articleUrl', {
+            initialValue: content.articleUrl
+          })(
+            <Input placeholder='请输入网址'/>
+          )}
+        </FormItem>
         <FormItem label="文章正文">
           {getFieldDecorator('richContent', {
             initialValue: content.richContent,
