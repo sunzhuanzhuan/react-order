@@ -161,7 +161,7 @@ class CreateTask extends Component {
 
 const mapStateToProps = (state) => ({
   common: state.commonReducers,
-  taskPoolReducers: state.taskPoolReducers
+  taskPoolData: state.taskPoolReducers
 })
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators({

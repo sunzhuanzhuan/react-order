@@ -129,9 +129,9 @@ class TaskManageList extends Component {
   }
 
   render() {
-    const { actions, history, taskPoolReducers } = this.props
+    const { actions, history, taskPoolData } = this.props
     const { listLoading, search } = this.state
-    const { taskManageList: { keys, source, total, pageNum, pageSize } } = taskPoolReducers
+    const { taskManageList: { keys, source, total, pageNum, pageSize } } = taskPoolData
 
     const dataSource = keys.map(key => source[key])
     const pagination = {
@@ -173,7 +173,7 @@ class TaskManageList extends Component {
 
 const mapStateToProps = (state) => ({
   common: state.commonReducers,
-  taskPoolReducers: state.taskPoolReducers
+  taskPoolData: state.taskPoolReducers
 })
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators({

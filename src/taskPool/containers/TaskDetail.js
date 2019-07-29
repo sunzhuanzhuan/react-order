@@ -13,11 +13,20 @@ import {
   Badge, message
 } from 'antd'
 import Section from "@/base/Section";
-import { KolInfo, QAStatus } from "@/taskPool/base/ColumnsDataGroup";
+import {
+  KolInfo,
+  QAStatus,
+  TaskStatus
+} from "@/taskPool/base/ColumnsDataGroup";
 import Yuan from "@/base/Yuan";
 import { WBYPlatformIcon } from "wbyui";
-import { getCountDownTimeText } from "@/taskPool/constants/utils";
+import {
+  getCountDownTimeText,
+  openNewWindowPreviewForWeibo, openNewWindowPreviewForWeixin
+} from "@/taskPool/constants/utils";
 import { mcnOrderList, taskDetail } from "@/taskPool/reducers";
+import { convertRawToHTML } from 'braft-convert'
+
 
 const columns = [
   {
@@ -25,35 +34,35 @@ const columns = [
     align: "center",
     dataIndex: 'snsName',
     render: (name, record) => {
-      return <KolInfo title={name} avatar={record.avatarUrl}/>
+      return <KolInfo title={name} avatar={record.avatarUrl} />
     }
   },
   {
     title: '领取时间',
     align: "center",
-    dataIndex: 'real_name_2',
-    render: (name, record) => {
-      return "2019-11-11 11:00:00"
+    dataIndex: 'createdAt',
+    render: (date, record) => {
+      return date
     }
   },
   {
     title: '执行状态',
     align: "center",
-    dataIndex: 'orderState',
-    render: (name, record) => {
-      return "已执行"
+    dataIndex: 'executionState',
+    render: (executionState, record) => {
+      return executionState === 1 ? "已执行" : "未执行"
     }
   },
   {
     title: '质检状态',
     align: "center",
-    dataIndex: 'orderState1',
+    dataIndex: 'orderState',
     render: (status, record) => {
-      return <QAStatus status={status}/>
+      return <QAStatus status={status} />
     }
   },
   {
-    title: '阅读数',
+    title: '达成数',
     align: "center",
     dataIndex: 'realActionNum',
     render: (realActionNum, record) => {
@@ -70,26 +79,33 @@ const columns = [
   },
   {
     title: '操作',
-    dataIndex: 'real_name_7',
+    dataIndex: 'contentUrl',
     align: "center",
-    render: (name, record) => {
+    render: (url, record) => {
       return <div>
-        <a>查看文章</a>
-        <span>
+        {url && <a target="_blank" href={url}>查看文章</a>}
+        {record.snapshotUrl && <span>
           <Divider type="vertical" />
-          <a onClick={() => this.offline(name)}>查看快照</a>
-        </span>
+          <a target="_blank" href={record.snapshotUrl}>查看快照</a>
+        </span>}
       </div>
     }
   }
 ]
+
+const target = {
+  "11": "阅读数", "12": "阅读数", "21": "粉丝覆盖", "22": "粉丝传播"
+}
+const contentStyle = {
+  "11": "多图文第一条", "12": "不限", "21": "直发", "22": "转发"
+}
 
 const statusKeyToProps = {
   '1': {
     status: 'processing',
     text: '进行中'
   },
-  '2': {
+  '4': {
     status: 'success',
     text: '已结束'
   },
@@ -97,7 +113,7 @@ const statusKeyToProps = {
     status: 'default',
     text: '已下线'
   },
-  '4': {
+  '2': {
     status: 'error',
     text: '已过期'
   }
@@ -133,6 +149,30 @@ class TaskDetail extends Component {
     })
   }
 
+  preview = () => {
+    const { taskDetail } = this.props.taskPoolData
+    // 微博
+    if (taskDetail.platformId === 1) {
+      const content = taskDetail.adOrderWeiboContent
+      return openNewWindowPreviewForWeibo({
+        content: content.content,
+        video: content.attachmentList[0].attachmentUrl,
+        images: content.attachmentList.map(item => item.attachmentUrl),
+        mediaType: content.mediaType
+      })
+    }
+    // 微信
+    if (taskDetail.platformId === 9) {
+      const content = taskDetail.adOrderWeixinContent
+      return openNewWindowPreviewForWeixin({
+        title: content.title,
+        content: convertRawToHTML(JSON.parse(content.content)),
+        remark: content.remark,
+        author: content.author
+      })
+    }
+  }
+
   getDetail = () => {
     const { actions, match } = this.props
     const { id } = match.params
@@ -157,9 +197,11 @@ class TaskDetail extends Component {
   }
 
   render() {
-    const { actions, history, taskPoolReducers } = this.props
+    const { actions, history, taskPoolData } = this.props
     const { listLoading, search } = this.state
-    const { mcnOrderList: { keys, source }, taskDetail } = taskPoolReducers
+    const { mcnOrderList: { keys, source, total, pageNum, pageSize  }, taskDetail } = taskPoolData
+    const isWeixin = taskDetail.platformId === 9
+    const isWeibo = taskDetail.platformId === 1
 
     const dataSource = keys.map(key => source[key])
     return <div className='task-pool-page-container detail-page'>
@@ -167,9 +209,10 @@ class TaskDetail extends Component {
         onBack={() => this.props.history.push('/order/task/manage')}
         title="任务详情"
         extra={
-          taskDetail.orderState === 1 ? <Button type="primary" ghost onClick={() => this.offline()}>
-            下线
-          </Button> : '已下线'
+          taskDetail.orderState === 1 ?
+            <Button type="primary" ghost onClick={() => this.offline()}>
+              下线
+            </Button> : <Badge {...statusKeyToProps[taskDetail.orderState]} />
         }
       />
       <Section>
@@ -179,20 +222,19 @@ class TaskDetail extends Component {
             <Descriptions.Item label="任务ID">{taskDetail.id}</Descriptions.Item>
             <Descriptions.Item label="任务名称">{taskDetail.orderName}</Descriptions.Item>
             <Descriptions.Item label="发布平台">
-              <div style={{
-                top: "-5px",
-                position: "relative",
-                userSelect: "none"
-              }}>
+              <div style={{ userSelect: "none"}}>
                 <WBYPlatformIcon weibo_type={taskDetail.platformId} widthSize={22} />
                 &nbsp;
-                <span>新浪微博</span>
+                {isWeixin && <span style={{verticalAlign: "text-bottom"}}>微信</span>}
+                {isWeibo && <span style={{verticalAlign: "text-bottom"}}>新浪微博</span>}
               </div>
             </Descriptions.Item>
             <Descriptions.Item label="行业分类">{taskDetail.industry}</Descriptions.Item>
-            <Descriptions.Item label="任务目标">阅读数</Descriptions.Item>
-            <Descriptions.Item label="发布位置">多图文第一条</Descriptions.Item>
-            <Descriptions.Item label="内容形式">直发</Descriptions.Item>
+            <Descriptions.Item label="任务目标">{target[taskDetail.taskTarget]}</Descriptions.Item>
+            {isWeixin &&
+            <Descriptions.Item label="发布位置">{contentStyle[taskDetail.taskContentStyle]}</Descriptions.Item>}
+            {isWeibo &&
+            <Descriptions.Item label="内容形式">{contentStyle[taskDetail.taskContentStyle]}</Descriptions.Item>}
             <Descriptions.Item label="任务开始时间">
               {taskDetail.createdAt}
             </Descriptions.Item>
@@ -203,14 +245,17 @@ class TaskDetail extends Component {
               {getCountDownTimeText(taskDetail.orderEndDate)}
             </Descriptions.Item>
             <Descriptions.Item label="发布后保留时长">{taskDetail.retainTime}小时</Descriptions.Item>
-            <Descriptions.Item label="推广文章">
+            {isWeixin && <Descriptions.Item label="推广文章">
               <div className="content-wrap">
                 <div className='image-wrap'>
                   <img src={(taskDetail.adOrderWeixinContent || {}).coverImageUrl} alt="" />
                 </div>
-                <a>查看文章</a>
+                <a onClick={this.preview}>查看文章</a>
               </div>
-            </Descriptions.Item>
+            </Descriptions.Item>}
+            {isWeibo && <Descriptions.Item label="推广文章">
+              <a onClick={this.preview}>查看</a>
+            </Descriptions.Item>}
           </Descriptions>
         </Section.Content>
       </Section>
@@ -223,12 +268,12 @@ class TaskDetail extends Component {
             </Descriptions.Item>
             <Descriptions.Item label="已领取博主数">{taskDetail.mcnCount} 位</Descriptions.Item>
             <Descriptions.Item label="消耗/预算">
-              <Yuan value={taskDetail.usedAmount} />
-              /
-              <Yuan value={taskDetail.totalAmount} />
+              <Yuan value={taskDetail.usedAmount} className="text-red text-blod"/>
+              &nbsp;/&nbsp;
+              <Yuan value={taskDetail.totalAmount} className="text-black text-blod"/>
             </Descriptions.Item>
-            <Descriptions.Item label="预估最低阅读数">{taskDetail.actionNum}</Descriptions.Item>
-            <Descriptions.Item label="已达成阅读数">{taskDetail.actionNum}</Descriptions.Item>
+            <Descriptions.Item label={`预估最低${isWeixin ? "阅读数" : "转发数"}`}>{taskDetail.actionNum}</Descriptions.Item>
+            <Descriptions.Item label={`已达成${isWeixin ? "阅读数" : "转发数"}`}>{taskDetail.realActionNum}</Descriptions.Item>
           </Descriptions>
         </Section.Content>
       </Section>
@@ -240,7 +285,17 @@ class TaskDetail extends Component {
             loading={listLoading}
             dataSource={dataSource}
             columns={columns}
-            pagination={false}
+            pagination={{
+              size: 'small',
+              total,
+              pageSize,
+              current: pageNum,
+              onChange: (currentPage) => {
+                this.getList({
+                  page: { ...search.page, currentPage }
+                })
+              },
+            }}
             size="default"
           />
         </Section.Content>
@@ -251,7 +306,7 @@ class TaskDetail extends Component {
 
 const mapStateToProps = (state) => ({
   common: state.commonReducers,
-  taskPoolReducers: state.taskPoolReducers
+  taskPoolData: state.taskPoolReducers
 })
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators({

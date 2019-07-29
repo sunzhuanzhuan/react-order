@@ -17,6 +17,7 @@
     "babel-polyfill": "^6.26.0",
     "babel-preset-react-app": "^6.1.0",
     "bfj": "6.1.1",
+    "braft-convert": "^2.3.0",
     "braft-editor": "^2.3.7",
     "case-sensitive-paths-webpack-plugin": "2.1.2",
     "chalk": "2.4.1",
