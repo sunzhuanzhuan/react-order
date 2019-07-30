@@ -19,6 +19,7 @@ class UpdateModal extends React.Component {
     this.props.form.validateFields((err, values) => {
       if (!err) {
         const { dataSource } = this.props;
+        if (!values.publish_articles_address) { values.publish_articles_address = ' ' }
         this.props.handleSubmit({
           type: 2,
           reason: values.reason,
@@ -71,6 +72,16 @@ class UpdateModal extends React.Component {
     })
   }
   render() {
+    let position = {
+      1: '头条',
+      2: '次条',
+      3: '三条',
+      4: '四条',
+      5: '五条',
+      6: '七条',
+      7: '头条',
+      8: '八条',
+    }
     const { getFieldDecorator } = this.props.form;
     const { visible, onCancel, dataSource, serviceRateAmount } = this.props;
     return <Modal
@@ -194,22 +205,22 @@ class UpdateModal extends React.Component {
         </Row>
         <Row gutter={16}>
           <Col span={2}></Col>
-          <Col span={6} style={{ lineHeight: '58px', paddingBottom: '12px' }}>发文位置（非必填：</Col>
-          <Col span={8}>{dataSource && dataSource[0].publish_articles_address}</Col>
+          <Col span={6} style={{ lineHeight: '58px', paddingBottom: '12px' }}>发文位置（非必填)：</Col>
+          <Col span={8} style={{ marginTop: '10px' }}>{position[dataSource && dataSource[0].publish_articles_address]}</Col>
           <Col span={8}>
             <FormItem>
               {getFieldDecorator('publish_articles_address', {
                 initialValue: dataSource && dataSource[0].publish_articles_address || ''
               })(
                 <Select placeholder="请选择" style={{ width: 120 }} allowClear>
-                  <Option value="1">头条</Option>
-                  <Option value="2">次条</Option>
-                  <Option value="3">三条</Option>
-                  <Option value="4">四条</Option>
-                  <Option value="5">五条</Option>
-                  <Option value="6">六条</Option>
-                  <Option value="7">七条</Option>
-                  <Option value="8">八条</Option>
+                  <Option value={1}>头条</Option>
+                  <Option value={2}>次条</Option>
+                  <Option value={3}>三条</Option>
+                  <Option value={4}>四条</Option>
+                  <Option value={5}>五条</Option>
+                  <Option value={6}>六条</Option>
+                  <Option value={7}>七条</Option>
+                  <Option value={8}>八条</Option>
                 </Select>
               )}
             </FormItem>
