@@ -27,7 +27,7 @@ class UpdateArticalModal extends React.Component {
               publish_articles_at: values.publish_articles_at.format("YYYY-MM-DD HH:mm:ss")
 
             }).then((res) => {
-              if (res.code === 1000) {
+              if (res.code === 200) {
                 message.success('操作成功！', 2);
                 this.props.onCancel();
                 setTimeout(() => {

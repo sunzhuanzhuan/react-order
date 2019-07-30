@@ -12,7 +12,7 @@ class EditOrderModal extends React.Component {
     this.props.form.validateFields((err, values) => {
       if (!err) {
         const { data, spotplan_id } = this.props;
-        // if (!values.publish_articles_address) { values.publish_articles_address = ' ' }
+        if (!values.publish_articles_address) { values.publish_articles_address = ' ' }
         this.props.actions.postUpdateSpotplanOrder({ ...values, spotplan_id, order_id: data[0].order_id }).then((res) => {
 
           if (!res.data.type) {
