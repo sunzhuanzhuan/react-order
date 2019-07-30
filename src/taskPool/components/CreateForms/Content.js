@@ -275,7 +275,7 @@ class ContentForWeibo extends React.Component {
           })(
             <Radio.Group>
               <Radio value={21}>直发</Radio>
-              <Radio value={22} disabled>转发</Radio>
+              <Radio value={22} disabled={budget.taskTarget === 22}>转发</Radio>
             </Radio.Group>
           )}
         </FormItem>

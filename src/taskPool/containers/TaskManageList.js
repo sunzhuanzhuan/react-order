@@ -161,6 +161,7 @@ class TaskManageList extends Component {
         </Button>
       </div>
       <Table
+        locale={{ emptyText: "还没有任务可以展示" }}
         loading={listLoading}
         dataSource={dataSource}
         pagination={pagination}
