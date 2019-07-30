@@ -708,6 +708,15 @@ export const HistoryCols = [
         })}
       </div>
     }
+  }, {
+    title: '原因',
+    dataIndex: 'reason',
+    key: 'reason',
+    align: 'center',
+    width: 100,
+    render: (text) => {
+      return text ? text : '-'
+    }
   },
   {
     title: '申请人',
@@ -869,6 +878,15 @@ export const OrderCols = [
     render: text => {
       return text && numeral(text).format('0,0.00') || '-'
     }
+  }, {
+    title: '原因',
+    dataIndex: 'reason',
+    key: 'reason',
+    align: 'center',
+    width: 100,
+    render: (text) => {
+      return text ? text : '-'
+    }
   }
 ];
 export const ArticalCols = [
@@ -992,6 +1010,15 @@ export const UpdateCols = [
     key: 'price_id',
     align: 'center',
     width: 100
+  }, {
+    title: '原因',
+    dataIndex: 'reason',
+    key: 'reason',
+    align: 'center',
+    width: 100,
+    render: (text) => {
+      return text ? text : '-'
+    }
   }
 ];
 //客户确认状态
