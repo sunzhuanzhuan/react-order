@@ -233,7 +233,7 @@ class TaskDetail extends Component {
                 {isWeibo && <span style={{verticalAlign: "text-bottom"}}>新浪微博</span>}
               </div>
             </Descriptions.Item>
-            <Descriptions.Item label="行业分类">{taskDetail.industry}</Descriptions.Item>
+            <Descriptions.Item label="行业分类">{taskDetail.industryName}</Descriptions.Item>
             <Descriptions.Item label="任务目标">{target[taskDetail.taskTarget]}</Descriptions.Item>
             {isWeixin &&
             <Descriptions.Item label="发布位置">{contentStyle[taskDetail.taskContentStyle]}</Descriptions.Item>}

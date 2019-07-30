@@ -81,7 +81,8 @@ class TaskReviewList extends Component {
         dataIndex: 'expectActionNum',
         align: "center",
         render: (expectActionNum, record) => {
-          return <StatisticsData format={"0,0"} value={[expectActionNum, record.realActionNum]} />
+          let iconType = record.platformId === 1 ? "icon-zhuanfa" : "icon-yuedu"
+          return <StatisticsData format={"0,0"} value={[expectActionNum, record.realActionNum]} iconType={iconType}/>
         }
       },
       {
