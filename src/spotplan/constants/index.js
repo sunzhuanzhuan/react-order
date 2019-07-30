@@ -1,6 +1,7 @@
 import React from 'react'
 import { Modal, Input, Form, Select, Tooltip, DatePicker } from 'antd'
 import numeral from 'numeral'
+import moment from 'moment'
 const { TextArea } = Input;
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -229,30 +230,6 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete) => 
     }
   },
   {
-    title: '备注（非必填）',
-    dataIndex: 'content',
-    key: 'content',
-    align: 'center',
-    width: 210,
-    render: (text, record) => {
-      // const flag = (record.customer_confirmation_status == 11 && [0, 4].includes(parseInt(record.last_apply_status))) ? true : false;
-      return record.is_inward_send == 1 || record.last_apply_status == 1 || record.last_apply_status == 2 ? text : <FormItem>
-        {getFieldDecorator(`${record.order_id}.content`, {
-          rules: [
-            { max: 120, message: '不能超过120字' }
-          ]
-        })(
-          <TextArea autosize={false} style={{ width: 140, height: 86, resize: 'none' }} placeholder='填写备注信息' onBlur={(e) => {
-            if (e.target.value != record.content) {
-              handleUpdate({ order_id: record.order_id, price_id: record.price_id, content: e.target.value })
-            }
-          }} />
-        )
-        }
-      </FormItem>
-    }
-  },
-  {
     title: '发文位置（非必填）',
     dataIndex: 'publish_articles_address',
     key: 'publish_articles_address',
@@ -262,8 +239,8 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete) => 
       return <FormItem>
         {getFieldDecorator(`${record.order_id}.publish_articles_address`)(
           <Select placeholder="请选择" style={{ width: 120 }} onChange={(value) => {
-            handleUpdate({ order_id: record.order_id, price_id: record.price_id, publish_articles_address: value })
-          }} >
+            handleUpdate({ order_id: record.order_id, price_id: record.price_id, publish_articles_address: value || '' })
+          }} allowClear>
             <Option value={1}>头条</Option>
             <Option value={2}>次条</Option>
             <Option value={3}>三条</Option>
@@ -286,10 +263,34 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete) => 
     render: (text, record) => {
       return <FormItem>
         {getFieldDecorator(`${record.order_id}.publish_articles_at`)(
-          <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" placeholder="请输入" style={{ width: 150 }} onOk={(value) => {
+          <DatePicker allowClear={record.publish_articles_at == null ? true : false} showTime format="YYYY-MM-DD HH:mm:ss" placeholder="请输入" style={{ width: 130 }} onOk={(value) => {
             handleUpdate({ order_id: record.order_id, price_id: record.price_id, publish_articles_at: value.format("YYYY-MM-DD HH:mm:ss") })
           }} />
         )}
+      </FormItem>
+    }
+  },
+  {
+    title: '备注（非必填）',
+    dataIndex: 'content',
+    key: 'content',
+    align: 'center',
+    width: 210,
+    render: (text, record) => {
+      // const flag = (record.customer_confirmation_status == 11 && [0, 4].includes(parseInt(record.last_apply_status))) ? true : false;
+      return record.is_inward_send == 1 || record.last_apply_status == 1 || record.last_apply_status == 2 ? text : <FormItem>
+        {getFieldDecorator(`${record.order_id}.content`, {
+          rules: [
+            { max: 120, message: '不能超过120字' }
+          ]
+        })(
+          <TextArea autosize={false} style={{ width: 140, height: 86, resize: 'none' }} placeholder='填写备注信息' onBlur={(e) => {
+            if (e.target.value != record.content) {
+              handleUpdate({ order_id: record.order_id, price_id: record.price_id, content: e.target.value })
+            }
+          }} />
+        )
+        }
       </FormItem>
     }
   },

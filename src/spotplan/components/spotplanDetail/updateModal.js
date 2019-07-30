@@ -201,7 +201,7 @@ class UpdateModal extends React.Component {
               {getFieldDecorator('publish_articles_address', {
                 initialValue: dataSource && dataSource[0].publish_articles_address || ''
               })(
-                <Select placeholder="请选择" style={{ width: 120 }}>
+                <Select placeholder="请选择" style={{ width: 120 }} allowClear>
                   <Option value="1">头条</Option>
                   <Option value="2">次条</Option>
                   <Option value="3">三条</Option>

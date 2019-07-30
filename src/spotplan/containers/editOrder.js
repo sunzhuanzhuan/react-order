@@ -71,7 +71,7 @@ class EditOrder extends React.Component {
               dataSource={data && data.list || []}
               bordered
               loading={loading}
-              scroll={{ x: 2180 }}
+              scroll={{ x: 2080 }}
               pagination={data && data.total > 50 ? paginationObj : false}
             />
           </ScrollTable>
