@@ -3,7 +3,7 @@ import { Table, Form, Modal, message } from 'antd'
 import { EditOrderFunc } from '../constants'
 import Header from '../components/header'
 import ScrollTable from '../../components/Scolltable'
-
+import moment from 'moment'
 class EditOrder extends React.Component {
   constructor() {
     super();
@@ -24,6 +24,8 @@ class EditOrder extends React.Component {
         [`${item.order_id}.is_replace`]: item.is_replace || undefined,
         [`${item.order_id}.release_form`]: item.release_form || undefined,
         [`${item.order_id}.content`]: item.content || undefined,
+        [`${item.order_id}.publish_articles_address`]: item.publish_articles_address || undefined,
+        [`${item.order_id}.publish_articles_at`]: moment(item.publish_articles_at).isValid() ? moment(item.publish_articles_at) : undefined,
       })
       // }, 0);
     })

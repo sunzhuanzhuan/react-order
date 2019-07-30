@@ -261,20 +261,23 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete) => 
     render: (text, record) => {
       return <FormItem>
         {getFieldDecorator(`${record.order_id}.publish_articles_address`)(
-          <Select placeholder="请选择" style={{ width: 120 }}>
-            <Option value="1">头条</Option>
-            <Option value="2">次条</Option>
-            <Option value="3">三条</Option>
-            <Option value="4">四条</Option>
-            <Option value="5">五条</Option>
-            <Option value="6">六条</Option>
-            <Option value="7">七条</Option>
-            <Option value="8">八条</Option>
+          <Select placeholder="请选择" style={{ width: 120 }} onChange={(value) => {
+            handleUpdate({ order_id: record.order_id, price_id: record.price_id, publish_articles_address: value })
+          }} >
+            <Option value={1}>头条</Option>
+            <Option value={2}>次条</Option>
+            <Option value={3}>三条</Option>
+            <Option value={4}>四条</Option>
+            <Option value={5}>五条</Option>
+            <Option value={6}>六条</Option>
+            <Option value={7}>七条</Option>
+            <Option value={8}>八条</Option>
           </Select>
         )}
       </FormItem>
     }
-  }, {
+  },
+  {
     title: '发文时间（非必填）',
     dataIndex: 'publish_articles_at',
     key: 'publish_articles_at',
@@ -283,7 +286,9 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete) => 
     render: (text, record) => {
       return <FormItem>
         {getFieldDecorator(`${record.order_id}.publish_articles_at`)(
-          <DatePicker showTime placeholder="请输入" style={{ width: 150 }} />
+          <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" placeholder="请输入" style={{ width: 150 }} onOk={(value) => {
+            handleUpdate({ order_id: record.order_id, price_id: record.price_id, publish_articles_at: value.format("YYYY-MM-DD HH:mm:ss") })
+          }} />
         )}
       </FormItem>
     }
@@ -388,6 +393,16 @@ export const SpotplanListFunc = () => [
     }
   }
 ];
+let position = {
+  1: '头条',
+  2: '次条',
+  3: '三条',
+  4: '四条',
+  5: '五条',
+  6: '七条',
+  7: '头条',
+  8: '八条',
+}
 export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdateOrder, handleEditOrder, handleDelete, handleHistory, handleAddNumber, handleUpdateArtical) => [
   {
     title: '订单ID',
@@ -551,7 +566,7 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     align: 'center',
     width: 120,
     render: text => {
-      return text ? text : '-'
+      return text ? position[text] : '-'
     }
   }, {
     title: '发文时间',

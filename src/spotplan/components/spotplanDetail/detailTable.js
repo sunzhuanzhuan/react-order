@@ -43,7 +43,7 @@ class DetailTable extends React.Component {
         rowKey={record => { return record.order_id ? record.order_id.toString() : '' }}
         columns={columns}
         dataSource={dataSource}
-        scroll={{ x: 1750 }}
+        scroll={{ x: 2050 }}
         pagination={(options && options.total > 50) ? paginationObj : false}
         loading={loading}
       />

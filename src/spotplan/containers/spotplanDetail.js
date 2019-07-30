@@ -10,6 +10,7 @@ import HistoryModal from '../components/spotplanDetail/historyModal'
 import EditOrderModal from '../components/spotplanDetail/editOrderModal'
 import ChangeModal from '../components/spotplanDetail/changeNumberModal'
 import QuitModal from '../components/spotplanDetail/quitOrderModal'
+import UpdateArticalModal from '../components/spotplanDetail/updateArticalModal'
 import UpdateModal from '../components/spotplanDetail/updateModal'
 import AddModal from '../components/spotplanDetail/addOrderModal'
 import './spotplan.less'
@@ -266,6 +267,26 @@ class SpotPlanDetail extends React.Component {
             }
           })
         }
+      } else {
+        this.queryData({ ...search.keys, spotplan_id: search.spotplan_id });
+        this.props.actions.getSpotplanPoInfo({ spotplan_id: search.spotplan_id });
+      }
+      return res
+    })
+  }
+  handleSubmitArticalTime = (obj) => {
+    const hide = message.loading('操作中，请稍候...');
+    const search = qs.parse(this.props.location.search.substring(1));
+    let { order_id } = this.state;
+    if (obj.type == 4) {
+      order_id = []
+    } else {
+      order_id = Array.isArray(order_id) ? order_id : [order_id];
+    }
+    return this.props.actions.postUpdatePublishArticlesAt({ spotplan_id: search.spotplan_id, order_id: order_id, ...obj }).then((res) => {
+      hide();
+      if (res.data) {
+        return res
       } else {
         this.queryData({ ...search.keys, spotplan_id: search.spotplan_id });
         this.props.actions.getSpotplanPoInfo({ spotplan_id: search.spotplan_id });
@@ -537,9 +558,9 @@ class SpotPlanDetail extends React.Component {
         dataSource={basicSpotplanOrderInfo}
         handleClose={this.handleClose}
       />}
-      {updateArticalVisible && <QuitModal visible={updateArticalVisible}
+      {updateArticalVisible && <UpdateArticalModal visible={updateArticalVisible}
         onCancel={() => { this.setState({ updateArticalVisible: false }) }}
-        handleSubmit={this.handleSubmit}
+        handleSubmitArticalTime={this.handleSubmitArticalTime}
         dataSource={basicSpotplanOrderInfo}
         handleClose={this.handleClose}
       />}

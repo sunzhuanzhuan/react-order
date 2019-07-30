@@ -9,7 +9,7 @@ class UpdateArticalModal extends React.Component {
     this.state = {
       costwithfee: undefined
     }
-    this.handleChange = debounce(this.handleValueChange, 800);
+    // this.handleChange = debounce(this.handleValueChange, 800);
   }
   handleSubmit = () => {
     this.props.form.validateFields((err, values) => {
@@ -22,9 +22,9 @@ class UpdateArticalModal extends React.Component {
           title: '更新发文时间',
           content: '发文时间提交成功之后，会同步到客户系统，是否确认提交？',
           onOk: () => {
-            this.props.handleSubmit({
-              order_id: orders,
-              publish_articles_at: values.publish_articles_at
+            this.props.handleSubmitArticalTime({
+              // order_id: orders,
+              publish_articles_at: values.publish_articles_at.format("YYYY-MM-DD HH:mm:ss")
 
             }).then((res) => {
               if (res.code === 1000) {
@@ -66,11 +66,11 @@ class UpdateArticalModal extends React.Component {
       订单数量<span style={{ color: 'red', padding: '0 10px' }}>{dataSource.length}个</span></h4>
       <Table rowKey='order_id' bordered columns={ArticalCols} dataSource={dataSource} pagination={false} />
       <Form>
-        <Form.Item label='填写原因'>
+        <Form.Item label='修改已选订单的发文时间'>
           {getFieldDecorator('publish_articles_at', {
-            rules: [{ required: true, message: '请输入' }]
+            rules: [{ required: true, message: '请填写发文时间' }]
           })(
-            <DatePicker showTime placeholder="请选择" />
+            <DatePicker showTime placeholder="请输入" />
           )}
         </Form.Item>
       </Form>
