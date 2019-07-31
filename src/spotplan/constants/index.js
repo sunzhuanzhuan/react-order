@@ -458,13 +458,15 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     key: 'last_apply_status',
     align: 'center',
     width: 120,
-    render: (text, record) => {
+    render: (text, record = {}) => {
+      const _record = record.record || {};
+      console.log(_record)
       const node = text ? <div>
-        <div>申请类型：{APPLY_TYPE[record.record.apply_type]} <a href='javascript:;' onClick={(e) => {
-          handleHistory(e, record.record);
+        <div>申请类型：{APPLY_TYPE[_record.apply_type]} <a href='javascript:;' onClick={(e) => {
+          handleHistory(e, _record);
         }}>查看详情</a></div>
-        {record.record.apply_status == 4 && <div>拒绝原因：{record.record.check_reason}</div>}
-        {record.record.apply_status == 4 && <div>拒绝时间：{record.record.check_at}</div>}
+        {_record.apply_status == 4 && <div>拒绝原因：{_record.check_reason}</div>}
+        {_record.apply_status == 4 && <div>拒绝时间：{_record.check_at}</div>}
       </div> : ''
       return <div>{text ? <Tooltip title={node}>{APPLY_STATUS[text]}</Tooltip> : '-'}</div>
     }
