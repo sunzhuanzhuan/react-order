@@ -9,28 +9,6 @@ import { WBYPlatformIcon } from "wbyui";
 
 const FormItem = Form.Item
 
-const options = [
-  {
-    value: '1',
-    label: 'Zhejiang',
-    children: [
-      {
-        value: '11',
-        label: 'Hangzhou'
-      }
-    ]
-  },
-  {
-    value: '2',
-    label: 'Jiangsu',
-    children: [
-      {
-        value: '22',
-        label: 'Nanjing'
-      }
-    ]
-  }
-];
 @Form.create()
 export default class Base extends React.Component {
   state = {}
@@ -115,7 +93,8 @@ export default class Base extends React.Component {
             }]
           })(
             <Cascader
-              options={options}
+              fieldNames={{ label: 'itemValue', value: 'itemKey', children: 'childrenList' }}
+              options={data.industryList}
               placeholder='请选择行业'
             />
           )}

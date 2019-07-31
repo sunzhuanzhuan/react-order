@@ -7,6 +7,7 @@ import {
   TPTaskDetailClear,
   TPMcnOrderList_success,
   TPGetMcnReviewOrderList_success,
+  TPQueryMcnFinancePaymentPage_success,
 } from '../actions'
 
 // 处理列表数据为map表
@@ -72,11 +73,17 @@ export const mcnReviewOrderList = handleActions({
   [TPGetMcnReviewOrderList_success]: handleResponseList(),
 }, initList())
 
+// 任务大厅打款列表
+export const financeTradeRecord = handleActions({
+  [TPQueryMcnFinancePaymentPage_success]: handleResponseList(),
+}, initList())
+
 
 
 export default combineReducers({
   taskManageList,
   taskDetail,
   mcnOrderList,
-  mcnReviewOrderList
+  mcnReviewOrderList,
+  financeTradeRecord
 })

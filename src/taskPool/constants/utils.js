@@ -38,6 +38,7 @@ export const openNewWindowPreviewForWeibo = ({ content = "", video = "", images 
   window.previewWindow.document.close()
 }
 
+// 倒计时显示
 export const getCountDownTimeText = (date) => {
   const diff = moment(date) - moment()
   const duration = moment.duration(diff, 'milliseconds')
@@ -59,4 +60,24 @@ export const getCountDownTimeText = (date) => {
   text += obj.hours ? obj.hours + '小时 ' : '';
   text += obj.minutes ? obj.minutes + '分钟' : '';
   return text
+}
+
+// 根据行业code获取行业名字
+export const getIndustryName = (source = [], code) => {
+  // itemValue', value: 'itemKey', children: 'childrenList'
+  let value = '';
+  return loop(source, code);
+  function loop(item, id) {
+    if (!item) return "";
+    for (var i = 0; i < item.length; i++) {
+      if (item[i].itemKey === code) {
+        value = item[i]
+        break;
+      }
+      if (item[i].childrenList) {
+        loop(item[i].childrenList, code)
+      }
+    }
+    return value;
+  }
 }

@@ -164,7 +164,7 @@ class TaskReviewList extends Component {
       },
       onShowSizeChange: (currentPage, pageSize) => {
         this.getList({
-          page: { ...search.page, pageSize }
+          page: { pageSize, currentPage: 1 }
         })
       }
     }

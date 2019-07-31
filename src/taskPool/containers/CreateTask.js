@@ -48,64 +48,25 @@ class CreateTask extends Component {
       current: step - 1,
       authToken: '',
       disabled: hasCompany,
+      industryList: [],
       base: {
         platformId: Number(platformId) || 1,
         company: hasCompany ? {
           label: companyName,
           key: companyId
-        } : undefined,
+        } : undefined
       },
       budget: {},
       content: {}
-      /*authToken: "eyJhbGciOiJIUzUxMiJ9.eyJ0b2tlbiI6Imp2NTBBQ19ycDl0cDlCeXFWam4xdjNTb3ZoZ3lMcVQzM2tmOGI5aTBOTENfWUZkeiJ9.7_EKsPXVrWBqnWA_mpyOUoqUqg4kh0xr6hO22zN_sU6ferIFhdYhmcgSsSSY5fosMbOgsxveqiwJEJK80off-g",
-      base:{
-        company: {
-          key: "2",
-          label: "可口可乐有限公司",
-        },
-        industry: [
-          "1",
-          "11"
-        ],
-        orderName: "刘治兵",
-        platformId: 1,
-      },
-      budget: {
-        taskContentStyle: 11,
-        actionNum:12333,
-        followerCountLimit: 2222,
-        orderEndDate: moment(),
-        retainTime: 24,
-        taskTarget: 22,
-        totalAmount: 12333,
-      },
-      content: {
-        coverImage: [{
-          uid: "rc-upload-1564223659679-2",
-          url:  "http://prd-wby-img.oss-cn-beijing.aliyuncs.com/B_GZA_ORDER_IMG_NORMAL_UPLOAD/891914dc09094f7db8be44ac8cf9c11a.jpg",
-        }],
-        attachment: {
-          images: [{
-            uid: "rc-upload-1564223659679-2",
-            url:  "http://prd-wby-img.oss-cn-beijing.aliyuncs.com/B_GZA_ORDER_IMG_NORMAL_UPLOAD/891914dc09094f7db8be44ac8cf9c11a.jpg",
-          }],
-          type:2,
-          video: {
-            url: "http://prd-wby-img.oss-cn-beijing.aliyuncs.com/VIDEO_TEST/c28934d21d7d470787558fdafccb7f6c.mp4"
-          },
-        },
-        title: "唐诗宋词里的十二时辰，一起了解下？",
-        author:"张三",
-        remark:"张唐诗宋词里,的十二时辰唐诗宋词里的十二时辰唐诗宋词里的十二时辰三",
-        richContent: BraftEditor.createEditorState("<p>Hello <b>World!</b></p>"),
-        content: "123123",
-        taskContentStyle: 21,
-      }*/
     }
   }
 
   componentDidMount() {
     const { actions } = this.props
+    // 获取任务大厅行业列表
+    actions.TPGetTaskIndustry().then(({ data: industryList }) => {
+      this.setState({ industryList })
+    })
     // 获取上传图片token
     actions.getNewToken().then(({ data: authToken }) => {
       this.setState({ authToken })

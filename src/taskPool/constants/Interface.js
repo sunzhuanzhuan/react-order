@@ -1,5 +1,6 @@
 const prefix = "/operator-gateway"
 export default {
+  getTaskIndustry: prefix + "/common/v1/getTaskIndustry",
   addTask: prefix + "/adOrder/v1/add",
   offline: prefix + "/adOrder/v1/offline",
   taskManageList: prefix + "/adOrder/v1/list",
@@ -11,4 +12,6 @@ export default {
   getMcnReviewOrderList: prefix + "/mcnGrapLog/v1/getMcnReviewOrderList",
   approvedSuccess: prefix + "/mcnGrapLog/v1/approvedSuccess",
   approvedFailure: prefix + "/mcnGrapLog/v1/approvedFailure",
+  queryMcnFinancePaymentPage: prefix + "/finance/v1/queryMcnFinancePaymentPage",
+  payMcnFinancePayment: prefix + "/finance/v1/payMcnFinancePayment",
 }

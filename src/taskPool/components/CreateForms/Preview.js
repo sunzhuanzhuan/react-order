@@ -14,6 +14,7 @@ import { withRouter } from 'react-router-dom'
 import moment from "moment";
 import { WBYPlatformIcon } from "wbyui";
 import {
+  getIndustryName,
   openNewWindowPreview, openNewWindowPreviewForWeibo,
   openNewWindowPreviewForWeixin
 } from "@/taskPool/constants/utils";
@@ -106,7 +107,7 @@ class PreviewForWeixin extends React.Component {
       <div className="form-preview-container">
         <Descriptions title={header} column={1}>
           <Descriptions.Item label="所属公司">{base.company.label}</Descriptions.Item>
-          <Descriptions.Item label="行业分类">{base.industry}</Descriptions.Item>
+          <Descriptions.Item label="行业分类">{getIndustryName(data.industryList, [...base.industry].pop()).itemValue}</Descriptions.Item>
           <Descriptions.Item label="内容发布位置">{contentStyle[budget.taskContentStyle]}</Descriptions.Item>
           <Descriptions.Item label="预算">{budget.totalAmount}</Descriptions.Item>
           <Descriptions.Item label="任务结束时间">{budget.orderEndDate.format('YYYY-MM-DD HH:mm:ss')}</Descriptions.Item>
@@ -220,7 +221,7 @@ class PreviewForWeibo extends React.Component {
       <div className="form-preview-container">
         <Descriptions title={header} column={1}>
           <Descriptions.Item label="所属公司">{base.company.label}</Descriptions.Item>
-          <Descriptions.Item label="行业分类">{base.industry}</Descriptions.Item>
+          <Descriptions.Item label="行业分类">{getIndustryName(data.industryList, [...base.industry].pop()).itemValue}</Descriptions.Item>
           <Descriptions.Item label="任务目标">{target[budget.taskTarget]}</Descriptions.Item>
           <Descriptions.Item label="预算">{budget.totalAmount}</Descriptions.Item>
           <Descriptions.Item label="任务结束时间">{budget.orderEndDate.format('YYYY-MM-DD HH:mm:ss')}</Descriptions.Item>

@@ -2,61 +2,64 @@ import React, { Component } from 'react'
 import { Table, message, Typography, Button } from 'antd'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import * as commonAction from "@/actions";
-import * as action from "@/taskPool/actions";
+import * as commonActions from '@/actions'
+import * as actions from '../actions'
 import Yuan from "@/base/Yuan";
 
 
 const { Title } = Typography;
 
-class TaskReviewList extends Component {
+class RemittanceRecordList extends Component {
   constructor(props, context) {
     super(props, context)
     this.state = {
       search: {
-        page: 1,
-        pageSize: 50
-      }
+        page: {
+          currentPage: 1,
+          pageSize: 20
+        }
+      },
+      listLoading: false
     }
     this.columns = [
       {
         title: '打款批次号',
-        dataIndex: 'real_name_1',
+        dataIndex: 'serialNo',
         align: "center",
-        render: (name, record) => {
-          return "12345"
+        render: (serialNo, record) => {
+          return serialNo
         }
       },
       {
         title: '主账号数',
-        dataIndex: 'real_name_2',
+        dataIndex: 'mcnCount',
         align: "center",
-        render: (name, record) => {
-          return "10"
+        render: (count, record) => {
+          return count
         }
       },
       {
         title: '打款总金额',
-        dataIndex: 'real_name_3',
+        dataIndex: 'settlementAmount',
         align: "center",
-        render: (name, record) => {
-          return <Yuan value={20000} />
+        render: (amount, record) => {
+          return <Yuan value={amount} format={"0,0.00"} />
         }
       },
       {
         title: '生成时间',
-        dataIndex: 'real_name_4',
+        dataIndex: 'createdAt',
         align: "center",
-        render: (name, record) => {
-          return "2016-06-07 11:12:00"
+        render: (createdAt, record) => {
+          return createdAt
         }
       },
       {
         title: '操作',
-        dataIndex: 'real_name_61',
+        dataIndex: 'settlementFilePath',
         align: "center",
-        render: (name, record) => {
-          return <Button onClick={() => this.download(name)} type="primary" ghost>下载</Button>
+        render: (url, record) => {
+          return <Button onClick={() => this.download(url, record)} type="primary" ghost>下载</Button>
         }
       }
     ]
@@ -65,17 +68,19 @@ class TaskReviewList extends Component {
   getList = (params = {}) => {
     const { actions } = this.props
     let search = { ...this.state.search, ...params }
-    // this.setState({ listLoading: true, search })
-    /*actions.getSummaryListByOrder(search).finally(() => {
+    this.setState({ listLoading: true, search })
+    actions.TPQueryMcnFinancePaymentPage(search).finally(() => {
       this.setState({ listLoading: false })
-    })*/
+    })
   }
 
   // 下载
-  download = (url) => {
+  download = (url, record) => {
+    const { actions } = this.props
     // 判断是否有一个下线请求处理中
-    this.props.actions.downloadDealResult({ downLoadUrl: url }).then((res) => {
+    actions.getFileRealPath({ downLoadUrl: url }).then((res) => {
       if (res.code === 1000) {
+        record.settlementState === 1 && actions.TPPayMcnFinancePayment({ id: record.id })
         window.location.href = res.data
       } else {
         message.error("下载地址获取失败")
@@ -90,23 +95,26 @@ class TaskReviewList extends Component {
   }
 
   render() {
-    const data = [
-      {}
-    ]
+    const { actions, history, taskPoolData } = this.props
+    const { listLoading, search } = this.state
+    const { financeTradeRecord: { keys, source, total, pageNum, pageSize } } = taskPoolData
+
+    const dataSource = keys.map(key => source[key])
     const pagination = {
-      total: 10,
-      pageSize: 20,
-      current: 1,
-      onChange: (current) => {
-        this.getList({ page: current })
-      },
-      showQuickJumper: true
+      total,
+      pageSize,
+      current: pageNum,
+      onChange: (currentPage) => {
+        this.getList({
+          page: { ...search.page, currentPage }
+        })
+      }
     }
     return <div className='task-pool-page-container review-page'>
       <Title level={4}>任务大厅打款列表</Title>
       <Table
-        loading={this.state.listLoading}
-        dataSource={data}
+        loading={listLoading}
+        dataSource={dataSource}
         pagination={pagination}
         columns={this.columns}
       />
@@ -114,17 +122,18 @@ class TaskReviewList extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
-  return {
-    // accountManage: state.accountManageReducer,
-  }
-}
-
+const mapStateToProps = (state) => ({
+  common: state.commonReducers,
+  taskPoolData: state.taskPoolReducers
+})
 const mapDispatchToProps = (dispatch) => ({
-  actions: bindActionCreators({ ...commonAction, ...action }, dispatch)
-});
+  actions: bindActionCreators({
+    ...commonActions,
+    ...actions
+  }, dispatch)
+})
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(TaskReviewList)
+)(RemittanceRecordList)

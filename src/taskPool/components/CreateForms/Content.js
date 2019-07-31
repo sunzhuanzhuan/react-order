@@ -267,7 +267,7 @@ class ContentForWeibo extends React.Component {
       <Form onSubmit={this.handleSubmit}  {...formLayout}>
         <FormItem label="内容形式">
           {getFieldDecorator('taskContentStyle', {
-            initialValue: content.taskContentStyle || 21,
+            initialValue: (budget.taskTarget === 22 || !content.taskContentStyle) ? 21 : content.taskContentStyle,
             rules: [{
               required: true,
               message: '请选择内容发布位置'

@@ -18,7 +18,7 @@ const statusKeyToProps = {
     style: { color: '#ff365d' }
   },
   '6': {
-    children: '',
+    children: '已取消',
   },
   '7': {
     children: '合格',

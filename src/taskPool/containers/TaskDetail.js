@@ -72,9 +72,9 @@ const columns = [
   {
     title: '结算价格',
     align: "center",
-    dataIndex: 'realAmount',
-    render: (realAmount, record) => {
-      return <Yuan value={realAmount} format={"0,0.00"} style={{ color: "#333" }} />
+    dataIndex: 'adRealAmount',
+    render: (amount, record) => {
+      return <Yuan value={record.orderState === 5 ? 0 : amount} format={"0,0.00"} style={{ color: "#333" }} />
     }
   },
   {

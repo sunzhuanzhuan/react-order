@@ -9,6 +9,11 @@ export const {
   method: 'post'
 });
 
+// 获取任务大厅行业列表
+export const {
+  TPGetTaskIndustry
+} = createHttpAction('TPGetTaskIndustry', Interface.getTaskIndustry);
+
 // 下线任务
 export const {
   TPOffline
@@ -86,5 +91,20 @@ export const {
 export const {
   TPApprovedFailure,
 } = createHttpAction('TPApprovedFailure', Interface.approvedFailure, {
+  method: 'post'
+});
+
+// 任务大厅打款列表
+export const {
+  TPQueryMcnFinancePaymentPage,
+  TPQueryMcnFinancePaymentPage_success,
+} = createHttpAction('TPQueryMcnFinancePaymentPage', Interface.queryMcnFinancePaymentPage, {
+  method: 'post'
+});
+
+// 下载回传接口，表示执行任务
+export const {
+  TPPayMcnFinancePayment,
+} = createHttpAction('TPPayMcnFinancePayment', Interface.payMcnFinancePayment, {
   method: 'post'
 });
