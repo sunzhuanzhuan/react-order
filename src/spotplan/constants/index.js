@@ -238,7 +238,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete) => 
     align: 'center',
     width: 210,
     render: (text, record) => {
-      return <FormItem>
+      return record.is_inward_send == 1 || record.last_apply_status == 1 || record.last_apply_status == 2 ? text : <FormItem>
         {getFieldDecorator(`${record.order_id}.publish_articles_address`)(
           <Select placeholder="请选择" style={{ width: 120 }} onChange={(value) => {
             handleUpdate({ order_id: record.order_id, price_id: record.price_id, publish_articles_address: value || '' })
@@ -263,7 +263,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete) => 
     align: 'center',
     width: 210,
     render: (text, record) => {
-      return <FormItem>
+      return record.is_inward_send == 1 || record.last_apply_status == 1 || record.last_apply_status == 2 ? text : <FormItem>
         {getFieldDecorator(`${record.order_id}.publish_articles_at`)(
           <DatePicker dropdownClassName="sp-calendar" allowClear={record.publish_articles_at == null ? true : false} showTime format="YYYY-MM-DD HH:mm:ss" placeholder="请输入" style={{ width: 130 }} onOk={(value) => {
             handleUpdate({ order_id: record.order_id, price_id: record.price_id, publish_articles_at: value.format("YYYY-MM-DD HH:mm:ss") })
