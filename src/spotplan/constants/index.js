@@ -2,6 +2,8 @@ import React from 'react'
 import { Modal, Input, Form, Select, Tooltip, DatePicker } from 'antd'
 import numeral from 'numeral'
 import moment from 'moment'
+
+import '../containers/index.less'
 const { TextArea } = Input;
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -263,7 +265,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete) => 
     render: (text, record) => {
       return <FormItem>
         {getFieldDecorator(`${record.order_id}.publish_articles_at`)(
-          <DatePicker allowClear={record.publish_articles_at == null ? true : false} showTime format="YYYY-MM-DD HH:mm:ss" placeholder="请输入" style={{ width: 130 }} onOk={(value) => {
+          <DatePicker dropdownClassName="sp-calendar" allowClear={record.publish_articles_at == null ? true : false} showTime format="YYYY-MM-DD HH:mm:ss" placeholder="请输入" style={{ width: 130 }} onOk={(value) => {
             handleUpdate({ order_id: record.order_id, price_id: record.price_id, publish_articles_at: value.format("YYYY-MM-DD HH:mm:ss") })
           }} />
         )}
