@@ -44,9 +44,9 @@ class EditOrder extends React.Component {
     })
   }
   render() {
-    const { getFieldDecorator } = this.props.form;
+    const { getFieldDecorator, getFieldValue, setFieldsValue } = this.props.form;
     const { data, handleUpdate, headerData, loading, search } = this.props;
-    const EditOrderCols = EditOrderFunc(getFieldDecorator, handleUpdate, this.handleDelete);
+    const EditOrderCols = EditOrderFunc(getFieldDecorator, handleUpdate, this.handleDelete, getFieldValue, setFieldsValue);
     const paginationObj = {
       onChange: (page) => {
         this.props.queryData(3, { spotplan_id: search.spotplan_id, page }, this.handleEditTable);

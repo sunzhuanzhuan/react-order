@@ -98,7 +98,7 @@ export const CheckModalFunc = handleDel => [
     }
   }
 ];
-export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete) => [
+export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, getFieldValue, setFieldsValue) => [
   {
     title: '订单ID',
     dataIndex: 'order_id',
@@ -277,6 +277,10 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete) => 
         {getFieldDecorator(`${record.order_id}.publish_articles_at`)(
           <DatePicker dropdownClassName="sp-calendar" allowClear={record.publish_articles_at == null ? true : false} showTime format="YYYY-MM-DD HH:mm:ss" placeholder="请输入" style={{ width: 130 }} onOk={(value) => {
             handleUpdate({ order_id: record.order_id, price_id: record.price_id, publish_articles_at: value.format("YYYY-MM-DD HH:mm:ss") })
+          }} onBlur={() => {
+            if (!getFieldValue('publish_articles_at')) {
+              setFieldsValue({ 'publish_articles_at': moment(record.publish_articles_at) })
+            }
           }} />
         )}
       </FormItem>
