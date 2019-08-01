@@ -23,6 +23,16 @@ const APPLY_STATUS = {
   3: 'SP更新审核通过',
   4: 'SP更新审核被拒',
 };
+let position = {
+  1: '头条',
+  2: '次条',
+  3: '三条',
+  4: '四条',
+  5: '五条',
+  6: '六条',
+  7: '七条',
+  8: '八条',
+}
 export const CheckModalFunc = handleDel => [
   {
     title: '订单ID',
@@ -238,7 +248,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete) => 
     align: 'center',
     width: 210,
     render: (text, record) => {
-      return record.is_inward_send == 1 || record.last_apply_status == 1 || record.last_apply_status == 2 ? text : <FormItem>
+      return record.is_inward_send == 1 || record.last_apply_status == 1 || record.last_apply_status == 2 ? position[text] : <FormItem>
         {getFieldDecorator(`${record.order_id}.publish_articles_address`)(
           <Select placeholder="请选择" style={{ width: 120 }} onChange={(value) => {
             handleUpdate({ order_id: record.order_id, price_id: record.price_id, publish_articles_address: value || '' })
@@ -396,16 +406,7 @@ export const SpotplanListFunc = () => [
     }
   }
 ];
-let position = {
-  1: '头条',
-  2: '次条',
-  3: '三条',
-  4: '四条',
-  5: '五条',
-  6: '七条',
-  7: '头条',
-  8: '八条',
-}
+
 export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdateOrder, handleEditOrder, handleDelete, handleHistory, handleAddNumber, handleUpdateArtical) => [
   {
     title: '订单ID',
@@ -685,6 +686,8 @@ export const HistoryCols = [
             {item.account_category_name && <div style={{ textAlign: 'left' }}>账号分类：{item.account_category_name}</div>}
             {item.release_form && <div style={{ textAlign: 'left' }}>位置/直发or转发：{item.release_form}</div>}
             {item.content && <div style={{ textAlign: 'left' }}>备注(非必填)：{item.content}</div>}
+            {item.publish_articles_address && <div style={{ textAlign: 'left' }}>发文位置(非必填):{position[item.publish_articles_address]}</div>}
+            {item.publish_articles_at && <div style={{ textAlign: 'left' }}>发文时间(非必填)：{item.publish_articles_at}</div>}
           </div>
         })}
       </div> : '-'
@@ -707,7 +710,8 @@ export const HistoryCols = [
             {item.service_rate && <div style={{ textAlign: 'left' }}>服务费率：<span style={item.service_rate != before_item.service_rate ? { color: 'red' } : {}}>{item.service_rate}%</span></div>}
             {item.account_category_name && <div style={{ textAlign: 'left' }}>账号分类：<span style={item.account_category_name != before_item.account_category_name ? { color: 'red' } : {}}>{item.account_category_name}</span></div>}
             {item.release_form && <div style={{ textAlign: 'left' }}>位置/直发or转发：<span style={item.release_form != before_item.release_form ? { color: 'red' } : {}}>{item.release_form}</span></div>}
-            {item.content && <div style={{ textAlign: 'left' }}>备注(非必填)：<span style={item.content != before_item.content ? { color: 'red' } : {}}>{item.content}</span></div>}
+            {item.publish_articles_address && <div style={{ textAlign: 'left' }}>发文位置(非必填)：<span style={item.publish_articles_address != before_item.publish_articles_address ? { color: 'red' } : {}}>{position[item.publish_articles_address]}</span></div>}
+            {item.publish_articles_at && <div style={{ textAlign: 'left' }}>发文时间(非必填)：<span style={item.publish_articles_at != before_item.publish_articles_at ? { color: 'red' } : {}}>{item.publish_articles_at}</span></div>}
           </div>
         })}
       </div>
