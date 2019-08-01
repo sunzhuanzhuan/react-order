@@ -712,7 +712,7 @@ export const HistoryCols = [
             {item.release_form && <div style={{ textAlign: 'left' }}>位置/直发or转发：<span style={item.release_form != before_item.release_form ? { color: 'red' } : {}}>{item.release_form}</span></div>}
             {item.publish_articles_address && <div style={{ textAlign: 'left' }}>发文位置(非必填)：<span style={item.publish_articles_address != before_item.publish_articles_address ? { color: 'red' } : {}}>{position[item.publish_articles_address]}</span></div>}
             {item.publish_articles_at && <div style={{ textAlign: 'left' }}>发文时间(非必填)：<span style={item.publish_articles_at != before_item.publish_articles_at ? { color: 'red' } : {}}>{item.publish_articles_at}</span></div>}
-            {item.content && <div style={{ textAlign: 'left' }}>位置/直发or转发：<span style={item.content != before_item.content ? { color: 'red' } : {}}>{item.content}</span></div>}
+            {item.content && <div style={{ textAlign: 'left' }}>备注(非必填):<span style={item.content != before_item.content ? { color: 'red' } : {}}>{item.content}</span></div>}
           </div>
         })}
       </div>
