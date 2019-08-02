@@ -160,15 +160,16 @@ class ContentForWeixin extends React.Component {
             <InputCount max={8} placeholder="请输入作者" />
           )}
         </FormItem>
-        <FormItem label={<span>&nbsp;&nbsp;&nbsp;摘要</span>}>
+        <FormItem label="摘要">
           {getFieldDecorator('remark', {
             initialValue: content.remark,
             rules: [
+              { required: true,  message: '请填写摘要' },
               { max: 120, message: '最多输入120字的摘要' }
             ]
           })(
             <Input.TextArea
-              placeholder='如果不填写会默认抓取正文前54个字'
+              placeholder='文章摘要'
               autosize={{
                 minRows: 3,
                 maxRows: 3

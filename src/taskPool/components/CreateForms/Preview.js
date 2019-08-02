@@ -18,6 +18,7 @@ import {
   openNewWindowPreview, openNewWindowPreviewForWeibo,
   openNewWindowPreviewForWeixin
 } from "@/taskPool/constants/utils";
+import numeral from '@/util/numeralExpand'
 
 const { Text } = Typography;
 
@@ -65,12 +66,13 @@ class PreviewForWeixin extends React.Component {
     delete body.company
 
     body.industry = body.industry[1]
+    body.taskTarget = body.taskContentStyle
 
     body.adOrderWeixinContent = {
       "author": content.author,
       "content": content.richContent.toRAW(),
-      "coverImageUrl": content.coverImage.url,
-      "coverImageName": content.coverImage.name,
+      "coverImageUrl": content.coverImage[0].url,
+      "coverImageName": content.coverImage[0].name,
       "remark": content.remark,
       "title": content.title
     }
@@ -109,7 +111,7 @@ class PreviewForWeixin extends React.Component {
           <Descriptions.Item label="所属公司">{base.company.label}</Descriptions.Item>
           <Descriptions.Item label="行业分类">{getIndustryName(data.industryList, [...base.industry].pop()).itemValue}</Descriptions.Item>
           <Descriptions.Item label="内容发布位置">{contentStyle[budget.taskContentStyle]}</Descriptions.Item>
-          <Descriptions.Item label="预算">{budget.totalAmount}</Descriptions.Item>
+          <Descriptions.Item label="预算">{numeral(budget.totalAmount).format("0,0.00")} 元</Descriptions.Item>
           <Descriptions.Item label="任务结束时间">{budget.orderEndDate.format('YYYY-MM-DD HH:mm:ss')}</Descriptions.Item>
           <Descriptions.Item label="发布后保留时长">{budget.retainTime}小时</Descriptions.Item>
           <Descriptions.Item label="文章封面">
@@ -181,6 +183,7 @@ class PreviewForWeibo extends React.Component {
     delete body.company
 
     body.industry = body.industry[1]
+    body.taskContentStyle = content.taskContentStyle
 
     body.adOrderWeiboContent = {
       "content": content.content,
@@ -223,7 +226,7 @@ class PreviewForWeibo extends React.Component {
           <Descriptions.Item label="所属公司">{base.company.label}</Descriptions.Item>
           <Descriptions.Item label="行业分类">{getIndustryName(data.industryList, [...base.industry].pop()).itemValue}</Descriptions.Item>
           <Descriptions.Item label="任务目标">{target[budget.taskTarget]}</Descriptions.Item>
-          <Descriptions.Item label="预算">{budget.totalAmount}</Descriptions.Item>
+          <Descriptions.Item label="预算">{numeral(budget.totalAmount).format("0,0.00")} 元</Descriptions.Item>
           <Descriptions.Item label="任务结束时间">{budget.orderEndDate.format('YYYY-MM-DD HH:mm:ss')}</Descriptions.Item>
           <Descriptions.Item label="发布后保留时长">{budget.retainTime}小时</Descriptions.Item>
           <Descriptions.Item label="内容形式">{contentStyle[content.taskContentStyle]}</Descriptions.Item>

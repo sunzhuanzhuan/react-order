@@ -4,6 +4,10 @@ import { getCountDownTimeText } from "@/taskPool/constants/utils";
 
 const { Text } = Typography;
 const statusKeyToProps = {
+  '0': {
+    status: 'default',
+    text: '未支付'
+  },
   '1': {
     status: 'processing',
     text: '任务进行中'
@@ -27,7 +31,7 @@ const TaskStatus = ({ status, date }) => {
     <div>
       <Badge {...(statusKeyToProps[status] || {})} />
       <br />
-      {status === 1 && <Text>
+      {date && status === 1 && <Text>
         剩余：{getCountDownTimeText(date)}
       </Text>}
     </div>

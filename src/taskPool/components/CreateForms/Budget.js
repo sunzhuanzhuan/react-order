@@ -142,6 +142,7 @@ class BudgetForWeixin extends React.Component {
               placeholder="任务结束时间"
               style={{ width: "100%" }}
               showTime
+              showToday={false}
             />
           )}
         </FormItem>
@@ -331,6 +332,7 @@ class BudgetForWeibo extends React.Component {
               placeholder="任务结束时间"
               style={{ width: "100%" }}
               showTime
+              showToday={false}
             />
           )}
         </FormItem>

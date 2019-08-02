@@ -17,9 +17,7 @@ export const {
 // 下线任务
 export const {
   TPOffline
-} = createHttpAction('TPOffline', Interface.offline, {
-  method: 'post'
-});
+} = createHttpAction('TPOffline', Interface.offline);
 
 // 根据公司名称模糊查询公司列表
 export const {

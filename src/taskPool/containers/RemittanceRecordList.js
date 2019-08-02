@@ -79,7 +79,7 @@ class RemittanceRecordList extends Component {
     const { actions } = this.props
     // 判断是否有一个下线请求处理中
     actions.getFileRealPath({ downLoadUrl: url }).then((res) => {
-      if (res.code === 1000) {
+      if (res.code === "1000") {
         record.settlementState === 1 && actions.TPPayMcnFinancePayment({ id: record.id })
         window.location.href = res.data
       } else {

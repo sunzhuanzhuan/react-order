@@ -100,25 +100,6 @@ const contentStyle = {
   "11": "多图文第一条", "12": "不限", "21": "直发", "22": "转发"
 }
 
-const statusKeyToProps = {
-  '1': {
-    status: 'processing',
-    text: '进行中'
-  },
-  '4': {
-    status: 'success',
-    text: '已结束'
-  },
-  '3': {
-    status: 'default',
-    text: '已下线'
-  },
-  '2': {
-    status: 'error',
-    text: '已过期'
-  }
-}
-
 class TaskDetail extends Component {
   constructor(props) {
     super(props);
@@ -127,6 +108,9 @@ class TaskDetail extends Component {
         page: {
           currentPage: 1,
           pageSize: 20
+        },
+        form: {
+          adOrderId: props.match.params.id
         }
       },
       listLoading: false,
@@ -168,9 +152,15 @@ class TaskDetail extends Component {
     // 微信
     if (taskDetail.platformId === 9) {
       const content = taskDetail.adOrderWeixinContent
+      let richContent;
+      try {
+        richContent = convertRawToHTML(JSON.parse(content.content))
+      }catch (e) {
+        richContent = content.content
+      }
       return openNewWindowPreviewForWeixin({
         title: content.title,
-        content: convertRawToHTML(JSON.parse(content.content)),
+        content: richContent,
         remark: content.remark,
         author: content.author
       })
@@ -216,7 +206,7 @@ class TaskDetail extends Component {
           taskDetail.orderState === 1 ?
             <Button type="primary" ghost onClick={() => this.offline()}>
               下线
-            </Button> : <Badge {...statusKeyToProps[taskDetail.orderState]} />
+            </Button> : <TaskStatus status={taskDetail.orderState}/>
         }
       />
       <Section>
@@ -268,22 +258,22 @@ class TaskDetail extends Component {
         <Section.Content>
           <Descriptions title="">
             <Descriptions.Item label="任务状态">
-              <Badge {...statusKeyToProps[taskDetail.orderState]} />
+              <TaskStatus status={taskDetail.orderState}/>
             </Descriptions.Item>
-            <Descriptions.Item label="已领取博主数">{taskDetail.mcnCount} 位</Descriptions.Item>
+            <Descriptions.Item label="已领取博主数">{taskDetail.mcnCount || 0} 位</Descriptions.Item>
             <Descriptions.Item label="消耗/预算">
               <Yuan value={taskDetail.usedAmount} className="text-red text-bold"/>
               &nbsp;/&nbsp;
               <Yuan value={taskDetail.totalAmount} className="text-black text-bold"/>
             </Descriptions.Item>
             <Descriptions.Item label={`预估最低${isWeixin ? "阅读数" : "转发数"}`}>{taskDetail.actionNum}</Descriptions.Item>
-            <Descriptions.Item label={`已达成${isWeixin ? "阅读数" : "转发数"}`}>{taskDetail.realActionNum}</Descriptions.Item>
+            <Descriptions.Item label={`已达成${isWeixin ? "阅读数" : "转发数"}`}>{taskDetail.realActionNum || '-'}</Descriptions.Item>
           </Descriptions>
         </Section.Content>
       </Section>
       <Section>
         <Section.Header title={<span>已领取博主 {
-          <span className='text-red'>33</span>} 位</span>} level={5} />
+          <span className='text-red'>{total}</span>} 位</span>} level={5} />
         <Section.Content>
           <Table
             loading={listLoading}
