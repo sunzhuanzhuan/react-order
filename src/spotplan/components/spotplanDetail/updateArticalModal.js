@@ -2,7 +2,7 @@ import React from 'react';
 import { Modal, Button, Table, Form, DatePicker, message } from 'antd';
 import { ArticalCols } from '../../constants'
 import debounce from 'lodash/debounce';
-
+import './updateArtical.less'
 class UpdateArticalModal extends React.Component {
   constructor() {
     super();
@@ -50,7 +50,7 @@ class UpdateArticalModal extends React.Component {
     return <Modal
       wrapClassName='change-modal'
       key='changeModal'
-      width={900}
+      width={1100}
       title='更新发文时间'
       visible={visible}
       maskClosable={false}
@@ -64,7 +64,7 @@ class UpdateArticalModal extends React.Component {
 
       <h4 style={{ padding: '10px 0' }}>已选订单
       订单数量<span style={{ color: 'red', padding: '0 10px' }}>{dataSource.length}个</span></h4>
-      <Table scroll={{ y: 400 }} rowKey='order_id' columns={ArticalCols} dataSource={dataSource} pagination={false} />
+      <div className="spArticalUpdate"><Table scroll={{ y: 400 }} rowKey='order_id' bordered columns={ArticalCols} dataSource={dataSource} pagination={false} /></div>
       <Form>
         <Form.Item label='修改已选订单的发文时间'>
           {getFieldDecorator('publish_articles_at', {
