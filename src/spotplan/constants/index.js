@@ -469,7 +469,6 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     width: 120,
     render: (text, record = {}) => {
       const _record = record.record || {};
-      console.log(_record)
       const node = text ? <div>
         <div>申请类型：{APPLY_TYPE[_record.apply_type]} <a href='javascript:;' onClick={(e) => {
           handleHistory(e, _record);
@@ -574,7 +573,7 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
       </Tooltip> : '-'
     }
   }, {
-    title: '发文位置（非必填）',
+    title: '发文位置',
     dataIndex: 'publish_articles_address',
     key: 'publish_articles_address',
     align: 'center',

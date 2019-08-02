@@ -64,7 +64,7 @@ class UpdateArticalModal extends React.Component {
 
       <h4 style={{ padding: '10px 0' }}>已选订单
       订单数量<span style={{ color: 'red', padding: '0 10px' }}>{dataSource.length}个</span></h4>
-      <Table rowKey='order_id' bordered columns={ArticalCols} dataSource={dataSource} pagination={false} />
+      <Table scroll={{ y: 400 }} rowKey='order_id' columns={ArticalCols} dataSource={dataSource} pagination={false} />
       <Form>
         <Form.Item label='修改已选订单的发文时间'>
           {getFieldDecorator('publish_articles_at', {
