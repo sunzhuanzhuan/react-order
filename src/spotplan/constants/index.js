@@ -279,9 +279,14 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
             handleUpdate({ order_id: record.order_id, price_id: record.price_id, publish_articles_at: value.format("YYYY-MM-DD HH:mm:ss") })
           }} onBlur={() => {
             let newAt = `${record.order_id}.publish_articles_at`;
+            console.log(record.publish_articles_at)
+            // console.log(getFieldValue(`${record.order_id}.publish_articles_at`).format("YYYY-MM-DD HH:mm:ss"))
             if (!getFieldValue(`${record.order_id}.publish_articles_at`)) {
-              setFieldsValue({ [newAt]: moment(record.publish_articles_at) })
-
+              if (record.publish_articles_at != '0000-00-00 00:00:00') {
+                if (record.publish_articles_at) {
+                  setFieldsValue({ [newAt]: moment(record.publish_articles_at) })
+                }
+              }
             } else if (record.publish_articles_at != getFieldValue(`${record.order_id}.publish_articles_at`).format("YYYY-MM-DD HH:mm:ss")) {
               handleUpdate({ order_id: record.order_id, price_id: record.price_id, publish_articles_at: getFieldValue(`${record.order_id}.publish_articles_at`).format("YYYY-MM-DD HH:mm:ss") })
             }

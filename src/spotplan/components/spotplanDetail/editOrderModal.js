@@ -109,7 +109,10 @@ class EditOrderModal extends React.Component {
             <DatePicker format="YYYY-MM-DD HH:mm:ss" showTime placeholder="请输入"
               onBlur={() => {
                 if (!this.props.form.getFieldValue('publish_articles_at')) {
-                  this.props.form.setFieldsValue({ 'publish_articles_at': moment(data[0].publish_articles_at) })
+                  if (data[0].publish_articles_at) {
+                    this.props.form.setFieldsValue({ 'publish_articles_at': moment(data[0].publish_articles_at) })
+                  }
+
                 }
               }}
               style={{ width: 150 }} allowClear={moment(data[0].publish_articles_at).isValid() ? false : true} />
