@@ -50,7 +50,7 @@ class UpdateArticalModal extends React.Component {
     return <Modal
       wrapClassName='change-modal'
       key='changeModal'
-      width={840}
+      width={900}
       title='更新发文时间'
       visible={visible}
       maskClosable={false}

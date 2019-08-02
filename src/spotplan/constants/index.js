@@ -278,8 +278,12 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
           <DatePicker dropdownClassName="sp-calendar" allowClear={record.publish_articles_at == null ? true : false} showTime format="YYYY-MM-DD HH:mm:ss" placeholder="请输入" style={{ width: 130 }} onOk={(value) => {
             handleUpdate({ order_id: record.order_id, price_id: record.price_id, publish_articles_at: value.format("YYYY-MM-DD HH:mm:ss") })
           }} onBlur={() => {
-            if (!getFieldValue('publish_articles_at')) {
-              setFieldsValue({ 'publish_articles_at': moment(record.publish_articles_at) })
+            let newAt = `${record.order_id}.publish_articles_at`;
+            if (!getFieldValue(`${record.order_id}.publish_articles_at`)) {
+              setFieldsValue({ [newAt]: moment(record.publish_articles_at) })
+
+            } else if (record.publish_articles_at != getFieldValue(`${record.order_id}.publish_articles_at`).format("YYYY-MM-DD HH:mm:ss")) {
+              handleUpdate({ order_id: record.order_id, price_id: record.price_id, publish_articles_at: getFieldValue(`${record.order_id}.publish_articles_at`).format("YYYY-MM-DD HH:mm:ss") })
             }
           }} />
         )}
@@ -291,7 +295,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
     dataIndex: 'content',
     key: 'content',
     align: 'center',
-    width: 210,
+    width: 240,
     render: (text, record) => {
       // const flag = (record.customer_confirmation_status == 11 && [0, 4].includes(parseInt(record.last_apply_status))) ? true : false;
       return record.is_inward_send == 1 || record.last_apply_status == 1 || record.last_apply_status == 2 ? text : <FormItem>
