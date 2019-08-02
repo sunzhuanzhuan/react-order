@@ -78,7 +78,7 @@ export default class Base extends React.Component {
             initialValue: base.orderName,
             rules: [
               { required: true, message: '请输入任务名称' },
-              { max: 20, message: '最多输入20个字' }
+              { max: 20, message: '任务名称不大于20字' }
             ]
           })(
             <InputCount max={20} placeholder="请输入任务名称" />

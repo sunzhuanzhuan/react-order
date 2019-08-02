@@ -82,7 +82,7 @@ class BudgetForWeixin extends React.Component {
             initialValue: budget.taskContentStyle || 11,
             rules: [{
               required: true,
-              message: '请选择内容发布位置'
+              message: '请选择发布位置'
             }]
           })(
             <Radio.Group onChange={e => {
@@ -100,7 +100,7 @@ class BudgetForWeixin extends React.Component {
               initialValue: budget.totalAmount,
               rules: [{
                 required: true,
-                message: '请填写任务预算'
+                message: '请输入任务预算'
               }]
             })(
               <InputNumber
@@ -152,7 +152,7 @@ class BudgetForWeixin extends React.Component {
               initialValue: budget.retainTime,
               rules: [{
                 required: true,
-                message: '请选择发布后保留时长'
+                message: '请选择任务保留时长'
               }]
             })(
               <Radio.Group>
@@ -270,7 +270,7 @@ class BudgetForWeibo extends React.Component {
               initialValue: budget.totalAmount,
               rules: [{
                 required: true,
-                message: '请填写任务预算'
+                message: '请输入任务预算'
               }]
             })(
               <InputNumber
@@ -342,7 +342,7 @@ class BudgetForWeibo extends React.Component {
               initialValue: budget.retainTime,
               rules: [{
                 required: true,
-                message: '请选择发布后保留时长'
+                message: '请选择任务保留时长'
               }]
             })(
               <Radio.Group>

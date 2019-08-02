@@ -204,7 +204,7 @@ class TaskDetail extends Component {
         title="任务详情"
         extra={
           taskDetail.orderState === 1 ?
-            <Button type="primary" ghost onClick={() => this.offline()}>
+            <Button type="primary" ghost onClick={() => this.offline(taskDetail.id)}>
               下线
             </Button> : <TaskStatus status={taskDetail.orderState}/>
         }

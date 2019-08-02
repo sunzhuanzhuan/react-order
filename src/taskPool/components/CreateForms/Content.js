@@ -104,7 +104,7 @@ class ContentForWeixin extends React.Component {
 
   validatorContent = (rules, value, callback) => {
     if (value.isEmpty()) {
-      callback('请输入正文内容')
+      callback('请输入正文')
     } else {
       callback()
     }
@@ -121,7 +121,7 @@ class ContentForWeixin extends React.Component {
           {getFieldDecorator('title', {
             initialValue: content.title,
             rules: [
-              { required: true, message: '请填写标题' },
+              { required: true, message: '请输入标题' },
               { max: 64, message: '最多输入64个字' }
             ]
           })(
@@ -164,7 +164,7 @@ class ContentForWeixin extends React.Component {
           {getFieldDecorator('remark', {
             initialValue: content.remark,
             rules: [
-              { required: true,  message: '请填写摘要' },
+              { required: true, message: '请填写摘要' },
               { max: 120, message: '最多输入120字的摘要' }
             ]
           })(
@@ -181,17 +181,21 @@ class ContentForWeixin extends React.Component {
           {getFieldDecorator('articleUrl', {
             initialValue: content.articleUrl
           })(
-            <Input placeholder='请输入网址'/>
+            <Input placeholder='请输入网址' />
           )}
         </FormItem>
         <FormItem label="文章正文">
           {getFieldDecorator('richContent', {
             initialValue: content.richContent,
             validateTrigger: 'onBlur',
-            rules: [{
-              required: true,
-              validator: this.validatorContent
-            }]
+            rules: [
+              { required: true, validator: this.validatorContent },
+              {
+                max: 2000,
+                message: '最多输入2000个字',
+                transform: value => value.toText()
+              }
+            ]
           })(
             <BraftEditor
               className="form-editor-container"
@@ -271,7 +275,7 @@ class ContentForWeibo extends React.Component {
             initialValue: (budget.taskTarget === 22 || !content.taskContentStyle) ? 21 : content.taskContentStyle,
             rules: [{
               required: true,
-              message: '请选择内容发布位置'
+              message: '请选择内容发布形式'
             }]
           })(
             <Radio.Group>
@@ -284,8 +288,8 @@ class ContentForWeibo extends React.Component {
           {getFieldDecorator('content', {
             initialValue: content.content,
             rules: [
-              { required: true, message: '请填写内容' },
-              { max: 140, message: '最多输入140个字' }
+              { required: true, message: '请输入内容描述' },
+              { max: 2000, message: '最多输入2000个字' }
             ]
           })(
             <Input.TextArea
@@ -316,7 +320,7 @@ class ContentForWeibo extends React.Component {
             initialValue: content.url,
             rules: [
               { required: true, message: '请填写微博地址' },
-              { type: "url", message: '请填写正确的链接' },
+              { type: "url", message: '请填写正确的链接' }
             ]
           })(
             <Input placeholder='输入微博文章链接' />
@@ -325,6 +329,9 @@ class ContentForWeibo extends React.Component {
         {getFieldValue('taskContentStyle') === 22 && <FormItem label="转发语">
           {getFieldDecorator('forwardWord', {
             initialValue: content.forwardWord,
+            rules: [
+              { max: 120, message: '最多输入120个字' }
+            ]
           })(
             <Input.TextArea
               placeholder='输入转发语'
