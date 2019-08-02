@@ -303,20 +303,23 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
     width: 240,
     render: (text, record) => {
       // const flag = (record.customer_confirmation_status == 11 && [0, 4].includes(parseInt(record.last_apply_status))) ? true : false;
-      return record.is_inward_send == 1 || record.last_apply_status == 1 || record.last_apply_status == 2 ? text : <FormItem>
-        {getFieldDecorator(`${record.order_id}.content`, {
-          rules: [
-            { max: 120, message: '不能超过120字' }
-          ]
-        })(
-          <TextArea autosize={false} style={{ width: 140, height: 86, resize: 'none' }} placeholder='填写备注信息' onBlur={(e) => {
-            if (e.target.value != record.content) {
-              handleUpdate({ order_id: record.order_id, price_id: record.price_id, content: e.target.value })
-            }
-          }} />
-        )
-        }
-      </FormItem>
+      return record.is_inward_send == 1 || record.last_apply_status == 1 || record.last_apply_status == 2 ? <Tooltip title={<div style={{ width: '200px' }}>{text}</div>}>
+        <div style={{ width: '180px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{text}
+        </div>
+      </Tooltip> : <FormItem>
+          {getFieldDecorator(`${record.order_id}.content`, {
+            rules: [
+              { max: 120, message: '不能超过120字' }
+            ]
+          })(
+            <TextArea autosize={false} style={{ width: 140, height: 86, resize: 'none', marginRight: '20px' }} placeholder='填写备注信息' onBlur={(e) => {
+              if (e.target.value != record.content) {
+                handleUpdate({ order_id: record.order_id, price_id: record.price_id, content: e.target.value })
+              }
+            }} />
+          )
+          }
+        </FormItem>
     }
   },
   {
