@@ -39,10 +39,11 @@ export class ReviewPass extends Component {
     e && e.preventDefault()
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        const { actions } = this.props
+        const { actions, id, platform } = this.props
         let newVal = { ...values }
         newVal.snapshotUrl = values.pic[0].url
-        newVal.id = this.props.id
+        newVal.id = id
+        newVal.platformId = platform
         delete newVal.pic
         this.setState({ loading: true });
         actions.TPApprovedSuccess(newVal).then(() => {
