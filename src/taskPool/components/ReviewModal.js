@@ -157,9 +157,9 @@ export class ReviewPass extends Component {
               authToken={this.state.authToken || ''}
               listType='picture-card'
               rule={{
-                bizzCode: 'B_GZA_ORDER_IMG_NORMAL_UPLOAD',
+                bizzCode: 'ORDER_IMG_UPLOAD',
                 max: 2,
-                suffix: 'jpg,jpeg,gif,png'
+                suffix: 'png,jpg,jpeg,gif,webp'
               }}
               len={1}
               tipContent=''
@@ -270,9 +270,9 @@ export class ReviewReject extends Component {
               authToken={this.state.authToken || ''}
               listType='picture-card'
               rule={{
-                bizzCode: 'B_GZA_ORDER_IMG_NORMAL_UPLOAD',
+                bizzCode: 'ORDER_IMG_UPLOAD',
                 max: 2,
-                suffix: 'jpg,jpeg,gif,png'
+                suffix: 'png,jpg,jpeg,gif,webp'
               }}
               len={1}
               tipContent=''

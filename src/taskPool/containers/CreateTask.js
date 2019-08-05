@@ -50,7 +50,7 @@ class CreateTask extends Component {
       disabled: hasCompany,
       industryList: [],
       base: {
-        platformId: Number(platformId) || 1,
+        platformId: Number(platformId) || 9,
         company: hasCompany ? {
           label: companyName,
           key: companyId

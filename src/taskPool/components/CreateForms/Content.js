@@ -39,6 +39,11 @@ const controls = [
  */
 @Form.create()
 class ContentForWeixin extends React.Component {
+  static mediaAccepts = {
+    image: 'image/png,image/jpeg,image/gif,image/webp',
+    video: 'video/mp4,video/x-flv,flv-application/octet-stream,video/quicktime,video/x-msvideo',
+    audio: false
+  }
   state = {}
 
   // 暂存 & 上一步
@@ -60,8 +65,17 @@ class ContentForWeixin extends React.Component {
         param.progress(parseFloat(Math.round(loaded / total * 100).toFixed(2)))
       }
     };
+    let rules = {
+      "image": "ORDER_IMG_UPLOAD",
+      "video": "ORDER_VIDEO_UPLOAD"
+    }
+    if(/^image\//.test(param.file.type)){
+      formData.append("bizzCode", rules['image']);
+    }else {
+      formData.append("bizzCode", rules['video']);
+    }
+
     formData.append("file", param.file);
-    formData.append("bizzCode", 'VIDEO_TEST');
     axios.post("/api/common-file/file/v1/uploadPubBucket", formData, config)
       .then(({ data: response }) => {
         if (response.code === '1000') {
@@ -70,7 +84,7 @@ class ContentForWeixin extends React.Component {
           param.success({
             url: response.data,
             meta: {
-              id: 'xxx',
+              id: param.file.uid,
               title: param.file.name,
               alt: param.file.name
             }
@@ -141,9 +155,9 @@ class ContentForWeixin extends React.Component {
               authToken={data.authToken}
               listType='picture-card'
               rule={{
-                bizzCode: 'B_GZA_ORDER_IMG_NORMAL_UPLOAD',
+                bizzCode: 'ORDER_IMG_UPLOAD',
                 max: 2,
-                suffix: 'jpg,jpeg,gif,png'
+                suffix: 'png,jpg,jpeg,gif,webp'
               }}
               len={1}
               tipContent={budget.taskContentStyle === 11 ? '图片尺寸比例为2.35:1,最大不能超过2MB' : '图片尺寸比例为1:1,最大不能超过2MB'}
@@ -201,7 +215,8 @@ class ContentForWeixin extends React.Component {
               className="form-editor-container"
               controls={controls}
               media={{
-                uploadFn: this.customUpload
+                uploadFn: this.customUpload,
+                accepts: this.mediaAccepts
               }}
               placeholder="请输入正文内容"
             />

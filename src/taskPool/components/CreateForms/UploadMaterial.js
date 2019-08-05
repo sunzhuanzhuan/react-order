@@ -67,9 +67,9 @@ export default class UploadMaterial extends Component {
               this.onChange(e && e.fileList, 'images')
             }}
             rule={{
-              bizzCode: 'B_GZA_ORDER_IMG_NORMAL_UPLOAD',
+              bizzCode: 'ORDER_IMG_UPLOAD',
               max: 2,
-              suffix: 'jpg,jpeg,gif,png'
+              suffix: 'png,jpg,jpeg,gif,webp'
             }}
             len={9}
             tipContent={'最多可上传9张图片, 最大不能超过2MB'}
@@ -80,9 +80,9 @@ export default class UploadMaterial extends Component {
             authToken={authToken}
             fileList={videos}
             rule={{
-              bizzCode: 'VIDEO_TEST',
+              bizzCode: 'ORDER_VIDEO_UPLOAD',
               max: 20,
-              suffix: '.mp4'
+              suffix: 'mp4,flv,mov,avi'
             }}
             onChange={e => {
               this.onChange(e && e.fileList[0], 'video')
