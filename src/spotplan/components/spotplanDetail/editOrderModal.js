@@ -18,17 +18,17 @@ class EditOrderModal extends React.Component {
           values.publish_articles_address = data[0].publish_articles_at
         }
         values.publish_articles_at = moment(values.publish_articles_at).format('YYYY-MM-DD HH:mm:ss')
-        // this.props.actions.postUpdateSpotplanOrder({ ...values, spotplan_id, order_id: data[0].order_id }).then((res) => {
-        //   if (!res.data.type) {
-        //     message.success('操作成功！', 2);
-        //     this.props.onCancel();
-        //     setTimeout(() => {
-        //       window.location.reload()
-        //     }, 1000)
-        //   } else {
-        //     this.props.onCancel();
-        //   }
-        // })
+        this.props.actions.postUpdateSpotplanOrder({ ...values, spotplan_id, order_id: data[0].order_id }).then((res) => {
+          if (!res.data.type) {
+            message.success('操作成功！', 2);
+            this.props.onCancel();
+            setTimeout(() => {
+              window.location.reload()
+            }, 1000)
+          } else {
+            this.props.onCancel();
+          }
+        })
       } else {
         Modal.error({
           title: '错误提示',
