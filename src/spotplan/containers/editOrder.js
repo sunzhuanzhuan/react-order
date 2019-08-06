@@ -3,7 +3,7 @@ import { Table, Form, Modal, message } from 'antd'
 import { EditOrderFunc } from '../constants'
 import Header from '../components/header'
 import ScrollTable from '../../components/Scolltable'
-
+import moment from 'moment'
 class EditOrder extends React.Component {
   constructor() {
     super();
@@ -24,6 +24,8 @@ class EditOrder extends React.Component {
         [`${item.order_id}.is_replace`]: item.is_replace || undefined,
         [`${item.order_id}.release_form`]: item.release_form || undefined,
         [`${item.order_id}.content`]: item.content || undefined,
+        [`${item.order_id}.publish_articles_address`]: item.publish_articles_address || undefined,
+        [`${item.order_id}.publish_articles_at`]: moment(item.publish_articles_at).isValid() ? moment(item.publish_articles_at) : undefined,
       })
       // }, 0);
     })
@@ -42,9 +44,9 @@ class EditOrder extends React.Component {
     })
   }
   render() {
-    const { getFieldDecorator } = this.props.form;
+    const { getFieldDecorator, getFieldValue, setFieldsValue } = this.props.form;
     const { data, handleUpdate, headerData, loading, search } = this.props;
-    const EditOrderCols = EditOrderFunc(getFieldDecorator, handleUpdate, this.handleDelete);
+    const EditOrderCols = EditOrderFunc(getFieldDecorator, handleUpdate, this.handleDelete, getFieldValue, setFieldsValue);
     const paginationObj = {
       onChange: (page) => {
         this.props.queryData(3, { spotplan_id: search.spotplan_id, page }, this.handleEditTable);
@@ -61,7 +63,7 @@ class EditOrder extends React.Component {
       <h3 className='top-gap'>订单列表</h3>
       <div className='edit-table-container top-gap'>
         <Form>
-          <ScrollTable scrollClassName='.ant-table-body' widthScroll={1800}>
+          <ScrollTable scrollClassName='.ant-table-body' widthScroll={2000}>
             <Table
               className='edit-table'
               rowKey='id'
@@ -69,7 +71,7 @@ class EditOrder extends React.Component {
               dataSource={data && data.list || []}
               bordered
               loading={loading}
-              scroll={{ x: 1544 }}
+              scroll={{ x: 1944 }}
               pagination={data && data.total > 50 ? paginationObj : false}
             />
           </ScrollTable>

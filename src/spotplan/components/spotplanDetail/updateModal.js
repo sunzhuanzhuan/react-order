@@ -1,9 +1,10 @@
 import React from 'react';
-import { Modal, Button, Table, Form, Input, Row, Col, message } from 'antd';
+import { Modal, Button, Table, Form, Input, Row, Col, message, Select } from 'antd';
 import { UpdateCols } from '../../constants'
 import numeral from 'numeral'
 import debounce from 'lodash/debounce';
 
+const { Option } = Select;
 const FormItem = Form.Item;
 const { TextArea } = Input;
 class UpdateModal extends React.Component {
@@ -18,6 +19,7 @@ class UpdateModal extends React.Component {
     this.props.form.validateFields((err, values) => {
       if (!err) {
         const { dataSource } = this.props;
+        if (!values.publish_articles_address) { values.publish_articles_address = ' ' }
         this.props.handleSubmit({
           type: 2,
           reason: values.reason,
@@ -29,6 +31,7 @@ class UpdateModal extends React.Component {
             account_category_name: dataSource[0].account_category_name,
             release_form: dataSource[0].release_form,
             content: dataSource[0].content,
+            publish_articles_address: dataSource[0].publish_articles_address
           },
           after_order: {
             costwithfee: this.state.costwithfee || dataSource[0].costwithfee,
@@ -69,6 +72,16 @@ class UpdateModal extends React.Component {
     })
   }
   render() {
+    let position = {
+      1: '头条',
+      2: '次条',
+      3: '三条',
+      4: '四条',
+      5: '五条',
+      6: '七条',
+      7: '头条',
+      8: '八条',
+    }
     const { getFieldDecorator } = this.props.form;
     const { visible, onCancel, dataSource, serviceRateAmount } = this.props;
     return <Modal
@@ -186,6 +199,29 @@ class UpdateModal extends React.Component {
                 rules: [{ required: true, message: '请填写值' }]
               })(
                 <TextArea autosize={{ minRows: 2, maxRows: 6 }} />
+              )}
+            </FormItem>
+          </Col>
+        </Row>
+        <Row gutter={16}>
+          <Col span={2}></Col>
+          <Col span={6} style={{ lineHeight: '58px', paddingBottom: '12px' }}>发文位置（非必填)：</Col>
+          <Col span={8} style={{ marginTop: '10px' }}>{position[dataSource && dataSource[0].publish_articles_address]}</Col>
+          <Col span={8}>
+            <FormItem>
+              {getFieldDecorator('publish_articles_address', {
+                initialValue: dataSource && dataSource[0].publish_articles_address || ''
+              })(
+                <Select placeholder="请选择" style={{ width: 120 }} allowClear>
+                  <Option value={1}>头条</Option>
+                  <Option value={2}>次条</Option>
+                  <Option value={3}>三条</Option>
+                  <Option value={4}>四条</Option>
+                  <Option value={5}>五条</Option>
+                  <Option value={6}>六条</Option>
+                  <Option value={7}>七条</Option>
+                  <Option value={8}>八条</Option>
+                </Select>
               )}
             </FormItem>
           </Col>
