@@ -43,7 +43,7 @@ export default class RemoteSearchSelect extends Component {
       "page": { "currentPage": 1, "pageSize": 30 },
       [wordKey]: value
     })
-      .then(({ data}) => data.list)
+      .then(({ data }) => data.list)
       .then((list) => {
         if (fetchId !== this.lastFetchId) {
           return;
@@ -69,9 +69,11 @@ export default class RemoteSearchSelect extends Component {
     this.search('')
   }
 
-  /*componentDidMount() {
-    this.search('')
-  }*/
+  componentDidMount() {
+    if (!this.props.disabled) {
+      this.search('')
+    }
+  }
 
   componentWillUnmount() {
     this.isUnmount = true

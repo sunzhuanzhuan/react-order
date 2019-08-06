@@ -65,7 +65,7 @@ class PreviewForWeixin extends React.Component {
     body.companyName = body.company.label
     delete body.company
 
-    body.industry = body.industry[1]
+    body.industry = body.industry.pop()
     body.taskTarget = body.taskContentStyle
 
     body.adOrderWeixinContent = {
