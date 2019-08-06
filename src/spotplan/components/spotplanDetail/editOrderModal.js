@@ -12,10 +12,8 @@ class EditOrderModal extends React.Component {
     this.props.form.validateFields((err, values) => {
       if (!err) {
         const { data, spotplan_id } = this.props;
-        console.log(!values.publish_articles_at);
-        console.log(data)
-        if (!values.publish_articles_address) {
-          values.publish_articles_address = data[0].publish_articles_at
+        if (!values.publish_articles_at) {
+          values.publish_articles_at = data[0].publish_articles_at
         }
         values.publish_articles_at = moment(values.publish_articles_at).format('YYYY-MM-DD HH:mm:ss')
         this.props.actions.postUpdateSpotplanOrder({ ...values, spotplan_id, order_id: data[0].order_id }).then((res) => {
