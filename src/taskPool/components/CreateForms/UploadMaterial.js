@@ -3,7 +3,7 @@
  * Created by lzb on 2019-07-16.
  */
 import React, { Component } from "react";
-import { Radio, Button, Icon } from "antd";
+import { Radio, Icon } from "antd";
 import { OssUpload } from "wbyui";
 
 

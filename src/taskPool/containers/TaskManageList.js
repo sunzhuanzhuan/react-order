@@ -1,12 +1,10 @@
 import React, { Component } from 'react'
 import { Modal, Table, message, Icon, Typography, Button, Divider } from 'antd'
-import { SH2 } from '@/base/SectionHeader'
 import { bindActionCreators } from 'redux'
 import { NavLink } from "react-router-dom";
 import * as commonActions from '@/actions'
 import * as actions from '../actions'
 import { connect } from 'react-redux'
-import { IconInfoBlock } from "@/base/DataGroup";
 import {
   TaskBudgetConsumptions,
   TaskInfo,

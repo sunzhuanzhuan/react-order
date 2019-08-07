@@ -3,26 +3,20 @@
  */
 import React from 'react'
 import {
-  Form,
-  Radio,
   Button,
-  DatePicker,
-  InputNumber,
   Descriptions, Typography, Modal
 } from 'antd'
 import { withRouter } from 'react-router-dom'
-import moment from "moment";
 import { WBYPlatformIcon } from "wbyui";
 import {
   getIndustryName,
-  openNewWindowPreview, openNewWindowPreviewForWeibo,
+  openNewWindowPreviewForWeibo,
   openNewWindowPreviewForWeixin
 } from "@/taskPool/constants/utils";
 import numeral from '@/util/numeralExpand'
 
 const { Text } = Typography;
 
-const FormItem = Form.Item
 
 const target = {
   "11": "多图文第一条", "12": "不限", "21": "粉丝覆盖", "22": "粉丝传播"

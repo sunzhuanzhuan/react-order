@@ -5,22 +5,30 @@ import store, { history } from './store';
 import 'babel-polyfill';
 import { LocaleProvider } from 'antd';
 import './index.less';
-import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect
+} from 'react-router-dom';
 import moment from 'moment';
 import numeral from 'numeral';
 import { linkTo } from '@/util/linkTo';
+import { lazyLoadComponent } from "@/components";
+
 // 导入语言包
 import zhCN from 'antd/lib/locale-provider/zh_CN';
 import 'moment/locale/zh-cn';
 import 'numeral/locales/chs';
 // 顶级根目录页面
 import App from './containers/App';
-import Reconciliations from './trinityReconciliations';
-import PublicOrderList from './publicOrderList/containers/PublicOrderList';
-import ClosingReport from './closingReport';
-import SpotPlan from './spotplan';
-import Business from './business';
-import Task from './taskPool';
+
+const Reconciliations = lazyLoadComponent(() => import( './trinityReconciliations'))
+const PublicOrderList = lazyLoadComponent(() => import( './publicOrderList/containers/PublicOrderList'))
+const ClosingReport = lazyLoadComponent(() => import( './closingReport'))
+const SpotPlan = lazyLoadComponent(() => import( './spotplan'))
+const Business = lazyLoadComponent(() => import( './business'))
+const Task = lazyLoadComponent(() => import( './taskPool'))
 
 // 设置语言包
 numeral.locale('chs');
@@ -53,7 +61,8 @@ render(
         <Switch>
           {
             process.env.NODE_ENV === 'development' ?
-              <Route exact path="/" render={() => <Redirect to="/order/task/create" />} /> : null
+              <Route exact path="/" render={() =>
+                <Redirect to="/order/task/create" />} /> : null
           }
           <Route path="/order" render={routes} />
           <Route render={redirectToOtherProjects} />

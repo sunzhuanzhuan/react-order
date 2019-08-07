@@ -10,8 +10,6 @@ import {
   FormContent, FormPreview
 } from "../components/CreateForms/index";
 import { parseUrlQuery } from "@/util/parseUrl";
-import moment from "moment";
-import BraftEditor from 'braft-editor'
 
 
 const { Step } = Steps;

@@ -1,20 +1,14 @@
 import React, { Component } from 'react'
 import {
-  Modal,
   Table,
-  Badge,
-  Icon,
   Typography,
   Button,
-  Divider,
   Tag
 } from 'antd'
-import { SH2 } from '@/base/SectionHeader'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import * as commonActions from '@/actions'
 import * as actions from '../actions'
-import { IconInfoBlock } from "@/base/DataGroup";
 import {
   KolInfo, StatisticsData
 } from "@/taskPool/base/ColumnsDataGroup";

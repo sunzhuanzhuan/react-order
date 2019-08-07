@@ -2,7 +2,7 @@
  * 创建任务-基本信息表单
  */
 import React from 'react'
-import { Form, Radio, Button, Select, Cascader } from 'antd'
+import { Form, Radio, Button, Cascader } from 'antd'
 import RemoteSearchSelect from "@/taskPool/base/RemoteSearchSelect";
 import { InputCount } from "@/base/Input";
 import { WBYPlatformIcon } from "wbyui";

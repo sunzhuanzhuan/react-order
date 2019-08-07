@@ -21,7 +21,7 @@ const getClientEnvironment = require('./env');
 const ModuleNotFoundPlugin = require('react-dev-utils/ModuleNotFoundPlugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin-alt');
 const typescriptFormatter = require('react-dev-utils/typescriptFormatter');
-// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 // Webpack uses `publicPath` to determine where the app is being served from.
 // It requires a trailing slash, or the file assets will get an incorrect path.
@@ -190,18 +190,17 @@ module.exports = {
     // https://twitter.com/wSokra/status/969633336732905474
     // https://medium.com/webpack/webpack-4-code-splitting-chunk-graph-and-the-splitchunks-optimization-be739a861366
     splitChunks: {
+      chunks: 'all',
       cacheGroups: {
         icons: {
-          chunks: 'initial',
           test: /@ant-design/,
           priority: 40,
           name: 'icons'
         },
         libs: {
-          chunks: 'initial',
-          test: /(react|react-dom|react-router-dom|redux|axios|react-redux)/,
+          test: /(react|react-dom|react-router-dom|redux|axios|react-redux|lodash|immutable|moment")/,
           priority: 40,
-          name: 'libs'
+          name: 'libs',
         }
       }
     },
@@ -301,6 +300,7 @@ module.exports = {
               customize: require.resolve('babel-preset-react-app/webpack-overrides'),
 
               plugins: [
+                "lodash",
                 ['@babel/plugin-proposal-decorators', { legacy: true }],
                 ['import', { libraryName: 'antd', libraryDirectory: 'es' }],
                 [
@@ -536,10 +536,10 @@ module.exports = {
         watch: paths.appSrc,
         silent: true,
         formatter: typescriptFormatter
-      })
-    /*,new BundleAnalyzerPlugin({
+      }),
+    new BundleAnalyzerPlugin({
       analyzerMode: 'static'
-    })*/
+    })
   ].filter(Boolean),
   // Some libraries import Node modules but don't use them in the browser.
   // Tell Webpack to provide empty mocks for them so importing them works.

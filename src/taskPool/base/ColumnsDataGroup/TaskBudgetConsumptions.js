@@ -1,6 +1,5 @@
 import React from 'react'
-import { Badge, Progress } from "antd";
-import moment from "moment";
+import { Progress } from "antd";
 import Yuan from "@/base/Yuan";
 
 const TaskBudgetConsumptions = (props) => {
