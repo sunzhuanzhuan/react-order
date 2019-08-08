@@ -17,6 +17,9 @@ class EditOrderModal extends React.Component {
         } else {
           values.publish_articles_at = moment(values.publish_articles_at).format('YYYY-MM-DD HH:mm:ss')
         }
+        if (!values.publish_articles_address) {
+          values.publish_articles_address = ''
+        }
         this.props.actions.postUpdateSpotplanOrder({ ...values, spotplan_id, order_id: data[0].order_id }).then((res) => {
           if (!res.data.type) {
             message.success('操作成功！', 2);
