@@ -66,7 +66,7 @@ const columns = [
     align: "center",
     dataIndex: 'realActionNum',
     render: (realActionNum, record) => {
-      return <div>{realActionNum}</div>
+      return <div>{realActionNum || "-"}</div>
     }
   },
   {
@@ -261,12 +261,12 @@ class TaskDetail extends Component {
               <TaskStatus status={taskDetail.orderState}/>
             </Descriptions.Item>
             <Descriptions.Item label="已领取博主数">{taskDetail.mcnCount || 0} 位</Descriptions.Item>
-            <Descriptions.Item label="消耗/预算">
-              <Yuan value={taskDetail.usedAmount} className="text-red text-bold"/>
+            <Descriptions.Item label="可用/预算">
+              <Yuan value={taskDetail.availableAmount} className="text-red text-bold"/>
               &nbsp;/&nbsp;
               <Yuan value={taskDetail.totalAmount} className="text-black text-bold"/>
             </Descriptions.Item>
-            <Descriptions.Item label={`预估最低${isWeixin ? "阅读数" : "转发数"}`}>{taskDetail.actionNum}</Descriptions.Item>
+            <Descriptions.Item label={`预估最低${isWeixin ? "阅读数" : "转发数"}`}>{taskDetail.actionNum || '-'}</Descriptions.Item>
             <Descriptions.Item label={`已达成${isWeixin ? "阅读数" : "转发数"}`}>{taskDetail.realActionNum || '-'}</Descriptions.Item>
           </Descriptions>
         </Section.Content>

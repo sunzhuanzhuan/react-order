@@ -19,7 +19,7 @@ export const openNewWindowPreviewForWeibo = ({ content = "", video = "", images 
   let imagesStr, videoSrc;
   if (mediaType === 1) {
     imagesStr = images.reduce((str, src) => {
-      str += `<li><a target="_blank" href="${src}" style="background-image: url('${src}'),url('http://img.weiboyi.com/vol1/1/102/124/x/c/1n07488qo50011r99p5o506o4op229o2/error_img.jpg');" /></li>`
+      str += `<li><a target="_blank" href="${src}" style="background-image: url('${src}');" /></li>`
       return str
     }, ``)
   } else if (mediaType === 2) {

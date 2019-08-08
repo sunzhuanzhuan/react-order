@@ -7,11 +7,11 @@ const TaskBudgetConsumptions = (props) => {
   return (
     <div className='task-budget-consumptions'>
       <div className='left'>
-        <span>已消耗：</span>
-        <Progress percent={(props.used/props.total) * 100} size="small" strokeColor={isDone ? "#cfcfcf" : "#68d07d"} showInfo={false} />
+        <span>可用：</span>
+        <Progress percent={(props.available/props.total) * 100} size="small" strokeColor={isDone ? "#cfcfcf" : "#68d07d"} showInfo={false} />
       </div>
       <div className='right'>
-        <Yuan className='text-red' value={props.used} format='0,0.00' /><br />
+        <Yuan className='text-red' value={props.available} format='0,0.00' /><br />
         <Yuan className='text-gray' value={props.total} format='0,0.00' />
       </div>
     </div>

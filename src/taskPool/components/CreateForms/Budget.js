@@ -6,7 +6,11 @@ import { Form, Radio, Button, DatePicker, InputNumber } from 'antd'
 import debounce from "lodash/debounce";
 import moment from "moment";
 import numeral from '@/util/numeralExpand'
+
 const FormItem = Form.Item
+
+const MAX_BUDGET_AMOUNT = 9999999
+const MAX_FOLLOWER_COUNT = 999999999
 
 /**
  * 微信平台
@@ -17,7 +21,7 @@ class BudgetForWeixin extends React.Component {
     super(props);
     this.calculation = debounce(this.calculation, 300)
     this.state = {
-      balance: 0,
+      balance: props.data.budget.balance || 0,
       actionNum: props.data.budget.actionNum || 0
     }
   }
@@ -32,6 +36,7 @@ class BudgetForWeixin extends React.Component {
       this.setState({
         balance: data
       });
+      // window.REACT_APP_CACHE_BALANCE = data
     })
   }
 
@@ -39,11 +44,12 @@ class BudgetForWeixin extends React.Component {
   cached = () => {
     let newVal = Object.assign({}, this.props.form.getFieldsValue())
     newVal.actionNum = this.state.actionNum
+    newVal.balance = this.state.balance
     this.props.prev("budget", newVal)
   }
 
-  calculation = (amount, taskOrderType) => {
-    if(amount <= 0){
+  calculation = (amount = 0, taskOrderType) => {
+    if (isNaN(amount) || amount <= 0) {
       return this.setState({
         actionNum: 0
       });
@@ -65,6 +71,7 @@ class BudgetForWeixin extends React.Component {
       if (!err) {
         let newVal = Object.assign({}, values)
         newVal.actionNum = this.state.actionNum
+        newVal.balance = this.state.balance
         this.props.next("budget", newVal)
       }
     });
@@ -75,6 +82,8 @@ class BudgetForWeixin extends React.Component {
     const { balance, actionNum } = this.state
     const { base, budget } = data
     const { getFieldDecorator, getFieldValue } = form
+    let maxAmount = Math.min(balance, MAX_BUDGET_AMOUNT);
+
     return (
       <Form onSubmit={this.handleSubmit}  {...formLayout}>
         <FormItem label="内容发布位置">
@@ -87,7 +96,7 @@ class BudgetForWeixin extends React.Component {
           })(
             <Radio.Group onChange={e => {
               let val = e.target.value
-              this.calculation(val, getFieldValue('totalAmount'))
+              this.calculation(getFieldValue('totalAmount'), val)
             }}>
               <Radio value={11}>多图文第一条</Radio>
               <Radio value={12}>不限</Radio>
@@ -98,15 +107,23 @@ class BudgetForWeixin extends React.Component {
           <div className='flex-form-input-container'>
             {getFieldDecorator('totalAmount', {
               initialValue: budget.totalAmount,
-              rules: [{
-                required: true,
-                message: '请输入任务预算'
-              }]
+              validateFirst: true,
+              rules: [
+                { required: true, message: '请输入任务预算' },
+                {
+                  validator: (rule, value, callback) => {
+                    if (value <= 0) {
+                      callback("请输入正确数字")
+                    }
+                    callback()
+                  }
+                }
+              ]
             })(
               <InputNumber
-                precision={2}
+                precision={0}
                 min={1}
-                max={balance || 999999999}
+                max={maxAmount}
                 step={1000}
                 style={{ flex: "auto" }}
                 onChange={val => {
@@ -119,7 +136,10 @@ class BudgetForWeixin extends React.Component {
               任务账户余额：{numeral(balance).format('0,0.00')} 元
             </div>
           </div>
-          <div style={{ height: 28, lineHeight: "28px" }}>预计可获得最低阅读：{actionNum}</div>
+          <div style={{
+            height: 28,
+            lineHeight: "28px"
+          }}>预计可获得最低阅读：{actionNum}</div>
         </FormItem>
         <FormItem label="任务结束时间">
           {getFieldDecorator('orderEndDate', {
@@ -149,7 +169,7 @@ class BudgetForWeixin extends React.Component {
         <FormItem label="发布后保留时长">
           <div className='flex-form-input-container'>
             {getFieldDecorator('retainTime', {
-              initialValue: budget.retainTime,
+              initialValue: budget.retainTime || 24,
               rules: [{
                 required: true,
                 message: '请选择任务保留时长'
@@ -186,7 +206,7 @@ class BudgetForWeibo extends React.Component {
     super(props);
     this.calculation = debounce(this.calculation, 300)
     this.state = {
-      balance: 0,
+      balance: props.data.budget.balance || 0,
       actionNum: props.data.budget.actionNum || 0
     }
   }
@@ -208,11 +228,12 @@ class BudgetForWeibo extends React.Component {
   cached = () => {
     let newVal = Object.assign({}, this.props.form.getFieldsValue())
     newVal.actionNum = this.state.actionNum
+    newVal.balance = this.state.balance
     this.props.prev("budget", newVal)
   }
 
-  calculation = (amount) => {
-    if(amount <= 0){
+  calculation = (amount = 0) => {
+    if (isNaN(amount) || amount <= 0) {
       return this.setState({
         actionNum: 0
       });
@@ -234,6 +255,7 @@ class BudgetForWeibo extends React.Component {
       if (!err) {
         let newVal = Object.assign({}, values)
         newVal.actionNum = this.state.actionNum
+        newVal.balance = this.state.balance
         this.props.next("budget", newVal)
       }
     });
@@ -245,6 +267,8 @@ class BudgetForWeibo extends React.Component {
     const { base, budget } = data
     const { getFieldDecorator, getFieldValue, getFieldsValue } = form
     const calculationFactor = getFieldsValue(['taskTarget', 'totalAmount'])
+    let maxAmount = Math.min(balance, MAX_BUDGET_AMOUNT);
+
     return (
       <Form onSubmit={this.handleSubmit}  {...formLayout}>
         <FormItem label="任务目标">
@@ -257,7 +281,7 @@ class BudgetForWeibo extends React.Component {
           })(
             <Radio.Group onChange={e => {
               let val = e.target.value
-              if(val === 22) this.calculation(getFieldValue('totalAmount'))
+              if (val === 22) this.calculation(getFieldValue('totalAmount'))
             }}>
               <Radio value={21}>粉丝覆盖</Radio>
               <Radio value={22}>转发传播</Radio>
@@ -274,13 +298,13 @@ class BudgetForWeibo extends React.Component {
               }]
             })(
               <InputNumber
-                precision={2}
+                precision={0}
                 min={1}
-                max={balance || 99999999}
+                max={maxAmount}
                 step={1000}
                 style={{ flex: "auto" }}
                 onChange={val => {
-                  if(getFieldValue('taskTarget') === 22) this.calculation(val)
+                  if (getFieldValue('taskTarget') === 22) this.calculation(val)
                 }}
                 placeholder="请输入金额"
               />
@@ -299,14 +323,14 @@ class BudgetForWeibo extends React.Component {
         </FormItem>
         <FormItem label=" 博主最少粉丝数">
           {getFieldDecorator('followerCountLimit', {
-            initialValue: budget.followerCountLimit,
+            initialValue: budget.followerCountLimit
           })(
             <InputNumber
               precision={0}
-              min={0}
+              min={1}
               style={{ width: "100%" }}
               step={500}
-              max={99999999}
+              max={MAX_FOLLOWER_COUNT}
               placeholder="请输入粉丝数"
             />
           )}
@@ -339,7 +363,7 @@ class BudgetForWeibo extends React.Component {
         <FormItem label="发布后保留时长">
           <div className='flex-form-input-container'>
             {getFieldDecorator('retainTime', {
-              initialValue: budget.retainTime,
+              initialValue: budget.retainTime || 24,
               rules: [{
                 required: true,
                 message: '请选择任务保留时长'

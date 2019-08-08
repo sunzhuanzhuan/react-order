@@ -69,12 +69,12 @@ class TaskManageList extends Component {
         }
       },
       {
-        title: '预算消耗',
+        title: '可用预算',
         dataIndex: 'totalAmount',
         width: 220,
         align: "right",
         render: (totalAmount, record) => {
-          return <TaskBudgetConsumptions total={totalAmount} used={record.usedAmount} state={record.orderStatus} />
+          return <TaskBudgetConsumptions total={totalAmount} available={record.availableAmount} state={record.orderStatus} />
         }
       },
       {

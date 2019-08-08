@@ -72,7 +72,7 @@ export default class UploadMaterial extends Component {
               suffix: 'png,jpg,jpeg,gif,webp'
             }}
             len={9}
-            tipContent={'最多可上传9张图片, 最大不能超过2MB'}
+            tipContent={'最多可上传9张图片,支持PNG,JPG,JPEG,GIF,WEBP格式,最大不能超过2MB'}
           />
         }
         {
@@ -88,7 +88,7 @@ export default class UploadMaterial extends Component {
               this.onChange(e && e.fileList[0], 'video')
             }}
             len={1}
-            tipContent={'视频最大不能超过20MB'}
+            tipContent={'视频支持MP4、FLV、MOV、AVI格式,最大不能超过20MB'}
           >
             <a><Icon type="upload" /> {videos.length > 0 ? "重新上传" : "上传视频"}</a>
           </OssUpload>

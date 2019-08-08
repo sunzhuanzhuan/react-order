@@ -130,11 +130,21 @@ class ContentForWeixin extends React.Component {
           {getFieldDecorator('title', {
             initialValue: content.title,
             rules: [
-              { required: true, message: '请输入标题' },
+              { required: true, message: '请输入标题', whitespace: true },
               { max: 64, message: '最多输入64个字' }
             ]
           })(
             <InputCount max={64} placeholder="请输入标题" />
+          )}
+        </FormItem>
+        <FormItem label={<span>&nbsp;&nbsp;&nbsp;作者</span>}>
+          {getFieldDecorator('author', {
+            initialValue: content.author,
+            rules: [
+              { max: 8, message: '最多输入8个字' }
+            ]
+          })(
+            <InputCount max={8} placeholder="请输入作者" />
           )}
         </FormItem>
         <FormItem label="封面">
@@ -155,18 +165,8 @@ class ContentForWeixin extends React.Component {
                 suffix: 'png,jpg,jpeg,gif,webp'
               }}
               len={1}
-              tipContent={budget.taskContentStyle === 11 ? '图片尺寸比例为2.35:1,最大不能超过2MB' : '图片尺寸比例为1:1,最大不能超过2MB'}
+              tipContent={budget.taskContentStyle === 11 ? '请上传PNG,JPG,JPEG,GIF,WEBP格式的图片,尺寸比例为2.35:1,最大不能超过2MB' : '请上传PNG,JPG,JPEG,GIF,WEBP格式的图片,尺寸比例为1:1,最大不能超过2MB'}
             />
-          )}
-        </FormItem>
-        <FormItem label={<span>&nbsp;&nbsp;&nbsp;作者</span>}>
-          {getFieldDecorator('author', {
-            initialValue: content.author,
-            rules: [
-              { max: 8, message: '最多输入8个字' }
-            ]
-          })(
-            <InputCount max={8} placeholder="请输入作者" />
           )}
         </FormItem>
         <FormItem label="摘要">
@@ -178,7 +178,7 @@ class ContentForWeixin extends React.Component {
             ]
           })(
             <Input.TextArea
-              placeholder='文章摘要'
+              placeholder='选填，如果不填写会默认抓取正文前54个字'
               autosize={{
                 minRows: 3,
                 maxRows: 3
@@ -330,7 +330,7 @@ class ContentForWeibo extends React.Component {
             initialValue: content.url,
             rules: [
               { required: true, message: '请填写微博地址' },
-              { type: "url", message: '请填写正确的链接' }
+              { type: "url", message: '请填写正确的微博地址' }
             ]
           })(
             <Input placeholder='输入微博文章链接' />

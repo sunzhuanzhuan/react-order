@@ -59,7 +59,7 @@ class PreviewForWeixin extends React.Component {
     body.companyName = body.company.label
     delete body.company
 
-    body.industry = body.industry.pop()
+    body.industry = [...body.industry].pop()
     body.taskTarget = body.taskContentStyle
 
     body.adOrderWeixinContent = {
@@ -176,8 +176,9 @@ class PreviewForWeibo extends React.Component {
     body.companyName = body.company.label
     delete body.company
 
-    body.industry = body.industry.pop()
+    body.industry = [...body.industry].pop()
     body.taskContentStyle = content.taskContentStyle
+    body.actionNum = body.taskTarget === 21 ? 0 : body.actionNum
 
     body.adOrderWeiboContent = {
       "content": content.content,
