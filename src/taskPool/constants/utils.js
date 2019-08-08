@@ -83,3 +83,17 @@ export const getIndustryName = (source = [], code) => {
     return value;
   }
 }
+
+/**
+ * 时间显示处理
+ */
+export const dateDisplayByLen = (date, precision) => {
+  let len = {
+    'm': 16,
+    'd': 10,
+  }
+  if(date === '1970-01-01 08:00:00'){
+    return  ''
+  }
+  return date ? date.slice(0, len[precision]) : ''
+}

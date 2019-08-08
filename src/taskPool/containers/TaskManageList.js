@@ -74,7 +74,7 @@ class TaskManageList extends Component {
         width: 220,
         align: "right",
         render: (totalAmount, record) => {
-          return <TaskBudgetConsumptions total={totalAmount} available={record.availableAmount} state={record.orderStatus} />
+          return <TaskBudgetConsumptions total={totalAmount} available={record.availableAmount} state={record.orderState} />
         }
       },
       {

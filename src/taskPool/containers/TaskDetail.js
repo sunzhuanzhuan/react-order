@@ -21,6 +21,7 @@ import {
 import Yuan from "@/base/Yuan";
 import { WBYPlatformIcon } from "wbyui";
 import {
+  dateDisplayByLen,
   getCountDownTimeText,
   openNewWindowPreviewForWeibo, openNewWindowPreviewForWeixin
 } from "@/taskPool/constants/utils";
@@ -42,7 +43,7 @@ const columns = [
     align: "center",
     dataIndex: 'createdAt',
     render: (date, record) => {
-      return date
+      return dateDisplayByLen(date, "m")
     }
   },
   {
@@ -230,10 +231,10 @@ class TaskDetail extends Component {
             {isWeibo &&
             <Descriptions.Item label="内容形式">{contentStyle[taskDetail.taskContentStyle]}</Descriptions.Item>}
             <Descriptions.Item label="任务开始时间">
-              {taskDetail.createdAt}
+              {dateDisplayByLen(taskDetail.createdAt, 'm')}
             </Descriptions.Item>
             <Descriptions.Item label="任务结束时间">
-              {taskDetail.orderEndDate}
+              {dateDisplayByLen(taskDetail.orderEndDate, 'm')}
             </Descriptions.Item>
             <Descriptions.Item label="任务剩余时间">
               {getCountDownTimeText(taskDetail.orderEndDate)}

@@ -14,6 +14,7 @@ import {
 } from "@/taskPool/base/ColumnsDataGroup";
 import Yuan from "@/base/Yuan";
 import { ReviewPass, ReviewReject } from '../components/ReviewModal'
+import { dateDisplayByLen } from "@/taskPool/constants/utils";
 
 
 const { Title } = Typography;
@@ -37,10 +38,11 @@ class TaskReviewList extends Component {
       {
         title: '任务信息',
         dataIndex: 'orderName',
+        width: 180,
         render: (name, record) => {
           return <div>
             <Tag>{record.qualityInspectionCount}</Tag>
-            <a>{name}</a>
+            <span>{name}</span>
           </div>
         }
       },
@@ -48,10 +50,9 @@ class TaskReviewList extends Component {
         title: '领取时间',
         dataIndex: 'createdAt',
         align: "center",
+        width: 150,
         render: (date, record) => {
-          return <div>
-            {date}
-          </div>
+          return dateDisplayByLen(date, 'm')
         }
       },
       {
@@ -59,7 +60,7 @@ class TaskReviewList extends Component {
         dataIndex: 'snsName',
         align: "center",
         render: (name, record) => {
-          return <KolInfo title={name} avatar={record.avatarUrl} />
+          return <KolInfo title={name || '-'} avatar={record.avatarUrl} />
         }
       },
       {
@@ -67,7 +68,7 @@ class TaskReviewList extends Component {
         dataIndex: 'maxAmount',
         align: "center",
         render: (maxAmount, record) => {
-          return <Yuan value={maxAmount} />
+          return <Yuan value={maxAmount} format={"0,0.00"} className="text-black"/>
         }
       },
       {
@@ -137,6 +138,11 @@ class TaskReviewList extends Component {
 
   componentDidMount() {
     this.getList()
+    if(/Android|webOS|iPhone|iPod|BlackBerry/i.test(window.navigator.userAgent)){
+      const layoutDOM = document.getElementById('root').firstChild
+      layoutDOM.style.minWidth = "auto"
+      // layoutDOM.style.height = "auto"
+    }
   }
 
   render() {
