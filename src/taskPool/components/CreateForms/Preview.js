@@ -170,7 +170,7 @@ class PreviewForWeibo extends React.Component {
 
     // 处理提交数据
     let body = Object.assign({}, base, budget)
-    const { type, images, video } = content.attachment
+    const { type, images, video } = content.attachment || {}
 
     body.companyId = body.company.key
     body.companyName = body.company.label

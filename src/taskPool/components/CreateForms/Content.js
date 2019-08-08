@@ -336,7 +336,7 @@ class ContentForWeibo extends React.Component {
             <Input placeholder='输入微博文章链接' />
           )}
         </FormItem>}
-        {getFieldValue('taskContentStyle') === 22 && <FormItem label="转发语">
+        {getFieldValue('taskContentStyle') === 22 && <FormItem label={<span>&nbsp;&nbsp;&nbsp;转发语</span>}>
           {getFieldDecorator('forwardWord', {
             initialValue: content.forwardWord,
             rules: [
