@@ -57,6 +57,7 @@ export default class UploadMaterial extends Component {
         <Radio.Group value={type} onChange={e => this.onChange(e.target.value, 'type')}>
           <Radio value={1}>图片</Radio>
           <Radio value={2}>视频</Radio>
+          <Radio value={0}>无</Radio>
         </Radio.Group>
         {
           type === 1 && <OssUpload
@@ -79,6 +80,7 @@ export default class UploadMaterial extends Component {
           type === 2 && <OssUpload
             authToken={authToken}
             fileList={videos}
+            listType='picture'
             rule={{
               bizzCode: 'ORDER_VIDEO_UPLOAD',
               max: 20,

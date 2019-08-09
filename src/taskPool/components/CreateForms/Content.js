@@ -29,6 +29,17 @@ const controls = [
   'list-ul', 'list-ol', 'blockquote', 'code', 'link', 'media'
 ]
 
+const uploadRequired = {
+  required: true,
+  type: "array",
+  validator: (rule, value, callback) => {
+    if (value && value.length > 0 && value.every(item => item.url)) {
+      callback()
+    }
+    callback(rule.message)
+  }
+}
+
 /**
  * 微信平台
  */
@@ -64,9 +75,9 @@ class ContentForWeixin extends React.Component {
       "image": "ORDER_IMG_UPLOAD",
       "video": "ORDER_VIDEO_UPLOAD"
     }
-    if(/^image\//.test(param.file.type)){
+    if (/^image\//.test(param.file.type)) {
       formData.append("bizzCode", rules['image']);
-    }else {
+    } else {
       formData.append("bizzCode", rules['video']);
     }
 
@@ -153,7 +164,7 @@ class ContentForWeixin extends React.Component {
             valuePropName: 'fileList',
             getValueFromEvent: e => e && e.fileList,
             rules: [
-              { required: true, type: "array", message: '请上传文章封面' }
+              { message: '请上传文章封面', required: true, type: "array" }
             ]
           })(
             <OssUpload
@@ -230,16 +241,19 @@ class ContentForWeixin extends React.Component {
 
 const validatorUploadMaterial = (rule, value, callback) => {
   if (!value) return callback('请上传素材')
+  if (value.type === 0) {
+    callback()
+  }
   if (!value.type) return callback('请选择素材类型')
   if (value.type === 1) {
-    if (value.images.length > 0) {
+    if (value.images.length > 0 && value.images.every(item => item.url)) {
       callback()
     } else {
       callback('请上传素材')
     }
   }
   if (value.type === 2) {
-    if (value.video) {
+    if (value.video && value.video.url) {
       callback()
     } else {
       callback('请上传素材')
@@ -314,6 +328,7 @@ class ContentForWeibo extends React.Component {
         {getFieldValue('taskContentStyle') === 21 && <FormItem label="素材">
           {getFieldDecorator('attachment', {
             initialValue: content.attachment,
+            validateTrigger: "onSubmit",
             rules: [
               {
                 required: true,
@@ -336,7 +351,8 @@ class ContentForWeibo extends React.Component {
             <Input placeholder='输入微博文章链接' />
           )}
         </FormItem>}
-        {getFieldValue('taskContentStyle') === 22 && <FormItem label={<span>&nbsp;&nbsp;&nbsp;转发语</span>}>
+        {getFieldValue('taskContentStyle') === 22 &&
+        <FormItem label={<span>&nbsp;&nbsp;&nbsp;转发语</span>}>
           {getFieldDecorator('forwardWord', {
             initialValue: content.forwardWord,
             rules: [

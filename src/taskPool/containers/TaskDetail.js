@@ -143,9 +143,10 @@ class TaskDetail extends Component {
     // 微博
     if (taskDetail.platformId === 1) {
       const content = taskDetail.adOrderWeiboContent
+      const videoObj = content.attachmentList[0] || {}
       return openNewWindowPreviewForWeibo({
         content: content.content,
-        video: content.attachmentList[0].attachmentUrl,
+        video: videoObj.attachmentUrl,
         images: content.attachmentList.map(item => item.attachmentUrl),
         mediaType: content.mediaType
       })
