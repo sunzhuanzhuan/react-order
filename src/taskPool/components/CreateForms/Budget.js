@@ -9,7 +9,7 @@ import numeral from '@/util/numeralExpand'
 
 const FormItem = Form.Item
 
-const MAX_BUDGET_AMOUNT = 9999999
+const MAX_BUDGET_AMOUNT = 99999999
 const MAX_FOLLOWER_COUNT = 999999999
 
 /**

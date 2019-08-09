@@ -68,6 +68,7 @@ class PreviewForWeixin extends React.Component {
       "coverImageUrl": content.coverImage[0].url,
       "coverImageName": content.coverImage[0].name,
       "remark": content.remark,
+      "articleUrl": content.articleUrl,
       "title": content.title
     }
 
@@ -85,7 +86,8 @@ class PreviewForWeixin extends React.Component {
       title: content.title,
       content: content.richContent.toHTML(),
       remark: content.remark,
-      author: content.author
+      author: content.author,
+      articleUrl: content.articleUrl
     })
   }
 

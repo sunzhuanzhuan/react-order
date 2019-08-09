@@ -67,7 +67,7 @@ const columns = [
     align: "center",
     dataIndex: 'realActionNum',
     render: (realActionNum, record) => {
-      return <div>{realActionNum || "-"}</div>
+      return <div>{record.orderState === 5 ? "-" : realActionNum || '-'}</div>
     }
   },
   {
@@ -119,10 +119,11 @@ class TaskDetail extends Component {
     }
   }
 
-  componentWillUnmount(){
+  componentWillUnmount() {
     const { actions } = this.props
     actions.TPTaskDetailClear()
   }
+
   // 下线
   offline = (id) => {
     const { actions } = this.props
@@ -157,14 +158,15 @@ class TaskDetail extends Component {
       let richContent;
       try {
         richContent = convertRawToHTML(JSON.parse(content.content))
-      }catch (e) {
+      } catch (e) {
         richContent = content.content
       }
       return openNewWindowPreviewForWeixin({
         title: content.title,
         content: richContent,
         remark: content.remark,
-        author: content.author
+        author: content.author,
+        articleUrl: content.articleUrl
       })
     }
   }
@@ -195,7 +197,7 @@ class TaskDetail extends Component {
   render() {
     const { actions, history, taskPoolData } = this.props
     const { listLoading, search } = this.state
-    const { mcnOrderList: { keys, source, total, pageNum, pageSize  }, taskDetail } = taskPoolData
+    const { mcnOrderList: { keys, source, total, pageNum, pageSize }, taskDetail } = taskPoolData
     const isWeixin = taskDetail.platformId === 9
     const isWeibo = taskDetail.platformId === 1
 
@@ -208,7 +210,7 @@ class TaskDetail extends Component {
           taskDetail.orderState === 1 ?
             <Button type="primary" ghost onClick={() => this.offline(taskDetail.id)}>
               下线
-            </Button> : <TaskStatus status={taskDetail.orderState}/>
+            </Button> : <TaskStatus status={taskDetail.orderState} />
         }
       />
       <Section>
@@ -218,11 +220,13 @@ class TaskDetail extends Component {
             <Descriptions.Item label="任务ID">{taskDetail.id}</Descriptions.Item>
             <Descriptions.Item label="任务名称">{taskDetail.orderName}</Descriptions.Item>
             <Descriptions.Item label="发布平台">
-              <div style={{ userSelect: "none"}}>
+              <div style={{ userSelect: "none" }}>
                 <WBYPlatformIcon weibo_type={taskDetail.platformId} widthSize={22} />
                 &nbsp;
-                {isWeixin && <span style={{verticalAlign: "text-bottom"}}>微信</span>}
-                {isWeibo && <span style={{verticalAlign: "text-bottom"}}>新浪微博</span>}
+                {isWeixin &&
+                <span style={{ verticalAlign: "text-bottom" }}>微信</span>}
+                {isWeibo &&
+                <span style={{ verticalAlign: "text-bottom" }}>新浪微博</span>}
               </div>
             </Descriptions.Item>
             <Descriptions.Item label="行业分类">{taskDetail.industryName}</Descriptions.Item>
@@ -260,13 +264,13 @@ class TaskDetail extends Component {
         <Section.Content>
           <Descriptions title="">
             <Descriptions.Item label="任务状态">
-              <TaskStatus status={taskDetail.orderState}/>
+              <TaskStatus status={taskDetail.orderState} />
             </Descriptions.Item>
-            <Descriptions.Item label="已领取博主数">{taskDetail.mcnCount || 0} 位</Descriptions.Item>
+            <Descriptions.Item label="有效执行博主数">{taskDetail.mcnCount || 0} 位</Descriptions.Item>
             <Descriptions.Item label="可用/预算">
-              <Yuan value={taskDetail.availableAmount} className="text-red text-bold"/>
+              <Yuan value={taskDetail.availableAmount} className="text-red text-bold" />
               &nbsp;/&nbsp;
-              <Yuan value={taskDetail.totalAmount} className="text-black text-bold"/>
+              <Yuan value={taskDetail.totalAmount} className="text-black text-bold" />
             </Descriptions.Item>
             <Descriptions.Item label={`预估最低${isWeixin ? "阅读数" : "转发数"}`}>{taskDetail.actionNum || '-'}</Descriptions.Item>
             <Descriptions.Item label={`已达成${isWeixin ? "阅读数" : "转发数"}`}>{taskDetail.realActionNum || '-'}</Descriptions.Item>
@@ -290,7 +294,7 @@ class TaskDetail extends Component {
                 this.getList({
                   page: { ...search.page, currentPage }
                 })
-              },
+              }
             }}
             size="default"
           />
