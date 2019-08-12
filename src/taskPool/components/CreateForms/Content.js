@@ -123,7 +123,7 @@ class ContentForWeixin extends React.Component {
   }
 
   validatorContent = (rules, value, callback) => {
-    if (value.isEmpty()) {
+    if (!value || value.isEmpty()) {
       callback('请输入正文')
     } else {
       callback()
@@ -180,11 +180,10 @@ class ContentForWeixin extends React.Component {
             />
           )}
         </FormItem>
-        <FormItem label="摘要">
+        <FormItem label={<span>&nbsp;&nbsp;&nbsp;摘要</span>}>
           {getFieldDecorator('remark', {
             initialValue: content.remark,
             rules: [
-              { required: true, message: '请填写摘要' },
               { max: 120, message: '最多输入120字的摘要' }
             ]
           })(
@@ -197,7 +196,7 @@ class ContentForWeixin extends React.Component {
             />
           )}
         </FormItem>
-        <FormItem label="阅读原文链接">
+        <FormItem label={<span>&nbsp;&nbsp;&nbsp;阅读原文链接</span>}>
           {getFieldDecorator('articleUrl', {
             initialValue: content.articleUrl
           })(
@@ -213,7 +212,7 @@ class ContentForWeixin extends React.Component {
               {
                 max: 2000,
                 message: '最多输入2000个字',
-                transform: value => value.toText()
+                transform: value => value && value.toText()
               }
             ]
           })(

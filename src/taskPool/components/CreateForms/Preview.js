@@ -67,7 +67,7 @@ class PreviewForWeixin extends React.Component {
       "content": content.richContent.toRAW(),
       "coverImageUrl": content.coverImage[0].url,
       "coverImageName": content.coverImage[0].name,
-      "remark": content.remark,
+      "remark": content.remark || content.richContent.toText().replace(/\s/g, '').slice(0, 54),
       "articleUrl": content.articleUrl,
       "title": content.title
     }
