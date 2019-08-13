@@ -224,7 +224,7 @@ class TaskDetail extends Component {
                 <WBYPlatformIcon weibo_type={taskDetail.platformId} widthSize={22} />
                 &nbsp;
                 {isWeixin &&
-                <span style={{ verticalAlign: "text-bottom" }}>微信</span>}
+                <span style={{ verticalAlign: "text-bottom" }}>微信公众号</span>}
                 {isWeibo &&
                 <span style={{ verticalAlign: "text-bottom" }}>新浪微博</span>}
               </div>

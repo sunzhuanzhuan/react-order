@@ -2,7 +2,7 @@
  * 创建任务-基本信息表单
  */
 import React from 'react'
-import { Form, Radio, Button, Cascader } from 'antd'
+import { Form, Radio, Button, Cascader, Tooltip } from 'antd'
 import RemoteSearchSelect from "@/taskPool/base/RemoteSearchSelect";
 import { InputCount } from "@/base/Input";
 import { WBYPlatformIcon } from "wbyui";
@@ -62,14 +62,16 @@ export default class Base extends React.Component {
                   userSelect: 'none'
                 }}>微信公众号</span>
               </Radio>
-              <Radio value={1}>
-                <WBYPlatformIcon weibo_type={1} widthSize={22} />
-                <span style={{
-                  verticalAlign: 'text-bottom',
-                  marginLeft: 8,
-                  userSelect: 'none'
-                }}>新浪微博</span>
-              </Radio>
+              <Tooltip title="糟糕，我们还没有准备好">
+                <Radio value={1} disabled>
+                  <WBYPlatformIcon weibo_type={1} widthSize={22} />
+                  <span style={{
+                    verticalAlign: 'text-bottom',
+                    marginLeft: 8,
+                    userSelect: 'none'
+                  }}>新浪微博</span>
+                </Radio>
+              </Tooltip>
             </Radio.Group>
           )}
         </FormItem>
@@ -94,7 +96,11 @@ export default class Base extends React.Component {
             }]
           })(
             <Cascader
-              fieldNames={{ label: 'itemValue', value: 'itemKey', children: 'childrenList' }}
+              fieldNames={{
+                label: 'itemValue',
+                value: 'itemKey',
+                children: 'childrenList'
+              }}
               options={data.industryList}
               placeholder='请选择行业'
             />
