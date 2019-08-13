@@ -8,7 +8,7 @@ const KolInfo = (props) => {
   return (
     <ImageTextBlock src={props.avatar || defaultImage}>
 			<span style={{ lineHeight: "30px", whiteSpace: "nowrap" }}>
-        {props.title}
+        {props.title || '-'}
       </span>
     </ImageTextBlock>
   )

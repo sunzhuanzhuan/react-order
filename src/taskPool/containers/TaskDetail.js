@@ -27,6 +27,10 @@ import {
 } from "@/taskPool/constants/utils";
 import { mcnOrderList, taskDetail } from "@/taskPool/reducers";
 import { convertRawToHTML } from 'braft-convert'
+import {
+  MCN_ORDER_STATE_CANCEL,
+  MCN_ORDER_STATE_UNQUALIFIED
+} from "@/taskPool/constants/config";
 
 
 const columns = [
@@ -67,7 +71,7 @@ const columns = [
     align: "center",
     dataIndex: 'realActionNum',
     render: (realActionNum, record) => {
-      return <div>{record.orderState === 5 ? "-" : realActionNum || '-'}</div>
+      return <div>{record.orderState === MCN_ORDER_STATE_UNQUALIFIED ? "-" : realActionNum || '-'}</div>
     }
   },
   {
@@ -75,7 +79,7 @@ const columns = [
     align: "center",
     dataIndex: 'adRealAmount',
     render: (amount, record) => {
-      return <Yuan value={record.orderState === 5 ? 0 : amount} format={"0,0.00"} style={{ color: "#333" }} />
+      return <Yuan value={record.orderState === MCN_ORDER_STATE_UNQUALIFIED ? 0 : amount} format={"0,0.00"} style={{ color: "#333" }} />
     }
   },
   {
@@ -83,7 +87,7 @@ const columns = [
     dataIndex: 'contentUrl',
     align: "center",
     render: (url, record) => {
-      return <div>
+      return record.orderState === MCN_ORDER_STATE_CANCEL ? null : <div>
         {url && <a target="_blank" href={url}>查看文章</a>}
         {record.snapshotUrl && <span>
           <Divider type="vertical" />
