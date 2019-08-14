@@ -36,7 +36,6 @@ import {
 const columns = [
   {
     title: '博主',
-    align: "center",
     dataIndex: 'snsName',
     render: (name, record) => {
       return <KolInfo title={name} avatar={record.avatarUrl} />

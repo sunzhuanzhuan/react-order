@@ -45,8 +45,9 @@ export default class InputCount extends Component {
     return <Input
       {...props}
       value={value}
+      className={`pr-${('' + max).length}`}
       suffix={
-        hideCount ? null :
+        hideCount ? <span/> :
           <span className='input-suffix-text'>{(value || '').length}/{max}</span>
       }
       onChange={this.onChange}
