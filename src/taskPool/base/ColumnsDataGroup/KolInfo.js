@@ -7,7 +7,7 @@ const defaultImage = "http://img.weiboyi.com/vol1/1/102/124/v/f/42r16109n87o11r9
 const KolInfo = (props) => {
   return (
     <ImageTextBlock src={props.avatar || defaultImage}>
-			<span style={{ lineHeight: "30px", whiteSpace: "nowrap" }}>
+			<span style={{ wordBreak: "break-all" }}>
         {props.title || '-'}
       </span>
     </ImageTextBlock>

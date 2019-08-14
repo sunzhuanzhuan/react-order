@@ -198,9 +198,13 @@ class ContentForWeixin extends React.Component {
         </FormItem>
         <FormItem label={<span>&nbsp;&nbsp;&nbsp;阅读原文链接</span>}>
           {getFieldDecorator('articleUrl', {
-            initialValue: content.articleUrl
+            initialValue: content.articleUrl,
+            rules: [{
+              pattern: /^htt(p|ps):\/\//,
+              message: '链接格式不正确'
+            }]
           })(
-            <Input placeholder='请输入网址' />
+            <Input placeholder='请输入阅读原文链接' />
           )}
         </FormItem>
         <FormItem label="内容正文" extra="请输入不超过2000字的正文内容">

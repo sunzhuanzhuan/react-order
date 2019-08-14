@@ -23,6 +23,7 @@
 
 .image-text-infos {
   display: flex;
+  max-width: 200px;
 
   .left {
     width: 30px;
@@ -35,5 +36,11 @@
       width: 100%;
       vertical-align: middle;
     }
+  }
+  .right {
+    flex: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
 }

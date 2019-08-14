@@ -28,6 +28,7 @@ import {
 import { mcnOrderList, taskDetail } from "@/taskPool/reducers";
 import { convertRawToHTML } from 'braft-convert'
 import {
+  AD_ORDER_STATE_OFFLINE,
   MCN_ORDER_STATE_CANCEL,
   MCN_ORDER_STATE_UNQUALIFIED
 } from "@/taskPool/constants/config";
@@ -244,9 +245,9 @@ class TaskDetail extends Component {
             <Descriptions.Item label="任务结束时间">
               {dateDisplayByLen(taskDetail.orderEndDate, 'm')}
             </Descriptions.Item>
-            <Descriptions.Item label="任务剩余时间">
+            {taskDetail.orderState === AD_ORDER_STATE_OFFLINE ? null : <Descriptions.Item label="任务剩余时间">
               {getCountDownTimeText(taskDetail.orderEndDate)}
-            </Descriptions.Item>
+            </Descriptions.Item>}
             <Descriptions.Item label="发布后保留时长">{taskDetail.retainTime}小时</Descriptions.Item>
             {isWeixin && <Descriptions.Item label="推广文章">
               <div className="content-wrap">
