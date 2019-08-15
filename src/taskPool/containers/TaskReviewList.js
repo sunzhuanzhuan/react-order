@@ -58,7 +58,6 @@ class TaskReviewList extends Component {
       {
         title: '博主信息',
         dataIndex: 'snsName',
-        align: "center",
         render: (name, record) => {
           return <KolInfo title={name || '-'} avatar={record.avatarUrl} />
         }
