@@ -84,7 +84,7 @@ class TaskReviewList extends Component {
         dataIndex: 'contentUrl',
         align: "center",
         render: (contentUrl, record) => {
-          return <a href={contentUrl}>查看文章</a>
+          return <a href={contentUrl} target="_blank">查看文章</a>
         }
       },
       {
