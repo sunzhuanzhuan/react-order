@@ -245,9 +245,9 @@ class TaskDetail extends Component {
             <Descriptions.Item label="任务结束时间">
               {dateDisplayByLen(taskDetail.orderEndDate, 'm')}
             </Descriptions.Item>
-            {taskDetail.orderState === AD_ORDER_STATE_OFFLINE ? null : <Descriptions.Item label="任务剩余时间">
+            <Descriptions.Item label="任务剩余时间">
               {getCountDownTimeText(taskDetail.orderEndDate)}
-            </Descriptions.Item>}
+            </Descriptions.Item>
             <Descriptions.Item label="发布后保留时长">{taskDetail.retainTime}小时</Descriptions.Item>
             {isWeixin && <Descriptions.Item label="推广文章">
               <div className="content-wrap">
