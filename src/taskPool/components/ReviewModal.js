@@ -191,7 +191,7 @@ export class ReviewReject extends Component {
         let newVal = { ...values }
         newVal.snapshotUrl = values.pic[0].url
         newVal.id = this.props.id
-        newVal.approveReason = values.approveReason.toString()
+        newVal.approveReason = (values.approveReason || '').toString()
         delete newVal.pic
         this.setState({ loading: true });
         actions.TPApprovedFailure(newVal).then(() => {

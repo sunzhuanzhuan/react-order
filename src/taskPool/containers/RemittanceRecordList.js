@@ -47,6 +47,14 @@ class RemittanceRecordList extends Component {
         }
       },
       {
+        title: '结算状态',
+        dataIndex: 'settlementState',
+        align: "center",
+        render: (amount, record) => {
+          return record.settlementState === 1 ? "已结算" : "未结算"
+        }
+      },
+      {
         title: '生成时间',
         dataIndex: 'createdAt',
         align: "center",
@@ -80,7 +88,7 @@ class RemittanceRecordList extends Component {
     // 判断是否有一个下线请求处理中
     actions.getFileRealPath({ downLoadUrl: url }).then((res) => {
       if (res.code === "1000") {
-        record.settlementState === 1 && actions.TPPayMcnFinancePayment({ id: record.id })
+        record.settlementState === 2 && actions.TPPayMcnFinancePayment({ id: record.id })
         window.location.href = res.data
       } else {
         message.error("下载地址获取失败")
