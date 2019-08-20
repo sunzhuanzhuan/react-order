@@ -2,6 +2,7 @@ import React from 'react';
 import { Modal, Button, Table, Form, DatePicker, message } from 'antd';
 import { ArticalCols } from '../../constants'
 import debounce from 'lodash/debounce';
+import moment from 'moment'
 import './updateArtical.less'
 class UpdateArticalModal extends React.Component {
   constructor() {
@@ -70,7 +71,7 @@ class UpdateArticalModal extends React.Component {
           {getFieldDecorator('publish_articles_at', {
             rules: [{ required: true, message: '请填写发文时间' }]
           })(
-            <DatePicker showTime placeholder="请输入" />
+            <DatePicker placeholder="请输入" showTime={{ defaultValue: moment('00:00:00', 'HH:mm:ss') }} />
           )}
         </Form.Item>
       </Form>
