@@ -214,8 +214,8 @@ class ContentForWeixin extends React.Component {
             rules: [
               { required: true, validator: this.validatorContent },
               {
-                max: 2000,
-                message: '最多输入2000个字',
+                max: 20000,
+                message: '最多输入20000个字',
                 transform: value => value && value.toText()
               }
             ]
