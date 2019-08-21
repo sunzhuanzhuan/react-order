@@ -207,7 +207,7 @@ class ContentForWeixin extends React.Component {
             <Input placeholder='请输入阅读原文链接' />
           )}
         </FormItem>
-        <FormItem label="内容正文" extra="请输入不超过2000字的正文内容">
+        <FormItem label="内容正文" extra="请输入不超过20000字的正文内容">
           {getFieldDecorator('richContent', {
             initialValue: content.richContent,
             validateTrigger: 'onBlur',
