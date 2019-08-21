@@ -18,6 +18,7 @@ export default {
   getUpdateSpotplanOrder: '/spotplan/getUpdateSpotplanOrder',
   getUpdateSpotplanOrderLog: '/spotplan/getApplyList',
   postChangeNumberSpotplanOrder: '/spotplan/changeNumberSpotplanOrder',
+  postUpdatePublishArticlesAt: '/spotplan/updatePublishArticlesAt',
   getExportSpotplamExcel: '/spotplan/exportSpotplamExcel',
   postDeleteSpotplanOrder: '/spotplan/deleteSpotplanOrder',
   getServiceRateAmount: '/spotplan/getServiceRateAmount'

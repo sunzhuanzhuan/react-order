@@ -1,6 +1,9 @@
 import React from 'react'
-import { Modal, Input, Form, Select, Tooltip } from 'antd'
+import { Modal, Input, Form, Select, Tooltip, DatePicker } from 'antd'
 import numeral from 'numeral'
+import moment from 'moment'
+
+import '../containers/index.less'
 const { TextArea } = Input;
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -20,6 +23,16 @@ const APPLY_STATUS = {
   3: 'SP更新审核通过',
   4: 'SP更新审核被拒',
 };
+let position = {
+  1: '头条',
+  2: '次条',
+  3: '三条',
+  4: '四条',
+  5: '五条',
+  6: '六条',
+  7: '七条',
+  8: '八条',
+}
 export const CheckModalFunc = handleDel => [
   {
     title: '订单ID',
@@ -85,7 +98,7 @@ export const CheckModalFunc = handleDel => [
     }
   }
 ];
-export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete) => [
+export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, getFieldValue, setFieldsValue) => [
   {
     title: '订单ID',
     dataIndex: 'order_id',
@@ -229,27 +242,84 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete) => 
     }
   },
   {
+    title: '发文位置（非必填）',
+    dataIndex: 'publish_articles_address',
+    key: 'publish_articles_address',
+    align: 'center',
+    width: 210,
+    render: (text, record) => {
+      return record.is_inward_send == 1 || record.last_apply_status == 1 || record.last_apply_status == 2 ? position[text] : <FormItem>
+        {getFieldDecorator(`${record.order_id}.publish_articles_address`)(
+          <Select placeholder="请选择" style={{ width: 120 }} onChange={(value) => {
+            handleUpdate({ order_id: record.order_id, price_id: record.price_id, publish_articles_address: value || '' })
+          }} allowClear>
+            <Option value={1}>头条</Option>
+            <Option value={2}>次条</Option>
+            <Option value={3}>三条</Option>
+            <Option value={4}>四条</Option>
+            <Option value={5}>五条</Option>
+            <Option value={6}>六条</Option>
+            <Option value={7}>七条</Option>
+            <Option value={8}>八条</Option>
+          </Select>
+        )}
+      </FormItem>
+    }
+  },
+  {
+    title: '发文时间（非必填）',
+    dataIndex: 'publish_articles_at',
+    key: 'publish_articles_at',
+    align: 'center',
+    width: 210,
+    render: (text, record) => {
+      return record.is_inward_send == 1 || record.last_apply_status == 1 || record.last_apply_status == 2 ? text : <FormItem>
+        {getFieldDecorator(`${record.order_id}.publish_articles_at`)(
+          <DatePicker dropdownClassName="sp-calendar" allowClear={record.publish_articles_at == null ? true : false} showTime format="YYYY-MM-DD HH:mm:ss" placeholder="请输入" style={{ width: 130 }} onOk={(value) => {
+            handleUpdate({ order_id: record.order_id, price_id: record.price_id, publish_articles_at: value.format("YYYY-MM-DD HH:mm:ss") })
+          }} onBlur={() => {
+            let newAt = `${record.order_id}.publish_articles_at`;
+            console.log(record.publish_articles_at)
+            // console.log(getFieldValue(`${record.order_id}.publish_articles_at`).format("YYYY-MM-DD HH:mm:ss"))
+            if (!getFieldValue(`${record.order_id}.publish_articles_at`)) {
+              if (record.publish_articles_at != '0000-00-00 00:00:00') {
+                if (record.publish_articles_at) {
+                  setFieldsValue({ [newAt]: moment(record.publish_articles_at) })
+                }
+              }
+            } else if (record.publish_articles_at != getFieldValue(`${record.order_id}.publish_articles_at`).format("YYYY-MM-DD HH:mm:ss")) {
+              handleUpdate({ order_id: record.order_id, price_id: record.price_id, publish_articles_at: getFieldValue(`${record.order_id}.publish_articles_at`).format("YYYY-MM-DD HH:mm:ss") })
+            }
+          }} />
+        )}
+      </FormItem>
+    }
+  },
+  {
     title: '备注（非必填）',
     dataIndex: 'content',
     key: 'content',
     align: 'center',
-    width: 210,
+    width: 240,
     render: (text, record) => {
       // const flag = (record.customer_confirmation_status == 11 && [0, 4].includes(parseInt(record.last_apply_status))) ? true : false;
-      return record.is_inward_send == 1 || record.last_apply_status == 1 || record.last_apply_status == 2 ? text : <FormItem>
-        {getFieldDecorator(`${record.order_id}.content`, {
-          rules: [
-            { max: 120, message: '不能超过120字' }
-          ]
-        })(
-          <TextArea autosize={false} style={{ width: 140, height: 86, resize: 'none' }} placeholder='填写备注信息' onBlur={(e) => {
-            if (e.target.value != record.content) {
-              handleUpdate({ order_id: record.order_id, price_id: record.price_id, content: e.target.value })
-            }
-          }} />
-        )
-        }
-      </FormItem>
+      return record.is_inward_send == 1 || record.last_apply_status == 1 || record.last_apply_status == 2 ? <Tooltip title={<div style={{ width: '200px' }}>{text}</div>}>
+        <div style={{ width: '180px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{text}
+        </div>
+      </Tooltip> : <FormItem>
+          {getFieldDecorator(`${record.order_id}.content`, {
+            rules: [
+              { max: 120, message: '不能超过120字' }
+            ]
+          })(
+            <TextArea autosize={false} style={{ width: 140, height: 86, resize: 'none', marginRight: '20px' }} placeholder='填写备注信息' onBlur={(e) => {
+              if (e.target.value != record.content) {
+                handleUpdate({ order_id: record.order_id, price_id: record.price_id, content: e.target.value })
+              }
+            }} />
+          )
+          }
+        </FormItem>
     }
   },
   {
@@ -352,7 +422,8 @@ export const SpotplanListFunc = () => [
     }
   }
 ];
-export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdateOrder, handleEditOrder, handleDelete, handleHistory, handleAddNumber) => [
+
+export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdateOrder, handleEditOrder, handleDelete, handleHistory, handleAddNumber, handleUpdateArtical) => [
   {
     title: '订单ID',
     dataIndex: 'order_id',
@@ -404,13 +475,14 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     key: 'last_apply_status',
     align: 'center',
     width: 120,
-    render: (text, record) => {
+    render: (text, record = {}) => {
+      const _record = record.record || {};
       const node = text ? <div>
-        <div>申请类型：{APPLY_TYPE[record.record.apply_type]} <a href='javascript:;' onClick={(e) => {
-          handleHistory(e, record.record);
+        <div>申请类型：{APPLY_TYPE[_record.apply_type]} <a href='javascript:;' onClick={(e) => {
+          handleHistory(e, _record);
         }}>查看详情</a></div>
-        {record.record.apply_status == 4 && <div>拒绝原因：{record.record.check_reason}</div>}
-        {record.record.apply_status == 4 && <div>拒绝时间：{record.record.check_at}</div>}
+        {_record.apply_status == 4 && <div>拒绝原因：{_record.check_reason}</div>}
+        {_record.apply_status == 4 && <div>拒绝时间：{_record.check_at}</div>}
       </div> : ''
       return <div>{text ? <Tooltip title={node}>{APPLY_STATUS[text]}</Tooltip> : '-'}</div>
     }
@@ -508,6 +580,24 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
         </div>
       </Tooltip> : '-'
     }
+  }, {
+    title: '发文位置',
+    dataIndex: 'publish_articles_address',
+    key: 'publish_articles_address',
+    align: 'center',
+    width: 120,
+    render: text => {
+      return text ? position[text] : '-'
+    }
+  }, {
+    title: '发文时间',
+    dataIndex: 'publish_articles_at',
+    key: 'publish_articles_at',
+    align: 'center',
+    width: 120,
+    render: text => {
+      return text ? text : '-'
+    }
   },
   {
     title: '备注',
@@ -549,6 +639,11 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
             <div> <a href='javascript:;' onClick={() => {
               handleUpdateOrder(record.order_id)
             }}>申请更新信息</a> </div> : null}
+        {
+          record.stopAndUpdate == 1 ?
+            <div> <a href='javascript:;' onClick={() => {
+              handleUpdateArtical(record.order_id)
+            }}>更新发文时间</a> </div> : null}
 
         {
           record.is_inward_send == 1 || record.last_apply_status == 1 || record.last_apply_status == 2 ? null : <div><a href='javascript:;' onClick={() => {
@@ -605,6 +700,8 @@ export const HistoryCols = [
             {item.service_rate && <div style={{ textAlign: 'left' }}>服务费率：{item.service_rate}%</div>}
             {item.account_category_name && <div style={{ textAlign: 'left' }}>账号分类：{item.account_category_name}</div>}
             {item.release_form && <div style={{ textAlign: 'left' }}>位置/直发or转发：{item.release_form}</div>}
+            {item.publish_articles_address && <div style={{ textAlign: 'left' }}>发文位置(非必填):{position[item.publish_articles_address]}</div>}
+            {item.publish_articles_at && <div style={{ textAlign: 'left' }}>发文时间(非必填)：{item.publish_articles_at}</div>}
             {item.content && <div style={{ textAlign: 'left' }}>备注(非必填)：{item.content}</div>}
           </div>
         })}
@@ -628,10 +725,21 @@ export const HistoryCols = [
             {item.service_rate && <div style={{ textAlign: 'left' }}>服务费率：<span style={item.service_rate != before_item.service_rate ? { color: 'red' } : {}}>{item.service_rate}%</span></div>}
             {item.account_category_name && <div style={{ textAlign: 'left' }}>账号分类：<span style={item.account_category_name != before_item.account_category_name ? { color: 'red' } : {}}>{item.account_category_name}</span></div>}
             {item.release_form && <div style={{ textAlign: 'left' }}>位置/直发or转发：<span style={item.release_form != before_item.release_form ? { color: 'red' } : {}}>{item.release_form}</span></div>}
-            {item.content && <div style={{ textAlign: 'left' }}>备注(非必填)：<span style={item.content != before_item.content ? { color: 'red' } : {}}>{item.content}</span></div>}
+            {item.publish_articles_address && <div style={{ textAlign: 'left' }}>发文位置(非必填)：<span style={item.publish_articles_address != before_item.publish_articles_address ? { color: 'red' } : {}}>{position[item.publish_articles_address]}</span></div>}
+            {item.publish_articles_at && <div style={{ textAlign: 'left' }}>发文时间(非必填)：<span style={item.publish_articles_at != before_item.publish_articles_at ? { color: 'red' } : {}}>{item.publish_articles_at}</span></div>}
+            {item.content && <div style={{ textAlign: 'left' }}>备注(非必填):<span style={item.content != before_item.content ? { color: 'red' } : {}}>{item.content}</span></div>}
           </div>
         })}
       </div>
+    }
+  }, {
+    title: '原因',
+    dataIndex: 'reason',
+    key: 'reason',
+    align: 'center',
+    width: 100,
+    render: (text) => {
+      return text ? text : '-'
     }
   },
   {
@@ -793,6 +901,86 @@ export const OrderCols = [
     width: 100,
     render: text => {
       return text && numeral(text).format('0,0.00') || '-'
+    }
+  }
+];
+export const ArticalCols = [
+  {
+    title: '订单ID',
+    dataIndex: 'order_id',
+    key: 'order_id',
+    align: 'center',
+    className: "columns",
+  },
+  {
+    title: '订单状态',
+    dataIndex: 'status_name',
+    key: 'status_name',
+    align: 'center',
+    className: "columns",
+  },
+  {
+    title: '需求名称',
+    dataIndex: 'requirement_name',
+    key: 'requirement_name',
+    align: 'center',
+    className: "columns",
+  },
+  {
+    title: '平台',
+    dataIndex: 'weibo_type_name',
+    key: 'weibo_type_name',
+    align: 'center',
+    className: "columns",
+  },
+  {
+    title: '账号名称',
+    dataIndex: 'weibo_name',
+    key: 'weibo_name',
+    align: 'center',
+    className: "columns",
+  }, {
+    title: 'PriceID',
+    dataIndex: 'price_id',
+    key: 'price_id',
+    align: 'center',
+    className: "columns",
+  },
+  {
+    title: '价格名称',
+    dataIndex: 'price_name',
+    key: 'price_name',
+    align: 'center',
+    className: "columns",
+  },
+  {
+    title: 'Cost（元）',
+    dataIndex: 'cost',
+    key: 'cost',
+    align: 'center',
+    className: "columns",
+    render: text => {
+      return text && numeral(text).format('0,0.00') || '-'
+    }
+  },
+  {
+    title: 'Costwithfee（元）',
+    dataIndex: 'costwithfee',
+    key: 'costwithfee',
+    align: 'center',
+    className: "columns",
+    render: text => {
+      return text && numeral(text).format('0,0.00') || '-'
+    }
+  },
+  {
+    title: '发文时间',
+    dataIndex: 'publish_articles_at',
+    key: 'publish_articles_at',
+    align: 'center',
+    className: "columns",
+    render: text => {
+      return text ? text : '-'
     }
   }
 ];

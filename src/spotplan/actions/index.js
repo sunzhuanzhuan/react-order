@@ -135,7 +135,12 @@ export const {
 } = createHttpAction('postChangeNumberSpotplanOrder', Interface.postChangeNumberSpotplanOrder, {
   method: 'post',
 });
-
+export const {
+  postUpdatePublishArticlesAt,
+  postUpdatePublishArticlesAt_success
+} = createHttpAction('postUpdatePublishArticlesAt', Interface.postUpdatePublishArticlesAt, {
+  method: 'post',
+});
 export const {
   getExportSpotplamExcel,
   getExportSpotplamExcel_success

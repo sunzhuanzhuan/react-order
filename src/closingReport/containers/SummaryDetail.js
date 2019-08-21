@@ -20,6 +20,7 @@ import DetailModal from '../base/DetailModal'
 import SelectOrders from './SelectOrders'
 import difference from 'lodash/difference'
 import Loading from '../base/Loading'
+import { judgeSPStatus } from "@/closingReport/util";
 
 
 const TabPane = Tabs.TabPane
@@ -217,7 +218,11 @@ export default class Test extends Component {
         Modal.confirm({
           title: '是否确认批量提交内审？',
           onOk: hide => {
-            return this.props.actions.submitCheckSummaryByOrder({ order_id: orders }).then(() => {
+            return this.props.actions.submitCheckSummaryByOrder({ order_id: orders }).then(({ data }) => {
+              let check = (data || {}).check
+              if (check) {
+                return judgeSPStatus(check, true)
+              }
               message.success('提交审核成功!')
               this.reload()
             }).finally(hide)
@@ -244,7 +249,7 @@ export default class Test extends Component {
   }
 
   exportData = () => {
-    if(!this.canExport || this.state.loading) return;
+    if (!this.canExport || this.state.loading) return;
     this.canExport = false
     const { actions } = this.props
     let { summary_id } = parseUrlQuery()
@@ -304,7 +309,7 @@ export default class Test extends Component {
         title="投放数据汇总单详情页"
         extra={
           <div>
-            <Button type='primary' ghost onClick={this.exportData} style={{marginRight: '10px'}}>导出数据</Button>
+            <Button type='primary' ghost onClick={this.exportData} style={{ marginRight: '10px' }}>导出数据</Button>
             <Button type='primary' ghost onClick={() => this.setState({ addModal: true })}>添加订单</Button>
           </div>
         }
@@ -340,7 +345,7 @@ export default class Test extends Component {
             <div>
               {
                 (statistics['status_1'].length > 0 && (tableActive === 'all' || tableActive === 'status_1')) ?
-                  <div style={{marginBottom: '10px'}}>
+                  <div style={{ marginBottom: '10px' }}>
                     <Checkbox
                       indeterminate={indeterminate}
                       onChange={this.onCheckAllChange}
@@ -365,7 +370,7 @@ export default class Test extends Component {
                   </div>
                   : null
               }
-              <Checkbox.Group style={{display: 'block'}} onChange={this.onCheckboxChange} value={cardChecked}>
+              <Checkbox.Group style={{ display: 'block' }} onChange={this.onCheckboxChange} value={cardChecked}>
                 {statistics[tableActive].map(key => {
                   let item = source[key]
                   return <OrderCard

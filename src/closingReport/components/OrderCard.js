@@ -13,7 +13,7 @@ import './OrderCard.less'
 import IconText from '../base/IconText'
 import update from 'immutability-helper'
 import OrderSummaryStatus from '../base/OrderSummaryStatus'
-import { datetimeValidate } from '../util'
+import { datetimeValidate, judgeSPStatus } from '../util'
 
 const Option = Select.Option
 const orderPlatformStatusMap = {
@@ -141,7 +141,11 @@ export default class OrderCard extends Component {
     Modal.confirm({
       title: '是否确认将本订单的投放数据提交审核？',
       onOk: hide => {
-        return actions.submitCheckSummaryByOrder({ order_id: [data.order_id] }).then(() => {
+        return actions.submitCheckSummaryByOrder({ order_id: [data.order_id] }).then(({ data }) => {
+          let check = (data || {}).check
+          if (check) {
+            return judgeSPStatus(check)
+          }
           message.success('提交审核成功!')
           successCallback && successCallback()
         }).finally(hide)
