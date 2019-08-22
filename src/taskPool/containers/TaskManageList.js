@@ -155,7 +155,7 @@ class TaskManageList extends Component {
         <Button type="primary" onClick={() => {
           history.push('/order/task/create')
         }}>
-          <Icon type="plus" />新建任务
+          <Icon type="plus" />新建蜂窝派任务
         </Button>
       </div>
       <Table
