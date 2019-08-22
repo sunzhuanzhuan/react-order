@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux';
 import { bindActionCreators } from "redux";
 import * as spotplanAction from "../../actions";
-import { Modal, Button, Select, Input, Form, message, DatePicker } from 'antd';
+import { Modal, Button, Select, Input, Form, message, DatePicker, InputNumber } from 'antd';
 import moment from 'moment'
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -41,7 +41,7 @@ class EditOrderModal extends React.Component {
   }
   render() {
     const { getFieldDecorator } = this.props.form;
-    const { visible, onCancel, data } = this.props;
+    const { visible, onCancel, data, handleUpdate } = this.props;
     const formItemLayout = {
       labelCol: { span: 8 },
       wrapperCol: { span: 16 }
@@ -70,6 +70,28 @@ class EditOrderModal extends React.Component {
             rules: [{ required: true, message: '请填写名称' }]
           })(
             <Input style={{ width: 240 }} />
+          )}
+        </FormItem>
+        <FormItem label='cost' {...formItemLayout}>
+          {getFieldDecorator('cost', {
+            initialValue: data && data[0].cost || '',
+            rules: [{ required: true, message: '请填cost金额' }]
+          })(<InputNumber step={0.01} max={99999999.99} min={0.01} onBlur={(e) => {
+            if (e.target.value != data && data[0].cost) {
+              handleUpdate({ order_id: data[0].order_id, price_id: data[0].price_id, costwithfee: e.target.value }).then(() => {
+                if (data[0].costwithfee) {
+                  this.props.form.setFieldsValue({ 'costwithfee': 111 })
+                }
+              })
+            }
+          }} />
+          )}
+        </FormItem>
+        <FormItem label='costwithfee' {...formItemLayout}>
+          {getFieldDecorator('costwithfee', {
+            initialValue: data && data[0].costwithfee || '',
+            rules: [{ required: true, message: '请填costwithfee金额' }]
+          })(<InputNumber step={0.01} max={99999999.99} min={0.01} />
           )}
         </FormItem>
         <FormItem label='账号分类' {...formItemLayout}>

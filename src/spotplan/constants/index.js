@@ -1,5 +1,5 @@
 import React from 'react'
-import { Modal, Input, Form, Select, Tooltip, DatePicker } from 'antd'
+import { Modal, Input, Form, Select, Tooltip, DatePicker, InputNumber } from 'antd'
 import numeral from 'numeral'
 import moment from 'moment'
 
@@ -183,8 +183,24 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
     key: 'cost',
     align: 'center',
     width: 80,
-    render: text => {
-      return text && numeral(text).format('0,0') || '-'
+    render: (text, record) => {
+      return record.is_inward_send == 1 || record.last_apply_status == 1 || record.last_apply_status == 2 ? text && numeral(text).format('0,0.00') || '-' : <FormItem>
+        {getFieldDecorator(`${record.order_id}.cost`, {
+          rules: [{ required: true, message: '请填写分类' }]
+        })(
+          <InputNumber step={0.01} max={99999999.99} min={0.00} onBlur={(e) => {
+            if (e.target.value != record.cost) {
+              handleUpdate({ order_id: record.order_id, price_id: record.price_id, cost: e.target.value }).then(() => {
+                if (record.costwithfee) {
+                  let newAt = `${record.order_id}.costwithfee`;
+                  setFieldsValue({ [newAt]: 11111 })
+                }
+              })
+            }
+          }} />
+        )
+        }
+      </FormItem>
     }
   },
   {
@@ -193,8 +209,19 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
     key: 'costwithfee',
     align: 'center',
     width: 100,
-    render: text => {
-      return text && numeral(text).format('0,0') || '-'
+    render: (text, record) => {
+      return record.is_inward_send == 1 || record.last_apply_status == 1 || record.last_apply_status == 2 ? text && numeral(text).format('0,0.00') || '-' : <FormItem>
+        {getFieldDecorator(`${record.order_id}.costwithfee`, {
+          rules: [{ required: true, message: '请填写分类' }]
+        })(
+          <InputNumber step={0.01} max={99999999.99} min={0.00} onBlur={(e) => {
+            if (e.target.value != record.costwithfee) {
+              handleUpdate({ order_id: record.order_id, price_id: record.price_id, costwithfee: e.target.value })
+            }
+          }} />
+        )
+        }
+      </FormItem>
     }
   },
   {

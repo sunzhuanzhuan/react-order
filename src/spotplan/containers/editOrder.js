@@ -25,6 +25,8 @@ class EditOrder extends React.Component {
         [`${item.order_id}.release_form`]: item.release_form || undefined,
         [`${item.order_id}.content`]: item.content || undefined,
         [`${item.order_id}.publish_articles_address`]: item.publish_articles_address || undefined,
+        [`${item.order_id}.cost`]: item.cost || undefined,
+        [`${item.order_id}.costwithfee`]: item.costwithfee || undefined,
         [`${item.order_id}.publish_articles_at`]: moment(item.publish_articles_at).isValid() ? moment(item.publish_articles_at) : undefined,
       })
       // }, 0);
