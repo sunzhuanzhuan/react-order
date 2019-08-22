@@ -36,7 +36,7 @@ class TaskReviewList extends Component {
     }
     this.columns = [
       {
-        title: '任务信息',
+        title: '蜂窝派任务信息',
         dataIndex: 'orderName',
         width: 180,
         render: (name, record) => {
