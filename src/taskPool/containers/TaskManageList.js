@@ -27,7 +27,7 @@ class TaskManageList extends Component {
     }
     this.columns = [
       {
-        title: '任务信息',
+        title: '蜂窝任务信息',
         dataIndex: 'orderName',
         width: 220,
         render: (name, record) => {
@@ -111,8 +111,8 @@ class TaskManageList extends Component {
     this.isOfflineRequest = true*/
     const { actions } = this.props
     Modal.confirm({
-      title: '确认要下线此任务吗?',
-      content: "任务下线后，不可重新上线。已领取任务的博主，可执行。未消耗的余额，会在之后返还到您的任务账户余额中。",
+      title: '确认要下线此蜂窝派任务吗?',
+      content: "蜂窝派任务下线后，不可重新上线。已领取蜂窝派任务的博主，可执行。未消耗的余额，会在之后返还到您的蜂窝派任务账户余额中。",
       onOk: () => {
         return actions.TPOffline({ id }).then(() => {
           message.success('下线成功')
@@ -150,7 +150,7 @@ class TaskManageList extends Component {
       }
     }
     return <div className='task-pool-page-container manage-page'>
-      <Title level={4}>任务管理</Title>
+      <Title level={4}>蜂窝任务管理</Title>
       <div style={{ padding: '0 0 16px 0' }}>
         <Button type="primary" onClick={() => {
           history.push('/order/task/create')

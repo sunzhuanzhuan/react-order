@@ -96,10 +96,10 @@ class CreateTask extends Component {
     const { platformId = 9 } = base
     const FormComponent = forms[platformId][current] || Empty
     return <div className='task-pool-page-container create-page'>
-      <PageHeader onBack={() => this.props.history.push('/order/task/manage')} title="新建任务" />
+      <PageHeader onBack={() => this.props.history.push('/order/task/manage')} title="新建蜂窝派任务" />
       <header>
         <Steps current={current}>
-          <Step title="任务基本信息" />
+          <Step title="蜂窝派任务基本信息" />
           <Step title="设置预算" />
           <Step title="撰写内容" />
           <Step title="预览" />
