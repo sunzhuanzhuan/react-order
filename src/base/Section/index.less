@@ -1,0 +1,29 @@
+
+@import "../../indexNbTheme";
+.component-section-container {
+  margin: 10px;
+}
+.component-section-header{
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  margin-bottom: .2em;
+  color: #333;
+  &.h1 { font-size: 38px; line-height: 1.23 }
+  &.h2 { font-size: 30px; line-height: 1.35 }
+  &.h3 { font-size: 24px; line-height: 1.35 }
+  &.h4 { font-size: 20px; line-height: 1.4 }
+  &.h5 { font-size: 16px; line-height: 1.4 }
+  &::before{
+    content: '';
+    display: inline-block;
+    width: (.4em * .7);
+    height: (1em * .95);
+    background: @primary-color;
+    margin-right: 10px;
+    border-radius: .2em;
+  }
+}
+.component-section-content {
+  padding: 13px ;
+}

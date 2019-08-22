@@ -11,6 +11,7 @@ import publicOrderListReducer from '../publicOrderList/reducers'
 import closingReportReducers from '../closingReport/reducer'
 import spotplanReducers from '../spotplan/reducers'
 import business from '../business/reducers'
+import taskPoolReducers from '../taskPool/reducers'
 export default combineReducers({
 	commonReducers,
 	routing: routerReducer,
@@ -23,5 +24,6 @@ export default combineReducers({
   closingReportReducers,
   business,
   spotplanReducers,
-  publicOrderListReducer
+  publicOrderListReducer,
+  taskPoolReducers
 });
