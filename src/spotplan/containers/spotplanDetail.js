@@ -206,12 +206,6 @@ class SpotPlanDetail extends React.Component {
     const search = qs.parse(this.props.location.search.substring(1));
     return this.props.actions.getServiceRateAmount({ spotplan_id: search.spotplan_id, ...obj })
   }
-  handleUpdateItem = obj => {
-    const search = qs.parse(this.props.location.search.substring(1));
-    return this.props.actions.postUpdateSpotplanOrder({ spotplan_id: search.spotplan_id, ...obj }).then(() => {
-      message.success('更新完成！', 1);
-    })
-  }
   handleDelete = order_id => {
     const search = qs.parse(this.props.location.search.substring(1));
     Modal.confirm({
@@ -548,7 +542,6 @@ class SpotPlanDetail extends React.Component {
       {editVisible && <EditOrderModal visible={editVisible}
         spotplan_id={search.spotplan_id}
         data={basicSpotplanOrderInfo}
-        handleUpdate={this.handleUpdateItem}
         onCancel={() => { this.setState({ editVisible: false }) }}
         handleClose={this.handleClose}
       />}

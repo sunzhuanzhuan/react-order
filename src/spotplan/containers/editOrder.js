@@ -46,9 +46,9 @@ class EditOrder extends React.Component {
     })
   }
   render() {
-    const { getFieldDecorator, getFieldValue, setFieldsValue } = this.props.form;
+    const { getFieldDecorator, getFieldValue, setFieldsValue ,validateFields} = this.props.form;
     const { data, handleUpdate, headerData, loading, search } = this.props;
-    const EditOrderCols = EditOrderFunc(getFieldDecorator, handleUpdate, this.handleDelete, getFieldValue, setFieldsValue);
+    const EditOrderCols = EditOrderFunc(getFieldDecorator, handleUpdate, this.handleDelete, getFieldValue, setFieldsValue,validateFields);
     const paginationObj = {
       onChange: (page) => {
         this.props.queryData(3, { spotplan_id: search.spotplan_id, page }, this.handleEditTable);
@@ -65,7 +65,7 @@ class EditOrder extends React.Component {
       <h3 className='top-gap'>订单列表</h3>
       <div className='edit-table-container top-gap'>
         <Form>
-          <ScrollTable scrollClassName='.ant-table-body' widthScroll={2000}>
+          <ScrollTable scrollClassName='.ant-table-body' widthScroll={2100}>
             <Table
               className='edit-table'
               rowKey='id'
@@ -73,7 +73,7 @@ class EditOrder extends React.Component {
               dataSource={data && data.list || []}
               bordered
               loading={loading}
-              scroll={{ x: 1944 }}
+              scroll={{ x: 2044 }}
               pagination={data && data.total > 50 ? paginationObj : false}
             />
           </ScrollTable>

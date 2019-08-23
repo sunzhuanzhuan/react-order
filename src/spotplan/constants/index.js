@@ -98,7 +98,7 @@ export const CheckModalFunc = handleDel => [
     }
   }
 ];
-export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, getFieldValue, setFieldsValue) => [
+export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, getFieldValue, setFieldsValue, validateFields) => [
   {
     title: '订单ID',
     dataIndex: 'order_id',
@@ -182,18 +182,33 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
     dataIndex: 'cost',
     key: 'cost',
     align: 'center',
-    width: 80,
+    width: 180,
     render: (text, record) => {
       return record.is_inward_send == 1 || record.last_apply_status == 1 || record.last_apply_status == 2 ? text && numeral(text).format('0,0.00') || '-' : <FormItem>
         {getFieldDecorator(`${record.order_id}.cost`, {
-          rules: [{ required: true, message: '请填写分类' }]
+          validateTrigger: ['onChange'],
+          validateFirst: true,
+          rules: [{ required: true, message: '请填写cost金额' }, {
+            validator: (rule, value, callback) => {
+              if (value.toString().split('.')[0].length > 8) {
+                callback('最多输入8位数（8位不包含小数位）')
+                return
+              } else if (value <= 0) {
+                callback('请输入大于0的数')
+                return
+              } else {
+                callback()
+              }
+            }
+          }]
         })(
-          <InputNumber step={0.01} max={99999999.99} min={0.00} onBlur={(e) => {
-            if (e.target.value != record.cost) {
-              handleUpdate({ order_id: record.order_id, price_id: record.price_id, cost: e.target.value }).then(() => {
+          <InputNumber step={0.01} style={{ width: 150 }} onBlur={(e) => {
+            if (e.target.value != '' && e.target.value != record.cost) {
+              handleUpdate({ order_id: record.order_id, price_id: record.price_id, cost: e.target.value }).then((res) => {
                 if (record.costwithfee) {
                   let newAt = `${record.order_id}.costwithfee`;
-                  setFieldsValue({ [newAt]: 11111 })
+                  setFieldsValue({ [newAt]: res.data.costwithfee });
+                  validateFields([`${record.order_id}.costwithfee`])
                 }
               })
             }
@@ -208,14 +223,28 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
     dataIndex: 'costwithfee',
     key: 'costwithfee',
     align: 'center',
-    width: 100,
+    width: 180,
     render: (text, record) => {
       return record.is_inward_send == 1 || record.last_apply_status == 1 || record.last_apply_status == 2 ? text && numeral(text).format('0,0.00') || '-' : <FormItem>
         {getFieldDecorator(`${record.order_id}.costwithfee`, {
-          rules: [{ required: true, message: '请填写分类' }]
+          validateTrigger: ['onChange'],
+          validateFirst: true,
+          rules: [{ required: true, message: '请填写costwithfee金额' }, {
+            validator: (rule, value, callback) => {
+              if (value.toString().split('.')[0].length > 8) {
+                callback('最多输入8位数（8位不包含小数位）')
+                return
+              } else if (value <= 0) {
+                callback('请输入大于0的数')
+                return
+              } else {
+                callback()
+              }
+            }
+          }]
         })(
-          <InputNumber step={0.01} max={99999999.99} min={0.00} onBlur={(e) => {
-            if (e.target.value != record.costwithfee) {
+          <InputNumber step={0.01} style={{ width: 150 }} onBlur={(e) => {
+            if (e.target.value != '' && e.target.value != record.costwithfee) {
               handleUpdate({ order_id: record.order_id, price_id: record.price_id, costwithfee: e.target.value })
             }
           }} />
@@ -572,7 +601,7 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     align: 'center',
     width: 120,
     render: text => {
-      return <div>{text && numeral(text).format('0,0') || '-'}</div>
+      return <div>{text && numeral(text).format('0,0.00') || '-'}</div>
     }
   },
   {

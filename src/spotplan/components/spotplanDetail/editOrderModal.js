@@ -39,6 +39,29 @@ class EditOrderModal extends React.Component {
       }
     })
   }
+  checkCost = (rule, value, callback) => {
+    if (value.toString().split('.')[0].length > 8) {
+      callback('最多输入8位数（8位不包含小数位）')
+      return
+    } else if (value <= 0) {
+      callback('请输入大于0的数')
+      return
+    } else {
+      callback()
+    }
+
+  }
+  checkCostfee = (rule, value1, callback) => {
+    if (value1.toString().split('.')[0].length > 8) {
+      callback('最多输入8位数（8位不包含小数位）')
+      return
+    } else if (value1 <= 0) {
+      callback('请输入大于0的数')
+      return
+    } else {
+      callback()
+    }
+  }
   render() {
     const { getFieldDecorator } = this.props.form;
     const { visible, onCancel, data, handleUpdate } = this.props;
@@ -75,14 +98,22 @@ class EditOrderModal extends React.Component {
         <FormItem label='cost' {...formItemLayout}>
           {getFieldDecorator('cost', {
             initialValue: data && data[0].cost || '',
-            rules: [{ required: true, message: '请填cost金额' }]
-          })(<InputNumber step={0.01} max={99999999.99} min={0.01} onBlur={(e) => {
-            if (e.target.value != data && data[0].cost) {
-              handleUpdate({ order_id: data[0].order_id, price_id: data[0].price_id, costwithfee: e.target.value }).then(() => {
-                if (data[0].costwithfee) {
-                  this.props.form.setFieldsValue({ 'costwithfee': 111 })
-                }
-              })
+            validateTrigger: ['onChange'],
+            validateFirst: true,
+            rules: [{ required: true, message: '请填cost金额' },
+            {
+              validator: this.checkCost
+            }]
+          })(<InputNumber step={0.01} style={{ width: 200 }} onChange={(value) => {
+            if (value != data && data[0].cost) {
+              if (data && data[0].service_rate) {
+                let num = Number(value) * (1 + (Number(data[0].service_rate) / 100)).toString()
+                this.props.form.setFieldsValue({
+                  'costwithfee': num.toFixed(2)
+                })
+                this.props.form.validateFields(['costwithfee'])
+              }
+
             }
           }} />
           )}
@@ -90,8 +121,13 @@ class EditOrderModal extends React.Component {
         <FormItem label='costwithfee' {...formItemLayout}>
           {getFieldDecorator('costwithfee', {
             initialValue: data && data[0].costwithfee || '',
-            rules: [{ required: true, message: '请填costwithfee金额' }]
-          })(<InputNumber step={0.01} max={99999999.99} min={0.01} />
+            validateTrigger: ['onChange'],
+            validateFirst: true,
+            rules: [{ required: true, message: '请填costwithfee金额' },
+            {
+              validator: this.checkCostfee
+            }]
+          })(<InputNumber step={0.01} style={{ width: 200 }} />
           )}
         </FormItem>
         <FormItem label='账号分类' {...formItemLayout}>
