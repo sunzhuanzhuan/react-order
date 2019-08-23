@@ -191,7 +191,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
           rules: [{ required: true, message: '请填写cost金额' }, {
             validator: (rule, value, callback) => {
               if (value.toString().split('.')[0].length > 8) {
-                callback('最多输入8位数（8位不包含小数位）')
+                callback('最多输入8位数')
                 return
               } else if (value <= 0) {
                 callback('请输入大于0的数')
@@ -202,7 +202,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
             }
           }]
         })(
-          <InputNumber step={0.01} style={{ width: 150 }} onBlur={(e) => {
+          <InputNumber style={{ width: 150 }} onBlur={(e) => {
             if (e.target.value != '' && e.target.value != record.cost) {
               handleUpdate({ order_id: record.order_id, price_id: record.price_id, cost: e.target.value }).then((res) => {
                 if (record.costwithfee) {
@@ -232,7 +232,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
           rules: [{ required: true, message: '请填写costwithfee金额' }, {
             validator: (rule, value, callback) => {
               if (value.toString().split('.')[0].length > 8) {
-                callback('最多输入8位数（8位不包含小数位）')
+                callback('最多输入8位数')
                 return
               } else if (value <= 0) {
                 callback('请输入大于0的数')
@@ -243,7 +243,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
             }
           }]
         })(
-          <InputNumber step={0.01} style={{ width: 150 }} onBlur={(e) => {
+          <InputNumber style={{ width: 150 }} onBlur={(e) => {
             if (e.target.value != '' && e.target.value != record.costwithfee) {
               handleUpdate({ order_id: record.order_id, price_id: record.price_id, costwithfee: e.target.value })
             }
@@ -601,7 +601,7 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     align: 'center',
     width: 120,
     render: text => {
-      return <div>{text && numeral(text).format('0,0.00') || '-'}</div>
+      return <div>{text && numeral(text).format('0,0') || '-'}</div>
     }
   },
   {
@@ -611,7 +611,7 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     align: 'center',
     width: 120,
     render: text => {
-      return <div>{text && numeral(text).format('0,0.00') || '-'}</div>
+      return <div>{text && numeral(text).format('0,0') || '-'}</div>
     }
   },
   {
