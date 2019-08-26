@@ -202,7 +202,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
             }
           }]
         })(
-          <InputNumber style={{ width: 150 }} onBlur={(e) => {
+          <InputNumber precision={0} style={{ width: 150 }} onBlur={(e) => {
             if (e.target.value != '' && e.target.value != record.cost) {
               handleUpdate({ order_id: record.order_id, price_id: record.price_id, cost: e.target.value }).then((res) => {
                 if (record.costwithfee) {
@@ -243,7 +243,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
             }
           }]
         })(
-          <InputNumber style={{ width: 150 }} onBlur={(e) => {
+          <InputNumber precision={0} style={{ width: 150 }} onBlur={(e) => {
             if (e.target.value != '' && e.target.value != record.costwithfee) {
               handleUpdate({ order_id: record.order_id, price_id: record.price_id, costwithfee: e.target.value })
             }
