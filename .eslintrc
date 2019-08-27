@@ -18,14 +18,14 @@
     "react": {
       "createClass": "createReactClass",
       "pragma": "React",
-      "version": "15.0",
+      "version": "detect",
       "flowVersion": "0.53"
     }
   },
   "rules": {
     "semi": 0,
     "no-debugger": 0,
-    "no-unused-vars": 1,
+    "no-unused-vars": 0,
     "no-case-declarations": 0,
     "no-useless-constructor": 0,
     "no-console": 1,

@@ -34,6 +34,22 @@ export const {
 	ignoreToast: true,
 	ignoreLoading: true
 });
+// 可用媒体平台下拉列表
+export const {
+  getAvailablePlatformList,
+  getAvailablePlatformList_success
+} = createHttpAction('getAvailablePlatformList', Interface.common.platformList)
+
+
+// 获取分类选项
+export const {
+  getAllClassifyInfos
+} = createHttpAction('getAllClassifyInfos', Interface.common.getAllClassifyInfos)
+
+// 获取真实的文件下载地址
+export const {
+  getFileRealPath
+} = createHttpAction('getFileRealPath', Interface.common.getFileRealPath)
 
 export const resetSiderAuth = createAction('RESET_SIDERMENU_AUTH', () => {
 	return [];

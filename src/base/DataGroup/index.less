@@ -1,5 +1,6 @@
 .platform-icon-text {
   display: flex;
+
   span.text {
     display: inline-block;
     line-height: 22px;
@@ -8,5 +9,38 @@
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
+  }
+}
+
+.platform-icon-infos {
+  display: flex;
+
+  .left {
+    width: 40px;
+    flex: none;
+  }
+}
+
+.image-text-infos {
+  display: flex;
+  max-width: 200px;
+
+  .left {
+    width: 30px;
+    height: 30px;
+    overflow: hidden;
+    align-items: center;
+    flex: none;
+    margin-right: 12px;
+    img {
+      width: 100%;
+      vertical-align: middle;
+    }
+  }
+  .right {
+    flex: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
 }

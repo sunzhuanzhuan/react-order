@@ -190,18 +190,17 @@ module.exports = {
     // https://twitter.com/wSokra/status/969633336732905474
     // https://medium.com/webpack/webpack-4-code-splitting-chunk-graph-and-the-splitchunks-optimization-be739a861366
     splitChunks: {
+      chunks: 'all',
       cacheGroups: {
         icons: {
-          chunks: 'initial',
           test: /@ant-design/,
           priority: 40,
           name: 'icons'
         },
         libs: {
-          chunks: 'initial',
-          test: /(react|react-dom|react-router-dom|redux|axios|react-redux)/,
+          test: /(react|react-dom|react-router-dom|redux|axios|react-redux|lodash|immutable|moment")/,
           priority: 40,
-          name: 'libs'
+          name: 'libs',
         }
       }
     },
@@ -301,6 +300,7 @@ module.exports = {
               customize: require.resolve('babel-preset-react-app/webpack-overrides'),
 
               plugins: [
+                "lodash",
                 ['@babel/plugin-proposal-decorators', { legacy: true }],
                 ['import', { libraryName: 'antd', libraryDirectory: 'es' }],
                 [
@@ -537,7 +537,7 @@ module.exports = {
         silent: true,
         formatter: typescriptFormatter
       })
-    /*,new BundleAnalyzerPlugin({
+    /*new BundleAnalyzerPlugin({
       analyzerMode: 'static'
     })*/
   ].filter(Boolean),
