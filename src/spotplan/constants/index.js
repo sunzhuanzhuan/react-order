@@ -203,15 +203,20 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
           }]
         })(
           <InputNumber precision={0} style={{ width: 150 }} onBlur={(e) => {
-            if (e.target.value != '' && e.target.value != record.cost) {
-              handleUpdate({ order_id: record.order_id, price_id: record.price_id, cost: e.target.value }).then((res) => {
-                if (record.costwithfee) {
-                  let newAt = `${record.order_id}.costwithfee`;
-                  setFieldsValue({ [newAt]: res.data.costwithfee });
-                  validateFields([`${record.order_id}.costwithfee`])
+            validateFields([`${record.order_id}.cost`], (errors, values) => {
+              if (!errors) {
+                if (e.target.value != '' && e.target.value != record.cost) {
+                  handleUpdate({ order_id: record.order_id, price_id: record.price_id, cost: e.target.value }).then((res) => {
+                    if (record.costwithfee) {
+                      let newAt = `${record.order_id}.costwithfee`;
+                      setFieldsValue({ [newAt]: res.data.costwithfee });
+                      validateFields([`${record.order_id}.costwithfee`])
+                    }
+                  })
                 }
-              })
-            }
+              }
+            })
+
           }} />
         )
         }
@@ -244,9 +249,13 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
           }]
         })(
           <InputNumber precision={0} style={{ width: 150 }} onBlur={(e) => {
-            if (e.target.value != '' && e.target.value != record.costwithfee) {
-              handleUpdate({ order_id: record.order_id, price_id: record.price_id, costwithfee: e.target.value })
-            }
+            validateFields([`${record.order_id}.costwithfee`], (errors, values) => {
+              if (!errors) {
+                if (e.target.value != '' && e.target.value != record.costwithfee) {
+                  handleUpdate({ order_id: record.order_id, price_id: record.price_id, costwithfee: e.target.value })
+                }
+              }
+            })
           }} />
         )
         }
