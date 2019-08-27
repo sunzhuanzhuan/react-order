@@ -71,8 +71,9 @@ class SpotplanAdd extends React.Component {
   }
   handleUpdate = obj => {
     const search = qs.parse(this.props.location.search.substring(1));
-    return this.props.actions.postUpdateSpotplanOrder({ spotplan_id: search.spotplan_id, ...obj }).then(() => {
+    return this.props.actions.postUpdateSpotplanOrder({ spotplan_id: search.spotplan_id, ...obj }).then((response) => {
       message.success('更新完成！', 1);
+      return response
     })
   }
   handleCheck = (type, order_id, item) => {

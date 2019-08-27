@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux';
 import { bindActionCreators } from "redux";
 import * as spotplanAction from "../../actions";
-import { Modal, Button, Select, Input, Form, message, DatePicker } from 'antd';
+import { Modal, Button, Select, Input, Form, message, DatePicker, InputNumber } from 'antd';
 import moment from 'moment'
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -39,9 +39,32 @@ class EditOrderModal extends React.Component {
       }
     })
   }
+  checkCost = (rule, value, callback) => {
+    if (value.toString().split('.')[0].length > 8) {
+      callback('最多输入8位数')
+      return
+    } else if (value <= 0) {
+      callback('请输入大于0的数')
+      return
+    } else {
+      callback()
+    }
+
+  }
+  checkCostfee = (rule, value1, callback) => {
+    if (value1.toString().split('.')[0].length > 8) {
+      callback('最多输入8位数')
+      return
+    } else if (value1 <= 0) {
+      callback('请输入大于0的数')
+      return
+    } else {
+      callback()
+    }
+  }
   render() {
     const { getFieldDecorator } = this.props.form;
-    const { visible, onCancel, data } = this.props;
+    const { visible, onCancel, data, handleUpdate } = this.props;
     const formItemLayout = {
       labelCol: { span: 8 },
       wrapperCol: { span: 16 }
@@ -70,6 +93,41 @@ class EditOrderModal extends React.Component {
             rules: [{ required: true, message: '请填写名称' }]
           })(
             <Input style={{ width: 240 }} />
+          )}
+        </FormItem>
+        <FormItem label='cost' {...formItemLayout}>
+          {getFieldDecorator('cost', {
+            initialValue: data && data[0].cost || '',
+            validateTrigger: ['onChange'],
+            validateFirst: true,
+            rules: [{ required: true, message: '请填cost金额' },
+            {
+              validator: this.checkCost
+            }]
+          })(<InputNumber precision={0} style={{ width: 200 }} onChange={(value) => {
+            if (value != data && data[0].cost) {
+              if (data && data[0].service_rate) {
+                let num = Number(value) * (1 + (Number(data[0].service_rate) / 100)).toString()
+                this.props.form.setFieldsValue({
+                  'costwithfee': num.toFixed(0)
+                })
+                this.props.form.validateFields(['costwithfee'])
+              }
+
+            }
+          }} />
+          )}
+        </FormItem>
+        <FormItem label='costwithfee' {...formItemLayout}>
+          {getFieldDecorator('costwithfee', {
+            initialValue: data && data[0].costwithfee || '',
+            validateTrigger: ['onChange'],
+            validateFirst: true,
+            rules: [{ required: true, message: '请填costwithfee金额' },
+            {
+              validator: this.checkCostfee
+            }]
+          })(<InputNumber precision={0} style={{ width: 200 }} />
           )}
         </FormItem>
         <FormItem label='账号分类' {...formItemLayout}>

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Modal, Input, Form, Select, Tooltip, DatePicker } from 'antd'
+import { Modal, Input, Form, Select, Tooltip, DatePicker, InputNumber } from 'antd'
 import numeral from 'numeral'
 import moment from 'moment'
 
@@ -98,7 +98,7 @@ export const CheckModalFunc = handleDel => [
     }
   }
 ];
-export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, getFieldValue, setFieldsValue) => [
+export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, getFieldValue, setFieldsValue, validateFields) => [
   {
     title: '订单ID',
     dataIndex: 'order_id',
@@ -182,9 +182,45 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
     dataIndex: 'cost',
     key: 'cost',
     align: 'center',
-    width: 80,
-    render: text => {
-      return text && numeral(text).format('0,0') || '-'
+    width: 180,
+    render: (text, record) => {
+      return record.is_inward_send == 1 || record.last_apply_status == 1 || record.last_apply_status == 2 ? text && numeral(text).format('0,0.00') || '-' : <FormItem>
+        {getFieldDecorator(`${record.order_id}.cost`, {
+          validateTrigger: ['onChange'],
+          validateFirst: true,
+          rules: [{ required: true, message: '请填写cost金额' }, {
+            validator: (rule, value, callback) => {
+              if (value.toString().split('.')[0].length > 8) {
+                callback('最多输入8位数')
+                return
+              } else if (value <= 0) {
+                callback('请输入大于0的数')
+                return
+              } else {
+                callback()
+              }
+            }
+          }]
+        })(
+          <InputNumber precision={0} style={{ width: 150 }} onBlur={(e) => {
+            validateFields([`${record.order_id}.cost`], (errors, values) => {
+              if (!errors) {
+                if (e.target.value != '' && e.target.value != record.cost) {
+                  handleUpdate({ order_id: record.order_id, price_id: record.price_id, cost: e.target.value }).then((res) => {
+                    if (record.costwithfee) {
+                      let newAt = `${record.order_id}.costwithfee`;
+                      setFieldsValue({ [newAt]: res.data.costwithfee });
+                      validateFields([`${record.order_id}.costwithfee`])
+                    }
+                  })
+                }
+              }
+            })
+
+          }} />
+        )
+        }
+      </FormItem>
     }
   },
   {
@@ -192,9 +228,38 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
     dataIndex: 'costwithfee',
     key: 'costwithfee',
     align: 'center',
-    width: 100,
-    render: text => {
-      return text && numeral(text).format('0,0') || '-'
+    width: 180,
+    render: (text, record) => {
+      return record.is_inward_send == 1 || record.last_apply_status == 1 || record.last_apply_status == 2 ? text && numeral(text).format('0,0.00') || '-' : <FormItem>
+        {getFieldDecorator(`${record.order_id}.costwithfee`, {
+          validateTrigger: ['onChange'],
+          validateFirst: true,
+          rules: [{ required: true, message: '请填写costwithfee金额' }, {
+            validator: (rule, value, callback) => {
+              if (value.toString().split('.')[0].length > 8) {
+                callback('最多输入8位数')
+                return
+              } else if (value <= 0) {
+                callback('请输入大于0的数')
+                return
+              } else {
+                callback()
+              }
+            }
+          }]
+        })(
+          <InputNumber precision={0} style={{ width: 150 }} onBlur={(e) => {
+            validateFields([`${record.order_id}.costwithfee`], (errors, values) => {
+              if (!errors) {
+                if (e.target.value != '' && e.target.value != record.costwithfee) {
+                  handleUpdate({ order_id: record.order_id, price_id: record.price_id, costwithfee: e.target.value })
+                }
+              }
+            })
+          }} />
+        )
+        }
+      </FormItem>
     }
   },
   {
@@ -555,7 +620,7 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     align: 'center',
     width: 120,
     render: text => {
-      return <div>{text && numeral(text).format('0,0.00') || '-'}</div>
+      return <div>{text && numeral(text).format('0,0') || '-'}</div>
     }
   },
   {
