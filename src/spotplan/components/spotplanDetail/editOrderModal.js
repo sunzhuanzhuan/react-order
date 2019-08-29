@@ -52,8 +52,8 @@ class EditOrderModal extends React.Component {
 
   }
   checkCostfee = (rule, value1, callback) => {
-    if (value1.toString().split('.')[0].length > 8) {
-      callback('最多输入8位数')
+    if (value1.toString().split('.')[0].length > 9) {
+      callback('最多输入9位数')
       return
     } else if (value1 <= 0) {
       callback('请输入大于0的数')
@@ -104,7 +104,7 @@ class EditOrderModal extends React.Component {
             {
               validator: this.checkCost
             }]
-          })(<InputNumber precision={0} style={{ width: 200 }} onChange={(value) => {
+          })(<InputNumber precision={0} max={99999999} min={1} style={{ width: 200 }} onChange={(value) => {
             if (value != data && data[0].cost) {
               if (data && data[0].service_rate) {
                 let num = Number(value) * (1 + (Number(data[0].service_rate) / 100)).toString()
@@ -127,7 +127,7 @@ class EditOrderModal extends React.Component {
             {
               validator: this.checkCostfee
             }]
-          })(<InputNumber precision={0} style={{ width: 200 }} />
+          })(<InputNumber max={999999999} min={1} precision={0} style={{ width: 200 }} />
           )}
         </FormItem>
         <FormItem label='账号分类' {...formItemLayout}>

@@ -202,7 +202,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
             }
           }]
         })(
-          <InputNumber precision={0} style={{ width: 150 }} onBlur={(e) => {
+          <InputNumber precision={0} max={99999999} min={1} style={{ width: 150 }} onBlur={(e) => {
             validateFields([`${record.order_id}.cost`], (errors, values) => {
               if (!errors) {
                 if (e.target.value != '' && e.target.value != record.cost) {
@@ -236,8 +236,8 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
           validateFirst: true,
           rules: [{ required: true, message: '请填写costwithfee金额' }, {
             validator: (rule, value, callback) => {
-              if (value.toString().split('.')[0].length > 8) {
-                callback('最多输入8位数')
+              if (value.toString().split('.')[0].length > 9) {
+                callback('最多输入9位数')
                 return
               } else if (value <= 0) {
                 callback('请输入大于0的数')
@@ -248,7 +248,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
             }
           }]
         })(
-          <InputNumber precision={0} style={{ width: 150 }} onBlur={(e) => {
+          <InputNumber precision={0} max={999999999} min={1} style={{ width: 150 }} onBlur={(e) => {
             validateFields([`${record.order_id}.costwithfee`], (errors, values) => {
               if (!errors) {
                 if (e.target.value != '' && e.target.value != record.costwithfee) {
