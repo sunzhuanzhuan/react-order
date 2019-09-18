@@ -69,7 +69,7 @@ export class Edit extends Component {
   render() {
     const titles = [
       '项目/品牌',
-      '资源/项目媒介',
+      '媒介/BP',
       '销售/执行人',
       '订单创建人',
       '平台',
@@ -124,7 +124,7 @@ export class View extends Component {
     } = this.props.data
     const titles = [
       '项目/品牌',
-      '资源/项目媒介',
+      '媒介/BP',
       '销售/执行人',
       '平台'
     ]
