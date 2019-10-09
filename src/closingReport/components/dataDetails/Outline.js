@@ -131,8 +131,8 @@ export class View extends Component {
     const values = [
       (brand_name || '-') + ' / ' + (project_name || '-'),
       <span key={112}>
-        <Media {...resource_media} title='资源媒介' /> /
-        <Media {...bp} title='项目媒介' />
+        <Media {...resource_media} title='媒介' /> /
+        <Media {...bp} title='bp' />
       </span>,
       (real_name || '-') + ' / ' + (executor_name || '-'),
       <WBYPlatformIcon key={22} weibo_type={platform_id} widthSize={22} />
