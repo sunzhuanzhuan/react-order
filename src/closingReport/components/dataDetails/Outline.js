@@ -119,7 +119,7 @@ export class View extends Component {
       executor_name,
       real_name,
       resource_media,
-      bp,
+      BP,
       platform_id
     } = this.props.data
     const titles = [
@@ -132,7 +132,7 @@ export class View extends Component {
       (brand_name || '-') + ' / ' + (project_name || '-'),
       <span key={112}>
         <Media {...resource_media} title='媒介' /> /
-        <Media {...bp} title='bp' />
+        <Media {...BP} title='BP' />
       </span>,
       (real_name || '-') + ' / ' + (executor_name || '-'),
       <WBYPlatformIcon key={22} weibo_type={platform_id} widthSize={22} />
