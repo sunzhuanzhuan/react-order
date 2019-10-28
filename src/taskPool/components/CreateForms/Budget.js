@@ -2,12 +2,13 @@
  * 创建任务-设置预算表单
  */
 import React from 'react'
-import { Form, Radio, Button, DatePicker, InputNumber } from 'antd'
+import { Form, Radio, Button, DatePicker, InputNumber, Checkbox } from 'antd'
 import debounce from "lodash/debounce";
 import moment from "moment";
 import numeral from '@/util/numeralExpand'
 
 const FormItem = Form.Item
+const CheckboxGroup = Checkbox.Group;
 
 const MAX_BUDGET_AMOUNT = 99999999
 const MAX_FOLLOWER_COUNT = 999999999
@@ -24,6 +25,11 @@ class BudgetForWeixin extends React.Component {
       balance: props.data.budget.balance || 0,
       actionNum: props.data.budget.actionNum || 0
     }
+    this.defaultOps = [
+      { label: '多图文第一条', value: '多图文第一条' },
+      { label: '多图文第二条', value: '多图文第二条' },
+      { label: '多图文第三-N条', value: '多图文第三-N条' },
+    ]
   }
 
   componentDidMount() {
@@ -68,13 +74,20 @@ class BudgetForWeixin extends React.Component {
   handleSubmit = (e) => {
     e && e.preventDefault()
     this.props.form.validateFields((err, values) => {
-      if (!err) {
+      // if (!err) {
         let newVal = Object.assign({}, values)
         newVal.actionNum = this.state.actionNum
         newVal.balance = this.state.balance
         this.props.next("budget", newVal)
-      }
+      // }
     });
+  }
+
+  getCheckOptions = () => {
+    const { form } = this.props;
+    const checkVal = form.getFieldValue('taskPosition');
+    this.defaultOps.forEach(item => item.disabled = checkVal.length === 2 && !(checkVal.includes(item.value)));
+    return this.defaultOps;
   }
 
   render() {
@@ -83,10 +96,9 @@ class BudgetForWeixin extends React.Component {
     const { base, budget } = data
     const { getFieldDecorator, getFieldValue } = form
     let maxAmount = Math.min(balance, MAX_BUDGET_AMOUNT);
-
     return (
       <Form onSubmit={this.handleSubmit}  {...formLayout}>
-        <FormItem label="内容发布位置">
+        <FormItem label="图片发布位置" className='taskPosRadio'>
           {getFieldDecorator('taskContentStyle', {
             initialValue: budget.taskContentStyle || 11,
             rules: [{
@@ -98,11 +110,30 @@ class BudgetForWeixin extends React.Component {
               let val = e.target.value
               this.calculation(getFieldValue('totalAmount'), val)
             }}>
-              <Radio value={11}>多图文第一条</Radio>
-              <Radio value={12}>不限</Radio>
+              <Radio value={11}>限制图文位置</Radio>
+              <Radio value={12}>不限图文位置</Radio>
             </Radio.Group>
           )}
         </FormItem>
+        {
+          getFieldValue('taskContentStyle') == 11 ? 
+            <FormItem className='taskPosCheckboxComp'>
+              <div className='flex-form-input-container'>
+                {getFieldDecorator('taskPosition', {
+                  initialValue: budget.taskPosition || [],
+                  rules: [{
+                    required: true,
+                    message: '请至少选择一项限制调价'
+                  }]
+                })(
+                  <CheckboxGroup options={this.getCheckOptions()}/>
+                )}
+                <div className='flex-form-input-suffix'>
+                  最多只可选两项
+                </div>
+              </div>
+            </FormItem> : null
+        }
         <FormItem label="任务预算">
           <div className='flex-form-input-container'>
             {getFieldDecorator('totalAmount', {
@@ -149,7 +180,7 @@ class BudgetForWeixin extends React.Component {
               { required: true, message: '请选择任务结束时间' },
               {
                 validator: (rule, value, callback) => {
-                  const date = moment().add(3, 'd')
+                  const date = moment().add(7, 'd')
                   if (value < date) {
                     return callback(`不能选择 ${date.format("YYYY-MM-DD HH:mm:ss")} 之前的时间`)
                   }
