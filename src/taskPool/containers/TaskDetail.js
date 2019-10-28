@@ -43,6 +43,13 @@ const columns = [
     }
   },
   {
+    title: 'Account_ID',
+    dataIndex: 'Account_ID',
+    render: (data, record) => {
+      return data
+    }
+  },
+  {
     title: '领取时间',
     align: "center",
     dataIndex: 'createdAt',
@@ -67,6 +74,14 @@ const columns = [
     }
   },
   {
+    title: 'KPI阅读/实际阅读',
+    align: "center",
+    dataIndex: 'KPI阅读/实际阅读',
+    render: (data, record) => {
+      return data
+    }
+  },
+  {
     title: '达成数',
     align: "center",
     dataIndex: 'realActionNum',
@@ -78,6 +93,14 @@ const columns = [
     title: '结算价格',
     align: "center",
     dataIndex: 'adRealAmount',
+    render: (amount, record) => {
+      return <Yuan value={record.orderState === MCN_ORDER_STATE_UNQUALIFIED ? 0 : amount} format={"0,0.00"} style={{ color: "#333" }} />
+    }
+  },
+  {
+    title: '成本价格',
+    align: "center",
+    dataIndex: '成本价格',
     render: (amount, record) => {
       return <Yuan value={record.orderState === MCN_ORDER_STATE_UNQUALIFIED ? 0 : amount} format={"0,0.00"} style={{ color: "#333" }} />
     }
