@@ -98,7 +98,7 @@ class BudgetForWeixin extends React.Component {
     let maxAmount = Math.min(balance, MAX_BUDGET_AMOUNT);
     return (
       <Form onSubmit={this.handleSubmit}  {...formLayout}>
-        <FormItem label="图片发布位置" className='taskPosRadio'>
+        <FormItem label="内容发布位置" className='taskPosRadio'>
           {getFieldDecorator('taskContentStyle', {
             initialValue: budget.taskContentStyle || 11,
             rules: [{
@@ -110,8 +110,8 @@ class BudgetForWeixin extends React.Component {
               let val = e.target.value
               this.calculation(getFieldValue('totalAmount'), val)
             }}>
-              <Radio value={11}>限制图文位置</Radio>
-              <Radio value={12}>不限图文位置</Radio>
+              <Radio value={11}>固定位置</Radio>
+              <Radio value={12}>不限位置</Radio>
             </Radio.Group>
           )}
         </FormItem>
