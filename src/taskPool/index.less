@@ -127,3 +127,46 @@
     text-align: center;
   }
 }
+
+.task-query-wrapper {
+  width: 100%;
+  padding: 10px 30px 0 0;
+  background: #F7F7F7;
+  margin-bottom: 20px;
+  .ant-form-item-label {
+      margin-left: 30px;
+      label {
+        display: inline-block;
+        width: 82px;
+      }
+  }
+  &:after {
+      content: ".";
+      clear: both;
+      display: block;
+      height: 0;
+      overflow: hidden;
+      visibility: hidden;
+  }
+  .ant-form-item,.ant-form-item-label,.ant-form-item-control-wrapper{
+      display: inline-block;
+      vertical-align: top;
+  }
+  .operate-wrapper {
+      float: right;
+      .ant-btn {
+          margin-left: 20px;
+      }
+  }
+  .common_search_width {
+      width: 170px;
+  }
+}
+
+.manage-page {
+  .taskOperateWrapper {
+    a:nth-child(even) {
+      margin-left: 10px;
+    }
+  }
+}
