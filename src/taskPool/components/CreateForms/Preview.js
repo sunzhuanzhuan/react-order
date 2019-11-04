@@ -93,7 +93,7 @@ class PreviewForWeixin extends React.Component {
 
   getLocationLimited = (budget) => {
     const { locationLimited, locationLimitedInfo } = budget;
-    if(locationLimited == 12)
+    if(locationLimited == 2)
       return '不限位置';
     const posInfo = locationLimitedInfo.map(item => contentStyle[item]);
     const posDetail = posInfo && posInfo.length ? `（${posInfo.join('，')}）` : '';

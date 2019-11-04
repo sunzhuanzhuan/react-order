@@ -100,7 +100,7 @@ class BudgetForWeixin extends React.Component {
       <Form onSubmit={this.handleSubmit}  {...formLayout}>
         <FormItem label="内容发布位置" className='taskPosRadio'>
           {getFieldDecorator('locationLimited', {
-            initialValue: budget.locationLimited || 11,
+            initialValue: budget.locationLimited || 1,
             rules: [{
               required: true,
               message: '请选择发布位置'
@@ -110,13 +110,13 @@ class BudgetForWeixin extends React.Component {
               let val = e.target.value
               this.calculation(getFieldValue('totalAmount'), val)
             }}>
-              <Radio value={11}>固定位置</Radio>
-              <Radio value={12}>不限位置</Radio>
+              <Radio value={1}>固定位置</Radio>
+              <Radio value={2}>不限位置</Radio>
             </Radio.Group>
           )}
         </FormItem>
         {
-          getFieldValue('locationLimited') == 11 ? 
+          getFieldValue('locationLimited') == 1 ? 
             <FormItem className='taskPosCheckboxComp'>
               <div className='flex-form-input-container'>
                 {getFieldDecorator('locationLimitedInfo', {
