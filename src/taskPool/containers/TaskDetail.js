@@ -128,6 +128,10 @@ const contentStyle = {
   "11": "多图文第一条", "12": "不限", "21": "直发", "22": "转发"
 }
 
+const WXContentStyle = {
+  "w1": "多图文第一条", "w2": "多图文第二条", "w3": "多图文第三-N条"
+}
+
 class TaskDetail extends Component {
   constructor(props) {
     super(props);
@@ -221,6 +225,15 @@ class TaskDetail extends Component {
     this.getList()
   }
 
+  getLocationLimited = (budget) => {
+    const { locationLimited, locationLimitedInfo } = budget;
+    if(locationLimited == 12)
+      return '不限位置';
+    const posInfo = locationLimitedInfo.map(item => WXContentStyle[item]);
+    const posDetail = posInfo && posInfo.length ? `（${posInfo.join('，')}）` : '';
+    return `固定位置${posDetail}`;
+  }
+
   render() {
     const { actions, history, taskPoolData } = this.props
     const { listLoading, search } = this.state
@@ -259,7 +272,7 @@ class TaskDetail extends Component {
             <Descriptions.Item label="行业分类">{taskDetail.industryName}</Descriptions.Item>
             <Descriptions.Item label="任务目标">{target[taskDetail.taskTarget]}</Descriptions.Item>
             {isWeixin &&
-            <Descriptions.Item label="发布位置">{contentStyle[taskDetail.taskContentStyle]}</Descriptions.Item>}
+            <Descriptions.Item label="发布位置">{this.getLocationLimited(taskDetail)}</Descriptions.Item>}
             {isWeibo &&
             <Descriptions.Item label="内容形式">{contentStyle[taskDetail.taskContentStyle]}</Descriptions.Item>}
             <Descriptions.Item label="任务开始时间">

@@ -26,9 +26,9 @@ class BudgetForWeixin extends React.Component {
       actionNum: props.data.budget.actionNum || 0
     }
     this.defaultOps = [
-      { label: '多图文第一条', value: '多图文第一条' },
-      { label: '多图文第二条', value: '多图文第二条' },
-      { label: '多图文第三-N条', value: '多图文第三-N条' },
+      { label: '多图文第一条', value: 'w1' },
+      { label: '多图文第二条', value: 'w2' },
+      { label: '多图文第三-N条', value: 'w3' },
     ]
   }
 
@@ -85,7 +85,7 @@ class BudgetForWeixin extends React.Component {
 
   getCheckOptions = () => {
     const { form } = this.props;
-    const checkVal = form.getFieldValue('taskPosition');
+    const checkVal = form.getFieldValue('locationLimitedInfo');
     this.defaultOps.forEach(item => item.disabled = checkVal.length === 2 && !(checkVal.includes(item.value)));
     return this.defaultOps;
   }
@@ -99,8 +99,8 @@ class BudgetForWeixin extends React.Component {
     return (
       <Form onSubmit={this.handleSubmit}  {...formLayout}>
         <FormItem label="内容发布位置" className='taskPosRadio'>
-          {getFieldDecorator('taskContentStyle', {
-            initialValue: budget.taskContentStyle || 11,
+          {getFieldDecorator('locationLimited', {
+            initialValue: budget.locationLimited || 11,
             rules: [{
               required: true,
               message: '请选择发布位置'
@@ -116,11 +116,11 @@ class BudgetForWeixin extends React.Component {
           )}
         </FormItem>
         {
-          getFieldValue('taskContentStyle') == 11 ? 
+          getFieldValue('locationLimited') == 11 ? 
             <FormItem className='taskPosCheckboxComp'>
               <div className='flex-form-input-container'>
-                {getFieldDecorator('taskPosition', {
-                  initialValue: budget.taskPosition || [],
+                {getFieldDecorator('locationLimitedInfo', {
+                  initialValue: budget.locationLimitedInfo || [],
                   rules: [{
                     required: true,
                     message: '请至少选择一项限制调价'
@@ -158,7 +158,7 @@ class BudgetForWeixin extends React.Component {
                 step={1000}
                 style={{ flex: "auto" }}
                 onChange={val => {
-                  this.calculation(val, getFieldValue('taskContentStyle'))
+                  this.calculation(val, getFieldValue('locationLimited'))
                 }}
                 placeholder="请输入金额"
               />

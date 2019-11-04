@@ -22,7 +22,7 @@ const target = {
   "11": "多图文第一条", "12": "不限", "21": "粉丝覆盖", "22": "粉丝传播"
 }
 const contentStyle = {
-  "11": "多图文第一条", "12": "不限", "21": "直发", "22": "转发"
+  "w1": "多图文第一条", "w2": "多图文第二条", "w3": "多图文第三-N条"
 }
 
 /**
@@ -60,7 +60,7 @@ class PreviewForWeixin extends React.Component {
     delete body.company
 
     body.industry = [...body.industry].pop()
-    body.taskTarget = body.taskContentStyle
+    body.taskTarget = body.locationLimited
 
     body.adOrderWeixinContent = {
       "author": content.author,
@@ -91,6 +91,14 @@ class PreviewForWeixin extends React.Component {
     })
   }
 
+  getLocationLimited = (budget) => {
+    const { locationLimited, locationLimitedInfo } = budget;
+    if(locationLimited == 12)
+      return '不限位置';
+    const posInfo = locationLimitedInfo.map(item => contentStyle[item]);
+    const posDetail = posInfo && posInfo.length ? `（${posInfo.join('，')}）` : '';
+    return `固定位置${posDetail}`;
+  }
 
   render() {
 
@@ -106,7 +114,7 @@ class PreviewForWeixin extends React.Component {
         <Descriptions title={header} column={1}>
           <Descriptions.Item label="所属公司">{base.company.label}</Descriptions.Item>
           <Descriptions.Item label="行业分类">{getIndustryName(data.industryList, [...base.industry].pop()).itemValue}</Descriptions.Item>
-          <Descriptions.Item label="内容发布位置">{contentStyle[budget.taskContentStyle]}</Descriptions.Item>
+          <Descriptions.Item label="内容发布位置">{this.getLocationLimited(budget)}</Descriptions.Item>
           <Descriptions.Item label="预算">{numeral(budget.totalAmount).format("0,0.00")} 元</Descriptions.Item>
           <Descriptions.Item label="任务结束时间">{budget.orderEndDate.format('YYYY-MM-DD HH:mm:ss')}</Descriptions.Item>
           <Descriptions.Item label="发布后保留时长">{budget.retainTime}小时</Descriptions.Item>
