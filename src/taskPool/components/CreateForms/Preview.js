@@ -69,8 +69,12 @@ class PreviewForWeixin extends React.Component {
       "coverImageName": content.coverImage[0].name,
       "remark": content.remark || content.richContent.toText().replace(/\s/g, '').slice(0, 54),
       "articleUrl": content.articleUrl,
-      "title": content.title
+      "title": content.title,
+      "locationLimitedInfo": budget.locationLimitedInfo,
+      "locationLimited": budget.locationLimited
     }
+    delete body.locationLimitedInfo;
+    delete body.locationLimited;
 
     actions.TPAddTask(body).then(this.success).finally(() => {
       this.setState({

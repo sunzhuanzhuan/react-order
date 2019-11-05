@@ -227,6 +227,8 @@ class TaskDetail extends Component {
 
   getLocationLimited = (budget) => {
     const { locationLimited, locationLimitedInfo } = budget;
+    if(!Array.isArray(locationLimitedInfo))
+      return '-'
     if(locationLimited == 2)
       return '不限位置';
     const posInfo = locationLimitedInfo.map(item => WXContentStyle[item]);
@@ -241,7 +243,7 @@ class TaskDetail extends Component {
     const isWeixin = taskDetail.platformId === 9
     const isWeibo = taskDetail.platformId === 1
 
-    const dataSource = keys.map(key => source[key])
+    const dataSource = keys.map(key => source[key]);
     return <div className='task-pool-page-container detail-page'>
       <PageHeader
         onBack={() => this.props.history.push('/order/task/manage')}
@@ -272,7 +274,7 @@ class TaskDetail extends Component {
             <Descriptions.Item label="行业分类">{taskDetail.industryName}</Descriptions.Item>
             <Descriptions.Item label="任务目标">{target[taskDetail.taskTarget]}</Descriptions.Item>
             {isWeixin &&
-            <Descriptions.Item label="发布位置">{this.getLocationLimited(taskDetail)}</Descriptions.Item>}
+            <Descriptions.Item label="发布位置">{this.getLocationLimited(taskDetail.adOrderWeixinContent)}</Descriptions.Item>}
             {isWeibo &&
             <Descriptions.Item label="内容形式">{contentStyle[taskDetail.taskContentStyle]}</Descriptions.Item>}
             <Descriptions.Item label="任务开始时间">

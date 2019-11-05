@@ -74,12 +74,18 @@ class BudgetForWeixin extends React.Component {
   handleSubmit = (e) => {
     e && e.preventDefault()
     this.props.form.validateFields((err, values) => {
-      if (!err) {
-        let newVal = Object.assign({}, values)
-        newVal.actionNum = this.state.actionNum
-        newVal.balance = this.state.balance
-        this.props.next("budget", newVal)
-      }
+
+      let newVal = Object.assign({}, values)
+      newVal.actionNum = this.state.actionNum
+      newVal.balance = this.state.balance
+      this.props.next("budget", newVal)
+
+      // if (!err) {
+      //   let newVal = Object.assign({}, values)
+      //   newVal.actionNum = this.state.actionNum
+      //   newVal.balance = this.state.balance
+      //   this.props.next("budget", newVal)
+      // }
     });
   }
 
