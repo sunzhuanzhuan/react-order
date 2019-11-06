@@ -25,17 +25,17 @@ class BudgetForWeixin extends React.Component {
       balance: props.data.budget.balance || 0,
       actionNum: props.data.budget.actionNum || 0
     }
-    this.defaultOps = [
-      { label: '多图文第一条', value: 'w1' },
-      { label: '多图文第二条', value: 'w2' },
-      { label: '多图文第三-N条', value: 'w3' },
-    ]
+    this.defaultOps = null;
   }
 
   componentDidMount() {
-    const { data, actions } = this.props
-    const { base: { company } } = data
-    actions.TPGetTaskPosition();
+    const { data, actions, taskPositionList } = this.props
+    const { base: { company } } = data;
+    if(Array.isArray(taskPositionList) && taskPositionList.length)
+      this.defaultOps = taskPositionList.map(item => {
+        const { locationKey: label, locationValue: value } = item;
+        return { label, value }
+      })
     actions.TPQueryAvailableBalance({
       companyId: company.key,
       accountType: 1
@@ -75,25 +75,29 @@ class BudgetForWeixin extends React.Component {
   handleSubmit = (e) => {
     e && e.preventDefault()
     this.props.form.validateFields((err, values) => {
-
-      let newVal = Object.assign({}, values)
-      newVal.actionNum = this.state.actionNum
-      newVal.balance = this.state.balance
-      this.props.next("budget", newVal)
-
-      // if (!err) {
-      //   let newVal = Object.assign({}, values)
-      //   newVal.actionNum = this.state.actionNum
-      //   newVal.balance = this.state.balance
-      //   this.props.next("budget", newVal)
-      // }
+      if (!err) {
+        let newVal = Object.assign({}, values)
+        newVal.actionNum = this.state.actionNum
+        newVal.balance = this.state.balance
+        this.props.next("budget", newVal)
+      }
     });
+  }
+
+  getRadioOptions = () => {
+    const options = [
+      { label: "固定位置", value: 1 },
+      { label: "不限位置", value: 2 },
+    ]
+    const showOps = this.defaultOps ? options : options.filter(item => item.value === 2);
+    return showOps.map(item => <Radio key={item.value} value={item.value}>{item.label}</Radio>)
   }
 
   getCheckOptions = () => {
     const { form } = this.props;
     const checkVal = form.getFieldValue('locationLimitedInfo');
-    this.defaultOps.forEach(item => item.disabled = checkVal.length === 2 && !(checkVal.includes(item.value)));
+    if(this.defaultOps)
+      this.defaultOps.forEach(item => item.disabled = checkVal.length === 2 && !(checkVal.includes(item.value)));
     return this.defaultOps;
   }
 
@@ -117,13 +121,14 @@ class BudgetForWeixin extends React.Component {
               let val = e.target.value
               this.calculation(getFieldValue('totalAmount'), val)
             }}>
-              <Radio value={1}>固定位置</Radio>
-              <Radio value={2}>不限位置</Radio>
+              {
+                this.getRadioOptions()
+              }
             </Radio.Group>
           )}
         </FormItem>
         {
-          getFieldValue('locationLimited') == 1 ? 
+          getFieldValue('locationLimited') == 1 && this.defaultOps ? 
             <FormItem className='taskPosCheckboxComp'>
               <div className='flex-form-input-container'>
                 {getFieldDecorator('locationLimitedInfo', {
