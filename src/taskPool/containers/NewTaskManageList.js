@@ -46,7 +46,7 @@ class NewTaskManageList extends Component {
   }
 
   componentDidMount() {
-    this.getList()
+    this.getList();
   }
   
   handleSearch = searchVal => {

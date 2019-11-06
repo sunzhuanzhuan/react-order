@@ -1,8 +1,9 @@
 import React, {PureComponent} from 'react';
-import { Form, Modal, Input } from 'antd';
+import { Form, Modal, Input, DatePicker } from 'antd';
 import numeral from 'numeral'
 
 const FormItem = Form.Item;
+const { Textarea } = Input;
 
 class TaskModal extends PureComponent {
     constructor(props) {
@@ -18,6 +19,12 @@ class TaskModal extends PureComponent {
             case 'addReceipt':
             case 'editReceipt':
                 return this.getReceiptComp();
+            case 'pass':
+                return this.getPassComp();
+            case 'qualified':
+                return this.getQualifiedComp();
+            case 'unqualified':
+                return this.getUnqualifiedComp();
             case 'settlement':
                 return this.getSettlementComp();
             case 'unSettlement':
@@ -46,6 +53,134 @@ class TaskModal extends PureComponent {
                             {
                                 required: true,
                                 message: '请输入回执链接',
+                            }
+                        ],
+                    })(
+                        <Input placeholder="请输入"/>
+                    )}
+                </FormItem>
+            </Form>
+        )
+    }
+
+    getPassComp = () => {
+        const { form } = this.props;
+        const { getFieldDecorator } = form;
+        const formItemLayout = {
+			labelCol: { span: 6 },
+			wrapperCol: { span: 14 },
+        };
+        
+        return (
+            <Form>
+                <FormItem label={'请添加发文日期'} {...formItemLayout} >
+                    {getFieldDecorator('请添加发文日期', 
+                    { 
+                        initialValue: '',
+                        rules: [
+                            {
+                                required: true,
+                                message: '请选择发文日期',
+                            }
+                        ],
+                    })(
+                        <DatePicker showTime placeholder="请选择发文日期" />
+                    )}
+                </FormItem>
+            </Form>
+        )
+    }
+
+    getQualifiedComp = () => {
+        const { form } = this.props;
+        const { getFieldDecorator } = form;
+        const formItemLayout = {
+			labelCol: { span: 6 },
+			wrapperCol: { span: 14 },
+        };
+        
+        return (
+            <Form>
+                <FormItem label={'发布时间'} {...formItemLayout} >
+                    {getFieldDecorator('发布时间', 
+                    { 
+                        initialValue: '',
+                        rules: [
+                            {
+                                required: true,
+                                message: '请选择发布时间',
+                            }
+                        ],
+                    })(
+                        <DatePicker showTime placeholder="请选择发布时间" />
+                    )}
+                </FormItem>
+                 <FormItem label={'此刻阅读数'} {...formItemLayout} >
+                    {getFieldDecorator('此刻阅读数', 
+                    { 
+                        initialValue: '',
+                        rules: [
+                            {
+                                required: true,
+                                message: '请输入此刻阅读数',
+                            }
+                        ],
+                    })(
+                        <Input placeholder="请输入此刻阅读数"/>
+                    )}
+                </FormItem>
+                <FormItem label={'截图'} {...formItemLayout} >
+                    {getFieldDecorator('截图', 
+                    { 
+                        initialValue: '',
+                        rules: [
+                            {
+                                required: true,
+                                message: '请上传截图',
+                            }
+                        ],
+                    })(
+                        <Input placeholder="请输入"/>
+                    )}
+                </FormItem>
+            </Form>
+        )
+    }
+
+    getUnqualifiedComp = () => {
+        const { form } = this.props;
+        const { getFieldDecorator } = form;
+        const formItemLayout = {
+			labelCol: { span: 6 },
+			wrapperCol: { span: 14 },
+        };
+        
+        return (
+            <Form>
+                 <FormItem label={'选择原因'} {...formItemLayout} >
+                    {getFieldDecorator('选择原因', 
+                    { 
+                        initialValue: ''
+                    })(
+                        <Input placeholder="请输入"/>
+                    )}
+                </FormItem>
+                <FormItem label={'备注'} {...formItemLayout} >
+                    {getFieldDecorator('备注', 
+                    { 
+                        initialValue: '',
+                    })(
+                        <Textarea />
+                    )}
+                </FormItem>
+                <FormItem label={'截图'} {...formItemLayout} >
+                    {getFieldDecorator('截图', 
+                    { 
+                        initialValue: '',
+                        rules: [
+                            {
+                                required: true,
+                                message: '请上传截图',
                             }
                         ],
                     })(

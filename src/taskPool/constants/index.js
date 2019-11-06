@@ -6,6 +6,10 @@ import {
 export const operateKeyMap = {
     addReceipt: '添加回执',
     editReceipt: '修改回执',
+    pass: '第一次质检异常审核通过',
+    noPass: '不通过',
+    qualified: '审核通过',
+    unqualified: '审核不通过',
     settlement: '执行结果确认',
     unSettlement: '执行结果取消',
 }
@@ -142,19 +146,19 @@ export const getTaskCol = (offline, handleOperate) => {
                   <Divider type="vertical" />
                   <a onClick={() => offline(id)}>下线</a>
                 </span>} */}
-                  <a onClick={() => handleOperate('addReceipt')}>添加回执</a>
-                  <a onClick={() => handleOperate('editReceipt')}>修改回执</a>
+                  <a onClick={() => handleOperate('addReceipt', id)}>添加回执</a>
+                  <a onClick={() => handleOperate('editReceipt', id)}>修改回执</a>
                   <div className='taskOperateWrapper'>
-                    <a onClick={() => handleOperate(id)}>通过</a>
-                    <a onClick={() => handleOperate(id)}>不通过</a>
+                    <a onClick={() => handleOperate('pass', id)}>通过</a>
+                    <a onClick={() => handleOperate('noPass', id)}>不通过</a>
                   </div>
                   <div className='taskOperateWrapper'>
-                    <a onClick={() => handleOperate(id)}>合格</a>
-                    <a onClick={() => handleOperate(id)}>不合格</a>
+                    <a onClick={() => handleOperate('qualified', id)}>合格</a>
+                    <a onClick={() => handleOperate('unqualified', id)}>不合格</a>
                   </div>
                   <div className='taskOperateWrapper'>
-                    <a onClick={() => handleOperate('settlement')}>确认结算</a>
-                    <a onClick={() => handleOperate('unSettlement')}>取消结算</a>
+                    <a onClick={() => handleOperate('settlement', id)}>确认</a>
+                    <a onClick={() => handleOperate('unSettlement', id)}>取消</a>
                   </div>
               </div>
             }

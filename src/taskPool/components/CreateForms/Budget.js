@@ -35,6 +35,7 @@ class BudgetForWeixin extends React.Component {
   componentDidMount() {
     const { data, actions } = this.props
     const { base: { company } } = data
+    actions.TPGetTaskPosition();
     actions.TPQueryAvailableBalance({
       companyId: company.key,
       accountType: 1

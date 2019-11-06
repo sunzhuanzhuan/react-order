@@ -9,6 +9,14 @@ export const {
   method: 'post'
 });
 
+// 获取任务位置列表
+export const {
+  TPGetTaskPosition,
+  TPGetTaskPosition_success
+} = createHttpAction('TPGetTaskPosition', Interface.TPGetTaskPosition, {
+  method: 'get'
+});
+
 // 获取任务大厅行业列表
 export const {
   TPGetTaskIndustry

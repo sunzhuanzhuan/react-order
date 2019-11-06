@@ -2,6 +2,7 @@ import { combineReducers } from 'redux'
 import { handleActions, handleAction } from 'redux-actions';
 import {
   TPTaskManageList_success,
+  TPGetTaskPosition_success,
   TPTaskDetail_success,
   TPChangeTaskDetail,
   TPTaskDetailClear,
@@ -59,6 +60,12 @@ export const taskDetail = handleActions({
   }
 }, {})
 
+//获取任务位置列表
+export const taskPositionList = handleActions({
+	[TPGetTaskPosition_success]: (state, action) => {
+		return [ ...action.payload.data ]
+	}
+}, []);
 
 // 任务详情, 博主领取列表
 export const mcnOrderList = handleActions({
@@ -85,5 +92,6 @@ export default combineReducers({
   taskDetail,
   mcnOrderList,
   mcnReviewOrderList,
-  financeTradeRecord
+  financeTradeRecord,
+  taskPositionList
 })

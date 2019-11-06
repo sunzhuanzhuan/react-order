@@ -230,10 +230,10 @@ class TaskDetail extends Component {
     if(!Array.isArray(locationLimitedInfo))
       return '-'
     if(locationLimited == 2)
-      return '不限位置';
+      return <div className='locationLimited'>不限位置</div>;
     const posInfo = locationLimitedInfo.map(item => WXContentStyle[item]);
     const posDetail = posInfo && posInfo.length ? `（${posInfo.join('，')}）` : '';
-    return `固定位置${posDetail}`;
+    return <div className='locationLimited'>{`固定位置${posDetail}`}</div>;
   }
 
   render() {
