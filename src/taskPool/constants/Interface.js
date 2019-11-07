@@ -15,4 +15,14 @@ export default {
   approvedFailure: prefix + "/mcnGrapLog/v1/approvedFailure",
   queryMcnFinancePaymentPage: prefix + "/finance/v1/queryMcnFinancePaymentPage",
   payMcnFinancePayment: prefix + "/finance/v1/payMcnFinancePayment",
+
+  TPGetAllMcnOrder: prefix + "/mcnOrder/v1/getAllMcnOrder",
+  TPFristFailureUpdateContentUrl: prefix + "/mcnOrder/v1/fristFailureUpdateContentUrl",
+  TPApprovedFristFailure: prefix + "/mcnOrder/v1/approvedFristFailure",
+  TPApprovedFirstSuccess: prefix + "/mcnOrder/v1/approvedFirstSuccess",
+  TPApprovedSecondFailure: prefix + "/mcnOrder/v1/approvedSecondFailure",
+  TPApprovedSecondSuccess: prefix + "/mcnOrder/v1/approvedSecondSuccess",
+  TPMcnOrderConfirmFinish: prefix + "/mcnOrder/v1/mcnOrderConfirmFinish",
+  TPMcnOrderConfirmCancel: prefix + "/mcnOrder/v1/mcnOrderConfirmCancel",
+
 }

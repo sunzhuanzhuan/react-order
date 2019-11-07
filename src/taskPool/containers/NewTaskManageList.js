@@ -21,10 +21,10 @@ class NewTaskManageList extends Component {
           pageSize: 20
         }
       },
-      listLoading: false
+      listLoading: false,
+      idObj: {}
     }
-    this.columns = []
-    this.isOfflineRequest = false
+    this.isOfflineRequest = false;
   }
 
   // 下线
@@ -47,11 +47,20 @@ class NewTaskManageList extends Component {
 
   componentDidMount() {
     this.getList();
+    this.props.actions.getNewToken().then(({ data: authToken }) => {
+      this.setState({ authToken })
+    })
   }
   
   handleSearch = searchVal => {
+    const search = {
+      ...this.state.search,
+      form: searchVal,
+    }
+
+    this.getList(search);
     this.setState({
-      searchVal
+      search
     })
   }
 
@@ -59,20 +68,28 @@ class NewTaskManageList extends Component {
     const { actions } = this.props
     let search = { ...this.state.search, ...params }
     this.setState({ listLoading: true, search })
-    actions.TPTaskManageList(search).finally(() => {
+    actions.TPGetAllMcnOrder(search).finally(() => {
       this.setState({ listLoading: false })
     })
   }
 
-  handleOperate = (type) => {
+  handleOperate = (type, idObj) => {
+    if(type === 'TPApprovedFristFailure') //一次质检不通过
+    {
+      this.props.actions[type](idObj)
+      return 
+    }
     this.setState({
       visible: true,
-      type
+      type,
+      idObj
     })
   }
 
-  handleOk = () => {
-
+  handleOk = (values) => {
+    const { type, actions } = this.props;
+    const { idObj } = this.state;
+    actions[type]({...values, ...idObj});
   }
 
   handleCancel = () => {
@@ -84,14 +101,14 @@ class NewTaskManageList extends Component {
   render() {
     const { history, taskPoolData } = this.props
     const { listLoading, search, visible, type } = this.state
-    const { taskManageList: { keys, source, total, pageNum, pageSize } } = taskPoolData
-    const dataSource = keys.map(key => source[key])
+    const { taskManageList: { total, list, pageNum, pageSize } } = taskPoolData
     const pagination = {
       total,
       pageSize,
       current: pageNum,
       showQuickJumper: true,
       showSizeChanger: true,
+      pageSizeOptions: ['20', '50', '100', '200'],
       onChange: (currentPage) => {
         this.getList({
           page: { ...search.page, currentPage }
@@ -103,7 +120,7 @@ class NewTaskManageList extends Component {
         })
       }
     };
-    const scrollWidth = getTotalWidth(getTaskCol())
+    const scrollWidth = getTotalWidth(getTaskCol());
 
     return <div className='task-pool-page-container manage-page'>
       <Title level={4}>蜂窝任务管理</Title>
@@ -126,7 +143,7 @@ class NewTaskManageList extends Component {
         <Table
           locale={{ emptyText: "还没有任务可以展示" }}
           loading={listLoading}
-          dataSource={dataSource}
+          dataSource={list}
           pagination={pagination}
           columns={getTaskCol(this.offline, this.handleOperate)}
           scroll={{ x: scrollWidth }}
@@ -135,6 +152,7 @@ class NewTaskManageList extends Component {
       <TaskModal 
         visible={visible}
         type={type}
+        data={this.state}
         title={operateKeyMap[type]}
         handleCancel={this.handleCancel}
         handleOk={this.handleOk}

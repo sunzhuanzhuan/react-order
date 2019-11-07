@@ -65,12 +65,13 @@ class PreviewForWeixin extends React.Component {
     body.adOrderWeixinContent = {
       "author": content.author,
       "content": content.richContent.toRAW(),
+      "contentText": content.richContent.toText(),
       "coverImageUrl": content.coverImage[0].url,
       "coverImageName": content.coverImage[0].name,
       "remark": content.remark || content.richContent.toText().replace(/\s/g, '').slice(0, 54),
       "articleUrl": content.articleUrl,
       "title": content.title,
-      "locationLimitedInfo": budget.locationLimitedInfo,
+      "locationLimitedInfo": budget.locationLimitedInfo.join(','),
       "locationLimited": budget.locationLimited
     }
     delete body.locationLimitedInfo;
@@ -99,7 +100,7 @@ class PreviewForWeixin extends React.Component {
     const { locationLimited, locationLimitedInfo } = budget;
     if(locationLimited == 2)
       return '不限位置';
-    const posInfo = locationLimitedInfo.map(item => contentStyle[item]);
+    const posInfo = locationLimitedInfo.split(',').map(item => contentStyle[item]);
     const posDetail = posInfo && posInfo.length ? `（${posInfo.join('，')}）` : '';
     return `固定位置${posDetail}`;
   }

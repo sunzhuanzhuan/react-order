@@ -132,7 +132,7 @@ class BudgetForWeixin extends React.Component {
             <FormItem className='taskPosCheckboxComp'>
               <div className='flex-form-input-container'>
                 {getFieldDecorator('locationLimitedInfo', {
-                  initialValue: budget.locationLimitedInfo || [],
+                  initialValue: budget.locationLimitedInfo ? budget.locationLimitedInfo.split(',') : [],
                   rules: [{
                     required: true,
                     message: '请至少选择一项限制调价'

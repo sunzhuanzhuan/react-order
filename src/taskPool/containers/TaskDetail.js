@@ -78,17 +78,18 @@ const columns = [
     align: "center",
     dataIndex: 'KPI阅读/实际阅读',
     render: (data, record) => {
-      return data
+      const { expectActionNum, realActionNum } = record;
+      return `${expectActionNum}/${realActionNum}`
     }
   },
-  {
-    title: '达成数',
-    align: "center",
-    dataIndex: 'realActionNum',
-    render: (realActionNum, record) => {
-      return <div>{record.orderState === MCN_ORDER_STATE_UNQUALIFIED ? "-" : realActionNum || '-'}</div>
-    }
-  },
+  // {
+  //   title: '达成数',
+  //   align: "center",
+  //   dataIndex: 'realActionNum',
+  //   render: (realActionNum, record) => {
+  //     return <div>{record.orderState === MCN_ORDER_STATE_UNQUALIFIED ? "-" : realActionNum || '-'}</div>
+  //   }
+  // },
   {
     title: '结算价格',
     align: "center",
@@ -100,7 +101,7 @@ const columns = [
   {
     title: '成本价格',
     align: "center",
-    dataIndex: '成本价格',
+    dataIndex: 'realAmount',
     render: (amount, record) => {
       return <Yuan value={record.orderState === MCN_ORDER_STATE_UNQUALIFIED ? 0 : amount} format={"0,0.00"} style={{ color: "#333" }} />
     }

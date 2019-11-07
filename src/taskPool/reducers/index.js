@@ -9,6 +9,7 @@ import {
   TPMcnOrderList_success,
   TPGetMcnReviewOrderList_success,
   TPQueryMcnFinancePaymentPage_success,
+  TPGetAllMcnOrder_success
 } from '../actions'
 
 // 处理列表数据为map表
@@ -37,10 +38,10 @@ function initList() {
   return { keys: [], source: {}, total: 0, pageNum: 1, pageSize: 50, response: {} }
 }
 
-// 任务管理列表
-export const taskManageList = handleActions({
-  [TPTaskManageList_success]: handleResponseList('id')
-}, initList())
+// // 任务管理列表
+// export const taskManageList = handleActions({
+//   [TPTaskManageList_success]: handleResponseList('id')
+// }, initList())
 
 // 任务详情
 export const taskDetail = handleActions({
@@ -60,6 +61,12 @@ export const taskDetail = handleActions({
   }
 }, {})
 
+//获取任务管理列表
+export const taskManageList = handleActions({
+	[TPGetAllMcnOrder_success]: (state, action) => {
+		return { ...action.payload.data }
+	}
+}, {});
 //获取任务位置列表
 export const taskPositionList = handleActions({
 	[TPGetTaskPosition_success]: (state, action) => {

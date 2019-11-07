@@ -3,7 +3,8 @@ import { Form, Modal, Input, DatePicker } from 'antd';
 import numeral from 'numeral'
 
 const FormItem = Form.Item;
-const { Textarea } = Input;
+const { TextArea } = Input;
+import { OssUpload } from "wbyui";
 
 class TaskModal extends PureComponent {
     constructor(props) {
@@ -17,17 +18,17 @@ class TaskModal extends PureComponent {
     getModalContent = type => {
         switch(type) {
             case 'addReceipt':
-            case 'editReceipt':
+            case 'TPFristFailureUpdateContentUrl':
                 return this.getReceiptComp();
-            case 'pass':
+            case 'TPApprovedFirstSuccess':
                 return this.getPassComp();
-            case 'qualified':
+            case 'TPApprovedSecondSuccess':
                 return this.getQualifiedComp();
-            case 'unqualified':
+            case 'TPApprovedSecondFailure':
                 return this.getUnqualifiedComp();
-            case 'settlement':
+            case 'TPMcnOrderConfirmFinish':
                 return this.getSettlementComp();
-            case 'unSettlement':
+            case 'TPMcnOrderConfirmCancel':
                 return this.getunSettlementComp();
 
             default:
@@ -44,11 +45,10 @@ class TaskModal extends PureComponent {
         };
         
         return (
-            <Form>
-                <FormItem label={'回执链接'} {...formItemLayout} >
-                    {getFieldDecorator('回执链接', 
+            <Form {...formItemLayout}>
+                <FormItem label={'回执链接'} >
+                    {getFieldDecorator('contentUrl', 
                     { 
-                        initialValue: '',
                         rules: [
                             {
                                 required: true,
@@ -72,11 +72,10 @@ class TaskModal extends PureComponent {
         };
         
         return (
-            <Form>
-                <FormItem label={'请添加发文日期'} {...formItemLayout} >
-                    {getFieldDecorator('请添加发文日期', 
+            <Form {...formItemLayout}>
+                <FormItem label={'请添加发文日期'} >
+                    {getFieldDecorator('publishedTime', 
                     { 
-                        initialValue: '',
                         rules: [
                             {
                                 required: true,
@@ -100,11 +99,10 @@ class TaskModal extends PureComponent {
         };
         
         return (
-            <Form>
-                <FormItem label={'发布时间'} {...formItemLayout} >
-                    {getFieldDecorator('发布时间', 
+            <Form {...formItemLayout}>
+                <FormItem label={'发布时间'} >
+                    {getFieldDecorator('publishedTime', 
                     { 
-                        initialValue: '',
                         rules: [
                             {
                                 required: true,
@@ -115,10 +113,9 @@ class TaskModal extends PureComponent {
                         <DatePicker showTime placeholder="请选择发布时间" />
                     )}
                 </FormItem>
-                 <FormItem label={'此刻阅读数'} {...formItemLayout} >
-                    {getFieldDecorator('此刻阅读数', 
+                 <FormItem label={'此刻阅读数'} >
+                    {getFieldDecorator('readNumber', 
                     { 
-                        initialValue: '',
                         rules: [
                             {
                                 required: true,
@@ -129,10 +126,9 @@ class TaskModal extends PureComponent {
                         <Input placeholder="请输入此刻阅读数"/>
                     )}
                 </FormItem>
-                <FormItem label={'截图'} {...formItemLayout} >
-                    {getFieldDecorator('截图', 
+                <FormItem label={'截图'} >
+                    {getFieldDecorator('snapshotUrl', 
                     { 
-                        initialValue: '',
                         rules: [
                             {
                                 required: true,
@@ -148,7 +144,7 @@ class TaskModal extends PureComponent {
     }
 
     getUnqualifiedComp = () => {
-        const { form } = this.props;
+        const { form, data } = this.props;
         const { getFieldDecorator } = form;
         const formItemLayout = {
 			labelCol: { span: 6 },
@@ -156,35 +152,41 @@ class TaskModal extends PureComponent {
         };
         
         return (
-            <Form>
-                 <FormItem label={'选择原因'} {...formItemLayout} >
-                    {getFieldDecorator('选择原因', 
-                    { 
-                        initialValue: ''
-                    })(
+            <Form {...formItemLayout}>
+                 <FormItem label={'选择原因'} >
+                    {getFieldDecorator('approveReason')(
                         <Input placeholder="请输入"/>
                     )}
                 </FormItem>
-                <FormItem label={'备注'} {...formItemLayout} >
-                    {getFieldDecorator('备注', 
-                    { 
-                        initialValue: '',
-                    })(
-                        <Textarea />
+                <FormItem label={'备注'} >
+                    {getFieldDecorator('remark')(
+                        <TextArea
+                            autoSize={{
+                                minRows: 3,
+                                maxRows: 3
+                            }}
+                        />
                     )}
                 </FormItem>
-                <FormItem label={'截图'} {...formItemLayout} >
-                    {getFieldDecorator('截图', 
-                    { 
-                        initialValue: '',
+                <FormItem label="截图">
+                    {getFieldDecorator('snapshotUrl', {
+                        valuePropName: 'fileList',
+                        getValueFromEvent: e => e && e.fileList,
                         rules: [
-                            {
-                                required: true,
-                                message: '请上传截图',
-                            }
-                        ],
+                        { message: '请上传截图', required: true, type: "array" }
+                        ]
                     })(
-                        <Input placeholder="请输入"/>
+                        <OssUpload
+                            authToken={data.authToken}
+                            listType='picture-card'
+                            rule={{
+                                bizzCode: 'ORDER_IMG_UPLOAD',
+                                max: 2,
+                                suffix: 'png,jpg,jpeg,gif,webp'
+                            }}
+                            len={1}
+                            // tipContent={budget.locationLimited === 1 ? '请上传PNG,JPG,JPEG,GIF,WEBP格式的图片,尺寸比例为2.35:1,最大不能超过2MB' : '请上传PNG,JPG,JPEG,GIF,WEBP格式的图片,尺寸比例为1:1,最大不能超过2MB'}
+                        />
                     )}
                 </FormItem>
             </Form>
@@ -203,7 +205,7 @@ class TaskModal extends PureComponent {
     }
 
     getunSettlementComp = () => {
-        const { form } = this.props;
+        const { form, data } = this.props;
         const { getFieldDecorator } = form;
         const formItemLayout = {
 			labelCol: { span: 6 },
@@ -211,11 +213,10 @@ class TaskModal extends PureComponent {
         };
         
         return (
-            <Form>
-                <FormItem label={'填写理由'} {...formItemLayout} >
-                    {getFieldDecorator('填写理由', 
+            <Form {...formItemLayout}>
+                <FormItem label={'填写理由'} >
+                    {getFieldDecorator('orderRemark', 
                     { 
-                        initialValue: '',
                         rules: [
                             {
                                 required: true,
@@ -226,12 +227,25 @@ class TaskModal extends PureComponent {
                         <Input placeholder="请输入"/>
                     )}
                 </FormItem>
-                <FormItem label={'上传附件/截图'} {...formItemLayout} >
-                    {getFieldDecorator('上传附件/截图', 
-                    { 
-                        initialValue: '',
+                <FormItem label="上传附件/截图">
+                    {getFieldDecorator('snapshotUrl', {
+                        valuePropName: 'fileList',
+                        getValueFromEvent: e => e && e.fileList,
+                        rules: [
+                        { message: '请上传附件/截图', required: true, type: "array" }
+                        ]
                     })(
-                        <Input placeholder="请输入"/>
+                        <OssUpload
+                            authToken={data.authToken}
+                            listType='picture-card'
+                            rule={{
+                                bizzCode: 'ORDER_IMG_UPLOAD',
+                                max: 2,
+                                suffix: 'png,jpg,jpeg,gif,webp'
+                            }}
+                            len={1}
+                            // tipContent={budget.locationLimited === 1 ? '请上传PNG,JPG,JPEG,GIF,WEBP格式的图片,尺寸比例为2.35:1,最大不能超过2MB' : '请上传PNG,JPG,JPEG,GIF,WEBP格式的图片,尺寸比例为1:1,最大不能超过2MB'}
+                        />
                     )}
                 </FormItem>
             </Form>

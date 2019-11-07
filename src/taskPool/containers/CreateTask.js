@@ -97,7 +97,6 @@ class CreateTask extends Component {
     const { taskPositionList = [] } = taskPoolData;
     const { platformId = 9 } = base
     const FormComponent = forms[platformId][current] || Empty
-    console.log('sldkfjlsdkjfsldkfj', taskPositionList, taskPoolData)
     return <div className='task-pool-page-container create-page'>
       <PageHeader onBack={() => this.props.history.push('/order/task/manage')} title="新建蜂窝派任务" />
       <header>
