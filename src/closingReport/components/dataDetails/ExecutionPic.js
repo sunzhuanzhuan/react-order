@@ -47,7 +47,7 @@ export class Edit extends Component {
           data.map((item, n) => {
             return <Form.Item key={item.id} className='upload-list-inline'>
               {getFieldDecorator(`execution_screenshot[${n}].value`, {
-                initialValue: (item.value || []).map(url => ({
+                initialValue: (item.value || []).filter(Boolean).map(url => ({
                   uid: url,
                   name: url.slice(-8),
                   status: 'done',
