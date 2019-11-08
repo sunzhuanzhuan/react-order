@@ -16,6 +16,8 @@ export default {
   queryMcnFinancePaymentPage: prefix + "/finance/v1/queryMcnFinancePaymentPage",
   payMcnFinancePayment: prefix + "/finance/v1/payMcnFinancePayment",
 
+  TPGetExcuteStatusList: prefix + "/mcnOrder/v1/getMcnOrderConfrimStateList",
+  TPGetOrderStatusLists: prefix + "/mcnOrder/v1/getMcnOrderStateList",
   TPGetAllMcnOrder: prefix + "/mcnOrder/v1/getAllMcnOrder",
   TPFristFailureUpdateContentUrl: prefix + "/mcnOrder/v1/fristFailureUpdateContentUrl",
   TPApprovedFristFailure: prefix + "/mcnOrder/v1/approvedFristFailure",

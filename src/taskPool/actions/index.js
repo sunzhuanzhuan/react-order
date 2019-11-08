@@ -109,6 +109,23 @@ export const {
 
 
 //-----------------------------V1.1---------------------------------------
+
+//获取执行状态list
+export const {
+  TPGetExcuteStatusList,
+  TPGetExcuteStatusList_success
+} = createHttpAction('TPGetExcuteStatusList', Interface.TPGetExcuteStatusList, {
+  method: 'get'
+});
+
+//获取订单状态list
+export const {
+  TPGetOrderStatusLists,
+  TPGetOrderStatusLists_success
+} = createHttpAction('TPGetOrderStatusLists', Interface.TPGetOrderStatusLists, {
+  method: 'get'
+});
+
 // 获取任务管理列表
 export const {
   TPGetAllMcnOrder,

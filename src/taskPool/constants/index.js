@@ -1,8 +1,11 @@
 import React from "react";
 import {
     TaskInfo,
-    TaskStatus
+    TaskStatus,
+    QAStatus
   } from "@/taskPool/base/ColumnsDataGroup";
+import Yuan from "@/base/Yuan";
+import { statusKeyToProps, confirmExeState } from "./config";
 export const operateKeyMap = {
     addReceipt: '添加回执',
     TPFristFailureUpdateContentUrl: '修改回执',
@@ -13,7 +16,13 @@ export const operateKeyMap = {
     TPMcnOrderConfirmFinish: '执行结果确认',
     TPMcnOrderConfirmCancel: '执行结果取消',
 }
-export const getTaskCol = (offline, handleOperate) => {
+
+const render = data => {
+  return data || data == 0 ? data : '-';
+}
+
+
+export const getTaskCol = (handleOperate) => {
     return [
         {
             title: '蜂窝任务信息',
@@ -27,55 +36,39 @@ export const getTaskCol = (offline, handleOperate) => {
         },
         {
             title: '任务状态',
-            dataIndex: 'orderState',
-            key: 'orderState',
+            dataIndex: 'adOrderStateDesc',
+            key: 'adOrderStateDesc',
             width: 220,
-            render: (state, record) => {
-                return <TaskStatus status={state} date={record.orderEndDate} />
-            }
+            render
         },
         {
             title: '博主名称',
             dataIndex: 'snsName',
             key: 'snsName',
             width: 120,
-            render: (data, record) => {
-              return <div>
-                {data}
-              </div>
-            }
+            render
         },
         {
             title: 'Account_ID',
             dataIndex: 'accountId',
             key: 'accountId',
             width: 120,
-            render: (data, record) => {
-              return <div>
-                {data}
-              </div>
-            }
+            render
         },
         {
             title: '领取时间',
             dataIndex: 'createdAt',
             key: 'createdAt',
             width: 120,
-            render: (data, record) => {
-              return <div>
-                {data}
-              </div>
-            }
+            render
         },
         {
             title: '执行状态',
             dataIndex: 'exeConfirmState',
             key: 'exeConfirmState',
             width: 120,
-            render: (data, record) => {
-              return <div>
-                {data}
-              </div>
+            render: (state) => {
+              return <div {...confirmExeState[state]} />
             }
         },
         {
@@ -86,7 +79,7 @@ export const getTaskCol = (offline, handleOperate) => {
             render: (_, record) => {
               const { expectActionNum, realActionNum } = record;
               return <div>
-                {`${expectActionNum}/${realActionNum}`}
+                {`${expectActionNum || 0}/${realActionNum || 0}`}
               </div>
             }
         },
@@ -95,10 +88,8 @@ export const getTaskCol = (offline, handleOperate) => {
             dataIndex: 'adRealAmount',
             key: 'adRealAmount',
             width: 120,
-            render: (data, record) => {
-              return <div>
-                {data}
-              </div>
+            render: (data) => {
+              return <Yuan value={data} format={"0,0.00"} className="text-black"/>
             }
         },
         {
@@ -106,10 +97,8 @@ export const getTaskCol = (offline, handleOperate) => {
             dataIndex: 'realAmount',
             key: 'realAmount',
             width: 120,
-            render: (data, record) => {
-              return <div>
-                {data}
-              </div>
+            render: (data) => {
+              return <Yuan value={data} format={"0,0.00"} className="text-black"/>
             }
         },
         {
@@ -117,21 +106,17 @@ export const getTaskCol = (offline, handleOperate) => {
             dataIndex: 'contentUrl',
             key: 'contentUrl',
             width: 120,
-            render: (data, record) => {
-              return <a href={data} tarket='_blank'>
-                {data}
-              </a>
+            render: (data) => {
+              return data ? <a target='_blank' href={data}>查看</a> : '-';
             }
         },
         {
             title: '质检状态',
-            dataIndex: '质检状态',
-            key: '质检状态',
+            dataIndex: 'orderState',
+            key: 'orderState',
             width: 120,
-            render: (name, record) => {
-              return <div>
-                {name}
-              </div>
+            render: (status) => {
+              return <QAStatus status={status} />
             }
         },
         {
@@ -140,28 +125,24 @@ export const getTaskCol = (offline, handleOperate) => {
             align: 'center',
             key: 'adOrderId',
             width: 140,
-            render: (id, record) => {
-              return <div>
-                {/* <NavLink to={'/order/task/detail/' + id}>查看</NavLink>
-                {record.orderState === 1 && <span>
-                  <Divider type="vertical" />
-                  <a onClick={() => offline(id)}>下线</a>
-                </span>} */}
-                  <a onClick={() => handleOperate('addReceipt', {id})}>添加回执</a>
-                  <a onClick={() => handleOperate('TPFristFailureUpdateContentUrl', {id})}>修改回执</a>
-                  <div className='taskOperateWrapper'>
-                    <a onClick={() => handleOperate('TPApprovedFirstSuccess', {id})}>通过</a>
-                    <a onClick={() => handleOperate('TPApprovedFristFailure', {id})}>不通过</a>
-                  </div>
-                  <div className='taskOperateWrapper'>
-                    <a onClick={() => handleOperate('TPApprovedSecondSuccess', {id})}>合格</a>
-                    <a onClick={() => handleOperate('TPApprovedSecondFailure', {id})}>不合格</a>
-                  </div>
-                  <div className='taskOperateWrapper'>
-                    <a onClick={() => handleOperate('TPMcnOrderConfirmFinish', {mcnOrderId: id})}>确认</a>
-                    <a onClick={() => handleOperate('TPMcnOrderConfirmCancel', {mcnOrderId: id})}>取消</a>
-                  </div>
-              </div>
+            render: (_, record) => {
+              const { adOrderId, orderState, confirmExeState: exeState } = record;
+              const { confirmExeState } = statusKeyToProps;
+              if(!(statusKeyToProps[orderState]) || !(statusKeyToProps[orderState]['actionArr']))
+                return '-';
+              if(confirmExeState) {
+                const exeItem = confirmExeState[exeState] || {};
+                if(exeItem['actionArr'])
+                  return confirmExeState[exeState]['actionArr'].map(item => {
+                    const { title, actionKey } = item;
+                    return <a key={actionKey} onClick={() => handleOperate(actionKey, {mcnOrderId: adOrderId})}>{title}</a>
+                  })
+              }
+              
+              return statusKeyToProps[orderState]['actionArr'].map(item => {
+                const { title, actionKey } = item;
+                return <a key={actionKey} onClick={() => handleOperate(actionKey, {id: adOrderId})}>{title}</a>
+              })
             }
         },
         {
@@ -169,11 +150,7 @@ export const getTaskCol = (offline, handleOperate) => {
             dataIndex: 'orderRemark',
             key: 'orderRemark',
             width: 120,
-            render: (name, record) => {
-              return <div>
-                {name}
-              </div>
-            }
+            render
         }
       ]
 }
@@ -184,20 +161,8 @@ export const getTaskQueryItems = () => {
         {label: '任务ID', key: 'adOrderId', compType: 'input'},
         {label: '博主名称', key: '博主名称', compType: 'input'},
         {label: 'Account_ID', key: 'accountId', compType: 'input'},
-        {label: '执行状态', key: 'confirmExeState', compType: 'select', optionKey: 'excuteStatus', idKey: 'user_id', labelKey: 'real_name', showSearch: true},
-        {label: '质检状态', key: 'orderState', compType: 'select', optionKey: 'qualityStatus', idKey: 'user_id', labelKey: 'real_name', showSearch: true},
+        {label: '执行状态', key: 'confirmExeState', compType: 'select', optionKey: 'excuteStatus', idKey: 'label', labelKey: 'value', showSearch: true},
+        {label: '质检状态', key: 'orderState', compType: 'select', optionKey: 'taskStatus', idKey: 'label', labelKey: 'value', showSearch: true},
         {compType: 'operate', key: 'operate'}
     ]
 }
-
-export const taskStatus = [
-
-]
-
-export const excuteStatus = [
-    
-]
-
-export const qualityStatus = [
-    
-]

@@ -5,7 +5,7 @@ import * as commonActions from '@/actions'
 import * as actions from '../actions'
 import { connect } from 'react-redux'
 import TaskManageQuery from './TaskManageQuery';
-import { getTaskQueryItems, getTaskCol, operateKeyMap, taskStatus, excuteStatus, qualityStatus } from '../constants';
+import { getTaskQueryItems, getTaskCol, operateKeyMap } from '../constants';
 import { getTotalWidth } from '../../util'
 import TaskModal from './TaskModal'
 import Scolltable from '@/components/Scolltable'
@@ -101,7 +101,7 @@ class NewTaskManageList extends Component {
   render() {
     const { history, taskPoolData } = this.props
     const { listLoading, search, visible, type } = this.state
-    const { taskManageList: { total, list, pageNum, pageSize } } = taskPoolData
+    const { taskManageList: { total, list, pageNum, pageSize }, taskStatus, excuteStatus } = taskPoolData
     const pagination = {
       total,
       pageSize,
@@ -132,7 +132,7 @@ class NewTaskManageList extends Component {
         </Button>
       </div>
       <TaskManageQuery 
-        queryOptions={{taskStatus, excuteStatus, qualityStatus}}
+        queryOptions={{taskStatus, excuteStatus}}
         queryItems={getTaskQueryItems()}
         handleSearch={this.handleSearch} 
       />

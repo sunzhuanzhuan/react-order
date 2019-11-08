@@ -9,7 +9,9 @@ import {
   TPMcnOrderList_success,
   TPGetMcnReviewOrderList_success,
   TPQueryMcnFinancePaymentPage_success,
-  TPGetAllMcnOrder_success
+  TPGetAllMcnOrder_success,
+  TPGetExcuteStatusList_success,
+  TPGetOrderStatusLists_success
 } from '../actions'
 
 // 处理列表数据为map表
@@ -70,6 +72,20 @@ export const taskManageList = handleActions({
 //获取任务位置列表
 export const taskPositionList = handleActions({
 	[TPGetTaskPosition_success]: (state, action) => {
+		return [ ...action.payload.data ]
+	}
+}, []);
+
+//获取执行状态list
+export const excuteStatus = handleActions({
+	[TPGetExcuteStatusList_success]: (state, action) => {
+		return [ ...action.payload.data ]
+	}
+}, []);
+
+//获取订单状态list
+export const taskStatus = handleActions({
+	[TPGetOrderStatusLists_success]: (state, action) => {
 		return [ ...action.payload.data ]
 	}
 }, []);

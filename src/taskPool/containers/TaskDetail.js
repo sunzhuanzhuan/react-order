@@ -79,7 +79,7 @@ const columns = [
     dataIndex: 'KPI阅读/实际阅读',
     render: (data, record) => {
       const { expectActionNum, realActionNum } = record;
-      return `${expectActionNum}/${realActionNum}`
+      return `${expectActionNum || 0}/${realActionNum || 0}`
     }
   },
   // {
