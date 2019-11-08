@@ -227,14 +227,8 @@ class TaskDetail extends Component {
   }
 
   getLocationLimited = (budget) => {
-    const { locationLimited, locationLimitedInfo } = budget;
-    if(!Array.isArray(locationLimitedInfo))
-      return '-'
-    if(locationLimited == 2)
-      return <div className='locationLimited'>不限位置</div>;
-    const posInfo = locationLimitedInfo.map(item => WXContentStyle[item]);
-    const posDetail = posInfo && posInfo.length ? `（${posInfo.join('，')}）` : '';
-    return <div className='locationLimited'>{`固定位置${posDetail}`}</div>;
+    const { locationInfo } = budget;
+    return <div className='locationLimited'>{ locationInfo || '-' }</div>;
   }
 
   render() {
