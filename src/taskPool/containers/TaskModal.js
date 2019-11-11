@@ -248,9 +248,7 @@ class TaskModal extends PureComponent {
                             authToken={data.authToken}
                             listType='picture-card'
                             rule={{
-                                bizzCode: 'ORDER_IMG_UPLOAD',
-                                max: 2,
-                                suffix: 'png,jpg,jpeg,gif,webp'
+                                max: 50,
                             }}
                             len={1}
                             tipContent=''

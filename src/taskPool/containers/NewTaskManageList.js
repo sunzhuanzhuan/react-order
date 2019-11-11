@@ -167,7 +167,7 @@ class NewTaskManageList extends Component {
       </Scolltable>
       <TaskModal 
         visible={visible}
-        type={'TPMcnOrderConfirmFinish'}
+        type={type}
         data={this.state}
         title={operateKeyMap[type]}
         settlementAmount={settlementAmount}
