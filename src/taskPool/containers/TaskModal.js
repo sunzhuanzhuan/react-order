@@ -5,6 +5,7 @@ import numeral from 'numeral'
 const FormItem = Form.Item;
 const { TextArea } = Input;
 import { OssUpload } from "wbyui";
+import moment from 'moment';
 
 class TaskModal extends PureComponent {
     constructor(props) {
@@ -91,7 +92,7 @@ class TaskModal extends PureComponent {
     }
 
     getQualifiedComp = () => {
-        const { form } = this.props;
+        const { form, data } = this.props;
         const { getFieldDecorator } = form;
         const formItemLayout = {
 			labelCol: { span: 6 },
@@ -126,19 +127,27 @@ class TaskModal extends PureComponent {
                         <Input placeholder="请输入此刻阅读数"/>
                     )}
                 </FormItem>
-                <FormItem label={'截图'} >
-                    {getFieldDecorator('snapshotUrl', 
-                    { 
+                <FormItem label="截图">
+                    {getFieldDecorator('snapshotUrl', {
+                        valuePropName: 'fileList',
+                        getValueFromEvent: e => e && e.fileList,
                         rules: [
-                            {
-                                required: true,
-                                message: '请上传截图',
-                            }
-                        ],
+                            { message: '请上传截图', required: true, type: "array" }
+                        ]
                     })(
-                        <Input placeholder="请输入"/>
+                        <OssUpload
+                            authToken={data.authToken}
+                            listType='picture-card'
+                            rule={{
+                                bizzCode: 'ORDER_IMG_UPLOAD',
+                                max: 2,
+                                suffix: 'png,jpg,jpeg,gif,webp'
+                            }}
+                            len={1}
+                            tipContent=''
+                        />
                     )}
-                </FormItem>
+                    </FormItem>
             </Form>
         )
     }
@@ -185,7 +194,7 @@ class TaskModal extends PureComponent {
                                 suffix: 'png,jpg,jpeg,gif,webp'
                             }}
                             len={1}
-                            // tipContent={budget.locationLimited === 1 ? '请上传PNG,JPG,JPEG,GIF,WEBP格式的图片,尺寸比例为2.35:1,最大不能超过2MB' : '请上传PNG,JPG,JPEG,GIF,WEBP格式的图片,尺寸比例为1:1,最大不能超过2MB'}
+                            tipContent=''
                         />
                     )}
                 </FormItem>
@@ -232,7 +241,7 @@ class TaskModal extends PureComponent {
                         valuePropName: 'fileList',
                         getValueFromEvent: e => e && e.fileList,
                         rules: [
-                        { message: '请上传附件/截图', required: true, type: "array" }
+                            { message: '请上传附件/截图', required: true, type: "array" }
                         ]
                     })(
                         <OssUpload
@@ -244,7 +253,7 @@ class TaskModal extends PureComponent {
                                 suffix: 'png,jpg,jpeg,gif,webp'
                             }}
                             len={1}
-                            // tipContent={budget.locationLimited === 1 ? '请上传PNG,JPG,JPEG,GIF,WEBP格式的图片,尺寸比例为2.35:1,最大不能超过2MB' : '请上传PNG,JPG,JPEG,GIF,WEBP格式的图片,尺寸比例为1:1,最大不能超过2MB'}
+                            tipContent=''
                         />
                     )}
                 </FormItem>
@@ -253,10 +262,18 @@ class TaskModal extends PureComponent {
     }
 
     handleOk = () => {
-        const { form, handleCancel } = this.props;
+        const { form, handleOk } = this.props;
         form.validateFields((errs, values) => {
-            // if(errs) return null;
-            handleCancel();
+            if(errs) return;
+
+            const { publishedTime, snapshotUrl } = values;
+            if(publishedTime) {
+                values.publishedTime = moment(publishedTime).format('YYYY-MM-DD HH:mm:ss')
+            }
+            if(snapshotUrl) {
+                values.snapshotUrl = snapshotUrl[0].url
+            }
+            handleOk(values);
         })
     }
 

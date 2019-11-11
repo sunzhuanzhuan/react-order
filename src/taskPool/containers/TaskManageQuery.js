@@ -1,5 +1,5 @@
 import React from 'react'
-import { Form, Input, Button, Select } from "antd";
+import { Form, Input, Button, Select, InputNumber } from "antd";
 
 const { Option } = Select;
 const FormItem = Form.Item;
@@ -35,6 +35,8 @@ class TaskManageQuery extends React.Component {
 					>
 							{ this.getSelectOption(optionKey, idKey, labelKey) }
 					</Select>;
+			case 'inputNumber':
+				return <InputNumber placeholder="请输入" min={0} className='common_search_width' />;
 			default:
 				return <Input placeholder="请输入" className='common_search_width' />;
 		}
@@ -68,12 +70,12 @@ class TaskManageQuery extends React.Component {
 
 		if(type === 'reset') {
 			form.resetFields();
-			handleSearch({page: 1, page_size: 20});
+			handleSearch();
 		}else if(type === 'search') {
 			form.validateFields((errors, values) => {
 				if(errors)
 					return null;
-				Object.assign(values, {page: 1, page_size: 20});
+				// Object.assign(values, {page: 1, page_size: 20});
 				handleSearch(values);
 			})
 		}

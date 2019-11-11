@@ -33,7 +33,6 @@ import {
   MCN_ORDER_STATE_UNQUALIFIED
 } from "@/taskPool/constants/config";
 
-
 const columns = [
   {
     title: '博主',
@@ -44,7 +43,7 @@ const columns = [
   },
   {
     title: 'Account_ID',
-    dataIndex: 'Account_ID',
+    dataIndex: 'accountId',
     render: (data, record) => {
       return data
     }
@@ -143,7 +142,7 @@ class TaskDetail extends Component {
           pageSize: 20
         },
         form: {
-          adOrderId: props.match.params.id
+          adOrderId: Number(props.match.params.id)
         }
       },
       listLoading: false,
@@ -227,8 +226,8 @@ class TaskDetail extends Component {
   }
 
   getLocationLimited = (budget) => {
-    const { locationLimitedInfo } = budget;
-    return <div className='locationLimited'>{ locationLimitedInfo || '-' }</div>;
+    const { locationInfo } = budget;
+    return <div className='locationLimited'>{ locationInfo || '-' }</div>;
   }
 
   render() {

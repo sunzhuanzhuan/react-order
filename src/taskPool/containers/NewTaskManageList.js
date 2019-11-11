@@ -50,12 +50,23 @@ class NewTaskManageList extends Component {
     this.props.actions.getNewToken().then(({ data: authToken }) => {
       this.setState({ authToken })
     })
+    this.props.actions.TPGetOrderStatusLists();
+    this.props.actions.TPGetExcuteStatusList();
+  }
+
+  dealQueryVal = (searchVal) => {
+    const searchKeys = Object.keys(searchVal);
+    searchKeys.forEach(item => {
+      if(searchVal[item] === '')
+        delete searchVal[item]
+    })
+    return searchVal
   }
   
   handleSearch = searchVal => {
     const search = {
       ...this.state.search,
-      form: searchVal,
+      form: this.dealQueryVal(searchVal),
     }
 
     this.getList(search);
@@ -73,7 +84,7 @@ class NewTaskManageList extends Component {
     })
   }
 
-  handleOperate = (type, idObj) => {
+  handleOperate = (type, idObj, settlementAmount) => {
     if(type === 'TPApprovedFristFailure') //一次质检不通过
     {
       this.props.actions[type](idObj)
@@ -82,14 +93,19 @@ class NewTaskManageList extends Component {
     this.setState({
       visible: true,
       type,
-      idObj
+      idObj,
+      settlementAmount
     })
   }
 
   handleOk = (values) => {
-    const { type, actions } = this.props;
-    const { idObj } = this.state;
-    actions[type]({...values, ...idObj});
+    const { actions } = this.props;
+    const { type, idObj, search } = this.state;
+    if(typeof actions[type] === 'function') {
+      actions[type]({...values, ...idObj}).then(() => {
+        this.getList(search);
+      });
+    }
   }
 
   handleCancel = () => {
@@ -145,15 +161,16 @@ class NewTaskManageList extends Component {
           loading={listLoading}
           dataSource={list}
           pagination={pagination}
-          columns={getTaskCol(this.offline, this.handleOperate)}
+          columns={getTaskCol(this.handleOperate, excuteStatus)}
           scroll={{ x: scrollWidth }}
         />
       </Scolltable>
       <TaskModal 
         visible={visible}
-        type={type}
+        type={'TPMcnOrderConfirmFinish'}
         data={this.state}
         title={operateKeyMap[type]}
+        settlementAmount={settlementAmount}
         handleCancel={this.handleCancel}
         handleOk={this.handleOk}
       />

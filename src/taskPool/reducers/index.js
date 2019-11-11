@@ -116,5 +116,7 @@ export default combineReducers({
   mcnOrderList,
   mcnReviewOrderList,
   financeTradeRecord,
-  taskPositionList
+  taskPositionList,
+  excuteStatus,
+  taskStatus
 })

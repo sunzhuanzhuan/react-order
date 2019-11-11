@@ -5,7 +5,7 @@ import {
     QAStatus
   } from "@/taskPool/base/ColumnsDataGroup";
 import Yuan from "@/base/Yuan";
-import { statusKeyToProps, confirmExeState } from "./config";
+import { statusKeyToProps, confirmexestate } from "./config";
 export const operateKeyMap = {
     addReceipt: '添加回执',
     TPFristFailureUpdateContentUrl: '修改回执',
@@ -18,7 +18,7 @@ export const operateKeyMap = {
 }
 
 const render = data => {
-  return data || data == 0 ? data : '-';
+  return data ? data : '-';
 }
 
 
@@ -38,7 +38,7 @@ export const getTaskCol = (handleOperate) => {
             title: '任务状态',
             dataIndex: 'adOrderStateDesc',
             key: 'adOrderStateDesc',
-            width: 220,
+            width: 120,
             render
         },
         {
@@ -61,15 +61,6 @@ export const getTaskCol = (handleOperate) => {
             key: 'createdAt',
             width: 120,
             render
-        },
-        {
-            title: '执行状态',
-            dataIndex: 'exeConfirmState',
-            key: 'exeConfirmState',
-            width: 120,
-            render: (state) => {
-              return <div {...confirmExeState[state]} />
-            }
         },
         {
             title: 'KPI阅读/实际阅读数',
@@ -120,28 +111,37 @@ export const getTaskCol = (handleOperate) => {
             }
         },
         {
+            title: '执行结果确认状态',
+            dataIndex: 'confirmExeState',
+            key: 'confirmExeState',
+            width: 120,
+            render: (state) => {
+              return <div {...confirmexestate[state]} />
+            }
+        },
+        {
             title: '操作',
             dataIndex: 'adOrderId',
             align: 'center',
             key: 'adOrderId',
+            className: 'operateWrapper',
             width: 140,
             render: (_, record) => {
-              const { adOrderId, orderState, confirmExeState: exeState } = record;
-              const { confirmExeState } = statusKeyToProps;
-              if(!(statusKeyToProps[orderState]) || !(statusKeyToProps[orderState]['actionArr']))
+              const { adOrderId, orderState, confirmExeState: exeState, adRealAmount } = record;
+              const { confirmexestate } = statusKeyToProps;
+              if(statusKeyToProps[orderState]['showoperate'] !== 'show')
                 return '-';
-              if(confirmExeState) {
-                const exeItem = confirmExeState[exeState] || {};
-                if(exeItem['actionArr'])
-                  return confirmExeState[exeState]['actionArr'].map(item => {
+              if(confirmexestate) {
+                const exeItem = confirmexestate[exeState] || {};
+                if(exeItem['actionarr'])
+                  return confirmexestate[exeState]['actionarr'].map(item => {
                     const { title, actionKey } = item;
-                    return <a key={actionKey} onClick={() => handleOperate(actionKey, {mcnOrderId: adOrderId})}>{title}</a>
+                    return <a key={actionKey} onClick={() => handleOperate(actionKey, {mcnOrderId: adOrderId}, adRealAmount)}>{title}</a>
                   })
               }
-              
-              return statusKeyToProps[orderState]['actionArr'].map(item => {
+              return statusKeyToProps[orderState]['actionarr'].map(item => {
                 const { title, actionKey } = item;
-                return <a key={actionKey} onClick={() => handleOperate(actionKey, {id: adOrderId})}>{title}</a>
+                return <a key={actionKey} onClick={() => handleOperate(actionKey, {id: adOrderId}, adRealAmount)}>{title}</a>
               })
             }
         },
@@ -158,11 +158,10 @@ export const getTaskCol = (handleOperate) => {
 export const getTaskQueryItems = () => {
     return [
         {label: '任务名称', key: 'orderName', compType: 'input'},
-        {label: '任务ID', key: 'adOrderId', compType: 'input'},
-        {label: '博主名称', key: '博主名称', compType: 'input'},
-        {label: 'Account_ID', key: 'accountId', compType: 'input'},
-        {label: '执行状态', key: 'confirmExeState', compType: 'select', optionKey: 'excuteStatus', idKey: 'label', labelKey: 'value', showSearch: true},
+        {label: '任务ID', key: 'adOrderId', compType: 'inputNumber'},
+        {label: 'Account_ID', key: 'accountId', compType: 'inputNumber'},
         {label: '质检状态', key: 'orderState', compType: 'select', optionKey: 'taskStatus', idKey: 'label', labelKey: 'value', showSearch: true},
+        {label: '执行结果确认状态', key: 'confirmExeState', compType: 'select', optionKey: 'excuteStatus', idKey: 'label', labelKey: 'value', showSearch: true},
         {compType: 'operate', key: 'operate'}
     ]
 }

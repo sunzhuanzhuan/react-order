@@ -30,7 +30,20 @@ const contentStyle = {
  */
 @withRouter
 class PreviewForWeixin extends React.Component {
-  state = { submitLoading: false }
+  constructor(props) {
+    super(props);
+    this.state = { submitLoading: false };
+    this.contentStyleWX = {}
+    this.getContentStyleWX(props.taskPositionList)
+  }
+  
+  getContentStyleWX = taskPositionList => {
+    if(Array.isArray(taskPositionList) && taskPositionList.length)
+    taskPositionList.forEach(item => {
+      const { locationKey, locationValue } = item;
+      this.contentStyleWX[locationKey] = locationValue;
+    })
+  }
 
   success = () => {
     Modal.success({
@@ -99,10 +112,10 @@ class PreviewForWeixin extends React.Component {
   getLocationLimited = (budget) => {
     const { locationLimited, locationLimitedInfo } = budget;
     if(locationLimited == 2)
-      return '不限位置';
-    const posInfo = locationLimitedInfo.split(',').map(item => contentStyle[item]);
+      return <div className='locationLimited'>不限位置</div>;
+    const posInfo = locationLimitedInfo.map(item => this.contentStyleWX[item]);
     const posDetail = posInfo && posInfo.length ? `（${posInfo.join('，')}）` : '';
-    return `固定位置${posDetail}`;
+    return <div className='locationLimited'>固定位置${posDetail}</div>;
   }
 
   render() {

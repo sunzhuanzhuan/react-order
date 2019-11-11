@@ -33,7 +33,7 @@ class BudgetForWeixin extends React.Component {
     const { base: { company } } = data;
     if(Array.isArray(taskPositionList) && taskPositionList.length)
       this.defaultOps = taskPositionList.map(item => {
-        const { locationKey: label, locationValue: value } = item;
+        const { locationKey: value, locationValue: label } = item;
         return { label, value }
       })
     actions.TPQueryAvailableBalance({
@@ -106,6 +106,12 @@ class BudgetForWeixin extends React.Component {
     const { balance, actionNum } = this.state
     const { base, budget } = data
     const { getFieldDecorator, getFieldValue } = form
+    const newFormLayout = {
+      labelCol: { span: 4 },
+      wrapperCol: { span: 22 },
+      labelAlign: "left",
+      colon: false
+    }
     let maxAmount = Math.min(balance, MAX_BUDGET_AMOUNT);
     return (
       <Form onSubmit={this.handleSubmit}  {...formLayout}>
@@ -129,10 +135,10 @@ class BudgetForWeixin extends React.Component {
         </FormItem>
         {
           getFieldValue('locationLimited') == 1 && this.defaultOps ? 
-            <FormItem className='taskPosCheckboxComp'>
+            <FormItem className='taskPosCheckboxComp' {...newFormLayout}>
               <div className='flex-form-input-container'>
                 {getFieldDecorator('locationLimitedInfo', {
-                  initialValue: budget.locationLimitedInfo ? budget.locationLimitedInfo.split(',') : [],
+                  initialValue: budget.locationLimitedInfo || [],
                   rules: [{
                     required: true,
                     message: '请至少选择一项限制调价'

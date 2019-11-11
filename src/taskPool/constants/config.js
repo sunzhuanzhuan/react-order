@@ -34,13 +34,13 @@ const MCN_ORDER_EXCUTE_CANCEL = 2; //执行结果取消
 const MCN_ORDER_EXCUTE_CONFIRM = 3; //执行结果确认
 
 // 任务执行状态文本及对应操作
-export const confirmExeState = {
+export const confirmexestate = {
     [MCN_ORDER_UNEXCUTE]: {
         children: '-'
     },
     [MCN_ORDER_EXCUTE_WAIT]: {
         children: '执行结果待确认',
-        actionArr: [
+        actionarr: [
             { title: '确认', actionKey: 'TPMcnOrderConfirmFinish' },
             { title: '取消', actionKey: 'TPMcnOrderConfirmCancel' },
         ]
@@ -56,7 +56,8 @@ export const confirmExeState = {
 export const statusKeyToProps = {
     [MCN_ORDER_STATE_WILL_QA]: {
       children: '待回填',
-      actionArr: [
+      showoperate: 'show',
+      actionarr: [
           { title: '添加回执', actionKey: 'TPFristFailureUpdateContentUrl' },
       ]
     },
@@ -79,19 +80,22 @@ export const statusKeyToProps = {
     [MCN_ORDER_STATE_QUALIFIED]: {
       children: '已完结',
       style: { color: '#0cad67' },
-      actionArr: [],
-      confirmExeState
+      showoperate: 'show',
+      actionarr: [],
+      confirmexestate
     },
     [MCN_ORDER_STATE_FIRST_QA_ERROR]: {
       children: '一检异常待处理',
-      actionArr: [
+      showoperate: 'show',
+      actionarr: [
         { title: '通过', actionKey: 'TPApprovedFirstSuccess' },
         { title: '不通过', actionKey: 'TPApprovedFristFailure' },
       ]
     },
     [MCN_ORDER_STATE_DEDUCTION_REWRITE_LINK]: {
       children: '链接待调整',
-      actionArr: [
+      showoperate: 'show',
+      actionarr: [
           { title: '修改回执', actionKey: 'TPFristFailureUpdateContentUrl' }
       ]
     },
@@ -100,7 +104,8 @@ export const statusKeyToProps = {
     },
     [MCN_ORDER_STATE_QUALIFIED_SECOND_QA_ERROR]: {
       children: '二检异常待处理',
-      actionArr: [
+      showoperate: 'show',
+      actionarr: [
         { title: '合格', actionKey: 'TPApprovedSecondSuccess' },
         { title: '不合格', actionKey: 'TPApprovedSecondFailure' },
       ]
