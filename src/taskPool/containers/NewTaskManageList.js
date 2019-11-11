@@ -116,7 +116,7 @@ class NewTaskManageList extends Component {
 
   render() {
     const { history, taskPoolData } = this.props
-    const { listLoading, search, visible, type } = this.state
+    const { listLoading, search, visible, type, settlementAmount } = this.state
     const { taskManageList: { total, list, pageNum, pageSize }, taskStatus, excuteStatus } = taskPoolData
     const pagination = {
       total,
