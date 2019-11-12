@@ -25,7 +25,7 @@ export const MCN_ORDER_STATE_FIRST_QA_ERROR = 8 // 一检异常待处理
 export const MCN_ORDER_STATE_DEDUCTION_REWRITE_LINK = 9 // 链接待调整
 export const MCN_ORDER_STATE_QUALIFIED_WILL_SECOND_QA = 10 // 待二检
 export const MCN_ORDER_STATE_QUALIFIED_SECOND_QA_ERROR = 11 // 二检异常待处理
-export const MCN_ORDER_STATE_QUALIFIED_WAIT_REQA = 11 // 待复检
+export const MCN_ORDER_STATE_QUALIFIED_WAIT_REQA = 12 // 待复检
 
 // 任务执行状态
 const MCN_ORDER_UNEXCUTE = 0; //未执行
