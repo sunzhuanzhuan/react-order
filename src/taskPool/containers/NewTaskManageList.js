@@ -24,27 +24,7 @@ class NewTaskManageList extends Component {
       listLoading: false,
       idObj: {}
     }
-    this.isOfflineRequest = false;
   }
-
-  // 下线
-  offline = (id) => {
-    // 判断是否有一个下线请求处理中
-    /*if (this.isOfflineRequest) return
-    this.isOfflineRequest = true*/
-    const { actions } = this.props
-    Modal.confirm({
-      title: '确认要下线此蜂窝派任务吗?',
-      content: "蜂窝派任务下线后，不可重新上线。已领取蜂窝派任务的博主，可执行。未消耗的余额，会在之后返还到您的蜂窝派任务账户余额中。",
-      onOk: () => {
-        return actions.TPOffline({ id }).then(() => {
-          message.success('下线成功')
-          this.getList()
-        })
-      }
-    })
-  }
-
   componentDidMount() {
     this.getList();
     this.props.actions.getNewToken().then(({ data: authToken }) => {
@@ -117,7 +97,7 @@ class NewTaskManageList extends Component {
   render() {
     const { history, taskPoolData } = this.props
     const { listLoading, search, visible, type, settlementAmount } = this.state
-    const { taskManageList: { total, list, pageNum, pageSize }, taskStatus, excuteStatus } = taskPoolData
+    const { orderManageList: { total, list, pageNum, pageSize }, taskStatus, excuteStatus } = taskPoolData
     const pagination = {
       total,
       pageSize,
@@ -139,14 +119,7 @@ class NewTaskManageList extends Component {
     const scrollWidth = getTotalWidth(getTaskCol());
 
     return <div className='task-pool-page-container manage-page'>
-      <Title level={4}>蜂窝任务管理</Title>
-      <div style={{ padding: '0 0 16px 0' }}>
-        <Button type="primary" onClick={() => {
-          history.push('/order/task/create')
-        }}>
-          <Icon type="plus" />新建蜂窝派任务
-        </Button>
-      </div>
+      <Title level={4}>蜂窝订单管理</Title>
       <TaskManageQuery 
         queryOptions={{taskStatus, excuteStatus}}
         queryItems={getTaskQueryItems()}

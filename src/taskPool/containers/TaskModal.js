@@ -1,9 +1,10 @@
 import React, {PureComponent} from 'react';
-import { Form, Modal, Input, DatePicker } from 'antd';
+import { Form, Modal, Input, DatePicker, Checkbox } from 'antd';
 import numeral from 'numeral'
 
 const FormItem = Form.Item;
 const { TextArea } = Input;
+const CheckboxGroup = Checkbox.Group;
 import { OssUpload } from "wbyui";
 import moment from 'moment';
 
@@ -13,7 +14,12 @@ class TaskModal extends PureComponent {
 		this.state = {
 			loading: false, 
 			attachment: ''
-		};
+        };
+        this.reasonOptions = [
+            {label: '内容已被删除', value: '内容已被删除'},
+            {label: '内容发布错误', value: '内容发布错误'},
+            {label: '发布账号错误', value: '发布账号错误'}
+        ]
 	}
 
     getModalContent = type => {
@@ -164,7 +170,7 @@ class TaskModal extends PureComponent {
             <Form {...formItemLayout}>
                  <FormItem label={'选择原因'} >
                     {getFieldDecorator('approveReason')(
-                        <Input placeholder="请输入"/>
+                         <CheckboxGroup options={this.getCheckOptions()}/>
                     )}
                 </FormItem>
                 <FormItem label={'备注'} >
@@ -264,12 +270,15 @@ class TaskModal extends PureComponent {
         form.validateFields((errs, values) => {
             if(errs) return;
 
-            const { publishedTime, snapshotUrl } = values;
+            const { publishedTime, snapshotUrl, approveReason } = values;
             if(publishedTime) {
                 values.publishedTime = moment(publishedTime).format('YYYY-MM-DD HH:mm:ss')
             }
             if(snapshotUrl) {
                 values.snapshotUrl = snapshotUrl[0].url
+            }
+            if(approveReason) {
+                values.approveReason = approveReason.join(',')
             }
             handleOk(values);
         })

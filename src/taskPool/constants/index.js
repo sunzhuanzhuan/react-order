@@ -25,7 +25,7 @@ const render = data => {
 export const getTaskCol = (handleOperate) => {
     return [
         {
-            title: '蜂窝任务信息',
+            title: '任务名称',
             dataIndex: 'orderName',
             key: 'orderName',
             width: 220,

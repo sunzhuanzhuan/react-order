@@ -240,7 +240,7 @@ class TaskDetail extends Component {
     const dataSource = keys.map(key => source[key]);
     return <div className='task-pool-page-container detail-page'>
       <PageHeader
-        onBack={() => this.props.history.push('/order/task/manage')}
+        onBack={() => this.props.history.go(-1)}
         title="蜂窝派任务详情"
         extra={
           taskDetail.orderState === 1 ?

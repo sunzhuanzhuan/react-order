@@ -40,10 +40,10 @@ function initList() {
   return { keys: [], source: {}, total: 0, pageNum: 1, pageSize: 50, response: {} }
 }
 
-// // 任务管理列表
-// export const taskManageList = handleActions({
-//   [TPTaskManageList_success]: handleResponseList('id')
-// }, initList())
+// 任务管理列表
+export const taskManageList = handleActions({
+  [TPTaskManageList_success]: handleResponseList('id')
+}, initList())
 
 // 任务详情
 export const taskDetail = handleActions({
@@ -63,8 +63,8 @@ export const taskDetail = handleActions({
   }
 }, {})
 
-//获取任务管理列表
-export const taskManageList = handleActions({
+//获取订单管理列表
+export const orderManageList = handleActions({
 	[TPGetAllMcnOrder_success]: (state, action) => {
 		return { ...action.payload.data }
 	}
@@ -118,5 +118,6 @@ export default combineReducers({
   financeTradeRecord,
   taskPositionList,
   excuteStatus,
-  taskStatus
+  taskStatus,
+  orderManageList
 })
