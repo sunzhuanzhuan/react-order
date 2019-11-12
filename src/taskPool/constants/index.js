@@ -128,7 +128,7 @@ export const getTaskCol = (handleOperate) => {
             width: 140,
             render: (_, record) => {
               const { adOrderId, orderState, confirmExeState: exeState, adRealAmount } = record;
-              const { confirmexestate } = statusKeyToProps;
+              const { confirmexestate } = statusKeyToProps[orderState];
               if(statusKeyToProps[orderState]['showoperate'] !== 'show')
                 return '-';
               if(confirmexestate) {
@@ -138,6 +138,7 @@ export const getTaskCol = (handleOperate) => {
                     const { title, actionKey } = item;
                     return <a key={actionKey} onClick={() => handleOperate(actionKey, {mcnOrderId: adOrderId}, adRealAmount)}>{title}</a>
                   })
+                return '-'
               }
               return statusKeyToProps[orderState]['actionarr'].map(item => {
                 const { title, actionKey } = item;
