@@ -96,7 +96,7 @@ export class Edit extends Component {
               screenshot.map((item, n) => {
                 return <Form.Item key={item.id}>
                   {getFieldDecorator(`screenshot[${n}].value`, {
-                    initialValue: (item.value || []).map(url => ({
+                    initialValue: (item.value || []).filter(Boolean).map(url => ({
                       uid: url,
                       name: url.slice(-28),
                       status: 'done',
