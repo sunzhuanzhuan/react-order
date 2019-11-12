@@ -112,10 +112,10 @@ class PreviewForWeixin extends React.Component {
   getLocationLimited = (budget) => {
     const { locationLimited, locationLimitedInfo } = budget;
     if(locationLimited == 2)
-      return <div className='locationLimited'>不限位置</div>;
+      return <div className='text-red'>无限制</div>;
     const posInfo = locationLimitedInfo.map(item => this.contentStyleWX[item]);
     const posDetail = posInfo && posInfo.length ? `（${posInfo.join('，')}）` : '';
-    return <div className='locationLimited'>固定位置${posDetail}</div>;
+    return <div className='text-red'>有限制{posDetail}</div>;
   }
 
   render() {

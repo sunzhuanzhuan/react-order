@@ -227,7 +227,7 @@ class TaskDetail extends Component {
 
   getLocationLimited = (budget) => {
     const { locationInfo } = budget;
-    return <div className='locationLimited'>{ locationInfo || '-' }</div>;
+    return <div className='text-red'>{ locationInfo || '-' }</div>;
   }
 
   render() {
