@@ -8,6 +8,7 @@ import Yuan from "@/base/Yuan";
 import { statusKeyToProps, confirmexestate } from "./config";
 export const operateKeyMap = {
     addReceipt: '添加回执',
+    TPUpdateContentUrl: '修改回执',
     TPFristFailureUpdateContentUrl: '修改回执',
     TPApprovedFirstSuccess: '第一次质检异常审核通过',
     TPApprovedFristFailure: '不通过',
@@ -143,7 +144,7 @@ export const getTaskCol = (handleOperate) => {
               return statusKeyToProps[orderState]['actionarr'].map(item => {
                 const { title, actionKey, isAdd } = item;
                 const basicParam = {id};
-                if(actionKey === 'TPFristFailureUpdateContentUrl')
+                if(actionKey === 'TPFristFailureUpdateContentUrl' || actionKey === 'TPUpdateContentUrl')
                   Object.assign(basicParam, {platformId})
                 return <a key={actionKey} onClick={() => handleOperate(actionKey, basicParam, adRealAmount, isAdd)}>{title}</a>
               })

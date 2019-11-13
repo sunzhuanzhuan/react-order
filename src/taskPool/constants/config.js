@@ -58,11 +58,15 @@ export const statusKeyToProps = {
       children: '待回填',
       showoperate: 'show',
       actionarr: [
-          { title: '添加回执', actionKey: 'TPFristFailureUpdateContentUrl', isAdd: true },
+          { title: '添加回执', actionKey: 'TPUpdateContentUrl', isAdd: true },
       ]
     },
     [MCN_ORDER_STATE_FIRST_QA]: {
       children: '待一检',
+      showoperate: 'show',
+      actionarr: [
+          { title: '修改回执', actionKey: 'TPUpdateContentUrl' },
+      ]
     },
     [MCN_ORDER_STATE_QA_ING]: {
       children: '质检中',

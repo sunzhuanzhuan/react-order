@@ -143,6 +143,14 @@ export const {
   method: 'get'
 });
 
+// 质检前回执链接调整
+export const {
+  TPUpdateContentUrl
+} = createHttpAction('TPUpdateContentUrl', Interface.TPUpdateContentUrl, {
+  method: 'post'
+});
+
+
 // 回执链接调整
 export const {
   TPFristFailureUpdateContentUrl

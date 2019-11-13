@@ -24,6 +24,7 @@ class TaskModal extends PureComponent {
 
     getModalContent = type => {
         switch(type) {
+            case 'TPUpdateContentUrl':
             case 'addReceipt':
             case 'TPFristFailureUpdateContentUrl':
                 return this.getReceiptComp();
@@ -209,7 +210,7 @@ class TaskModal extends PureComponent {
                         valuePropName: 'fileList',
                         getValueFromEvent: e => e && e.fileList,
                         rules: [
-                        { message: '请上传截图', required: true, type: "array" }
+                            { message: '请上传截图', required: true, type: "array" }
                         ]
                     })(
                         <OssUpload
@@ -265,8 +266,12 @@ class TaskModal extends PureComponent {
                     { 
                         rules: [
                             {
+                                required: true,
+                                message: '请填写理由',
+                            },
+                            {
                                 validator: this.textValidatorRule
-                              }
+                            }
                         ],
                     })(
                         <Input placeholder="请输入"/>
