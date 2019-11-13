@@ -84,7 +84,7 @@ class PreviewForWeixin extends React.Component {
       "remark": content.remark || content.richContent.toText().replace(/\s/g, '').slice(0, 54),
       "articleUrl": content.articleUrl,
       "title": content.title,
-      "locationLimitedInfo": budget.locationLimitedInfo.join(','),
+      "locationLimitedInfo": budget.locationLimitedInfo && budget.locationLimitedInfo.join(','),
       "locationLimited": budget.locationLimited
     }
     delete body.locationLimitedInfo;
