@@ -114,7 +114,7 @@ export const getTaskCol = (handleOperate) => {
             title: '执行结果确认状态',
             dataIndex: 'confirmExeState',
             key: 'confirmExeState',
-            width: 120,
+            width: 130,
             render: (state) => {
               return <div {...confirmexestate[state]} />
             }
@@ -127,7 +127,7 @@ export const getTaskCol = (handleOperate) => {
             className: 'operateWrapper',
             width: 140,
             render: (_, record) => {
-              const { adOrderId, orderState, confirmExeState: exeState, adRealAmount } = record;
+              const { id, orderState, confirmExeState: exeState, adRealAmount } = record;
               const { confirmexestate } = statusKeyToProps[orderState];
               if(statusKeyToProps[orderState]['showoperate'] !== 'show')
                 return '-';
@@ -136,13 +136,13 @@ export const getTaskCol = (handleOperate) => {
                 if(exeItem['actionarr'])
                   return confirmexestate[exeState]['actionarr'].map(item => {
                     const { title, actionKey } = item;
-                    return <a key={actionKey} onClick={() => handleOperate(actionKey, {mcnOrderId: adOrderId}, adRealAmount)}>{title}</a>
+                    return <a key={actionKey} onClick={() => handleOperate(actionKey, {mcnOrderId: id}, adRealAmount)}>{title}</a>
                   })
                 return '-'
               }
               return statusKeyToProps[orderState]['actionarr'].map(item => {
                 const { title, actionKey } = item;
-                return <a key={actionKey} onClick={() => handleOperate(actionKey, {id: adOrderId}, adRealAmount)}>{title}</a>
+                return <a key={actionKey} onClick={() => handleOperate(actionKey, {id: id}, adRealAmount)}>{title}</a>
               })
             }
         },

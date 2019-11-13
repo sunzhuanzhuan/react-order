@@ -131,6 +131,7 @@ class NewTaskManageList extends Component {
       >
         <Table
           locale={{ emptyText: "还没有任务可以展示" }}
+          rowKey='id'
           loading={listLoading}
           dataSource={list}
           pagination={pagination}
@@ -138,15 +139,17 @@ class NewTaskManageList extends Component {
           scroll={{ x: scrollWidth }}
         />
       </Scolltable>
-      <TaskModal 
-        visible={visible}
-        type={type}
-        data={this.state}
-        title={operateKeyMap[type]}
-        settlementAmount={settlementAmount}
-        handleCancel={this.handleCancel}
-        handleOk={this.handleOk}
-      />
+      { 
+        visible ? <TaskModal 
+          visible={visible}
+          type={type}
+          data={this.state}
+          title={operateKeyMap[type]}
+          settlementAmount={settlementAmount}
+          handleCancel={this.handleCancel}
+          handleOk={this.handleOk}
+        /> : null
+      }
     </div>
   }
 }

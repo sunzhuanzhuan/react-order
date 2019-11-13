@@ -20,7 +20,7 @@ export default {
   TPGetOrderStatusLists: prefix + "/mcnOrder/v1/getMcnOrderStateList",
   TPGetAllMcnOrder: prefix + "/mcnOrder/v1/getAllMcnOrder",
   TPFristFailureUpdateContentUrl: prefix + "/mcnOrder/v1/fristFailureUpdateContentUrl",
-  TPApprovedFristFailure: prefix + "/mcnOrder/v1/approvedFristFailure",
+  TPApprovedFristFailure: prefix + "/mcnOrder/v1/approvedFirstFailure",
   TPApprovedFirstSuccess: prefix + "/mcnOrder/v1/approvedFirstSuccess",
   TPApprovedSecondFailure: prefix + "/mcnOrder/v1/approvedSecondFailure",
   TPApprovedSecondSuccess: prefix + "/mcnOrder/v1/approvedSecondSuccess",

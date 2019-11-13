@@ -71,7 +71,7 @@ class TaskModal extends PureComponent {
     }
 
     getPassComp = () => {
-        const { form } = this.props;
+        const { form, data } = this.props;
         const { getFieldDecorator } = form;
         const formItemLayout = {
 			labelCol: { span: 6 },
@@ -91,6 +91,27 @@ class TaskModal extends PureComponent {
                         ],
                     })(
                         <DatePicker showTime placeholder="请选择发文日期" />
+                    )}
+                </FormItem>
+                <FormItem label="截图">
+                    {getFieldDecorator('snapshotUrl', {
+                        valuePropName: 'fileList',
+                        getValueFromEvent: e => e && e.fileList,
+                        rules: [
+                        { message: '请上传截图', required: true, type: "array" }
+                        ]
+                    })(
+                        <OssUpload
+                            authToken={data.authToken}
+                            listType='picture-card'
+                            rule={{
+                                bizzCode: 'ORDER_IMG_UPLOAD',
+                                max: 2,
+                                suffix: 'png,jpg,jpeg,gif,webp'
+                            }}
+                            len={1}
+                            tipContent=''
+                        />
                     )}
                 </FormItem>
             </Form>
@@ -219,6 +240,16 @@ class TaskModal extends PureComponent {
         )
     }
 
+    textValidatorRule = (rule, value, callback) => {
+        if(!(value && value.trim()))
+            return callback('请填写理由')
+        
+        if (value.trim().length > 20) {
+          return callback('请输入20字以内内容')
+        }
+        callback()
+      }
+
     getunSettlementComp = () => {
         const { form, data } = this.props;
         const { getFieldDecorator } = form;
@@ -234,9 +265,8 @@ class TaskModal extends PureComponent {
                     { 
                         rules: [
                             {
-                                required: true,
-                                message: '请填写理由',
-                            }
+                                validator: this.textValidatorRule
+                              }
                         ],
                     })(
                         <Input placeholder="请输入"/>
@@ -246,9 +276,6 @@ class TaskModal extends PureComponent {
                     {getFieldDecorator('snapshotUrl', {
                         valuePropName: 'fileList',
                         getValueFromEvent: e => e && e.fileList,
-                        rules: [
-                            { message: '请上传附件/截图', required: true, type: "array" }
-                        ]
                     })(
                         <OssUpload
                             authToken={data.authToken}
