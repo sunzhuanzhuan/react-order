@@ -191,7 +191,7 @@ class TaskModal extends PureComponent {
             <Form {...formItemLayout}>
                  <FormItem label={'选择原因'} >
                     {getFieldDecorator('approveReason')(
-                         <CheckboxGroup options={this.getCheckOptions()}/>
+                         <CheckboxGroup className='reason-block-wrapper' options={this.reasonOptions}/>
                     )}
                 </FormItem>
                 <FormItem label={'备注'} >
@@ -315,6 +315,7 @@ class TaskModal extends PureComponent {
         const { visible, type, title, handleCancel } = this.props;
         return (
             <Modal
+                wrapClassName='task-operate-modal'
                 title={title}
                 visible={visible}
                 destroyOnClose
