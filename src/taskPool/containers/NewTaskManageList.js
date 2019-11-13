@@ -87,6 +87,7 @@ class NewTaskManageList extends Component {
     const { type, idObj, search } = this.state;
     if(typeof actions[type] === 'function') {
       actions[type]({...values, ...idObj}).then(() => {
+        this.handleCancel();
         this.getList(search);
       });
     }
