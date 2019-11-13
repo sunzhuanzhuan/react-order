@@ -64,16 +64,20 @@ class NewTaskManageList extends Component {
     })
   }
 
-  handleOperate = (type, idObj, settlementAmount) => {
+  handleOperate = (type, idObj, settlementAmount, isAddLink) => {
     if(type === 'TPApprovedFristFailure') //一次质检不通过
     {
-      this.props.actions[type](idObj)
+      const { search } = this.state;
+      this.props.actions[type](idObj).then(() => {
+        this.getList(search);
+      });
       return 
     }
     this.setState({
       visible: true,
       type,
       idObj,
+      isAddLink,
       settlementAmount
     })
   }
@@ -96,7 +100,7 @@ class NewTaskManageList extends Component {
 
   render() {
     const { history, taskPoolData } = this.props
-    const { listLoading, search, visible, type, settlementAmount } = this.state
+    const { listLoading, search, visible, type, isAddLink, settlementAmount } = this.state
     const { orderManageList: { total, list, pageNum, pageSize }, taskStatus, excuteStatus } = taskPoolData
     const pagination = {
       total,
@@ -144,7 +148,7 @@ class NewTaskManageList extends Component {
           visible={visible}
           type={type}
           data={this.state}
-          title={operateKeyMap[type]}
+          title={isAddLink ? operateKeyMap['addReceipt'] : operateKeyMap[type]}
           settlementAmount={settlementAmount}
           handleCancel={this.handleCancel}
           handleOk={this.handleOk}

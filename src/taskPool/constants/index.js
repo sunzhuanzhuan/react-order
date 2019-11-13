@@ -127,7 +127,7 @@ export const getTaskCol = (handleOperate) => {
             className: 'operateWrapper',
             width: 140,
             render: (_, record) => {
-              const { id, orderState, confirmExeState: exeState, adRealAmount } = record;
+              const { id, platformId, orderState, confirmExeState: exeState, adRealAmount } = record;
               const { confirmexestate } = statusKeyToProps[orderState];
               if(statusKeyToProps[orderState]['showoperate'] !== 'show')
                 return '-';
@@ -141,8 +141,11 @@ export const getTaskCol = (handleOperate) => {
                 return '-'
               }
               return statusKeyToProps[orderState]['actionarr'].map(item => {
-                const { title, actionKey } = item;
-                return <a key={actionKey} onClick={() => handleOperate(actionKey, {id: id}, adRealAmount)}>{title}</a>
+                const { title, actionKey, isAdd } = item;
+                const basicParam = {id};
+                if(actionKey === 'TPFristFailureUpdateContentUrl')
+                  Object.assign(basicParam, {platformId})
+                return <a key={actionKey} onClick={() => handleOperate(actionKey, basicParam, adRealAmount, isAdd)}>{title}</a>
               })
             }
         },
