@@ -191,7 +191,15 @@ class TaskModal extends PureComponent {
         return (
             <Form {...formItemLayout}>
                  <FormItem label={'选择原因'} >
-                    {getFieldDecorator('approveReason')(
+                    {getFieldDecorator('approveReason', 
+                    { 
+                        rules: [
+                            {
+                                required: true,
+                                message: '请选择原因',
+                            }
+                        ],
+                    })(
                          <CheckboxGroup className='reason-block-wrapper' options={this.reasonOptions}/>
                     )}
                 </FormItem>
