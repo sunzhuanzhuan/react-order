@@ -294,6 +294,7 @@ class TaskModal extends PureComponent {
                             authToken={data.authToken}
                             listType='picture-card'
                             rule={{
+                                bizzCode: 'F_TASK_CANCEL',
                                 max: 50,
                             }}
                             len={1}
