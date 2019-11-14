@@ -170,7 +170,7 @@ class BudgetForWeixin extends React.Component {
               ]
             })(
               <InputNumber
-                precision={0}
+                precision={2}
                 min={1}
                 max={maxAmount}
                 step={1000}
