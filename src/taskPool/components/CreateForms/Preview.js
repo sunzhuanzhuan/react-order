@@ -73,7 +73,8 @@ class PreviewForWeixin extends React.Component {
     delete body.company
 
     body.industry = [...body.industry].pop()
-    body.taskTarget = body.locationLimited
+    // body.taskTarget = body.locationLimited
+    body.taskTarget = 11 //发布位置locationLimited值发生变化 详情任务目标字段固定传11
 
     body.adOrderWeixinContent = {
       "author": content.author,
