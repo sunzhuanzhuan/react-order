@@ -210,7 +210,7 @@ class BudgetForWeixin extends React.Component {
             <DatePicker
               placeholder="任务结束时间"
               format="YYYY-MM-DD HH:mm"
-              defaultPickerValue={moment().add(3, 'd').add(1, 'h').startOf('h')}
+              defaultPickerValue={moment().add(7, 'd').add(1, 'h').startOf('h')}
               style={{ width: "100%" }}
               showTime={{
                 minuteStep:15,

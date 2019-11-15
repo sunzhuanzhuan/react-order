@@ -6,7 +6,7 @@ import * as actions from '../actions'
 import { connect } from 'react-redux'
 import TaskManageQuery from './TaskManageQuery';
 import { getTaskQueryItems, getTaskCol, operateKeyMap } from '../constants';
-import { getTotalWidth } from '../../util'
+import { getTotalWidth, events } from '../../util'
 import TaskModal from './TaskModal'
 import Scolltable from '@/components/Scolltable'
 const { Title } = Typography;
@@ -22,9 +22,14 @@ class NewTaskManageList extends Component {
         }
       },
       listLoading: false,
-      idObj: {}
-    }
+      idObj: {},
+      leftWidth: 40
+    };
+    events.on('message', this.collapsedListener);
   }
+  collapsedListener = isClosed => {
+		this.setState({leftWidth: isClosed ? 40 : 200});
+	}
   componentDidMount() {
     this.getList();
     this.props.actions.getNewToken().then(({ data: authToken }) => {
@@ -32,6 +37,9 @@ class NewTaskManageList extends Component {
     })
     this.props.actions.TPGetOrderStatusLists();
     this.props.actions.TPGetExcuteStatusList();
+    const leftSlide = document.getElementsByClassName('ant-layout-sider-trigger')[0];
+		const leftWidth = leftSlide && leftSlide.clientWidth;
+		this.setState({leftWidth});
   }
 
   dealQueryVal = (searchVal) => {
@@ -101,7 +109,7 @@ class NewTaskManageList extends Component {
 
   render() {
     const { history, taskPoolData } = this.props
-    const { listLoading, search, visible, type, isAddLink, settlementAmount } = this.state
+    const { listLoading, search, visible, type, isAddLink, settlementAmount, leftWidth } = this.state
     const { orderManageList: { total, list, pageNum, pageSize }, taskStatus, excuteStatus } = taskPoolData
     const pagination = {
       total,
@@ -132,7 +140,7 @@ class NewTaskManageList extends Component {
       />
       <Scolltable 
         scrollClassName={`.ant-table-body`} 
-        widthScroll={scrollWidth}
+        widthScroll={scrollWidth + leftWidth}
       >
         <Table
           locale={{ emptyText: "还没有任务可以展示" }}
