@@ -111,7 +111,7 @@ class TaskModal extends PureComponent {
                                 suffix: 'png,jpg,jpeg,gif,webp'
                             }}
                             len={1}
-                            tipContent=''
+                            tipContent={() => '上传图片的大小不能超过2Mb'}
                         />
                     )}
                 </FormItem>

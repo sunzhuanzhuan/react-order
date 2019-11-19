@@ -6,6 +6,7 @@ import {
   } from "@/taskPool/base/ColumnsDataGroup";
 import Yuan from "@/base/Yuan";
 import { statusKeyToProps, confirmexestate } from "./config";
+import { Popconfirm } from 'antd'
 export const operateKeyMap = {
     addReceipt: '添加回执',
     TPUpdateContentUrl: '修改回执',
@@ -144,6 +145,12 @@ export const getTaskCol = (handleOperate) => {
               return statusKeyToProps[orderState]['actionarr'].map(item => {
                 const { title, actionKey, isAdd } = item;
                 const basicParam = {id};
+                if(actionKey === 'TPApprovedFristFailure')
+                  return (
+                    <Popconfirm key={actionKey} title="是否确定不通过？" okText="确定" cancelText="取消" onConfirm={() => handleOperate(actionKey, basicParam, adRealAmount, isAdd)}>
+                        <a>{title}</a>
+                    </Popconfirm>
+                  )
                 if(actionKey === 'TPFristFailureUpdateContentUrl' || actionKey === 'TPUpdateContentUrl')
                   Object.assign(basicParam, {platformId})
                 return <a key={actionKey} onClick={() => handleOperate(actionKey, basicParam, adRealAmount, isAdd)}>{title}</a>
