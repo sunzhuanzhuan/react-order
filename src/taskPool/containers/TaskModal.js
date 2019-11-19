@@ -180,6 +180,14 @@ class TaskModal extends PureComponent {
         )
     }
 
+    unRequiredValidatorRule = (rule, value, callback) => {
+        if (value && value.length > 20) {
+          return callback('请输入20字以内内容')
+        }
+        callback()
+    }
+
+
     getUnqualifiedComp = () => {
         const { form, data } = this.props;
         const { getFieldDecorator } = form;
@@ -204,7 +212,14 @@ class TaskModal extends PureComponent {
                     )}
                 </FormItem>
                 <FormItem label={'备注'} >
-                    {getFieldDecorator('remark')(
+                    {getFieldDecorator('remark', 
+                    { 
+                        rules: [
+                            {
+                                validator: this.unRequiredValidatorRule
+                            }
+                        ],
+                    })(
                         <TextArea
                             autoSize={{
                                 minRows: 3,
