@@ -52,14 +52,23 @@ class NewTaskManageList extends Component {
   }
   
   handleSearch = searchVal => {
-    const search = {
-      ...this.state.search,
+    const search = searchVal ? {
+      page: {
+        currentPage: 1,
+        pageSize: 20
+      },
       form: this.dealQueryVal(searchVal),
+    } : {
+      page: {
+        currentPage: 1,
+        pageSize: 20
+      }
     }
 
-    this.getList(search);
     this.setState({
       search
+    }, () => {
+      this.getList(search);
     })
   }
 
