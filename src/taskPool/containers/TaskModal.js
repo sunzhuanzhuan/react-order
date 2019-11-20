@@ -265,10 +265,10 @@ class TaskModal extends PureComponent {
     }
 
     textValidatorRule = (rule, value, callback) => {
-        if(!(value && value.trim()))
+        if(!value)
             return callback('请填写理由')
         
-        if (value.trim().length > 20) {
+        if (value && value.length > 20) {
           return callback('请输入20字以内内容')
         }
         callback()
@@ -290,7 +290,7 @@ class TaskModal extends PureComponent {
                         rules: [
                             {
                                 required: true,
-                                message: '请填写理由',
+                                message: ' ',
                             },
                             {
                                 validator: this.textValidatorRule
