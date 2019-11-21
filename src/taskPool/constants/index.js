@@ -129,7 +129,7 @@ export const getTaskCol = (handleOperate) => {
             className: 'operateWrapper',
             width: 140,
             render: (_, record) => {
-              const { id, platformId, orderState, confirmExeState: exeState, adRealAmount } = record;
+              const { id, platformId, orderState, confirmExeState: exeState, realAmount } = record;
               const { confirmexestate } = statusKeyToProps[orderState];
               if(statusKeyToProps[orderState]['showoperate'] !== 'show')
                 return '-';
@@ -138,7 +138,7 @@ export const getTaskCol = (handleOperate) => {
                 if(exeItem['actionarr'])
                   return confirmexestate[exeState]['actionarr'].map(item => {
                     const { title, actionKey } = item;
-                    return <a key={actionKey} onClick={() => handleOperate(actionKey, {mcnOrderId: id}, adRealAmount)}>{title}</a>
+                    return <a key={actionKey} onClick={() => handleOperate(actionKey, {mcnOrderId: id}, realAmount)}>{title}</a>
                   })
                 return '-'
               }
@@ -147,13 +147,13 @@ export const getTaskCol = (handleOperate) => {
                 const basicParam = {id};
                 if(actionKey === 'TPApprovedFristFailure')
                   return (
-                    <Popconfirm key={actionKey} title="是否确定不通过？" okText="确定" cancelText="取消" onConfirm={() => handleOperate(actionKey, basicParam, adRealAmount, isAdd)}>
+                    <Popconfirm key={actionKey} title="是否确定不通过？" okText="确定" cancelText="取消" onConfirm={() => handleOperate(actionKey, basicParam, realAmount, isAdd)}>
                         <a>{title}</a>
                     </Popconfirm>
                   )
                 if(actionKey === 'TPFristFailureUpdateContentUrl' || actionKey === 'TPUpdateContentUrl')
                   Object.assign(basicParam, {platformId})
-                return <a key={actionKey} onClick={() => handleOperate(actionKey, basicParam, adRealAmount, isAdd)}>{title}</a>
+                return <a key={actionKey} onClick={() => handleOperate(actionKey, basicParam, realAmount, isAdd)}>{title}</a>
               })
             }
         },
