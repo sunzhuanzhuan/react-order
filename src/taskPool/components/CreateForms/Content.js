@@ -176,7 +176,7 @@ class ContentForWeixin extends React.Component {
                 suffix: 'png,jpg,jpeg,gif,webp'
               }}
               len={1}
-              tipContent={budget.taskContentStyle === 11 ? '请上传PNG,JPG,JPEG,GIF,WEBP格式的图片,尺寸比例为2.35:1,最大不能超过2MB' : '请上传PNG,JPG,JPEG,GIF,WEBP格式的图片,尺寸比例为1:1,最大不能超过2MB'}
+              tipContent={budget.locationLimited === 1 ? '请上传PNG,JPG,JPEG,GIF,WEBP格式的图片,尺寸比例为2.35:1,最大不能超过2MB' : '请上传PNG,JPG,JPEG,GIF,WEBP格式的图片,尺寸比例为1:1,最大不能超过2MB'}
             />
           )}
         </FormItem>

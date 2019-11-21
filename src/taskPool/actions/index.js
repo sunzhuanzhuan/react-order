@@ -106,3 +106,97 @@ export const {
 } = createHttpAction('TPPayMcnFinancePayment', Interface.payMcnFinancePayment, {
   method: 'post'
 });
+
+
+//-----------------------------V1.1---------------------------------------
+
+//获取执行状态list
+export const {
+  TPGetExcuteStatusList,
+  TPGetExcuteStatusList_success
+} = createHttpAction('TPGetExcuteStatusList', Interface.TPGetExcuteStatusList, {
+  method: 'get'
+});
+
+//获取订单状态list
+export const {
+  TPGetOrderStatusLists,
+  TPGetOrderStatusLists_success
+} = createHttpAction('TPGetOrderStatusLists', Interface.TPGetOrderStatusLists, {
+  method: 'get'
+});
+
+// 获取任务管理列表
+export const {
+  TPGetAllMcnOrder,
+  TPGetAllMcnOrder_success
+} = createHttpAction('TPGetAllMcnOrder', Interface.TPGetAllMcnOrder, {
+  method: 'post'
+});
+
+
+// 获取任务位置列表
+export const {
+  TPGetTaskPosition,
+  TPGetTaskPosition_success
+} = createHttpAction('TPGetTaskPosition', Interface.TPGetTaskPosition, {
+  method: 'get'
+});
+
+// 质检前回执链接调整
+export const {
+  TPUpdateContentUrl
+} = createHttpAction('TPUpdateContentUrl', Interface.TPUpdateContentUrl, {
+  method: 'post'
+});
+
+
+// 回执链接调整
+export const {
+  TPFristFailureUpdateContentUrl
+} = createHttpAction('TPFristFailureUpdateContentUrl', Interface.TPFristFailureUpdateContentUrl, {
+  method: 'post'
+});
+
+// 一次质检不通过
+export const {
+  TPApprovedFristFailure
+} = createHttpAction('TPApprovedFristFailure', Interface.TPApprovedFristFailure, {
+  method: 'post'
+});
+
+// 一次质检通过
+export const {
+  TPApprovedFirstSuccess
+} = createHttpAction('TPApprovedFirstSuccess', Interface.TPApprovedFirstSuccess, {
+  method: 'post'
+});
+
+// 二次质检不通过
+export const {
+  TPApprovedSecondFailure
+} = createHttpAction('TPApprovedSecondFailure', Interface.TPApprovedSecondFailure, {
+  method: 'post'
+});
+
+// 二次质检通过
+export const {
+  TPApprovedSecondSuccess
+} = createHttpAction('TPApprovedSecondSuccess', Interface.TPApprovedSecondSuccess, {
+  method: 'post'
+});
+
+// 执行结果确认
+export const {
+  TPMcnOrderConfirmFinish
+} = createHttpAction('TPMcnOrderConfirmFinish', Interface.TPMcnOrderConfirmFinish, {
+  method: 'post'
+});
+
+// 执行结果取消
+export const {
+  TPMcnOrderConfirmCancel
+} = createHttpAction('TPMcnOrderConfirmCancel', Interface.TPMcnOrderConfirmCancel, {
+  method: 'post'
+});
+

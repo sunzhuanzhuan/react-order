@@ -2,12 +2,16 @@ import { combineReducers } from 'redux'
 import { handleActions, handleAction } from 'redux-actions';
 import {
   TPTaskManageList_success,
+  TPGetTaskPosition_success,
   TPTaskDetail_success,
   TPChangeTaskDetail,
   TPTaskDetailClear,
   TPMcnOrderList_success,
   TPGetMcnReviewOrderList_success,
   TPQueryMcnFinancePaymentPage_success,
+  TPGetAllMcnOrder_success,
+  TPGetExcuteStatusList_success,
+  TPGetOrderStatusLists_success
 } from '../actions'
 
 // 处理列表数据为map表
@@ -59,6 +63,32 @@ export const taskDetail = handleActions({
   }
 }, {})
 
+//获取订单管理列表
+export const orderManageList = handleActions({
+	[TPGetAllMcnOrder_success]: (state, action) => {
+		return { ...action.payload.data }
+	}
+}, {});
+//获取任务位置列表
+export const taskPositionList = handleActions({
+	[TPGetTaskPosition_success]: (state, action) => {
+		return [ ...action.payload.data ]
+	}
+}, []);
+
+//获取执行状态list
+export const excuteStatus = handleActions({
+	[TPGetExcuteStatusList_success]: (state, action) => {
+		return [ ...action.payload.data ]
+	}
+}, []);
+
+//获取订单状态list
+export const taskStatus = handleActions({
+	[TPGetOrderStatusLists_success]: (state, action) => {
+		return [ ...action.payload.data ]
+	}
+}, []);
 
 // 任务详情, 博主领取列表
 export const mcnOrderList = handleActions({
@@ -85,5 +115,9 @@ export default combineReducers({
   taskDetail,
   mcnOrderList,
   mcnReviewOrderList,
-  financeTradeRecord
+  financeTradeRecord,
+  taskPositionList,
+  excuteStatus,
+  taskStatus,
+  orderManageList
 })

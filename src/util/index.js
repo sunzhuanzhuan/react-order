@@ -173,7 +173,13 @@ const changeHistoryLocation = (historyInstance, paramsString, actionType, value)
 }
 
 // export var EventEmitter = require('events')
-
+/**
+ * @param arr [Array]
+ * return Number
+ */
+const getTotalWidth = (arr = []) => {
+	return arr.reduce((accumulator, item) => accumulator + parseInt(item.width), 0);
+}
 var events = new EventEmitter()
 // events.on('message', function (text) {
 // 	console.log(text)
@@ -190,7 +196,8 @@ export {
 	shallowEqual,
 	changeHistorySearch,
 	changeHistoryLocation,
-	events
+	events,
+	getTotalWidth
 }
 export { calcSum } from './calcSum'
 

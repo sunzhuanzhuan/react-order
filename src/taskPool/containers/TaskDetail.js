@@ -33,13 +33,19 @@ import {
   MCN_ORDER_STATE_UNQUALIFIED
 } from "@/taskPool/constants/config";
 
-
 const columns = [
   {
     title: '博主',
     dataIndex: 'snsName',
     render: (name, record) => {
       return <KolInfo title={name} avatar={record.avatarUrl} />
+    }
+  },
+  {
+    title: 'Account_ID',
+    dataIndex: 'accountId',
+    render: (data, record) => {
+      return data
     }
   },
   {
@@ -67,17 +73,34 @@ const columns = [
     }
   },
   {
-    title: '达成数',
+    title: 'KPI阅读/实际阅读',
     align: "center",
-    dataIndex: 'realActionNum',
-    render: (realActionNum, record) => {
-      return <div>{record.orderState === MCN_ORDER_STATE_UNQUALIFIED ? "-" : realActionNum || '-'}</div>
+    dataIndex: 'KPI阅读/实际阅读',
+    render: (data, record) => {
+      const { expectActionNum, realActionNum } = record;
+      return `${expectActionNum || 0}/${realActionNum || 0}`
     }
   },
+  // {
+  //   title: '达成数',
+  //   align: "center",
+  //   dataIndex: 'realActionNum',
+  //   render: (realActionNum, record) => {
+  //     return <div>{record.orderState === MCN_ORDER_STATE_UNQUALIFIED ? "-" : realActionNum || '-'}</div>
+  //   }
+  // },
   {
     title: '结算价格',
     align: "center",
     dataIndex: 'adRealAmount',
+    render: (amount, record) => {
+      return <Yuan value={record.orderState === MCN_ORDER_STATE_UNQUALIFIED ? 0 : amount} format={"0,0.00"} style={{ color: "#333" }} />
+    }
+  },
+  {
+    title: '成本价格',
+    align: "center",
+    dataIndex: 'realAmount',
     render: (amount, record) => {
       return <Yuan value={record.orderState === MCN_ORDER_STATE_UNQUALIFIED ? 0 : amount} format={"0,0.00"} style={{ color: "#333" }} />
     }
@@ -105,6 +128,10 @@ const contentStyle = {
   "11": "多图文第一条", "12": "不限", "21": "直发", "22": "转发"
 }
 
+const WXContentStyle = {
+  "w1": "多图文第一条", "w2": "多图文第二条", "w3": "多图文第三-N条"
+}
+
 class TaskDetail extends Component {
   constructor(props) {
     super(props);
@@ -115,7 +142,7 @@ class TaskDetail extends Component {
           pageSize: 20
         },
         form: {
-          adOrderId: props.match.params.id
+          adOrderId: Number(props.match.params.id)
         }
       },
       listLoading: false,
@@ -198,6 +225,11 @@ class TaskDetail extends Component {
     this.getList()
   }
 
+  getLocationLimited = (budget) => {
+    const { locationInfo } = budget;
+    return <div className='text-red'>{ locationInfo || '-' }</div>;
+  }
+
   render() {
     const { actions, history, taskPoolData } = this.props
     const { listLoading, search } = this.state
@@ -205,10 +237,10 @@ class TaskDetail extends Component {
     const isWeixin = taskDetail.platformId === 9
     const isWeibo = taskDetail.platformId === 1
 
-    const dataSource = keys.map(key => source[key])
+    const dataSource = keys.map(key => source[key]);
     return <div className='task-pool-page-container detail-page'>
       <PageHeader
-        onBack={() => this.props.history.push('/order/task/manage')}
+        onBack={() => this.props.history.go(-1)}
         title="蜂窝派任务详情"
         extra={
           taskDetail.orderState === 1 ?
@@ -236,7 +268,7 @@ class TaskDetail extends Component {
             <Descriptions.Item label="行业分类">{taskDetail.industryName}</Descriptions.Item>
             <Descriptions.Item label="任务目标">{target[taskDetail.taskTarget]}</Descriptions.Item>
             {isWeixin &&
-            <Descriptions.Item label="发布位置">{contentStyle[taskDetail.taskContentStyle]}</Descriptions.Item>}
+            <Descriptions.Item label="发布位置">{this.getLocationLimited(taskDetail.adOrderWeixinContent)}</Descriptions.Item>}
             {isWeibo &&
             <Descriptions.Item label="内容形式">{contentStyle[taskDetail.taskContentStyle]}</Descriptions.Item>}
             <Descriptions.Item label="任务开始时间">

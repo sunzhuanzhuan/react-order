@@ -69,6 +69,7 @@ class CreateTask extends Component {
     actions.getNewToken().then(({ data: authToken }) => {
       this.setState({ authToken })
     })
+    actions.TPGetTaskPosition();
   }
 
   saveFormsData = () => {
@@ -92,7 +93,8 @@ class CreateTask extends Component {
 
   render() {
     const { current, base, budget, content } = this.state
-    const { actions } = this.props
+    const { actions, taskPoolData = {} } = this.props;
+    const { taskPositionList = [] } = taskPoolData;
     const { platformId = 9 } = base
     const FormComponent = forms[platformId][current] || Empty
     return <div className='task-pool-page-container create-page'>
@@ -112,6 +114,7 @@ class CreateTask extends Component {
           prev={this.prev}
           data={this.state}
           actions={actions}
+          taskPositionList={taskPositionList}
         />
       </main>
     </div>
@@ -120,7 +123,7 @@ class CreateTask extends Component {
 
 const mapStateToProps = (state) => ({
   common: state.commonReducers,
-  taskPoolData: state.taskPoolReducers
+  taskPoolData: state.taskPoolReducers,
 })
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators({

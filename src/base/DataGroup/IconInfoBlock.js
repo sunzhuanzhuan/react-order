@@ -5,9 +5,9 @@ const IconInfoBlock = (props) => {
   return (
     <div className='platform-icon-infos'>
       <div className='left'>
-        <WBYPlatformIcon weibo_type={props.platformId} widthSize={28} />
+        <WBYPlatformIcon weibo_type={props.platformId} widthSize={props.width || 28} />
       </div>
-      <div className='right'>
+      <div className='right' style={props.style}>
         {props.children}
       </div>
     </div>
