@@ -69,7 +69,7 @@ export class Edit extends Component {
   render() {
     const titles = [
       '项目/品牌',
-      '资源/项目媒介',
+      '媒介/BP',
       '销售/执行人',
       '订单创建人',
       '平台',
@@ -86,9 +86,9 @@ export class Edit extends Component {
         <a onClick={this.ok}>确定</a>
         <a onClick={this.cancel}>取消</a>
       </div> : <div className='view-value'>
-        <span>{this.state.inputValue || '--'}</span>
-        <a onClick={this.change}>修改</a>
-      </div>
+          <span>{this.state.inputValue || '--'}</span>
+          <a onClick={this.change}>修改</a>
+        </div>
     ]
     return <div className='platform-data-detail-module outline'>
       <Row>
@@ -119,20 +119,20 @@ export class View extends Component {
       executor_name,
       real_name,
       resource_media,
-      project_media,
+      bp,
       platform_id
     } = this.props.data
     const titles = [
       '项目/品牌',
-      '资源/项目媒介',
+      '媒介/BP',
       '销售/执行人',
       '平台'
     ]
     const values = [
       (brand_name || '-') + ' / ' + (project_name || '-'),
       <span key={112}>
-        <Media {...resource_media} title='资源媒介' /> /
-        <Media {...project_media} title='项目媒介' />
+        <Media {...resource_media} title='媒介' /> /
+        <Media {...bp} title='BP' />
       </span>,
       (real_name || '-') + ' / ' + (executor_name || '-'),
       <WBYPlatformIcon key={22} weibo_type={platform_id} widthSize={22} />

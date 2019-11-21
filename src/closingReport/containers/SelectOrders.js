@@ -9,7 +9,8 @@ const disabledReason = {
   '2': '订单尚未添加执行内容',
   '3': '已经被投放数据汇总单(单号: $投放数据汇总单号$)勾选',
   '4': '订单已执行终止',
-  '5': '订单终止申请中'
+  '5': '订单终止申请中',
+  '6': '执行内容尚未审核通过'
 }
 const columns = [
   {
@@ -53,7 +54,7 @@ const columns = [
     title: '项目/品牌',
     dataIndex: 'brand_name',
     render: (brand, record) => {
-      return <div style={{minWidth: 120}}>
+      return <div style={{ minWidth: 120 }}>
         <a target="_blank" href={record.project_path}>项目：{record.project_name || '-'}</a>
         <div>品牌：{brand || '-'}</div>
       </div>
@@ -72,7 +73,7 @@ const columns = [
     dataIndex: 'executor_admin_name',
     align: 'center',
     render: (name) => {
-      return <div style={{minWidth: '60px'}}>
+      return <div style={{ minWidth: '60px' }}>
         {name || '-'}
       </div>
     }
