@@ -118,3 +118,9 @@ export const statusKeyToProps = {
         children: '待复检'
     }
   }
+
+// 平台
+export const platformTypes = [
+  { id: "1", title: '微信公众号', suffix: (data) => `(${data.siNaCount || 0})` }, // 社媒平台
+  { id: "2", title: '合作平台', suffix: (data) => `(${data.weChatCount || 0})` },
+]

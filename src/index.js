@@ -62,7 +62,7 @@ render(
           {
             process.env.NODE_ENV === 'development' ?
               <Route exact path="/" render={() =>
-                <Redirect to="/order/task/create" />} /> : null
+                <Redirect to="/order/task/tasks-manage" />} /> : null
           }
           <Route path="/order" render={routes} />
           <Route render={redirectToOtherProjects} />
