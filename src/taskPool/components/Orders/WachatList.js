@@ -2,7 +2,7 @@ import React from 'react'
 import { Table } from 'antd'
 import { QUALIFIED_STATU, ABNORMAL_STATU, PENDING_STATU, NO_QUALIFIED_STATU } from './config'
 import HocModal from './HocModal'
-import EditReceipt from './ModalContent'
+import { EditReceipt, AbnormalForm } from './ModalContent'
 import Scolltable from '@/components/Scolltable/Scolltable.js'
 export default function WachatList() {
   const dataSource = [
@@ -94,18 +94,26 @@ export default function WachatList() {
     {
       title: '质检操作',
       dataIndex: '质检操作name',
-      key: '质检操作name', render: text => {
+      key: '质检操作name',
+      align: 'center',
+      fixed: 'right',
+      width: '180px',
+      render: text => {
         return <div>
           {text == QUALIFIED_STATU ? <>
             <a>确认结算</a>/
-          <a>取消结算</a>
+            <a>取消结算</a>
           </>
             : null}
-          {text == ABNORMAL_STATU ? <>
-            <a>通过</a>/
-          <a>不通过</a>
+          <>
+            <HocModal
+              title='质检异常审核通过'
+              clickCmp={(props) => <a onClick={props.onClick}>通过</a>}
+              contentCmp={AbnormalForm}
+            /> /
+            <a>不通过</a>
           </>
-            : null}
+          {/* {text == ABNORMAL_STATU ? : null} */}
         </div>
       },
     },
@@ -114,21 +122,22 @@ export default function WachatList() {
       dataIndex: '订单操作name',
       key: '订单操作name',
       align: 'center',
-      width: '220px',
+      fixed: 'right',
+      width: '180px',
       render: text => {
         return <div>
           <HocModal
             title='添加回执'
             clickCmp={(props) => <a onClick={props.onClick}>添加回执</a>}
             contentCmp={EditReceipt}
-          />/
-          <HocModal
+          />
+          {/* {text == PENDING_STATU ? : null} */}
+          {/* {text == PENDING_STATU ? <HocModal
             title='修改回执'
             clickCmp={(props) => <a onClick={props.onClick}>修改回执</a>}
             contentCmp={EditReceipt}
-          />
-          {/* {text == PENDING_STATU ? : null} */}
-          {/* {text == PENDING_STATU ? : null} */}
+          />: null} */}
+          / <a>详情</a>
         </div>
       }
     },
@@ -145,8 +154,8 @@ export default function WachatList() {
   ];
 
   return (
-    <Scolltable scrollClassName='.ant-table-body' widthScroll={3000}>
-      <Table dataSource={dataSource} columns={columns} scroll={{ x: 2700 }} />
+    <Scolltable scrollClassName='.ant-table-body' widthScroll={2600}>
+      <Table dataSource={dataSource} columns={columns} scroll={{ x: 2400 }} />
     </Scolltable>
   )
 }
