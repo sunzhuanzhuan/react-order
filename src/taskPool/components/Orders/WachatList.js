@@ -2,7 +2,7 @@ import React from 'react'
 import { Table } from 'antd'
 import { QUALIFIED_STATU, ABNORMAL_STATU, PENDING_STATU, NO_QUALIFIED_STATU } from './config'
 import HocModal from './HocModal'
-import { EditReceipt, AbnormalForm } from './ModalContent'
+import { EditReceipt, AbnormalForm, QualityFailedForm } from './ModalContent'
 import Scolltable from '@/components/Scolltable/Scolltable.js'
 export default function WachatList() {
   const dataSource = [
@@ -112,6 +112,16 @@ export default function WachatList() {
               contentCmp={AbnormalForm}
             /> /
             <a>不通过</a>
+            <HocModal
+              title='第一次质检异常审核不通过'
+              clickCmp={(props) => <a onClick={props.onClick}>不通过</a>}
+              contentCmp={() => <div>确定该订单不通过么？</div>}
+            />
+            <HocModal
+              title='第二次质检异常审核不通过'
+              clickCmp={(props) => <a onClick={props.onClick}>不通过</a>}
+              contentCmp={QualityFailedForm}
+            />
           </>
           {/* {text == ABNORMAL_STATU ? : null} */}
         </div>
