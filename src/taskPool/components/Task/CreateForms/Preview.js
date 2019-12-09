@@ -36,7 +36,7 @@ class PreviewForWeixin extends React.Component {
     this.contentStyleWX = {}
     this.getContentStyleWX(props.taskPositionList)
   }
-  
+
   getContentStyleWX = taskPositionList => {
     if(Array.isArray(taskPositionList) && taskPositionList.length)
     taskPositionList.forEach(item => {
@@ -135,8 +135,8 @@ class PreviewForWeixin extends React.Component {
           <Descriptions.Item label="行业分类">{getIndustryName(data.industryList, [...base.industry].pop()).itemValue}</Descriptions.Item>
           <Descriptions.Item label="内容发布位置">{this.getLocationLimited(budget)}</Descriptions.Item>
           <Descriptions.Item label="预算">{numeral(budget.totalAmount).format("0,0.00")} 元</Descriptions.Item>
-          <Descriptions.Item label="任务结束时间">{budget.orderEndDate.format('YYYY-MM-DD HH:mm:ss')}</Descriptions.Item>
-          <Descriptions.Item label="发布后保留时长">{budget.retainTime}小时</Descriptions.Item>
+          <Descriptions.Item label="任务结束时间">{base.orderEndDate.format('YYYY-MM-DD HH:mm:ss')}</Descriptions.Item>
+          <Descriptions.Item label="发布后保留时长">{base.retainTime}小时</Descriptions.Item>
           <Descriptions.Item label="文章封面">
             <div className='image-wrap'>
               <img src={content.coverImage[0].url} alt="" />
@@ -251,8 +251,8 @@ class PreviewForWeibo extends React.Component {
           <Descriptions.Item label="行业分类">{getIndustryName(data.industryList, [...base.industry].pop()).itemValue}</Descriptions.Item>
           <Descriptions.Item label="任务目标">{target[budget.taskTarget]}</Descriptions.Item>
           <Descriptions.Item label="预算">{numeral(budget.totalAmount).format("0,0.00")} 元</Descriptions.Item>
-          <Descriptions.Item label="任务结束时间">{budget.orderEndDate.format('YYYY-MM-DD HH:mm:ss')}</Descriptions.Item>
-          <Descriptions.Item label="发布后保留时长">{budget.retainTime}小时</Descriptions.Item>
+          <Descriptions.Item label="任务结束时间">{base.orderEndDate.format('YYYY-MM-DD HH:mm:ss')}</Descriptions.Item>
+          <Descriptions.Item label="发布后保留时长">{base.retainTime}小时</Descriptions.Item>
           <Descriptions.Item label="内容形式">{contentStyle[content.taskContentStyle]}</Descriptions.Item>
           <Descriptions.Item label="推广文章">
             <a onClick={this.preview}>预览</a>

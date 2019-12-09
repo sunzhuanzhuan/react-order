@@ -16,7 +16,7 @@ import { OssUpload } from "wbyui";
 
 import cookie from "js-cookie";
 import 'braft-editor/dist/index.css'
-import UploadMaterial from "@/taskPool/components/CreateForms/UploadMaterial";
+import UploadMaterial from "@/taskPool/components/Task/CreateForms/UploadMaterial";
 
 
 const FormItem = Form.Item

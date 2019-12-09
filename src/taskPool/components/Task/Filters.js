@@ -2,89 +2,108 @@
  * 列表筛选组件, 包括tab和筛选表单
  * Created by lzb on 2019-12-03.
  */
-import React, {
-  forwardRef,
-  useEffect,
-  useImperativeHandle,
-  useRef,
-  useState
-} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
-  Button, Dropdown, Form, Icon,
-  Input, Menu, Tabs, Select
+  Button, Row, Col, Form,
+  Input, Tabs, Select, DatePicker
 } from "antd";
 import { platformTypes } from "../../constants/config";
-import { WBYPlatformIcon } from "wbyui";
+import moment from 'moment';
 
 const { TabPane } = Tabs;
 const { Option } = Select;
+const { RangePicker } = DatePicker
 
 
 const FilterForm = (props) => {
 
   const { getFieldDecorator } = props.form;
   return (
-    <div className="page-filter-form">
-      <Form.Item label="任务名称">
-        {getFieldDecorator('snsName', {})(
-          <Input placeholder="请输入" style={{ width: 120 }} allowClear />
-        )}
-      </Form.Item>
-      <Form.Item label="任务ID">
-        {getFieldDecorator('isFamous', {})(
-          <Select style={{ width: 120 }} placeholder="请选择" allowClear>
-            <Option value="1">是</Option>
-            <Option value="2">否</Option>
-          </Select>
-        )}
-      </Form.Item>
-      <Form.Item label="创建人">
-        {getFieldDecorator('platformId', {})(
-          <Select style={{ width: 120 }} placeholder="请选择" allowClear>
-            {
-              [].map(item =>
-                <Option key={item.id}>{item.platformName}</Option>)
-            }
-          </Select>
-        )}
-      </Form.Item>
-      <Form.Item label="任务状态">
-        {getFieldDecorator('businessDeviserId', {})(
-          <Select style={{ width: 120 }} optionLabelProp="name" allowClear placeholder="请选择"
-                  dropdownMatchSelectWidth={false}>
-            {
-              [].map(item =>
-                <Option key={item.id} name={item.realName}>
-                  {item.realName}
-                  <br />
-                  {item.cellPhone}
-                </Option>)
-            }
-          </Select>
-        )}
-      </Form.Item>
-      <Form.Item label="任务类型">
-        {getFieldDecorator('isAssigned', {})(
-          <Select style={{ width: 120 }} placeholder="请选择" allowClear>
-            <Option value="1">是</Option>
-            <Option value="2">否</Option>
-          </Select>
-        )}
-      </Form.Item>
-      <Form.Item>
-        <Button type="primary" htmlType="submit" style={{ marginRight: 10 }}>查询</Button>
-        <Button type="primary" ghost onClick={() => props.form.resetFields()}>重置</Button>
-      </Form.Item>
-    </div>
+    <Row className="flex-form-layout">
+      <Col span={9}>
+        <Form.Item label="任务创建时间">
+          {getFieldDecorator('platformId', {})(
+            <RangePicker
+              format="YYYY-MM-DD HH:mm"
+              showTime={{
+                format: "mm:ss",
+                defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment('23:59:59', 'HH:mm:ss')]
+              }}
+              style={{ width: '100%' }}
+            />
+          )}
+        </Form.Item>
+      </Col>
+      <Col span={5}>
+        <Form.Item label="任务类型">
+          {getFieldDecorator('isFamous2', {})(
+            <Select placeholder="请选择" allowClear>
+              <Option value="1">是</Option>
+              <Option value="2">否</Option>
+            </Select>
+          )}
+        </Form.Item>
+      </Col>
+      <Col span={5}>
+        <Form.Item label="创建人">
+          {getFieldDecorator('isFamous', {})(
+            <Input placeholder="请输入" allowClear />
+          )}
+        </Form.Item>
+      </Col>
+      <Col span={5}>
+        <Form.Item label="任务名称">
+          {getFieldDecorator('snsName', {})(
+            <Input placeholder="请输入" allowClear />
+          )}
+        </Form.Item>
+      </Col>
+      <Col span={9}>
+        <Form.Item label="任务开始时间">
+          {getFieldDecorator('platformId', {})(
+            <RangePicker
+              format="YYYY-MM-DD HH:mm"
+              showTime={{
+                format: "mm:ss",
+                defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment('23:59:59', 'HH:mm:ss')]
+              }}
+              style={{ width: '100%' }}
+            />
+          )}
+        </Form.Item>
+      </Col>
+      <Col span={5}>
+        <Form.Item label="任务状态">
+          {getFieldDecorator('isFamou22s', {})(
+            <Select placeholder="请选择" allowClear>
+              <Option value="1">是</Option>
+              <Option value="2">否</Option>
+            </Select>
+          )}
+        </Form.Item>
+      </Col>
+      <Col span={5}>
+        <Form.Item label="任务ID">
+          {getFieldDecorator('isFa33mous', {})(
+            <Input placeholder="请输入" allowClear />
+          )}
+        </Form.Item>
+      </Col>
+      <Col span={5}>
+        <Form.Item>
+          <Button type="primary" htmlType="submit" style={{ marginRight: 10 }}>查询</Button>
+          <Button type="primary" ghost onClick={() => props.form.resetFields()}>重置</Button>
+        </Form.Item>
+      </Col>
+    </Row>
   );
 }
 
 const Filters = (props) => {
   const [active, setActive] = useState('1')
-  const filterForm = useRef(null);
 
   useEffect(() => {
-    // onSearch(props.initialForms)
+    submit()
   }, [active])
 
   const tabChange = (key) => {
@@ -104,7 +123,11 @@ const Filters = (props) => {
 
   return (
     <Form className="page-filter" onSubmit={submit} layout="inline">
-      <Tabs activeKey={active} onChange={tabChange} animated={false}>
+      <Tabs activeKey={active} onChange={tabChange} animated={false} tabBarExtraContent={
+        <Button type="primary" icon="plus" onClick={() => {}}>
+          创建新任务
+        </Button>
+      }>
         {
           platformTypes.map(pane => (
             <TabPane key={pane.id} tab={

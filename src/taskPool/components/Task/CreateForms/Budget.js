@@ -23,28 +23,30 @@ class BudgetForWeixin extends React.Component {
     this.calculation = debounce(this.calculation, 300)
     this.state = {
       balance: props.data.budget.balance || 0,
-      actionNum: props.data.budget.actionNum || 0
+      actionNum: props.data.budget.actionNum || 0,
+      defaultOps: null
     }
-    this.defaultOps = null;
   }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.taskPositionList.length !== (prevState.defaultOps || []).length) {
+      return {
+        defaultOps: nextProps.taskPositionList.map(item => {
+          const { locationKey: value, locationValue: label } = item;
+          return { label, value }
+        })
+      }
+    } else {
+      return null
+    }
+  }
+
 
   componentDidMount() {
     const { data, actions, taskPositionList } = this.props
     const { base: { company } } = data;
-    if(Array.isArray(taskPositionList) && taskPositionList.length)
-      this.defaultOps = taskPositionList.map(item => {
-        const { locationKey: value, locationValue: label } = item;
-        return { label, value }
-      })
-    actions.TPQueryAvailableBalance({
-      companyId: company.key,
-      accountType: 1
-    }).then(({ data }) => {
-      this.setState({
-        balance: data
-      });
-      // window.REACT_APP_CACHE_BALANCE = data
-    })
+    if (Array.isArray(taskPositionList) && taskPositionList.length)
+      this.setState({})
   }
 
   // 暂存 & 上一步
@@ -89,16 +91,19 @@ class BudgetForWeixin extends React.Component {
       { label: "固定位置", value: 1 },
       { label: "不限位置", value: 2 },
     ]
-    const showOps = this.defaultOps ? options : options.filter(item => item.value === 2);
+    const showOps = this.state.defaultOps ? options : options.filter(item => item.value === 2);
     return showOps.map(item => <Radio key={item.value} value={item.value}>{item.label}</Radio>)
   }
 
-  getCheckOptions = () => {
-    const { form } = this.props;
-    const checkVal = form.getFieldValue('locationLimitedInfo');
-    if(this.defaultOps)
-      this.defaultOps.forEach(item => item.disabled = checkVal.length === 2 && !(checkVal.includes(item.value)));
-    return this.defaultOps;
+  onCheckChange = (selected) => {
+    const newOps = this.state.defaultOps.map((item) => {
+      let disabled = selected.length === 2 && !(selected.includes(item.value))
+      return {
+        ...item,
+        disabled
+      }
+    })
+    this.setState({ defaultOps: newOps });
   }
 
   render() {
@@ -134,7 +139,7 @@ class BudgetForWeixin extends React.Component {
           )}
         </FormItem>
         {
-          getFieldValue('locationLimited') == 1 && this.defaultOps ? 
+          getFieldValue('locationLimited') == 1 && this.state.defaultOps ?
             <FormItem className='taskPosCheckboxComp' {...newFormLayout}>
               <div className='flex-form-input-container'>
                 {getFieldDecorator('locationLimitedInfo', {
@@ -144,7 +149,7 @@ class BudgetForWeixin extends React.Component {
                     message: '请至少选择一项限制调价'
                   }]
                 })(
-                  <CheckboxGroup options={this.getCheckOptions()}/>
+                  <CheckboxGroup onChange={this.onCheckChange} options={this.state.defaultOps} />
                 )}
                 <div className='flex-form-input-suffix'>
                   最多只可选两项
@@ -190,58 +195,9 @@ class BudgetForWeixin extends React.Component {
             lineHeight: "28px"
           }}>预计可获得最低阅读：{actionNum}</div>
         </FormItem>
-        <FormItem label="任务结束时间">
-          {getFieldDecorator('orderEndDate', {
-            initialValue: budget.orderEndDate,
-            validateFirst: true,
-            rules: [
-              { required: true, message: '请选择任务结束时间' },
-              {
-                validator: (rule, value, callback) => {
-                  const date = moment().add(7, 'd')
-                  if (value < date) {
-                    return callback(`不能选择 ${date.format("YYYY-MM-DD HH:mm:ss")} 之前的时间`)
-                  }
-                  callback()
-                }
-              }
-            ]
-          })(
-            <DatePicker
-              placeholder="任务结束时间"
-              format="YYYY-MM-DD HH:mm"
-              defaultPickerValue={moment().add(7, 'd').add(1, 'h').startOf('h')}
-              style={{ width: "100%" }}
-              showTime={{
-                minuteStep:15,
-                format:"hh:mm"
-              }}
-              showToday={false}
-            />
-          )}
-        </FormItem>
-        <FormItem label="发布后保留时长">
-          <div className='flex-form-input-container'>
-            {getFieldDecorator('retainTime', {
-              initialValue: budget.retainTime || 24,
-              rules: [{
-                required: true,
-                message: '请选择任务保留时长'
-              }]
-            })(
-              <Radio.Group>
-                <Radio value={24}>24小时</Radio>
-                <Radio value={48}>48小时</Radio>
-              </Radio.Group>
-            )}
-            <div className='flex-form-input-suffix'>
-              规定时间内，文章质检合格，则自动扣款。
-            </div>
-          </div>
-        </FormItem>
         <footer>
           <FormItem label=' '>
-            <Button onClick={this.cached}>上一步</Button>
+            {this.props.isEdit ? null : <Button onClick={this.cached}>上一步</Button>}
             <Button type="primary" htmlType="submit">下一步</Button>
           </FormItem>
         </footer>
@@ -265,18 +221,6 @@ class BudgetForWeibo extends React.Component {
     }
   }
 
-  componentDidMount() {
-    const { data, actions } = this.props
-    const { base: { company } } = data
-    actions.TPQueryAvailableBalance({
-      companyId: company.key,
-      accountType: 1
-    }).then(({ data }) => {
-      this.setState({
-        balance: data
-      });
-    })
-  }
 
   // 暂存 & 上一步
   cached = () => {
@@ -391,7 +335,7 @@ class BudgetForWeibo extends React.Component {
         </FormItem>
         <FormItem label="任务结束时间">
           {getFieldDecorator('orderEndDate', {
-            initialValue: budget.orderEndDate,
+            initialValue: base.orderEndDate,
             validateFirst: true,
             rules: [
               { required: true, message: '请选择任务结束时间' },
@@ -412,8 +356,8 @@ class BudgetForWeibo extends React.Component {
               defaultPickerValue={moment().add(3, 'd').add(1, 'h').startOf('h')}
               style={{ width: "100%" }}
               showTime={{
-                minuteStep:15,
-                format:"hh:mm"
+                minuteStep: 15,
+                format: "hh:mm"
               }}
               showToday={false}
             />

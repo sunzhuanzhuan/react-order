@@ -1,2 +1,128 @@
 @import "~antd/dist/antd.less";   // 引入官方提供的 less 样式入口文件
 @import "indexNbTheme.less";   // 用于覆盖上面定义的变量
+.ant-table-fixed-left .ant-table-body-inner {
+  padding-right: 0;
+}
+
+.ta-r {
+  text-align: right;
+}
+
+//
+.flex-form-layout {
+  .ant-form-item {
+    display: flex;
+    align-items: center;
+
+    .ant-form-item-control-wrapper {
+      flex: 1;
+    }
+
+    .ant-form-item-label {
+      padding: 0 6px;
+    }
+  }
+}
+
+// 常用类
+.text-overflow-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ant-select-dropdown, .ant-select-dropdown.ant-select-dropdown--multiple {
+  .ant-select-dropdown-menu-item {
+    padding: 5px 12px;
+  }
+}
+
+//顶部用户名
+.user-name {
+  position: absolute;
+  top: 0px;
+  right: 185px;
+  color: #eee;
+  font-size: 15px;
+}
+
+//老平台
+.old-platform {
+  position: absolute;
+  top: 10px;
+  right: 80px; // 自定宽度, 合并代码需删除
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+  body {
+    background: #f0f2f5;
+    overflow: hidden;
+  }
+  #app-content-children-id {
+    margin: 20px;
+    background: #fff;
+    padding: 20px;
+    height: calc(100% - 40px);
+    box-sizing: border-box;
+    overflow-y: scroll;
+  }
+}
+
+.anticon-close-circle {
+  cursor: pointer;
+  color: #ccc;
+  transition: color 0.3s;
+  font-size: 12px;
+}
+
+#app-content-children-id {
+  overflow: auto;
+}
+
+.anticon-close-circle:hover {
+  color: #999;
+}
+
+.anticon-close-circle:active {
+  color: #666;
+}
+
+.ant-dropdown-trigger {
+  cursor: pointer;
+}
+
+//增加自定义的slider
+.ant-slider-theme-thin {
+  .ant-slider-rail,
+  .ant-slider-track,
+  .ant-slider-step {
+    height: 2px;
+  }
+  .ant-slider-handle {
+    margin-top: -6px
+  }
+}
+
+.ant-tag-theme-thin {
+  &.ant-tag-checkable-checked {
+    border: none;
+    color: #333;
+    line-height: 22px;
+    background: fadeout(@primary-color, 70%);
+  }
+}
+// NProgress
+#nprogress {
+  .bar{
+    background-color: @primary-color;
+  }
+  .peg{
+    box-shadow: 0 0 10px @primary-color, 0 0 5px @primary-color;
+  }
+  .spinner-icon{
+    display: none;
+    border-top-color: @primary-color;
+    border-left-color: @primary-color;
+  }
+}
