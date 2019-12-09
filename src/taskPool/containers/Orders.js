@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import WachatList from '../components/Orders/WachatList'
+import WachatList from '../components/Order/WachatList'
 import { Tabs, Modal } from 'antd';
 const { TabPane } = Tabs;
 export class Orders extends Component {
