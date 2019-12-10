@@ -15,12 +15,15 @@ const FormItem = Form.Item
 
 @Form.create()
 export default class Base extends React.Component {
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
     this.defaultDisableDate = moment().add(31, 'm').startOf('m')
+    let [ startData, endData ] = props.data.base.orderDate || []
     this.state = {
       endOpen: false,
-      dateDuration: "请选择时间",
+      dateDuration: (startData && endData) ?
+        "共计" + getCountDownTimeText(endData, 0, 5, startData) :
+        "请选择时间",
       disabledDateFlag: this.defaultDisableDate
     }
   }
@@ -51,21 +54,21 @@ export default class Base extends React.Component {
           <div className='flex-form-input-container'>
             {getFieldDecorator('company', {
               initialValue: base.company,
-              rules: [{
+              rules: [ {
                 required: true,
                 message: '请选择任务所属公司'
-              }]
+              } ]
             })(
               <RemoteSearchSelect
                 style={{ flex: 'auto', width: "auto" }}
                 action={actions.TPFuzzyQueryCompany}
                 placeholder="请选择任务所属公司"
-                disabled={data.disabled}
+                disabled={this.props.lockCompanySelect}
                 onChange={this.props.getCompanyBalance}
               />
             )}
             <div className='flex-form-input-suffix'>
-              任务账户余额：{numeral(data.budget.balance || 0).format('0,0.00')} 元
+              任务账户余额：{numeral(this.props.balance).format('0,0.00')} 元
             </div>
           </div>
 
@@ -73,10 +76,10 @@ export default class Base extends React.Component {
         <FormItem label="任务发布平台">
           {getFieldDecorator('platformId', {
             initialValue: base.platformId,
-            rules: [{
+            rules: [ {
               required: true,
               message: '请选择平台'
-            }]
+            } ]
           })(
             <Radio.Group>
               <Radio value={9}>
@@ -114,11 +117,11 @@ export default class Base extends React.Component {
         <FormItem label="行业分类">
           {getFieldDecorator('industry', {
             initialValue: base.industry,
-            rules: [{
+            rules: [ {
               required: true,
               message: '请选择行业',
               type: 'array'
-            }]
+            } ]
           })(
             <Cascader
               fieldNames={{
@@ -126,7 +129,7 @@ export default class Base extends React.Component {
                 value: 'itemKey',
                 children: 'childrenList'
               }}
-              options={data.industryList}
+              options={this.props.industryList}
               placeholder='请选择行业'
             />
           )}
@@ -134,13 +137,13 @@ export default class Base extends React.Component {
         <FormItem label="任务时间">
           <div className='flex-form-input-container'>
             {getFieldDecorator('orderDate', {
-              // initialValue: base.orderDate,
+              initialValue: base.orderDate,
               validateFirst: true,
               rules: [
                 { required: true, message: '请选择任务时间' },
                 {
                   validator: (rule, value, callback) => {
-                    const [start, end] = value
+                    const [ start, end ] = value
 
                     const min = moment(start).add(7, 'd')
                     if (end < min) {
@@ -153,7 +156,7 @@ export default class Base extends React.Component {
             })(
               <RangePicker
                 allowClear={false}
-                placeholder={["任务开始时间", "任务结束时间"]}
+                placeholder={[ "任务开始时间", "任务结束时间" ]}
                 format="YYYY-MM-DD HH:mm"
                 style={{ flex: 'auto' }}
                 disabledDate={this.disabledDate}
@@ -162,7 +165,7 @@ export default class Base extends React.Component {
                   moment(this.defaultDisableDate).add(7, 'd')
                 ]}
                 onCalendarChange={(range) => {
-                  const [startData, endData] = range
+                  const [ startData, endData ] = range
                   if (range.length === 1) {
                     this.setState({
                       disabledDateFlag: moment(range[0]).add(7, 'd')
@@ -199,10 +202,10 @@ export default class Base extends React.Component {
           <div className='flex-form-input-container'>
             {getFieldDecorator('retainTime', {
               initialValue: base.retainTime || 24,
-              rules: [{
+              rules: [ {
                 required: true,
                 message: '请选择任务保留时长'
-              }]
+              } ]
             })(
               <Radio.Group>
                 <Radio value={24}>24小时</Radio>
@@ -217,11 +220,11 @@ export default class Base extends React.Component {
         <FormItem label={<span>选择任务模式 </span>}>
           <div className='flex-form-input-container'>
             {getFieldDecorator('retainTime222', {
-              initialValue: base.retainTime || "1",
-              rules: [{
+              initialValue: base.retainTime222 || "1",
+              rules: [ {
                 required: true,
                 message: '选择任务模式'
-              }]
+              } ]
             })(
               <Radio.Group>
                 <Radio value={"1"}>抢单模式</Radio>
@@ -243,7 +246,7 @@ export default class Base extends React.Component {
             ]
           })(
             <OssUpload
-              authToken={data.authToken}
+              authToken={this.props.authToken}
               listType='picture-card'
               rule={{
                 bizzCode: 'ORDER_IMG_UPLOAD',
