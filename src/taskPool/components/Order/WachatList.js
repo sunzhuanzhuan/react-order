@@ -1,10 +1,12 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { Table } from 'antd'
 import { QUALIFIED_STATU, ABNORMAL_STATU, PENDING_STATU, NO_QUALIFIED_STATU } from './config'
-import HocModal from './HocModal'
-import { EditReceipt, AbnormalForm, QualityFailedForm } from './ModalContent'
+import { EditReceipt, } from './ModalContent'
+import AbnormalForm from './AbnormalForm'
+import QualityFailedForm from './QualityFailedForm'
 import Scolltable from '@/components/Scolltable/Scolltable.js'
-export default function WachatList() {
+export default function WachatList(props) {
+  const { setModalProps } = props
   const dataSource = [
     {
       key: '1',
@@ -99,30 +101,34 @@ export default function WachatList() {
       fixed: 'right',
       width: '180px',
       render: text => {
-        return <div>
-          {text == QUALIFIED_STATU ? <>
-            <a>确认结算</a>/
-            <a>取消结算</a>
-          </>
-            : null}
-          <>
-            <HocModal
-              title='质检异常审核通过'
-              clickCmp={(props) => <a onClick={props.onClick}>通过</a>}
-              contentCmp={AbnormalForm}
-            /> /
-            <a>不通过</a>
-            <HocModal
-              title='第一次质检异常审核不通过'
-              clickCmp={(props) => <a onClick={props.onClick}>不通过</a>}
-              contentCmp={() => <div>确定该订单不通过么？</div>}
-            />
-            <HocModal
-              title='第二次质检异常审核不通过'
-              clickCmp={(props) => <a onClick={props.onClick}>不通过</a>}
-              contentCmp={QualityFailedForm}
-            />
-          </>
+        return <div>{text == QUALIFIED_STATU ? <>
+          <a>确认结算</a>/
+        <a>取消结算</a>
+        </>
+          : null}
+          <a onClick={() => setModalProps({
+            visible: true,
+            title: '质检异常审核通过',
+            content: <AbnormalForm />
+          })}>通过</a>
+          /
+          <a onClick={() => setModalProps({
+            visible: true,
+            title: '第一次质检异常审核不通过',
+            content: <div>确定该订单不通过么？</div>
+          })}>不通过</a>
+          <a onClick={() => setModalProps({
+            visible: true,
+            title: '第一次质检异常审核不通过',
+            content: <div>确定该订单不通过么？</div>
+          })}>不通过</a>
+
+          <a onClick={() => setModalProps({
+            visible: true,
+            title: '第二次质检异常审核不通过',
+            content: <QualityFailedForm />
+          })}>不通过</a>
+
           {/* {text == ABNORMAL_STATU ? : null} */}
         </div>
       },
@@ -136,11 +142,10 @@ export default function WachatList() {
       width: '180px',
       render: text => {
         return <div>
-          <HocModal
-            title='添加回执'
-            clickCmp={(props) => <a onClick={props.onClick}>添加回执</a>}
-            contentCmp={EditReceipt}
-          />
+          <a onClick={() => setModalProps({
+            title: '添加回执',
+            content: <EditReceipt />
+          })}>添加回执</a>
           {/* {text == PENDING_STATU ? : null} */}
           {/* {text == PENDING_STATU ? <HocModal
             title='修改回执'
@@ -162,7 +167,6 @@ export default function WachatList() {
     },
 
   ];
-
   return (
     <Scolltable scrollClassName='.ant-table-body' widthScroll={2600}>
       <Table dataSource={dataSource} columns={columns} scroll={{ x: 2400 }} />
