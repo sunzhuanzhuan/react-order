@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react'
-import { Table } from 'antd'
+import { Table, Input } from 'antd'
 import { QUALIFIED_STATU, ABNORMAL_STATU, PENDING_STATU, NO_QUALIFIED_STATU } from './config'
-import { EditReceipt, } from './ModalContent'
+import CancelPaymentForm from './CancelPaymentForm'
 import AbnormalForm from './AbnormalForm'
 import QualityFailedForm from './QualityFailedForm'
 import Scolltable from '@/components/Scolltable/Scolltable.js'
@@ -106,6 +106,7 @@ export default function WachatList(props) {
         <a>取消结算</a>
         </>
           : null}
+          {/*第二次质检 isShowRead=true*/}
           <a onClick={() => setModalProps({
             visible: true,
             title: '质检异常审核通过',
@@ -119,17 +120,19 @@ export default function WachatList(props) {
           })}>不通过</a>
           <a onClick={() => setModalProps({
             visible: true,
-            title: '第一次质检异常审核不通过',
-            content: <div>确定该订单不通过么？</div>
-          })}>不通过</a>
-
-          <a onClick={() => setModalProps({
-            visible: true,
             title: '第二次质检异常审核不通过',
             content: <QualityFailedForm />
           })}>不通过</a>
-
-          {/* {text == ABNORMAL_STATU ? : null} */}
+          <a onClick={() => setModalProps({
+            visible: true,
+            title: '确认结算',
+            content: <div>本次任务执行将成功生成1,234.00元的结算单，是否确定？</div>
+          })}>确认结算</a>
+          <a onClick={() => setModalProps({
+            visible: true,
+            title: '取消结算',
+            content: <CancelPaymentForm />
+          })}>取消结算</a>
         </div>
       },
     },
@@ -143,6 +146,7 @@ export default function WachatList(props) {
       render: text => {
         return <div>
           <a onClick={() => setModalProps({
+            visible: true,
             title: '添加回执',
             content: <EditReceipt />
           })}>添加回执</a>
@@ -171,5 +175,13 @@ export default function WachatList(props) {
     <Scolltable scrollClassName='.ant-table-body' widthScroll={2600}>
       <Table dataSource={dataSource} columns={columns} scroll={{ x: 2400 }} />
     </Scolltable>
+  )
+}
+
+export function EditReceipt(props) {
+  return (
+    <div>
+      回执链接:<Input onClick={props.onClick} />
+    </div>
   )
 }

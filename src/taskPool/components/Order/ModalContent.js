@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import { Input, Form, DatePicker, Checkbox, Row, Col } from 'antd';
-import { OssUpload } from 'wbyui'
+import { Input } from 'antd';
+
 import request from '@/api'
-import './ModalContent.less'
 //form布局
 export const formItemLayout = {
   labelCol: { span: 8 },
@@ -15,12 +14,6 @@ export const action = () => {
   })
 }
 
-export function EditReceipt(props) {
-  return (
-    <div>
-      回执链接:<Input onClick={props.onClick} />
-    </div>
-  )
-}
+
 
 

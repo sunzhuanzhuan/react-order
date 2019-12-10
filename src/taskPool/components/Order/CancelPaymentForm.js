@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import { Input, Form, DatePicker, Checkbox, Row, Col } from 'antd';
+import { Input, Form, } from 'antd';
 import { OssUpload } from 'wbyui'
 import { action, formItemLayout } from "./ModalContent";
+const { TextArea } = Input;
+
 //第二次质检不通过
-function QualityFailed(props) {
+function CancelPayment(props) {
   const [token, setToken] = useState('')
   useEffect(() => {
     action().then(authToken => {
@@ -12,33 +14,20 @@ function QualityFailed(props) {
   }, [])
   const { form } = props
   const { getFieldDecorator } = form
-  const options = ['内容已被删除', '内容发布错误', '其他（请备注原因）']
   return <Form layout='horizontal'>
-    <Form.Item label='选择原因' {...formItemLayout}>
+    <Form.Item label='填写理由' {...formItemLayout}>
       {getFieldDecorator('reson', {
-        rules: [{ required: true, message: '请选择原因' }],
+        rules: [{ required: true, message: '请填写理由' }],
       })(
-        <Checkbox.Group style={{ width: '100%', marginTop: 12 }}>
-          <Row >
-            {options.map(one => <Col span={24} key={one}>
-              <Checkbox value={one}>{one}</Checkbox>
-            </Col>)}
-          </Row>
-        </Checkbox.Group>
+        <TextArea />
       )}
     </Form.Item>
-    <Form.Item label='备注' {...formItemLayout}>
-      {getFieldDecorator('read', {
-      })(
-        <Input placeholder="请输入备注" />
-      )}
-    </Form.Item>
-    <Form.Item label='上传文章快照' {...formItemLayout}>
+    <Form.Item label='上传附件/截图' {...formItemLayout}>
       {getFieldDecorator('keyss', {
         valuePropName: 'fileList',
         getValueFromEvent: e => e && e.fileList,
         rules: [
-          { message: '请上传截图', required: true, type: "array" }
+          // { message: '请上传截图', required: true, type: "array" }
         ]
       })(
         <OssUpload
@@ -56,5 +45,5 @@ function QualityFailed(props) {
     </Form.Item>
   </Form >
 }
-const QualityFailedForm = Form.create()(QualityFailed)
-export default QualityFailedForm
+const CancelPaymentForm = Form.create()(CancelPayment)
+export default CancelPaymentForm

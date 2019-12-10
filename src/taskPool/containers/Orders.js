@@ -6,8 +6,10 @@ const { TabPane } = Tabs;
 const Orders = (porps) => {
   const [modalProps, setModalProps] = useState({ title: '', content: '' })
   function onOk(callback) {
-    setModalProps({ visible: false })
-    callback && callback()
+    setModalProps({ ...modalProps, visible: false })
+    if (typeof (callback) === "function") {
+      callback()
+    }
   }
   function callback() {
 
@@ -30,7 +32,7 @@ const Orders = (porps) => {
         {...modalProps}
         visible={modalProps.visible}
         onOk={onOk}
-        onCancel={() => setModalProps({ visible: false })}
+        onCancel={() => setModalProps({ ...modalProps, visible: false })}
       >
         {modalProps.content}
       </Modal>
