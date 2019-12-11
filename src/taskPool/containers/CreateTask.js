@@ -11,6 +11,7 @@ import {
 } from "../components/Task/CreateForms/index";
 import { parseUrlQuery } from "@/util/parseUrl";
 import update from 'immutability-helper'
+import moment from 'moment';
 
 
 const { Step } = Steps;
@@ -61,7 +62,15 @@ const CreateTask = (props) => {
         company: lockCompanySelect ? {
           label: companyName,
           key: companyId
-        } : undefined
+        } : undefined,
+        orderName: "安师大",
+        taskType: "2",
+        industry: ["10000", "10002"],
+        orderDate: [moment("2019-12-30"), moment("2020-01-30")],
+        orderCoverImage: [{
+          uid: "asdasd",
+          url: "http://prd-wby-img.oss-cn-beijing.aliyuncs.com/ORDER_IMG_UPLOAD/39069087673a43beb9d7bf18ca1c3a5a.jpg"
+        }]
       },
       budget: {},
       content: {}

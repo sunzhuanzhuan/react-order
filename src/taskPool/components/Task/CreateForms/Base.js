@@ -9,6 +9,7 @@ import { OssUpload, WBYPlatformIcon } from "wbyui";
 import numeral from '@/util/numeralExpand';
 import moment, { duration } from 'moment';
 import { getCountDownTimeText } from '@/taskPool/constants/utils';
+import QuestionTip from '@/base/QuestionTip';
 
 const { RangePicker } = DatePicker
 const FormItem = Form.Item
@@ -71,7 +72,6 @@ export default class Base extends React.Component {
               任务账户余额：{numeral(this.props.balance).format('0,0.00')} 元
             </div>
           </div>
-
         </FormItem>
         <FormItem label="任务发布平台">
           {getFieldDecorator('platformId', {
@@ -217,10 +217,14 @@ export default class Base extends React.Component {
             </div>
           </div>
         </FormItem>
-        <FormItem label={<span>选择任务模式 </span>}>
+        <FormItem label={<span>选择任务模式<QuestionTip content={<div>
+          <b>抢单模式</b> 固定定价和阅读数，由博主抢单;
+          <br />
+          <b>竞标模式</b> 固定阅读数，由博主自由报价后再对所报价格进行选择
+        </div>}/></span>}>
           <div className='flex-form-input-container'>
-            {getFieldDecorator('retainTime222', {
-              initialValue: base.retainTime222 || "1",
+            {getFieldDecorator('taskType', {
+              initialValue: base.taskType || "1",
               rules: [ {
                 required: true,
                 message: '选择任务模式'
