@@ -11,6 +11,7 @@ import {
 } from "../components/Task/CreateForms/index";
 import { parseUrlQuery } from "@/util/parseUrl";
 import update from 'immutability-helper'
+import moment from 'moment';
 
 
 const { Step } = Steps;
@@ -36,35 +37,40 @@ const formLayout = {
   colon: false
 }
 
-
-function reducer(state, action) {
-  switch (action.type) {
-    case 'increment':
-      return { count: state.count + 1 };
-    case 'decrement':
-      return { count: state.count - 1 };
-    default:
-      throw new Error();
-  }
-}
-
 const CreateTask = (props) => {
-  // 初始化数据
-  const [authToken, setAuthToken] = useState("")
-  const [industryList, setIndustryList] = useState([])
-  const [state, setState] = useState(() => {
-    const { step = 1, company = '', platformId } = parseUrlQuery()
-    const [companyId, companyName] = company.split("::")
-    const hasCompany = !!(companyId && companyName)
+  // 获取url上的数据
+  const { step = 1, company = '', platform } = parseUrlQuery()
+  // 步骤
+  const [ current, setCurrent ] = useState(step - 1)
+  // 图片上传Token
+  const [ authToken, setAuthToken ] = useState("")
+  // 行业分类
+  const [ industryList, setIndustryList ] = useState([])
+  // 账户余额
+  const [ balance, setBalance ] = useState(0)
+  // 任务发文位置
+  const [ taskPositionList, setTaskPositionList ] = useState([])
+  // 是否锁定公司选择
+  const [ lockCompanySelect ] = useState(!!company)
+
+  // 任务数据
+  const [ state, setState ] = useState(() => {
+    const [ companyId, companyName ] = company.split("::")
     return {
-      current: step - 1,
-      disabled: hasCompany,
       base: {
-        platformId: Number(platformId) || 9,
-        company: hasCompany ? {
+        platformId: Number(platform) || 9,
+        company: lockCompanySelect ? {
           label: companyName,
           key: companyId
-        } : undefined
+        } : undefined,
+        orderName: "安师大",
+        taskType: "2",
+        industry: ["10000", "10002"],
+        orderDate: [moment("2019-12-30"), moment("2020-01-30")],
+        orderCoverImage: [{
+          uid: "asdasd",
+          url: "http://prd-wby-img.oss-cn-beijing.aliyuncs.com/ORDER_IMG_UPLOAD/39069087673a43beb9d7bf18ca1c3a5a.jpg"
+        }]
       },
       budget: {},
       content: {}
@@ -73,31 +79,27 @@ const CreateTask = (props) => {
 
   const getCompanyBalance = (company = {}) => {
     actions.TPQueryAvailableBalance({
-      companyId: company.key || state.base.company.key,
+      companyId: company.key,
       accountType: 1
     }).then(({ data }) => {
-      setState(update(state,
-        {
-          budget: { balance: { $set: data } },
-        }
-      ))
+      setBalance(data)
     })
   }
 
 
   const next = (key, data) => {
+    setCurrent(current + 1)
     setState(update(state,
       {
-        current: { $set: state.current + 1 },
         [key]: { $set: data }
       }
     ))
   }
 
   const prev = (key, data) => {
+    setCurrent(current - 1)
     setState(update(state,
       {
-        current: { $set: state.current - 1 },
         [key]: { $set: data }
       }
     ))
@@ -113,16 +115,21 @@ const CreateTask = (props) => {
     actions.getNewToken().then(({ data: authToken }) => {
       setAuthToken(authToken)
     })
-    actions.TPGetTaskPosition();
+    // 获取发文位置
+    actions.TPGetTaskPosition().then(({ data: taskPositionList }) => {
+      setTaskPositionList(taskPositionList)
+    })
 
-    if (state.base.company) {
-      getCompanyBalance()
+    if (company) {
+      getCompanyBalance(state.base.company)
     }
   }, [])
 
-  const { current, base, budget, content } = state
+  const childProps = {
+    current, authToken, industryList, balance, lockCompanySelect, taskPositionList
+  }
+  const { base, budget, content } = state
   const { actions, taskPoolData = {} } = props;
-  const { taskPositionList = [] } = taskPoolData;
   const { platformId = 9 } = base
   const FormComponent = forms[platformId][current] || Empty
   return (
@@ -140,10 +147,10 @@ const CreateTask = (props) => {
           formLayout={formLayout}
           next={next}
           prev={prev}
-          data={{ ...state, authToken, industryList }}
+          data={state}
           actions={actions}
-          taskPositionList={taskPositionList}
           getCompanyBalance={getCompanyBalance}
+          {...childProps}
         />
       </main>
     </div>
