@@ -168,7 +168,7 @@ class ContentForWeixin extends React.Component {
             ]
           })(
             <OssUpload
-              authToken={data.authToken}
+              authToken={this.props.authToken}
               listType='picture-card'
               rule={{
                 bizzCode: 'ORDER_IMG_UPLOAD',
