@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react'
 import { Table, Input } from 'antd'
-import { QUALIFIED_STATU, ABNORMAL_STATU, PENDING_STATU, NO_QUALIFIED_STATU } from './config'
+import { QUALIFIED_STATU, ABNORMAL_STATU, PENDING_STATU, NO_QUALIFIED_STATU } from '../config'
 import CancelPaymentForm from './CancelPaymentForm'
 import AbnormalForm from './AbnormalForm'
 import QualityFailedForm from './QualityFailedForm'

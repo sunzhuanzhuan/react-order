@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux'
 import { handleActions, handleAction } from 'redux-actions';
+import * as order from './order'
 import {
   TPTaskManageList_success,
   TPGetTaskPosition_success,
@@ -65,29 +66,29 @@ export const taskDetail = handleActions({
 
 //获取订单管理列表
 export const orderManageList = handleActions({
-	[TPGetAllMcnOrder_success]: (state, action) => {
-		return { ...action.payload.data }
-	}
+  [TPGetAllMcnOrder_success]: (state, action) => {
+    return { ...action.payload.data }
+  }
 }, {});
 //获取任务位置列表
 export const taskPositionList = handleActions({
-	[TPGetTaskPosition_success]: (state, action) => {
-		return [ ...action.payload.data ]
-	}
+  [TPGetTaskPosition_success]: (state, action) => {
+    return [...action.payload.data]
+  }
 }, []);
 
 //获取执行状态list
 export const excuteStatus = handleActions({
-	[TPGetExcuteStatusList_success]: (state, action) => {
-		return [ ...action.payload.data ]
-	}
+  [TPGetExcuteStatusList_success]: (state, action) => {
+    return [...action.payload.data]
+  }
 }, []);
 
 //获取订单状态list
 export const taskStatus = handleActions({
-	[TPGetOrderStatusLists_success]: (state, action) => {
-		return [ ...action.payload.data ]
-	}
+  [TPGetOrderStatusLists_success]: (state, action) => {
+    return [...action.payload.data]
+  }
 }, []);
 
 // 任务详情, 博主领取列表
@@ -119,5 +120,6 @@ export default combineReducers({
   taskPositionList,
   excuteStatus,
   taskStatus,
-  orderManageList
+  orderManageList,
+  ...order
 })

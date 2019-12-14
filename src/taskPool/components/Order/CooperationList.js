@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import { Table, Input } from 'antd'
 
-function CooperationList() {
+function CooperationList(props) {
+  const { platformOrderList } = props
   const dataSource = [
     {
       key: '1',
@@ -20,8 +21,8 @@ function CooperationList() {
   const columns = [
     {
       title: '订单ID',
-      dataIndex: 'name',
-      key: 'name',
+      dataIndex: 'orderId',
+      key: 'orderId',
     },
     {
       title: '合作平台',
