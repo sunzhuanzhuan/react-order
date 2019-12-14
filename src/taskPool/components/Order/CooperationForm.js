@@ -1,5 +1,5 @@
 import React from 'react'
-import { Form, Input, DatePicker, Select } from 'antd'
+import { Form, Input, DatePicker, Select, Button } from 'antd'
 const { RangePicker } = DatePicker
 function CooperationForm(props) {
   const { getFieldDecorator } = props.form
@@ -51,6 +51,10 @@ function CooperationForm(props) {
         {getFieldDecorator('salesman', {})(
           <Input placeholder='请输入' />
         )}
+      </Form.Item>
+      <Form.Item>
+        <Button type='primary'>查询</Button>
+        <Button style={{ marginLeft: 20 }}>重置</Button>
       </Form.Item>
     </Form>
   )

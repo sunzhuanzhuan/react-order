@@ -1,7 +1,8 @@
-import React, { Component } from 'react'
-import { Table, Input } from 'antd'
-
+import React, { useState } from 'react'
+import { Table, Input, Button } from 'antd'
+import { otherOrderStateMap } from '../../constants/orderConfig'
 function CooperationList(props) {
+  const [selectedRow, setSelectedRow] = useState([])
   const { platformOrderList } = props
   const dataSource = [
     {
@@ -25,73 +26,87 @@ function CooperationList(props) {
       key: 'orderId',
     },
     {
-      title: '合作平台',
-      dataIndex: '合作平台name',
-      key: '合作平台name',
+      title: '任务名称',
+      dataIndex: 'adOrderName',
+      key: 'adOrderName',
+      render: (text, record) => {
+        //adOrderId
+        return <a>dd</a>
+      }
     },
     {
-      title: '联系人',
-      dataIndex: '联系人name',
-      key: '联系人name',
+      title: '所属公司',
+      dataIndex: 'companyName',
+      key: 'companyName',
     },
     {
-      title: '手机号',
-      dataIndex: '手机号name',
-      key: '手机号name',
+      title: '合作平台名称',
+      dataIndex: 'platformName',
+      key: 'platformName',
     },
     {
-      title: '广告主名称',
-      dataIndex: '广告主名称name',
-      key: '广告主名称name',
+      title: '预计阅读数',
+      dataIndex: 'actionNum',
+      key: 'actionNum',
     },
     {
-      title: '任务标题',
-      dataIndex: '任务标题name',
-      key: '任务标题name',
+      title: '任务创建时间',
+      dataIndex: 'createdAt',
+      key: 'createdAt',
     },
     {
-      title: '总阅读量',
-      dataIndex: '总阅读量name',
-      key: '总阅读量name',
+      title: '投放开始~结束时间',
+      dataIndex: 'orderStartEndDate',
+      key: 'orderStartEndDate',
     },
     {
-      title: '订单时间',
-      dataIndex: '订单时间name',
-      key: '订单时间name',
-    },
-    {
-      title: '执行时间',
-      dataIndex: '执行时间name',
-      key: '执行时间name',
+      title: '创建销售',
+      dataIndex: 'salesman',
+      key: 'salesman',
     },
     {
       title: '订单状态',
-      dataIndex: '订单状态name',
-      key: '订单状态name',
-      render: text => <div>
-
-      </div>,
+      dataIndex: '订单状态orderId',
+      key: '订单状态orderId',
+      render: text => otherOrderStateMap[text]
     },
     {
-      title: '负责销售',
-      dataIndex: '负责销售name',
-      key: '负责销售name',
+      title: '上传订单文件',
+      dataIndex: 'fileUrl',
+      key: 'fileUrl',
+      render: (text, record) => {
+        return <>
+          上传结案报告
+        </>
+      }
     },
     {
       title: '操作',
-      dataIndex: '操作name',
-      key: '操作name',
-      render: text => <div>
-
+      dataIndex: 'operate',
+      key: 'operate',
+      align: 'center',
+      width: '230px',
+      render: text => <div className='children-mr'>
+        <Button type='primary'>确认</Button>
+        <Button type='primary'>驳回</Button>
+        <Button>查看详情</Button>
       </div>,
     },
   ];
-
+  const rowSelection = {
+    rowSelection: selectedRow,
+    onChange: (selectedRowKeys) => setSelectedRow(selectedRowKeys)
+  }
   return (
-    <Table dataSource={dataSource} columns={columns} />
+    <>
+      <Table dataSource={dataSource} columns={columns} rowSelection={rowSelection} />
+      <Button>批量确认</Button>
+      <Button style={{ marginLeft: 20 }}>批量驳回</Button>
+    </>
   )
 }
 
 export default CooperationList
+
 
 
