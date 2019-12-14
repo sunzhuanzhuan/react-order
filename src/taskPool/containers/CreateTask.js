@@ -12,6 +12,7 @@ import {
 import { parseUrlQuery } from "@/util/parseUrl";
 import update from 'immutability-helper'
 import moment from 'moment';
+import BraftEditor from 'braft-editor';
 
 
 const { Step } = Steps;
@@ -72,8 +73,18 @@ const CreateTask = (props) => {
           url: "http://prd-wby-img.oss-cn-beijing.aliyuncs.com/ORDER_IMG_UPLOAD/39069087673a43beb9d7bf18ca1c3a5a.jpg"
         }]
       },
-      budget: {},
-      content: {}
+      budget: {
+        totalAmount: 666,
+        locationLimited: "2"
+      },
+      content: {
+        title: '22322',
+        coverImage:  [{
+          uid: "asdasd",
+          url: "http://prd-wby-img.oss-cn-beijing.aliyuncs.com/ORDER_IMG_UPLOAD/39069087673a43beb9d7bf18ca1c3a5a.jpg"
+        }],
+        richContent: BraftEditor.createEditorState('sss')
+      }
     }
   })
 

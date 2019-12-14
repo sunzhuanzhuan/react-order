@@ -298,13 +298,15 @@ class BudgetForWeixin extends React.Component {
   cached = () => {
     let newVal = Object.assign({}, this.props.form.getFieldsValue())
     newVal.actionNum = this.state.actionNum
+    newVal.amount = this.state.amount
     this.props.prev("budget", newVal)
   }
 
   calculation = (amount = 0, taskOrderType) => {
     if (isNaN(amount) || amount <= 0) {
       return this.setState({
-        actionNum: 0
+        actionNum: 0,
+        amount: 0
       });
     }
     const { data, actions } = this.props
@@ -314,7 +316,7 @@ class BudgetForWeixin extends React.Component {
     }).then(({ data }) => {
       this.setState({
         actionNum: data,
-        amount: amount
+        amount: amount + data
       });
     })
   }
@@ -325,6 +327,7 @@ class BudgetForWeixin extends React.Component {
       if (!err) {
         let newVal = Object.assign({}, values)
         newVal.actionNum = this.state.actionNum
+        newVal.amount = this.state.amount
         this.props.next("budget", newVal)
       }
     });
@@ -397,7 +400,7 @@ class BudgetForWeixin extends React.Component {
           <div style={{
             height: 28,
             lineHeight: "28px"
-          }}>包含冻结服务费{actionNum}元，实际扣款为{amount + actionNum}元
+          }}>包含冻结服务费{actionNum}元，实际扣款为{amount}元
           </div>
         </FormItem>
         <FormItem label="内容发布位置" className='taskPosRadio'>
@@ -461,6 +464,7 @@ class BudgetForWeixin extends React.Component {
               <FormItem>
                 {getFieldDecorator('locationww', {
                   initialValue: budget.locationww,
+                  valuePropName: 'checked'
                 })(
                   <Checkbox>粉丝量</Checkbox>
                 )}
@@ -485,6 +489,7 @@ class BudgetForWeixin extends React.Component {
               <FormItem>
                 {getFieldDecorator('locationww2', {
                   initialValue: budget.locationww,
+                  valuePropName: 'checked'
                 })(
                   <Checkbox>近28天内有发文</Checkbox>
                 )}
@@ -496,6 +501,7 @@ class BudgetForWeixin extends React.Component {
               <FormItem>
                 {getFieldDecorator('locationww', {
                   initialValue: budget.locationww,
+                  valuePropName: 'checked'
                 })(
                   <Checkbox>28天内第一条平均阅读</Checkbox>
                 )}
@@ -519,6 +525,7 @@ class BudgetForWeixin extends React.Component {
               <FormItem>
                 {getFieldDecorator('locationww', {
                   initialValue: budget.locationww,
+                  valuePropName: 'checked'
                 })(
                   <Checkbox>粉丝性别比例</Checkbox>
                 )}
@@ -546,6 +553,7 @@ class BudgetForWeixin extends React.Component {
               <FormItem>
                 {getFieldDecorator('locationww', {
                   initialValue: budget.locationww,
+                  valuePropName: 'checked'
                 })(
                   <Checkbox>博主领取最低阅读数</Checkbox>
                 )}
@@ -570,6 +578,7 @@ class BudgetForWeixin extends React.Component {
               <FormItem>
                 {getFieldDecorator('locationww', {
                   initialValue: budget.locationww,
+                  valuePropName: 'checked'
                 })(
                   <Checkbox>只允许认证号接单</Checkbox>
                 )}

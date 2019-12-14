@@ -9,6 +9,7 @@ import {
 import { withRouter } from 'react-router-dom'
 import { WBYPlatformIcon } from "wbyui";
 import {
+  getCountDownTimeText,
   getIndustryName,
   openNewWindowPreviewForWeibo,
   openNewWindowPreviewForWeixin
@@ -124,6 +125,7 @@ class PreviewForWeixin extends React.Component {
     const { data } = this.props
     const { submitLoading } = this.state
     const { base, budget, content } = data
+    const [startDate, endDate] = base.orderDate
     const header = <div className='form-preview-header'>
       <WBYPlatformIcon weibo_type={9} widthSize={26} />
       <span className='title'>{base.orderName}</span>
@@ -131,11 +133,14 @@ class PreviewForWeixin extends React.Component {
     return (
       <div className="form-preview-container">
         <Descriptions title={header} column={1}>
+          <Descriptions.Item label="任务模式">{base.company.label}</Descriptions.Item>
           <Descriptions.Item label="所属公司">{base.company.label}</Descriptions.Item>
-          <Descriptions.Item label="行业分类">{getIndustryName(data.industryList, [...base.industry].pop()).itemValue}</Descriptions.Item>
+          <Descriptions.Item label="行业分类">{getIndustryName(this.props.industryList, [...base.industry].pop()).itemValue}</Descriptions.Item>
+          <Descriptions.Item label="任务开始时间">{startDate.format('YYYY-MM-DD HH:mm:ss')}</Descriptions.Item>
+          <Descriptions.Item label="任务结束时间">{endDate.format('YYYY-MM-DD HH:mm:ss')}</Descriptions.Item>
+          <Descriptions.Item label="任务持续时间">{getCountDownTimeText(endDate,0, 5, startDate)}</Descriptions.Item>
           <Descriptions.Item label="内容发布位置">{this.getLocationLimited(budget)}</Descriptions.Item>
           <Descriptions.Item label="预算">{numeral(budget.totalAmount).format("0,0.00")} 元</Descriptions.Item>
-          <Descriptions.Item label="任务结束时间">{base.orderEndDate.format('YYYY-MM-DD HH:mm:ss')}</Descriptions.Item>
           <Descriptions.Item label="发布后保留时长">{base.retainTime}小时</Descriptions.Item>
           <Descriptions.Item label="文章封面">
             <div className='image-wrap'>
