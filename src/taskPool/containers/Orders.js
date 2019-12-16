@@ -49,6 +49,7 @@ const Orders = (props) => {
         {...modalProps}
         visible={modalProps.visible}
         onOk={onOk}
+        footer={null}
         onCancel={() => setModalProps({ ...modalProps, visible: false })}
       >
         {modalProps.content}
