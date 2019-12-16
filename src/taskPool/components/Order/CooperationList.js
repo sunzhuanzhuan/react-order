@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-import { Table, Modal, Button } from 'antd'
+import { Table, Modal, Button, message } from 'antd'
 import { otherOrderStateMap, PARTNER_AWAIT, PENDING, OVER, MEDIUM_AWAIT } from '../../constants/orderConfig'
-console.log("TCL: otherOrderStateMap", otherOrderStateMap)
+import api from '@/api'
 import Scolltable from '@/components/Scolltable/Scolltable.js'
 import CooperationModel, { RejectForm } from './CooperationModel'
 const { confirm } = Modal;
@@ -10,14 +10,14 @@ function CooperationList(props) {
   const { platformOrderList, setModalProps } = props
   const dataSource = [
     {
-      key: '1',
+      orderId: '1',
       name: '胡彦斌',
       age: 32,
       address: '西湖区湖底公园1号',
       otherOrderState: '30'
     },
     {
-      key: '2',
+      orderId: '2',
       name: '胡彦祖',
       age: 42,
       address: '西湖区湖底公园1号',
@@ -25,41 +25,35 @@ function CooperationList(props) {
     },
   ];
   //合作方确认
-  function partnerOK() {
+  function orderOK(title, adOrderId, okText) {
     confirm({
-      title: '确认后执行单和结算金额不可撤回',
+      title: title,
+      okText: okText,
       onOk() {
-        console.log('ok');
+        updatePlatformOrder({ operationFlag: 1, adOrderId: adOrderId })
       },
       onCancel() {
         console.log('Cancel');
       },
     });
   }
-
-  function pendingOk() {
-    confirm({
-      title: '确认后结案报告不可撤回',
-      onOk() {
-        console.log('ok');
-      },
-      onCancel() {
-        console.log('Cancel');
-      },
-    });
+  //驳回、同意
+  async function updatePlatformOrder(params) {
+    try {
+      await api.post('/operator-gateway/cooperationPlatform/v2/updatePlatformOrder', { ...params })
+      message.error('操作成功')
+    } catch (error) {
+      message.error('操作失败')
+    }
   }
-  //确认批量执行
-  function batchOk() {
-    confirm({
-      title: '确定批量执行',
-      okText: '确认执行',
-      onOk() {
-        console.log('ok');
-      },
-      onCancel() {
-        console.log('Cancel');
-      },
-    });
+  //上传执行单、上传结案报告）
+  async function updatePlatformFile(params) {
+    try {
+      await api.post('/operator-gateway/cooperationPlatform/v2/updatePlatformFile', { ...params })
+      message.error('操作成功')
+    } catch (error) {
+      message.error('操作失败')
+    }
   }
   const columns = [
     {
@@ -123,22 +117,31 @@ function CooperationList(props) {
         const partner_await = record.otherOrderState == PARTNER_AWAIT
         //待执行
         const pending = record.otherOrderState == PENDING
+        const commProps = {
+          okFn: updatePlatformFile,
+          adOrderId: record.orderId,
+          cancelFn: () => setModalProps({ visible: false })
+        }
         return <>
           {partner_await ? <a type='primary' onClick={
             () => setModalProps({
               title: '请上传执行单并录入结算金额',
               visible: true,
-              content: <CooperationModel isPrice={partner_await} />
+              content: <CooperationModel isPrice={partner_await}
+                {...commProps}
+              />
             })
-          }>上传结案报告</a> : null}
+          }>上传执行单</a> : null}
 
           {pending ? <a type='primary' onClick={
             () => setModalProps({
               title: '请上传结案报告',
               visible: true,
-              content: <CooperationModel />
+              content: <CooperationModel
+                {...commProps} />
             })
-          }>上传结案报告</a> : null}
+          }>上传结案报告</a> : null
+          }
 
         </>
       }
@@ -159,17 +162,21 @@ function CooperationList(props) {
         const pending = record.otherOrderState == PENDING
         //已完成
         const over = record.otherOrderState == OVER
+        const { orderId } = record
         return <div className='children-mr'>
           {medium_await ? <Button type='primary' onClick=''>确定</Button> : null}
-          {partner_await ? <Button type='primary' onClick={partnerOK}>确定</Button> : null}
-          {pending ? <Button type='primary' onClick={pendingOk}>确定</Button> : null}
+          {partner_await ? <Button type='primary' onClick={() => orderOK('确认后执行单和结算金额不可撤回', [orderId])}>确定</Button> : null}
+          {pending ? <Button type='primary' onClick={() => orderOK('确认后结案报告不可撤回', [orderId])}>确定</Button> : null}
           {medium_await || partner_await ? <Button type='primary'
             onClick={() => setModalProps({
               title: '驳回',
               visible: true,
-              content: <RejectForm />
+              content: <RejectForm
+                adOrderId={[orderId]}
+                okFn={updatePlatformOrder}
+                cancelFn={() => setModalProps({ visible: false })} />
             })}>驳回</Button> : null}
-          {medium_await || partner_await || pending || over ? <Button>查看详情</Button> : null}
+          {medium_await || partner_await || pending || over ? <Button onClick={() => window.open(`orders-coodetail?orderId=${orderId}`)}>查看详情</Button> : null}
         </div>
       },
     },
@@ -178,16 +185,21 @@ function CooperationList(props) {
     rowSelection: selectedRow,
     onChange: (selectedRowKeys) => setSelectedRow(selectedRowKeys)
   }
-  function onOk() {
-    console.log("TCL: CooperationList -> selectedRow", selectedRow)
-  }
+
   return (
     <>
       <Scolltable scrollClassName='.ant-table-body' widthScroll={2000}>
         <Table dataSource={dataSource} columns={columns} rowSelection={rowSelection} scroll={{ x: 1800 }} rowKey='orderId' />
       </Scolltable>
-      <Button onClick={batchOk}>批量确认</Button>
-      <Button onClick={onOk} style={{ marginLeft: 20 }}>批量驳回</Button>
+      <Button onClick={() => orderOK('确定批量执行', selectedRow, '确认执行')} disabled={selectedRow.length == 0}>批量确认</Button>
+      <Button onClick={() => setModalProps({
+        title: '批量驳回',
+        visible: true,
+        content: <RejectForm
+          adOrderId={selectedRow}
+          okFn={updatePlatformOrder}
+          cancelFn={() => setModalProps({ visible: false })} />
+      })} style={{ marginLeft: 20 }} disabled={selectedRow.length == 0}>批量驳回</Button>
     </>
   )
 }
