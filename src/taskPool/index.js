@@ -4,6 +4,8 @@ import { Route } from 'react-router-dom';
 import CreateTask from './containers/CreateTask';
 import Tasks from './containers/Tasks';
 import Orders from './containers/Orders';
+import OrderCooDetail from './containers/OrderCooDetail';
+
 import Clues from './containers/Clues';
 import Attributes from './containers/Attributes';
 import Settings from './containers/Settings';
@@ -23,6 +25,7 @@ class Business extends Component {
         <Route path="/order/task/tasks-manage" component={Tasks} />
         <Route path="/order/task/create" component={CreateTask} />
         <Route path="/order/task/orders-manage" component={Orders} />
+        <Route path="/order/task/orders-coodetail" component={OrderCooDetail} />
         <Route path="/order/task/clues-manage" component={Clues} />
         <Route path="/order/task/attributes-manage" component={Attributes} />
         <Route path="/order/task/settings-manage" component={Settings} />
