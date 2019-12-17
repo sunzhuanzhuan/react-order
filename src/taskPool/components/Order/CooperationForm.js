@@ -4,7 +4,7 @@ import moment from 'moment'
 const format = 'YYYY/MM/DD'
 const { RangePicker } = DatePicker
 function CooperationForm(props) {
-  const { getFieldDecorator, validateFields } = props.form
+  const { getFieldDecorator, validateFields, resetFields } = props.form
   //搜索
   function searchForm(e) {
     e.preventDefault();
@@ -73,7 +73,7 @@ function CooperationForm(props) {
       </Form.Item>
       <Form.Item>
         <Button type='primary' onClick={searchForm}>查询</Button>
-        <Button style={{ marginLeft: 20 }}>重置</Button>
+        <Button style={{ marginLeft: 20 }} onClick={() => { resetFields() }}>重置</Button>
       </Form.Item>
     </Form>
   )
