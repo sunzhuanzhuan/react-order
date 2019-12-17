@@ -7,23 +7,8 @@ import CooperationModel, { RejectForm } from './CooperationModel'
 const { confirm } = Modal;
 function CooperationList(props) {
   const [selectedRow, setSelectedRow] = useState([])
-  const { platformOrderList, setModalProps } = props
-  const dataSource = [
-    {
-      orderId: '1',
-      name: '胡彦斌',
-      age: 32,
-      address: '西湖区湖底公园1号',
-      otherOrderState: '30'
-    },
-    {
-      orderId: '2',
-      name: '胡彦祖',
-      age: 42,
-      address: '西湖区湖底公园1号',
-      otherOrderState: '50'
-    },
-  ];
+  const { platformOrderList = {}, setModalProps } = props
+  const { list = [] } = platformOrderList
   //合作方确认
   function orderOK(title, adOrderId, okText) {
     confirm({
@@ -189,8 +174,28 @@ function CooperationList(props) {
   return (
     <>
       <Scolltable scrollClassName='.ant-table-body' widthScroll={2000}>
-        <Table dataSource={dataSource} columns={columns} rowSelection={rowSelection} scroll={{ x: 1800 }} rowKey='orderId' />
+        <Table dataSource={list || []}
+          columns={columns}
+          rowSelection={rowSelection}
+          scroll={{ x: 1800 }}
+          rowKey='orderId'
+          pagination={{
+            pageSize: platformOrderList.pageSize || 1,
+            showSizeChanger: true,
+            showQuickJumper: true,
+            total: 20,
+            current: 1,
+            onShowSizeChange: (current, size) => {
+              props.getPlatformOrderList({ page: { currentPage: current, pageSize: size } })
+            },
+
+            onChange: (page, pageSize) => {
+              props.getPlatformOrderList({ page: { currentPage: page, pageSize: pageSize } })
+            }
+          }} />
       </Scolltable>
+
+
       <Button onClick={() => orderOK('确定批量执行', selectedRow, '确认执行')} disabled={selectedRow.length == 0}>批量确认</Button>
       <Button onClick={() => setModalProps({
         title: '批量驳回',

@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react'
 import { connect } from 'react-redux'
 import * as actions from '@/taskPool/actions';
 import { WachatList, CooperationList, CooperationForm } from '../components/Order'
-import { Tabs, Modal } from 'antd';
+import { Tabs, Modal, Spin } from 'antd';
 import { bindActionCreators } from 'redux';
 const { TabPane } = Tabs;
 const Orders = (props) => {
   const [modalProps, setModalProps] = useState({ title: '', content: '' })
+  const [cooSearch, setCooSearch] = useState({ page: { currentPage: 1, pageSize: 10 } })
+  const [loading, setLoading] = useState(true)
   const { actions } = props
   useEffect(() => {
     getPlatformOrderList()
@@ -22,8 +24,12 @@ const Orders = (props) => {
       getPlatformOrderList()
     }
   }
-  function getPlatformOrderList(params) {
-    actions.getPlatformOrderList(params)
+  async function getPlatformOrderList(params) {
+    setLoading(true)
+    const data = { ...cooSearch, ...params }
+    setCooSearch(data)
+    await actions.getPlatformOrderList(data)
+    setLoading(false)
   }
   const comProps = {
     setModalProps,
@@ -31,20 +37,24 @@ const Orders = (props) => {
   }
   const { platformOrderList } = props.orderReducers
   const platformProps = {
-    platformOrderList
+    platformOrderList,
+    getPlatformOrderList
   }
   return (
     <div>
       订单管理
+      <Spin spinning={loading}>
         <Tabs onChange={callback} defaultActiveKey='2' >
-        <TabPane tab="微信公众号" key="1">
-          <WachatList {...comProps} />
-        </TabPane>
-        <TabPane tab="合作平台" key="2">
-          <CooperationForm />
-          <CooperationList {...comProps} {...platformProps} />
-        </TabPane>
-      </Tabs>
+          <TabPane tab="微信公众号" key="1">
+            <WachatList {...comProps} />
+          </TabPane>
+          <TabPane tab="合作平台" key="2">
+
+            <CooperationForm  {...platformProps} />
+            <CooperationList {...comProps} {...platformProps} />
+          </TabPane>
+        </Tabs>
+      </Spin>
       <Modal
         {...modalProps}
         visible={modalProps.visible}
