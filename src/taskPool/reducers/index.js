@@ -1,6 +1,8 @@
 import { combineReducers } from 'redux'
 import { handleActions, handleAction } from 'redux-actions';
 import * as order from './order'
+import * as account from './account'
+
 import {
   TPTaskManageList_success,
   TPGetTaskPosition_success,
@@ -121,5 +123,6 @@ export default combineReducers({
   excuteStatus,
   taskStatus,
   orderManageList,
-  ...order
+  ...order,
+  ...account
 })

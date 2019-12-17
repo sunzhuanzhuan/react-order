@@ -13,12 +13,7 @@ const Orders = (props) => {
   useEffect(() => {
     getPlatformOrderList()
   }, [])
-  function onOk(callback) {
-    setModalProps({ ...modalProps, visible: false })
-    if (typeof (callback) === "function") {
-      callback()
-    }
-  }
+
   function callback(key) {
     if (key == 2) {
       getPlatformOrderList()
@@ -58,7 +53,6 @@ const Orders = (props) => {
       <Modal
         {...modalProps}
         visible={modalProps.visible}
-        onOk={onOk}
         footer={null}
         onCancel={() => setModalProps({ ...modalProps, visible: false })}
       >
