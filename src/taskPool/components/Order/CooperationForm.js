@@ -73,7 +73,12 @@ function CooperationForm(props) {
       </Form.Item>
       <Form.Item>
         <Button type='primary' onClick={searchForm}>查询</Button>
-        <Button style={{ marginLeft: 20 }} onClick={() => { resetFields() }}>重置</Button>
+        <Button style={{ marginLeft: 20 }} onClick={() => {
+          resetFields()
+          props.getPlatformOrderList({
+            page: { currentPage: 1, pageSize: 10 }
+          })
+        }}>重置</Button>
       </Form.Item>
     </Form>
   )

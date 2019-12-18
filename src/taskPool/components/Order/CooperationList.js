@@ -7,7 +7,7 @@ import CooperationModel, { RejectForm } from './CooperationModel'
 const { confirm } = Modal;
 function CooperationList(props) {
   const [selectedRow, setSelectedRow] = useState([])
-  const { platformOrderList = {}, setModalProps } = props
+  const { platformOrderList = {}, setModalProps, getPlatformOrderList } = props
   const { list = [] } = platformOrderList
   //合作方确认
   function orderOK(title, adOrderId, okText) {
@@ -26,6 +26,7 @@ function CooperationList(props) {
   async function updatePlatformOrder(params) {
     try {
       await api.post('/operator-gateway/cooperationPlatform/v2/updatePlatformOrder', { ...params })
+      getPlatformOrderList()
       message.error('操作成功')
     } catch (error) {
       message.error('操作失败')
@@ -35,6 +36,7 @@ function CooperationList(props) {
   async function updatePlatformFile(params) {
     try {
       await api.post('/operator-gateway/cooperationPlatform/v2/updatePlatformFile', { ...params })
+      getPlatformOrderList()
       message.error('操作成功')
     } catch (error) {
       message.error('操作失败')
@@ -105,7 +107,7 @@ function CooperationList(props) {
         const commProps = {
           okFn: updatePlatformFile,
           adOrderId: record.orderId,
-          cancelFn: () => setModalProps({ visible: false })
+          cancelFn: () => setModalProps({ visible: false }),
         }
         return <>
           {partner_await ? <a type='primary' onClick={

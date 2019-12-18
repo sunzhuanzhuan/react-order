@@ -3,6 +3,8 @@ import { Form, Input, Select, DatePicker, Button } from 'antd'
 import './index.less'
 import accountConfig from '../../../constants/accountConfig'
 import KpiForm from './KpiForm'
+import FormItem from 'antd/lib/form/FormItem'
+import TagItem from './TagItem'
 const { RangePicker } = DatePicker;
 const formConfig = [
   { label: 'accountID', type: 'input', key: 'accountId' },
@@ -32,7 +34,18 @@ const formReceive = [
 ]
 function AccountForm(props) {
   const { isReceive, form } = props
-  const { getFieldDecorator } = form
+  const { getFieldDecorator, resetFields, validateFields } = form
+  function onSearch(e) {
+    e.preventDefault();
+    validateFields((err, values) => {
+
+      console.log("TCL: onSearch -> values", values)
+
+    })
+  }
+  function reset() {
+    resetFields()
+  }
   function getChildren({ type, key, dataShow = 'name', dataValue = 'value' }) {
     switch (type) {
       case 'select':
@@ -58,9 +71,27 @@ function AccountForm(props) {
           )}&nbsp;&nbsp;{one.text && one.text[1]}
         </div>
       </Form.Item>)}
-      {isReceive ? null : <KpiForm form={form} />}
-      <Button type='primary'>筛选</Button>
-      <Button style={{ marginLeft: 10 }}>重置</Button>
+      {isReceive
+        ? <>
+          <Button type='primary' onClick={onSearch}>筛选</Button>
+          <Button style={{ marginLeft: 10 }}>重置</Button></>
+        : <>
+          <KpiForm form={form} />
+          <div>
+            <FormItem label='常见分类'>
+              {getFieldDecorator(`form.classificationIds`, {
+                //rules: [{ required: true, message: 'Please input your username!' }],
+              })(
+                <TagItem />
+              )}
+            </FormItem>
+          </div>
+          <div className='button-footer'>
+            <Button type='primary' onClick={onSearch}>筛选</Button>
+            <Button style={{ marginLeft: 10 }}>重置</Button>
+          </div>
+        </>}
+
     </Form>
   )
 }
