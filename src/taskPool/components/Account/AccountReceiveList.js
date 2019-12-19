@@ -1,30 +1,14 @@
 import React, { useState } from 'react'
-import { Table, Badge, Button } from 'antd'
+import { Table, Badge, Button, message, Modal } from 'antd'
 import { StateInfo, KpiTable } from './AccountList'
 const shelfState = {
   1: { name: '上架', state: 'success' },
   2: { name: '下架', state: 'error' }
 }
+const { confirm } = Modal;
 function AccountReceiveList(props) {
   const [selectedRow, setSelectedRow] = useState([])
-
-  const dataSource = [
-    {
-      accountId: '1',
-      snsName: '胡彦斌',
-      age: 32,
-      address: '西湖区湖底公园1号',
-      kpiTarget: { mediaIndex1stReadKpiNum: 1 }
-    },
-    {
-      accountId: '2',
-      snsName: '胡彦祖',
-      age: 42,
-      address: '西湖区湖底公园1号',
-      kpiTarget: { mediaIndex1stReadKpiNum: 1 }
-    },
-  ];
-
+  const { claimAccountList, actions, changePage } = props
   const columns = [
     {
       title: 'account ID',
@@ -86,7 +70,7 @@ function AccountReceiveList(props) {
       align: 'center',
       render: (text, record) => {
         return <div className='children-mr'>
-          <Button type='primary'>领取账号</Button>
+          <Button type='primary' onClick={() => claimAccountAsync(record.accountId)}>领取账号</Button>
         </div>
       }
     },
@@ -96,9 +80,19 @@ function AccountReceiveList(props) {
     rowSelection: selectedRow,
     onChange: (selectedRowKeys) => setSelectedRow(selectedRowKeys)
   }
-
+  async function claimAccountAsync(id) {
+    await actions.claimAccount({ accountId: [id] })
+    message.success('领取成功')
+  }
+  async function batchClaim() {
+    const { data } = await actions.claimAccount({ accountId: selectedRow })
+    Modal.success({
+      title: '成功领取/领取总数',
+      content: `${data.claimSuccessNum}/${data.claimTotalNum}`,
+    });
+  }
   return (<>
-    <Table dataSource={dataSource} columns={columns} rowKey='accountId'
+    <Table dataSource={claimAccountList.list} columns={columns} rowKey='accountId'
       rowSelection={rowSelection}
       pagination={{
         pageSize: 2,
@@ -107,14 +101,14 @@ function AccountReceiveList(props) {
         total: 20,
         current: 1,
         onShowSizeChange: (current, size) => {
-          //props.getPlatformOrderList({ page: { currentPage: current, pageSize: size } })
+          changePage({ page: { currentPage: current, pageSize: size } })
         },
 
         onChange: (page, pageSize) => {
-          //props.getPlatformOrderList({ page: { currentPage: page, pageSize: pageSize } })
+          changePage({ page: { currentPage: page, pageSize: pageSize } })
         }
       }} />
-    <Button disabled={selectedRow.length == 0}>批量领取账号</Button>
+    <Button disabled={selectedRow.length == 0} onClick={batchClaim}>批量领取账号</Button>
   </>)
 }
 

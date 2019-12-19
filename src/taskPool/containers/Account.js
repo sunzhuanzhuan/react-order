@@ -6,11 +6,13 @@ import AccountForm from '../components/Account/AccountForm'
 import AccountList from '../components/Account/AccountList'
 import { Modal, Tabs, Spin, Button, Badge } from 'antd'
 import TitleBox from '../base/TitleBox'
+const baseSearch = { page: { currentPage: 1, pageSize: 10 } }
 const { TabPane } = Tabs;
 function Account(props) {
   const [modalProps, setModalProps] = useState({ title: '', content: '' })
   const [searchParam, setSearchParam] = useState({ page: { currentPage: 1, pageSize: 10 } })
   const [loading, setLoading] = useState(true)
+  const [defaultSearchKey, setDefaultSearchKey] = useState()
   useEffect(() => {
     getAccountListAsync()
   }, [])
@@ -22,37 +24,43 @@ function Account(props) {
     setSearchParam(params)
     setLoading(false)
   }
+
+  //操作筛选项
+  function searchAction(params) {
+    getAccountListAsync({ ...baseSearch, ...params })
+  }
+  //操作分页使用查询
+  function changePage(params) {
+    getAccountListAsync({ ...searchParam, ...params, ...defaultSearchKey })
+  }
+  //重置
+  function onReset() {
+    setSearchParam(baseSearch)
+  }
+
   const comProps = {
     accountList,
     setModalProps,
-    searchParam
+    searchParam,
+    actions,
+    changePage,
   }
   return (
     <div>
       <h2>账号列表</h2>
       <TitleBox title='筛选项' >
-        <AccountForm />
+        <AccountForm searchAction={searchAction} onReset={onReset} />
       </TitleBox>
+      <div style={{ position: 'relative' }}>
+        <a href="/order/task/account-receive" style={{ position: 'absolute', left: 99, zIndex: 999, top: -10 }}>
+          <Badge count={5} >
+            <Button type='primary' >账号领取</Button>
+          </Badge>
+        </a>
+      </div>
       <Spin spinning={loading}>
         <TitleBox title='账号列表' >
-          <div style={{ position: 'relative' }}>
-            <a href="/order/task/account-receive" target='_blank' style={{ position: 'absolute', right: 0, zIndex: 999 }}>
-              <Badge count={5} onClick={() => window.open('/order/task/account-receive')}>
-                <Button type='primary' >账号领取</Button>
-              </Badge>
-            </a>
-          </div>
-          <Tabs defaultActiveKey="1" >
-            <TabPane tab={`全部（${11}）`} key="1">
-              <AccountList {...comProps} />
-            </TabPane>
-            <TabPane tab={`待审核（${9}）`} key="2">
-              <AccountList {...comProps} />
-            </TabPane>
-            <TabPane tab={`待评估（${0}）`} key="3">
-              <AccountList {...comProps} />
-            </TabPane>
-          </Tabs>
+          <AccountList {...comProps} />
         </TitleBox>
       </Spin>
       <Modal

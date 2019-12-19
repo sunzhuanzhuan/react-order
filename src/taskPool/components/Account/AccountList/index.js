@@ -1,8 +1,12 @@
 import React, { useState } from 'react'
-import { Table, Badge, Button, Alert } from 'antd'
+import { Table, Badge, Button, Alert, Modal, Input, Form } from 'antd'
 import Scolltable from '@/components/Scolltable/Scolltable.js'
 import MessageIcon from '../../../base/MessageIcon'
+import accountInterface from '@/taskPool/constants/accountInterface.js'
+import api from '@/api'
 import './index.less'
+import TextArea from 'antd/lib/input/TextArea'
+const { confirm } = Modal;
 const mapState = {
   1: { name: '正常', state: 'success' },
   2: { name: '异常', state: 'error' }
@@ -14,22 +18,7 @@ const shelfState = {
 function AccountList(props) {
   const [selectedRow, setSelectedRow] = useState([])
   const { list = [] } = props.accountList
-  const dataSource = [
-    {
-      accountId: '1',
-      snsName: '胡彦斌',
-      age: 32,
-      address: '西湖区湖底公园1号',
-      kpiTarget: { mediaIndex1stReadKpiNum: 1 }
-    },
-    {
-      accountId: '2',
-      snsName: '胡彦祖',
-      age: 42,
-      address: '西湖区湖底公园1号',
-      kpiTarget: { mediaIndex1stReadKpiNum: 1 }
-    },
-  ];
+  const { setModalProps, actions } = props
 
   const columns = [
     {
@@ -120,11 +109,13 @@ function AccountList(props) {
       fixed: 'right',
       align: 'center',
       render: (text, record) => {
+        const { accountId, auditState, estimateState, shelfState } = record
         return <div className='children-mr'>
-          <Button type='primary'>审核</Button>
-          <Button type='primary'>查看详情</Button>
-          <Button type='primary'>评估</Button>
-          {record.shelfState ? <Button>{shelfState[record.shelfState].name}</Button> : null}
+          {auditState == 1 ? <Button type='primary'>审核</Button> : null}
+          {auditState == 2 || estimateState == 2 ? <Button type='primary'>查看详情</Button> : null}
+          {estimateState == 1 ? <Button type='primary'>评估</Button> : null}
+          {shelfState == 1 ? <Button onClick={() => offTake(accountId)}>下架</Button> : null}
+          {shelfState == 2 ? <Button onClick={() => onTake(accountId)}>上架</Button> : null}
         </div>
       }
     },
@@ -134,9 +125,49 @@ function AccountList(props) {
     rowSelection: selectedRow,
     onChange: (selectedRowKeys) => setSelectedRow(selectedRowKeys)
   }
+  function batchPast() {
+    confirm({
+      title: '确认批量通过?',
+      // content: 'Some descriptions',
+      onOk() {
+        console.log('OK');
+      },
+      onCancel() {
+        console.log('Cancel');
+      },
+    });
+  }
+  function batchNOPast() {
+    setModalProps({
+      title: '填写批量不通过原因（50字以内）',
+      content: <ReasonForm />,
+      visible: true,
+    })
+  }
+  async function updateAccountStateMsg(params) {
+    await actions.updateAccountStateMsg(params)
 
+  }
+  function offTake(accountId) {
+    setModalProps({
+      title: '填写下架原因（50字以内）',
+      content: <ReasonForm okText='确认下架' onOk={actions.updateAccountStateMsg} />,
+      visible: true,
+    })
+  }
+  function onTake(accountId) {
+    confirm({
+      title: '确认上架吗?',
+      onOk() {
+        actions.updateAccountStateMsg({ accountId: accountId, operationFlag: 1 })
+      },
+      onCancel() { },
+    });
+  }
+  const isShowCheacked = selectedRow.length == 0
   return (<>
-    <Alert message={<span>已选择 <a>{selectedRow.length}</a> 个账号    合计：{10} 个</span>} type="info" />
+    {isShowCheacked ? null : <Alert message={<span>已选择 <a>{selectedRow.length}</a> 个账号    合计：{10} 个</span>} type="info" />}
+    <br />
     <Scolltable scrollClassName='.ant-table-body' widthScroll={2000}>
       <Table dataSource={list} columns={columns} rowKey='accountId'
         rowSelection={rowSelection}
@@ -148,16 +179,16 @@ function AccountList(props) {
           total: 20,
           current: 1,
           onShowSizeChange: (current, size) => {
-            //props.getPlatformOrderList({ page: { currentPage: current, pageSize: size } })
+            props.changePage({ page: { currentPage: current, pageSize: size } })
           },
 
           onChange: (page, pageSize) => {
-            //props.getPlatformOrderList({ page: { currentPage: page, pageSize: pageSize } })
+            props.changePage({ page: { currentPage: page, pageSize: pageSize } })
           }
         }} />
     </Scolltable>
-    <Button disabled={selectedRow.length == 0}>批量审核通过</Button>
-    <Button style={{ marginLeft: 20 }} disabled={selectedRow.length == 0}>批量审核不通过</Button>
+    <Button disabled={isShowCheacked} onClick={batchPast}>批量审核通过</Button>
+    <Button style={{ marginLeft: 20 }} disabled={isShowCheacked} onClick={batchNOPast}>批量审核不通过</Button>
   </>)
 }
 
@@ -193,3 +224,30 @@ export const StateInfo = ({ value, okText = '正常', errorText = '异常', erro
     </>}
   </div> : '-'
 }
+
+function Reason(props) {
+  const { isReceive, form, okText = '确认不通过' } = props
+  const { getFieldDecorator, resetFields, validateFields } = form
+  function onOk() {
+    validateFields((err, values) => {
+      if (!err) {
+        props.onOk && props.onOk(values)
+      }
+    })
+  }
+  return <Form>
+    <Form.Item>
+      {getFieldDecorator(`reason`, {
+        rules: [{ required: true, message: '请填写原因!' }],
+      })(
+        <TextArea rows={4} placeholder='请填写原因（50字以内）' />
+      )}
+    </Form.Item>
+    <div className='button-footer'>
+      <Button type='primary' onClick={onOk}>{okText}</Button>
+      <Button onClick={props.onCancel}>取消</Button>
+    </div>
+
+  </Form>
+}
+const ReasonForm = Form.create()(Reason)
