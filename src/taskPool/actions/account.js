@@ -1,0 +1,88 @@
+import { createHttpAction } from 'redux-action-extend'
+import Interface from '../constants/accountInterface';
+import { createAction } from "redux-actions";
+// 账号管理（合作平台）
+export const {
+  getAccountList,
+  getAccountList_success,
+} = createHttpAction('getAccountList', Interface.getAccountList, {
+  method: 'post'
+});
+//上下架
+export const {
+  updateAccountStateMsg,
+  updateAccountStateMsg_success,
+} = createHttpAction('updateAccountStateMsg', Interface.updateAccountStateMsg, {
+  method: 'post'
+});
+
+// 领取列表
+export const {
+  getClaimAccountList,
+  getClaimAccountList_success,
+} = createHttpAction('getClaimAccountList', Interface.getClaimAccountList, {
+  method: 'post'
+});
+//领取账号
+export const {
+  claimAccount,
+  claimAccount_success,
+} = createHttpAction('claimAccount', Interface.claimAccount, {
+  method: 'post'
+});
+
+
+//账号详情
+export const {
+  getAccountDetail,
+  getAccountDetail_success,
+} = createHttpAction('getAccountDetail', Interface.getAccountDetail, {
+  method: 'post'
+});
+
+//批量通过/批量拒绝
+export const {
+  batchUpdateAccountState,
+  batchUpdateAccountState_success,
+} = createHttpAction('batchUpdateAccountState', Interface.batchUpdateAccountState, {
+  method: 'post'
+});
+
+//账号审核
+export const {
+  auditAccount,
+  auditAccount_success,
+} = createHttpAction('auditAccount', Interface.auditAccount, {
+  method: 'post'
+});
+
+//内容评估查询
+export const {
+  accountEstimateDetails,
+  accountEstimateDetails_success,
+} = createHttpAction('accountEstimateDetails', Interface.accountEstimateDetails, {
+  method: 'post'
+});
+
+//内容评估提交
+export const {
+  accountEstimateSubmit,
+  accountEstimateSubmit_success,
+} = createHttpAction('accountEstimateSubmit', Interface.accountEstimateSubmit, {
+  method: 'post'
+});
+
+//账号评语提交
+export const {
+  updateAccountEstimateDescribe,
+  updateAccountEstimateDescribe_success,
+} = createHttpAction('updateAccountEstimateDescribe', Interface.updateAccountEstimateDescribe, {
+  method: 'post'
+});
+
+//蜂窝派账号管理页签数量
+export const {
+  getAccountTabNumber,
+  getAccountTabNumber_success,
+} = createHttpAction('getAccountTabNumber', Interface.getAccountTabNumber);
+
