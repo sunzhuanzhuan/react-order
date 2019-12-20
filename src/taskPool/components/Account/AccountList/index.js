@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Table, Badge, Button, Alert, Modal, Input, Form } from 'antd'
+import { Table, Badge, Button, Alert, Modal, Input, Form, message } from 'antd'
 import Scolltable from '@/components/Scolltable/Scolltable.js'
 import MessageIcon from '../../../base/MessageIcon'
 import accountInterface from '@/taskPool/constants/accountInterface.js'
@@ -7,10 +7,6 @@ import api from '@/api'
 import './index.less'
 import TextArea from 'antd/lib/input/TextArea'
 const { confirm } = Modal;
-const mapState = {
-  1: { name: '正常', state: 'success' },
-  2: { name: '异常', state: 'error' }
-}
 const shelfState = {
   1: { name: '上架', state: 'success' },
   2: { name: '下架', state: 'error' }
@@ -18,7 +14,7 @@ const shelfState = {
 function AccountList(props) {
   const [selectedRow, setSelectedRow] = useState([])
   const { list = [] } = props.accountList
-  const { setModalProps, actions } = props
+  const { setModalProps, batchUpdateAccountStateAsync, updateAccountStateMsgAsync } = props
 
   const columns = [
     {
@@ -128,30 +124,30 @@ function AccountList(props) {
   function batchPast() {
     confirm({
       title: '确认批量通过?',
-      // content: 'Some descriptions',
       onOk() {
-        console.log('OK');
+        batchUpdateAccountStateAsync({ operationFlag: 1, accountId: selectedRow })
       },
       onCancel() {
-        console.log('Cancel');
       },
     });
   }
   function batchNOPast() {
     setModalProps({
       title: '填写批量不通过原因（50字以内）',
-      content: <ReasonForm />,
+      content: <ReasonForm onOk={(value) => batchUpdateAccountStateAsync(
+        { remark: value, accountId: selectedRow, operationFlag: 2 }
+      )} />,
       visible: true,
     })
   }
-  async function updateAccountStateMsg(params) {
-    await actions.updateAccountStateMsg(params)
 
-  }
   function offTake(accountId) {
     setModalProps({
       title: '填写下架原因（50字以内）',
-      content: <ReasonForm okText='确认下架' onOk={actions.updateAccountStateMsg} />,
+      content: <ReasonForm okText='确认下架'
+        onOk={(value) => updateAccountStateMsgAsync(
+          { remark: value, accountId: accountId, operationFlag: 2 }
+        )} />,
       visible: true,
     })
   }
@@ -159,7 +155,7 @@ function AccountList(props) {
     confirm({
       title: '确认上架吗?',
       onOk() {
-        actions.updateAccountStateMsg({ accountId: accountId, operationFlag: 1 })
+        updateAccountStateMsgAsync({ accountId: accountId, operationFlag: 1 })
       },
       onCancel() { },
     });

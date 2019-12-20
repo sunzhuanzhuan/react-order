@@ -18,3 +18,9 @@ export const claimAccountList = handleActions({
   list: []
 })
 
+//蜂窝派账号管理页签数量
+export const accountTabNumber = handleActions({
+  [account.getAccountTabNumber_success]: (state, action) => {
+    return { ...action.payload.data }
+  },
+}, {})

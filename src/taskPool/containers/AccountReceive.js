@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import * as actions from '@/taskPool/actions';
 import { bindActionCreators } from 'redux';
 import AccountReceiveList from '../components/Account/AccountReceiveList'
-import AccountForm from '../components/Account/AccountForm'
+import AccountReceiveForm from '../components/Account/AccountReceiveForm'
 import { Modal, Spin, Icon } from 'antd'
 import BreadCrumbs from '../base/BreadCrumbs'
 const baseSearch = { page: { currentPage: 1, pageSize: 10 } }
@@ -37,7 +37,7 @@ function AccountReceive(props) {
   return (
     <div>
       <BreadCrumbs link='/order/task/account-manage' text={<h2>账号领取</h2>} />
-      <AccountForm isReceive={true} searchAction={searchAction} onReset={onReset} />
+      <AccountReceiveForm searchAction={searchAction} onReset={onReset} />
       <Spin spinning={isLoading}>
         <AccountReceiveList claimAccountList={claimAccountList} actions={actions} changePage={changePage} />
       </Spin>

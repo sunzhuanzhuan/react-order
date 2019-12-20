@@ -1,7 +1,7 @@
 const baseUrl = 'operator-gateway/accountMapping/v2/'
 export default {
   getAccountList: `${baseUrl}getAccountList`,//账号管理
-  updateAccountStateMsg: `${baseUrl}getAccountList`,//上下架
+  updateAccountStateMsg: `${baseUrl}updateAccountStateMsg`,//上下架
   getAccountDetail: `${baseUrl}getAccountDetail`,//账号详情
   batchUpdateAccountState: `${baseUrl}batchUpdateAccountState`,//批量通过/批量拒绝
   getClaimAccountList: `${baseUrl}claimAccountList`,//领取列表
