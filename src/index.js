@@ -3,7 +3,7 @@ import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 import store, { history } from './store';
 import 'babel-polyfill';
-import { LocaleProvider } from 'antd';
+import { ConfigProvider } from 'antd';
 import './index.less';
 import {
   BrowserRouter as Router,
@@ -55,7 +55,7 @@ const routes = () => (
 );
 
 render(
-  <LocaleProvider locale={zhCN}>
+  <ConfigProvider locale={zhCN}>
     <Provider store={store}>
       <Router>
         <Switch>
@@ -69,6 +69,6 @@ render(
         </Switch>
       </Router>
     </Provider>
-  </LocaleProvider>,
+  </ConfigProvider>,
   document.getElementById('root')
 );

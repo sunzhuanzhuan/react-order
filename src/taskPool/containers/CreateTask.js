@@ -18,16 +18,22 @@ import BraftEditor from 'braft-editor';
 const { Step } = Steps;
 let forms = {
   '9': [
-    FormBase,
+    FormBase.media,
     FormBudget.weixin,
     FormContent.weixin,
     FormPreview.weixin
   ],
   '1': [
-    FormBase,
+    FormBase.media,
     FormBudget.weibo,
     FormContent.weibo,
     FormPreview.weibo
+  ],
+  '1000': [
+    FormBase.partner,
+    FormBudget[12306],
+    FormContent[12306],
+    FormPreview[12306]
   ]
 }
 
@@ -47,6 +53,8 @@ const CreateTask = (props) => {
   const [ authToken, setAuthToken ] = useState("")
   // 行业分类
   const [ industryList, setIndustryList ] = useState([])
+  // 经营内容
+  const [ businessScopeList, setBusinessScopeList ] = useState([])
   // 账户余额
   const [ balance, setBalance ] = useState(0)
   // 任务发文位置
@@ -56,10 +64,12 @@ const CreateTask = (props) => {
 
   // 任务数据
   const [ state, setState ] = useState(() => {
+    let defaultPlatformId = Object.keys(forms).indexOf(platform) === -1 ? 9 : Number(platform)
+
     const [ companyId, companyName ] = company.split("::")
     return {
       base: {
-        platformId: Number(platform) || 9,
+        platformId: defaultPlatformId,
         company: lockCompanySelect ? {
           label: companyName,
           key: companyId
@@ -68,10 +78,13 @@ const CreateTask = (props) => {
         taskType: "2",
         industry: ["10000", "10002"],
         orderDate: [moment("2019-12-30"), moment("2020-01-30")],
+        orderStartDate: moment("2019-12-30"),
+        orderEndDate: moment("2020-01-30"),
         orderCoverImage: [{
           uid: "asdasd",
           url: "http://prd-wby-img.oss-cn-beijing.aliyuncs.com/ORDER_IMG_UPLOAD/39069087673a43beb9d7bf18ca1c3a5a.jpg"
-        }]
+        }],
+        businessScope: "1"
       },
       budget: {
         totalAmount: 666,
@@ -136,19 +149,29 @@ const CreateTask = (props) => {
     }
   }, [])
 
+  const getBusinessScope = (industryId) => {
+    setTimeout(() => {
+      setBusinessScopeList([
+        {id: 1, scopeName: '内容1'},
+        {id: 2, scopeName: '内容2'},
+        {id: 3, scopeName: '内容3'},
+      ])
+    },1000);
+  }
+
   const childProps = {
-    current, authToken, industryList, balance, lockCompanySelect, taskPositionList
+    current, authToken, industryList, balance, lockCompanySelect, taskPositionList, businessScopeList
   }
   const { base, budget, content } = state
   const { actions, taskPoolData = {} } = props;
-  const { platformId = 9 } = base
+  const { platformId } = base
   const FormComponent = forms[platformId][current] || Empty
   return (
     <div className='task-pool-page-container create-task-page'>
       <header>
         <Steps current={current}>
           <Step title="填写信息" description="填写任务基本信息，选择任务模式" />
-          <Step title="设置预算" description="设置任务的指标或预算" />
+          <Step title="设置指标" description="设置任务的指标或预算" />
           <Step title="撰写内容" description="填写所需发布的内容信息" />
           <Step title="预览" description="生成任务预览" />
         </Steps>
@@ -161,12 +184,14 @@ const CreateTask = (props) => {
           data={state}
           actions={actions}
           getCompanyBalance={getCompanyBalance}
+          getBusinessScope={getBusinessScope}
           {...childProps}
         />
       </main>
     </div>
   )
 };
+
 
 
 const mapStateToProps = (state) => ({
