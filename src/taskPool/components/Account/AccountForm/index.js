@@ -6,7 +6,7 @@ import FormItem from 'antd/lib/form/FormItem'
 import TagItem from './TagItem'
 import moment from 'moment'
 import SearchForm from '../../../base/SearchForm/index'
-const format = 'YYYY/MM/DD'
+const format = 'YYYY-MM-DD'
 const formConfig = [
   { label: 'accountID', type: 'input', key: 'accountId' },
   { label: '平台ID', type: 'input', key: 'platformId' },

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Form, Input, DatePicker, Select, Button } from 'antd'
 import moment from 'moment'
-const format = 'YYYY/MM/DD'
+const format = 'YYYY-MM-DD'
 const { RangePicker } = DatePicker
 function CooperationForm(props) {
   const { getFieldDecorator, validateFields, resetFields } = props.form

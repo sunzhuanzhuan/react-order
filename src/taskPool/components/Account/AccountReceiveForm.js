@@ -3,7 +3,7 @@ import { Form, Button } from 'antd'
 import accountConfig from '../../constants/accountConfig'
 import moment from 'moment'
 import SearchForm from '../../base/SearchForm/index'
-const format = 'YYYY/MM/DD'
+const format = 'YYYY-MM-DD'
 const formConfig = [
   { label: 'accountID', type: 'input', key: 'accountId' },
   { label: '平台ID', type: 'input', key: 'platformId' },

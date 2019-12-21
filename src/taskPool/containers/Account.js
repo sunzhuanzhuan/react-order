@@ -7,7 +7,6 @@ import AccountList from '../components/Account/AccountList'
 import { Modal, Tabs, Spin, Button, Badge, message } from 'antd'
 import TitleBox from '../base/TitleBox'
 const baseSearch = { page: { currentPage: 1, pageSize: 10 } }
-const { TabPane } = Tabs;
 function Account(props) {
   const [modalProps, setModalProps] = useState({ title: '', content: '' })
   const [searchParam, setSearchParam] = useState({ page: { currentPage: 1, pageSize: 10 } })

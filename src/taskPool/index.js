@@ -11,7 +11,7 @@ import Attributes from './containers/Attributes';
 import Settings from './containers/Settings';
 import Account from './containers/Account';
 import AccountReceive from './containers/AccountReceive';
-
+import AccountDetails from './containers/AccountDetails'
 
 class Business extends Component {
   render() {
@@ -32,6 +32,8 @@ class Business extends Component {
         <Route path="/order/task/settings-manage" component={Settings} />
         <Route path="/order/task/account-manage" component={Account} />
         <Route path="/order/task/account-receive" component={AccountReceive} />
+        <Route path="/order/task/account-details" component={AccountDetails} />
+
       </div>
     )
   }

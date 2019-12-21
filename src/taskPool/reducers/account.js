@@ -24,3 +24,9 @@ export const accountTabNumber = handleActions({
     return { ...action.payload.data }
   },
 }, {})
+//账号详情页
+export const accountDetail = handleActions({
+  [account.getAccountDetail_success]: (state, action) => {
+    return { ...action.payload.data }
+  },
+}, {})

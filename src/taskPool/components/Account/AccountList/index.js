@@ -106,10 +106,11 @@ function AccountList(props) {
       align: 'center',
       render: (text, record) => {
         const { accountId, auditState, estimateState, shelfState } = record
+        const url = `/order/task/account-details?accountId=${accountId}`
         return <div className='children-mr'>
-          {auditState == 1 ? <Button type='primary'>审核</Button> : null}
-          {auditState == 2 || estimateState == 2 ? <Button type='primary'>查看详情</Button> : null}
-          {estimateState == 1 ? <Button type='primary'>评估</Button> : null}
+          {auditState == 1 ? <Button type='primary' onClick={() => window.open(url, "_self")}>审核</Button> : null}
+          {auditState == 2 || estimateState == 2 ? <Button type='primary' onClick={() => window.open(url, "_self")}>查看详情</Button> : null}
+          {estimateState == 1 ? <Button type='primary' onClick={() => window.open(url, "_self")}>评估</Button> : null}
           {shelfState == 1 ? <Button onClick={() => offTake(accountId)}>下架</Button> : null}
           {shelfState == 2 ? <Button onClick={() => onTake(accountId)}>上架</Button> : null}
         </div>
