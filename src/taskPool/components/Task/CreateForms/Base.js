@@ -2,7 +2,7 @@
  * 创建任务-基本信息表单
  */
 import React from 'react'
-import { Form, Radio, Button, Cascader, Tooltip, DatePicker } from 'antd'
+import { Form, Radio, Button, Cascader, Tooltip, DatePicker, Select } from 'antd'
 import RemoteSearchSelect from "@/taskPool/base/RemoteSearchSelect";
 import { InputCount } from "@/base/Input";
 import { OssUpload, WBYPlatformIcon } from "wbyui";
@@ -15,7 +15,7 @@ const { RangePicker } = DatePicker
 const FormItem = Form.Item
 
 @Form.create()
-export default class Base extends React.Component {
+class BaseForMedia extends React.Component {
   constructor(props) {
     super(props)
     this.defaultDisableDate = moment().add(31, 'm').startOf('m')
@@ -270,4 +270,213 @@ export default class Base extends React.Component {
       </Form>
     )
   }
+}
+
+@Form.create()
+class BaseForPartner extends React.Component {
+  constructor(props) {
+    super(props)
+    this.defaultDisableDate = moment().endOf('d')
+    let [ startData, endData ] = props.data.base.orderDate || []
+    this.state = {
+      endOpen: false,
+      dateDuration: (startData && endData) ?
+        "共计" + getCountDownTimeText(endData, 0, 5, startData) :
+        "请选择时间",
+      disabledEndDate: moment(this.defaultDisableDate).add(1, 'd')
+    }
+  }
+
+  handleSubmit = (e) => {
+    e && e.preventDefault()
+    this.props.form.validateFields((err, values) => {
+      if (!err) {
+        let newVal = Object.assign({}, values)
+        this.props.next("base", newVal)
+      }
+    });
+  }
+
+  disabledStartDate = (current) => {
+    return current && current < this.defaultDisableDate
+  }
+  disabledEndDate = (current) => {
+    return current && current < this.state.disabledEndDate
+  }
+
+  render() {
+
+    const { form, formLayout, data, actions } = this.props
+    const { base } = data
+    const { getFieldDecorator, getFieldValue } = form
+
+    return (
+      <Form onSubmit={this.handleSubmit}  {...formLayout}>
+        <FormItem label="任务名称">
+          {getFieldDecorator('orderName', {
+            initialValue: base.orderName,
+            rules: [
+              { required: true, message: '请输入任务名称', whitespace: true },
+              { max: 20, message: '任务名称不大于20字' }
+            ]
+          })(
+            <InputCount max={20} placeholder="请输入任务名称" />
+          )}
+        </FormItem>
+        <FormItem label="任务发布平台">
+          {getFieldDecorator('platformId', {
+            initialValue: base.platformId,
+            rules: [ {
+              required: true,
+              message: '请选择平台'
+            } ]
+          })(
+            <Radio.Group>
+              <Radio value={1000}>
+                12306行程通知
+              </Radio>
+              {/*<Tooltip title="糟糕，我们还没有准备好">
+                <Radio value={1} disabled>
+                  <WBYPlatformIcon weibo_type={1} widthSize={22} />
+                  <span style={{
+                    verticalAlign: 'text-bottom',
+                    marginLeft: 8,
+                    userSelect: 'none'
+                  }}>新浪微博</span>
+                </Radio>
+              </Tooltip>*/}
+            </Radio.Group>
+          )}
+        </FormItem>
+        <FormItem label="任务所属公司">
+          <div className='flex-form-input-container'>
+            {getFieldDecorator('company', {
+              initialValue: base.company,
+              rules: [ {
+                required: true,
+                message: '请选择任务所属公司'
+              } ]
+            })(
+              <RemoteSearchSelect
+                style={{ flex: 'auto', width: "auto" }}
+                action={actions.TPFuzzyQueryCompany}
+                placeholder="请选择任务所属公司"
+                disabled={this.props.lockCompanySelect}
+                onChange={this.props.getCompanyBalance}
+              />
+            )}
+            <div className='flex-form-input-suffix'>
+              任务账户余额：{numeral(this.props.balance).format('0,0.00')} 元
+            </div>
+          </div>
+        </FormItem>
+        <FormItem label="行业分类">
+          {getFieldDecorator('industry', {
+            initialValue: base.industry,
+            rules: [ {
+              required: true,
+              message: '请选择行业',
+              type: 'array'
+            } ]
+          })(
+            <Cascader
+              fieldNames={{
+                label: 'itemValue',
+                value: 'itemKey',
+                children: 'childrenList'
+              }}
+              onChange={e => {
+                this.props.getBusinessScope(e.slice(-1))
+              }}
+              options={this.props.industryList}
+              placeholder='请选择行业'
+            />
+          )}
+        </FormItem>
+        {this.props.businessScopeList.length > 0 ? <FormItem label="经营内容">
+          {getFieldDecorator('businessScope', {
+            initialValue: base.businessScope,
+            rules: [ {
+              required: true,
+              message: '请选择经营内容',
+            } ]
+          })(
+            <Select
+              placeholder='请选择经营内容'
+            >
+              {this.props.businessScopeList.map(item => <Select.Option key={item.id}>{item.scopeName}</Select.Option>)}
+            </Select>
+          )}
+        </FormItem> : null}
+        <FormItem label="投放开始日期">
+            {getFieldDecorator('orderStartDate', {
+              initialValue: base.orderStartDate,
+              validateFirst: true,
+              rules: [
+                { required: true, message: '请选择投放开始日期' },
+                {
+                  validator: (rule, value, callback) => {
+                    if (value.isBefore(this.defaultDisableDate)) {
+                      return callback(`必须是当前日期之后的日期`)
+                    }
+                    callback()
+                  }
+                }
+              ]
+            })(
+              <DatePicker
+                allowClear={false}
+                placeholder="投放开始日期"
+                format="YYYY-MM-DD"
+                showToday={false}
+                style={{ width: '100%' }}
+                onChange={(m) => this.setState({
+                  disabledEndDate: moment(m).endOf('d')
+                })}
+                disabledDate={this.disabledStartDate}
+              />
+            )}
+        </FormItem>
+        <FormItem label="投放结束日期">
+          <div className='flex-form-input-container'>
+            {getFieldDecorator('orderEndDate', {
+              initialValue: base.orderEndDate,
+              validateFirst: true,
+              rules: [
+                {
+                  validator: (rule, value, callback) => {
+                    if (value && value.isBefore(this.state.disabledEndDate)) {
+                      return callback(`必须是投放开始日期之后日期`)
+                    }
+                    callback()
+                  }
+                }
+              ]
+            })(
+              <DatePicker
+                placeholder="投放结束日期"
+                format="YYYY-MM-DD"
+                showToday={false}
+                style={{ flex: 'auto' }}
+                disabledDate={this.disabledEndDate}
+                // onChange={}
+              />
+            )}
+            <div className='flex-form-input-suffix'>
+              如选择按天数投放，则以计算的投放天数为准
+            </div>
+          </div>
+        </FormItem>
+        <footer>
+          <FormItem label=' '>
+            <Button type="primary" htmlType="submit">下一步</Button>
+          </FormItem>
+        </footer>
+      </Form>
+    )
+  }
+}
+export default {
+  media: BaseForMedia,
+  partner: BaseForPartner
 }

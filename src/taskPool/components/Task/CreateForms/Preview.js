@@ -4,7 +4,7 @@
 import React from 'react'
 import {
   Button,
-  Descriptions, Typography, Modal
+  Descriptions, Typography, Modal,Icon
 } from 'antd'
 import { withRouter } from 'react-router-dom'
 import { WBYPlatformIcon } from "wbyui";
@@ -15,7 +15,7 @@ import {
   openNewWindowPreviewForWeixin
 } from "@/taskPool/constants/utils";
 import numeral from '@/util/numeralExpand'
-
+import { OssUpload } from 'wbyui'
 const { Text } = Typography;
 
 
@@ -152,6 +152,18 @@ class PreviewForWeixin extends React.Component {
           </Descriptions.Item>
         </Descriptions>
         <Text type="danger">确认无误即可提交。博主领取并执行任务后，会自动扣除预算。</Text>
+        <OssUpload.Dragger
+          // len={1}
+          authToken={this.props.authToken}
+        >
+          <p className="ant-upload-drag-icon">
+            <Icon type="inbox" />
+          </p>
+          <p className="ant-upload-text">单击或拖动文件到该区域以上传</p>
+          <p className="ant-upload-hint">
+            支持单次或批量上传。 严格禁止上传公司敏感数据或其他重要文件
+          </p>
+        </OssUpload.Dragger>
         <footer>
           <Button onClick={this.props.prev}>上一步</Button>
           <Button type="primary" loading={submitLoading} onClick={this.handleSubmit}>提交</Button>

@@ -8,7 +8,7 @@ import {
   Radio,
   Button,
   Input,
-  message
+  message, Icon
 } from 'antd'
 import { InputCount } from "@/base/Input";
 import axios from "axios";
@@ -189,7 +189,7 @@ class ContentForWeixin extends React.Component {
           })(
             <Input.TextArea
               placeholder='选填，如果不填写会默认抓取正文前54个字'
-              autosize={{
+              autoSize={{
                 minRows: 3,
                 maxRows: 3
               }}
@@ -229,6 +229,132 @@ class ContentForWeixin extends React.Component {
               }}
               placeholder="请输入正文内容"
             />
+          )}
+        </FormItem>
+        <footer>
+          <FormItem label=' '>
+            <Button onClick={this.cached}>上一步</Button>
+            <Button type="primary" htmlType="submit">下一步</Button>
+          </FormItem>
+        </footer>
+      </Form>
+    )
+  }
+}
+
+/**
+ * 12306平台
+ */
+@Form.create()
+class ContentFor12306 extends React.Component {
+  state = {}
+
+  componentDidMount() { }
+
+  // 暂存 & 上一步
+  cached = () => {
+    let newVal = Object.assign({}, this.props.form.getFieldsValue())
+    this.props.prev("content", newVal)
+  }
+
+  handleSubmit = (e) => {
+    e && e.preventDefault()
+    this.props.form.validateFieldsAndScroll((err, values) => {
+      if (!err) {
+        let newVal = Object.assign({}, values)
+        this.props.next("content", newVal)
+      }
+    });
+  }
+
+  render() {
+
+    const { form, formLayout, data } = this.props
+    const { base, budget, content } = data
+    const { getFieldDecorator, getFieldValue, getFieldsValue } = form
+    return (
+      <Form onSubmit={this.handleSubmit}  {...formLayout}>
+        <FormItem label="内容正文">
+          {getFieldDecorator('content', {
+            initialValue: content.content,
+            rules: [
+              { required: true, message: '请输入内容正文' },
+              { max: 140, message: '最多输入2000个字' }
+            ]
+          })(
+            <Input.TextArea
+              placeholder='请输入内容正文，最多为140字'
+              autoSize={{
+                minRows: 2,
+                maxRows: 2
+              }}
+            />
+          )}
+        </FormItem>
+        <FormItem label="上传图片">
+          {getFieldDecorator('attachmentImg', {
+            initialValue: content.attachmentImg || [],
+            valuePropName: 'fileList',
+            getValueFromEvent: e => e && e.fileList,
+            rules: [ { required: true, message: '请上传图片' , type: 'array'}]
+          })(
+            <OssUpload
+              authToken={this.props.authToken}
+              listType='picture-card'
+              rule={{
+                bizzCode: 'ORDER_IMG_UPLOAD',
+                max: 1 / 1024 * 50,
+                suffix: 'png,jpg,jpeg,gif,webp'
+              }}
+              len={1}
+              tipContent="请上传PNG,JPG格式的图片,横图尺寸比例为800px*600px，文件大小需小于50kb"
+            />
+          )}
+        </FormItem>
+        <FormItem label="上传视频">
+          {getFieldDecorator('attachmentVideo', {
+            initialValue: content.attachmentVideo || [],
+            valuePropName: 'fileList',
+            getValueFromEvent: e => e && e.fileList,
+            rules: [ { required: true, message: '请上传视频' , type: 'array'}]
+          })(
+            <OssUpload
+              authToken={this.props.authToken}
+              listType='picture'
+              rule={{
+                bizzCode: 'ORDER_VIDEO_UPLOAD',
+                max: 20,
+                suffix: 'mp4'
+              }}
+              onChange={e => {
+                this.onChange(e && e.fileList[0], 'video')
+              }}
+              len={1}
+              tipContent="请上传MP4格式的视频，文件大小需不超过1.5Mb"
+            >
+              <a><Icon type="upload" /> {getFieldValue('attachmentVideo').length > 0 ? "重新上传" : "上传视频"}</a>
+            </OssUpload>
+          )}
+        </FormItem>
+        <FormItem label="资质上传">
+          <div>需上传《企业营业执照副本/事业单位法人证》，《企业营业执照副本/事业单位法人证》</div>
+          {getFieldDecorator('attachmentList', {
+            initialValue: content.attachmentList || [],
+            valuePropName: 'fileList',
+            getValueFromEvent: e => e && e.fileList,
+            rules: [ { required: true, message: '请上传资质' , type: 'array'}]
+          })(
+            <OssUpload
+              authToken={this.props.authToken}
+              listType='picture'
+              rule={{
+                bizzCode: 'F_TASK_CANCEL',
+                max: 50,
+              }}
+              tipContent="上传格式为全文件，文件大小不超过50Mb"
+            >
+              <a><Icon type="upload" />上传资质文件</a>
+            </OssUpload>
           )}
         </FormItem>
         <footer>
@@ -321,7 +447,7 @@ class ContentForWeibo extends React.Component {
           })(
             <Input.TextArea
               placeholder='微博内容'
-              autosize={{
+              autoSize={{
                 minRows: 4,
                 maxRows: 4
               }}
@@ -364,7 +490,7 @@ class ContentForWeibo extends React.Component {
           })(
             <Input.TextArea
               placeholder='输入转发语'
-              autosize={{
+              autoSize={{
                 minRows: 2,
                 maxRows: 2
               }}
@@ -384,5 +510,6 @@ class ContentForWeibo extends React.Component {
 
 export default {
   weixin: ContentForWeixin,
-  weibo: ContentForWeibo
+  weibo: ContentForWeibo,
+  12306: ContentFor12306
 }

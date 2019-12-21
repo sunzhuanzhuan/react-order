@@ -2,13 +2,28 @@
  * 创建任务-设置预算表单
  */
 import React from 'react'
-import { Form, Radio, Button, DatePicker, InputNumber, Checkbox, Row, Col } from 'antd'
+import {
+  Form,
+  Radio,
+  Button,
+  DatePicker,
+  InputNumber,
+  Checkbox,
+  Row,
+  Col,
+  TreeSelect,
+  Alert
+} from 'antd'
 import debounce from "lodash/debounce";
 import moment from "moment";
 import numeral from '@/util/numeralExpand'
 import { node } from 'prop-types';
 import { extend } from 'immutability-helper';
 import QuestionTip from '@/base/QuestionTip';
+import { CheckGroup } from '@/taskPool/base/CheckGroup';
+
+const { SHOW_PARENT } = TreeSelect;
+
 
 const FormItem = Form.Item
 const CheckboxGroup = Checkbox.Group;
@@ -16,6 +31,28 @@ const CheckboxGroup = Checkbox.Group;
 const MAX_BUDGET_AMOUNT = 99999999
 const MAX_FOLLOWER_COUNT = 999999999
 
+const CC_OPTIONS = [
+  { label: "G/C高铁", value: 1 },
+  { label: "D动车", value: 2 },
+  { label: "普通", value: 3 },
+]
+const ZX_OPTIONS = [
+  { label: "商务座", value: 1 },
+  { label: "一等座", value: 2 },
+  { label: "二等座", value: 3 },
+  { label: "高级软卧", value: 4 },
+  { label: "软卧", value: 5 },
+  { label: "硬卧", value: 6 },
+  { label: "硬座", value: 7 },
+  { label: "动卧", value: 8 },
+]
+const NL_OPTIONS = [
+  { label: "0-18岁", value: 1 },
+  { label: "18-25岁", value: 2 },
+  { label: "25-35岁", value: 3 },
+  { label: "35-45岁", value: 4 },
+  { label: "大于45岁", value: 5 },
+]
 
 const newFormLayout = {
   labelCol: { span: 4 },
@@ -598,6 +635,291 @@ class BudgetForWeixin extends React.Component {
 }
 
 /**
+ * 12306平台
+ */
+@Form.create()
+class BudgetFor12306 extends React.Component {
+  constructor(props) {
+    super(props);
+    const { budget } = props.data
+    this.calculation = debounce(this.calculation, 300)
+
+    this.state = {
+      actionNum: budget.actionNum || 0,
+      treeData: [
+        { id: 1, pId: 0, value: '1', title: 'Expand to load' },
+        { id: 2, pId: 0, value: '2', title: 'Expand to load' },
+        { id: 3, pId: 0, value: '3', title: 'Tree Node', isLeaf: true },
+      ],
+    }
+  }
+
+  genTreeNode = (parentId, isLeaf = false) => {
+    const random = Math.random()
+      .toString(36)
+      .substring(2, 6);
+    return {
+      id: random,
+      pId: parentId,
+      value: random,
+      title: isLeaf ? 'Tree Node' : 'Expand to load',
+      isLeaf,
+    };
+  };
+
+  onLoadData = treeNode =>
+    new Promise(resolve => {
+      const { id } = treeNode.props;
+      setTimeout(() => {
+        this.setState({
+          treeData: this.state.treeData.concat([
+            this.genTreeNode(id, false),
+            this.genTreeNode(id, true),
+          ]),
+        });
+        resolve();
+      }, 300);
+    });
+
+  componentDidMount() {
+    const { data, actions, taskPositionList } = this.props
+    const { budget } = data;
+  }
+
+  // 暂存 & 上一步
+  cached = () => {
+    let newVal = Object.assign({}, this.props.form.getFieldsValue())
+    this.props.prev("budget", newVal)
+  }
+
+
+  handleSubmit = (e) => {
+    e && e.preventDefault()
+    this.props.form.validateFields((err, values) => {
+      if (!err) {
+        let newVal = Object.assign({}, values)
+        this.props.next("budget", newVal)
+      }
+    });
+  }
+
+  calculation = (amount = 0, taskOrderType) => {
+    if (isNaN(amount) || amount <= 0) {
+      return this.setState({
+        actionNum: 0,
+        amount: 0
+      });
+    }
+    const { data, actions } = this.props
+    actions.TPQueryActionNum({
+      "amount": amount,
+      "taskOrderType": taskOrderType
+    }).then(({ data }) => {
+      this.setState({
+        actionNum: data,
+        amount: amount + data
+      });
+    })
+  }
+
+  render() {
+    const { form, formLayout, data, actions, balance } = this.props
+    const { actionNum, amount } = this.state
+    const { base, budget } = data
+    const { getFieldDecorator, getFieldValue } = form
+
+    const tProps = {
+      dropdownStyle: { maxHeight: 400, overflow: 'auto' },
+      treeData: this.state.treeData,
+      treeDataSimpleMode: true,
+      treeCheckable: true,
+      showCheckedStrategy: SHOW_PARENT,
+      style: {
+        width: '100%',
+      },
+      loadData: this.onLoadData
+    }
+
+    let maxAmount = Math.min(balance, MAX_BUDGET_AMOUNT);
+    return (
+      <Form onSubmit={this.handleSubmit}  {...formLayout}>
+        <FormItem label="投放模式">
+          {getFieldDecorator('location2', {
+            initialValue: budget.location2 || 2,
+            rules: [ {
+              required: true,
+              message: '请选择投放模式'
+            } ]
+          })(
+            <Radio.Group>
+              <Radio key={1} value={1}>按天数投放</Radio>
+              <Radio key={2} value={2}>按量投放</Radio>
+            </Radio.Group>
+          )}
+        </FormItem>
+        <FormItem label="内容类型">
+          {getFieldDecorator('location1', {
+            initialValue: budget.location1 || 2,
+            rules: [ {
+              required: true,
+              message: '请选择内容类型'
+            } ]
+          })(
+            <Radio.Group>
+              <Radio key={1} value={1}>图文+链接+视频</Radio>
+              <Radio key={2} value={2}>图文+链接</Radio>
+            </Radio.Group>
+          )}
+        </FormItem>
+        <FormItem label="输入投放天数">
+          <div className='flex-form-input-container'>
+            {getFieldDecorator('totalDay', {
+              initialValue: budget.totalDay,
+              validateFirst: true,
+              rules: [
+                { required: true, message: '请输入投放天数' },
+                {
+                  validator: (rule, value, callback) => {
+                    if (value <= 0) {
+                      callback("请输入正确数字")
+                    }
+                    callback()
+                  }
+                }
+              ]
+            })(
+              <InputNumber
+                precision={0}
+                min={1}
+                style={{ flex: "auto" }}
+                onChange={val => {
+                  this.calculation()
+                }}
+                placeholder="输入投放天数"
+              />
+            )}
+            <span style={{ margin: "0 10px" }}>天</span>
+            <div className='flex-form-input-suffix'>
+              任务账户余额：{numeral(balance).format('0,0.00')} 元
+            </div>
+          </div>
+        </FormItem>
+        <FormItem label="输入投放条数">
+          <div className='flex-form-input-container'>
+            {getFieldDecorator('totalCount', {
+              initialValue: budget.totalCount,
+              validateFirst: true,
+              rules: [
+                { required: true, message: '请输入投放条数' },
+                {
+                  validator: (rule, value, callback) => {
+                    if (value <= 0) {
+                      callback("请输入正确数字")
+                    }
+                    callback()
+                  }
+                }
+              ]
+            })(
+              <InputNumber
+                precision={0}
+                min={1}
+                style={{ flex: "auto" }}
+                step={100}
+                formatter={value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                parser={value => value.replace(/\$\s?|(,*)/g, '')}
+                onChange={val => {
+                  this.calculation()
+                }}
+                placeholder="输入投放条数"
+              />
+            )}
+            <span style={{ margin: "0 10px" }}>条</span>
+            <div className='flex-form-input-suffix'>
+              任务账户余额：{numeral(balance).format('0,0.00')} 元
+            </div>
+          </div>
+        </FormItem>
+        <FormItem label="出发城市">
+          {getFieldDecorator('startCity', {
+            initialValue: budget.startCity,
+            validateFirst: true,
+            rules: [
+              { required: true, message: '请选择出发城市', type: 'array' },
+            ]
+          })(
+            <TreeSelect {...tProps} searchPlaceholder="请选择出发城市" />
+          )}
+        </FormItem>
+        <FormItem label="到达城市">
+          {getFieldDecorator('endCity', {
+            initialValue: budget.endCity,
+            validateFirst: true,
+            rules: [
+              { required: true, message: '请选择到达城市', type: 'array' },
+            ]
+          })(
+            <TreeSelect {...tProps} searchPlaceholder="请选择到达城市" />
+          )}
+        </FormItem>
+        <FormItem label="车次类型">
+          {getFieldDecorator('typecc', {
+            initialValue: budget.typecc,
+          })(
+            <CheckGroup options={CC_OPTIONS} />
+          )}
+        </FormItem>
+        <FormItem label="坐席类型" wrapperCol={{span: 20}}>
+          {getFieldDecorator('typeaa', {
+            initialValue: budget.typeaa,
+          })(
+            <CheckGroup options={ZX_OPTIONS} />
+          )}
+        </FormItem>
+        <FormItem label="人群性别">
+          {getFieldDecorator('type334234', {
+            initialValue: budget.type334234,
+          })(
+            <Radio.Group>
+              <Radio value={1}>全部</Radio>
+              <Radio value={2}>男</Radio>
+              <Radio value={3}>女</Radio>
+            </Radio.Group>
+          )}
+        </FormItem>
+        <FormItem label="是否限定年龄">
+          {getFieldDecorator('type66666', {
+            initialValue: budget.type66666,
+          })(
+            <Radio.Group>
+              <Radio value={1}>否</Radio>
+              <Radio value={2}>是</Radio>
+            </Radio.Group>
+          )}
+        </FormItem>
+        <FormItem label="配置年龄区间" wrapperCol={{span: 20}}>
+          {getFieldDecorator('typeasasdaa', {
+            initialValue: budget.typeasasdaa,
+            rules: [
+              { type: 'array', max: 4, message: '最多不超过4项' }
+            ]
+          })(
+            <Checkbox.Group options={NL_OPTIONS} />
+          )}
+        </FormItem>
+        <Alert message='投放单价为6元/条，原价300,000元，折扣返现10,000元，实付290,000元'/>
+        <footer>
+          <FormItem label=' '>
+            {this.props.isEdit ? null : <Button onClick={this.cached}>上一步</Button>}
+            <Button type="primary" htmlType="submit">下一步</Button>
+          </FormItem>
+        </footer>
+      </Form>
+    )
+  }
+}
+
+/**
  * 微博平台
  */
 @Form.create()
@@ -817,7 +1139,9 @@ class BudgetForWeibo extends React.Component {
   }
 }
 
+
 export default {
   weixin: BudgetForWeixin,
-  weibo: BudgetForWeibo
+  weibo: BudgetForWeibo,
+  12306: BudgetFor12306
 }
