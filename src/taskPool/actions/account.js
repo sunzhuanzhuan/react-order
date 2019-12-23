@@ -58,9 +58,9 @@ export const {
 
 //内容评估查询
 export const {
-  accountEstimateDetails,
-  accountEstimateDetails_success,
-} = createHttpAction('accountEstimateDetails', Interface.accountEstimateDetails, {
+  getAccountEstimateDetails,
+  getAccountEstimateDetails_success,
+} = createHttpAction('getAccountEstimateDetails', Interface.getAccountEstimateDetails, {
   method: 'post'
 });
 

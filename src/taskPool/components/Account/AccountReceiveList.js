@@ -1,14 +1,9 @@
 import React, { useState } from 'react'
-import { Table, Badge, Button, message, Modal } from 'antd'
-import { StateInfo, KpiTable } from './AccountList'
-const shelfState = {
-  1: { name: '上架', state: 'success' },
-  2: { name: '下架', state: 'error' }
-}
-const { confirm } = Modal;
+import { Table, Button, Modal } from 'antd'
+import { KpiTable } from './AccountList'
 function AccountReceiveList(props) {
   const [selectedRow, setSelectedRow] = useState([])
-  const { claimAccountList, actions, changePage } = props
+  const { claimAccountList, claimAccountAsync, changePage } = props
   const columns = [
     {
       title: 'account ID',
@@ -70,7 +65,7 @@ function AccountReceiveList(props) {
       align: 'center',
       render: (text, record) => {
         return <div className='children-mr'>
-          <Button type='primary' onClick={() => claimAccountAsync(record.accountId)}>领取账号</Button>
+          <Button type='primary' onClick={() => claimAccountAsync([record.accountId])}>领取账号</Button>
         </div>
       }
     },
@@ -80,17 +75,7 @@ function AccountReceiveList(props) {
     rowSelection: selectedRow,
     onChange: (selectedRowKeys) => setSelectedRow(selectedRowKeys)
   }
-  async function claimAccountAsync(id) {
-    await actions.claimAccount({ accountId: [id] })
-    message.success('领取成功')
-  }
-  async function batchClaim() {
-    const { data } = await actions.claimAccount({ accountId: selectedRow })
-    Modal.success({
-      title: '成功领取/领取总数',
-      content: `${data.claimSuccessNum}/${data.claimTotalNum}`,
-    });
-  }
+
   return (<>
     <Table dataSource={claimAccountList.list} columns={columns} rowKey='accountId'
       rowSelection={rowSelection}
@@ -108,7 +93,7 @@ function AccountReceiveList(props) {
           changePage({ page: { currentPage: page, pageSize: pageSize } })
         }
       }} />
-    <Button disabled={selectedRow.length == 0} onClick={batchClaim}>批量领取账号</Button>
+    <Button disabled={selectedRow.length == 0} onClick={() => claimAccountAsync(selectedRow, 'batch')}>批量领取账号</Button>
   </>)
 }
 

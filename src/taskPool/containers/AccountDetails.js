@@ -21,24 +21,14 @@ function AccountDetails(props) {
     await actions.getAccountDetail(searchParam)
     setIsLoading(false)
   }
-  //内容评估提交
-  async function accountEstimateSubmitAsync(param) {
-    await actions.accountEstimateSubmit(param)
-    getAccountDetailAsync()
-  }
-  //账号评语提交
-  async function updateAccountEstimateDescribeAsync(param) {
-    await actions.updateAccountEstimateDescribe(param)
-    getAccountDetailAsync()
-  }
 
   const { actions, acconutReducers } = props
-  const { accountDetail = {}, accountEstimateSubmit = {} } = acconutReducers
+  const { accountDetail = {}, accountEstimateDetails = {} } = acconutReducers
   const contentProps = {
-    accountEstimateSubmitAsync,
-    updateAccountEstimateDescribeAsync,
     ...searchParam, accountDetail, actions,
+    accountEstimateDetails
   }
+
   return (
     <div className='task-account-details'>
       <BreadCrumbs link='/order/task/account-manage' text={<h2>账号详情</h2>} />

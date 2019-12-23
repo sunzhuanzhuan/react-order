@@ -30,3 +30,10 @@ export const accountDetail = handleActions({
     return { ...action.payload.data }
   },
 }, {})
+
+//内容评估查询
+export const accountEstimateDetails = handleActions({
+  [account.getAccountEstimateDetails_success]: (state, action) => {
+    return { ...action.payload.data }
+  },
+}, {})

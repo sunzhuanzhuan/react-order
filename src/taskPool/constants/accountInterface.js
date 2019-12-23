@@ -7,7 +7,7 @@ export default {
   getClaimAccountList: `${baseUrl}claimAccountList`,//领取列表
   auditAccount: `${baseUrl}auditAccount`,//账号审核
   claimAccount: `${baseUrl}claimAccount`,//领取账号（单条领取/批量领取）
-  accountEstimateDetails: `${baseUrl}accountEstimateDetails`,//内容评估查询
+  getAccountEstimateDetails: `${baseUrl}accountEstimateDetails`,//内容评估查询
   accountEstimateSubmit: `${baseUrl}accountEstimateSubmit`,//内容评估提交
   updateAccountEstimateDescribe: `${baseUrl}updateAccountEstimateDescribe`,//账号评语提交
   getAccountTabNumber: `${baseUrl}getAccountTabNumber`,//蜂窝派账号管理页签数量
