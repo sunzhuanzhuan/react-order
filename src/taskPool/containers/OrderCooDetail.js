@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import TitleBox from '../base/TitleBox'
 import { Steps, Col, Row, Descriptions } from 'antd'
-import { getOrderStep } from '../constants/orderConfig'
+import { getOrderStep, MEDIUM_REJECT, PARTNER_REJECT } from '../constants/orderConfig'
+
 import api from '@/api'
 const { Step } = Steps;
 function CooperationDetail() {
-  const [orderDetail, setOrderDetail] = useState({})
+  const [orderDetail, setOrderDetail] = useState({ qualifications: [] })
   useEffect(() => {
     getPlatformOrderDetail()
   }, [])
@@ -17,7 +18,7 @@ function CooperationDetail() {
     { name: '内容正文', content: orderDetail.content },
     { name: '图文', content: <div><img src={orderDetail.imageUrl} /></div> },
     { name: '视频', content: <a href={orderDetail.vedioUrl}>ming</a> },
-    { name: '所属公司资质', content: '' },
+    { name: '所属公司资质', content: <div>orderDetail.qualifications.map(one)<a></a></div> },
   ]
 
   const orderFile = [
@@ -74,8 +75,8 @@ function CooperationDetail() {
       </TitleBox>
       <TitleBox title='订单备注' >
         <Descriptions>
-          <Descriptions.Item label='媒介驳回原因' >{orderDetail.refusalReason}</Descriptions.Item>
-          <Descriptions.Item label='内容平台驳回原因：' >{orderDetail.refusalReason}</Descriptions.Item>
+          {orderDetail.otherOrderState == MEDIUM_REJECT ? <Descriptions.Item label='媒介驳回原因' >{orderDetail.refusalReason}</Descriptions.Item> : null}
+          {orderDetail.otherOrderState == PARTNER_REJECT ? <Descriptions.Item label='合作平台驳回原因：' >{orderDetail.refusalReason}</Descriptions.Item> : null}
         </Descriptions>
       </TitleBox>
     </div>

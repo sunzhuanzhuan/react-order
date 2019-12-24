@@ -1,13 +1,14 @@
 import React, { useState } from 'react'
-import { Table, Modal, Button, message } from 'antd'
-import { otherOrderStateMap, PARTNER_AWAIT, PENDING, OVER, MEDIUM_AWAIT } from '../../constants/orderConfig'
+import { Table, Modal, Button, message, Icon } from 'antd'
+import { otherOrderStateMap, PARTNER_AWAIT, PENDING, OVER, MEDIUM_AWAIT, MEDIUM_REJECT, PARTNER_REJECT } from '../../constants/orderConfig'
 import api from '@/api'
 import Scolltable from '@/components/Scolltable/Scolltable.js'
 import CooperationModel, { RejectForm } from './CooperationModel'
+import MessageIcon from '../../base/MessageIcon'
 const { confirm } = Modal;
 function CooperationList(props) {
   const [selectedRow, setSelectedRow] = useState([])
-  const { platformOrderList = {}, setModalProps, getPlatformOrderList } = props
+  const { platformOrderList = {}, setModalProps, changePage, actions } = props
   const { list = [] } = platformOrderList
   //合作方确认
   function orderOK(title, adOrderId, okText) {
@@ -15,32 +16,22 @@ function CooperationList(props) {
       title: title,
       okText: okText,
       onOk() {
-        updatePlatformOrder({ operationFlag: 1, adOrderId: adOrderId })
-      },
-      onCancel() {
-        console.log('Cancel');
+        updatePlatformOrderAsync({ operationFlag: 1, adOrderId: adOrderId })
       },
     });
   }
   //驳回、同意
-  async function updatePlatformOrder(params) {
-    try {
-      await api.post('/operator-gateway/cooperationPlatform/v2/updatePlatformOrder', { ...params })
-      getPlatformOrderList()
-      message.error('操作成功')
-    } catch (error) {
-      message.error('操作失败')
-    }
+  async function updatePlatformOrderAsync(params) {
+    await actions.TPUpdatePlatformOrder(params)
+    changePage()
+    message.success('操作成功')
   }
+
   //上传执行单、上传结案报告）
-  async function updatePlatformFile(params) {
-    try {
-      await api.post('/operator-gateway/cooperationPlatform/v2/updatePlatformFile', { ...params })
-      getPlatformOrderList()
-      message.error('操作成功')
-    } catch (error) {
-      message.error('操作失败')
-    }
+  async function updatePlatformFileAsync(params) {
+    await actions.TPUpdatePlatformFile(params)
+    changePage()
+    message.success('操作成功')
   }
   const columns = [
     {
@@ -91,7 +82,10 @@ function CooperationList(props) {
       title: '订单状态',
       dataIndex: 'otherOrderState',
       key: 'otherOrderState',
-      render: text => otherOrderStateMap[text]
+      render: (text, record) => <div>
+        {otherOrderStateMap[text]}
+        {text == MEDIUM_REJECT || text == PARTNER_REJECT ? <MessageIcon title={record.reason} /> : null}
+      </div>
     },
     {
       title: '上传订单文件',
@@ -105,7 +99,7 @@ function CooperationList(props) {
         //待执行
         const pending = record.otherOrderState == PENDING
         const commProps = {
-          okFn: updatePlatformFile,
+          okFn: updatePlatformFileAsync,
           adOrderId: record.orderId,
           cancelFn: () => setModalProps({ visible: false }),
         }
@@ -118,7 +112,7 @@ function CooperationList(props) {
                 {...commProps}
               />
             })
-          }>上传执行单</a> : null}
+          }><IconType value={record.execOrderUrl} />  上传执行单</a> : null}
 
           {pending ? <a type='primary' onClick={
             () => setModalProps({
@@ -127,7 +121,7 @@ function CooperationList(props) {
               content: <CooperationModel
                 {...commProps} />
             })
-          }>上传结案报告</a> : null
+          }><IconType value={record.finalReportUrl} />  上传结案报告</a> : null
           }
 
         </>
@@ -149,18 +143,18 @@ function CooperationList(props) {
         const pending = record.otherOrderState == PENDING
         //已完成
         const over = record.otherOrderState == OVER
-        const { orderId } = record
+        const { orderId, execOrderUrl, finalReportUrl } = record
         return <div className='children-mr'>
-          {medium_await ? <Button type='primary' onClick=''>确定</Button> : null}
-          {partner_await ? <Button type='primary' onClick={() => orderOK('确认后执行单和结算金额不可撤回', [orderId])}>确定</Button> : null}
-          {pending ? <Button type='primary' onClick={() => orderOK('确认后结案报告不可撤回', [orderId])}>确定</Button> : null}
+          {medium_await ? <Button type='primary' onClick={() => orderOK('确认订单递交给合作平台', [orderId])}>确认</Button> : null}
+          {partner_await ? <Button type='primary' disabled={!execOrderUrl} onClick={() => orderOK('确认后执行单和结算金额不可撤回', [orderId])}>确认</Button> : null}
+          {pending ? <Button disabled={!finalReportUrl} type='primary' onClick={() => orderOK('确认后结案报告不可撤回', [orderId])}>确定</Button> : null}
           {medium_await || partner_await ? <Button type='primary'
             onClick={() => setModalProps({
               title: '驳回',
               visible: true,
               content: <RejectForm
                 adOrderId={[orderId]}
-                okFn={updatePlatformOrder}
+                okFn={updatePlatformOrderAsync}
                 cancelFn={() => setModalProps({ visible: false })} />
             })}>驳回</Button> : null}
           {medium_await || partner_await || pending || over ? <Button onClick={() => window.open(`orders-coodetail?orderId=${orderId}`)}>查看详情</Button> : null}
@@ -176,7 +170,7 @@ function CooperationList(props) {
   return (
     <>
       <Scolltable scrollClassName='.ant-table-body' widthScroll={2000}>
-        <Table dataSource={list || []}
+        <Table dataSource={list}
           columns={columns}
           rowSelection={rowSelection}
           scroll={{ x: 1800 }}
@@ -188,11 +182,11 @@ function CooperationList(props) {
             total: 20,
             current: 1,
             onShowSizeChange: (current, size) => {
-              props.getPlatformOrderList({ page: { currentPage: current, pageSize: size } })
+              changePage({ page: { currentPage: current, pageSize: size } })
             },
 
             onChange: (page, pageSize) => {
-              props.getPlatformOrderList({ page: { currentPage: page, pageSize: pageSize } })
+              changePage({ page: { currentPage: page, pageSize: pageSize } })
             }
           }} />
       </Scolltable>
@@ -204,7 +198,7 @@ function CooperationList(props) {
         visible: true,
         content: <RejectForm
           adOrderId={selectedRow}
-          okFn={updatePlatformOrder}
+          okFn={updatePlatformOrderAsync}
           cancelFn={() => setModalProps({ visible: false })} />
       })} style={{ marginLeft: 20 }} disabled={selectedRow.length == 0}>批量驳回</Button>
     </>
@@ -215,3 +209,6 @@ export default CooperationList
 
 
 
+const IconType = (value) => {
+  return value ? <Icon type="check-circle" theme="filled" style={{ color: '#5ccd5c' }} /> : <Icon type="exclamation-circle" theme="filled" style={{ color: '#fd3d11' }} />
+}

@@ -16,7 +16,7 @@ function AccountReceive(props) {
   }, [])
   async function getClaimAccountListAsync(params) {
     setIsLoading(true)
-    await actions.getClaimAccountList(params)
+    await actions.TPGetClaimAccountList(params)
     setIsLoading(false)
     setSearchParam(params)
   }
@@ -33,7 +33,7 @@ function AccountReceive(props) {
     setSearchParam(baseSearch)
   }
   async function claimAccountAsync(ids, type) {
-    const { data } = await actions.claimAccount({ accountId: ids })
+    const { data } = await actions.TPClaimAccount({ accountId: ids })
     if (type == 'batch') {
       Modal.success({
         title: '成功领取/领取总数',

@@ -18,7 +18,7 @@ function CooperationForm(props) {
           values.form.orderEndDateStart = moment(values.orderEndDate[0]).format(format)
           values.form.orderEndDateEnd = moment(values.orderEndDate[1]).format(format)
         }
-        props.getPlatformOrderList(values)
+        props.searchAction(values)
       }
     })
   }
