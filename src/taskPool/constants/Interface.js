@@ -44,6 +44,10 @@ export default {
   },
   order: {
     getPlatformOrderList: `${orderUrl}platformOrderList`
+  },
+  attribute: {
+    queryQualificationByName: prefix + "/configManage/v1/queryQualificationByName",
   }
+
 }
 

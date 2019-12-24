@@ -3,6 +3,8 @@ import Interface from '../constants/Interface';
 import { createAction } from "redux-actions";
 export * from './order'
 export * from './account'
+export * from './task'
+export * from './attribute'
 
 // 新增任务
 export const {
