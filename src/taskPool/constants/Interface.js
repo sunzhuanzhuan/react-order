@@ -27,5 +27,8 @@ export default {
   TPApprovedSecondSuccess: prefix + "/mcnOrder/v1/approvedSecondSuccess",
   TPMcnOrderConfirmFinish: prefix + "/mcnOrder/v1/mcnOrderConfirmFinish",
   TPMcnOrderConfirmCancel: prefix + "/mcnOrder/v1/mcnOrderConfirmCancel",
+  TPPostOperationLog: prefix + "/configmanage/v1/queryOperationLog",
+  TPPostClueList: prefix + "/adclue/v1/queryAdClueList",
+  TPGetClueDetail: prefix + "/adclue/v1/queryAdClueInfo"
 
 }

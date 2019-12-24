@@ -14,7 +14,8 @@ import {
   TPQueryMcnFinancePaymentPage_success,
   TPGetAllMcnOrder_success,
   TPGetExcuteStatusList_success,
-  TPGetOrderStatusLists_success
+  TPGetOrderStatusLists_success,
+  TPGetClueDetail_success
 } from '../actions'
 
 // 处理列表数据为map表
@@ -111,7 +112,12 @@ export const financeTradeRecord = handleActions({
   [TPQueryMcnFinancePaymentPage_success]: handleResponseList(),
 }, initList())
 
-
+// 获取线索详情
+export const clueDetail = handleActions({
+  [TPGetClueDetail_success]: (state, action) => {
+    return { ...action.payload.data }
+  }
+}, {});
 
 export default combineReducers({
   taskManageList,
@@ -124,5 +130,6 @@ export default combineReducers({
   taskStatus,
   orderManageList,
   ...order,
-  ...account
+  ...account,
+  clueDetail
 })
