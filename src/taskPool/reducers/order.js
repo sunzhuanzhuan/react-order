@@ -6,8 +6,6 @@ export const platformOrderList = handleActions({
   [order.TPGetPlatformOrderList_success]: (state, action) => {
     return { ...action.payload.data }
   },
-}, {
-  list: []
-})
+}, {})
 
 

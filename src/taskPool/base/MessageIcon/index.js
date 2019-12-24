@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react'
 import { Tooltip, Popover, Icon } from 'antd';
-export default class MeassageIcon extends PureComponent {
+export default class MessageIcon extends PureComponent {
   render() {
     return (
       <Tooltip {...this.props} trigger="hover" getPopupContainer={() => document.querySelector('.task-pool-router-wrapper')}>

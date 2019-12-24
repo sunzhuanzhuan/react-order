@@ -5,35 +5,49 @@ import { WachatList, CooperationList, CooperationForm } from '../components/Orde
 import { Tabs, Modal, Spin } from 'antd';
 import { bindActionCreators } from 'redux';
 const { TabPane } = Tabs;
+const baseSearch = { page: { currentPage: 1, pageSize: 10 } }
+
 const Orders = (props) => {
   const [modalProps, setModalProps] = useState({ title: '', content: '' })
-  const [cooSearch, setCooSearch] = useState({ page: { currentPage: 1, pageSize: 10 } })
+  const [cooSearch, setCooSearch] = useState(baseSearch)
   const [loading, setLoading] = useState(true)
-  const { actions } = props
+  const { actions, orderReducers } = props
   useEffect(() => {
-    getPlatformOrderList()
+    getPlatformOrderListAsync()
   }, [])
 
   function callback(key) {
     if (key == 2) {
-      getPlatformOrderList()
+      getPlatformOrderListAsync()
     }
   }
-  async function getPlatformOrderList(params) {
+  async function getPlatformOrderListAsync(params) {
     setLoading(true)
-    const data = { ...cooSearch, ...params }
-    setCooSearch(data)
-    await actions.TPGetPlatformOrderList(data)
+    setCooSearch(params)
+    await actions.TPGetPlatformOrderList(params)
     setLoading(false)
   }
+  //操作筛选项
+  function searchAction(params) {
+    getPlatformOrderListAsync({ ...params, ...baseSearch, })
+  }
+  //操作分页使用查询
+  function changePage(params) {
+    getPlatformOrderListAsync({ ...cooSearch, ...params })
+  }
+
+
+
   const comProps = {
     setModalProps,
     actions: actions,
   }
-  const { platformOrderList } = props.orderReducers
+  const { platformOrderList } = orderReducers
   const platformProps = {
     platformOrderList,
-    getPlatformOrderList
+    searchAction,
+    changePage,
+    actions
   }
   return (
     <div>
@@ -44,7 +58,6 @@ const Orders = (props) => {
             <WachatList {...comProps} />
           </TabPane>
           <TabPane tab="合作平台" key="2">
-
             <CooperationForm  {...platformProps} />
             <CooperationList {...comProps} {...platformProps} />
           </TabPane>

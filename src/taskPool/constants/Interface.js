@@ -43,7 +43,10 @@ export default {
     TPGetAccountTabNumber: `${accountUrl}getAccountTabNumber`,//蜂窝派账号管理页签数量
   },
   order: {
-    TPGetPlatformOrderList: `${orderUrl}platformOrderList`
+    TPGetPlatformOrderList: `${orderUrl}platformOrderList`,//订单管理（合作平台）
+    TPUpdatePlatformOrder: `${orderUrl}updatePlatformOrder`,//（同意(批量)、驳回（批量））
+    TPUpdatePlatformFile: `${orderUrl}updatePlatformFile`,//（上传执行单、上传结案报告）
+    TPGetPlatformOrderDetail: `${orderUrl}platformOrderDetail`,//合作平台订单详情
   }
 }
 
