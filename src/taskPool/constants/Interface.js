@@ -1,6 +1,7 @@
 const prefix = "/operator-gateway"
 const accountUrl = 'operator-gateway/accountMapping/v2/'
 const orderUrl = '/operator-gateway/cooperationPlatform/v2/'
+const orderMcnUrl = '/operator-gateway/mcnOrder/v1/'
 export default {
   getTaskIndustry: prefix + "/common/v1/getTaskIndustry",
   addTask: prefix + "/adOrder/v1/add",
@@ -47,6 +48,22 @@ export default {
     TPUpdatePlatformOrder: `${orderUrl}updatePlatformOrder`,//（同意(批量)、驳回（批量））
     TPUpdatePlatformFile: `${orderUrl}updatePlatformFile`,//（上传执行单、上传结案报告）
     TPGetPlatformOrderDetail: `${orderUrl}platformOrderDetail`,//合作平台订单详情
+
+    TPGetAllMcnOrder: `${orderMcnUrl}getAllMcnOrder`,//蜂窝派订单列表（搜索）
+    TPApprovedFirstFailure: `${orderMcnUrl}approvedFirstFailure`,//一次质检不通过
+    TPApprovedFirstSuccess: `${orderMcnUrl}approvedFirstSuccess`,//一次质检通过
+    TPApprovedSecondFailure: `${orderMcnUrl}approvedSecondFailure`,//二次质检不通过
+    TPApprovedSecondSuccess: `${orderMcnUrl}approvedSecondSuccess`,//二次质检通过
+    TPMcnOrderConfirmFinish: `${orderMcnUrl}mcnOrderConfirmFinish`,//执行结果确认
+    TPMcnOrderConfirmCancel: `${orderMcnUrl}mcnOrderConfirmCancel`,//执行结果取消
+    TPFristFailureUpdateContentUrl: `${orderMcnUrl}fristFailureUpdateContentUrl`,//回执链接调整
+    TPGetMcnOrderStateList: `${orderMcnUrl}getMcnOrderStateList`,//获取订单状态列表
+    TPGetMcnOrderConfrimStateList: `${orderMcnUrl}getMcnOrderConfrimStateList`,//获取订单确认状态列表
+    TPUpdateContentUrl: `${orderMcnUrl}updateContentUrl`,//回执链接调整_质检前修改
+    TPApplyConfirm: `${orderMcnUrl}applyConfirm`,//订单确认/拒绝
+    TPFailureReasons: `${orderMcnUrl}failureReasons`,//订单失败原因查询
+    TPOrderInfo: `${orderMcnUrl}orderInfo`,//订单详情
+    TPQueryDataCurve: `${orderMcnUrl}queryDataCurve`,//获取数据曲线
   }
 }
 
