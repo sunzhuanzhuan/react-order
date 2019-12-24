@@ -1,8 +1,9 @@
 import React from 'react'
-import { Form, Radio, Button } from 'antd'
+import { Form, Radio, Button, Modal, message } from 'antd'
 import FormItem from 'antd/lib/form/FormItem'
 import TextArea from 'antd/lib/input/TextArea';
 import TitleBox from '../../base/TitleBox'
+const { confirm } = Modal;
 const formLayout = {
   labelCol: { span: 3 },
   wrapperCol: { span: 21 },
@@ -14,15 +15,25 @@ function AuditResults(props) {
   const { getFieldValue, getFieldDecorator } = form
   function submitForm(e) {
     e.preventDefault();
-    form.validateFields((err, values) => {
+    form.validateFields(async (err, values) => {
       if (!err) {
-        //
-        actions.auditAccount({ ...values, accountId: accountId })
+        audit({ ...values, accountId: accountId })
       }
     })
   }
   function goBack() {
     window.open('/order/task/account-manage', "_self")
+  }
+  function audit(param) {
+    confirm({
+      title: '是否确定提交审核结果？',
+      onOk() {
+        message.success('提交成功，返回列表页', 1, async () => {
+          await actions.TPAuditAccount(param)
+          goBack()
+        })
+      },
+    });
   }
   return (
     <div>

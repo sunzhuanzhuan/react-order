@@ -13,13 +13,13 @@ function Account(props) {
   const [loading, setLoading] = useState(true)
   useEffect(() => {
     getAccountListAsync()
-    actions.getAccountTabNumber()
+    actions.TPGetAccountTabNumber()
   }, [])
   const { acconutReducers, actions } = props
   const { accountList, accountTabNumber = {} } = acconutReducers
   async function getAccountListAsync(params) {
     setLoading(true)
-    await actions.getAccountList(params)
+    await actions.TPGetAccountList(params)
     setSearchParam(params)
     setLoading(false)
   }
@@ -38,14 +38,14 @@ function Account(props) {
   }
   //上下架
   async function updateAccountStateMsgAsync(params) {
-    await actions.updateAccountStateMsg(params)
+    await actions.TPUpdateAccountStateMsg(params)
     setModalProps({ visible: false })
     changePage()
     message.success('操作成功')
   }
   //批量通过
   async function batchUpdateAccountStateAsync(params) {
-    await actions.batchUpdateAccountState(params)
+    await actions.TPBatchUpdateAccountState(params)
     setModalProps({ visible: false })
     changePage()
     message.success('操作成功')

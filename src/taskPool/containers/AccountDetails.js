@@ -19,7 +19,7 @@ function AccountDetails(props) {
   }, [])
   async function getAccountDetailAsync() {
     setIsLoading(true)
-    await actions.getAccountDetail(searchParam)
+    await actions.TPGetAccountDetail(searchParam)
     setIsLoading(false)
   }
 

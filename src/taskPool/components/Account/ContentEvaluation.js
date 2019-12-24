@@ -114,7 +114,7 @@ class ContentEvaluation extends React.Component {
     const { estimateState } = accountEstimateDetails
     //账号评语提交
     async function updateAccountEstimateDescribeAsync(param) {
-      await actions.updateAccountEstimateDescribe(param)
+      await actions.TPUpdateAccountEstimateDescribe(param)
     }
     let columns = [
       {

@@ -23,7 +23,7 @@ const Orders = (props) => {
     setLoading(true)
     const data = { ...cooSearch, ...params }
     setCooSearch(data)
-    await actions.getPlatformOrderList(data)
+    await actions.TPGetPlatformOrderList(data)
     setLoading(false)
   }
   const comProps = {
