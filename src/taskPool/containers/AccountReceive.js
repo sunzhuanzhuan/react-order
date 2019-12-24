@@ -4,7 +4,7 @@ import * as actions from '@/taskPool/actions';
 import { bindActionCreators } from 'redux';
 import AccountReceiveList from '../components/Account/AccountReceiveList'
 import AccountReceiveForm from '../components/Account/AccountReceiveForm'
-import { Modal, Spin, Icon } from 'antd'
+import { Modal, Spin, Icon, message } from 'antd'
 import BreadCrumbs from '../base/BreadCrumbs'
 const baseSearch = { page: { currentPage: 1, pageSize: 10 } }
 function AccountReceive(props) {
@@ -16,7 +16,7 @@ function AccountReceive(props) {
   }, [])
   async function getClaimAccountListAsync(params) {
     setIsLoading(true)
-    await actions.getClaimAccountList(params)
+    await actions.TPGetClaimAccountList(params)
     setIsLoading(false)
     setSearchParam(params)
   }
@@ -32,6 +32,19 @@ function AccountReceive(props) {
   function onReset() {
     setSearchParam(baseSearch)
   }
+  async function claimAccountAsync(ids, type) {
+    const { data } = await actions.TPClaimAccount({ accountId: ids })
+    if (type == 'batch') {
+      Modal.success({
+        title: '成功领取/领取总数',
+        content: `${data.claimSuccessNum}/${data.claimTotalNum}`,
+      });
+    } else {
+      message.success('领取成功')
+    }
+    changePage()
+  }
+
   const { actions, acconutReducers } = props
   const { claimAccountList } = acconutReducers
   return (
@@ -39,7 +52,7 @@ function AccountReceive(props) {
       <BreadCrumbs link='/order/task/account-manage' text={<h2>账号领取</h2>} />
       <AccountReceiveForm searchAction={searchAction} onReset={onReset} />
       <Spin spinning={isLoading}>
-        <AccountReceiveList claimAccountList={claimAccountList} actions={actions} changePage={changePage} />
+        <AccountReceiveList claimAccountList={claimAccountList} actions={actions} changePage={changePage} claimAccountAsync={claimAccountAsync} />
       </Spin>
       <Modal
         {...modalProps}

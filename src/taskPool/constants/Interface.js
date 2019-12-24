@@ -1,4 +1,6 @@
 const prefix = "/operator-gateway"
+const accountUrl = 'operator-gateway/accountMapping/v2/'
+const orderUrl = '/operator-gateway/cooperationPlatform/v2/'
 export default {
   getTaskIndustry: prefix + "/common/v1/getTaskIndustry",
   addTask: prefix + "/adOrder/v1/add",
@@ -29,6 +31,26 @@ export default {
   TPMcnOrderConfirmCancel: prefix + "/mcnOrder/v1/mcnOrderConfirmCancel",
   TPPostOperationLog: prefix + "/configmanage/v1/queryOperationLog",
   TPPostClueList: prefix + "/adclue/v1/queryAdClueList",
-  TPGetClueDetail: prefix + "/adclue/v1/queryAdClueInfo"
+  TPGetClueDetail: prefix + "/adclue/v1/queryAdClueInfo",
 
+  account: {
+    TPGetAccountList: `${accountUrl}getAccountList`,//账号管理
+    TPUpdateAccountStateMsg: `${accountUrl}updateAccountStateMsg`,//上下架
+    TPGetAccountDetail: `${accountUrl}getAccountDetail`,//账号详情
+    TPBatchUpdateAccountState: `${accountUrl}batchUpdateAccountState`,//批量通过/批量拒绝
+    TPGetClaimAccountList: `${accountUrl}claimAccountList`,//领取列表
+    TPAuditAccount: `${accountUrl}auditAccount`,//账号审核
+    TPClaimAccount: `${accountUrl}claimAccount`,//领取账号（单条领取/批量领取）
+    TPGetAccountEstimateDetails: `${accountUrl}accountEstimateDetails`,//内容评估查询
+    TPAccountEstimateSubmit: `${accountUrl}accountEstimateSubmit`,//内容评估提交
+    TPUpdateAccountEstimateDescribe: `${accountUrl}updateAccountEstimateDescribe`,//账号评语提交
+    TPGetAccountTabNumber: `${accountUrl}getAccountTabNumber`,//蜂窝派账号管理页签数量
+  },
+  order: {
+    TPGetPlatformOrderList: `${orderUrl}platformOrderList`,//订单管理（合作平台）
+    TPUpdatePlatformOrder: `${orderUrl}updatePlatformOrder`,//（同意(批量)、驳回（批量））
+    TPUpdatePlatformFile: `${orderUrl}updatePlatformFile`,//（上传执行单、上传结案报告）
+    TPGetPlatformOrderDetail: `${orderUrl}platformOrderDetail`,//合作平台订单详情
+  }
 }
+

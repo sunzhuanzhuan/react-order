@@ -4,7 +4,7 @@ import { Input } from 'antd';
 import request from '@/api'
 //form布局
 export const formItemLayout = {
-  labelCol: { span: 8 },
+  labelCol: { span: 10 },
   wrapperCol: { span: 14 },
 }
 //接口请求

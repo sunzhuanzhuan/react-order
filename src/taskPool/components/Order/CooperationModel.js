@@ -17,10 +17,11 @@ function CooperationModel(props) {
       if (!err) {
         props.okFn && props.okFn({
           operationFlag: props.isPrice ? 1 : 2,
-          fileUrl: '',
+          fileUrl: values.fileUrl[0].url,
           platformSettlementAmount: values.platformSettlementAmount,
           adOrderId: props.adOrderId
         })
+        props.cancelFn & props.cancelFn()
       }
     });
   }
@@ -34,7 +35,7 @@ function CooperationModel(props) {
         )}
       </Form.Item> : null}
       <Form.Item label={`上传${props.isPrice ? '执行单' : '结案报告'}`} {...formItemLayout}>
-        {getFieldDecorator('file', {
+        {getFieldDecorator('fileUrl', {
           valuePropName: 'fileList',
           getValueFromEvent: e => e && e.fileList,
           rules: [
