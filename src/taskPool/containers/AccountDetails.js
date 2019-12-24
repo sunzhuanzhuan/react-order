@@ -6,6 +6,7 @@ import { Modal, Spin, Collapse, } from 'antd'
 import BreadCrumbs from '../base/BreadCrumbs'
 import DetailsShow from '../components/Account/DetailsShow'
 import ContentEvaluation from '../components/Account/ContentEvaluation'
+import AuditResults from '../components/Account/AuditResults'
 import qs from 'qs'
 import { withRouter } from 'react-router-dom'
 const { Panel } = Collapse;
@@ -28,18 +29,22 @@ function AccountDetails(props) {
     ...searchParam, accountDetail, actions,
     accountEstimateDetails
   }
-
+  const {
+    auditState//审核状态   1：待审核（默认） 2：未通过 3：已通过
+  } = accountDetail
   return (
     <div className='task-account-details'>
       <BreadCrumbs link='/order/task/account-manage' text={<h2>账号详情</h2>} />
       <Spin spinning={isLoading}>
-        <Collapse defaultActiveKey={['2']}>
+
+        <Collapse defaultActiveKey={['1', '2']}>
           <Panel header="账号审核" key="1">
             <DetailsShow accountDetail={accountDetail} />
+            {auditState == 1 ? <AuditResults accountDetail={accountDetail} /> : null}
           </Panel>
-          <Panel header="内容评估" key="2">
+          {auditState == 3 ? <Panel header="内容评估" key="2">
             <ContentEvaluation {...contentProps} />
-          </Panel>
+          </Panel> : null}
         </Collapse>
       </Spin>
       <Modal

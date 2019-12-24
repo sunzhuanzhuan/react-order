@@ -31,7 +31,7 @@ function AccountForm(props) {
   function onSearch(e) {
     e.preventDefault();
     validateFields((err, values) => {
-      const { submitTime, estimatetime, auditTime } = values.form
+      const { estimatetime, auditTime } = values.form
       if (auditTime) {
         values.form.auditStartTime = moment(auditTime[0]).format(format)
         values.form.auditEndTime = moment(auditTime[1]).format(format)

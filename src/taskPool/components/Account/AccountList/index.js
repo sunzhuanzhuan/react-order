@@ -2,8 +2,6 @@ import React, { useState } from 'react'
 import { Table, Badge, Button, Alert, Modal, Input, Form, message } from 'antd'
 import Scolltable from '@/components/Scolltable/Scolltable.js'
 import MessageIcon from '../../../base/MessageIcon'
-import accountInterface from '@/taskPool/constants/accountInterface.js'
-import api from '@/api'
 import './index.less'
 import TextArea from 'antd/lib/input/TextArea'
 const { confirm } = Modal;
@@ -127,6 +125,7 @@ function AccountList(props) {
       title: '确认批量通过?',
       onOk() {
         batchUpdateAccountStateAsync({ operationFlag: 1, accountId: selectedRow })
+        setSelectedRow([])
       },
       onCancel() {
       },
@@ -137,7 +136,7 @@ function AccountList(props) {
       title: '填写批量不通过原因（50字以内）',
       content: <ReasonForm onOk={(value) => batchUpdateAccountStateAsync(
         { remark: value, accountId: selectedRow, operationFlag: 2 }
-      )} />,
+      )} setSelectedRow={setSelectedRow} />,
       visible: true,
     })
   }
@@ -228,6 +227,7 @@ function Reason(props) {
   function onOk() {
     validateFields((err, values) => {
       if (!err) {
+        props.setSelectedRow && props.setSelectedRow([])
         props.onOk && props.onOk(values)
       }
     })

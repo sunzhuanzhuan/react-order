@@ -1,18 +1,18 @@
 import { createHttpAction } from 'redux-action-extend'
-import Interface from '../constants/accountInterface';
+import Interface from '../constants/Interface';
 import { createAction } from "redux-actions";
 // 账号管理（合作平台）
 export const {
   getAccountList,
   getAccountList_success,
-} = createHttpAction('getAccountList', Interface.getAccountList, {
+} = createHttpAction('getAccountList', Interface.account.getAccountList, {
   method: 'post'
 });
 //上下架
 export const {
   updateAccountStateMsg,
   updateAccountStateMsg_success,
-} = createHttpAction('updateAccountStateMsg', Interface.updateAccountStateMsg, {
+} = createHttpAction('updateAccountStateMsg', Interface.account.updateAccountStateMsg, {
   method: 'post'
 });
 
@@ -20,14 +20,14 @@ export const {
 export const {
   getClaimAccountList,
   getClaimAccountList_success,
-} = createHttpAction('getClaimAccountList', Interface.getClaimAccountList, {
+} = createHttpAction('getClaimAccountList', Interface.account.getClaimAccountList, {
   method: 'post'
 });
 //领取账号
 export const {
   claimAccount,
   claimAccount_success,
-} = createHttpAction('claimAccount', Interface.claimAccount, {
+} = createHttpAction('claimAccount', Interface.account.claimAccount, {
   method: 'post'
 });
 
@@ -36,7 +36,7 @@ export const {
 export const {
   getAccountDetail,
   getAccountDetail_success,
-} = createHttpAction('getAccountDetail', Interface.getAccountDetail, {
+} = createHttpAction('getAccountDetail', Interface.account.getAccountDetail, {
   method: 'post'
 });
 
@@ -44,7 +44,7 @@ export const {
 export const {
   batchUpdateAccountState,
   batchUpdateAccountState_success,
-} = createHttpAction('batchUpdateAccountState', Interface.batchUpdateAccountState, {
+} = createHttpAction('batchUpdateAccountState', Interface.account.batchUpdateAccountState, {
   method: 'post'
 });
 
@@ -52,7 +52,7 @@ export const {
 export const {
   auditAccount,
   auditAccount_success,
-} = createHttpAction('auditAccount', Interface.auditAccount, {
+} = createHttpAction('auditAccount', Interface.account.auditAccount, {
   method: 'post'
 });
 
@@ -60,7 +60,7 @@ export const {
 export const {
   getAccountEstimateDetails,
   getAccountEstimateDetails_success,
-} = createHttpAction('getAccountEstimateDetails', Interface.getAccountEstimateDetails, {
+} = createHttpAction('getAccountEstimateDetails', Interface.account.getAccountEstimateDetails, {
   method: 'post'
 });
 
@@ -68,7 +68,7 @@ export const {
 export const {
   accountEstimateSubmit,
   accountEstimateSubmit_success,
-} = createHttpAction('accountEstimateSubmit', Interface.accountEstimateSubmit, {
+} = createHttpAction('accountEstimateSubmit', Interface.account.accountEstimateSubmit, {
   method: 'post'
 });
 
@@ -76,7 +76,7 @@ export const {
 export const {
   updateAccountEstimateDescribe,
   updateAccountEstimateDescribe_success,
-} = createHttpAction('updateAccountEstimateDescribe', Interface.updateAccountEstimateDescribe, {
+} = createHttpAction('updateAccountEstimateDescribe', Interface.account.updateAccountEstimateDescribe, {
   method: 'post'
 });
 
@@ -84,5 +84,5 @@ export const {
 export const {
   getAccountTabNumber,
   getAccountTabNumber_success,
-} = createHttpAction('getAccountTabNumber', Interface.getAccountTabNumber);
+} = createHttpAction('getAccountTabNumber', Interface.account.getAccountTabNumber);
 

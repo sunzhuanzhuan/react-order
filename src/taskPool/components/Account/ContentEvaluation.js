@@ -194,13 +194,14 @@ const AccountComments = (props) => {
       }
     })
   }
+
   return <Form layout='horizontal'>
     <Descriptions title="账号等级及评语">
       <Descriptions.Item label="账号等级">{data.estimateGrade}</Descriptions.Item>
       <Descriptions.Item label="内容评估（总分30）">{data.contentEstimateTotalScore}</Descriptions.Item>
       <Descriptions.Item label="效果评估（总分10）">{data.effectEstimateScore}</Descriptions.Item>
     </Descriptions>
-    <Form.Item label='账号评语'>
+    <Form.Item label='账号评语' >
       {form.getFieldDecorator(`estimateDescribe`, {
         initialValue: 'estimateDescribe',
         rules: [
@@ -208,7 +209,7 @@ const AccountComments = (props) => {
           { required: true, message: '请填写账号评语' }
         ],
       })(
-        <TextArea rows={4} placeholder='请填写账号评语，不超过100个字' disabled={data.estimateDescribe} />
+        <TextArea rows={4} placeholder='请填写账号评语，不超过100个字' readOnly={data.estimateDescribe} />
       )}
     </Form.Item>
     <div className='button-footer'>
