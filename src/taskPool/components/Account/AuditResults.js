@@ -9,15 +9,20 @@ const formLayout = {
 }
 
 function AuditResults(props) {
-  const { form, accountDetail } = props
+  const { form, accountDetail, actions, accountId } = props
+  const { auditState, remark, refusedType } = accountDetail
   const { getFieldValue, getFieldDecorator } = form
   function submitForm(e) {
     e.preventDefault();
     form.validateFields((err, values) => {
       if (!err) {
         //
+        actions.auditAccount({ ...values, accountId: accountId })
       }
     })
+  }
+  function goBack() {
+    window.open('/order/task/account-manage', "_self")
   }
   return (
     <div>
@@ -25,7 +30,7 @@ function AuditResults(props) {
         <Form layout='horizontal'>
           <FormItem label='是否通过审核'{...formLayout}>
             {getFieldDecorator(`auditState`, {
-              initialValue: 'auditState',
+              initialValue: auditState,
               rules: [
                 { required: true, message: '请选择是否通过审核' }
               ],
@@ -38,20 +43,20 @@ function AuditResults(props) {
           </FormItem>
           {getFieldValue('auditState') == 2 ? <FormItem label='不通过类型' {...formLayout}>
             {getFieldDecorator(`refusedType`, {
-              initialValue: 'refusedType',
+              initialValue: refusedType,
               rules: [
                 { required: true, message: '请选择不通过类型' }
               ],
             })(
               <Radio.Group >
-                <Radio value={1}>非本人账号</Radio>
-                <Radio value={2}>其他</Radio>
+                <Radio value='1'>非本人账号</Radio>
+                <Radio value='2'>其他</Radio>
               </Radio.Group>
             )}
           </FormItem> : null}
           {getFieldValue('refusedType') == 2 ? <FormItem label='其他原因' {...formLayout}>
             {getFieldDecorator(`remark`, {
-              initialValue: '',
+              initialValue: remark,
               rules: [
                 { max: 50, message: '不超过50个字' },
                 { required: true, message: '请填写原因' }
@@ -62,7 +67,7 @@ function AuditResults(props) {
           </FormItem> : null}
         </Form>
         <div className='button-footer'>
-          <Button onClick={() => window.open('/order/task/account-manage', "_self")}>返回</Button>
+          <Button onClick={goBack}>返回</Button>
           <Button type='primary' onClick={submitForm}>提交审核</Button>
         </div>
       </TitleBox>

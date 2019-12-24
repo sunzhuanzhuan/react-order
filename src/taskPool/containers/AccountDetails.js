@@ -40,7 +40,7 @@ function AccountDetails(props) {
         <Collapse defaultActiveKey={['1', '2']}>
           <Panel header="账号审核" key="1">
             <DetailsShow accountDetail={accountDetail} />
-            {auditState == 1 ? <AuditResults accountDetail={accountDetail} /> : null}
+            {auditState == 1 ? <AuditResults accountDetail={accountDetail} actions={actions} {...searchParam} /> : null}
           </Panel>
           {auditState == 3 ? <Panel header="内容评估" key="2">
             <ContentEvaluation {...contentProps} />
