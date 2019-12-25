@@ -3,11 +3,10 @@
  * Created by lzb on 2019-12-16.
  */
 import React, { Component, useState } from 'react';
-import './index.less'
 import { Spin, Dropdown, Tag, Icon, Tooltip, Select, Popover, message, Input } from 'antd';
 import debounce from 'lodash/debounce';
+import './index.less'
 
-const Search = Input.Search;
 
 class CertificateGroup extends React.Component {
 
@@ -56,6 +55,7 @@ class CertificateGroup extends React.Component {
           以下资质广告主上传时须必选其一
           <a className='certificate-group-container-delete' onClick={this.props.onDelete}>删除</a>
         </h4>
+        <b className="required-red-star">*</b>
         <Select
           className='popup-search-certificate-list'
           showSearch
