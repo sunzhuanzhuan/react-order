@@ -51,6 +51,10 @@ export default {
     TPUpdatePlatformOrder: `${orderUrl}updatePlatformOrder`,//（同意(批量)、驳回（批量））
     TPUpdatePlatformFile: `${orderUrl}updatePlatformFile`,//（上传执行单、上传结案报告）
     TPGetPlatformOrderDetail: `${orderUrl}platformOrderDetail`,//合作平台订单详情
+  },
+  attribute: {
+    queryQualificationByName: prefix + "/configManage/v1/queryQualificationByName",
   }
+
 }
 
