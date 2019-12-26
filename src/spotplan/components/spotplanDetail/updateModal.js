@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, Button, Table, Form, Input, Row, Col, message, Select } from 'antd';
+import { Modal, Button, Table, Form, Input, Row, Col, message, Select, InputNumber } from 'antd';
 import { UpdateCols } from '../../constants'
 import numeral from 'numeral'
 import debounce from 'lodash/debounce';
@@ -78,8 +78,8 @@ class UpdateModal extends React.Component {
       3: '三条',
       4: '四条',
       5: '五条',
-      6: '七条',
-      7: '头条',
+      6: '六条',
+      7: '七条',
       8: '八条',
     }
     const { getFieldDecorator } = this.props.form;
@@ -133,14 +133,14 @@ class UpdateModal extends React.Component {
         <Row style={{ lineHeight: '58px' }} gutter={16}>
           <Col span={2}></Col>
           <Col span={6}>Cost（元）：</Col>
-          <Col span={8}>{dataSource && numeral(dataSource[0].cost).format('0,0')}</Col>
+          <Col span={8}>{dataSource && numeral(dataSource[0].cost).format('0,0.00')}</Col>
           <Col span={8}>
             <FormItem>
               {getFieldDecorator('cost', {
                 initialValue: dataSource && dataSource[0].cost || '',
                 rules: [{ required: true, message: '请填写值' }]
               })(
-                <Input placeholder='' style={{ width: 200 }} onChange={e => {
+                <InputNumber precision={2} placeholder='' style={{ width: 200 }} onChange={e => {
                   this.handleChange(e, dataSource, 'service_rate', 'cost')
                 }} />
               )}
@@ -170,8 +170,8 @@ class UpdateModal extends React.Component {
         <Row style={{ lineHeight: '58px' }} gutter={16}>
           <Col span={2}></Col>
           <Col span={6}>Costwithfee（元）：</Col>
-          <Col span={8}>{dataSource && numeral(dataSource[0].costwithfee).format('0,0')}</Col>
-          <Col span={8}>{serviceRateAmount.costwithfee ? numeral(serviceRateAmount.costwithfee).format('0,0') : dataSource && numeral(dataSource[0].costwithfee).format('0,0')}</Col>
+          <Col span={8}>{dataSource && numeral(dataSource[0].costwithfee).format('0,0.00')}</Col>
+          <Col span={8}>{serviceRateAmount.costwithfee ? numeral(serviceRateAmount.costwithfee).format('0,0.00') : dataSource && numeral(dataSource[0].costwithfee).format('0,0.00')}</Col>
         </Row>
         <Row style={{ lineHeight: '58px' }} gutter={16}>
           <Col span={2}></Col>

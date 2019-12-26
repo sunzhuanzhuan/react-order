@@ -104,7 +104,7 @@ class EditOrderModal extends React.Component {
             {
               validator: this.checkCost
             }]
-          })(<InputNumber precision={0} max={99999999} min={1} style={{ width: 200 }} onChange={(value) => {
+          })(<InputNumber precision={2} max={99999999} min={1} style={{ width: 200 }} onChange={(value) => {
             if (value != data && data[0].cost) {
               if (data && data[0].service_rate) {
                 let num = Number(value) * (1 + (Number(data[0].service_rate) / 100)).toString()
@@ -127,7 +127,7 @@ class EditOrderModal extends React.Component {
             {
               validator: this.checkCostfee
             }]
-          })(<InputNumber max={999999999} min={1} precision={0} style={{ width: 200 }} />
+          })(<InputNumber max={999999999} min={1} precision={2} style={{ width: 200 }} />
           )}
         </FormItem>
         <FormItem label='账号分类' {...formItemLayout}>

@@ -202,7 +202,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
             }
           }]
         })(
-          <InputNumber precision={0} max={99999999} min={1} style={{ width: 150 }} onBlur={(e) => {
+          <InputNumber precision={2} max={99999999} min={1} style={{ width: 150 }} onBlur={(e) => {
             validateFields([`${record.order_id}.cost`], (errors, values) => {
               if (!errors) {
                 if (e.target.value != '' && e.target.value != record.cost) {
@@ -248,7 +248,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
             }
           }]
         })(
-          <InputNumber precision={0} max={999999999} min={1} style={{ width: 150 }} onBlur={(e) => {
+          <InputNumber precision={2} max={999999999} min={1} style={{ width: 150 }} onBlur={(e) => {
             validateFields([`${record.order_id}.costwithfee`], (errors, values) => {
               if (!errors) {
                 if (e.target.value != '' && e.target.value != record.costwithfee) {
@@ -610,7 +610,7 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     align: 'center',
     width: 120,
     render: text => {
-      return <div>{text && numeral(text).format('0,0') || '-'}</div>
+      return <div>{text && numeral(text).format('0,0.00') || '-'}</div>
     }
   },
   {
@@ -620,7 +620,7 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     align: 'center',
     width: 120,
     render: text => {
-      return <div>{text && numeral(text).format('0,0') || '-'}</div>
+      return <div>{text && numeral(text).format('0,0.00') || '-'}</div>
     }
   },
   {
