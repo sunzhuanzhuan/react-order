@@ -25,8 +25,8 @@ class UpdateModal extends React.Component {
           reason: values.reason,
           before_order: {
             price_name: dataSource[0].price_name,
-            cost: dataSource[0].cost,
-            service_rate: dataSource[0].service_rate,
+            cost: dataSource[0].costdataSource,
+            service_rate: [0].service_rate,
             costwithfee: dataSource[0].costwithfee,
             account_category_name: dataSource[0].account_category_name,
             release_form: dataSource[0].release_form,
@@ -205,12 +205,13 @@ class UpdateModal extends React.Component {
         </Row>
         <Row gutter={16}>
           <Col span={2}></Col>
-          <Col span={6} style={{ lineHeight: '58px', paddingBottom: '12px' }}>发文位置（非必填)：</Col>
+          <Col span={6} style={{ lineHeight: '58px', paddingBottom: '12px' }}>发文位置（微信必填）：</Col>
           <Col span={8} style={{ marginTop: '10px' }}>{position[dataSource && dataSource[0].publish_articles_address]}</Col>
           <Col span={8}>
             <FormItem>
               {getFieldDecorator('publish_articles_address', {
-                initialValue: dataSource && dataSource[0].publish_articles_address || ''
+                initialValue: dataSource && dataSource[0].publish_articles_address,
+                rules: [{ required: dataSource && dataSource[0].weibo_type == 9 ? true : false, message: '请选择发文位置' }]
               })(
                 <Select placeholder="请选择" style={{ width: 120 }} allowClear>
                   <Option value={1}>头条</Option>

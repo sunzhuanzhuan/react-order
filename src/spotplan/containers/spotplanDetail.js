@@ -354,7 +354,7 @@ class SpotPlanDetail extends React.Component {
     if (!flag) {
       Modal.error({
         title: '错误提示',
-        content: <div>你选择的订单中存在不能发起【更新发文时间】的订单，请重新选择。</div>
+        content: <div>你选择的订单中存在不能发起【修改订单信息】的订单，请重新选择。</div>
       });
       return;
     }
@@ -530,7 +530,7 @@ class SpotPlanDetail extends React.Component {
         {(spotplanPoInfo && spotplanPoInfo.customer_po_amount) == null ? null : <Button type='primary' onClick={this.handleSettleChange}>批量申请换号</Button>}
         {(spotplanPoInfo && spotplanPoInfo.customer_po_amount) == null ? null : <Button className='left-gap' type='primary' onClick={this.handleSettleQuit}>批量申请终止合作</Button>}
         {(spotplanPoInfo && spotplanPoInfo.customer_po_amount) == null ? null : <Button type='primary' className='left-gap' onClick={this.handleSettleAddAccount}>批量申请新增账号</Button>}
-        {(spotplanPoInfo && spotplanPoInfo.customer_po_amount) == null ? null : <Button type='primary' className='left-gap' onClick={this.handleSettleUpdateArtical}>批量更新发文时间</Button>}
+        {(spotplanPoInfo && spotplanPoInfo.customer_po_amount) == null ? null : <Button type='primary' className='left-gap' onClick={this.handleSettleUpdateArtical}>批量修改订单信息</Button>}
         <Button type='primary' className='left-gap' onClick={this.handleSettleDeleteOrder}>批量删除订单</Button>
 
       </div>

@@ -138,14 +138,34 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
     }
   },
   {
-    title: '账号ID',
+    title: '账号ID（微信必填）',
     dataIndex: 'weibo_id',
     key: 'weibo_id',
     align: 'center',
     width: 120,
     render: (text, record) => {
-      const flag = record.weibo_type == 23 ? true : false;
-      return flag ? '-' : text
+      return <FormItem>
+        {getFieldDecorator(`${record.order_id}.weibo_id`, {
+          trigger: ['onChange'],
+          rules: [{ required: record.weibo_type == 9 ? true : false, message: '请填写账号ID' }, {
+            validator: (rule, value, callback) => {
+              let reg = /^[^\u4e00-\u9fa5]{0,255}$/
+              if (!reg.test(value)) {
+                callback('请输入中文除外的，最多255个字符')
+              } else {
+                callback()
+              }
+            }
+          }]
+        })(
+          <Input onBlur={(e) => {
+            if (e.target.value != record.weibo_id) {
+              handleUpdate({ order_id: record.order_id, price_id: record.price_id, weibo_id: e.target.value })
+            }
+          }} />
+        )
+        }
+      </FormItem>
     }
   },
   {
@@ -307,14 +327,20 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
     }
   },
   {
-    title: '发文位置（非必填）',
+    title: '发文位置（微信必填）',
     dataIndex: 'publish_articles_address',
     key: 'publish_articles_address',
     align: 'center',
     width: 210,
     render: (text, record) => {
       return record.is_inward_send == 1 || record.last_apply_status == 1 || record.last_apply_status == 2 ? position[text] : <FormItem>
-        {getFieldDecorator(`${record.order_id}.publish_articles_address`)(
+        {getFieldDecorator(`${record.order_id}.publish_articles_address`, {
+          rules: [
+            {
+              required: record.weibo_type == 9 ? true : false,
+              message: '请填写发文位置',
+            }]
+        })(
           <Select placeholder="请选择" style={{ width: 120 }} onChange={(value) => {
             handleUpdate({ order_id: record.order_id, price_id: record.price_id, publish_articles_address: value || '' })
           }} allowClear>
@@ -330,16 +356,45 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
         )}
       </FormItem>
     }
+  }, {
+    title: 'Client（非必填）',
+    dataIndex: 'client',
+    key: 'client',
+    align: 'center',
+    width: 210,
+    render: (text, record) => {
+      return record.is_inward_send == 1 || record.last_apply_status == 1 || record.last_apply_status == 2 ? position[text] : <FormItem>
+        {getFieldDecorator(`${record.order_id}.client`)(
+          <Select placeholder="请选择" style={{ width: 120 }} onChange={(value) => {
+            handleUpdate({ order_id: record.order_id, price_id: record.price_id, client: value || '' })
+          }} allowClear>
+            <Option value={1}>天猫</Option>
+            <Option value={2}>京东</Option>
+            <Option value={3}>唯品会</Option>
+            <Option value={4}>考拉</Option>
+            <Option value={5}>苏宁易购</Option>
+            <Option value={6}>线上（其他）</Option>
+            <Option value={7}>线下</Option>
+          </Select>
+        )}
+      </FormItem>
+    }
   },
   {
-    title: '发文时间（非必填）',
+    title: '发文时间（微信必填）',
     dataIndex: 'publish_articles_at',
     key: 'publish_articles_at',
     align: 'center',
     width: 210,
     render: (text, record) => {
       return record.is_inward_send == 1 || record.last_apply_status == 1 || record.last_apply_status == 2 ? text : <FormItem>
-        {getFieldDecorator(`${record.order_id}.publish_articles_at`)(
+        {getFieldDecorator(`${record.order_id}.publish_articles_at`, {
+          rules: [
+            {
+              required: record.weibo_type == 9 ? true : false,
+              message: '请填写发文时间',
+            }]
+        })(
           <DatePicker dropdownClassName="sp-calendar" allowClear={record.publish_articles_at == null ? true : false} showTime={{ defaultValue: moment('00:00:00', 'HH:mm:ss') }} format="YYYY-MM-DD HH:mm:ss" placeholder="请输入" style={{ width: 130 }} onOk={(value) => {
             handleUpdate({ order_id: record.order_id, price_id: record.price_id, publish_articles_at: value.format("YYYY-MM-DD HH:mm:ss") })
           }} onBlur={() => {
@@ -358,6 +413,32 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
           }} />
         )}
       </FormItem>
+    }
+  }, {
+    title: 'content type（非必填）',
+    dataIndex: 'content_type',
+    key: 'content_type',
+    align: 'center',
+    width: 240,
+    render: (text, record) => {
+      // const flag = (record.customer_confirmation_status == 11 && [0, 4].includes(parseInt(record.last_apply_status))) ? true : false;
+      return record.is_inward_send == 1 || record.last_apply_status == 1 || record.last_apply_status == 2 ? <Tooltip title={<div style={{ width: '200px' }}>{text}</div>}>
+        <div style={{ width: '180px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{text}
+        </div>
+      </Tooltip> : <FormItem>
+          {getFieldDecorator(`${record.order_id}.content_type`, {
+            rules: [
+              { max: 255, message: '不能超过255字' }
+            ]
+          })(
+            <TextArea autosize={false} style={{ width: 140, height: 86, resize: 'none', marginRight: '20px' }} placeholder='请填写内容类型' onBlur={(e) => {
+              if (e.target.value != record.content_type) {
+                handleUpdate({ order_id: record.order_id, price_id: record.price_id, content_type: e.target.value })
+              }
+            }} />
+          )
+          }
+        </FormItem>
     }
   },
   {
@@ -655,9 +736,27 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
       return text ? position[text] : '-'
     }
   }, {
+    title: 'Client',
+    dataIndex: 'client',
+    key: 'client',
+    align: 'center',
+    width: 120,
+    render: text => {
+      return text ? text : '-'
+    }
+  }, {
     title: '发文时间',
     dataIndex: 'publish_articles_at',
     key: 'publish_articles_at',
+    align: 'center',
+    width: 120,
+    render: text => {
+      return text ? text : '-'
+    }
+  }, {
+    title: 'content type',
+    dataIndex: 'content_type',
+    key: 'content_type',
     align: 'center',
     width: 120,
     render: text => {
@@ -708,7 +807,7 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
           record.stopAndUpdate == 1 ?
             <div> <a href='javascript:;' onClick={() => {
               handleUpdateArtical(record.order_id)
-            }}>更新发文时间</a> </div> : null}
+            }}>修改订单信息</a> </div> : null}
 
         {
           record.is_inward_send == 1 || record.last_apply_status == 1 || record.last_apply_status == 2 ? null : <div><a href='javascript:;' onClick={() => {

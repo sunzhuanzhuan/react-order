@@ -23,6 +23,9 @@ class EditOrder extends React.Component {
         [`${item.order_id}.account_category_name`]: item.account_category_name || undefined,
         [`${item.order_id}.is_replace`]: item.is_replace || undefined,
         [`${item.order_id}.release_form`]: item.release_form || undefined,
+        [`${item.order_id}.weibo_id`]: item.weibo_type == 23 ? '-' : item.weibo_id,
+        [`${item.order_id}.client`]: item.client || undefined,
+        [`${item.order_id}.content_type`]: item.content_type || undefined,
         [`${item.order_id}.content`]: item.content || undefined,
         [`${item.order_id}.publish_articles_address`]: item.publish_articles_address || undefined,
         [`${item.order_id}.cost`]: item.cost || undefined,
@@ -46,9 +49,9 @@ class EditOrder extends React.Component {
     })
   }
   render() {
-    const { getFieldDecorator, getFieldValue, setFieldsValue ,validateFields} = this.props.form;
+    const { getFieldDecorator, getFieldValue, setFieldsValue, validateFields } = this.props.form;
     const { data, handleUpdate, headerData, loading, search } = this.props;
-    const EditOrderCols = EditOrderFunc(getFieldDecorator, handleUpdate, this.handleDelete, getFieldValue, setFieldsValue,validateFields);
+    const EditOrderCols = EditOrderFunc(getFieldDecorator, handleUpdate, this.handleDelete, getFieldValue, setFieldsValue, validateFields);
     const paginationObj = {
       onChange: (page) => {
         this.props.queryData(3, { spotplan_id: search.spotplan_id, page }, this.handleEditTable);
@@ -73,7 +76,7 @@ class EditOrder extends React.Component {
               dataSource={data && data.list || []}
               bordered
               loading={loading}
-              scroll={{ x: 2044 }}
+              scroll={{ x: 2544 }}
               pagination={data && data.total > 50 ? paginationObj : false}
             />
           </ScrollTable>
