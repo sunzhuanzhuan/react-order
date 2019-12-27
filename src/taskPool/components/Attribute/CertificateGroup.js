@@ -35,14 +35,14 @@ class CertificateGroup extends React.Component {
       });
   };
 
-  handleChange = (_, value) => {
+  handleChange = (value) => {
     this.setState({
       searching: false,
       // data: []
     });
     value = value.map(item => ({
-      qualificationId: item.props.value,
-      qualificationName: item.props.children
+      qualificationId: item.key,
+      qualificationName: item.label
     }))
     this.props.onChange && this.props.onChange(value)
   };
@@ -55,7 +55,6 @@ class CertificateGroup extends React.Component {
           以下资质广告主上传时须必选其一
           <a className='certificate-group-container-delete' onClick={this.props.onDelete}>删除</a>
         </h4>
-        <b className="required-red-star">*</b>
         <Select
           className='popup-search-certificate-list'
           showSearch
@@ -75,10 +74,7 @@ class CertificateGroup extends React.Component {
         >
           {
             this.state.data.map(item =>
-              <Select.Option
-                key={item.id}
-                value={item.id}
-              >
+              <Select.Option key={item.id}>
                 {item.qualificationName}
               </Select.Option>)
           }

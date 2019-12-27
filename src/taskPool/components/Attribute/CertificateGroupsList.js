@@ -42,6 +42,15 @@ export default class CertificateGroupsList extends React.Component {
     this.triggerChange(groups)
   };
 
+  onChildrenChange = (index, certificates) => {
+    this.onGroupsChange(update(this.state.groups, {
+        [index]: {
+          groupQualificationMappingReqList: { $set: certificates }
+        }
+      }
+    ))
+  }
+
 
   deleteGroup = (index) => {
     this.onGroupsChange(update(this.state.groups, {
@@ -67,9 +76,9 @@ export default class CertificateGroupsList extends React.Component {
             return <div key={item['uuid']}>
               <Form.Item className="certificate-group-container">
                 {
-                  getFieldDecorator(`${this.props.fieldPrefix}[${index}].groupQualificationMappingReqList`,
+                  getFieldDecorator(`${this.props.fieldPrefix}[${item.uuid}].certificates`,
                     {
-                      initialValue: [],
+                      initialValue: item.groupQualificationMappingReqList,
                       rules: [ {
                         validator: (rule, value, callback) => {
                           if (value.length === 0) {
@@ -79,12 +88,18 @@ export default class CertificateGroupsList extends React.Component {
                         }, type: 'array'
                       } ]
                     })(
-                    <CertificateGroup onDelete={this.deleteGroup} search={this.props.search} />
+                    <CertificateGroup
+                      onDelete={this.deleteGroup}
+                      search={this.props.search}
+                      onChange={(certificates) => {
+                        this.onChildrenChange(index, certificates)
+                      }}
+                    />
                   )
                 }
               </Form.Item>
               {
-                getFieldDecorator(`${this.props.fieldPrefix}[${index}].id`,
+                getFieldDecorator(`${this.props.fieldPrefix}[${item.uuid}].id`,
                   { initialValue: item['id'] })(<Input type='hidden' />)
               }
             </div>

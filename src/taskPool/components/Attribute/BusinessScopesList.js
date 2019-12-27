@@ -43,23 +43,39 @@ export default class BusinessScopesList extends React.Component {
     this.triggerChange(scopes)
   };
 
+  onChildrenChange = (index, groups) => {
+    this.onScopesChange(update(this.state.scopes, {
+        [index]: {
+          qualificationsGroupList: { $set: groups }
+        }
+      }
+    ))
+  }
+  onTitleChange = (index, title) => {
+    this.onScopesChange(update(this.state.scopes, {
+        [index]: {
+          name: { $set: title }
+        }
+      }
+    ))
+  }
 
-  deleteGroup = (index) => {
+  deleteScope = (index) => {
     this.onScopesChange(update(this.state.scopes, {
         $splice: [ [ index, 1 ] ]
       }
     ))
   };
 
-  addGroup = () => {
+  addScope = () => {
     this.onScopesChange(update(this.state.scopes, {
-        $push: [ { uuid: uuid(), groupQualificationMappingReqList: [] } ]
+        $push: [ { uuid: uuid(), qualificationsGroupList: [] } ]
       }
     ))
   };
 
   render() {
-    const { getFieldDecorator } = this.props.form
+    const { getFieldDecorator, getFieldValue } = this.props.form
 
     return (
       <div>
@@ -69,30 +85,50 @@ export default class BusinessScopesList extends React.Component {
               <Form.Item style={{ marginBottom: 0, paddingBottom: 6 }}>
                 <h3 className="business-scope-container-title">
                   {
-                    getFieldDecorator(`${this.props.fieldPrefix}[${index}].scopeName`,
+                    getFieldDecorator(`${this.props.fieldPrefix}[${item.uuid}].scopeName`,
                       {
-                        initialValue: [],
-                        rules: [ { required: true, message: '经营内容标题不能为空' } ]
+                        initialValue: item.scopeName,
+                        validateFirst: true,
+                        // validateTrigger: ['submit'],
+                        rules: [
+                          { required: true, message: '经营内容标题不能为空' },
+                          {
+                            validator: (rule, value, callback) => {
+                              const names = Object.values(getFieldValue('_scopes')).map(item => item.scopeName)
+                              if (value && names.some((name, index) => (name === value && names.indexOf(
+                                name) !== index))) {
+                                callback("经营内容不能重复")
+                              } else {
+                                callback()
+                              }
+                            }
+                          }
+                        ]
                       })(
-                      <Input placeholder='经营内容标题' />
+                      <Input placeholder='经营内容标题'
+                             onChange={event => this.onTitleChange(index, event.target.value)} />
                     )
                   }
                   <Button
-                    style={{ marginLeft: 10 }}
-                    icon='close'
-                    type="danger"
-                    onClick={this.deleteGroup}/>
+                    className="business-scope-container-title-close-btn "
+                    icon='delete'
+                    type="link"
+                    onClick={this.deleteScope}>
+                    删除
+                  </Button>
                 </h3>
               </Form.Item>
               <div className="business-scope-container-content">
                 <CertificateGroupsList
                   form={this.props.form}
                   search={this.props.search}
-                  fieldPrefix={`${this.props.fieldPrefix}[${index}].qualificationsGroupList`}
+                  fieldPrefix={`${this.props.fieldPrefix}[${item.uuid}]._groups`}
+                  onChange={(groups) => this.onChildrenChange(index, groups)}
+                  groups={item.qualificationsGroupList}
                 />
               </div>
               {
-                getFieldDecorator(`${this.props.fieldPrefix}[${index}].id`,
+                getFieldDecorator(`${this.props.fieldPrefix}[${item.uuid}].id`,
                   {
                     initialValue: item.id,
                   })(
@@ -102,7 +138,7 @@ export default class BusinessScopesList extends React.Component {
             </div>
           })
         }
-        <Button icon='plus' type='primary' ghost onClick={this.addGroup}>添加经营内容</Button>
+        <Button icon='plus' type='primary' ghost onClick={this.addScope}>添加经营内容</Button>
       </div>
     );
   }
