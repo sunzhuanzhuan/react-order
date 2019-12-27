@@ -4,7 +4,7 @@ const Weichat = (props) => {
 
   return (
     <div>
-
+      6
     </div>
   );
 };
