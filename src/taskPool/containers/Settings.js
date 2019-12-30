@@ -12,7 +12,7 @@ import Notice from '../components/Setting/Notice';
 
 const { SubMenu } = Menu;
 const Settings = (props) => {
-  const [current, setCurrent] = useState('notice')
+  const [current, setCurrent] = useState('cooperation')
   const handleClick = (e) => {
     setCurrent(e.key)
   }
