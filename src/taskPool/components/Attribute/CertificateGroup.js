@@ -3,57 +3,85 @@
  * Created by lzb on 2019-12-16.
  */
 import React, { Component, useState } from 'react';
-import './index.less'
-import { Menu, Dropdown, Tag, Icon, Tooltip, Select, Popover, message, Input } from 'antd';
+import { Spin, Dropdown, Tag, Icon, Tooltip, Select, Popover, message, Input } from 'antd';
 import debounce from 'lodash/debounce';
+import './index.less'
 
-const Search = Input.Search;
 
+class CertificateGroup extends React.Component {
 
-const SearchSelectCertificate = (props) => {
-  return (
-    <Select
-      className='popup-search-certificate-list'
-      style={{ width: "100%"}}
-      showSearch
-      mode='multiple'
-      placeholder="新增资质"
-      defaultValue={props.value}
-      maxTagTextLength={12}
-    >
-      {
-        props.value.map(name =>
-          <Select.Option
-            key={name}
-          >
-            {name}
-          </Select.Option>)
-      }
-    </Select>
-  );
-};
-
-const CertificateGroup = (props) => {
-  const [ tags, setTags ] = useState([ '企业营业执照副本', '事业单位法人证1', '事业单位法人证2' ])
-  const [ selectVisible, setSelectVisible ] = useState(false)
-
-  const handleClose = (removedTag) => {
-    const newTags = tags.filter(tag => tag !== removedTag);
-    setTags(newTags)
+  constructor(props) {
+    super(props);
+    this.lastFetchId = 0;
+    this.searchCertificate = debounce(this.searchCertificate, 800);
   }
 
-  const onPopChange = (value) => {
-    if (!('value' in this.props)) {
-      this.setState({ value });
-    }
-    this.triggerChange(value)
+  state = {
+    searching: false,
+    data: []
   }
 
-  return (
-    <div className="certificate-group-container">
-      <SearchSelectCertificate value={tags} onChange={onPopChange} />
-    </div>
-  );
-};
+  searchCertificate = value => {
+    this.lastFetchId += 1;
+    const fetchId = this.lastFetchId;
+    this.setState({ data: [], fetching: true });
+    this.props.search({ qualificationName: value })
+      .then(({ data }) => {
+        if (fetchId !== this.lastFetchId) {
+          // for fetch callback order
+          return;
+        }
+        this.setState({ data, fetching: false });
+      });
+  };
+
+  handleChange = (value) => {
+    this.setState({
+      searching: false,
+      // data: []
+    });
+    value = value.map(item => ({
+      qualificationId: item.key,
+      qualificationName: item.label
+    }))
+    this.props.onChange && this.props.onChange(value)
+  };
+
+  render() {
+
+    return (
+      <>
+        <h4 className='certificate-group-container-title'>
+          以下资质广告主上传时须必选其一
+          <a className='certificate-group-container-delete' onClick={this.props.onDelete}>删除</a>
+        </h4>
+        <Select
+          className='popup-search-certificate-list'
+          showSearch
+          mode='multiple'
+          placeholder="请选择资质"
+          maxTagTextLength={12}
+          labelInValue
+          value={this.props.value.map(item => ({
+            label: item.qualificationName,
+            key: item.qualificationId,
+          }))}
+          notFoundContent={this.state.searching ? <Spin size="small" /> : null}
+          filterOption={false}
+          onSearch={this.searchCertificate}
+          onChange={this.handleChange}
+          style={{ width: '100%' }}
+        >
+          {
+            this.state.data.map(item =>
+              <Select.Option key={item.id}>
+                {item.qualificationName}
+              </Select.Option>)
+          }
+        </Select>
+      </>
+    );
+  }
+}
 
 export default CertificateGroup;

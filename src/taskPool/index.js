@@ -8,11 +8,14 @@ import OrderCooDetail from './containers/OrderCooDetail';
 
 import Clues from './containers/Clues';
 import Attributes from './containers/Attributes';
+import CreateAttribute from './containers/CreateAttribute';
 import Settings from './containers/Settings';
 import Account from './containers/Account';
 import AccountReceive from './containers/AccountReceive';
 import AccountDetails from './containers/AccountDetails'
-
+import operationLog from './containers/Log'
+import CluesDetails from './containers/CluesDetails'
+import Platform from './containers/Platfrom'
 class Business extends Component {
   render() {
     return (
@@ -29,11 +32,15 @@ class Business extends Component {
           <Route path="/order/task/orders-manage" component={Orders} />
           <Route path="/order/task/orders-coodetail" component={OrderCooDetail} />
           <Route path="/order/task/clues-manage" component={Clues} />
+          <Route path="/order/task/clues-details" component={CluesDetails} />
           <Route path="/order/task/attributes-manage" component={Attributes} />
+          <Route path="/order/task/attributes-create" component={CreateAttribute} />
+          <Route path="/order/task/platform-manage" component={Platform} />
           <Route path="/order/task/settings-manage" component={Settings} />
           <Route path="/order/task/account-manage" component={Account} />
           <Route path="/order/task/account-receive" component={AccountReceive} />
           <Route path="/order/task/account-details" component={AccountDetails} />
+          <Route path="/order/task/operation-log" component={operationLog} />
           <Redirect from="/order/task/create" to='/order/task/tasks-manage' />
         </Switch >
       </div>

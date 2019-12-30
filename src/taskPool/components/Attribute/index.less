@@ -1,9 +1,49 @@
 @import "../../../indexNbTheme";
+
 .certificate-group-container {
-  background: #fff;
+  background: #f8f8f8;
+  padding: 16px 10px 8px;
+  border-radius: 4px;
+  margin-bottom: 6px;
+
+  &-title {
+    line-height: 18px;
+    font-weight: normal;
+    padding: 0 8px;
+  }
+
+  &-delete {
+    float: right;
+  }
 }
+
+.business-scope-container {
+  border: 1px dashed #ddd;
+  border-radius: 4px;
+  padding: 10px;
+  margin: 10px 0;
+
+  &-title {
+    position: relative;
+    line-height: 2em;
+    margin-bottom: 10px;
+
+    &-close-btn {
+      position: absolute;
+      margin-left: 10px;
+    }
+  }
+
+  &-content {
+    border-left: 3px solid #f1f1f1;
+    padding-left: 10px;
+  }
+}
+
 .popup-search-certificate {
-  .ant-popover-inner-content {}
+  .ant-popover-inner-content {
+  }
+
   /*&-list {
     list-style: none;
     margin: 0;

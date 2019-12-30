@@ -30,6 +30,10 @@ export default {
   TPApprovedSecondSuccess: prefix + "/mcnOrder/v1/approvedSecondSuccess",
   TPMcnOrderConfirmFinish: prefix + "/mcnOrder/v1/mcnOrderConfirmFinish",
   TPMcnOrderConfirmCancel: prefix + "/mcnOrder/v1/mcnOrderConfirmCancel",
+  TPPostOperationLog: prefix + "/configmanage/v1/queryOperationLog",
+  TPPostClueList: prefix + "/adclue/v1/queryAdClueList",
+  TPGetClueDetail: prefix + "/adclue/v1/queryAdClueInfo",
+
   account: {
     TPGetAccountList: `${accountUrl}getAccountList`,//账号管理
     TPUpdateAccountStateMsg: `${accountUrl}updateAccountStateMsg`,//上下架
@@ -48,7 +52,6 @@ export default {
     TPUpdatePlatformOrder: `${orderUrl}updatePlatformOrder`,//（同意(批量)、驳回（批量））
     TPUpdatePlatformFile: `${orderUrl}updatePlatformFile`,//（上传执行单、上传结案报告）
     TPGetPlatformOrderDetail: `${orderUrl}platformOrderDetail`,//合作平台订单详情
-
     TPGetAllMcnOrder: `${orderMcnUrl}getAllMcnOrder`,//蜂窝派订单列表（搜索）
     TPApprovedFirstFailure: `${orderMcnUrl}approvedFirstFailure`,//一次质检不通过
     TPApprovedFirstSuccess: `${orderMcnUrl}approvedFirstSuccess`,//一次质检通过
@@ -64,6 +67,10 @@ export default {
     TPFailureReasons: `${orderMcnUrl}failureReasons`,//订单失败原因查询
     TPOrderInfo: `${orderMcnUrl}orderInfo`,//订单详情
     TPQueryDataCurve: `${orderMcnUrl}queryDataCurve`,//获取数据曲线
+  },
+  attribute: {
+    queryQualificationByName: prefix + "/configManage/v1/queryQualificationByName",
   }
+
 }
 
