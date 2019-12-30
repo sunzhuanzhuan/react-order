@@ -42,13 +42,6 @@ export const {
   method: 'post'
 });
 
-// 任务管理列表
-export const {
-  TPTaskManageList,
-  TPTaskManageList_success
-} = createHttpAction('TPTaskManageList', Interface.taskManageList, {
-  method: 'post'
-});
 
 // 任务详情
 export const {
