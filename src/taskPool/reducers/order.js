@@ -14,3 +14,10 @@ export const allMcnOrderList = handleActions({
   },
 }, {})
 
+//获取订单状态列表
+export const mcnOrderStateList = handleActions({
+  [order.TPGetMcnOrderStateList_success]: (state, action) => {
+    return [...action.payload.data]
+  },
+}, [])
+

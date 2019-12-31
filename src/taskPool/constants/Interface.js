@@ -1,7 +1,7 @@
 const prefix = "/operator-gateway"
-const accountUrl = prefix + '/accountMapping/v2'
-const orderUrl = prefix + '/cooperationPlatform/v2'
-const orderMcnUrl = prefix + '/mcnOrder/v1'
+const accountMapping = prefix + '/accountMapping/v2'
+const cooperationPlatform = prefix + '/cooperationPlatform/v2'
+const mcnOrder = prefix + '/mcnOrder/v1'
 const configManage = prefix + '/configManage/v1'
 export default {
   getTaskIndustry: prefix + "/common/v1/getTaskIndustry",
@@ -35,38 +35,37 @@ export default {
   TPGetClueDetail: prefix + "/adclue/v1/queryAdClueInfo",
 
   account: {
-    TPGetAccountList: `${accountUrl}/getAccountList`,//账号管理
-    TPUpdateAccountStateMsg: `${accountUrl}/updateAccountStateMsg`,//上下架
-    TPGetAccountDetail: `${accountUrl}/getAccountDetail`,//账号详情
-    TPBatchUpdateAccountState: `${accountUrl}/batchUpdateAccountState`,//批量通过/批量拒绝
-    TPGetClaimAccountList: `${accountUrl}/claimAccountList`,//领取列表
-    TPAuditAccount: `${accountUrl}/auditAccount`,//账号审核
-    TPClaimAccount: `${accountUrl}/claimAccount`,//领取账号（单条领取/批量领取）
-    TPGetAccountEstimateDetails: `${accountUrl}/accountEstimateDetails`,//内容评估查询
-    TPAccountEstimateSubmit: `${accountUrl}/accountEstimateSubmit`,//内容评估提交
-    TPUpdateAccountEstimateDescribe: `${accountUrl}/updateAccountEstimateDescribe`,//账号评语提交
-    TPGetAccountTabNumber: `${accountUrl}/getAccountTabNumber`,//蜂窝派账号管理页签数量
+    TPGetAccountList: `${accountMapping}/getAccountList`,//账号管理
+    TPUpdateAccountStateMsg: `${accountMapping}/updateAccountStateMsg`,//上下架
+    TPGetAccountDetail: `${accountMapping}/getAccountDetail`,//账号详情
+    TPBatchUpdateAccountState: `${accountMapping}/batchUpdateAccountState`,//批量通过/批量拒绝
+    TPGetClaimAccountList: `${accountMapping}/claimAccountList`,//领取列表
+    TPAuditAccount: `${accountMapping}/auditAccount`,//账号审核
+    TPClaimAccount: `${accountMapping}/claimAccount`,//领取账号（单条领取/批量领取）
+    TPGetAccountEstimateDetails: `${accountMapping}/accountEstimateDetails`,//内容评估查询
+    TPAccountEstimateSubmit: `${accountMapping}/accountEstimateSubmit`,//内容评估提交
+    TPUpdateAccountEstimateDescribe: `${accountMapping}/updateAccountEstimateDescribe`,//账号评语提交
+    TPGetAccountTabNumber: `${accountMapping}/getAccountTabNumber`,//蜂窝派账号管理页签数量
   },
   order: {
-    TPGetPlatformOrderList: `${orderUrl}/platformOrderList`,//订单管理（合作平台）
-    TPUpdatePlatformOrder: `${orderUrl}/updatePlatformOrder`,//（同意(批量)、驳回（批量））
-    TPUpdatePlatformFile: `${orderUrl}/updatePlatformFile`,//（上传执行单、上传结案报告）
-    TPGetPlatformOrderDetail: `${orderUrl}/platformOrderDetail`,//合作平台订单详情
-    TPGetAllMcnOrderList: `${orderMcnUrl}/getAllMcnOrder_2`,//蜂窝派订单列表（搜索）
-    TPApprovedFirstFailure: `${orderMcnUrl}/approvedFirstFailure`,//一次质检不通过
-    TPApprovedFirstSuccess: `${orderMcnUrl}/approvedFirstSuccess`,//一次质检通过
-    TPApprovedSecondFailure: `${orderMcnUrl}/approvedSecondFailure`,//二次质检不通过
-    TPApprovedSecondSuccess: `${orderMcnUrl}/approvedSecondSuccess`,//二次质检通过
-    TPMcnOrderConfirmFinish: `${orderMcnUrl}/mcnOrderConfirmFinish`,//执行结果确认
-    TPMcnOrderConfirmCancel: `${orderMcnUrl}/mcnOrderConfirmCancel`,//执行结果取消
-    TPFristFailureUpdateContentUrl: `${orderMcnUrl}/fristFailureUpdateContentUrl`,//回执链接调整
-    TPGetMcnOrderStateList: `${orderMcnUrl}/getMcnOrderStateList`,//获取订单状态列表
-    TPGetMcnOrderConfrimStateList: `${orderMcnUrl}/getMcnOrderConfrimStateList`,//获取订单确认状态列表
-    TPUpdateContentUrl: `${orderMcnUrl}/updateContentUrl`,//回执链接调整_质检前修改
-    TPApplyConfirm: `${orderMcnUrl}/applyConfirm`,//订单确认/拒绝
-    TPFailureReasons: `${orderMcnUrl}/failureReasons`,//订单失败原因查询
-    TPOrderInfo: `${orderMcnUrl}/orderInfo`,//订单详情
-    TPQueryDataCurve: `${orderMcnUrl}/queryDataCurve`,//获取数据曲线
+    TPGetPlatformOrderList: `${cooperationPlatform}/platformOrderList`,//订单管理（合作平台）
+    TPUpdatePlatformOrder: `${cooperationPlatform}/updatePlatformOrder`,//（同意(批量)、驳回（批量））
+    TPUpdatePlatformFile: `${cooperationPlatform}/updatePlatformFile`,//（上传执行单、上传结案报告）
+    TPGetPlatformOrderDetail: `${cooperationPlatform}/platformOrderDetail`,//合作平台订单详情
+    TPGetAllMcnOrderList: `${mcnOrder}/getAllMcnOrder_2`,//蜂窝派订单列表（搜索）
+    TPApprovedFirstFailure: `${mcnOrder}/approvedFirstFailure`,//一次质检不通过
+    TPApprovedFirstSuccess: `${mcnOrder}/approvedFirstSuccess`,//一次质检通过
+    TPApprovedSecondFailure: `${mcnOrder}/approvedSecondFailure`,//二次质检不通过
+    TPApprovedSecondSuccess: `${mcnOrder}/approvedSecondSuccess`,//二次质检通过
+    TPMcnOrderConfirmFinish: `${mcnOrder}/mcnOrderConfirmFinish`,//执行结果确认
+    TPMcnOrderConfirmCancel: `${mcnOrder}/mcnOrderConfirmCancel`,//执行结果取消
+    TPFristFailureUpdateContentUrl: `${mcnOrder}/fristFailureUpdateContentUrl`,//回执链接调整
+    TPGetMcnOrderStateList: `${mcnOrder}/getMcnOrderStateList`,//获取订单状态列表
+    TPUpdateContentUrl: `${mcnOrder}/updateContentUrl`,//回执链接调整_质检前修改
+    TPApplyConfirm: `${mcnOrder}/applyConfirm`,//订单确认/拒绝
+    TPFailureReasons: `${mcnOrder}/failureReasons`,//订单失败原因查询
+    TPOrderInfo: `${mcnOrder}/orderInfo`,//订单详情
+    TPQueryDataCurve: `${mcnOrder}/queryDataCurve`,//获取数据曲线
   },
   attribute: {
     queryQualificationByName: configManage + "/queryQualificationByName",

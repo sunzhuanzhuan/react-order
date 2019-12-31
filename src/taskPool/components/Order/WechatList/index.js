@@ -1,10 +1,12 @@
 import React, { useMemo } from 'react'
-import { Table, Input } from 'antd'
-import { QUALIFIED_STATU, ABNORMAL_STATU, PENDING_STATU, NO_QUALIFIED_STATU } from '../config'
+import { Table, Input, Badge, Divider, Button } from 'antd'
+import { orderStateMap } from '../config'
 import CancelPaymentForm from './CancelPaymentForm'
 import AbnormalForm from './AbnormalForm'
 import QualityFailedForm from './QualityFailedForm'
 import Scolltable from '@/components/Scolltable/Scolltable.js'
+
+
 export default function WachatList(props) {
   const { setModalProps, allMcnOrderList = {} } = props
   const { list = [] } = allMcnOrderList
@@ -81,8 +83,11 @@ export default function WachatList(props) {
     },
     {
       title: '订单状态',
-      dataIndex: 'adOrderStateDesc',
-      key: 'adOrderStateDesc',
+      dataIndex: 'orderStateDesc',
+      key: 'orderStateDesc',
+      render: text => <div>
+        <Badge status={orderStateMap[text]} />{text}
+      </div>
     },
     {
       title: '备注',
@@ -90,7 +95,7 @@ export default function WachatList(props) {
       key: '备注name',
       align: 'center',
       render: text => {
-        { text == NO_QUALIFIED_STATU ? <a>查看</a> : null }
+        <a>查看</a>
       }
     },
     {
@@ -100,63 +105,64 @@ export default function WachatList(props) {
       align: 'center',
       fixed: 'right',
       width: '180px',
-      render: text => {
-        return <div>{text == QUALIFIED_STATU ? <>
-          <a>确认结算</a>/
-        <a>取消结算</a>
-        </>
-          : null}
-          {/*第二次质检 isShowRead=true*/}
-          <a onClick={() => setModalProps({
-            visible: true,
-            title: '质检异常审核通过',
-            content: <AbnormalForm />
-          })}>通过</a>
-          /
-          <a onClick={() => setModalProps({
-            visible: true,
-            title: '第一次质检异常审核不通过',
-            content: <div>确定该订单不通过么？</div>
-          })}>不通过</a>
-          <a onClick={() => setModalProps({
-            visible: true,
-            title: '第二次质检异常审核不通过',
-            content: <QualityFailedForm />
-          })}>不通过</a>
-          <a onClick={() => setModalProps({
+      render: (text, record) => {
+        return <div>
+          {record.orderStateDesc == '一检异常待处理' ? <>
+            <a onClick={() => setModalProps({
+              visible: true,
+              title: '第一次质检异常审核通过',
+              content: <AbnormalForm />
+            })}>通过</a><Divider type="vertical" />
+            <Divider type="vertical" />
+            <a onClick=''>不通过</a>
+          </> : null}
+          {record.orderStateDesc == '二检异常待处理' ?
+            <>
+              <a onClick={() => setModalProps({
+                visible: true,
+                title: '第二次质检异常审核通过',
+                content: <AbnormalForm isShowRead={true} />
+              })}>通过</a><Divider type="vertical" />
+              <a onClick={() => setModalProps({
+                visible: true,
+                title: '第二次质检异常审核不通过',
+                content: <QualityFailedForm />
+              })}>不通过</a>
+            </> : null}
+          {record.orderStateDesc == '合格' ? <> <a onClick={() => setModalProps({
             visible: true,
             title: '确认结算',
-            content: <div>本次任务执行将成功生成1,234.00元的结算单，是否确定？</div>
-          })}>确认结算</a>
-          <a onClick={() => setModalProps({
-            visible: true,
-            title: '取消结算',
-            content: <CancelPaymentForm />
-          })}>取消结算</a>
+            content: <PaymentOK />
+          })}>确认结算</a><Divider type="vertical" />
+            <a onClick={() => setModalProps({
+              visible: true,
+              title: '取消结算',
+              content: <CancelPaymentForm />
+            })}>取消结算</a>
+          </> : null}
         </div>
       },
     },
     {
       title: '订单操作',
-      dataIndex: '订单操作name',
-      key: '订单操作name',
+      dataIndex: 'orderOperation',
+      key: 'orderOperation',
       align: 'center',
       fixed: 'right',
       width: '180px',
-      render: text => {
+      render: (text, record) => {
         return <div>
-          <a onClick={() => setModalProps({
+          {record.orderStateDesc == '待执行' ? <> <a onClick={() => setModalProps({
             visible: true,
             title: '添加回执',
             content: <EditReceipt />
-          })}>添加回执</a>
-          {/* {text == PENDING_STATU ? : null} */}
-          {/* {text == PENDING_STATU ? <HocModal
-            title='修改回执'
-            clickCmp={(props) => <a onClick={props.onClick}>修改回执</a>}
-            contentCmp={EditReceipt}
-          />: null} */}
-          / <a>详情</a>
+          })}>添加回执 </a> <Divider type="vertical" /></> : null}
+          {record.orderStateDesc == '待修改' ? <><a onClick={() => setModalProps({
+            visible: true,
+            title: '修改回执',
+            content: <EditReceipt />
+          })}>修改回执 </a><Divider type="vertical" /></> : null}
+          <a>详情</a>
         </div>
       }
     },
@@ -169,6 +175,7 @@ export default function WachatList(props) {
         dataSource={list}
         columns={columns}
         scroll={{ x: 2000 }}
+        rowKey='id'
       />
     </Scolltable>
   )
@@ -178,6 +185,21 @@ export function EditReceipt(props) {
   return (
     <div>
       回执链接:<Input onClick={props.onClick} />
+      <div className='button-footer'>
+        <Button>取消</Button>
+        <Button type='primary'>确定</Button>
+      </div>
+    </div>
+  )
+}
+export function PaymentOK(props) {
+  return (
+    <div>
+      <div>本次任务执行将成功生成1,234.00元的结算单，是否确定？</div>
+      <div className='button-footer'>
+        <Button>取消</Button>
+        <Button type='primary'>确定</Button>
+      </div>
     </div>
   )
 }
