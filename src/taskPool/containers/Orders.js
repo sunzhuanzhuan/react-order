@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { connect } from 'react-redux'
 import * as actions from '@/taskPool/actions';
-import { WachatList, CooperationList, CooperationForm } from '../components/Order'
+import { WechatList, CooperationList, CooperationForm } from '../components/Order'
 import { Tabs, Modal, Spin } from 'antd';
 import { bindActionCreators } from 'redux';
 const { TabPane } = Tabs;
@@ -10,17 +10,38 @@ const baseSearch = { page: { currentPage: 1, pageSize: 10 } }
 const Orders = (props) => {
   const [modalProps, setModalProps] = useState({ title: '', content: '' })
   const [cooSearch, setCooSearch] = useState(baseSearch)
+  const [weChatSearch, setWeChatSearch] = useState(baseSearch)
   const [loading, setLoading] = useState(true)
   const { actions, orderReducers } = props
   useEffect(() => {
-    getPlatformOrderListAsync()
+    searchWechatAction()
   }, [])
 
   function callback(key) {
     if (key == 2) {
-      getPlatformOrderListAsync()
+      searchAction()
+    }
+    if (key == 1) {
+      searchWechatAction()
     }
   }
+  //微信
+  async function getAllMcnOrderListAsync(params) {
+    setLoading(true)
+    setWeChatSearch(params)
+    await actions.TPGetAllMcnOrderList(params)
+    setLoading(false)
+  }
+  //操作筛选项
+  function searchWechatAction(params) {
+    getAllMcnOrderListAsync({ ...params, ...baseSearch, })
+  }
+  //操作分页使用查询
+  function changeWechatPage(params) {
+    getAllMcnOrderListAsync({ ...weChatSearch, ...params })
+  }
+
+  //合作平台
   async function getPlatformOrderListAsync(params) {
     setLoading(true)
     setCooSearch(params)
@@ -36,18 +57,21 @@ const Orders = (props) => {
     getPlatformOrderListAsync({ ...cooSearch, ...params })
   }
 
-
-
   const comProps = {
     setModalProps,
     actions: actions,
   }
-  const { platformOrderList } = orderReducers
+  const { platformOrderList, allMcnOrderList } = orderReducers
   const platformProps = {
     platformOrderList,
     searchAction,
     changePage,
     actions
+  }
+  const weChatProps = {
+    allMcnOrderList,
+    searchWechatAction,
+    changeWechatPage
   }
   return (
     <div>
@@ -55,7 +79,7 @@ const Orders = (props) => {
       <Spin spinning={loading}>
         <Tabs onChange={callback} defaultActiveKey='1' >
           <TabPane tab="微信公众号" key="1">
-            <WachatList {...comProps} />
+            <WechatList {...comProps} {...weChatProps} />
           </TabPane>
           <TabPane tab="合作平台" key="2">
             <CooperationForm  {...platformProps} />

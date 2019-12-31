@@ -6,92 +6,92 @@ import AbnormalForm from './AbnormalForm'
 import QualityFailedForm from './QualityFailedForm'
 import Scolltable from '@/components/Scolltable/Scolltable.js'
 export default function WachatList(props) {
-  const { setModalProps } = props
-  const dataSource = [
-    {
-      key: '1',
-      name: '胡彦斌',
-      age: 32,
-      address: '西湖区湖底公园1号',
-    },
-    {
-      key: '2',
-      name: '胡彦祖',
-      age: 42,
-      address: '西湖区湖底公园1号',
-    },
-  ];
-
+  const { setModalProps, allMcnOrderList = {} } = props
+  const { list = [] } = allMcnOrderList
   const columns = [
     {
       title: '订单ID',
-      dataIndex: 'name',
-      key: 'name',
+      dataIndex: 'id',
+      key: 'id',
     },
     {
       title: '任务名称/平台',
-      dataIndex: '任务名称/平台name',
-      key: '任务名称/平台name',
+      dataIndex: 'orderName',
+      key: 'orderName',
     },
     {
       title: '任务ID',
-      dataIndex: '任务IDname',
-      key: '任务IDname',
+      dataIndex: 'adOrderId',
+      key: 'adOrderId',
     },
     {
       title: '任务状态',
-      dataIndex: '任务状态name',
-      key: '任务状态name',
+      dataIndex: 'orderStateDesc',
+      key: 'orderStateDesc',
     },
     {
       title: '任务类型',
-      dataIndex: '任务类型name',
-      key: '任务类型name',
+      dataIndex: 'taskPatternDesc',
+      key: 'taskPatternDesc',
     },
     {
       title: '账号名称',
-      dataIndex: '账号名称name',
-      key: '账号名称name',
+      dataIndex: 'snsName',
+      key: 'snsName',
     },
     {
       title: 'Account_ID',
-      dataIndex: 'Account_IDname',
-      key: 'Account_IDname',
+      dataIndex: 'accountId',
+      key: 'accountId',
     },
     {
       title: '领取时间',
-      dataIndex: '领取时间name',
-      key: '领取时间name',
+      dataIndex: 'receiveAt',
+      key: 'receiveAt',
     },
     {
       title: '预计推送时间',
-      dataIndex: '预计推送时间name',
-      key: '预计推送时间name',
+      dataIndex: 'expectedPublishedTime',
+      key: 'expectedPublishedTime',
     },
     {
       title: '实际阅读/KPI',
       dataIndex: '实际阅读/KPIname',
       key: '实际阅读/KPIname',
+      render: (text, record) => {
+        return <div>
+          {record.realActionNum}/{record.expectActionNum}
+        </div>
+      }
     },
     {
       title: '阅读单价',
-      dataIndex: '阅读单价name',
-      key: '阅读单价name',
+      dataIndex: 'unitPrice',
+      key: 'unitPrice',
     },
     {
       title: '消耗预算',
-      dataIndex: '消耗预算name',
-      key: '消耗预算name',
+      dataIndex: 'adRealAmount',
+      key: 'adRealAmount',
     },
     {
       title: '实际结算价格',
-      dataIndex: '实际结算价格name',
-      key: '实际结算价格name',
+      dataIndex: 'realAmount',
+      key: 'realAmount',
     },
     {
       title: '订单状态',
-      dataIndex: '订单状态name',
-      key: '订单状态name',
+      dataIndex: 'adOrderStateDesc',
+      key: 'adOrderStateDesc',
+    },
+    {
+      title: '备注',
+      dataIndex: '备注name',
+      key: '备注name',
+      align: 'center',
+      render: text => {
+        { text == NO_QUALIFIED_STATU ? <a>查看</a> : null }
+      }
     },
     {
       title: '质检操作',
@@ -160,20 +160,16 @@ export default function WachatList(props) {
         </div>
       }
     },
-    {
-      title: '备注',
-      dataIndex: '备注name',
-      key: '备注name',
-      align: 'center',
-      render: text => {
-        { text == NO_QUALIFIED_STATU ? <a>查看</a> : null }
-      }
-    },
+
 
   ];
   return (
-    <Scolltable scrollClassName='.ant-table-body' widthScroll={2600}>
-      <Table dataSource={dataSource} columns={columns} scroll={{ x: 2400 }} />
+    <Scolltable scrollClassName='.ant-table-body' widthScroll={2100}>
+      <Table
+        dataSource={list}
+        columns={columns}
+        scroll={{ x: 2000 }}
+      />
     </Scolltable>
   )
 }
