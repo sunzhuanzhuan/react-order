@@ -61,7 +61,6 @@ export default {
     TPMcnOrderConfirmCancel: `${orderMcnUrl}/mcnOrderConfirmCancel`,//执行结果取消
     TPFristFailureUpdateContentUrl: `${orderMcnUrl}/fristFailureUpdateContentUrl`,//回执链接调整
     TPGetMcnOrderStateList: `${orderMcnUrl}/getMcnOrderStateList`,//获取订单状态列表
-    TPGetMcnOrderConfrimStateList: `${orderMcnUrl}/getMcnOrderConfrimStateList`,//获取订单确认状态列表
     TPUpdateContentUrl: `${orderMcnUrl}/updateContentUrl`,//回执链接调整_质检前修改
     TPApplyConfirm: `${orderMcnUrl}/applyConfirm`,//订单确认/拒绝
     TPFailureReasons: `${orderMcnUrl}/failureReasons`,//订单失败原因查询

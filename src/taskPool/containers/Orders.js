@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { connect } from 'react-redux'
 import * as actions from '@/taskPool/actions';
-import { WechatList, CooperationList, CooperationForm } from '../components/Order'
+import { WechatList, CooperationList, CooperationForm, WechatForm } from '../components/Order'
 import { Tabs, Modal, Spin } from 'antd';
 import { bindActionCreators } from 'redux';
 const { TabPane } = Tabs;
@@ -15,8 +15,10 @@ const Orders = (props) => {
   const { actions, orderReducers } = props
   useEffect(() => {
     searchWechatAction()
+    //获取订单状态列表
+    actions.TPGetMcnOrderStateList()
   }, [])
-
+  //切换tab
   function callback(key) {
     if (key == 2) {
       searchAction()
@@ -61,7 +63,7 @@ const Orders = (props) => {
     setModalProps,
     actions: actions,
   }
-  const { platformOrderList, allMcnOrderList } = orderReducers
+  const { platformOrderList, allMcnOrderList, mcnOrderStateList } = orderReducers
   const platformProps = {
     platformOrderList,
     searchAction,
@@ -71,7 +73,9 @@ const Orders = (props) => {
   const weChatProps = {
     allMcnOrderList,
     searchWechatAction,
-    changeWechatPage
+    changeWechatPage,
+    mcnOrderStateList,
+    actions
   }
   return (
     <div>
@@ -79,6 +83,7 @@ const Orders = (props) => {
       <Spin spinning={loading}>
         <Tabs onChange={callback} defaultActiveKey='1' >
           <TabPane tab="微信公众号" key="1">
+            <WechatForm {...weChatProps} />
             <WechatList {...comProps} {...weChatProps} />
           </TabPane>
           <TabPane tab="合作平台" key="2">

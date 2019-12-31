@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Input, Form, DatePicker, Checkbox, Row, Col } from 'antd';
+import { Input, Form, Button, Checkbox, Row, Col } from 'antd';
 import { OssUpload } from 'wbyui'
 import { action, formItemLayout } from "./ModalContent";
 //第二次质检不通过
@@ -54,6 +54,10 @@ function QualityFailed(props) {
         />
       )}
     </Form.Item>
+    <div className='button-footer'>
+      <Button>取消</Button>
+      <Button type='primary'>确定</Button>
+    </div>
   </Form >
 }
 const QualityFailedForm = Form.create()(QualityFailed)

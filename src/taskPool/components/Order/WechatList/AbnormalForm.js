@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Form, DatePicker } from 'antd';
+import { Form, DatePicker, Button } from 'antd';
 import { OssUpload } from 'wbyui'
 import request from '@/api'
 import { action, formItemLayout } from "./ModalContent";
@@ -52,6 +52,10 @@ function Abnormal(props) {
         />
       )}
     </Form.Item>
+    <div className='button-footer'>
+      <Button>取消</Button>
+      <Button type='primary'>确定</Button>
+    </div>
   </Form >
 }
 const AbnormalForm = Form.create()(Abnormal)
