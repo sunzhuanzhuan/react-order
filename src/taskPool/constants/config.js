@@ -132,6 +132,12 @@ export const cluePlatformTypes = [
   { id: "2", title: '12306', suffix: (data) => `(${data.weChatCount || 0})` },
 ]
 
+export const wxPositionToFields = {
+  'w1': 'wxOneNumber',
+  'w2': 'wxTwoNumber',
+  'w3': 'wxOtherNumber',
+}
+
 //线索管理，列表的微信公众号和12306的column
 export const getColumns = function (params, clickModal) {
   return params == 1 ? [

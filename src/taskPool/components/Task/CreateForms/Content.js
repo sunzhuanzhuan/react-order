@@ -137,7 +137,7 @@ class ContentForWeixin extends React.Component {
     const { getFieldDecorator, getFieldValue } = form
     return (
       <Form onSubmit={this.handleSubmit}  {...formLayout}>
-        <FormItem label="标题">
+        <FormItem label="文章标题">
           {getFieldDecorator('title', {
             initialValue: content.title,
             rules: [
@@ -148,7 +148,7 @@ class ContentForWeixin extends React.Component {
             <InputCount max={64} placeholder="请输入标题" />
           )}
         </FormItem>
-        <FormItem label={<span>&nbsp;&nbsp;&nbsp;作者</span>}>
+        <FormItem label={<span>&nbsp;&nbsp;&nbsp;文章作者</span>}>
           {getFieldDecorator('author', {
             initialValue: content.author,
             rules: [
@@ -158,7 +158,7 @@ class ContentForWeixin extends React.Component {
             <InputCount max={8} placeholder="请输入作者" />
           )}
         </FormItem>
-        <FormItem label="封面">
+        <FormItem label="文章封面">
           {getFieldDecorator('coverImage', {
             initialValue: content.coverImage,
             valuePropName: 'fileList',
@@ -176,7 +176,7 @@ class ContentForWeixin extends React.Component {
                 suffix: 'png,jpg,jpeg,gif,webp'
               }}
               len={1}
-              tipContent={budget.locationLimited === 1 ? '请上传PNG,JPG,JPEG,GIF,WEBP格式的图片,尺寸比例为2.35:1,最大不能超过2MB' : '请上传PNG,JPG,JPEG,GIF,WEBP格式的图片,尺寸比例为1:1,最大不能超过2MB'}
+              tipContent={'请上传PNG,JPG,JPEG,GIF,WEBP格式的图片,尺寸比例为2.35:1,最大不能超过2MB'}
             />
           )}
         </FormItem>
