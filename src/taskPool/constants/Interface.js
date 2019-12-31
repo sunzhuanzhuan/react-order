@@ -1,9 +1,9 @@
 const prefix = "/operator-gateway"
 const accountUrl = 'operator-gateway/accountMapping/v2/'
 const orderUrl = '/operator-gateway/cooperationPlatform/v2/'
+const configManage = prefix + '/configManage/v1'
 export default {
   getTaskIndustry: prefix + "/common/v1/getTaskIndustry",
-  addTask: prefix + "/adOrder/v1/add",
   TPGetTaskPosition: prefix + "/adOrder/v1/getTaskLocationInfoB",
   offline: prefix + "/adOrder/v1/offline",
   taskManageList: prefix + "/adOrder/v1/list",
@@ -53,8 +53,14 @@ export default {
     TPGetPlatformOrderDetail: `${orderUrl}platformOrderDetail`,//合作平台订单详情
   },
   attribute: {
-    queryQualificationByName: prefix + "/configManage/v1/queryQualificationByName",
+    queryQualificationByName: configManage + "/queryQualificationByName",
+  },
+  task: {
+    getIndustryCatalog: configManage + "/getIndustryCatalog",
+    taskManageList: prefix + "/adOrder/v1/list",
+    queryRetainTimeList: configManage + "/queryRetainTimeList",
+    getTaskLocationInfoB: prefix + "/adOrder/v1/getTaskLocationInfoB",
+    addTask: prefix + "/adOrder/v1/add_2",
   }
-
 }
 

@@ -6,12 +6,6 @@ export * from './account'
 export * from './task'
 export * from './attribute'
 
-// 新增任务
-export const {
-  TPAddTask
-} = createHttpAction('TPAddTask', Interface.addTask, {
-  method: 'post'
-});
 
 // 获取任务大厅行业列表
 export const {
@@ -132,13 +126,6 @@ export const {
 });
 
 
-// 获取任务位置列表
-export const {
-  TPGetTaskPosition,
-  TPGetTaskPosition_success
-} = createHttpAction('TPGetTaskPosition', Interface.TPGetTaskPosition, {
-  method: 'get'
-});
 
 // 质检前回执链接调整
 export const {

@@ -59,6 +59,8 @@ const CreateTask = (props) => {
   const [ balance, setBalance ] = useState(0)
   // 任务发文位置
   const [ taskPositionList, setTaskPositionList ] = useState([])
+  // 任务保留时长列表
+  const [ taskRetainTimeList, setTaskRetainTimeList ] = useState([])
   // 是否锁定公司选择
   const [ lockCompanySelect ] = useState(!!company)
 
@@ -75,12 +77,10 @@ const CreateTask = (props) => {
           key: companyId
         } : undefined,
         orderName: "安师大",
-        taskType: "2",
-        industry: ["10000", "10002"],
+        taskPattern: 2,
+        industry: ["2", "21"],
         orderDate: [moment("2019-12-30"), moment("2020-01-30")],
-        orderStartDate: moment("2019-12-30"),
-        orderEndDate: moment("2020-01-30"),
-        orderCoverImage: [{
+        showPictureUrl: [{
           uid: "asdasd",
           url: "http://prd-wby-img.oss-cn-beijing.aliyuncs.com/ORDER_IMG_UPLOAD/39069087673a43beb9d7bf18ca1c3a5a.jpg"
         }],
@@ -88,7 +88,7 @@ const CreateTask = (props) => {
       },
       budget: {
         totalAmount: 666,
-        locationLimited: "2"
+        locationLimited: 2
       },
       content: {
         title: '22322',
@@ -132,7 +132,7 @@ const CreateTask = (props) => {
   useEffect(() => {
     const { actions } = props
     // 获取任务大厅行业列表
-    actions.TPGetTaskIndustry().then(({ data: industryList }) => {
+    actions.TPGetIndustryCatalog().then(({ data: industryList }) => {
       setIndustryList(industryList)
     })
     // 获取上传图片token
@@ -142,6 +142,10 @@ const CreateTask = (props) => {
     // 获取发文位置
     actions.TPGetTaskPosition().then(({ data: taskPositionList }) => {
       setTaskPositionList(taskPositionList)
+    })
+    // 获取保留时长
+    actions.TPQueryRetainTimeList().then(({ data: retainTimeList }) => {
+      setTaskRetainTimeList(retainTimeList)
     })
 
     if (company) {
@@ -160,7 +164,7 @@ const CreateTask = (props) => {
   }
 
   const childProps = {
-    current, authToken, industryList, balance, lockCompanySelect, taskPositionList, businessScopeList
+    current, authToken, industryList, balance, lockCompanySelect, taskPositionList, businessScopeList, taskRetainTimeList
   }
   const { base, budget, content } = state
   const { actions, taskPoolData = {} } = props;
