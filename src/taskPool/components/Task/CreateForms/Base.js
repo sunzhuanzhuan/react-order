@@ -44,8 +44,7 @@ class BaseForMedia extends React.Component {
   }
 
   render() {
-
-    const { form, formLayout, data, actions } = this.props
+    const { form, formLayout, data, actions, taskRetainTimeList } = this.props
     const { base } = data
     const { getFieldDecorator } = form
 
@@ -90,16 +89,6 @@ class BaseForMedia extends React.Component {
                   userSelect: 'none'
                 }}>微信公众号</span>
               </Radio>
-              {/*<Tooltip title="糟糕，我们还没有准备好">
-                <Radio value={1} disabled>
-                  <WBYPlatformIcon weibo_type={1} widthSize={22} />
-                  <span style={{
-                    verticalAlign: 'text-bottom',
-                    marginLeft: 8,
-                    userSelect: 'none'
-                  }}>新浪微博</span>
-                </Radio>
-              </Tooltip>*/}
             </Radio.Group>
           )}
         </FormItem>
@@ -114,7 +103,7 @@ class BaseForMedia extends React.Component {
             <InputCount max={20} placeholder="请输入任务名称" />
           )}
         </FormItem>
-        <FormItem label="行业分类">
+        {this.props.industryList.length > 0 && <FormItem label="行业分类">
           {getFieldDecorator('industry', {
             initialValue: base.industry,
             rules: [ {
@@ -125,15 +114,15 @@ class BaseForMedia extends React.Component {
           })(
             <Cascader
               fieldNames={{
-                label: 'itemValue',
-                value: 'itemKey',
-                children: 'childrenList'
+                label: 'industryName',
+                value: 'id',
+                children: 'taskIndustryList'
               }}
               options={this.props.industryList}
               placeholder='请选择行业'
             />
           )}
-        </FormItem>
+        </FormItem>}
         <FormItem label="任务时间">
           <div className='flex-form-input-container'>
             {getFieldDecorator('orderDate', {
@@ -198,51 +187,49 @@ class BaseForMedia extends React.Component {
             </div>
           </div>
         </FormItem>
-        <FormItem label="发布后保留时长">
+        {taskRetainTimeList.length > 0 && <FormItem label="发布后保留时长">
           <div className='flex-form-input-container'>
             {getFieldDecorator('retainTime', {
-              initialValue: base.retainTime || 24,
+              initialValue: base.retainTime || taskRetainTimeList[0].retainTime,
               rules: [ {
                 required: true,
                 message: '请选择任务保留时长'
               } ]
             })(
               <Radio.Group>
-                <Radio value={24}>24小时</Radio>
-                <Radio value={48}>48小时</Radio>
+                {
+                  taskRetainTimeList.map(item =>
+                    <Radio key={item.retainTime}
+                           value={item.retainTime}>{item.retainTime}小时</Radio>)
+                }
               </Radio.Group>
             )}
             <div className='flex-form-input-suffix'>
               规定时间内，文章质检合格，则自动扣款。
             </div>
           </div>
-        </FormItem>
+        </FormItem>}
         <FormItem label={<span>选择任务模式<QuestionTip content={<div>
           <b>抢单模式</b> 固定定价和阅读数，由博主抢单;
           <br />
           <b>竞标模式</b> 固定阅读数，由博主自由报价后再对所报价格进行选择
-        </div>}/></span>}>
-          <div className='flex-form-input-container'>
-            {getFieldDecorator('taskType', {
-              initialValue: base.taskType || "1",
-              rules: [ {
-                required: true,
-                message: '选择任务模式'
-              } ]
-            })(
-              <Radio.Group>
-                <Radio value={"1"}>抢单模式</Radio>
-                <Radio value={"2"}>竞标模式</Radio>
-              </Radio.Group>
-            )}
-            <div>
-              {/*<Icon/>*/}
-            </div>
-          </div>
+        </div>} /></span>}>
+          {getFieldDecorator('taskPattern', {
+            initialValue: base.taskPattern || 1,
+            rules: [ {
+              required: true,
+              message: '选择任务模式'
+            } ]
+          })(
+            <Radio.Group>
+              <Radio value={1}>抢单模式</Radio>
+              <Radio value={2}>竞标模式</Radio>
+            </Radio.Group>
+          )}
         </FormItem>
         <FormItem label="上传任务封面">
-          {getFieldDecorator('orderCoverImage', {
-            initialValue: base.orderCoverImage,
+          {getFieldDecorator('showPictureUrl', {
+            initialValue: base.showPictureUrl,
             valuePropName: 'fileList',
             getValueFromEvent: e => e && e.fileList,
             rules: [
@@ -258,7 +245,7 @@ class BaseForMedia extends React.Component {
                 suffix: 'png,jpg,jpeg,gif,webp'
               }}
               len={1}
-              tipContent={'请上传PNG,JPG,JPEG,GIF,WEBP格式的图片,尺寸比例为2.35:1,最大不能超过2MB'}
+              tipContent={'请上传PNG,JPG,JPEG,GIF,WEBP格式的图片,最大不能超过2MB'}
             />
           )}
         </FormItem>
@@ -381,9 +368,9 @@ class BaseForPartner extends React.Component {
           })(
             <Cascader
               fieldNames={{
-                label: 'itemValue',
-                value: 'itemKey',
-                children: 'childrenList'
+                label: 'industryName',
+                value: 'id',
+                children: 'taskIndustryList'
               }}
               onChange={e => {
                 this.props.getBusinessScope(e.slice(-1))
@@ -404,38 +391,39 @@ class BaseForPartner extends React.Component {
             <Select
               placeholder='请选择经营内容'
             >
-              {this.props.businessScopeList.map(item => <Select.Option key={item.id}>{item.scopeName}</Select.Option>)}
+              {this.props.businessScopeList.map(item => <Select.Option
+                key={item.id}>{item.scopeName}</Select.Option>)}
             </Select>
           )}
         </FormItem> : null}
         <FormItem label="投放开始日期">
-            {getFieldDecorator('orderStartDate', {
-              initialValue: base.orderStartDate,
-              validateFirst: true,
-              rules: [
-                { required: true, message: '请选择投放开始日期' },
-                {
-                  validator: (rule, value, callback) => {
-                    if (value.isBefore(this.defaultDisableDate)) {
-                      return callback(`必须是当前日期之后的日期`)
-                    }
-                    callback()
+          {getFieldDecorator('orderStartDate', {
+            initialValue: base.orderStartDate,
+            validateFirst: true,
+            rules: [
+              { required: true, message: '请选择投放开始日期' },
+              {
+                validator: (rule, value, callback) => {
+                  if (value.isBefore(this.defaultDisableDate)) {
+                    return callback(`必须是当前日期之后的日期`)
                   }
+                  callback()
                 }
-              ]
-            })(
-              <DatePicker
-                allowClear={false}
-                placeholder="投放开始日期"
-                format="YYYY-MM-DD"
-                showToday={false}
-                style={{ width: '100%' }}
-                onChange={(m) => this.setState({
-                  disabledEndDate: moment(m).endOf('d')
-                })}
-                disabledDate={this.disabledStartDate}
-              />
-            )}
+              }
+            ]
+          })(
+            <DatePicker
+              allowClear={false}
+              placeholder="投放开始日期"
+              format="YYYY-MM-DD"
+              showToday={false}
+              style={{ width: '100%' }}
+              onChange={(m) => this.setState({
+                disabledEndDate: moment(m).endOf('d')
+              })}
+              disabledDate={this.disabledStartDate}
+            />
+          )}
         </FormItem>
         <FormItem label="投放结束日期">
           <div className='flex-form-input-container'>
@@ -476,6 +464,7 @@ class BaseForPartner extends React.Component {
     )
   }
 }
+
 export default {
   media: BaseForMedia,
   partner: BaseForPartner

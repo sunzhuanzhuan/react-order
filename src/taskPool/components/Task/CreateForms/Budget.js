@@ -61,6 +61,12 @@ const newFormLayout = {
   colon: false
 }
 
+const wxPositionToFields = {
+  'w1': 'wxOneNumber',
+  'w2': 'wxTwoNumber',
+  'w3': 'wxOtherNumber',
+}
+
 // 设置单价组件
 class UnitPrice extends React.Component {
 
@@ -71,13 +77,14 @@ class UnitPrice extends React.Component {
   calculation = (amount, numObj) => {
     setTimeout(() => {
       amount = amount || this.props.form.getFieldValue('totalAmount')
-      numObj = numObj || this.props.form.getFieldValue('locationLimitedInfoUnitPrice')
+      numObj = numObj || this.props.form.getFieldsValue(Object.values(wxPositionToFields))
       if (isNaN(amount) || amount <= 0 || !numObj) {
         return this.setState({
           readNums: [ 0 ]
         });
       }
       let result = Object.values(numObj)
+        .filter(n => typeof n === 'number')
         .sort((a, b) => b - a)
       if (result.length > 2) {
         result = [ result[0], result[result.length - 1] ]
@@ -101,80 +108,36 @@ class UnitPrice extends React.Component {
         return this.props.taskPositionList.find(item => key === item.locationKey)
       }) : this.props.taskPositionList
 
-    return (
+    return checked.length > 0 && (
       <div>
         <FormItem label="设定阅读单价">
-          {getFieldDecorator('unitPrice', {
-            initialValue: budget.unitPrice || 2,
-            rules: [ {
-              required: true,
-              message: '请设定阅读单价'
-            } ]
-          })(
-            <Radio.Group onChange={() => this.calculation()}>
-              <Radio key={1} value={1}>按照发文位置设定</Radio>
-              <Radio key={2} value={2}>统一单价</Radio>
-            </Radio.Group>
-          )}
+          {
+            checked.map((item) =>
+              <FormItem
+                key={item.locationKey}
+                {...newFormLayout}
+                labelCol={{ span: 4, }}
+                wrapperCol={{ span: 20 }}
+                label={item.locationValue}
+              >
+                {getFieldDecorator(wxPositionToFields[item.locationKey], {
+                  initialValue: budget[wxPositionToFields[item.locationKey]] || 0.1,
+                  rules: [ {
+                    required: true,
+                    message: '必填'
+                  } ]
+                })(
+                  <InputNumber
+                    precision={2}
+                    min={0.1}
+                    onChange={val => {
+                      this.calculation()
+                    }}
+                  />
+                )} 元/阅读
+              </FormItem>)
+          }
         </FormItem>
-        {
-          getFieldValue('unitPrice') === 1 &&
-          checked.map((item) =>
-            <FormItem
-              key={item.locationKey}
-              {...newFormLayout}
-              labelCol={{ span: 3, offset: 4 }}
-              wrapperCol={{ span: 16 }}
-              label={item.locationValue}
-            >
-              {getFieldDecorator(`locationLimitedInfoUnitPrice[${item.locationKey}]`, {
-                initialValue: (budget.locationLimitedInfoUnitPrice || {})[item.locationKey] || 0.1,
-                rules: [ {
-                  required: true,
-                  message: '必填'
-                } ]
-              })(
-                <InputNumber
-                  precision={2}
-                  min={0.1}
-                  max={200}
-                  onChange={val => {
-                    this.calculation(getFieldValue('totalAmount'), Object.assign(
-                      getFieldValue('locationLimitedInfoUnitPrice'),
-                      { [item.locationKey]: val }
-                    ))
-                  }}
-                />
-              )} 元/阅读
-            </FormItem>)
-        }
-        {
-          getFieldValue('unitPrice') === 2 &&
-          <FormItem
-            {...newFormLayout}
-            labelCol={{ span: 3, offset: 4 }}
-            wrapperCol={{ span: 16 }}
-            label="统一单价"
-          >
-            {getFieldDecorator(`locationLimitedInfoUnitPrice.single`, {
-              initialValue: (budget.locationLimitedInfoUnitPrice || {}).single || 0.1,
-              rules: [ {
-                required: true,
-                message: '必填'
-              } ]
-            })(
-              <InputNumber
-                precision={2}
-                min={0.1}
-                max={200}
-                onChange={val => {
-                  this.calculation(getFieldValue('totalAmount'),
-                    Object.assign({ single: val }))
-                }}
-              />
-            )} 元/阅读
-          </FormItem>
-        }
         <Row>
           <Col offset={4}>
             <div style={{ height: 28, lineHeight: "28px" }}>
@@ -197,15 +160,15 @@ class ReadNumber extends React.Component {
   calculation = (amount, numObj) => {
     setTimeout(() => {
       amount = amount || this.props.form.getFieldValue('totalAmount')
-      numObj = numObj || this.props.form.getFieldValue('locationLimitedInfoReadNumber')
+      numObj = numObj || this.props.form.getFieldsValue(Object.values(wxPositionToFields))
       if (isNaN(amount) || amount <= 0 || !numObj) {
         return this.setState({
           unitPrice: [ 0 ]
         });
       }
-      let sum = Object.values(numObj).reduce(function (prev, curr, idx, arr) {
-        return prev + curr;
-      })
+      let sum = Object.values(numObj).filter(Boolean).reduce(function (prev, cur) {
+        return prev + cur;
+      }, 0)
       this.setState({
         unitPrice: numeral(amount).divide(sum).format('0.00')
       });
@@ -221,78 +184,36 @@ class ReadNumber extends React.Component {
         return this.props.taskPositionList.find(item => key === item.locationKey)
       }) : this.props.taskPositionList
 
-    return (
+    return checked.length > 0 && (
       <div>
         <FormItem label="设定阅读数">
-          {getFieldDecorator('unitPrice', {
-            initialValue: budget.unitPrice || 2,
-            rules: [ {
-              required: true,
-              message: '请设定阅读单价'
-            } ]
-          })(
-            <Radio.Group onChange={() => this.calculation()}>
-              <Radio key={1} value={1}>按照发文位置设定</Radio>
-              <Radio key={2} value={2}>不限图文位置</Radio>
-            </Radio.Group>
-          )}
+          {
+            checked.map((item) =>
+              <FormItem
+                key={item.locationKey}
+                {...newFormLayout}
+                labelCol={{ span: 4 }}
+                wrapperCol={{ span: 20 }}
+                label={item.locationValue}
+              >
+                {getFieldDecorator(wxPositionToFields[item.locationKey], {
+                  initialValue: budget[wxPositionToFields[item.locationKey]] || 500,
+                  rules: [ {
+                    required: true,
+                    message: '必填'
+                  } ]
+                })(
+                  <InputNumber
+                    min={1}
+                    step={500}
+                    onChange={val => {
+                      this.calculation()
+                    }}
+                  />
+                )} 阅读
+              </FormItem>)
+          }
         </FormItem>
-        {
-          getFieldValue('unitPrice') === 1 &&
-          checked.map((item) =>
-            <FormItem
-              key={item.locationKey}
-              {...newFormLayout}
-              labelCol={{ span: 3, offset: 4 }}
-              wrapperCol={{ span: 16 }}
-              label={item.locationValue}
-            >
-              {getFieldDecorator(`locationLimitedInfoReadNumber[${item.locationKey}]`, {
-                initialValue: (budget.locationLimitedInfoReadNumber || {})[item.locationKey] || 500,
-                rules: [ {
-                  required: true,
-                  message: '必填'
-                } ]
-              })(
-                <InputNumber
-                  min={1}
-                  step={500}
-                  onChange={val => {
-                    this.calculation(getFieldValue('totalAmount'), Object.assign(
-                      getFieldValue('locationLimitedInfoReadNumber'),
-                      { [item.locationKey]: val }
-                    ))
-                  }}
-                />
-              )} 阅读
-            </FormItem>)
-        }
-        {
-          getFieldValue('unitPrice') === 2 &&
-          <FormItem
-            {...newFormLayout}
-            labelCol={{ span: 3, offset: 4 }}
-            wrapperCol={{ span: 16 }}
-            label="总阅读数"
-          >
-            {getFieldDecorator(`locationLimitedInfoReadNumber.single`, {
-              initialValue: (budget.locationLimitedInfoReadNumber || {}).single || 500,
-              rules: [ {
-                required: true,
-                message: '必填'
-              } ]
-            })(
-              <InputNumber
-                min={1}
-                step={500}
-                onChange={val => {
-                  this.calculation(getFieldValue('totalAmount'),
-                    Object.assign({ single: val }))
-                }}
-              />
-            )} 阅读
-          </FormItem>
-        }
         <Row>
           <Col offset={4}>
             <div style={{ height: 28, lineHeight: "28px" }}>
@@ -382,7 +303,7 @@ class BudgetForWeixin extends React.Component {
       return {
         label: item.locationValue,
         value: item.locationKey,
-        disabled
+        // disabled
       }
     })
   }
@@ -396,8 +317,8 @@ class BudgetForWeixin extends React.Component {
     let maxAmount = Math.min(balance, MAX_BUDGET_AMOUNT);
     return (
       <Form onSubmit={this.handleSubmit}  {...formLayout}>
-        {base.taskType === "1" && <h2>抢单模式</h2>}
-        {base.taskType === "2" && <h2>竞标模式</h2>}
+        {base.taskPattern === 1 && <h2>抢单模式</h2>}
+        {base.taskPattern === 2 && <h2>竞标模式</h2>}
         <FormItem label="任务预算(元)">
           <div className='flex-form-input-container'>
             {getFieldDecorator('totalAmount', {
@@ -452,8 +373,8 @@ class BudgetForWeixin extends React.Component {
               let val = e.target.value
               this.calculation(getFieldValue('totalAmount'), val)
             }}>
-              <Radio key={1} value={1}>固定位置</Radio>
-              <Radio key={2} value={2}>不限位置</Radio>
+              <Radio value={1}>固定位置</Radio>
+              <Radio value={2}>不限位置</Radio>
             </Radio.Group>
           )}
         </FormItem>
@@ -465,10 +386,16 @@ class BudgetForWeixin extends React.Component {
                   initialValue: budget.locationLimitedInfo || this.state.positionCheck,
                   rules: [ {
                     required: true,
-                    message: '请至少选择一项限制调价'
+                    validator: (rule, value, callback) => {
+                      if(value && value.length > 0 && value.length < 3){
+                        callback()
+                      }
+                      callback("发布位置最少选择一项, 最多只可选两项")
+                    }
                   } ]
                 })(
                   <CheckboxGroup
+                    style={{paddingBottom: 6}}
                     onChange={ary => {
                       this.setState({ positionCheck: ary })
                       this.readField.calculation()
@@ -476,19 +403,19 @@ class BudgetForWeixin extends React.Component {
                     options={this.getPositionOps()}
                   />
                 )}
-                <div className='flex-form-input-suffix'>
+                {/*<div className='flex-form-input-suffix'>
                   最少选择一项, 最多只可选两项
-                </div>
+                </div>*/}
               </div>
             </FormItem> : null
         }
-        {base.taskType === "1" && <UnitPrice
+        {base.taskPattern === 1 && <UnitPrice
           ref={node => this.readField = node}
           form={form}
           data={data}
           taskPositionList={this.props.taskPositionList}
         />}
-        {base.taskType === "2" && <ReadNumber
+        {base.taskPattern === 2 && <ReadNumber
           ref={node => this.readField = node}
           form={form}
           data={data}
@@ -499,33 +426,33 @@ class BudgetForWeixin extends React.Component {
           <Row>
             <Col span={7}>
               <FormItem>
-                {getFieldDecorator('locationww', {
-                  initialValue: budget.locationww,
+                {getFieldDecorator('_followerCountLimit', {
+                  initialValue: budget._followerCountLimit,
                   valuePropName: 'checked'
                 })(
                   <Checkbox>粉丝量</Checkbox>
                 )}
               </FormItem>
             </Col>
-            <Col span={7}>
+            {getFieldValue('_followerCountLimit') && <Col span={7}>
               <FormItem>
                 大于
-                {getFieldDecorator('locationw222', {
-                  initialValue: budget.locationLimited || 2,
+                {getFieldDecorator('followerCountLimit', {
+                  initialValue: budget.followerCountLimit,
                   rules: [ {
-                    required: getFieldValue('locationww'),
-                    message: '请选择发布位置'
+                    required: true,
+                    message: '请填写限制数量'
                   } ]
-                })(<InputNumber style={{ margin: "0 10px" }} />)}
+                })(<InputNumber min={1} style={{ margin: "0 10px" }} />)}
                 个
               </FormItem>
-            </Col>
+            </Col>}
           </Row>
           <Row>
             <Col span={7}>
               <FormItem>
-                {getFieldDecorator('locationww2', {
-                  initialValue: budget.locationww,
+                {getFieldDecorator('mediaCountLimit', {
+                  initialValue: budget.mediaCountLimit,
                   valuePropName: 'checked'
                 })(
                   <Checkbox>近28天内有发文</Checkbox>
@@ -536,85 +463,85 @@ class BudgetForWeixin extends React.Component {
           <Row>
             <Col span={7}>
               <FormItem>
-                {getFieldDecorator('locationww', {
-                  initialValue: budget.locationww,
+                {getFieldDecorator('_mediaAvgReadNumLimit', {
+                  initialValue: budget._mediaAvgReadNumLimit,
                   valuePropName: 'checked'
                 })(
                   <Checkbox>28天内第一条平均阅读</Checkbox>
                 )}
               </FormItem>
             </Col>
-            <Col span={7}>
+            {getFieldValue('_mediaAvgReadNumLimit') && <Col span={7}>
               <FormItem>
                 高于
-                {getFieldDecorator('locationw222', {
-                  initialValue: budget.locationLimited || 2,
+                {getFieldDecorator('mediaAvgReadNumLimit', {
+                  initialValue: budget.mediaAvgReadNumLimit,
                   rules: [ {
-                    required: getFieldValue('locationww'),
-                    message: '请选择发布位置'
+                    required: true,
+                    message: '请填写限制数量'
                   } ]
-                })(<InputNumber style={{ margin: "0 10px" }} />)}
+                })(<InputNumber min={1} style={{ margin: "0 10px" }} />)}
               </FormItem>
-            </Col>
+            </Col>}
           </Row>
           <Row>
             <Col span={7}>
               <FormItem>
-                {getFieldDecorator('locationww', {
-                  initialValue: budget.locationww,
+                {getFieldDecorator('_followerGenderRatioLimit', {
+                  initialValue: budget._followerGenderRatioLimit,
                   valuePropName: 'checked'
                 })(
                   <Checkbox>粉丝性别比例</Checkbox>
                 )}
               </FormItem>
             </Col>
-            <Col span={7}>
+            {getFieldValue('_followerGenderRatioLimit') && <Col span={7}>
               <FormItem>
-                {getFieldDecorator('locationw222', {
-                  initialValue: budget.locationLimited || 2,
+                {getFieldDecorator('followerGenderRatioLimit', {
+                  initialValue: budget.followerGenderRatioLimit,
                   rules: [ {
-                    required: getFieldValue('locationww'),
-                    message: '请选择发布位置'
+                    required: true,
+                    message: '请选择'
                   } ]
                 })(
                   <Radio.Group>
-                    <Radio>男性多</Radio>
-                    <Radio>女性多</Radio>
+                    <Radio value={1}>男性多</Radio>
+                    <Radio value={2}>女性多</Radio>
                   </Radio.Group>
                 )}
               </FormItem>
-            </Col>
+            </Col>}
           </Row>
           <Row>
             <Col span={7}>
               <FormItem>
-                {getFieldDecorator('locationww', {
-                  initialValue: budget.locationww,
+                {getFieldDecorator('_minNumOfReadLimit', {
+                  initialValue: budget._minNumOfReadLimit,
                   valuePropName: 'checked'
                 })(
                   <Checkbox>博主领取最低阅读数</Checkbox>
                 )}
               </FormItem>
             </Col>
-            <Col span={7}>
+            {getFieldValue('_minNumOfReadLimit') && <Col span={7}>
               <FormItem>
                 不低于
-                {getFieldDecorator('locationw222', {
-                  initialValue: budget.locationLimited || 2,
+                {getFieldDecorator('minNumOfReadLimit', {
+                  initialValue: budget.minNumOfReadLimit,
                   rules: [ {
-                    required: getFieldValue('locationww'),
-                    message: '请选择发布位置'
+                    required: true,
+                    message: '请填写限制数量'
                   } ]
-                })(<InputNumber style={{ margin: "0 10px" }} />)}
+                })(<InputNumber min={1} style={{ margin: "0 10px" }} />)}
                 个
               </FormItem>
-            </Col>
+            </Col>}
           </Row>
           <Row>
             <Col span={7}>
               <FormItem>
-                {getFieldDecorator('locationww', {
-                  initialValue: budget.locationww,
+                {getFieldDecorator('onlyVerified', {
+                  initialValue: budget.onlyVerified,
                   valuePropName: 'checked'
                 })(
                   <Checkbox>只允许认证号接单</Checkbox>

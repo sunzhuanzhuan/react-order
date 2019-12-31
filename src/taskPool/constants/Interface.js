@@ -2,9 +2,9 @@ const prefix = "/operator-gateway"
 const accountUrl = prefix + '/accountMapping/v2'
 const orderUrl = prefix + '/cooperationPlatform/v2'
 const orderMcnUrl = prefix + '/mcnOrder/v1'
+const configManage = prefix + '/configManage/v1'
 export default {
   getTaskIndustry: prefix + "/common/v1/getTaskIndustry",
-  addTask: prefix + "/adOrder/v1/add",
   TPGetTaskPosition: prefix + "/adOrder/v1/getTaskLocationInfoB",
   offline: prefix + "/adOrder/v1/offline",
   taskManageList: prefix + "/adOrder/v1/list",
@@ -68,8 +68,14 @@ export default {
     TPQueryDataCurve: `${orderMcnUrl}/queryDataCurve`,//获取数据曲线
   },
   attribute: {
-    queryQualificationByName: prefix + "/configManage/v1/queryQualificationByName",
+    queryQualificationByName: configManage + "/queryQualificationByName",
+  },
+  task: {
+    getIndustryCatalog: configManage + "/getIndustryCatalog",
+    taskManageList: prefix + "/adOrder/v1/list",
+    queryRetainTimeList: configManage + "/queryRetainTimeList",
+    getTaskLocationInfoB: prefix + "/adOrder/v1/getTaskLocationInfoB",
+    addTask: prefix + "/adOrder/v1/add_2",
   }
-
 }
 
