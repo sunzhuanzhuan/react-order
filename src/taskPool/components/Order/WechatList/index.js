@@ -8,7 +8,7 @@ import Scolltable from '@/components/Scolltable/Scolltable.js'
 
 
 export default function WachatList(props) {
-  const { setModalProps, allMcnOrderList = {} } = props
+  const { setModalProps, allMcnOrderList = {}, actions, } = props
   const { list = [] } = allMcnOrderList
   const columns = [
     {
@@ -28,8 +28,8 @@ export default function WachatList(props) {
     },
     {
       title: '任务状态',
-      dataIndex: 'orderStateDesc',
-      key: 'orderStateDesc',
+      dataIndex: 'adOrderStateDesc',
+      key: 'adOrderStateDesc',
     },
     {
       title: '任务类型',
@@ -88,15 +88,6 @@ export default function WachatList(props) {
       render: text => <div>
         <Badge status={orderStateMap[text]} />{text}
       </div>
-    },
-    {
-      title: '备注',
-      dataIndex: '备注name',
-      key: '备注name',
-      align: 'center',
-      render: text => {
-        <a>查看</a>
-      }
     },
     {
       title: '质检操作',
@@ -166,8 +157,17 @@ export default function WachatList(props) {
         </div>
       }
     },
-
-
+    {
+      title: '备注',
+      dataIndex: '备注name',
+      key: '备注name',
+      align: 'center',
+      fixed: 'right',
+      width: '80px',
+      render: text => {
+        <a>查看</a>
+      }
+    },
   ];
   return (
     <Scolltable scrollClassName='.ant-table-body' widthScroll={2100}>

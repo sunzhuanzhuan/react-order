@@ -12,8 +12,14 @@ function Abnormal(props) {
     })
   }, [])
   const { isShowRead, form } = props
-  const { getFieldDecorator } = form
-
+  const { getFieldDecorator, validateFields } = form
+  function submitForm() {
+    validateFields((err, values) => {
+      if (!err) {
+        //
+      }
+    })
+  }
   return <Form layout='horizontal'>
     <Form.Item label='发文日期' {...formItemLayout}>
       {getFieldDecorator('username', {
@@ -53,8 +59,8 @@ function Abnormal(props) {
       )}
     </Form.Item>
     <div className='button-footer'>
-      <Button>取消</Button>
-      <Button type='primary'>确定</Button>
+      <Button >取消</Button>
+      <Button type='primary' onClick={submitForm}>确定</Button>
     </div>
   </Form >
 }

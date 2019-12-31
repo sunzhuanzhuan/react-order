@@ -75,7 +75,7 @@ const Orders = (props) => {
     searchWechatAction,
     changeWechatPage,
     mcnOrderStateList,
-    actions
+    actions, setModalProps
   }
   return (
     <div>

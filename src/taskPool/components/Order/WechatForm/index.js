@@ -4,7 +4,7 @@ import moment from 'moment'
 const { RangePicker } = DatePicker;
 function WeChatForm(props) {
   const { form, mcnOrderStateList = [] } = props
-  const { validateFields, getFieldDecorator, } = form
+  const { validateFields, getFieldDecorator, resetFields } = form
   function submitForm() {
     validateFields((err, values) => {
       if (!err) {
@@ -12,15 +12,23 @@ function WeChatForm(props) {
         if (values.receiveAt) {
           allValue.form.receiveAtStart = values.orderStartDate[0]
           allValue.form.receiveAtEnd = values.orderStartDate[1]
+          delete allValue.receiveAt
         }
         if (values.expectedPublishedTime) {
           allValue.form.expectedPublishedTimeStart = values.expectedPublishedTime[0]
           allValue.form.expectedPublishedTimeEnd = values.expectedPublishedTime[1]
+          delete allValue.expectedPublishedTime
         }
+
         props.searchWechatAction(allValue)
       }
     })
   }
+  function resetForm() {
+    resetFields()
+    props.searchWechatAction({ form: {} })
+  }
+  //
   return (
     <div>
       <Form layout='inline'>
@@ -61,7 +69,7 @@ function WeChatForm(props) {
         </Form.Item>
         <Form.Item>
           <Button type='primary' onClick={submitForm}>查询</Button>
-          <Button style={{ marginLeft: 20 }} onClick=''>重置</Button>
+          <Button style={{ marginLeft: 20 }} onClick={resetForm}>重置</Button>
         </Form.Item>
       </Form>
     </div>
