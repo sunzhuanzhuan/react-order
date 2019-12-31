@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Form, Input, Button } from 'antd'
 import { OssUpload } from 'wbyui'
-import { action, formItemLayout } from "./WachatList/ModalContent";
+import { action, formItemLayout } from "./WechatList/ModalContent";
 const { TextArea } = Input;
 
 function CooperationModel(props) {

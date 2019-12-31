@@ -22,3 +22,11 @@ export const {
 } = createHttpAction('TPUpdatePlatformFile', Interface.order.TPUpdatePlatformFile, {
   method: 'post'
 });
+
+//订单管理微信公众号
+export const {
+  TPGetAllMcnOrderList,
+  TPGetAllMcnOrderList_success,
+} = createHttpAction('TPGetAllMcnOrderList', Interface.order.TPGetAllMcnOrderList, {
+  method: 'post'
+});

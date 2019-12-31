@@ -7,5 +7,10 @@ export const platformOrderList = handleActions({
     return { ...action.payload.data }
   },
 }, {})
-
+// 订单管理（合作平台）
+export const allMcnOrderList = handleActions({
+  [order.TPGetAllMcnOrderList_success]: (state, action) => {
+    return { ...action.payload.data }
+  },
+}, {})
 
