@@ -115,7 +115,7 @@ class UnitPrice extends React.Component {
                 label={item.locationValue}
               >
                 {getFieldDecorator(wxPositionToFields[item.locationKey], {
-                  initialValue: budget[wxPositionToFields[item.locationKey]] || 0.1,
+                  initialValue: budget[wxPositionToFields[item.locationKey]],
                   rules: [ {
                     required: true,
                     message: '必填'
@@ -196,7 +196,7 @@ class ReadNumber extends React.Component {
                 label={item.locationValue}
               >
                 {getFieldDecorator(wxPositionToFields[item.locationKey], {
-                  initialValue: budget[wxPositionToFields[item.locationKey]] || 500,
+                  initialValue: budget[wxPositionToFields[item.locationKey]],
                   rules: [ {
                     required: true,
                     message: '必填'

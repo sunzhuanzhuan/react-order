@@ -59,25 +59,18 @@ class PreviewForWeixin extends React.Component {
     })
   }
 
-  handleSubmit = (e) => {
-    e && e.preventDefault()
-    const { data, actions } = this.props
+  handleValues = (data) => {
     const { base, budget, content } = data
+    let body = {}
+    body.orderName = base.orderName
+    body.companyId = base.company.key
+    body.companyName = base.company.label
+    body.orderStartDate	= base.orderDate[0]
+    body.orderEndDate = base.orderDate[1]
+    body.platformId = base.platformId
+    body.industry = [ ...base.industry ].pop()
 
-    this.setState({
-      submitLoading: true
-    });
-
-    // 处理提交数据
-    let body = Object.assign({}, base, budget)
-
-    body.companyId = body.company.key
-    body.companyName = body.company.label
-    delete body.company
-
-    body.industry = [ ...body.industry ].pop()
-    // body.taskTarget = body.locationLimited
-    body.taskTarget = 11 //发布位置locationLimited值发生变化 详情任务目标字段固定传11
+    body.totalAmount = budget.totalAmount
 
     body.adOrderWeixinContent = {
       "author": content.author,
@@ -88,19 +81,50 @@ class PreviewForWeixin extends React.Component {
       "remark": content.remark || content.richContent.toText().replace(/\s/g, '').slice(0, 54),
       "articleUrl": content.articleUrl,
       "title": content.title,
-      "locationLimitedInfo": budget.locationLimitedInfo && budget.locationLimitedInfo.join(','),
-      "locationLimited": budget.locationLimited
-    }
-    delete body.locationLimitedInfo;
-    delete body.locationLimited;
 
-    actions.TPAddTask(body).then(this.success).finally(() => {
+      "retainTime": base.retainTime,
+      "locationLimited": budget.locationLimited,
+      "locationLimitedInfo": budget.locationLimitedInfo && budget.locationLimitedInfo.join(','),
+      "taskPattern": base.taskPattern,
+
+      "mediaAvgReadNumLimit": budget._mediaAvgReadNumLimit ? budget.mediaAvgReadNumLimit : 0,
+      "followerGenderRatioLimit": budget._followerGenderRatioLimit ? budget.followerGenderRatioLimit : 0,
+      "minNumOfReadLimit": budget._minNumOfReadLimit ? budget.minNumOfReadLimit : 0,
+      "followerCountLimit": budget._followerCountLimit ? budget.followerCountLimit : 0,
+
+      "mediaCountLimit": budget.mediaCountLimit ? 1 : 2,
+      "onlyVerified":  budget.onlyVerified ? 1 : 2,
+
+      "wxOneNumber": budget.wxOneNumber,
+      "wxTwoNumber": budget.wxTwoNumber,
+      "wxOtherNumber": budget.wxOtherNumber,
+      "showPictureUrl": base.showPictureUrl[0].url
+    }
+
+
+    return body
+  }
+
+  handleSubmit = (e) => {
+    e && e.preventDefault()
+    const { data, actions } = this.props
+    const { base, budget, content } = data
+
+    this.setState({
+      submitLoading: true
+    });
+
+    // 处理提交数据
+    const values = this.handleValues(data)
+
+    actions.TPAddTask(values).then(this.success).finally(() => {
       this.setState({
         submitLoading: false
       });
     })
   }
 
+  // 预览文章内容
   preview = () => {
     const { data } = this.props
     const { base, budget, content } = data
@@ -113,15 +137,17 @@ class PreviewForWeixin extends React.Component {
     })
   }
 
+  // 预览发文位置信息
   getLocationLimited = (budget) => {
     const { locationLimited, locationLimitedInfo } = budget;
-    if (locationLimited == 2)
-      return <div className='text-red'>无限制</div>;
+    if (locationLimited === 2)
+      return <div>无限制</div>;
     const posInfo = locationLimitedInfo.map(item => this.contentStyleWX[item]);
     const posDetail = posInfo && posInfo.length ? `（${posInfo.join('、')}）` : '';
-    return <div className='text-red'>有限制{posDetail}</div>;
+    return <div>有限制{posDetail}</div>;
   }
 
+  // 发文位置对应的单价或阅读数 name => value 形式
   getLocationMapping = (budget) => {
     const { locationLimited, locationLimitedInfo } = budget;
     let list = []
@@ -136,6 +162,7 @@ class PreviewForWeixin extends React.Component {
     }))
   }
 
+  // 预览阅读单价
   getUnitPrice = (budget) => {
     const list = this.getLocationMapping(budget)
     return list.map(o => {
@@ -143,11 +170,50 @@ class PreviewForWeixin extends React.Component {
     })
   }
 
+  // 预览阅读数
   getReadNumber = (budget) => {
     const list = this.getLocationMapping(budget)
     return list.map(o => {
       return <div key={o.name}>{o.name} {numeral(o.value).format("0,0")}阅读</div>
     })
+  }
+
+  // 预览博主限制
+  getLimit = (budget) => {
+    let list = [
+      {
+        text: "粉丝量大于",
+        val: budget._followerCountLimit ? budget.followerCountLimit : 0
+      },
+      {
+        text: "近28天内有发文",
+        val: budget.mediaCountLimit ? "" : 0
+      },
+      {
+        text: "28天内第一条平均阅读高于",
+        val: budget._mediaAvgReadNumLimit ? budget.mediaAvgReadNumLimit : 0
+      },
+      {
+        text: "性别比例",
+        val: budget._followerGenderRatioLimit ? (budget.followerGenderRatioLimit === 1 ? "男性多" : "女性多") : 0
+      },
+      {
+        text: "博主最低领取阅读数不低于",
+        val: budget._minNumOfReadLimit ? budget.minNumOfReadLimit : 0
+      },
+      {
+        text: "只允许认证号接单",
+        val: budget.onlyVerified ? "" : 0
+      },
+    ]
+
+    const result = list.filter(({ val }) => val !== 0).map((item, n) => {
+      return <div key={n}>{item.text + item.val}</div>
+    })
+    if (result.length === 0) {
+      return "无限制"
+    }
+    return result
   }
 
 
@@ -203,7 +269,7 @@ class PreviewForWeixin extends React.Component {
           }
           {
             base.taskPattern === 1 && <Descriptions.Item label="预计阅读数">
-              <div className='text-red'>{budget.readNums.join("~")}</div>
+              <div className='text-red'>{budget.readNums.join(" ~ ")}</div>
             </Descriptions.Item>
           }
           {
@@ -211,6 +277,9 @@ class PreviewForWeixin extends React.Component {
               <div className='text-red'>{budget.unitPrice}元/阅读</div>
             </Descriptions.Item>
           }
+          <Descriptions.Item label="博主限制">
+            {this.getLimit(budget)}
+          </Descriptions.Item>
           <Descriptions.Item label="文章封面">
             <div className='image-wrap'>
               <img src={content.coverImage[0].url} alt="" />
@@ -220,7 +289,7 @@ class PreviewForWeixin extends React.Component {
             <a onClick={this.preview}>预览</a>
           </Descriptions.Item>
         </Descriptions>
-        <Text type="danger">确认无误即可提交。博主领取并执行任务后，会自动扣除预算。</Text>
+        <Text type="danger">确认无误即可提交。任务将会在设定的开始时间到达时上线。</Text>
         <footer>
           <Button onClick={this.props.prev}>上一步</Button>
           <Button type="primary" loading={submitLoading} onClick={this.handleSubmit}>提交</Button>

@@ -75,7 +75,7 @@ export default {
     taskManageList: prefix + "/adOrder/v1/list",
     queryRetainTimeList: configManage + "/queryRetainTimeList",
     getTaskLocationInfoB: prefix + "/adOrder/v1/getTaskLocationInfoB",
-    addTask: prefix + "/adOrder/v1/add_2",
+    addTask: prefix + "/adOrder/v1/add",
   }
 }
 
