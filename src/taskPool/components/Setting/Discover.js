@@ -18,19 +18,23 @@ const Discover = (props) => {
   const handleDelete = () => {
 
   }
+  console.log(props.qualityConfig)
   return (
     <div>
 
       <h2 style={{ marginTop: '20px' }}>微信公众号</h2>
       <div style={{ marginLeft: '30px' }}>
         <h3 style={{ marginTop: '10px' }}>回执链接时限设置</h3>
-        <span>时限设置为 <InputNumber precision={0} /> 小时</span>
+        <span>时限设置为 {props.qualityConfig.contentUrlTimeout && <InputNumber precision={0} min={0} defaultValue={props.qualityConfig.contentUrlTimeout} />} 小时</span>
         <h3 style={{ marginTop: '10px' }}>第一次质检文本匹配率设置</h3>
-        <span>文本匹配率不低于 <InputNumber precision={0} min={1} max={100} />%时，第一次质检合格</span>
+        <span>文本匹配率不低于{props.qualityConfig.textSimilarity && <InputNumber style={{ width: '50px' }} precision={0} min={1} max={100} defaultValue={props.qualityConfig.textSimilarity} />}%时，第一次质检合格</span>
         <h3 style={{ marginTop: '10px' }}>保留时长设置</h3>
-        <p><Checkbox value="24" defaultChecked>24小时</Checkbox></p>
+        {/* {props.qualityConfig.retainTimeList.map(()=>{
+          return  <p><Checkbox value="24" defaultChecked>24小时</Checkbox></p>
+        })}
+       
         <p><Checkbox value="48" defaultChecked>48小时</Checkbox></p>
-        <p><Checkbox value="72" defaultChecked>72小时</Checkbox><Button type="link" onClick={() => handleOpenModal(false)}>删除</Button></p>
+        <p><Checkbox value="72" defaultChecked>72小时</Checkbox><Button type="link" onClick={() => handleOpenModal(false)}>删除</Button></p> */}
         <Button type="primary" onClick={() => handleOpenModal(true)}>新增保留时长</Button>
         <Modal
           title="Basic Modal"

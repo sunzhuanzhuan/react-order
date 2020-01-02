@@ -29,10 +29,22 @@ export default {
   TPApprovedSecondSuccess: prefix + "/mcnOrder/v1/approvedSecondSuccess",
   TPMcnOrderConfirmFinish: prefix + "/mcnOrder/v1/mcnOrderConfirmFinish",
   TPMcnOrderConfirmCancel: prefix + "/mcnOrder/v1/mcnOrderConfirmCancel",
-  TPPostOperationLog: prefix + "/configmanage/v1/queryOperationLog",
-  TPPostClueList: prefix + "/adclue/v1/queryAdClueList",
-  TPGetClueDetail: prefix + "/adclue/v1/queryAdClueInfo",
-
+  clue: {
+    TPPostOperationLog: prefix + "/configmanage/v1/queryOperationLog",
+    TPPostClueList: prefix + "/adclue/v1/queryAdClueList",
+    TPGetClueDetail: prefix + "/adclue/v1/queryAdClueInfo",
+  },
+  platform: {
+    TPGetPlatformList: prefix + "/cooperationPlatform/v2/getPlatformList",
+    TPSavePlatform: prefix + "/cooperationPlatform/v2/savePlatform",
+    TPPlatformDetail: prefix + "/cooperationPlatform/v2/getPlatformDetail",
+    TPPUpdatePlatform: prefix + "/cooperationPlatform/v2/updatePlatform",
+  },
+  setting: {
+    TPReadUnitPriceConfig: prefix + "/cooperationPlatform/v2/suggestReadUnitPriceConfig",
+    TPGetReadUnitPriceConfig: prefix + "/cooperationPlatform/v2/getSuggestReadUnitPriceConfig",
+    TPGetQualityConfig: prefix + "/configManage/v1/getQualityConfig"
+  },
   account: {
     TPGetAccountList: `${accountUrl}getAccountList`,//账号管理
     TPUpdateAccountStateMsg: `${accountUrl}updateAccountStateMsg`,//上下架

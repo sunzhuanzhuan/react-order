@@ -5,7 +5,9 @@ export * from './order'
 export * from './account'
 export * from './task'
 export * from './attribute'
-
+export * from './clue'
+export * from './platform'
+export * from './setting'
 // 新增任务
 export const {
   TPAddTask
@@ -204,22 +206,3 @@ export const {
   method: 'post'
 });
 
-// 获取操作日志
-export const {
-  TPPostOperationLog
-} = createHttpAction('TPPostOperationLog', Interface.TPPostOperationLog, {
-  method: 'post'
-});
-//线索列表
-export const {
-  TPPostClueList
-} = createHttpAction('TPPostClueList', Interface.TPPostClueList, {
-  method: 'post'
-});
-//线索详情
-export const {
-  TPGetClueDetail,
-  TPGetClueDetail_success
-} = createHttpAction('TPGetClueDetail', Interface.TPGetClueDetail, {
-  method: 'get'
-});

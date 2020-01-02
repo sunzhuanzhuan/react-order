@@ -2,7 +2,8 @@ import { combineReducers } from 'redux'
 import { handleActions, handleAction } from 'redux-actions';
 import * as order from './order'
 import * as account from './account'
-
+import * as platform from './platform'
+import * as setting from './setting'
 import {
   TPTaskManageList_success,
   TPGetTaskPosition_success,
@@ -131,5 +132,7 @@ export default combineReducers({
   orderManageList,
   ...order,
   ...account,
+  ...platform,
+  ...setting,
   clueDetail
 })
