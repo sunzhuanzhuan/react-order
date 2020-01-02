@@ -1,64 +1,113 @@
 import React, { useState, useEffect } from 'react'
 import TitleBox from '../base/TitleBox'
-import { Steps, Col, Row, Descriptions } from 'antd'
+import { Col, Row, Descriptions, Spin, Modal } from 'antd'
 import BreadCrumbs from '../base/BreadCrumbs'
-import api from '@/api'
-function CooperationDetail() {
-  const [orderDetail, setOrderDetail] = useState({ qualifications: [] })
+import { connect } from 'react-redux'
+import * as actions from '@/taskPool/actions';
+import { bindActionCreators } from 'redux';
+import { withRouter } from 'react-router-dom'
+import DataCurve from '../components/Order/DataCurve'
+import qs from 'qs'
+function CooperationDetail(props) {
+  const { actions, orderReducers } = props
+  const [modalProps, setModalProps] = useState({ title: '' })
+  const { orderMcnDetailInfo = {}, dataCurvelist = [] } = orderReducers
+  const [isLoading, setIsLoading] = useState(true)
   useEffect(() => {
-    getPlatformOrderDetail()
+    getOrderDetail()
   }, [])
-  async function getPlatformOrderDetail() {
-    const { data } = await api.post('/operator-gateway/cooperationPlatform/v2/platformOrderDetail', { adOrderId: 1 })
-    setOrderDetail(data)
+  async function getOrderDetail() {
+    const searchParam = qs.parse(props.location.search.substring(1))
+    await actions.TPOrderInfo({ mcnOrderId: searchParam.id })
+    actions.TPQueryDataCurve({ mcnOrderId: searchParam.id })
+    setIsLoading(false)
   }
-  const taskConfig = [
-    { name: '内容正文', content: orderDetail.content },
-    { name: '图文', content: <div><img src={orderDetail.imageUrl} /></div> },
-    { name: '视频', content: <a href={orderDetail.vedioUrl}>ming</a> },
-    { name: '所属公司资质', content: <div>orderDetail.qualifications.map(one)<a></a></div> },
-  ]
   const baseInfo = [
-    { label: '任务名称', content: '' },
-    { label: '发布平台', content: '' },
-    { label: '图文发布位置', content: '' },
+    { label: '任务名称', content: orderMcnDetailInfo.orderName },
+    { label: '发布平台', content: orderMcnDetailInfo.platformName },
+    { label: '图文发布位置', content: orderMcnDetailInfo.locationLimitedInfo },
 
-    { label: '任务ID', content: '' },
-    { label: '订单ID', content: '' },
-    { label: '领取时间', content: '' },
+    { label: '任务ID', content: orderMcnDetailInfo.adOrderNumber },
+    { label: '订单ID', content: orderMcnDetailInfo.mcnOrderId },
+    { label: '领取时间', content: orderMcnDetailInfo.receiveAt },
 
-    { label: '所属公司', content: '' },
-    { label: '订单状态', content: '' },
-    { label: '预计推送时间', content: '' },
-    { label: '行业分类', content: '', span: 2 },
+    { label: '所属公司', content: orderMcnDetailInfo.companyName },
+    { label: '订单状态', content: orderMcnDetailInfo.orderStateDesc },
+    { label: '预计推送时间', content: orderMcnDetailInfo.expectedPublishedTime },
+    { label: '行业分类', content: orderMcnDetailInfo.industryName, span: 2 },
     { label: '阅读单价', content: '' },
-    { label: '任务模式', content: '', span: 2 },
+    { label: '任务模式', content: orderMcnDetailInfo.taskPatternDesc, span: 2 },
     { label: '发布保留时长', content: '', },
     { label: '', content: '', span: 2 },
     { label: '申请阅读数', content: '' },
 
   ]
   const orderInfo = [
-    { label: '订单冻结金额', content: '', span: 3 },
-    { label: '消耗预算', content: '', span: 3 },
-    { label: '实际结算', content: '', span: 3 },
+    { label: '订单冻结金额', content: orderMcnDetailInfo.maxAmount, span: 3 },
+    { label: '消耗预算', content: orderMcnDetailInfo.realAmount, span: 3 },
+    { label: '实际结算', content: orderMcnDetailInfo.realActionNum, span: 3 },
   ]
+  function openData() {
+    setModalProps({
+      visible: true,
+      title: '数据曲线',
+      width: 800,
+      content: <div>
+        <DataCurve data={dataCurvelist} />
+      </div>
+    })
+  }
+  function openArticleImg() {
+    setModalProps({
+      visible: true,
+      title: '文章链接',
+      content: <img src={orderMcnDetailInfo.snapshotUrl} />
+    })
+  }
   const articleInfo = [
-    { label: '文章快照', content: '', span: 3 },
-    { label: '文章链接', content: '', span: 3 },
-    { label: '数据曲线', content: '', span: 3 },
+    { label: '文章快照', content: <a onClick={openArticleImg}>查看</a> },
+    { label: '文章链接', content: <a href={orderMcnDetailInfo.snapshotUrl} target='_blank'>查看</a> },
+    { label: '数据曲线', content: <a onClick={openData} >查看</a> },
   ]
+  const secondReasonInfo = [
+    { label: '原因', content: orderMcnDetailInfo.maxAmount, span: 3 },
+    { label: '备注', content: orderMcnDetailInfo.maxAmount, span: 3 },
+    { label: '图片', content: <img src={orderMcnDetailInfo.maxAmount} />, span: 3 },
+  ]
+  function secondReason() {
+    setModalProps({
+      visible: true,
+      title: '二检不合格原因',
+      content: <Descriptions>
+        {secondReasonInfo.map(item => <Descriptions.Item key={item.label} label={item.label} span={item.span}>{item.content}</Descriptions.Item>)}
+      </Descriptions>
+    })
+  }
+  const cancelReasonInfo = [
+    { label: '理由', content: orderMcnDetailInfo.maxAmount, span: 3 },
+    { label: '附件/截图', content: <img src={orderMcnDetailInfo.maxAmount} />, span: 3 },
+  ]
+  function cancelReason() {
+    setModalProps({
+      visible: true,
+      title: '取消结算原因',
+      content: <Descriptions>
+        {cancelReasonInfo.map(item => <Descriptions.Item key={item.label} label={item.label} span={item.span}>{item.content}</Descriptions.Item>)}
+      </Descriptions>
+    })
+  }
   const remark1 = [
-    { label: ' 一检不合格原因', content: '', span: 3 },
+    { label: ' 一检不合格原因', content: <a onClick={openData} >查看</a>, span: 3 },
   ]
   const remark2 = [
-    { label: ' 二检不合格原因', content: '', span: 3 },
+    { label: ' 二检不合格原因', content: <a onClick={secondReason} >查看</a>, span: 3 },
   ]
   const remark3 = [
-    { label: '取消结算原因', content: '', span: 3 },
+    { label: '取消结算原因', content: <a onClick={cancelReason} >查看</a>, span: 3 },
   ]
   return (
-    <div>
+    <Spin spinning={isLoading}>
+
       <BreadCrumbs link='/order/task/orders-manage' text={<h2>订单详情</h2>} />
       <TitleBox title='基本信息' >
         <Descriptions>
@@ -83,14 +132,31 @@ function CooperationDetail() {
       </TitleBox>
       <TitleBox title='订单备注' >
         <Descriptions>
-          {remark1.map(item => <Descriptions.Item key={item.label} label={item.label} span={item.span}>{item.content}</Descriptions.Item>)}
+          {remark2.map(item => <Descriptions.Item key={item.label} label={item.label} span={item.span}>{item.content}</Descriptions.Item>)}
         </Descriptions>
       </TitleBox>
-    </div>
+      <Modal
+        visible={modalProps.visible}
+        footer={null}
+        onCancel={() => setModalProps({ ...modalProps, visible: false })}
+        {...modalProps}
+      >
+        {modalProps.content}
+      </Modal>
+    </Spin>
   )
 }
+const mapStateToProps = (state) => ({
+  orderReducers: state.taskPoolReducers
+})
 
-export default CooperationDetail
+const mapDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators({
+    ...actions
+  }, dispatch)
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(CooperationDetail))
 const ContentRow = ({ list = [] }) => {
   return list.map(item => <Row key={item.name} style={{ paddingBottom: 6, color: 'rgba(0, 0, 0, 0.85)', fontSize: 13 }}>
     <Col span={4}>{item.name}</Col>
