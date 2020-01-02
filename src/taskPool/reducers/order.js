@@ -21,3 +21,15 @@ export const mcnOrderStateList = handleActions({
   },
 }, [])
 
+//订单详情
+export const orderMcnDetailInfo = handleActions({
+  [order.TPOrderInfo_success]: (state, action) => {
+    return { ...action.payload.data }
+  },
+}, {})
+//获取数据曲线
+export const dataCurvelist = handleActions({
+  [order.TPQueryDataCurve_success]: (state, action) => {
+    return [...action.payload.data]
+  },
+}, [])
