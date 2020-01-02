@@ -17,10 +17,9 @@ import {
 import debounce from "lodash/debounce";
 import moment from "moment";
 import numeral from '@/util/numeralExpand'
-import { node } from 'prop-types';
-import { extend } from 'immutability-helper';
 import QuestionTip from '@/base/QuestionTip';
 import { CheckGroup } from '@/taskPool/base/CheckGroup';
+import { wxPositionToFields } from '@/taskPool/constants/config';
 
 const { SHOW_PARENT } = TreeSelect;
 
@@ -61,11 +60,6 @@ const newFormLayout = {
   colon: false
 }
 
-const wxPositionToFields = {
-  'w1': 'wxOneNumber',
-  'w2': 'wxTwoNumber',
-  'w3': 'wxOtherNumber',
-}
 
 // 设置单价组件
 class UnitPrice extends React.Component {
@@ -157,6 +151,11 @@ class ReadNumber extends React.Component {
     unitPrice: [ 0 ]
   }
 
+  componentDidMount() {
+    const { base, budget } = this.props.data
+    this.calculation(budget.totalAmount)
+  }
+
   calculation = (amount, numObj) => {
     setTimeout(() => {
       amount = amount || this.props.form.getFieldValue('totalAmount')
@@ -170,7 +169,7 @@ class ReadNumber extends React.Component {
         return prev + cur;
       }, 0)
       this.setState({
-        unitPrice: numeral(amount).divide(sum).format('0.00')
+        unitPrice: numeral(amount).divide(sum || 1).format('0.00')
       });
     }, 0);
   }
@@ -249,7 +248,7 @@ class BudgetForWeixin extends React.Component {
   componentDidMount() {
     const { data, actions, taskPositionList } = this.props
     const { budget } = data;
-    this.readField.calculation(budget.totalAmount)
+    this.calculation(budget.totalAmount)
   }
 
   // 暂存 & 上一步
@@ -257,6 +256,8 @@ class BudgetForWeixin extends React.Component {
     let newVal = Object.assign({}, this.props.form.getFieldsValue())
     newVal.actionNum = this.state.actionNum
     newVal.amount = this.state.amount
+    newVal.readNums = this.readField.state.readNums
+    newVal.unitPrice = this.readField.state.unitPrice
     this.props.prev("budget", newVal)
   }
 
@@ -286,6 +287,8 @@ class BudgetForWeixin extends React.Component {
         let newVal = Object.assign({}, values)
         newVal.actionNum = this.state.actionNum
         newVal.amount = this.state.amount
+        newVal.readNums = this.readField.state.readNums
+        newVal.unitPrice = this.readField.state.unitPrice
         this.props.next("budget", newVal)
       }
     });

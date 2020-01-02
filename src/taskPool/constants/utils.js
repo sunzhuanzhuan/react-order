@@ -69,18 +69,18 @@ export const getCountDownTimeText = (date, min = 5, precision = 5, assort = mome
 
 // 根据行业code获取行业名字
 export const getIndustryName = (source = [], code) => {
-  // itemValue', value: 'itemKey', children: 'childrenList'
+  // itemValue', value: 'id', children: 'taskIndustryList'
   let value = '';
   return loop(source, code);
   function loop(item, id) {
     if (!item) return "";
     for (var i = 0; i < item.length; i++) {
-      if (item[i].itemKey === code) {
+      if (item[i].id === code) {
         value = item[i]
         break;
       }
-      if (item[i].childrenList) {
-        loop(item[i].childrenList, code)
+      if (item[i].taskIndustryList) {
+        loop(item[i].taskIndustryList, code)
       }
     }
     return value;

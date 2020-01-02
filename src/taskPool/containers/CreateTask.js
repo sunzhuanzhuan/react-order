@@ -88,7 +88,10 @@ const CreateTask = (props) => {
       },
       budget: {
         totalAmount: 666,
-        locationLimited: 2
+        locationLimited: 2,
+        wxOneNumber: 50,
+        wxTwoNumber: 50,
+        wxOtherNumber	: 50,
       },
       content: {
         title: '22322',
@@ -181,7 +184,7 @@ const CreateTask = (props) => {
         </Steps>
       </header>
       <main>
-        <FormComponent
+        {taskPositionList.length > 0 && <FormComponent
           formLayout={formLayout}
           next={next}
           prev={prev}
@@ -190,7 +193,7 @@ const CreateTask = (props) => {
           getCompanyBalance={getCompanyBalance}
           getBusinessScope={getBusinessScope}
           {...childProps}
-        />
+        />}
       </main>
     </div>
   )
