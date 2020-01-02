@@ -33,6 +33,16 @@ let position = {
   7: '七条',
   8: '八条',
 }
+let clientName = {
+  1: '天猫',
+  2: '京东',
+  3: '唯品会',
+  4: '考拉',
+  5: '苏宁易购',
+  6: '线上（其他）',
+  7: '七条',
+  8: '线下',
+}
 export const CheckModalFunc = handleDel => [
   {
     title: '订单ID',
@@ -467,7 +477,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
           }
         </FormItem>
     }
-  },
+  }, {},
   {
     title: '操作',
     dataIndex: 'action',
@@ -742,7 +752,7 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     align: 'center',
     width: 120,
     render: text => {
-      return text ? text : '-'
+      return text ? clientName[text] : '-'
     }
   }, {
     title: '发文时间',

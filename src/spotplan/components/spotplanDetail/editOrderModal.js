@@ -200,7 +200,7 @@ class EditOrderModal extends React.Component {
         </FormItem>
         <FormItem label='Client（非必填）' {...formItemLayout}>
           {getFieldDecorator('client', {
-            initialValue: data && data[0].publish_articles_address1 || '',
+            initialValue: data && data[0].client || '',
           })(
             <Select placeholder="请选择" style={{ width: 120 }} allowClear>
               <Option value={1}>天猫</Option>
@@ -215,7 +215,7 @@ class EditOrderModal extends React.Component {
         </FormItem>
         <FormItem label='content type（非必填）' {...formItemLayout}>
           {getFieldDecorator('content_type', {
-            initialValue: data && data[0].content || '',
+            initialValue: data && data[0].content_type || '',
             rules: [{ max: 120, message: '不能超过255个汉字' }]
           })(
             <TextArea placeholder='请填写内容类型' autosize={{ minRows: 4, maxRows: 6 }} />
