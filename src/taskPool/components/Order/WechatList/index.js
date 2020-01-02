@@ -6,7 +6,7 @@ import AbnormalForm from './AbnormalForm'
 import QualityFailedForm from './QualityFailedForm'
 import Scolltable from '@/components/Scolltable/Scolltable.js'
 import EditReceiptForm from './EditReceiptForm'
-
+import numeral from 'numeral';
 export default function WachatList(props) {
   const { setModalProps, allMcnOrderList = {}, actions, changeWechatPage } = props
   const { list = [] } = allMcnOrderList
@@ -103,7 +103,7 @@ export default function WachatList(props) {
       fixed: 'right',
       width: '180px',
       render: (text, record) => {
-        const { id } = record
+        const { id, realAmount } = record
         return <div>
           {record.orderStateDesc == '一检异常待处理' ? <>
             <a onClick={() => setModalProps({
@@ -129,7 +129,7 @@ export default function WachatList(props) {
           {record.orderStateDesc == '合格' ? <> <a onClick={() => setModalProps({
             visible: true,
             title: '确认结算',
-            content: (props) => <PaymentOK  {...props} id={id} />
+            content: (props) => <PaymentOK  {...props} id={id} realAmount={realAmount} />
           })}>确认结算</a><Divider type="vertical" />
             <a onClick={() => setModalProps({
               visible: true,
@@ -153,7 +153,7 @@ export default function WachatList(props) {
           {record.orderStateDesc == '待执行' ? <> <a onClick={() => setModalProps({
             visible: true,
             title: '添加回执',
-            content: (props) => <EditReceiptForm orderState={orderState} {...props} id={id} />
+            content: (props) => <EditReceiptForm orderState={200} {...props} id={id} />
           })}>添加回执 </a> <Divider type="vertical" /></> : null}
           {record.orderStateDesc == '待修改' ? <><a onClick={() => setModalProps({
             visible: true,
@@ -189,7 +189,7 @@ export default function WachatList(props) {
 }
 
 export function PaymentOK(props) {
-  const { id, changeWechatPage, setModalProps, actions } = props
+  const { id, changeWechatPage, setModalProps, actions, realAmount } = props
   async function onOK() {
     await actions.TPMcnOrderConfirmFinish({ mcnOrderId: id })
     setModalProps({ visible: false })
@@ -198,7 +198,7 @@ export function PaymentOK(props) {
   }
   return (
     <div>
-      <div>本次任务执行将成功生成1,234.00元的结算单，是否确定？</div>
+      <div>本次任务执行将成功生成 <span style={{ color: 'red' }}>{numeral(realAmount).format('0,0.00')}</span> 元的结算单，是否确定？</div>
       <div className='button-footer'>
         <Button onClick={() => setModalProps({ visible: false })}>取消</Button>
         <Button type='primary' onClick={onOK}>确定</Button>

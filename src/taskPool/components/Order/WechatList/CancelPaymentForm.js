@@ -22,7 +22,6 @@ function CancelPayment(props) {
       if (!err) {
         let valueNews = { ...values }
         valueNews.snapshotUrl = values.snapshotUrl[0].url
-        console.log("TCL: submitForm -> valueNews", valueNews)
         //执行结果取消
         await actions.TPMcnOrderConfirmCancel({ mcnOrderId: id, ...valueNews })
         setModalProps({ visible: false })
