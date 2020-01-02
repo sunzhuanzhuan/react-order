@@ -65,7 +65,7 @@ const CreateTask = (props) => {
   const [ lockCompanySelect ] = useState(!!company)
 
   // 任务数据
-  const [ state, setState ] = useState(() => {
+  const [ state, setDataState ] = useState(() => {
     let defaultPlatformId = Object.keys(forms).indexOf(platform) === -1 ? 9 : Number(platform)
 
     const [ companyId, companyName ] = company.split("::")
@@ -84,14 +84,31 @@ const CreateTask = (props) => {
           uid: "asdasd",
           url: "http://prd-wby-img.oss-cn-beijing.aliyuncs.com/ORDER_IMG_UPLOAD/39069087673a43beb9d7bf18ca1c3a5a.jpg"
         }],
-        businessScope: "1"
+        businessScope: "1",
+        "retainTime": 24,
       },
       budget: {
-        totalAmount: 666,
-        locationLimited: 2,
-        wxOneNumber: 50,
-        wxTwoNumber: 50,
-        wxOtherNumber	: 50,
+        "totalAmount": 666,
+        "locationLimited": 1,
+        "_followerCountLimit": true,
+        "mediaCountLimit": true,
+        "_mediaAvgReadNumLimit": true,
+        "_followerGenderRatioLimit": true,
+        "_minNumOfReadLimit": true,
+        "onlyVerified": true,
+        "followerCountLimit": 11111,
+        "locationLimitedInfo": [
+          "w1",
+          "w2"
+        ],
+        "wxOneNumber": 23,
+        "wxTwoNumber": 43,
+        "mediaAvgReadNumLimit": 111111,
+        "followerGenderRatioLimit": 2,
+        "minNumOfReadLimit": 11,
+        "actionNum": 951,
+        "amount": 1617,
+        "unitPrice": "10.09"
       },
       content: {
         title: '22322',
@@ -116,7 +133,7 @@ const CreateTask = (props) => {
 
   const next = (key, data) => {
     setCurrent(current + 1)
-    setState(update(state,
+    setDataState(update(state,
       {
         [key]: { $set: data }
       }
@@ -125,7 +142,7 @@ const CreateTask = (props) => {
 
   const prev = (key, data) => {
     setCurrent(current - 1)
-    setState(update(state,
+    setDataState(update(state,
       {
         [key]: { $set: data }
       }
