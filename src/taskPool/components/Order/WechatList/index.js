@@ -1,15 +1,21 @@
 import React, { useMemo } from 'react'
-import { Table, Input, Badge, Divider, Button } from 'antd'
+import { Table, Input, Badge, Divider, Button, message } from 'antd'
 import { orderStateMap } from '../config'
 import CancelPaymentForm from './CancelPaymentForm'
 import AbnormalForm from './AbnormalForm'
 import QualityFailedForm from './QualityFailedForm'
 import Scolltable from '@/components/Scolltable/Scolltable.js'
-
+import EditReceiptForm from './EditReceiptForm'
 
 export default function WachatList(props) {
-  const { setModalProps, allMcnOrderList = {} } = props
+  const { setModalProps, allMcnOrderList = {}, actions, changeWechatPage } = props
   const { list = [] } = allMcnOrderList
+  async function noPass(id) {
+    await actions.TPApprovedFirstFailure(id)
+    message.success('操作成功')
+    setModalProps({ visible: false })
+    changeWechatPage()
+  }
   const columns = [
     {
       title: '订单ID',
@@ -28,8 +34,8 @@ export default function WachatList(props) {
     },
     {
       title: '任务状态',
-      dataIndex: 'orderStateDesc',
-      key: 'orderStateDesc',
+      dataIndex: 'adOrderStateDesc',
+      key: 'adOrderStateDesc',
     },
     {
       title: '任务类型',
@@ -58,8 +64,8 @@ export default function WachatList(props) {
     },
     {
       title: '实际阅读/KPI',
-      dataIndex: '实际阅读/KPIname',
-      key: '实际阅读/KPIname',
+      dataIndex: 'expectActionNum',
+      key: 'expectActionNum',
       render: (text, record) => {
         return <div>
           {record.realActionNum}/{record.expectActionNum}
@@ -90,15 +96,6 @@ export default function WachatList(props) {
       </div>
     },
     {
-      title: '备注',
-      dataIndex: '备注name',
-      key: '备注name',
-      align: 'center',
-      render: text => {
-        <a>查看</a>
-      }
-    },
-    {
       title: '质检操作',
       dataIndex: '质检操作name',
       key: '质检操作name',
@@ -106,38 +103,38 @@ export default function WachatList(props) {
       fixed: 'right',
       width: '180px',
       render: (text, record) => {
+        const { id } = record
         return <div>
           {record.orderStateDesc == '一检异常待处理' ? <>
             <a onClick={() => setModalProps({
               visible: true,
               title: '第一次质检异常审核通过',
-              content: <AbnormalForm />
+              content: (props) => <AbnormalForm {...props} id={id} />
             })}>通过</a><Divider type="vertical" />
-            <Divider type="vertical" />
-            <a onClick=''>不通过</a>
+            <a onClick={() => noPass(id)}>不通过</a>
           </> : null}
           {record.orderStateDesc == '二检异常待处理' ?
             <>
               <a onClick={() => setModalProps({
                 visible: true,
                 title: '第二次质检异常审核通过',
-                content: <AbnormalForm isShowRead={true} />
+                content: (props) => <AbnormalForm isShowRead={true} id={id} {...props} />
               })}>通过</a><Divider type="vertical" />
               <a onClick={() => setModalProps({
                 visible: true,
                 title: '第二次质检异常审核不通过',
-                content: <QualityFailedForm />
+                content: (props) => <QualityFailedForm  {...props} id={id} />
               })}>不通过</a>
             </> : null}
           {record.orderStateDesc == '合格' ? <> <a onClick={() => setModalProps({
             visible: true,
             title: '确认结算',
-            content: <PaymentOK />
+            content: (props) => <PaymentOK  {...props} id={id} />
           })}>确认结算</a><Divider type="vertical" />
             <a onClick={() => setModalProps({
               visible: true,
               title: '取消结算',
-              content: <CancelPaymentForm />
+              content: (props) => <CancelPaymentForm  {...props} id={id} />
             })}>取消结算</a>
           </> : null}
         </div>
@@ -151,23 +148,33 @@ export default function WachatList(props) {
       fixed: 'right',
       width: '180px',
       render: (text, record) => {
+        const { id, orderState } = record
         return <div>
           {record.orderStateDesc == '待执行' ? <> <a onClick={() => setModalProps({
             visible: true,
             title: '添加回执',
-            content: <EditReceipt />
+            content: (props) => <EditReceiptForm orderState={orderState} {...props} id={id} />
           })}>添加回执 </a> <Divider type="vertical" /></> : null}
           {record.orderStateDesc == '待修改' ? <><a onClick={() => setModalProps({
             visible: true,
             title: '修改回执',
-            content: <EditReceipt />
+            content: (props) => <EditReceiptForm orderState={orderState}  {...props} id={id} />
           })}>修改回执 </a><Divider type="vertical" /></> : null}
-          <a>详情</a>
+          <a href={`/order/task/orders-wechatdetail?id=${id}`}>详情</a>
         </div>
       }
     },
-
-
+    {
+      title: '备注',
+      dataIndex: '备注name',
+      key: '备注name',
+      align: 'center',
+      fixed: 'right',
+      width: '80px',
+      render: (text, record) => {
+        <a >查看</a>
+      }
+    },
   ];
   return (
     <Scolltable scrollClassName='.ant-table-body' widthScroll={2100}>
@@ -181,24 +188,20 @@ export default function WachatList(props) {
   )
 }
 
-export function EditReceipt(props) {
-  return (
-    <div>
-      回执链接:<Input onClick={props.onClick} />
-      <div className='button-footer'>
-        <Button>取消</Button>
-        <Button type='primary'>确定</Button>
-      </div>
-    </div>
-  )
-}
 export function PaymentOK(props) {
+  const { id, changeWechatPage, setModalProps, actions } = props
+  async function onOK() {
+    await actions.TPMcnOrderConfirmFinish({ mcnOrderId: id })
+    setModalProps({ visible: false })
+    message.success('操作成功')
+    changeWechatPage()
+  }
   return (
     <div>
       <div>本次任务执行将成功生成1,234.00元的结算单，是否确定？</div>
       <div className='button-footer'>
-        <Button>取消</Button>
-        <Button type='primary'>确定</Button>
+        <Button onClick={() => setModalProps({ visible: false })}>取消</Button>
+        <Button type='primary' onClick={onOK}>确定</Button>
       </div>
     </div>
   )

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Input, Form, Button, } from 'antd';
+import { Input, Form, Button, message, } from 'antd';
 import { OssUpload } from 'wbyui'
 import { action } from "./ModalContent";
 const { TextArea } = Input;
@@ -15,11 +15,25 @@ function CancelPayment(props) {
       setToken(authToken)
     })
   }, [])
-  const { form } = props
-  const { getFieldDecorator } = form
+  const { form, id, changeWechatPage, setModalProps, actions } = props
+  const { getFieldDecorator, validateFields } = form
+  function submitForm() {
+    validateFields(async (err, values) => {
+      if (!err) {
+        let valueNews = { ...values }
+        valueNews.snapshotUrl = values.snapshotUrl[0].url
+        console.log("TCL: submitForm -> valueNews", valueNews)
+        //执行结果取消
+        await actions.TPMcnOrderConfirmCancel({ mcnOrderId: id, ...valueNews })
+        setModalProps({ visible: false })
+        message.success('操作成功')
+        changeWechatPage()
+      }
+    })
+  }
   return <Form layout='horizontal'>
     <Form.Item label='填写理由' {...formItemLayout}>
-      {getFieldDecorator('reson', {
+      {getFieldDecorator('orderRemark', {
         rules: [
           { required: true, message: '请填写理由' },
           { max: 20, message: '理由不超过20个字' }
@@ -29,7 +43,7 @@ function CancelPayment(props) {
       )}
     </Form.Item>
     <Form.Item label='上传附件/截图' {...formItemLayout}>
-      {getFieldDecorator('keyss', {
+      {getFieldDecorator('snapshotUrl', {
         valuePropName: 'fileList',
         getValueFromEvent: e => e && e.fileList,
         rules: [
@@ -49,8 +63,8 @@ function CancelPayment(props) {
       )}
     </Form.Item>
     <div className='button-footer'>
-      <Button>取消</Button>
-      <Button type='primary'>确定</Button>
+      <Button onClick={() => setModalProps({ visible: false })}>取消</Button>
+      <Button type='primary' onClick={submitForm}>确定</Button>
     </div>
   </Form >
 }

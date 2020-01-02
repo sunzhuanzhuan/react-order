@@ -8,10 +8,11 @@ const { TabPane } = Tabs;
 const baseSearch = { page: { currentPage: 1, pageSize: 10 } }
 
 const Orders = (props) => {
-  const [modalProps, setModalProps] = useState({ title: '', content: '' })
+  const [modalProps, setModalProps] = useState({ title: '' })
   const [cooSearch, setCooSearch] = useState(baseSearch)
   const [weChatSearch, setWeChatSearch] = useState(baseSearch)
   const [loading, setLoading] = useState(true)
+  const [orderType, setOrderType] = useState(1)
   const { actions, orderReducers } = props
   useEffect(() => {
     searchWechatAction()
@@ -20,6 +21,7 @@ const Orders = (props) => {
   }, [])
   //切换tab
   function callback(key) {
+    setOrderType(key)
     if (key == 2) {
       searchAction()
     }
@@ -75,7 +77,8 @@ const Orders = (props) => {
     searchWechatAction,
     changeWechatPage,
     mcnOrderStateList,
-    actions
+    actions,
+    setModalProps
   }
   return (
     <div>
@@ -98,7 +101,7 @@ const Orders = (props) => {
         footer={null}
         onCancel={() => setModalProps({ ...modalProps, visible: false })}
       >
-        {modalProps.content}
+        {orderType == 1 && modalProps.content ? modalProps.content(weChatProps) : modalProps.content}
       </Modal>
     </div>
   )
