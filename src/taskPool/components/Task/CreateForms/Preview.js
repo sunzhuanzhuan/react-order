@@ -69,6 +69,7 @@ class PreviewForWeixin extends React.Component {
     body.orderEndDate = base.orderDate[1]
     body.platformId = base.platformId
     body.industry = [ ...base.industry ].pop()
+    body.businessScopeId = base.businessScopeId
 
     body.totalAmount = budget.totalAmount
 

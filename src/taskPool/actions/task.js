@@ -36,3 +36,23 @@ export const {
 } = createHttpAction('TPAddTask', Interface.task.addTask, {
   method: 'post'
 });
+
+// 根据行业ID获取经营内容
+export const {
+  TPGetBusinessScopeList
+} = createHttpAction('TPGetBusinessScopeList', Interface.task.getBusinessScopeList)
+
+// 根据行业/经营内容获取资质组信息
+export const {
+  TPQueryQualificationsGroup
+} = createHttpAction('TPQueryQualificationsGroup', Interface.task.queryQualificationsGroup);
+
+// 该平台是否需要上传资质(目前仅微信)
+export const {
+  TPQueryTaskCheckQualifications
+} = createHttpAction('TPQueryTaskCheckQualifications', Interface.task.queryTaskCheckQualifications);
+
+// 12306价格计算
+export const {
+  TPTripPriceCalculation
+} = createHttpAction('TPTripPriceCalculation', Interface.task.tripPriceCalculation);
