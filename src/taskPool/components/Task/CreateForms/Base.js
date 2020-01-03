@@ -46,7 +46,7 @@ class BaseForMedia extends React.Component {
   render() {
     const { form, formLayout, data, actions, taskRetainTimeList } = this.props
     const { base } = data
-    const { getFieldDecorator } = form
+    const { getFieldDecorator, getFieldValue } = form
 
     return (
       <Form onSubmit={this.handleSubmit}  {...formLayout}>
@@ -118,11 +118,34 @@ class BaseForMedia extends React.Component {
                 value: 'id',
                 children: 'taskIndustryList'
               }}
+              allowClear={false}
+              onChange={val => {
+                this.props.getBusinessScope(val.slice(-1))
+              }}
               options={this.props.industryList}
               placeholder='请选择行业'
             />
           )}
         </FormItem>}
+        {this.props.businessScopeList.length > 0 ? <FormItem label="经营内容">
+          {getFieldDecorator('businessScopeId', {
+            initialValue: base.businessScopeId,
+            rules: [ {
+              required: true,
+              message: '请选择经营内容',
+            } ]
+          })(
+            <Select
+              placeholder='请选择经营内容'
+              onChange={val => {
+                this.props.getQualificationsGroup(getFieldValue("industry").slice(-1), val)
+              }}
+            >
+              {this.props.businessScopeList.map(item => <Select.Option
+                key={item.id}>{item.scopeName}</Select.Option>)}
+            </Select>
+          )}
+        </FormItem> : null}
         <FormItem label="任务时间">
           <div className='flex-form-input-container'>
             {getFieldDecorator('orderDate', {
@@ -322,16 +345,6 @@ class BaseForPartner extends React.Component {
               <Radio value={1000}>
                 12306行程通知
               </Radio>
-              {/*<Tooltip title="糟糕，我们还没有准备好">
-                <Radio value={1} disabled>
-                  <WBYPlatformIcon weibo_type={1} widthSize={22} />
-                  <span style={{
-                    verticalAlign: 'text-bottom',
-                    marginLeft: 8,
-                    userSelect: 'none'
-                  }}>新浪微博</span>
-                </Radio>
-              </Tooltip>*/}
             </Radio.Group>
           )}
         </FormItem>
@@ -357,7 +370,7 @@ class BaseForPartner extends React.Component {
             </div>
           </div>
         </FormItem>
-        <FormItem label="行业分类">
+        {this.props.industryList.length > 0 && <FormItem label="行业分类">
           {getFieldDecorator('industry', {
             initialValue: base.industry,
             rules: [ {
@@ -372,17 +385,18 @@ class BaseForPartner extends React.Component {
                 value: 'id',
                 children: 'taskIndustryList'
               }}
-              onChange={e => {
-                this.props.getBusinessScope(e.slice(-1))
+              allowClear={false}
+              onChange={val => {
+                this.props.getBusinessScope(val.slice(-1))
               }}
               options={this.props.industryList}
               placeholder='请选择行业'
             />
           )}
-        </FormItem>
+        </FormItem>}
         {this.props.businessScopeList.length > 0 ? <FormItem label="经营内容">
-          {getFieldDecorator('businessScope', {
-            initialValue: base.businessScope,
+          {getFieldDecorator('businessScopeId', {
+            initialValue: base.businessScopeId,
             rules: [ {
               required: true,
               message: '请选择经营内容',
@@ -390,6 +404,9 @@ class BaseForPartner extends React.Component {
           })(
             <Select
               placeholder='请选择经营内容'
+              onChange={val => {
+                this.props.getQualificationsGroup(getFieldValue("industry").slice(-1), val)
+              }}
             >
               {this.props.businessScopeList.map(item => <Select.Option
                 key={item.id}>{item.scopeName}</Select.Option>)}

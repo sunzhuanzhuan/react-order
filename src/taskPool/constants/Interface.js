@@ -76,6 +76,10 @@ export default {
     queryRetainTimeList: configManage + "/queryRetainTimeList",
     getTaskLocationInfoB: prefix + "/adOrder/v1/getTaskLocationInfoB",
     addTask: prefix + "/adOrder/v1/add",
+    tripPriceCalculation: prefix + "/adOrder/v1/trip/priceCalculation",
+    getBusinessScopeList: configManage + "/getBusinessScopeList",
+    queryQualificationsGroup: configManage + "/queryQualificationsGroup",
+    queryTaskCheckQualifications: configManage + "/queryTaskCheckQualifications",
   }
 }
 

@@ -30,27 +30,27 @@ const CheckboxGroup = Checkbox.Group;
 const MAX_BUDGET_AMOUNT = 99999999
 const MAX_FOLLOWER_COUNT = 999999999
 
-const CC_OPTIONS = [
-  { label: "G/C高铁", value: 1 },
-  { label: "D动车", value: 2 },
-  { label: "普通", value: 3 },
+const TRAIN_TYPE_OPTIONS = [
+  { label: "G/C高铁", value: 50 },
+  { label: "D动车", value: 51 },
+  { label: "普通", value: 59 },
 ]
-const ZX_OPTIONS = [
-  { label: "商务座", value: 1 },
-  { label: "一等座", value: 2 },
-  { label: "二等座", value: 3 },
-  { label: "高级软卧", value: 4 },
-  { label: "软卧", value: 5 },
-  { label: "硬卧", value: 6 },
-  { label: "硬座", value: 7 },
-  { label: "动卧", value: 8 },
+const SEAT_OPTIONS = [
+  { label: "商务座", value: 21 },
+  { label: "一等座", value: 22 },
+  { label: "二等座", value: 23 },
+  { label: "高级软卧", value: 24 },
+  { label: "软卧", value: 25 },
+  { label: "硬卧", value: 26 },
+  { label: "硬座", value: 27 },
+  { label: "动卧", value: 28 },
 ]
-const NL_OPTIONS = [
-  { label: "0-18岁", value: 1 },
-  { label: "18-25岁", value: 2 },
-  { label: "25-35岁", value: 3 },
-  { label: "35-45岁", value: 4 },
-  { label: "大于45岁", value: 5 },
+const AGES_OPTIONS = [
+  { label: "0-18岁", value: 40 },
+  { label: "18-25岁", value: 41 },
+  { label: "25-35岁", value: 42 },
+  { label: "35-45岁", value: 43 },
+  { label: "大于45岁", value: 44 },
 ]
 
 const newFormLayout = {
@@ -261,6 +261,7 @@ class BudgetForWeixin extends React.Component {
     this.props.prev("budget", newVal)
   }
 
+  // TODO: 替换手续费计算接口
   calculation = (amount = 0, taskOrderType) => {
     if (isNaN(amount) || amount <= 0) {
       return this.setState({
@@ -575,7 +576,12 @@ class BudgetFor12306 extends React.Component {
     this.calculation = debounce(this.calculation, 300)
 
     this.state = {
-      actionNum: budget.actionNum || 0,
+      result: {
+        unitPrice: 0,
+        totalAmount: 0,
+        discount: 0,
+        actualPayment: 0,
+      },
       treeData: [
         { id: 1, pId: 0, value: '1', title: 'Expand to load' },
         { id: 2, pId: 0, value: '2', title: 'Expand to load' },
@@ -633,28 +639,29 @@ class BudgetFor12306 extends React.Component {
     });
   }
 
-  calculation = (amount = 0, taskOrderType) => {
-    if (isNaN(amount) || amount <= 0) {
-      return this.setState({
-        actionNum: 0,
-        amount: 0
-      });
-    }
-    const { data, actions } = this.props
-    actions.TPQueryActionNum({
-      "amount": amount,
-      "taskOrderType": taskOrderType
-    }).then(({ data }) => {
-      this.setState({
-        actionNum: data,
-        amount: amount + data
-      });
-    })
+  calculation = () => {
+    setTimeout(() => {
+      const values = this.props.form.getFieldsValue([
+        "putType",
+        "mediaType",
+        "actionNum",
+        "leavePalce",
+        "arrivePlace",
+        "deliverySex",
+        "deliverySeat",
+        "deliveryAges",
+        "deliveryTrainType",
+      ])
+      const { data, actions } = this.props
+      actions.TPTripPriceCalculation(values).then(({ data }) => {
+        this.setState(data);
+      })
+    }, 0);
   }
 
   render() {
     const { form, formLayout, data, actions, balance } = this.props
-    const { actionNum, amount } = this.state
+    const { actionNum, result } = this.state
     const { base, budget } = data
     const { getFieldDecorator, getFieldValue } = form
 
@@ -670,38 +677,37 @@ class BudgetFor12306 extends React.Component {
       loadData: this.onLoadData
     }
 
-    let maxAmount = Math.min(balance, MAX_BUDGET_AMOUNT);
     return (
       <Form onSubmit={this.handleSubmit}  {...formLayout}>
         <FormItem label="投放模式">
-          {getFieldDecorator('location2', {
-            initialValue: budget.location2 || 2,
+          {getFieldDecorator('putType', {
+            initialValue: budget.putType || 2,
             rules: [ {
               required: true,
               message: '请选择投放模式'
             } ]
           })(
             <Radio.Group>
-              <Radio key={1} value={1}>按天数投放</Radio>
-              <Radio key={2} value={2}>按量投放</Radio>
+              <Radio value={2}>按天数投放</Radio>
+              <Radio value={1}>按量投放</Radio>
             </Radio.Group>
           )}
         </FormItem>
         <FormItem label="内容类型">
-          {getFieldDecorator('location1', {
-            initialValue: budget.location1 || 2,
+          {getFieldDecorator('mediaType', {
+            initialValue: budget.mediaType || 3,
             rules: [ {
               required: true,
               message: '请选择内容类型'
             } ]
           })(
             <Radio.Group>
-              <Radio key={1} value={1}>图文+链接+视频</Radio>
-              <Radio key={2} value={2}>图文+链接</Radio>
+              <Radio value={3}>图文+链接+视频</Radio>
+              <Radio value={4}>图文+链接</Radio>
             </Radio.Group>
           )}
         </FormItem>
-        <FormItem label="输入投放天数">
+        {getFieldValue("putType") === 2 && <FormItem label="输入投放天数">
           <div className='flex-form-input-container'>
             {getFieldDecorator('totalDay', {
               initialValue: budget.totalDay,
@@ -733,8 +739,8 @@ class BudgetFor12306 extends React.Component {
               任务账户余额：{numeral(balance).format('0,0.00')} 元
             </div>
           </div>
-        </FormItem>
-        <FormItem label="输入投放条数">
+        </FormItem>}
+        {getFieldValue("putType") === 1 && <FormItem label="输入投放条数">
           <div className='flex-form-input-container'>
             {getFieldDecorator('totalCount', {
               initialValue: budget.totalCount,
@@ -769,10 +775,10 @@ class BudgetFor12306 extends React.Component {
               任务账户余额：{numeral(balance).format('0,0.00')} 元
             </div>
           </div>
-        </FormItem>
+        </FormItem>}
         <FormItem label="出发城市">
-          {getFieldDecorator('startCity', {
-            initialValue: budget.startCity,
+          {getFieldDecorator('leavePlace', {
+            initialValue: budget.leavePlace,
             validateFirst: true,
             rules: [
               { required: true, message: '请选择出发城市', type: 'array' },
@@ -782,8 +788,8 @@ class BudgetFor12306 extends React.Component {
           )}
         </FormItem>
         <FormItem label="到达城市">
-          {getFieldDecorator('endCity', {
-            initialValue: budget.endCity,
+          {getFieldDecorator('arrivePlace', {
+            initialValue: budget.arrivePlace,
             validateFirst: true,
             rules: [
               { required: true, message: '请选择到达城市', type: 'array' },
@@ -792,52 +798,52 @@ class BudgetFor12306 extends React.Component {
             <TreeSelect {...tProps} searchPlaceholder="请选择到达城市" />
           )}
         </FormItem>
-        <FormItem label="车次类型">
-          {getFieldDecorator('typecc', {
-            initialValue: budget.typecc,
+        {getFieldValue("putType") === 1 && <FormItem label="车次类型">
+          {getFieldDecorator('deliveryTrainType', {
+            initialValue: budget.deliveryTrainType,
           })(
-            <CheckGroup options={CC_OPTIONS} />
+            <CheckGroup options={TRAIN_TYPE_OPTIONS} />
           )}
-        </FormItem>
-        <FormItem label="坐席类型" wrapperCol={{span: 20}}>
-          {getFieldDecorator('typeaa', {
-            initialValue: budget.typeaa,
+        </FormItem>}
+        {getFieldValue("putType") === 1 && <FormItem label="坐席类型" wrapperCol={{span: 20}}>
+          {getFieldDecorator('deliverySeat', {
+            initialValue: budget.deliverySeat,
           })(
-            <CheckGroup options={ZX_OPTIONS} />
+            <CheckGroup options={SEAT_OPTIONS} />
           )}
-        </FormItem>
-        <FormItem label="人群性别">
-          {getFieldDecorator('type334234', {
-            initialValue: budget.type334234,
-          })(
-            <Radio.Group>
-              <Radio value={1}>全部</Radio>
-              <Radio value={2}>男</Radio>
-              <Radio value={3}>女</Radio>
-            </Radio.Group>
-          )}
-        </FormItem>
-        <FormItem label="是否限定年龄">
-          {getFieldDecorator('type66666', {
-            initialValue: budget.type66666,
+        </FormItem>}
+        {getFieldValue("putType") === 1 && <FormItem label="人群性别">
+          {getFieldDecorator('deliverySex', {
+            initialValue: budget.deliverySex || 0,
           })(
             <Radio.Group>
-              <Radio value={1}>否</Radio>
-              <Radio value={2}>是</Radio>
+              <Radio value={0}>全部</Radio>
+              <Radio value={10}>男</Radio>
+              <Radio value={11}>女</Radio>
             </Radio.Group>
           )}
-        </FormItem>
-        <FormItem label="配置年龄区间" wrapperCol={{span: 20}}>
-          {getFieldDecorator('typeasasdaa', {
-            initialValue: budget.typeasasdaa,
+        </FormItem>}
+        {getFieldValue("putType") === 1 && <FormItem label="是否限定年龄">
+          {getFieldDecorator('_deliveryAges', {
+            initialValue: budget._deliveryAges || 2,
+          })(
+            <Radio.Group>
+              <Radio value={2}>否</Radio>
+              <Radio value={1}>是</Radio>
+            </Radio.Group>
+          )}
+        </FormItem>}
+        {getFieldValue("_deliveryAges") === 1 && <FormItem label="配置年龄区间" wrapperCol={{span: 20}}>
+          {getFieldDecorator('deliveryAges', {
+            initialValue: budget.deliveryAges,
             rules: [
               { type: 'array', max: 4, message: '最多不超过4项' }
             ]
           })(
-            <Checkbox.Group options={NL_OPTIONS} />
+            <Checkbox.Group options={AGES_OPTIONS} />
           )}
-        </FormItem>
-        <Alert message='投放单价为6元/条，原价300,000元，折扣返现10,000元，实付290,000元'/>
+        </FormItem>}
+        <Alert message={`投放单价为${result.unitPrice}元/条，原价${result.totalAmount}元，折扣返现${result.discount}元，实付${result.actualPayment}元`}/>
         <footer>
           <FormItem label=' '>
             {this.props.isEdit ? null : <Button onClick={this.cached}>上一步</Button>}
