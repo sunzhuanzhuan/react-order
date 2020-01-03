@@ -77,6 +77,7 @@ export default {
     getTaskLocationInfoB: prefix + "/adOrder/v1/getTaskLocationInfoB",
     addTask: prefix + "/adOrder/v1/add",
     tripPriceCalculation: prefix + "/adOrder/v1/trip/priceCalculation",
+    weixinPriceCalculation: prefix + "/adOrder/v1/weixin/priceCalculation",
     getBusinessScopeList: configManage + "/getBusinessScopeList",
     queryQualificationsGroup: configManage + "/queryQualificationsGroup",
     queryTaskCheckQualifications: configManage + "/queryTaskCheckQualifications",

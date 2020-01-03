@@ -239,7 +239,7 @@ class BudgetForWeixin extends React.Component {
     let defaultCheck = budget.locationLimitedInfo || []
 
     this.state = {
-      actionNum: budget.actionNum || 0,
+      actionNum: budget.serviceFee || 0,
       amount: budget.totalAmount || 0,
       positionCheck: defaultCheck
     }
@@ -254,31 +254,28 @@ class BudgetForWeixin extends React.Component {
   // 暂存 & 上一步
   cached = () => {
     let newVal = Object.assign({}, this.props.form.getFieldsValue())
-    newVal.actionNum = this.state.actionNum
-    newVal.amount = this.state.amount
+    newVal.serviceFee = this.state.serviceFee
+    newVal.actualPayment = this.state.actualPayment
     newVal.readNums = this.readField.state.readNums
     newVal.unitPrice = this.readField.state.unitPrice
     this.props.prev("budget", newVal)
   }
 
-  // TODO: 替换手续费计算接口
-  calculation = (amount = 0, taskOrderType) => {
-    if (isNaN(amount) || amount <= 0) {
+  calculation = (totalAmount = 0) => {
+    if (isNaN(totalAmount) || totalAmount <= 0) {
       return this.setState({
-        actionNum: 0,
-        amount: 0
+        serviceFee: 0,
+        actualPayment: 0
       });
     }
-    const { data, actions } = this.props
-    actions.TPQueryActionNum({
-      "amount": amount,
-      "taskOrderType": taskOrderType
-    }).then(({ data }) => {
-      this.setState({
-        actionNum: data,
-        amount: amount + data
-      });
-    })
+    const { actions } = this.props
+    actions.TPWeixinPriceCalculation({ totalAmount })
+      .then(({ data }) => {
+        this.setState({
+          serviceFee: data.serviceFee,
+          actualPayment: data.actualPayment
+        });
+      })
   }
 
   handleSubmit = (e) => {
@@ -286,8 +283,8 @@ class BudgetForWeixin extends React.Component {
     this.props.form.validateFields((err, values) => {
       if (!err) {
         let newVal = Object.assign({}, values)
-        newVal.actionNum = this.state.actionNum
-        newVal.amount = this.state.amount
+        newVal.serviceFee = this.state.serviceFee
+        newVal.actualPayment = this.state.actualPayment
         newVal.readNums = this.readField.state.readNums
         newVal.unitPrice = this.readField.state.unitPrice
         this.props.next("budget", newVal)
@@ -315,7 +312,7 @@ class BudgetForWeixin extends React.Component {
 
   render() {
     const { form, formLayout, data, actions, balance } = this.props
-    const { actionNum, amount } = this.state
+    const { serviceFee, actualPayment } = this.state
     const { base, budget } = data
     const { getFieldDecorator, getFieldValue } = form
     let maxAmount = Math.min(balance, MAX_BUDGET_AMOUNT);
@@ -362,7 +359,7 @@ class BudgetForWeixin extends React.Component {
           <div style={{
             height: 28,
             lineHeight: "28px"
-          }}>包含冻结服务费{actionNum}元，实际扣款为{amount}元
+          }}>包含冻结服务费{serviceFee}元，实际扣款为{actualPayment}元
           </div>
         </FormItem>
         <FormItem label="内容发布位置" className='taskPosRadio'>
@@ -373,10 +370,7 @@ class BudgetForWeixin extends React.Component {
               message: '请选择发布位置'
             } ]
           })(
-            <Radio.Group onChange={e => {
-              let val = e.target.value
-              this.calculation(getFieldValue('totalAmount'), val)
-            }}>
+            <Radio.Group>
               <Radio value={1}>固定位置</Radio>
               <Radio value={2}>不限位置</Radio>
             </Radio.Group>
@@ -391,7 +385,7 @@ class BudgetForWeixin extends React.Component {
                   rules: [ {
                     required: true,
                     validator: (rule, value, callback) => {
-                      if(value && value.length > 0 && value.length < 3){
+                      if (value && value.length > 0 && value.length < 3) {
                         callback()
                       }
                       callback("发布位置最少选择一项, 最多只可选两项")
@@ -399,7 +393,7 @@ class BudgetForWeixin extends React.Component {
                   } ]
                 })(
                   <CheckboxGroup
-                    style={{paddingBottom: 6}}
+                    style={{ paddingBottom: 6 }}
                     onChange={ary => {
                       this.setState({ positionCheck: ary })
                       this.readField.calculation()
@@ -576,55 +570,50 @@ class BudgetFor12306 extends React.Component {
     this.calculation = debounce(this.calculation, 300)
 
     this.state = {
-      result: {
+      result: budget.result || {
         unitPrice: 0,
         totalAmount: 0,
         discount: 0,
         actualPayment: 0,
       },
-      treeData: [
-        { id: 1, pId: 0, value: '1', title: 'Expand to load' },
-        { id: 2, pId: 0, value: '2', title: 'Expand to load' },
-        { id: 3, pId: 0, value: '3', title: 'Tree Node', isLeaf: true },
-      ],
+      treeData: [],
     }
   }
 
-  genTreeNode = (parentId, isLeaf = false) => {
-    const random = Math.random()
-      .toString(36)
-      .substring(2, 6);
-    return {
-      id: random,
-      pId: parentId,
-      value: random,
-      title: isLeaf ? 'Tree Node' : 'Expand to load',
-      isLeaf,
-    };
+  getTreeNode = (list = []) => {
+    return list.map(item => ({
+      id: item.id,
+      pId: item.parentId,
+      value: item.id,
+      title: item.areaName,
+      isLeaf: item.areaLevel === 2,
+    }))
   };
 
-  onLoadData = treeNode =>
-    new Promise(resolve => {
-      const { id } = treeNode.props;
-      setTimeout(() => {
-        this.setState({
-          treeData: this.state.treeData.concat([
-            this.genTreeNode(id, false),
-            this.genTreeNode(id, true),
-          ]),
-        });
-        resolve();
-      }, 300);
-    });
+  onLoadData = treeNode => {
+    const { data, actions, taskPositionList } = this.props
+    const { id } = treeNode.props;
+    return actions.getAsyncAreaList({ pid: id }).then(({ data }) => {
+      this.setState({
+        treeData: this.state.treeData.concat(this.getTreeNode(data)),
+      });
+    })
+  }
 
   componentDidMount() {
-    const { data, actions, taskPositionList } = this.props
-    const { budget } = data;
+    const { actions } = this.props
+    // 获取初始城市列表
+    actions.getAsyncAreaList().then(({ data }) => {
+      this.setState({
+        treeData: this.state.treeData.concat(this.getTreeNode(data)),
+      });
+    })
   }
 
   // 暂存 & 上一步
   cached = () => {
     let newVal = Object.assign({}, this.props.form.getFieldsValue())
+    newVal.result = this.state.result
     this.props.prev("budget", newVal)
   }
 
@@ -634,6 +623,7 @@ class BudgetFor12306 extends React.Component {
     this.props.form.validateFields((err, values) => {
       if (!err) {
         let newVal = Object.assign({}, values)
+        newVal.result = this.state.result
         this.props.next("budget", newVal)
       }
     });
@@ -645,27 +635,29 @@ class BudgetFor12306 extends React.Component {
         "putType",
         "mediaType",
         "actionNum",
-        "leavePalce",
+        "actionDay",
+        "leavePlace",
         "arrivePlace",
         "deliverySex",
         "deliverySeat",
         "deliveryAges",
         "deliveryTrainType",
       ])
-      const { data, actions } = this.props
+      if (!values.actionNum) return
+      const { actions } = this.props
       actions.TPTripPriceCalculation(values).then(({ data }) => {
-        this.setState(data);
+        this.setState({ result: data });
       })
     }, 0);
   }
 
   render() {
     const { form, formLayout, data, actions, balance } = this.props
-    const { actionNum, result } = this.state
+    const { result } = this.state
     const { base, budget } = data
     const { getFieldDecorator, getFieldValue } = form
 
-    const tProps = {
+    const treeProps = {
       dropdownStyle: { maxHeight: 400, overflow: 'auto' },
       treeData: this.state.treeData,
       treeDataSimpleMode: true,
@@ -677,6 +669,11 @@ class BudgetFor12306 extends React.Component {
       loadData: this.onLoadData
     }
 
+    // 按量投放
+    const PA = getFieldValue("putType") === 1
+    // 按天数投放
+    const PB = getFieldValue("putType") === 2
+
     return (
       <Form onSubmit={this.handleSubmit}  {...formLayout}>
         <FormItem label="投放模式">
@@ -687,7 +684,7 @@ class BudgetFor12306 extends React.Component {
               message: '请选择投放模式'
             } ]
           })(
-            <Radio.Group>
+            <Radio.Group onChange={this.calculation}>
               <Radio value={2}>按天数投放</Radio>
               <Radio value={1}>按量投放</Radio>
             </Radio.Group>
@@ -701,16 +698,16 @@ class BudgetFor12306 extends React.Component {
               message: '请选择内容类型'
             } ]
           })(
-            <Radio.Group>
+            <Radio.Group onChange={this.calculation}>
               <Radio value={3}>图文+链接+视频</Radio>
               <Radio value={4}>图文+链接</Radio>
             </Radio.Group>
           )}
         </FormItem>
-        {getFieldValue("putType") === 2 && <FormItem label="输入投放天数">
+        {PB && <FormItem label="输入投放天数">
           <div className='flex-form-input-container'>
-            {getFieldDecorator('totalDay', {
-              initialValue: budget.totalDay,
+            {getFieldDecorator('actionDay', {
+              initialValue: budget.actionDay,
               validateFirst: true,
               rules: [
                 { required: true, message: '请输入投放天数' },
@@ -728,9 +725,7 @@ class BudgetFor12306 extends React.Component {
                 precision={0}
                 min={1}
                 style={{ flex: "auto" }}
-                onChange={val => {
-                  this.calculation()
-                }}
+                onChange={this.calculation}
                 placeholder="输入投放天数"
               />
             )}
@@ -740,10 +735,10 @@ class BudgetFor12306 extends React.Component {
             </div>
           </div>
         </FormItem>}
-        {getFieldValue("putType") === 1 && <FormItem label="输入投放条数">
+        {PA && <FormItem label="输入投放条数">
           <div className='flex-form-input-container'>
-            {getFieldDecorator('totalCount', {
-              initialValue: budget.totalCount,
+            {getFieldDecorator('actionNum', {
+              initialValue: budget.actionNum,
               validateFirst: true,
               rules: [
                 { required: true, message: '请输入投放条数' },
@@ -764,9 +759,7 @@ class BudgetFor12306 extends React.Component {
                 step={100}
                 formatter={value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                 parser={value => value.replace(/\$\s?|(,*)/g, '')}
-                onChange={val => {
-                  this.calculation()
-                }}
+                onChange={this.calculation}
                 placeholder="输入投放条数"
               />
             )}
@@ -784,7 +777,9 @@ class BudgetFor12306 extends React.Component {
               { required: true, message: '请选择出发城市', type: 'array' },
             ]
           })(
-            <TreeSelect {...tProps} searchPlaceholder="请选择出发城市" />
+            <TreeSelect {...treeProps} searchPlaceholder="请选择出发城市" onChange={() => {
+              PA && this.calculation()
+            }} />
           )}
         </FormItem>
         <FormItem label="到达城市">
@@ -795,45 +790,58 @@ class BudgetFor12306 extends React.Component {
               { required: true, message: '请选择到达城市', type: 'array' },
             ]
           })(
-            <TreeSelect {...tProps} searchPlaceholder="请选择到达城市" />
+            <TreeSelect {...treeProps} searchPlaceholder="请选择到达城市" onChange={() => {
+              PA && this.calculation()
+            }} />
           )}
         </FormItem>
-        {getFieldValue("putType") === 1 && <FormItem label="车次类型">
+        {PA && <FormItem label="车次类型">
           {getFieldDecorator('deliveryTrainType', {
             initialValue: budget.deliveryTrainType,
           })(
-            <CheckGroup options={TRAIN_TYPE_OPTIONS} />
+            <CheckGroup options={TRAIN_TYPE_OPTIONS} onChange={() => {
+              PA && this.calculation()
+            }} />
           )}
         </FormItem>}
-        {getFieldValue("putType") === 1 && <FormItem label="坐席类型" wrapperCol={{span: 20}}>
+        {PA && <FormItem label="坐席类型" wrapperCol={{ span: 20 }}>
           {getFieldDecorator('deliverySeat', {
             initialValue: budget.deliverySeat,
           })(
-            <CheckGroup options={SEAT_OPTIONS} />
+            <CheckGroup options={SEAT_OPTIONS} onChange={() => {
+              PA && this.calculation()
+            }} />
           )}
         </FormItem>}
-        {getFieldValue("putType") === 1 && <FormItem label="人群性别">
+        {PA && <FormItem label="人群性别">
           {getFieldDecorator('deliverySex', {
             initialValue: budget.deliverySex || 0,
           })(
-            <Radio.Group>
+            <Radio.Group onChange={() => {
+              PA && this.calculation()
+            }}>
               <Radio value={0}>全部</Radio>
               <Radio value={10}>男</Radio>
               <Radio value={11}>女</Radio>
             </Radio.Group>
           )}
         </FormItem>}
-        {getFieldValue("putType") === 1 && <FormItem label="是否限定年龄">
+        {PA && <FormItem label="是否限定年龄">
           {getFieldDecorator('_deliveryAges', {
             initialValue: budget._deliveryAges || 2,
           })(
-            <Radio.Group>
+            <Radio.Group onChange={(e) => {
+              e.target.value === 1 && this.calculation()
+            }}>
               <Radio value={2}>否</Radio>
               <Radio value={1}>是</Radio>
             </Radio.Group>
           )}
         </FormItem>}
-        {getFieldValue("_deliveryAges") === 1 && <FormItem label="配置年龄区间" wrapperCol={{span: 20}}>
+        {getFieldValue("_deliveryAges") === 1 &&
+        <FormItem label="配置年龄区间" wrapperCol={{ span: 20 }} onChange={() => {
+          PA && this.calculation()
+        }}>
           {getFieldDecorator('deliveryAges', {
             initialValue: budget.deliveryAges,
             rules: [
@@ -843,7 +851,8 @@ class BudgetFor12306 extends React.Component {
             <Checkbox.Group options={AGES_OPTIONS} />
           )}
         </FormItem>}
-        <Alert message={`投放单价为${result.unitPrice}元/条，原价${result.totalAmount}元，折扣返现${result.discount}元，实付${result.actualPayment}元`}/>
+        <Alert
+          message={`投放单价为${result.unitPrice}元/条，原价${result.totalAmount}元，折扣返现${result.discount}元，实付${result.actualPayment}元`} />
         <footer>
           <FormItem label=' '>
             {this.props.isEdit ? null : <Button onClick={this.cached}>上一步</Button>}

@@ -199,10 +199,10 @@ class ContentForWeixin extends React.Component {
         <FormItem label={<span>&nbsp;&nbsp;&nbsp;阅读原文链接</span>}>
           {getFieldDecorator('articleUrl', {
             initialValue: content.articleUrl,
-            rules: [{
+            rules: [ {
               pattern: /^htt(p|ps):\/\//,
               message: '链接格式不正确'
-            }]
+            } ]
           })(
             <Input placeholder='请输入阅读原文链接' />
           )}
@@ -249,7 +249,8 @@ class ContentForWeixin extends React.Component {
 class ContentFor12306 extends React.Component {
   state = {}
 
-  componentDidMount() { }
+  componentDidMount() {
+  }
 
   // 暂存 & 上一步
   cached = () => {
@@ -292,11 +293,11 @@ class ContentFor12306 extends React.Component {
           )}
         </FormItem>
         <FormItem label="上传图片">
-          {getFieldDecorator('attachmentImg', {
-            initialValue: content.attachmentImg || [],
+          {getFieldDecorator('image', {
+            initialValue: content.image || [],
             valuePropName: 'fileList',
             getValueFromEvent: e => e && e.fileList,
-            rules: [ { required: true, message: '请上传图片' , type: 'array'}]
+            rules: [ { required: true, message: '请上传图片', type: 'array' } ]
           })(
             <OssUpload
               authToken={this.props.authToken}
@@ -311,12 +312,12 @@ class ContentFor12306 extends React.Component {
             />
           )}
         </FormItem>
-        <FormItem label="上传视频">
-          {getFieldDecorator('attachmentVideo', {
-            initialValue: content.attachmentVideo || [],
+        {budget.mediaType === 3 && <FormItem label="上传视频">
+          {getFieldDecorator('video', {
+            initialValue: content.video || [],
             valuePropName: 'fileList',
-            getValueFromEvent: e => e && e.fileList,
-            rules: [ { required: true, message: '请上传视频' , type: 'array'}]
+            getValueFromEvent: e => e && e.fileList.slice(-1),
+            rules: [ { required: true, message: '请上传视频', type: 'array' } ]
           })(
             <OssUpload
               authToken={this.props.authToken}
@@ -326,37 +327,49 @@ class ContentFor12306 extends React.Component {
                 max: 20,
                 suffix: 'mp4'
               }}
-              onChange={e => {
-                this.onChange(e && e.fileList[0], 'video')
-              }}
-              len={1}
               tipContent="请上传MP4格式的视频，文件大小需不超过1.5Mb"
             >
-              <a><Icon type="upload" /> {getFieldValue('attachmentVideo').length > 0 ? "重新上传" : "上传视频"}</a>
+              <a><Icon type="upload" /> {getFieldValue('video').length > 0 ? "重新上传" : "上传视频"}</a>
             </OssUpload>
           )}
-        </FormItem>
-        <FormItem label="资质上传">
-          <div>需上传《企业营业执照副本/事业单位法人证》，《企业营业执照副本/事业单位法人证》</div>
-          {getFieldDecorator('attachmentList', {
-            initialValue: content.attachmentList || [],
-            valuePropName: 'fileList',
-            getValueFromEvent: e => e && e.fileList,
-            rules: [ { required: true, message: '请上传资质' , type: 'array'}]
-          })(
-            <OssUpload
-              authToken={this.props.authToken}
-              listType='picture'
-              rule={{
-                bizzCode: 'F_TASK_CANCEL',
-                max: 50,
-              }}
-              tipContent="上传格式为全文件，文件大小不超过50Mb"
-            >
-              <a><Icon type="upload" />上传资质文件</a>
-            </OssUpload>
-          )}
-        </FormItem>
+        </FormItem>}
+        {
+          this.props.qualificationsGroups.map((item, n) => {
+            const value = (content.qualificationsFile || [])[n] || {}
+            return <div key={item.id}>
+              <FormItem label={`资质上传(${n + 1})`}>
+                <div>
+                  需上传
+                  {
+                    item.groupQualificationMappingReqList.map(item => "《" + item.qualificationName + "》")
+                      .join("或")
+                  }
+                </div>
+                {getFieldDecorator(`qualificationsFile[${n}].files`, {
+                  initialValue: value.files || [],
+                  valuePropName: 'fileList',
+                  getValueFromEvent: e => e && e.fileList.slice(-1),
+                  rules: [ { required: true, message: '请上传资质', type: 'array' } ]
+                })(
+                  <OssUpload
+                    authToken={this.props.authToken}
+                    listType='picture'
+                    rule={{
+                      bizzCode: 'F_TASK_CANCEL',
+                      max: 50,
+                    }}
+                    tipContent="上传格式为全文件，文件大小不超过50Mb"
+                  >
+                    <a><Icon type="upload" /> {getFieldValue(`qualificationsFile[${n}]`).length > 0 ? "重新上传" : "上传资质文件"}</a>
+                  </OssUpload>
+                )}
+              </FormItem>
+              {getFieldDecorator(`qualificationsFile[${n}].id`, {
+                initialValue: item.id,
+              })(<Input type="hidden"/>)}
+            </div>
+          })
+        }
         <footer>
           <FormItem label=' '>
             <Button onClick={this.cached}>上一步</Button>
@@ -398,7 +411,8 @@ const validatorUploadMaterial = (rule, value, callback) => {
 class ContentForWeibo extends React.Component {
   state = {}
 
-  componentDidMount() { }
+  componentDidMount() {
+  }
 
   // 暂存 & 上一步
   cached = () => {
@@ -426,10 +440,10 @@ class ContentForWeibo extends React.Component {
         <FormItem label="内容形式">
           {getFieldDecorator('taskContentStyle', {
             initialValue: (budget.taskTarget === 22 || !content.taskContentStyle) ? 21 : content.taskContentStyle,
-            rules: [{
+            rules: [ {
               required: true,
               message: '请选择内容发布形式'
-            }]
+            } ]
           })(
             <Radio.Group>
               <Radio value={21}>直发</Radio>
