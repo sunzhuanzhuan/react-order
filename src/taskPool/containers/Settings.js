@@ -27,8 +27,8 @@ const Settings = (props) => {
     }
   }, [])
 
-  const { readUnitPriceConfig, qualityConfig } = props.settingReducers
-  console.log(qualityConfig)
+  const { readUnitPriceConfig, qualityConfig, addRetainTime } = props.settingReducers
+  console.log(addRetainTime)
   return (
     <div>
       <Menu mode="horizontal" onClick={handleClick} selectedKeys={current}>
@@ -61,7 +61,10 @@ const Settings = (props) => {
         TPReadUnitPriceConfig={props.actions.TPReadUnitPriceConfig}
         TPGetReadUnitPriceConfig={props.actions.TPGetReadUnitPriceConfig}
       /> : null}
-      {current == 'discover' ? <Discover qualityConfig={qualityConfig} /> : null}
+      {current == 'discover' ? <Discover
+        qualityConfig={qualityConfig}
+        TPAddRetainTime={props.TPAddRetainTime}
+        addRetainTime={addRetainTime} /> : null}
       {current == 'select' ? <Select /> : null}
       {current == 'weichat' ? <Weichat /> : null}
       {current == 'cooperation' ? <Cooperation /> : null}

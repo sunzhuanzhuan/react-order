@@ -13,3 +13,9 @@ export const qualityConfig = handleActions({
     return { ...action.payload.data }
   },
 }, {})
+//新增保留时长
+export const addRetainTime = handleActions({
+  [setting.TPAddRetainTime_success]: (state, action) => {
+    return { ...action.payload.data }
+  },
+}, {})

@@ -22,3 +22,10 @@ export const {
 } = createHttpAction('TPGetQualityConfig', Interface.setting.TPGetQualityConfig, {
   method: 'get'
 });
+//新增保留时长
+export const {
+  TPAddRetainTime,
+  TPAddRetainTime_success
+} = createHttpAction('TPAddRetainTime', Interface.setting.TPAddRetainTime, {
+  method: 'post'
+});

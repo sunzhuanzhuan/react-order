@@ -43,7 +43,8 @@ export default {
   setting: {
     TPReadUnitPriceConfig: prefix + "/cooperationPlatform/v2/suggestReadUnitPriceConfig",
     TPGetReadUnitPriceConfig: prefix + "/cooperationPlatform/v2/getSuggestReadUnitPriceConfig",
-    TPGetQualityConfig: prefix + "/configManage/v1/getQualityConfig"
+    TPGetQualityConfig: prefix + "/configManage/v1/getQualityConfig",
+    TPAddRetainTime: prefix + "/configManage/v1/addRetainTime"
   },
   account: {
     TPGetAccountList: `${accountUrl}getAccountList`,//账号管理
