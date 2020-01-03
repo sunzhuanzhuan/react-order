@@ -39,7 +39,7 @@ function CooperationDetail(props) {
     { label: '任务模式', content: orderMcnDetailInfo.taskPatternDesc, span: 2 },
     { label: '发布保留时长', content: '', },
     { label: '', content: '', span: 2 },
-    { label: '申请阅读数', content: '' },
+    { label: '申请阅读数', content: orderMcnDetailInfo.expectActionNum },
 
   ]
   const orderInfo = [

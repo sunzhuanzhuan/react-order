@@ -65,21 +65,14 @@ function Account(props) {
       <TitleBox title='筛选项' >
         <AccountForm searchAction={searchAction} onReset={onReset} />
       </TitleBox>
-      <div style={{ position: 'relative' }}>
-        <a href="/order/task/account-receive" style={{ position: 'absolute', right: 0, zIndex: 999, top: -10 }}>
+
+      <Spin spinning={loading}>
+        <a href="/order/task/account-receive" style={{ padding: '10px 0px', display: 'block' }}>
           <Badge count={5} >
             <Button type='primary' >账号领取</Button>
           </Badge>
         </a>
-      </div>
-      <Spin spinning={loading}>
-        <TitleBox title={<div>账号列表<span
-          style={{ color: '#ccc', fontWeight: 400, fontSize: 12 }}
-        >（共：{accountTabNumber.allStateNum}）
-        </span>
-        </div>} >
-          <AccountList {...comProps} />
-        </TitleBox>
+        <AccountList {...comProps} />
       </Spin>
       <Modal
         {...modalProps}
@@ -87,7 +80,7 @@ function Account(props) {
         footer={null}
         onCancel={() => setModalProps({ ...modalProps, visible: false })}
       >
-        {modalProps.content}
+        {modalProps.content && modalProps.content(comProps)}
       </Modal>
     </div>
   )
