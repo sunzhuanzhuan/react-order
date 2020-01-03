@@ -148,7 +148,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
     }
   },
   {
-    title: '账号ID（微信必填）',
+    title: '账号ID（必填）',
     dataIndex: 'weibo_id',
     key: 'weibo_id',
     align: 'center',
@@ -156,11 +156,14 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
     render: (text, record) => {
       return <FormItem>
         {getFieldDecorator(`${record.order_id}.weibo_id`, {
-          trigger: ['onChange'],
-          rules: [{ required: record.weibo_type == 9 ? true : false, message: '请填写账号ID' }, {
+          validateTrigger: ['onChange'],
+          validateFirst: true,
+          rules: [{ required: true, message: '请填写账号ID' }, {
             validator: (rule, value, callback) => {
               let reg = /^[^\u4e00-\u9fa5]{0,255}$/
-              if (!reg.test(value)) {
+              if (value == '') {
+                callback('请输入')
+              } else if (!reg.test(value)) {
                 callback('请输入中文除外的，最多255个字符')
               } else {
                 callback()
@@ -345,6 +348,8 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
     render: (text, record) => {
       return record.is_inward_send == 1 || record.last_apply_status == 1 || record.last_apply_status == 2 ? position[text] : <FormItem>
         {getFieldDecorator(`${record.order_id}.publish_articles_address`, {
+          validateTrigger: ['onChange'],
+          validateFirst: true,
           rules: [
             {
               required: record.weibo_type == 9 ? true : false,
@@ -399,6 +404,8 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
     render: (text, record) => {
       return record.is_inward_send == 1 || record.last_apply_status == 1 || record.last_apply_status == 2 ? text : <FormItem>
         {getFieldDecorator(`${record.order_id}.publish_articles_at`, {
+          validateTrigger: ['onChange'],
+          validateFirst: true,
           rules: [
             {
               required: record.weibo_type == 9 ? true : false,

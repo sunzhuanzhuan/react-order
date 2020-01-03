@@ -20,7 +20,7 @@ class EditOrderModal extends React.Component {
         if (!values.publish_articles_address) {
           values.publish_articles_address = ''
         }
-        this.props.actions.postUpdateSpotplanOrder({ ...values, spotplan_id, order_id: data[0].order_id }).then((res) => {
+        this.props.actions.postUpdateSpotplanOrder({ ...values, spotplan_id, order_id: data[0].order_id, flag: 2 }).then((res) => {
           if (!res.data.type) {
             message.success('操作成功！', 2);
             this.props.onCancel();
@@ -87,13 +87,16 @@ class EditOrderModal extends React.Component {
         <FormItem label='需求名称' {...formItemLayout}>{data && data[0].requirement_name}</FormItem>
         <FormItem label='平台' {...formItemLayout}>{data && data[0].weibo_type_name}</FormItem>
         <FormItem label='账号名称' {...formItemLayout}>{data && data[0].weibo_name}</FormItem>
-        <FormItem label='账号ID（微信必填）' {...formItemLayout}>
+        <FormItem label='账号ID（必填）' {...formItemLayout}>
           {getFieldDecorator('weibo_id', {
             initialValue: data && data[0].weibo_id == 23 ? '-' : data && data[0].weibo_id || '',
-            rules: [{ required: data && data[0].weibo_type == 9 ? true : false, message: '请填写账号ID' }, {
+            rules: [{ required: true, message: '请填写账号ID' }, {
               validator: (rule, value, callback) => {
                 let reg = /^[^\u4e00-\u9fa5]{0,255}$/
-                if (!reg.test(value)) {
+                if (value == '') {
+                  callback('请填写账号ID')
+                }
+                else if (!reg.test(value)) {
                   callback('请输入中文除外的，最多255个字符')
                 } else {
                   callback()
