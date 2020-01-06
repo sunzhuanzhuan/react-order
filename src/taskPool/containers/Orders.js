@@ -85,7 +85,7 @@ const Orders = (props) => {
     <div>
       <h2>订单管理</h2>
       <Spin spinning={loading}>
-        <Tabs onChange={callback} defaultActiveKey='2' >
+        <Tabs onChange={callback} defaultActiveKey='1' >
           <TabPane tab="微信公众号" key="1">
             <WechatForm {...weChatProps} />
             <WechatList {...comProps} {...weChatProps} />
