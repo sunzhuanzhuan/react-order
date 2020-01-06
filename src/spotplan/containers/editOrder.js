@@ -68,7 +68,7 @@ class EditOrder extends React.Component {
       <h3 className='top-gap'>订单列表</h3>
       <div className='edit-table-container top-gap'>
         <Form>
-          <ScrollTable scrollClassName='.ant-table-body' widthScroll={2100}>
+          <ScrollTable scrollClassName='.ant-table-body' widthScroll={3000}>
             <Table
               className='edit-table'
               rowKey='id'

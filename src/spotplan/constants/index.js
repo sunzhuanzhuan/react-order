@@ -792,7 +792,7 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
         </div>
       </Tooltip> : '-'
     }
-  },
+  }, {},
   {
     title: '操作',
     dataIndex: 'action',
