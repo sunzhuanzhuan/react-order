@@ -6,14 +6,14 @@ import AccountForm from '../components/Account/AccountForm'
 import AccountList from '../components/Account/AccountList'
 import { Modal, Tabs, Spin, Button, Badge, message } from 'antd'
 import TitleBox from '../base/TitleBox'
-const baseSearch = { page: { currentPage: 1, pageSize: 10 } }
+const baseSearch = { page: { currentPage: 1, pageSize: 10 }, form: {} }
 function Account(props) {
   const [modalProps, setModalProps] = useState({ title: '', content: '' })
-  const [searchParam, setSearchParam] = useState({ page: { currentPage: 1, pageSize: 10 } })
+  const [searchParam, setSearchParam] = useState(baseSearch)
   const [claimTotal, setClaimTotal] = useState(0)
   const [loading, setLoading] = useState(true)
   useEffect(() => {
-    getAccountListAsync()
+    getAccountListAsync(searchParam)
     actions.TPGetFiltersMeta()
     getClaimAccountList()
   }, [])
@@ -27,7 +27,7 @@ function Account(props) {
   }
   //获取领取列表数
   async function getClaimAccountList() {
-    const { data } = await actions.TPGetClaimAccountList({ page: { currentPage: 1, pageSize: 1 } })
+    const { data } = await actions.TPGetClaimAccountList({ page: { currentPage: 1, pageSize: 1 }, form: {} })
     setClaimTotal(data.total)
   }
 

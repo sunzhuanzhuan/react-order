@@ -5,7 +5,7 @@ import { WechatList, CooperationList, CooperationForm, WechatForm } from '../com
 import { Tabs, Modal, Spin } from 'antd';
 import { bindActionCreators } from 'redux';
 const { TabPane } = Tabs;
-const baseSearch = { page: { currentPage: 1, pageSize: 10 } }
+const baseSearch = { page: { currentPage: 1, pageSize: 10 }, form: {} }
 
 const Orders = (props) => {
   const [modalProps, setModalProps] = useState({ title: '' })
@@ -85,7 +85,7 @@ const Orders = (props) => {
     <div>
       <h2>订单管理</h2>
       <Spin spinning={loading}>
-        <Tabs onChange={callback} defaultActiveKey='1' >
+        <Tabs onChange={callback} defaultActiveKey='2' >
           <TabPane tab="微信公众号" key="1">
             <WechatForm {...weChatProps} />
             <WechatList {...comProps} {...weChatProps} />
