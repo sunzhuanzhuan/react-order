@@ -10,8 +10,8 @@ function WeChatForm(props) {
       if (!err) {
         let allValue = { ...values }
         if (values.receiveAt) {
-          allValue.form.receiveAtStart = values.orderStartDate[0]
-          allValue.form.receiveAtEnd = values.orderStartDate[1]
+          allValue.form.receiveAtStart = values.receiveAt[0]
+          allValue.form.receiveAtEnd = values.receiveAt[1]
           delete allValue.receiveAt
         }
         if (values.expectedPublishedTime) {

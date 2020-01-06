@@ -15,11 +15,14 @@ function CooperationModel(props) {
   function okFn() {
     validateFields((err, values) => {
       if (!err) {
+        const file = values.fileUrl[0]
+        const nameKey = props.isPrice == 1 ? 'execOrderName' : 'finalReportName'
         props.okFn && props.okFn({
           operationFlag: props.isPrice ? 1 : 2,
-          fileUrl: values.fileUrl[0].url,
+          fileUrl: file.url,
           platformSettlementAmount: values.platformSettlementAmount,
-          adOrderId: props.adOrderId
+          adOrderId: props.adOrderId,
+          [nameKey]: file.name
         })
         props.cancelFn & props.cancelFn()
       }

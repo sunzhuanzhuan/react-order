@@ -7,6 +7,7 @@ import TagItem from './TagItem'
 import moment from 'moment'
 import SearchForm from '../../../base/SearchForm/index'
 import SelectSearch from '../SelectSearch'
+import './index.less'
 const format = 'YYYY-MM-DD'
 const formConfig = [
   { label: 'accountID', type: 'input', key: 'accountId' },
@@ -64,15 +65,13 @@ function AccountForm(props) {
       </FormItem>
       <SearchForm form={form} formData={accountConfig} formConfig={formConfig2} />
       <KpiForm form={form} />
-      <div>
-        <FormItem label='常见分类'>
-          {getFieldDecorator(`form.classificationIds`, {
-            //rules: [{ required: true, message: 'Please input your username!' }],
-          })(
-            <TagItem />
-          )}
-        </FormItem>
-      </div>
+      <FormItem label='常见分类' className='classificationIds-flex' {...formItemLayout}>
+        {getFieldDecorator(`form.classificationIds`, {
+          //rules: [{ required: true, message: 'Please input your username!' }],
+        })(
+          <TagItem list={props.orderIndustryCategory} />
+        )}
+      </FormItem>
       <div className='button-footer'>
         <Button type='primary' onClick={onSearch}>筛选</Button>
         <Button style={{ marginLeft: 10 }} onClick={onReset}>重置</Button>
@@ -82,3 +81,7 @@ function AccountForm(props) {
 }
 
 export default Form.create()(AccountForm)
+export const formItemLayout = {
+  labelCol: { span: 2 },
+  wrapperCol: { span: 22 },
+}

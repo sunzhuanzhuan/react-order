@@ -28,6 +28,7 @@ const Orders = (props) => {
     if (key == 1) {
       searchWechatAction()
     }
+    setModalProps({ content: null, title: null })
   }
   //微信
   async function getAllMcnOrderListAsync(params) {
@@ -101,7 +102,11 @@ const Orders = (props) => {
         footer={null}
         onCancel={() => setModalProps({ ...modalProps, visible: false })}
       >
-        {orderType == 1 && modalProps.content ? modalProps.content(weChatProps) : modalProps.content}
+        {modalProps.content ?
+          orderType == 1 ?
+            modalProps.content(weChatProps)
+            : modalProps.content
+          : null}
       </Modal>
     </div>
   )

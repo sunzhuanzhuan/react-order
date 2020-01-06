@@ -14,9 +14,10 @@ function Account(props) {
   useEffect(() => {
     getAccountListAsync()
     actions.TPGetAccountTabNumber()
+    actions.TPGetFiltersMeta()
   }, [])
   const { acconutReducers, actions } = props
-  const { accountList, accountTabNumber = {} } = acconutReducers
+  const { accountList, orderIndustryCategory = [] } = acconutReducers
   async function getAccountListAsync(params) {
     setLoading(true)
     await actions.TPGetAccountList(params)
@@ -63,7 +64,8 @@ function Account(props) {
     <div>
       <h2>账号列表</h2>
       <TitleBox title='筛选项' >
-        <AccountForm searchAction={searchAction} onReset={onReset} />
+        <AccountForm searchAction={searchAction} onReset={onReset}
+          orderIndustryCategory={orderIndustryCategory} />
       </TitleBox>
 
       <Spin spinning={loading}>
