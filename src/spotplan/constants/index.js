@@ -171,7 +171,12 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
             }
           }]
         })(
-          <Input onBlur={(e) => {
+          <Input onFocus={() => {
+            if (record.weibo_id == 23) {
+              let newWei = `${record.order_id}.weibo_id`;
+              setFieldsValue({ [newWei]: '' });
+            }
+          }} onBlur={(e) => {
             if (e.target.value != record.weibo_id) {
               handleUpdate({ order_id: record.order_id, price_id: record.price_id, weibo_id: e.target.value })
             }

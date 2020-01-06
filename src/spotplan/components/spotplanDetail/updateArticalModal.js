@@ -114,7 +114,9 @@ class UpdateArticalModal extends React.Component {
           )}
         </Form.Item>
         <Form.Item label='content type'>
-          {getFieldDecorator('content_type')(
+          {getFieldDecorator('content_type', {
+            rules: [{ max: 255, message: '不能超过255个汉字' }]
+          })(
             <TextArea placeholder='请填写内容类型' autosize={{ minRows: 4, maxRows: 6 }} />
           )}
         </Form.Item>
