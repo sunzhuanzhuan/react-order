@@ -37,12 +37,6 @@ export const {
 });
 
 
-// 任务详情
-export const {
-  TPTaskDetail,
-  TPTaskDetail_success
-} = createHttpAction('TPTaskDetail', Interface.taskDetail);
-
 // 修改任务详情
 export const TPChangeTaskDetail = createAction('TPChangeTaskDetail', (data) => {
   return { data }

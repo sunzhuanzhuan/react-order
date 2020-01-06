@@ -255,9 +255,9 @@ class PreviewForWeixin extends React.Component {
           <Descriptions.Item label="发布后保留时长">{base.retainTime}小时</Descriptions.Item>
           <Descriptions.Item label="任务预算">{numeral(budget.totalAmount)
             .format("0,0.00")} 元</Descriptions.Item>
-          <Descriptions.Item label="冻结服务费">{numeral(budget.actionNum)
+          <Descriptions.Item label="冻结服务费">{numeral(budget.serviceFee)
             .format("0,0.00")} 元</Descriptions.Item>
-          <Descriptions.Item label="实际扣款">{numeral(budget.amount)
+          <Descriptions.Item label="实际扣款">{numeral(budget.actualPayment)
             .format("0,0.00")} 元</Descriptions.Item>
           <Descriptions.Item label="内容发布位置">{this.getLocationLimited(budget)}</Descriptions.Item>
           {

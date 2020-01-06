@@ -11,7 +11,6 @@ export default {
   fuzzyQueryCompany: prefix + "/company/v1/fuzzyQuery",
   queryAvailableBalance: prefix + "/finance/v1/queryAvailableBalance",
   queryActionNum: prefix + "/adOrder/v1/queryActionNum",
-  taskDetail: prefix + "/adOrder/v1/detail",
   mcnOrderList: prefix + "/adOrder/v1/mcnOrderList",
   getMcnReviewOrderList: prefix + "/mcnGrapLog/v1/getMcnReviewOrderList",
   approvedSuccess: prefix + "/mcnGrapLog/v1/approvedSuccess",
@@ -81,6 +80,7 @@ export default {
     getBusinessScopeList: configManage + "/getBusinessScopeList",
     queryQualificationsGroup: configManage + "/queryQualificationsGroup",
     queryTaskCheckQualifications: configManage + "/queryTaskCheckQualifications",
+    taskDetail: prefix + "/adOrder/v1/detail_2",
   }
 }
 

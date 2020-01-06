@@ -63,3 +63,9 @@ export const {
 export const {
   TPWeixinPriceCalculation
 } = createHttpAction('TPWeixinPriceCalculation', Interface.task.weixinPriceCalculation);
+
+// 任务详情
+export const {
+  TPTaskDetail,
+  TPTaskDetail_success
+} = createHttpAction('TPTaskDetail', Interface.task.taskDetail);
