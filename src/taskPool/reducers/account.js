@@ -1,6 +1,12 @@
 import { combineReducers } from 'redux'
 import { handleActions, handleAction } from 'redux-actions';
 import * as account from '../actions/account'
+//常见分类
+export const orderIndustryCategory = handleActions({
+  [account.TPGetFiltersMeta_success]: (state, action) => {
+    return [...action.payload.data.order_industry_category]
+  },
+}, [])
 // 账号管理（合作平台）
 export const accountList = handleActions({
   [account.TPGetAccountList_success]: (state, action) => {

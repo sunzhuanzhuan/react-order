@@ -6,22 +6,29 @@ import AccountForm from '../components/Account/AccountForm'
 import AccountList from '../components/Account/AccountList'
 import { Modal, Tabs, Spin, Button, Badge, message } from 'antd'
 import TitleBox from '../base/TitleBox'
-const baseSearch = { page: { currentPage: 1, pageSize: 10 } }
+const baseSearch = { page: { currentPage: 1, pageSize: 10 }, form: {} }
 function Account(props) {
   const [modalProps, setModalProps] = useState({ title: '', content: '' })
-  const [searchParam, setSearchParam] = useState({ page: { currentPage: 1, pageSize: 10 } })
+  const [searchParam, setSearchParam] = useState(baseSearch)
+  const [claimTotal, setClaimTotal] = useState(0)
   const [loading, setLoading] = useState(true)
   useEffect(() => {
-    getAccountListAsync()
-    actions.TPGetAccountTabNumber()
+    getAccountListAsync(searchParam)
+    actions.TPGetFiltersMeta()
+    getClaimAccountList()
   }, [])
   const { acconutReducers, actions } = props
-  const { accountList, accountTabNumber = {} } = acconutReducers
+  const { accountList, orderIndustryCategory = [] } = acconutReducers
   async function getAccountListAsync(params) {
     setLoading(true)
     await actions.TPGetAccountList(params)
     setSearchParam(params)
     setLoading(false)
+  }
+  //获取领取列表数
+  async function getClaimAccountList() {
+    const { data } = await actions.TPGetClaimAccountList({ page: { currentPage: 1, pageSize: 1 }, form: {} })
+    setClaimTotal(data.total)
   }
 
   //操作筛选项
@@ -63,12 +70,13 @@ function Account(props) {
     <div>
       <h2>账号列表</h2>
       <TitleBox title='筛选项' >
-        <AccountForm searchAction={searchAction} onReset={onReset} />
+        <AccountForm searchAction={searchAction} onReset={onReset}
+          orderIndustryCategory={orderIndustryCategory} />
       </TitleBox>
 
       <Spin spinning={loading}>
         <a href="/order/task/account-receive" style={{ padding: '10px 0px', display: 'block' }}>
-          <Badge count={5} >
+          <Badge count={claimTotal} >
             <Button type='primary' >账号领取</Button>
           </Badge>
         </a>

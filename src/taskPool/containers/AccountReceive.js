@@ -6,7 +6,7 @@ import AccountReceiveList from '../components/Account/AccountReceiveList'
 import AccountReceiveForm from '../components/Account/AccountReceiveForm'
 import { Modal, Spin, Icon, message } from 'antd'
 import BreadCrumbs from '../base/BreadCrumbs'
-const baseSearch = { page: { currentPage: 1, pageSize: 10 } }
+const baseSearch = { page: { currentPage: 1, pageSize: 10 }, form: {} }
 function AccountReceive(props) {
   const [modalProps, setModalProps] = useState({ title: '', content: '' })
   const [isLoading, setIsLoading] = useState(true)

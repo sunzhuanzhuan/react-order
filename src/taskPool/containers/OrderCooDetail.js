@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import TitleBox from '../base/TitleBox'
-import { Steps, Col, Row, Descriptions } from 'antd'
-import { getOrderStep, MEDIUM_REJECT, PARTNER_REJECT } from '../constants/orderConfig'
-
+import { Steps, Col, Row, Descriptions, Divider } from 'antd'
+import { getOrderStep, MEDIUM_REJECT, PARTNER_REJECT, deliverySeatMap, deliverySexMap, mediaTypeMap, putTypeMap } from '../constants/orderConfig'
 import api from '@/api'
+import moment from 'moment'
+const format = 'YYYY-MM-DD HH:mm:ss'
 const { Step } = Steps;
 function CooperationDetail() {
   const [orderDetail, setOrderDetail] = useState({ qualifications: [] })
@@ -16,9 +17,16 @@ function CooperationDetail() {
   }
   const taskConfig = [
     { name: '内容正文', content: orderDetail.content },
-    { name: '图文', content: <div><img src={orderDetail.imageUrl} /></div> },
-    { name: '视频', content: <a href={orderDetail.vedioUrl}>ming</a> },
-    { name: '所属公司资质', content: <div>orderDetail.qualifications.map(one)<a></a></div> },
+    { name: '图文', content: <div><a href={orderDetail.imageUrl}>{orderDetail.imageName}</a></div> },
+    { name: '视频', content: <a href={orderDetail.vedioUrl}>{orderDetail.vedioName}</a> },
+    {
+      name: '所属公司资质',
+      content: <div> {orderDetail.qualifications.map((one, index) => <>
+        <a key={one.name} href={one.fileUrl}>{one.fileName}</a>
+        {orderDetail.qualifications.length > index + 1 ? <Divider type="vertical" /> : null}
+      </>
+      )}</div>
+    },
   ]
 
   const orderFile = [
@@ -28,20 +36,20 @@ function CooperationDetail() {
   const baseInfo = [
     { label: '订单ID', content: orderDetail.adOrderId },
     { label: '任务ID', content: orderDetail.orderId },
-    { label: '投放模式', content: orderDetail.putType },
+    { label: '投放模式', content: putTypeMap[orderDetail.putType] },
     { label: '所属公司', content: orderDetail.companyName },
-    { label: '内容类型', content: orderDetail.extensionType },
+    { label: '内容类型', content: mediaTypeMap[orderDetail.mediaType] },
     { label: '阅读单价', content: orderDetail.unitPrice },
     { label: '行业分类', content: orderDetail.industry },
     { label: '出发城市/车站', content: orderDetail.leavePalce },
     { label: '投放条数', content: orderDetail.actionNum },
-    { label: '投放开始日期', content: orderDetail.orderStartDate },
+    { label: '投放开始日期', content: moment(orderDetail.orderStartDate * 1000).format(format) },
     { label: '到达城市/车站', content: orderDetail.arrivePlace },
     { label: '任务预算', content: orderDetail.totalAmount },
     { label: '投放结束日期', content: orderDetail.orderEndDate },
-    { label: '坐席类型', content: orderDetail.deliverySeat, span: 2 },
+    { label: '坐席类型', content: deliverySeatMap[orderDetail.deliverySeat], span: 2 },
     { label: '投放持续时间', content: orderDetail.durationDay },
-    { label: '人群性别', content: orderDetail.deliverySex, span: 2 },
+    { label: '人群性别', content: deliverySexMap[orderDetail.deliverySex], span: 2 },
     { label: '', content: '' },
     { label: '年龄区间', content: orderDetail.deliveryAges, span: 2 },
   ]

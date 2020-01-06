@@ -1,6 +1,11 @@
 import { createHttpAction } from 'redux-action-extend'
 import Interface from '../constants/Interface';
 import { createAction } from "redux-actions";
+//获取常见分类
+export const {
+  TPGetFiltersMeta,
+  TPGetFiltersMeta_success,
+} = createHttpAction('TPGetFiltersMeta', '/export/account/getFiltersMeta');
 // 账号管理（合作平台）
 export const {
   TPGetAccountList,

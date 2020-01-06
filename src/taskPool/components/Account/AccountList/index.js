@@ -11,8 +11,8 @@ const shelfState = {
 }
 function AccountList(props) {
   const [selectedRow, setSelectedRow] = useState([])
-  const { list = [] } = props.accountList
-  const { setModalProps, batchUpdateAccountStateAsync, updateAccountStateMsgAsync } = props
+  const { setModalProps, batchUpdateAccountStateAsync, accountList, updateAccountStateMsgAsync } = props
+  const { list = [] } = accountList
 
   const columns = [
     {
@@ -169,11 +169,11 @@ function AccountList(props) {
         rowSelection={rowSelection}
         scroll={{ x: 1800 }}
         pagination={{
-          pageSize: 2,
+          pageSize: Number(accountList.pageSize),
           showSizeChanger: true,
           showQuickJumper: true,
-          total: 20,
-          current: 1,
+          total: Number(accountList.total),
+          current: Number(accountList.pageNum),
           onShowSizeChange: (current, size) => {
             props.changePage({ page: { currentPage: current, pageSize: size } })
           },
