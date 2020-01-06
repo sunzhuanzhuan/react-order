@@ -55,4 +55,11 @@ export const {
 // 12306价格计算
 export const {
   TPTripPriceCalculation
-} = createHttpAction('TPTripPriceCalculation', Interface.task.tripPriceCalculation);
+} = createHttpAction('TPTripPriceCalculation', Interface.task.tripPriceCalculation, {
+  method: 'post'
+});
+
+// 微信价格计算
+export const {
+  TPWeixinPriceCalculation
+} = createHttpAction('TPWeixinPriceCalculation', Interface.task.weixinPriceCalculation);

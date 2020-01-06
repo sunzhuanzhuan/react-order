@@ -25,6 +25,11 @@ export const {
 	getChineseCities_success
 } = createHttpAction('getChineseCities', Interface.common.getChineseCities)
 
+// 获取中国地域信息(异步级联)
+export const {
+	getAsyncAreaList,
+} = createHttpAction('getAsyncAreaList', Interface.common.areaList)
+
 export const {
 	getAuthorizations,
 	getAuthorizations_success

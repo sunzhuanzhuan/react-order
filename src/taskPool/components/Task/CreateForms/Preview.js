@@ -17,6 +17,7 @@ import {
 import numeral from '@/util/numeralExpand'
 import { OssUpload } from 'wbyui'
 import { wxPositionToFields } from '@/taskPool/constants/config';
+import moment from 'moment';
 
 const { Text } = Typography;
 
@@ -65,7 +66,7 @@ class PreviewForWeixin extends React.Component {
     body.orderName = base.orderName
     body.companyId = base.company.key
     body.companyName = base.company.label
-    body.orderStartDate	= base.orderDate[0]
+    body.orderStartDate = base.orderDate[0]
     body.orderEndDate = base.orderDate[1]
     body.platformId = base.platformId
     body.industry = [ ...base.industry ].pop()
@@ -94,7 +95,7 @@ class PreviewForWeixin extends React.Component {
       "followerCountLimit": budget._followerCountLimit ? budget.followerCountLimit : 0,
 
       "mediaCountLimit": budget.mediaCountLimit ? 1 : 2,
-      "onlyVerified":  budget.onlyVerified ? 1 : 2,
+      "onlyVerified": budget.onlyVerified ? 1 : 2,
 
       "wxOneNumber": budget.wxOneNumber,
       "wxTwoNumber": budget.wxTwoNumber,
@@ -301,6 +302,159 @@ class PreviewForWeixin extends React.Component {
 }
 
 /**
+ * 12306平台
+ */
+@withRouter
+class PreviewFor12306 extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { submitLoading: false };
+  }
+
+  success = () => {
+    Modal.success({
+      className: 'center-success-modal',
+      title: '提交成功',
+      content: '您可在任务管理页随时查看进度',
+      onOk: () => {
+        this.props.history.push('/order/task/manage')
+      }
+    })
+  }
+
+  handleValues = (data) => {
+    const { base, budget, content } = data
+    let body = {}
+    body.orderName = base.orderName
+    body.companyId = base.company.key
+    body.companyName = base.company.label
+    body.orderStartDate = base.orderDate[0]
+    body.orderEndDate = base.orderDate[1]
+    body.platformId = base.platformId
+    body.industry = [ ...base.industry ].pop()
+    body.businessScopeId = base.businessScopeId
+
+    body.totalAmount = budget.totalAmount
+
+    body.adOrderWeixinContent = {
+      "author": content.author,
+      "content": content.richContent.toRAW(),
+      "contentText": content.richContent.toText(),
+      "coverImageUrl": content.coverImage[0].url,
+      "coverImageName": content.coverImage[0].name,
+      "remark": content.remark || content.richContent.toText().replace(/\s/g, '').slice(0, 54),
+      "articleUrl": content.articleUrl,
+      "title": content.title,
+
+      "retainTime": base.retainTime,
+      "locationLimited": budget.locationLimited,
+      "locationLimitedInfo": budget.locationLimitedInfo && budget.locationLimitedInfo.join(','),
+      "taskPattern": base.taskPattern,
+
+      "mediaAvgReadNumLimit": budget._mediaAvgReadNumLimit ? budget.mediaAvgReadNumLimit : 0,
+      "followerGenderRatioLimit": budget._followerGenderRatioLimit ? budget.followerGenderRatioLimit : 0,
+      "minNumOfReadLimit": budget._minNumOfReadLimit ? budget.minNumOfReadLimit : 0,
+      "followerCountLimit": budget._followerCountLimit ? budget.followerCountLimit : 0,
+
+      "mediaCountLimit": budget.mediaCountLimit ? 1 : 2,
+      "onlyVerified": budget.onlyVerified ? 1 : 2,
+
+      "wxOneNumber": budget.wxOneNumber,
+      "wxTwoNumber": budget.wxTwoNumber,
+      "wxOtherNumber": budget.wxOtherNumber,
+      "showPictureUrl": base.showPictureUrl[0].url
+    }
+
+
+    return body
+  }
+
+  handleSubmit = (e) => {
+    e && e.preventDefault()
+    const { data, actions } = this.props
+    const { base, budget, content } = data
+
+    this.setState({
+      submitLoading: true
+    });
+
+    // 处理提交数据
+    const values = this.handleValues(data)
+
+    actions.TPAddTask(values).then(this.success).finally(() => {
+      this.setState({
+        submitLoading: false
+      });
+    })
+  }
+
+
+  render() {
+
+    const { data } = this.props
+    const { submitLoading } = this.state
+    const { base, budget, content } = data
+    const header = <div className='form-preview-header'>
+      {base.orderName}
+    </div>
+    return (
+      <div className="form-preview-container">
+        <Descriptions title={header} column={1}>
+          <Descriptions.Item label="所属公司">{base.company.label}</Descriptions.Item>
+          <Descriptions.Item label="行业分类">{
+            base.industry.map(id => getIndustryName(this.props.industryList, id).industryName)
+              .join('/')
+          }</Descriptions.Item>
+          <Descriptions.Item label="投放开始日期">
+            {base.orderStartDate.format('YYYY-MM-DD')}
+          </Descriptions.Item>
+          <Descriptions.Item label="投放结束日期">
+            {base.putType === 2 && moment(base.orderStartDate).add(budget.actionDay, 'd').format('YYYY-MM-DD')}
+            {(base.putType === 1 && base.orderEndDate) ?  base.orderEndDate.format('YYYY-MM-DD') : "无"}
+          </Descriptions.Item>
+          <Descriptions.Item label="任务持续时间">
+            {base.putType === 2 && <div>{budget.actionDay}天</div>}
+
+            {
+            getCountDownTimeText(base.orderEndDate,0,5,base.orderStartDate)
+          }
+          </Descriptions.Item>
+          <Descriptions.Item label="任务预算">
+            {numeral(budget.totalAmount).format("0,0.00")} 元</Descriptions.Item>
+          <Descriptions.Item label="投放模式">
+            {base.putType === 1 && "按量投放"}
+            {base.putType === 2 && "按天投放"}
+          </Descriptions.Item>
+          <Descriptions.Item label="冻结服务费">
+            {numeral(budget.actionNum).format("0,0.00")} 元</Descriptions.Item>
+          <Descriptions.Item label="实际扣款">
+            {numeral(budget.amount).format("0,0.00")} 元</Descriptions.Item>
+          <Descriptions.Item label="阅读单价">
+            {budget.result.unitPrice}
+          </Descriptions.Item>
+          <Descriptions.Item label="阅读数">
+            {budget.result.unitPrice}
+          </Descriptions.Item>
+          {
+            base.putType === 1 && <Descriptions.Item label="预计阅读数">
+              <div className='text-red'>{budget.actionNum}条</div>
+            </Descriptions.Item>
+          }
+          <Descriptions.Item label="内容预览">
+            <a onClick={this.preview}>查看</a>
+          </Descriptions.Item>
+        </Descriptions>
+        <Text type="danger">确认无误即可提交。任务将会在设定的开始时间到达时上线。</Text>
+        <footer>
+          <Button onClick={this.props.prev}>上一步</Button>
+          <Button type="primary" loading={submitLoading} onClick={this.handleSubmit}>提交</Button>
+        </footer>
+      </div>
+    )
+  }
+}
+
+/**
  * 微博平台
  */
 @withRouter
@@ -419,5 +573,6 @@ class PreviewForWeibo extends React.Component {
 
 export default {
   weixin: PreviewForWeixin,
+  12306: PreviewFor12306,
   weibo: PreviewForWeibo
 }
