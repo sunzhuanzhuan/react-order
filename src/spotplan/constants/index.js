@@ -753,15 +753,6 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
       return text ? position[text] : '-'
     }
   }, {
-    title: 'Client',
-    dataIndex: 'client',
-    key: 'client',
-    align: 'center',
-    width: 120,
-    render: text => {
-      return text ? clientName[text] : '-'
-    }
-  }, {
     title: '发文时间',
     dataIndex: 'publish_articles_at',
     key: 'publish_articles_at',
@@ -769,6 +760,15 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     width: 120,
     render: text => {
       return text ? text : '-'
+    }
+  }, {
+    title: 'Client',
+    dataIndex: 'client',
+    key: 'client',
+    align: 'center',
+    width: 120,
+    render: text => {
+      return text ? clientName[text] : '-'
     }
   }, {
     title: 'content type',

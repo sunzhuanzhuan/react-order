@@ -170,7 +170,7 @@ class EditOrderModal extends React.Component {
         <FormItem label='发文位置（微信必填）' {...formItemLayout}>
           {getFieldDecorator('publish_articles_address', {
             initialValue: data && data[0].publish_articles_address || '',
-            rules: [{ required: data && data[0].weibo_type == 9 ? true : false, message: '请填写账号ID' }]
+            rules: [{ required: data && data[0].weibo_type == 9 ? true : false, message: '请填写发文位置' }]
           })(
             <Select placeholder="请选择" style={{ width: 120 }} allowClear>
               <Option value={1}>头条</Option>
