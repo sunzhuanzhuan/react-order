@@ -19,7 +19,12 @@ import moment from "moment";
 import numeral from '@/util/numeralExpand'
 import QuestionTip from '@/base/QuestionTip';
 import { CheckGroup } from '@/taskPool/base/CheckGroup';
-import { wxPositionToFields } from '@/taskPool/constants/config';
+import {
+  wxPositionToFields,
+  TRAIN_TYPE_OPTIONS,
+  AGES_OPTIONS,
+  SEAT_OPTIONS
+} from '@/taskPool/constants/config';
 
 const { SHOW_PARENT } = TreeSelect;
 
@@ -30,28 +35,6 @@ const CheckboxGroup = Checkbox.Group;
 const MAX_BUDGET_AMOUNT = 99999999
 const MAX_FOLLOWER_COUNT = 999999999
 
-const TRAIN_TYPE_OPTIONS = [
-  { label: "G/C高铁", value: 50 },
-  { label: "D动车", value: 51 },
-  { label: "普通", value: 59 },
-]
-const SEAT_OPTIONS = [
-  { label: "商务座", value: 21 },
-  { label: "一等座", value: 22 },
-  { label: "二等座", value: 23 },
-  { label: "高级软卧", value: 24 },
-  { label: "软卧", value: 25 },
-  { label: "硬卧", value: 26 },
-  { label: "硬座", value: 27 },
-  { label: "动卧", value: 28 },
-]
-const AGES_OPTIONS = [
-  { label: "0-18岁", value: 40 },
-  { label: "18-25岁", value: 41 },
-  { label: "25-35岁", value: 42 },
-  { label: "35-45岁", value: 43 },
-  { label: "大于45岁", value: 44 },
-]
 
 const newFormLayout = {
   labelCol: { span: 4 },
@@ -614,6 +597,7 @@ class BudgetFor12306 extends React.Component {
   cached = () => {
     let newVal = Object.assign({}, this.props.form.getFieldsValue())
     newVal.result = this.state.result
+    newVal.treeData = this.state.treeData
     this.props.prev("budget", newVal)
   }
 
@@ -624,6 +608,7 @@ class BudgetFor12306 extends React.Component {
       if (!err) {
         let newVal = Object.assign({}, values)
         newVal.result = this.state.result
+        newVal.treeData = this.state.treeData
         this.props.next("budget", newVal)
       }
     });
