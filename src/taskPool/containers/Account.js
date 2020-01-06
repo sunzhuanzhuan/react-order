@@ -10,11 +10,12 @@ const baseSearch = { page: { currentPage: 1, pageSize: 10 } }
 function Account(props) {
   const [modalProps, setModalProps] = useState({ title: '', content: '' })
   const [searchParam, setSearchParam] = useState({ page: { currentPage: 1, pageSize: 10 } })
+  const [claimTotal, setClaimTotal] = useState(0)
   const [loading, setLoading] = useState(true)
   useEffect(() => {
     getAccountListAsync()
-    actions.TPGetAccountTabNumber()
     actions.TPGetFiltersMeta()
+    getClaimAccountList()
   }, [])
   const { acconutReducers, actions } = props
   const { accountList, orderIndustryCategory = [] } = acconutReducers
@@ -23,6 +24,11 @@ function Account(props) {
     await actions.TPGetAccountList(params)
     setSearchParam(params)
     setLoading(false)
+  }
+  //获取领取列表数
+  async function getClaimAccountList() {
+    const { data } = await actions.TPGetClaimAccountList({ page: { currentPage: 1, pageSize: 1 } })
+    setClaimTotal(data.total)
   }
 
   //操作筛选项
@@ -70,7 +76,7 @@ function Account(props) {
 
       <Spin spinning={loading}>
         <a href="/order/task/account-receive" style={{ padding: '10px 0px', display: 'block' }}>
-          <Badge count={5} >
+          <Badge count={claimTotal} >
             <Button type='primary' >账号领取</Button>
           </Badge>
         </a>

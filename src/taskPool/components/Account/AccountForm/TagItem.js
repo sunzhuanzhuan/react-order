@@ -24,7 +24,7 @@ function TagItem(props) {
     <div className='tag-item'>
       {props.list.map(item => {
         const isActive = value.includes(item.code)
-        return <div key={item.value} className={`item ${isActive ? 'active' : ''}`} onClick={() => changeValue(item.code)}>{item.name}
+        return <div key={item.code} className={`item ${isActive ? 'active' : ''}`} onClick={() => changeValue(item.code)}>{item.name}
           {isActive ? <Icon type="close-circle" className='icon' /> : null}
         </div>
       })}
