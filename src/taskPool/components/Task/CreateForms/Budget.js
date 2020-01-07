@@ -533,7 +533,7 @@ class BudgetForWeixin extends React.Component {
         </FormItem>
         <footer>
           <FormItem label=' '>
-            {this.props.isEdit ? null : <Button onClick={this.cached}>上一步</Button>}
+            {this.props.isUpdate ? null : <Button onClick={this.cached}>上一步</Button>}
             <Button type="primary" htmlType="submit">下一步</Button>
           </FormItem>
         </footer>
@@ -840,7 +840,7 @@ class BudgetFor12306 extends React.Component {
           message={`投放单价为${result.unitPrice}元/条，原价${result.totalAmount}元，折扣返现${result.discount}元，实付${result.actualPayment}元`} />
         <footer>
           <FormItem label=' '>
-            {this.props.isEdit ? null : <Button onClick={this.cached}>上一步</Button>}
+            {this.props.isUpdate ? null : <Button onClick={this.cached}>上一步</Button>}
             <Button type="primary" htmlType="submit">下一步</Button>
           </FormItem>
         </footer>

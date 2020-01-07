@@ -10,6 +10,7 @@ import {
   TPChangeTaskDetail,
   TPTaskDetailClear,
   TPMcnOrderList_success,
+  TPMcnOrderListByTemp_success,
   TPGetMcnReviewOrderList_success,
   TPQueryMcnFinancePaymentPage_success,
   TPGetAllMcnOrder_success,
@@ -101,6 +102,13 @@ export const mcnOrderList = handleActions({
     return initList()
   }
 }, initList())
+// 任务详情, 博主申请列表
+export const mcnOrderListByTemp = handleActions({
+  [TPMcnOrderListByTemp_success]: handleResponseList('id'),
+  [TPTaskDetailClear]: (state, action) => {
+    return initList()
+  }
+}, initList())
 
 // 异常订单审核列表
 export const mcnReviewOrderList = handleActions({
@@ -123,6 +131,7 @@ export default combineReducers({
   taskManageList,
   taskDetail,
   mcnOrderList,
+  mcnOrderListByTemp,
   mcnReviewOrderList,
   financeTradeRecord,
   taskPositionList,

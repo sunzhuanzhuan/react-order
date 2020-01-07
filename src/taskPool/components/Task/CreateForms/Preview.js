@@ -119,7 +119,14 @@ class PreviewForWeixin extends React.Component {
 
     // 处理提交数据
     const values = this.handleValues(data)
-
+    if (this.props.isUpdate) {
+      actions.TPUpdateTask({...values, id: this.props.taskId}).then(this.success).finally(() => {
+        this.setState({
+          submitLoading: false
+        });
+      })
+      return
+    }
     actions.TPAddTask(values).then(this.success).finally(() => {
       this.setState({
         submitLoading: false
@@ -248,10 +255,9 @@ class PreviewForWeixin extends React.Component {
             label="任务开始时间">{startDate.format('YYYY-MM-DD HH:mm:ss')}</Descriptions.Item>
           <Descriptions.Item
             label="任务结束时间">{endDate.format('YYYY-MM-DD HH:mm:ss')}</Descriptions.Item>
-          <Descriptions.Item label="任务持续时间">{getCountDownTimeText(endDate,
-            0,
-            5,
-            startDate)}</Descriptions.Item>
+          <Descriptions.Item label="任务持续时间">
+            {getCountDownTimeText(endDate, 0, 5, startDate)}
+          </Descriptions.Item>
           <Descriptions.Item label="发布后保留时长">{base.retainTime}小时</Descriptions.Item>
           <Descriptions.Item label="任务预算">{numeral(budget.totalAmount)
             .format("0,0.00")} 元</Descriptions.Item>
@@ -315,7 +321,7 @@ class PreviewFor12306 extends React.Component {
   preview = () => {
     const { data } = this.props
     const { base, budget, content } = data
-    const { video = [{}], image = [{}] } = content
+    const { video = [ {} ], image = [ {} ] } = content
     openNewWindowPreviewFor12306({
       content: content.content,
       video: video[0].url,
@@ -385,6 +391,14 @@ class PreviewFor12306 extends React.Component {
     // 处理提交数据
     const values = this.handleValues(data)
 
+    if (this.props.isUpdate) {
+      actions.TPUpdateTask({...values, id: this.props.taskId}).then(this.success).finally(() => {
+        this.setState({
+          submitLoading: false
+        });
+      })
+      return
+    }
     actions.TPAddTask(values).then(this.success).finally(() => {
       this.setState({
         submitLoading: false
