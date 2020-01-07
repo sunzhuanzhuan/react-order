@@ -9,6 +9,7 @@ import {
 } from "antd";
 import { platformTypes } from "../../constants/config";
 import moment from 'moment';
+import { useHistory } from 'react-router-dom'
 
 const { TabPane } = Tabs;
 const { Option } = Select;
@@ -22,12 +23,12 @@ const FilterForm = (props) => {
     <Row className="flex-form-layout">
       <Col span={9}>
         <Form.Item label="任务创建时间">
-          {getFieldDecorator('platformId', {})(
+          {getFieldDecorator('createdAt', {})(
             <RangePicker
               format="YYYY-MM-DD HH:mm"
               showTime={{
                 format: "mm:ss",
-                defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment('23:59:59', 'HH:mm:ss')]
+                defaultValue: [ moment('00:00:00', 'HH:mm:ss'), moment('23:59:59', 'HH:mm:ss') ]
               }}
               style={{ width: '100%' }}
             />
@@ -38,8 +39,8 @@ const FilterForm = (props) => {
         <Form.Item label="任务类型">
           {getFieldDecorator('isFamous2', {})(
             <Select placeholder="请选择" allowClear>
-              <Option value="1">是</Option>
-              <Option value="2">否</Option>
+              <Option value="1">抢单</Option>
+              <Option value="2">竞标</Option>
             </Select>
           )}
         </Form.Item>
@@ -60,12 +61,12 @@ const FilterForm = (props) => {
       </Col>
       <Col span={9}>
         <Form.Item label="任务开始时间">
-          {getFieldDecorator('platformId', {})(
+          {getFieldDecorator('startAt', {})(
             <RangePicker
               format="YYYY-MM-DD HH:mm"
               showTime={{
                 format: "mm:ss",
-                defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment('23:59:59', 'HH:mm:ss')]
+                defaultValue: [ moment('00:00:00', 'HH:mm:ss'), moment('23:59:59', 'HH:mm:ss') ]
               }}
               style={{ width: '100%' }}
             />
@@ -74,17 +75,20 @@ const FilterForm = (props) => {
       </Col>
       <Col span={5}>
         <Form.Item label="任务状态">
-          {getFieldDecorator('isFamou22s', {})(
+          {getFieldDecorator('type', {})(
             <Select placeholder="请选择" allowClear>
-              <Option value="1">是</Option>
-              <Option value="2">否</Option>
+              <Option value="1">待发布</Option>
+              <Option value="2">进行中</Option>
+              <Option value="3">已下线</Option>
+              <Option value="4">已结束</Option>
+              <Option value="5">已过期</Option>
             </Select>
           )}
         </Form.Item>
       </Col>
       <Col span={5}>
         <Form.Item label="任务ID">
-          {getFieldDecorator('isFa33mous', {})(
+          {getFieldDecorator('id', {})(
             <Input placeholder="请输入" allowClear />
           )}
         </Form.Item>
@@ -100,11 +104,12 @@ const FilterForm = (props) => {
 }
 
 const Filters = (props) => {
-  const [active, setActive] = useState('1')
+  const [ active, setActive ] = useState(platformTypes[0].id)
+  const history = useHistory()
 
   useEffect(() => {
     submit()
-  }, [active])
+  }, [ active ])
 
   const tabChange = (key) => {
     props.form.resetFields()
@@ -114,8 +119,12 @@ const Filters = (props) => {
   const submit = e => {
     e && e.preventDefault();
     props.form.validateFields((err, values) => {
+      console.log(values, '_____');
       if (!err) {
-        let filter = Object.assign({ pageNum: 1, active }, values)
+        let filter = {
+          page: { currentPage: 1 },
+          form: { ...values, active }
+        }
         props.search(filter)
       }
     });
@@ -124,7 +133,9 @@ const Filters = (props) => {
   return (
     <Form className="page-filter" onSubmit={submit} layout="inline">
       <Tabs activeKey={active} onChange={tabChange} animated={false} tabBarExtraContent={
-        <Button type="primary" icon="plus" onClick={() => {}}>
+        <Button type="primary" icon="plus" onClick={() => {
+          history.push(`/order/task/tasks-create?platform=${active}`)
+        }}>
           创建新任务
         </Button>
       }>

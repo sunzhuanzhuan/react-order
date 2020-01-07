@@ -11,8 +11,8 @@ const shelfState = {
 }
 function AccountList(props) {
   const [selectedRow, setSelectedRow] = useState([])
-  const { list = [] } = props.accountList
-  const { setModalProps, batchUpdateAccountStateAsync, updateAccountStateMsgAsync } = props
+  const { setModalProps, batchUpdateAccountStateAsync, accountList, updateAccountStateMsgAsync } = props
+  const { list = [] } = accountList
 
   const columns = [
     {
@@ -134,9 +134,9 @@ function AccountList(props) {
   function batchNOPast() {
     setModalProps({
       title: '填写批量不通过原因（50字以内）',
-      content: <ReasonForm onOk={(value) => batchUpdateAccountStateAsync(
+      content: (props) => <ReasonForm onOk={(value) => batchUpdateAccountStateAsync(
         { remark: value, accountId: selectedRow, operationFlag: 2 }
-      )} setSelectedRow={setSelectedRow} />,
+      )} setSelectedRow={setSelectedRow} {...props} />,
       visible: true,
     })
   }
@@ -144,10 +144,10 @@ function AccountList(props) {
   function offTake(accountId) {
     setModalProps({
       title: '填写下架原因（50字以内）',
-      content: <ReasonForm okText='确认下架'
+      content: (props) => <ReasonForm okText='确认下架'
         onOk={(value) => updateAccountStateMsgAsync(
           { remark: value, accountId: accountId, operationFlag: 2 }
-        )} />,
+        )} {...props} />,
       visible: true,
     })
   }
@@ -169,11 +169,11 @@ function AccountList(props) {
         rowSelection={rowSelection}
         scroll={{ x: 1800 }}
         pagination={{
-          pageSize: 2,
+          pageSize: accountList.pageSize,
           showSizeChanger: true,
           showQuickJumper: true,
-          total: 20,
-          current: 1,
+          total: accountList.total,
+          current: accountList.pageNum,
           onShowSizeChange: (current, size) => {
             props.changePage({ page: { currentPage: current, pageSize: size } })
           },
@@ -189,7 +189,7 @@ function AccountList(props) {
 }
 
 export default AccountList
-export const KpiTable = ({ data }) => {
+export const KpiTable = ({ data = {} }) => {
   const columnsKpi = [{
     title: '多图文第一条',
     dataIndex: 'mediaIndex1stReadKpiNum',
@@ -210,7 +210,7 @@ export const KpiTable = ({ data }) => {
     align: 'center',
     render: (text, record) => <span>{text}/{record.mediaOtherReadKpiMaxNum}</span>
   },]
-  return <Table pagination={false} columns={columnsKpi} dataSource={[data]} className='kpi-table' bordered />
+  return <Table pagination={false} rowKey='mediaIndex1stReadKpiNum' columns={columnsKpi} dataSource={[data]} className='kpi-table' bordered />
 }
 export const StateInfo = ({ value, okText = '正常', errorText = '异常', errorReson }) => {
   return value ? <div>
@@ -222,8 +222,8 @@ export const StateInfo = ({ value, okText = '正常', errorText = '异常', erro
 }
 
 function Reason(props) {
-  const { isReceive, form, okText = '确认不通过' } = props
-  const { getFieldDecorator, resetFields, validateFields } = form
+  const { setModalProps, form, okText = '确认不通过' } = props
+  const { getFieldDecorator, validateFields } = form
   function onOk() {
     validateFields((err, values) => {
       if (!err) {
@@ -242,7 +242,7 @@ function Reason(props) {
     </Form.Item>
     <div className='button-footer'>
       <Button type='primary' onClick={onOk}>{okText}</Button>
-      <Button onClick={props.onCancel}>取消</Button>
+      <Button onClick={() => setModalProps({ visible: false })}>取消</Button>
     </div>
 
   </Form>

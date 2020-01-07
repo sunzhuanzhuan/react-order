@@ -13,6 +13,7 @@ export const otherOrderStateMap = {
   [PENDING]: '待执行',
   [OVER]: '已完成'
 }
+export const otherOrderStateList = Object.keys(otherOrderStateMap).map(one => ({ key: one, name: otherOrderStateMap[one] }))
 
 const orderStep = {
   0: ['待媒介处理', '待合作方确定', '待执行', '已完成'],
@@ -21,4 +22,32 @@ const orderStep = {
 }
 export const getOrderStep = (type) => {
   return orderStep[type] ? orderStep[type] : orderStep[0]
+}
+//坐席类型
+export const deliverySeatMap = {
+  '1': '不限',
+  '2': '商务座',
+  '3': '一等座',
+  '4': '二等座',
+  '5': '高级软卧',
+  '6': '软卧',
+  '7': '硬卧',
+  '8': '硬座',
+  '9': '动卧'
+}
+//人群性别  
+export const deliverySexMap = {
+  '1': '不限',
+  '2': '男',
+  '3': '女'
+}
+//内容类型 
+export const mediaTypeMap = {
+  '3': '图文+链接+视频',
+  '4': '图文+链接'
+}
+//投放模式 
+export const putTypeMap = {
+  '1': '按天投放',
+  '2': '按量投放'
 }

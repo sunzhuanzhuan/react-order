@@ -2,10 +2,11 @@ import React, { Component } from 'react'
 import './index.less'
 import { Route, Redirect, Switch } from 'react-router-dom';
 import CreateTask from './containers/CreateTask';
+import UpdateTask from './containers/UpdateTask';
 import Tasks from './containers/Tasks';
 import Orders from './containers/Orders';
 import OrderCooDetail from './containers/OrderCooDetail';
-
+import OrderWechatDetail from './containers/OrderWechatDetail';
 import Clues from './containers/Clues';
 import Attributes from './containers/Attributes';
 import CreateAttribute from './containers/CreateAttribute';
@@ -29,8 +30,11 @@ class Business extends Component {
         <Route path="/order/task/remittance_record" component={RemittanceRecordList} />*/}
           <Route path="/order/task/tasks-manage" component={Tasks} />
           <Route path="/order/task/tasks-create" component={CreateTask} />
+          <Route path="/order/task/tasks-update/:id" component={UpdateTask} />
           <Route path="/order/task/orders-manage" component={Orders} />
           <Route path="/order/task/orders-coodetail" component={OrderCooDetail} />
+          <Route path="/order/task/orders-wechatdetail" component={OrderWechatDetail} />
+
           <Route path="/order/task/clues-manage" component={Clues} />
           <Route path="/order/task/clues-details" component={CluesDetails} />
           <Route path="/order/task/attributes-manage" component={Attributes} />

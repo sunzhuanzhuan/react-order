@@ -7,5 +7,29 @@ export const platformOrderList = handleActions({
     return { ...action.payload.data }
   },
 }, {})
+// 订单管理（合作平台）
+export const allMcnOrderList = handleActions({
+  [order.TPGetAllMcnOrderList_success]: (state, action) => {
+    return { ...action.payload.data }
+  },
+}, {})
 
+//获取订单状态列表
+export const mcnOrderStateList = handleActions({
+  [order.TPGetMcnOrderStateList_success]: (state, action) => {
+    return [...action.payload.data]
+  },
+}, [])
 
+//订单详情
+export const orderMcnDetailInfo = handleActions({
+  [order.TPOrderInfo_success]: (state, action) => {
+    return { ...action.payload.data }
+  },
+}, {})
+//获取数据曲线
+export const dataCurvelist = handleActions({
+  [order.TPQueryDataCurve_success]: (state, action) => {
+    return [...action.payload.data]
+  },
+}, [])

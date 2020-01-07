@@ -6,24 +6,26 @@ import FormItem from 'antd/lib/form/FormItem'
 import TagItem from './TagItem'
 import moment from 'moment'
 import SearchForm from '../../../base/SearchForm/index'
+import SelectSearch from '../SelectSearch'
+import './index.less'
 const format = 'YYYY-MM-DD'
 const formConfig = [
   { label: 'accountID', type: 'input', key: 'accountId' },
   { label: '平台ID', type: 'input', key: 'platformId' },
-  { label: '账号名称', type: 'input', key: 'snsName' },
-  { label: '主账号名称', type: 'input', key: 'accountName' },
-  { label: '审核状态', type: 'select', key: 'auditState', isDefault: true },
-  { label: '评估状态', type: 'select', key: 'estimateState', isDefault: true },
-  { label: '评估等级', type: 'select', key: 'estimateGrade', },
-  { label: '上下架状态', type: 'select', key: 'shelfState', },
-  { label: '抢单接单状态', type: 'select', key: 'seckillState', },
-  { label: '竞价接单状态', type: 'select', key: 'biddingState', },
-  { label: '审核时间', type: 'rangePicker', key: 'auditTime', },
-  { label: '评估时间', type: 'rangePicker', key: 'estimatetime', },
-  { label: '粉丝数', text: ['大于', '个'], key: 'followerCount' },
-  { label: '28天内第一条平均阅读', text: ['高于'], key: 'mediaIndex1AvgReadNum28d' },
-  { label: '粉丝性别比例', type: 'select', key: 'genderProportion', },
-  { label: '认证号', type: 'select', key: 'isVerified', },
+  { label: '账号名称', type: 'input', key: 'snsName' }]
+
+const formConfig2 = [{ label: '审核状态', type: 'select', key: 'auditState', isDefault: true },
+{ label: '评估状态', type: 'select', key: 'estimateState', isDefault: true },
+{ label: '评估等级', type: 'select', key: 'estimateGrade', },
+{ label: '上下架状态', type: 'select', key: 'shelfState', },
+{ label: '抢单接单状态', type: 'select', key: 'seckillState', },
+{ label: '竞价接单状态', type: 'select', key: 'biddingState', },
+{ label: '审核时间', type: 'rangePicker', key: 'auditTime', },
+{ label: '评估时间', type: 'rangePicker', key: 'estimatetime', },
+{ label: '粉丝数', text: ['大于', '个'], key: 'followerCount' },
+{ label: '28天内第一条平均阅读', text: ['高于'], key: 'mediaIndex1AvgReadNum28d' },
+{ label: '粉丝性别比例', type: 'select', key: 'genderProportion', },
+{ label: '认证号', type: 'select', key: 'isVerified', },
 ]
 function AccountForm(props) {
   const { form, searchAction, } = props
@@ -31,7 +33,7 @@ function AccountForm(props) {
   function onSearch(e) {
     e.preventDefault();
     validateFields((err, values) => {
-      const { estimatetime, auditTime } = values.form
+      const { estimatetime, auditTime, identity } = values.form
       if (auditTime) {
         values.form.auditStartTime = moment(auditTime[0]).format(format)
         values.form.auditEndTime = moment(auditTime[1]).format(format)
@@ -39,6 +41,9 @@ function AccountForm(props) {
       if (estimatetime) {
         values.form.estimateStarttime = moment(estimatetime[0]).format(format)
         values.form.estimateEndtime = moment(estimatetime[1]).format(format)
+      }
+      if (identity) {
+        values.form.identityId = values.form.identity.key
       }
       searchAction && searchAction(values)
     })
@@ -51,16 +56,22 @@ function AccountForm(props) {
   return (
     <Form layout='inline' className='use-form-search'>
       <SearchForm form={form} formData={accountConfig} formConfig={formConfig} />
+      <FormItem label='主账号名称'>
+        {getFieldDecorator(`form.identity`, {
+          //rules: [{ required: true, message: 'Please input your username!' }],
+        })(
+          <SelectSearch searchKey='identityName' />
+        )}
+      </FormItem>
+      <SearchForm form={form} formData={accountConfig} formConfig={formConfig2} />
       <KpiForm form={form} />
-      <div>
-        <FormItem label='常见分类'>
-          {getFieldDecorator(`form.classificationIds`, {
-            //rules: [{ required: true, message: 'Please input your username!' }],
-          })(
-            <TagItem />
-          )}
-        </FormItem>
-      </div>
+      <FormItem label='常见分类' className='classificationIds-flex' {...formItemLayout}>
+        {getFieldDecorator(`form.classificationIds`, {
+          //rules: [{ required: true, message: 'Please input your username!' }],
+        })(
+          <TagItem list={props.orderIndustryCategory} />
+        )}
+      </FormItem>
       <div className='button-footer'>
         <Button type='primary' onClick={onSearch}>筛选</Button>
         <Button style={{ marginLeft: 10 }} onClick={onReset}>重置</Button>
@@ -70,3 +81,7 @@ function AccountForm(props) {
 }
 
 export default Form.create()(AccountForm)
+export const formItemLayout = {
+  labelCol: { span: 2 },
+  wrapperCol: { span: 22 },
+}

@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import { Form, Input, Button } from 'antd'
 import { OssUpload } from 'wbyui'
-import { action, formItemLayout } from "./WachatList/ModalContent";
+import { action } from "./WechatList/ModalContent";
 const { TextArea } = Input;
-
+export const formItemLayout = {
+  labelCol: { span: 6 },
+  wrapperCol: { span: 14 },
+}
 function CooperationModel(props) {
   const [token, setToken] = useState('')
   useEffect(() => {
@@ -15,11 +18,14 @@ function CooperationModel(props) {
   function okFn() {
     validateFields((err, values) => {
       if (!err) {
+        const file = values.fileUrl[0]
+        const nameKey = props.isPrice == 1 ? 'execOrderName' : 'finalReportName'
         props.okFn && props.okFn({
           operationFlag: props.isPrice ? 1 : 2,
-          fileUrl: values.fileUrl[0].url,
+          fileUrl: file.url,
           platformSettlementAmount: values.platformSettlementAmount,
-          adOrderId: props.adOrderId
+          adOrderId: props.adOrderId,
+          [nameKey]: file.name
         })
         props.cancelFn & props.cancelFn()
       }

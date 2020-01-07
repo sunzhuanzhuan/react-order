@@ -120,10 +120,33 @@ export const statusKeyToProps = {
   }
 }
 
+export const TRAIN_TYPE_OPTIONS = [
+  { label: "G/C高铁", value: 50 },
+  { label: "D动车", value: 51 },
+  { label: "普通", value: 59 },
+]
+export const SEAT_OPTIONS = [
+  { label: "商务座", value: 21 },
+  { label: "一等座", value: 22 },
+  { label: "二等座", value: 23 },
+  { label: "高级软卧", value: 24 },
+  { label: "软卧", value: 25 },
+  { label: "硬卧", value: 26 },
+  { label: "硬座", value: 27 },
+  { label: "动卧", value: 28 },
+]
+export const AGES_OPTIONS = [
+  { label: "0-18岁", value: 40 },
+  { label: "18-25岁", value: 41 },
+  { label: "25-35岁", value: 42 },
+  { label: "35-45岁", value: 43 },
+  { label: "大于45岁", value: 44 },
+]
+
 // 平台
 export const platformTypes = [
-  { id: "1", title: '微信公众号', suffix: (data) => `(${data.siNaCount || 0})` }, // 社媒平台
-  { id: "2", title: '合作平台', suffix: (data) => `(${data.weChatCount || 0})` },
+  { id: "9", title: '微信公众号', suffix: (data) => `(${data.siNaCount || 0})` }, // 社媒平台
+  { id: "1000", title: '合作平台', suffix: (data) => `(${data.weChatCount || 0})` },
 ]
 
 //线索平台
@@ -131,6 +154,12 @@ export const cluePlatformTypes = [
   { id: "1", title: '微信公众号', suffix: (data) => `(${data.siNaCount || 0})` }, // 社媒平台
   { id: "2", title: '12306', suffix: (data) => `(${data.weChatCount || 0})` },
 ]
+
+export const wxPositionToFields = {
+  'w1': 'wxOneNumber',
+  'w2': 'wxTwoNumber',
+  'w3': 'wxOtherNumber',
+}
 
 //线索管理，列表的微信公众号和12306的column
 export const getColumns = function (params, clickModal) {

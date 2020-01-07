@@ -8,12 +8,13 @@ export * from './attribute'
 export * from './clue'
 export * from './platform'
 export * from './setting'
-// 新增任务
-export const {
-  TPAddTask
-} = createHttpAction('TPAddTask', Interface.addTask, {
-  method: 'post'
-});
+// // 新增任务
+// export const {
+//   TPAddTask
+// } = createHttpAction('TPAddTask', Interface.addTask, {
+//   method: 'post'
+// });
+
 
 // 获取任务大厅行业列表
 export const {
@@ -44,19 +45,6 @@ export const {
   method: 'post'
 });
 
-// 任务管理列表
-export const {
-  TPTaskManageList,
-  TPTaskManageList_success
-} = createHttpAction('TPTaskManageList', Interface.taskManageList, {
-  method: 'post'
-});
-
-// 任务详情
-export const {
-  TPTaskDetail,
-  TPTaskDetail_success
-} = createHttpAction('TPTaskDetail', Interface.taskDetail);
 
 // 修改任务详情
 export const TPChangeTaskDetail = createAction('TPChangeTaskDetail', (data) => {
@@ -141,68 +129,5 @@ export const {
 });
 
 
-// 获取任务位置列表
-export const {
-  TPGetTaskPosition,
-  TPGetTaskPosition_success
-} = createHttpAction('TPGetTaskPosition', Interface.TPGetTaskPosition, {
-  method: 'get'
-});
 
-// 质检前回执链接调整
-export const {
-  TPUpdateContentUrl
-} = createHttpAction('TPUpdateContentUrl', Interface.TPUpdateContentUrl, {
-  method: 'post'
-});
-
-
-// 回执链接调整
-export const {
-  TPFristFailureUpdateContentUrl
-} = createHttpAction('TPFristFailureUpdateContentUrl', Interface.TPFristFailureUpdateContentUrl, {
-  method: 'post'
-});
-
-// 一次质检不通过
-export const {
-  TPApprovedFristFailure
-} = createHttpAction('TPApprovedFristFailure', Interface.TPApprovedFristFailure, {
-  method: 'post'
-});
-
-// 一次质检通过
-export const {
-  TPApprovedFirstSuccess
-} = createHttpAction('TPApprovedFirstSuccess', Interface.TPApprovedFirstSuccess, {
-  method: 'post'
-});
-
-// 二次质检不通过
-export const {
-  TPApprovedSecondFailure
-} = createHttpAction('TPApprovedSecondFailure', Interface.TPApprovedSecondFailure, {
-  method: 'post'
-});
-
-// 二次质检通过
-export const {
-  TPApprovedSecondSuccess
-} = createHttpAction('TPApprovedSecondSuccess', Interface.TPApprovedSecondSuccess, {
-  method: 'post'
-});
-
-// 执行结果确认
-export const {
-  TPMcnOrderConfirmFinish
-} = createHttpAction('TPMcnOrderConfirmFinish', Interface.TPMcnOrderConfirmFinish, {
-  method: 'post'
-});
-
-// 执行结果取消
-export const {
-  TPMcnOrderConfirmCancel
-} = createHttpAction('TPMcnOrderConfirmCancel', Interface.TPMcnOrderConfirmCancel, {
-  method: 'post'
-});
 

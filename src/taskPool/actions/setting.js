@@ -29,3 +29,10 @@ export const {
 } = createHttpAction('TPAddRetainTime', Interface.setting.TPAddRetainTime, {
   method: 'post'
 });
+//更新质检配置
+export const {
+  TPChangeQualityConfig,
+  TPChangeQualityConfig_success
+} = createHttpAction('TPChangeQualityConfig', Interface.setting.TPChangeQualityConfig, {
+  method: 'post'
+});

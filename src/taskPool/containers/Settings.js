@@ -75,6 +75,7 @@ class Settings extends React.Component {
           TPGetReadUnitPriceConfig={this.props.actions.TPGetReadUnitPriceConfig}
         /> : null}
         {current == 'discover' ? <Discover
+          TPChangeQualityConfig={this.props.actions.TPChangeQualityConfig}
           qualityConfig={qualityConfig}
           TPAddRetainTime={this.props.actions.TPAddRetainTime}
           addRetainTime={addRetainTime} /> : null}

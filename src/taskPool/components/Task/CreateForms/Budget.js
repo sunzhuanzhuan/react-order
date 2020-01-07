@@ -17,10 +17,14 @@ import {
 import debounce from "lodash/debounce";
 import moment from "moment";
 import numeral from '@/util/numeralExpand'
-import { node } from 'prop-types';
-import { extend } from 'immutability-helper';
 import QuestionTip from '@/base/QuestionTip';
 import { CheckGroup } from '@/taskPool/base/CheckGroup';
+import {
+  wxPositionToFields,
+  TRAIN_TYPE_OPTIONS,
+  AGES_OPTIONS,
+  SEAT_OPTIONS
+} from '@/taskPool/constants/config';
 
 const { SHOW_PARENT } = TreeSelect;
 
@@ -31,28 +35,6 @@ const CheckboxGroup = Checkbox.Group;
 const MAX_BUDGET_AMOUNT = 99999999
 const MAX_FOLLOWER_COUNT = 999999999
 
-const CC_OPTIONS = [
-  { label: "G/C高铁", value: 1 },
-  { label: "D动车", value: 2 },
-  { label: "普通", value: 3 },
-]
-const ZX_OPTIONS = [
-  { label: "商务座", value: 1 },
-  { label: "一等座", value: 2 },
-  { label: "二等座", value: 3 },
-  { label: "高级软卧", value: 4 },
-  { label: "软卧", value: 5 },
-  { label: "硬卧", value: 6 },
-  { label: "硬座", value: 7 },
-  { label: "动卧", value: 8 },
-]
-const NL_OPTIONS = [
-  { label: "0-18岁", value: 1 },
-  { label: "18-25岁", value: 2 },
-  { label: "25-35岁", value: 3 },
-  { label: "35-45岁", value: 4 },
-  { label: "大于45岁", value: 5 },
-]
 
 const newFormLayout = {
   labelCol: { span: 4 },
@@ -60,6 +42,7 @@ const newFormLayout = {
   labelAlign: "left",
   colon: false
 }
+
 
 // 设置单价组件
 class UnitPrice extends React.Component {
@@ -71,13 +54,14 @@ class UnitPrice extends React.Component {
   calculation = (amount, numObj) => {
     setTimeout(() => {
       amount = amount || this.props.form.getFieldValue('totalAmount')
-      numObj = numObj || this.props.form.getFieldValue('locationLimitedInfoUnitPrice')
+      numObj = numObj || this.props.form.getFieldsValue(Object.values(wxPositionToFields))
       if (isNaN(amount) || amount <= 0 || !numObj) {
         return this.setState({
           readNums: [ 0 ]
         });
       }
       let result = Object.values(numObj)
+        .filter(n => typeof n === 'number')
         .sort((a, b) => b - a)
       if (result.length > 2) {
         result = [ result[0], result[result.length - 1] ]
@@ -101,80 +85,36 @@ class UnitPrice extends React.Component {
         return this.props.taskPositionList.find(item => key === item.locationKey)
       }) : this.props.taskPositionList
 
-    return (
+    return checked.length > 0 && (
       <div>
         <FormItem label="设定阅读单价">
-          {getFieldDecorator('unitPrice', {
-            initialValue: budget.unitPrice || 2,
-            rules: [ {
-              required: true,
-              message: '请设定阅读单价'
-            } ]
-          })(
-            <Radio.Group onChange={() => this.calculation()}>
-              <Radio key={1} value={1}>按照发文位置设定</Radio>
-              <Radio key={2} value={2}>统一单价</Radio>
-            </Radio.Group>
-          )}
+          {
+            checked.map((item) =>
+              <FormItem
+                key={item.locationKey}
+                {...newFormLayout}
+                labelCol={{ span: 4, }}
+                wrapperCol={{ span: 20 }}
+                label={item.locationValue}
+              >
+                {getFieldDecorator(wxPositionToFields[item.locationKey], {
+                  initialValue: budget[wxPositionToFields[item.locationKey]],
+                  rules: [ {
+                    required: true,
+                    message: '必填'
+                  } ]
+                })(
+                  <InputNumber
+                    precision={2}
+                    min={0.1}
+                    onChange={val => {
+                      this.calculation()
+                    }}
+                  />
+                )} 元/阅读
+              </FormItem>)
+          }
         </FormItem>
-        {
-          getFieldValue('unitPrice') === 1 &&
-          checked.map((item) =>
-            <FormItem
-              key={item.locationKey}
-              {...newFormLayout}
-              labelCol={{ span: 3, offset: 4 }}
-              wrapperCol={{ span: 16 }}
-              label={item.locationValue}
-            >
-              {getFieldDecorator(`locationLimitedInfoUnitPrice[${item.locationKey}]`, {
-                initialValue: (budget.locationLimitedInfoUnitPrice || {})[item.locationKey] || 0.1,
-                rules: [ {
-                  required: true,
-                  message: '必填'
-                } ]
-              })(
-                <InputNumber
-                  precision={2}
-                  min={0.1}
-                  max={200}
-                  onChange={val => {
-                    this.calculation(getFieldValue('totalAmount'), Object.assign(
-                      getFieldValue('locationLimitedInfoUnitPrice'),
-                      { [item.locationKey]: val }
-                    ))
-                  }}
-                />
-              )} 元/阅读
-            </FormItem>)
-        }
-        {
-          getFieldValue('unitPrice') === 2 &&
-          <FormItem
-            {...newFormLayout}
-            labelCol={{ span: 3, offset: 4 }}
-            wrapperCol={{ span: 16 }}
-            label="统一单价"
-          >
-            {getFieldDecorator(`locationLimitedInfoUnitPrice.single`, {
-              initialValue: (budget.locationLimitedInfoUnitPrice || {}).single || 0.1,
-              rules: [ {
-                required: true,
-                message: '必填'
-              } ]
-            })(
-              <InputNumber
-                precision={2}
-                min={0.1}
-                max={200}
-                onChange={val => {
-                  this.calculation(getFieldValue('totalAmount'),
-                    Object.assign({ single: val }))
-                }}
-              />
-            )} 元/阅读
-          </FormItem>
-        }
         <Row>
           <Col offset={4}>
             <div style={{ height: 28, lineHeight: "28px" }}>
@@ -194,20 +134,25 @@ class ReadNumber extends React.Component {
     unitPrice: [ 0 ]
   }
 
+  componentDidMount() {
+    const { base, budget } = this.props.data
+    this.calculation(budget.totalAmount)
+  }
+
   calculation = (amount, numObj) => {
     setTimeout(() => {
       amount = amount || this.props.form.getFieldValue('totalAmount')
-      numObj = numObj || this.props.form.getFieldValue('locationLimitedInfoReadNumber')
+      numObj = numObj || this.props.form.getFieldsValue(Object.values(wxPositionToFields))
       if (isNaN(amount) || amount <= 0 || !numObj) {
         return this.setState({
           unitPrice: [ 0 ]
         });
       }
-      let sum = Object.values(numObj).reduce(function (prev, curr, idx, arr) {
-        return prev + curr;
-      })
+      let sum = Object.values(numObj).filter(Boolean).reduce(function (prev, cur) {
+        return prev + cur;
+      }, 0)
       this.setState({
-        unitPrice: numeral(amount).divide(sum).format('0.00')
+        unitPrice: numeral(amount).divide(sum || 1).format('0.00')
       });
     }, 0);
   }
@@ -221,78 +166,36 @@ class ReadNumber extends React.Component {
         return this.props.taskPositionList.find(item => key === item.locationKey)
       }) : this.props.taskPositionList
 
-    return (
+    return checked.length > 0 && (
       <div>
         <FormItem label="设定阅读数">
-          {getFieldDecorator('unitPrice', {
-            initialValue: budget.unitPrice || 2,
-            rules: [ {
-              required: true,
-              message: '请设定阅读单价'
-            } ]
-          })(
-            <Radio.Group onChange={() => this.calculation()}>
-              <Radio key={1} value={1}>按照发文位置设定</Radio>
-              <Radio key={2} value={2}>不限图文位置</Radio>
-            </Radio.Group>
-          )}
+          {
+            checked.map((item) =>
+              <FormItem
+                key={item.locationKey}
+                {...newFormLayout}
+                labelCol={{ span: 4 }}
+                wrapperCol={{ span: 20 }}
+                label={item.locationValue}
+              >
+                {getFieldDecorator(wxPositionToFields[item.locationKey], {
+                  initialValue: budget[wxPositionToFields[item.locationKey]],
+                  rules: [ {
+                    required: true,
+                    message: '必填'
+                  } ]
+                })(
+                  <InputNumber
+                    min={1}
+                    step={500}
+                    onChange={val => {
+                      this.calculation()
+                    }}
+                  />
+                )} 阅读
+              </FormItem>)
+          }
         </FormItem>
-        {
-          getFieldValue('unitPrice') === 1 &&
-          checked.map((item) =>
-            <FormItem
-              key={item.locationKey}
-              {...newFormLayout}
-              labelCol={{ span: 3, offset: 4 }}
-              wrapperCol={{ span: 16 }}
-              label={item.locationValue}
-            >
-              {getFieldDecorator(`locationLimitedInfoReadNumber[${item.locationKey}]`, {
-                initialValue: (budget.locationLimitedInfoReadNumber || {})[item.locationKey] || 500,
-                rules: [ {
-                  required: true,
-                  message: '必填'
-                } ]
-              })(
-                <InputNumber
-                  min={1}
-                  step={500}
-                  onChange={val => {
-                    this.calculation(getFieldValue('totalAmount'), Object.assign(
-                      getFieldValue('locationLimitedInfoReadNumber'),
-                      { [item.locationKey]: val }
-                    ))
-                  }}
-                />
-              )} 阅读
-            </FormItem>)
-        }
-        {
-          getFieldValue('unitPrice') === 2 &&
-          <FormItem
-            {...newFormLayout}
-            labelCol={{ span: 3, offset: 4 }}
-            wrapperCol={{ span: 16 }}
-            label="总阅读数"
-          >
-            {getFieldDecorator(`locationLimitedInfoReadNumber.single`, {
-              initialValue: (budget.locationLimitedInfoReadNumber || {}).single || 500,
-              rules: [ {
-                required: true,
-                message: '必填'
-              } ]
-            })(
-              <InputNumber
-                min={1}
-                step={500}
-                onChange={val => {
-                  this.calculation(getFieldValue('totalAmount'),
-                    Object.assign({ single: val }))
-                }}
-              />
-            )} 阅读
-          </FormItem>
-        }
         <Row>
           <Col offset={4}>
             <div style={{ height: 28, lineHeight: "28px" }}>
@@ -319,7 +222,7 @@ class BudgetForWeixin extends React.Component {
     let defaultCheck = budget.locationLimitedInfo || []
 
     this.state = {
-      actionNum: budget.actionNum || 0,
+      actionNum: budget.serviceFee || 0,
       amount: budget.totalAmount || 0,
       positionCheck: defaultCheck
     }
@@ -328,34 +231,34 @@ class BudgetForWeixin extends React.Component {
   componentDidMount() {
     const { data, actions, taskPositionList } = this.props
     const { budget } = data;
-    this.readField.calculation(budget.totalAmount)
+    this.calculation(budget.totalAmount)
   }
 
   // 暂存 & 上一步
   cached = () => {
     let newVal = Object.assign({}, this.props.form.getFieldsValue())
-    newVal.actionNum = this.state.actionNum
-    newVal.amount = this.state.amount
+    newVal.serviceFee = this.state.serviceFee
+    newVal.actualPayment = this.state.actualPayment
+    newVal.readNums = this.readField.state.readNums
+    newVal.unitPrice = this.readField.state.unitPrice
     this.props.prev("budget", newVal)
   }
 
-  calculation = (amount = 0, taskOrderType) => {
-    if (isNaN(amount) || amount <= 0) {
+  calculation = (totalAmount = 0) => {
+    if (isNaN(totalAmount) || totalAmount <= 0) {
       return this.setState({
-        actionNum: 0,
-        amount: 0
+        serviceFee: 0,
+        actualPayment: 0
       });
     }
-    const { data, actions } = this.props
-    actions.TPQueryActionNum({
-      "amount": amount,
-      "taskOrderType": taskOrderType
-    }).then(({ data }) => {
-      this.setState({
-        actionNum: data,
-        amount: amount + data
-      });
-    })
+    const { actions } = this.props
+    actions.TPWeixinPriceCalculation({ totalAmount })
+      .then(({ data }) => {
+        this.setState({
+          serviceFee: data.serviceFee,
+          actualPayment: data.actualPayment
+        });
+      })
   }
 
   handleSubmit = (e) => {
@@ -363,8 +266,10 @@ class BudgetForWeixin extends React.Component {
     this.props.form.validateFields((err, values) => {
       if (!err) {
         let newVal = Object.assign({}, values)
-        newVal.actionNum = this.state.actionNum
-        newVal.amount = this.state.amount
+        newVal.serviceFee = this.state.serviceFee
+        newVal.actualPayment = this.state.actualPayment
+        newVal.readNums = this.readField.state.readNums
+        newVal.unitPrice = this.readField.state.unitPrice
         this.props.next("budget", newVal)
       }
     });
@@ -382,7 +287,7 @@ class BudgetForWeixin extends React.Component {
       return {
         label: item.locationValue,
         value: item.locationKey,
-        disabled
+        // disabled
       }
     })
   }
@@ -390,14 +295,14 @@ class BudgetForWeixin extends React.Component {
 
   render() {
     const { form, formLayout, data, actions, balance } = this.props
-    const { actionNum, amount } = this.state
+    const { serviceFee, actualPayment } = this.state
     const { base, budget } = data
     const { getFieldDecorator, getFieldValue } = form
     let maxAmount = Math.min(balance, MAX_BUDGET_AMOUNT);
     return (
       <Form onSubmit={this.handleSubmit}  {...formLayout}>
-        {base.taskType === "1" && <h2>抢单模式</h2>}
-        {base.taskType === "2" && <h2>竞标模式</h2>}
+        {base.taskPattern === 1 && <h2>抢单模式</h2>}
+        {base.taskPattern === 2 && <h2>竞标模式</h2>}
         <FormItem label="任务预算(元)">
           <div className='flex-form-input-container'>
             {getFieldDecorator('totalAmount', {
@@ -437,7 +342,7 @@ class BudgetForWeixin extends React.Component {
           <div style={{
             height: 28,
             lineHeight: "28px"
-          }}>包含冻结服务费{actionNum}元，实际扣款为{amount}元
+          }}>包含冻结服务费{serviceFee}元，实际扣款为{actualPayment}元
           </div>
         </FormItem>
         <FormItem label="内容发布位置" className='taskPosRadio'>
@@ -448,12 +353,9 @@ class BudgetForWeixin extends React.Component {
               message: '请选择发布位置'
             } ]
           })(
-            <Radio.Group onChange={e => {
-              let val = e.target.value
-              this.calculation(getFieldValue('totalAmount'), val)
-            }}>
-              <Radio key={1} value={1}>固定位置</Radio>
-              <Radio key={2} value={2}>不限位置</Radio>
+            <Radio.Group>
+              <Radio value={1}>固定位置</Radio>
+              <Radio value={2}>不限位置</Radio>
             </Radio.Group>
           )}
         </FormItem>
@@ -465,10 +367,16 @@ class BudgetForWeixin extends React.Component {
                   initialValue: budget.locationLimitedInfo || this.state.positionCheck,
                   rules: [ {
                     required: true,
-                    message: '请至少选择一项限制调价'
+                    validator: (rule, value, callback) => {
+                      if (value && value.length > 0 && value.length < 3) {
+                        callback()
+                      }
+                      callback("发布位置最少选择一项, 最多只可选两项")
+                    }
                   } ]
                 })(
                   <CheckboxGroup
+                    style={{ paddingBottom: 6 }}
                     onChange={ary => {
                       this.setState({ positionCheck: ary })
                       this.readField.calculation()
@@ -476,19 +384,19 @@ class BudgetForWeixin extends React.Component {
                     options={this.getPositionOps()}
                   />
                 )}
-                <div className='flex-form-input-suffix'>
+                {/*<div className='flex-form-input-suffix'>
                   最少选择一项, 最多只可选两项
-                </div>
+                </div>*/}
               </div>
             </FormItem> : null
         }
-        {base.taskType === "1" && <UnitPrice
+        {base.taskPattern === 1 && <UnitPrice
           ref={node => this.readField = node}
           form={form}
           data={data}
           taskPositionList={this.props.taskPositionList}
         />}
-        {base.taskType === "2" && <ReadNumber
+        {base.taskPattern === 2 && <ReadNumber
           ref={node => this.readField = node}
           form={form}
           data={data}
@@ -499,33 +407,33 @@ class BudgetForWeixin extends React.Component {
           <Row>
             <Col span={7}>
               <FormItem>
-                {getFieldDecorator('locationww', {
-                  initialValue: budget.locationww,
+                {getFieldDecorator('_followerCountLimit', {
+                  initialValue: budget._followerCountLimit,
                   valuePropName: 'checked'
                 })(
                   <Checkbox>粉丝量</Checkbox>
                 )}
               </FormItem>
             </Col>
-            <Col span={7}>
+            {getFieldValue('_followerCountLimit') && <Col span={7}>
               <FormItem>
                 大于
-                {getFieldDecorator('locationw222', {
-                  initialValue: budget.locationLimited || 2,
+                {getFieldDecorator('followerCountLimit', {
+                  initialValue: budget.followerCountLimit,
                   rules: [ {
-                    required: getFieldValue('locationww'),
-                    message: '请选择发布位置'
+                    required: true,
+                    message: '请填写限制数量'
                   } ]
-                })(<InputNumber style={{ margin: "0 10px" }} />)}
+                })(<InputNumber min={1} style={{ margin: "0 10px" }} />)}
                 个
               </FormItem>
-            </Col>
+            </Col>}
           </Row>
           <Row>
             <Col span={7}>
               <FormItem>
-                {getFieldDecorator('locationww2', {
-                  initialValue: budget.locationww,
+                {getFieldDecorator('mediaCountLimit', {
+                  initialValue: budget.mediaCountLimit,
                   valuePropName: 'checked'
                 })(
                   <Checkbox>近28天内有发文</Checkbox>
@@ -536,85 +444,85 @@ class BudgetForWeixin extends React.Component {
           <Row>
             <Col span={7}>
               <FormItem>
-                {getFieldDecorator('locationww', {
-                  initialValue: budget.locationww,
+                {getFieldDecorator('_mediaAvgReadNumLimit', {
+                  initialValue: budget._mediaAvgReadNumLimit,
                   valuePropName: 'checked'
                 })(
                   <Checkbox>28天内第一条平均阅读</Checkbox>
                 )}
               </FormItem>
             </Col>
-            <Col span={7}>
+            {getFieldValue('_mediaAvgReadNumLimit') && <Col span={7}>
               <FormItem>
                 高于
-                {getFieldDecorator('locationw222', {
-                  initialValue: budget.locationLimited || 2,
+                {getFieldDecorator('mediaAvgReadNumLimit', {
+                  initialValue: budget.mediaAvgReadNumLimit,
                   rules: [ {
-                    required: getFieldValue('locationww'),
-                    message: '请选择发布位置'
+                    required: true,
+                    message: '请填写限制数量'
                   } ]
-                })(<InputNumber style={{ margin: "0 10px" }} />)}
+                })(<InputNumber min={1} style={{ margin: "0 10px" }} />)}
               </FormItem>
-            </Col>
+            </Col>}
           </Row>
           <Row>
             <Col span={7}>
               <FormItem>
-                {getFieldDecorator('locationww', {
-                  initialValue: budget.locationww,
+                {getFieldDecorator('_followerGenderRatioLimit', {
+                  initialValue: budget._followerGenderRatioLimit,
                   valuePropName: 'checked'
                 })(
                   <Checkbox>粉丝性别比例</Checkbox>
                 )}
               </FormItem>
             </Col>
-            <Col span={7}>
+            {getFieldValue('_followerGenderRatioLimit') && <Col span={7}>
               <FormItem>
-                {getFieldDecorator('locationw222', {
-                  initialValue: budget.locationLimited || 2,
+                {getFieldDecorator('followerGenderRatioLimit', {
+                  initialValue: budget.followerGenderRatioLimit,
                   rules: [ {
-                    required: getFieldValue('locationww'),
-                    message: '请选择发布位置'
+                    required: true,
+                    message: '请选择'
                   } ]
                 })(
                   <Radio.Group>
-                    <Radio>男性多</Radio>
-                    <Radio>女性多</Radio>
+                    <Radio value={1}>男性多</Radio>
+                    <Radio value={2}>女性多</Radio>
                   </Radio.Group>
                 )}
               </FormItem>
-            </Col>
+            </Col>}
           </Row>
           <Row>
             <Col span={7}>
               <FormItem>
-                {getFieldDecorator('locationww', {
-                  initialValue: budget.locationww,
+                {getFieldDecorator('_minNumOfReadLimit', {
+                  initialValue: budget._minNumOfReadLimit,
                   valuePropName: 'checked'
                 })(
                   <Checkbox>博主领取最低阅读数</Checkbox>
                 )}
               </FormItem>
             </Col>
-            <Col span={7}>
+            {getFieldValue('_minNumOfReadLimit') && <Col span={7}>
               <FormItem>
                 不低于
-                {getFieldDecorator('locationw222', {
-                  initialValue: budget.locationLimited || 2,
+                {getFieldDecorator('minNumOfReadLimit', {
+                  initialValue: budget.minNumOfReadLimit,
                   rules: [ {
-                    required: getFieldValue('locationww'),
-                    message: '请选择发布位置'
+                    required: true,
+                    message: '请填写限制数量'
                   } ]
-                })(<InputNumber style={{ margin: "0 10px" }} />)}
+                })(<InputNumber min={1} style={{ margin: "0 10px" }} />)}
                 个
               </FormItem>
-            </Col>
+            </Col>}
           </Row>
           <Row>
             <Col span={7}>
               <FormItem>
-                {getFieldDecorator('locationww', {
-                  initialValue: budget.locationww,
+                {getFieldDecorator('onlyVerified', {
+                  initialValue: budget.onlyVerified,
                   valuePropName: 'checked'
                 })(
                   <Checkbox>只允许认证号接单</Checkbox>
@@ -645,50 +553,51 @@ class BudgetFor12306 extends React.Component {
     this.calculation = debounce(this.calculation, 300)
 
     this.state = {
-      actionNum: budget.actionNum || 0,
-      treeData: [
-        { id: 1, pId: 0, value: '1', title: 'Expand to load' },
-        { id: 2, pId: 0, value: '2', title: 'Expand to load' },
-        { id: 3, pId: 0, value: '3', title: 'Tree Node', isLeaf: true },
-      ],
+      result: budget.result || {
+        unitPrice: 0,
+        totalAmount: 0,
+        discount: 0,
+        actualPayment: 0,
+      },
+      treeData: [],
     }
   }
 
-  genTreeNode = (parentId, isLeaf = false) => {
-    const random = Math.random()
-      .toString(36)
-      .substring(2, 6);
-    return {
-      id: random,
-      pId: parentId,
-      value: random,
-      title: isLeaf ? 'Tree Node' : 'Expand to load',
-      isLeaf,
-    };
+  getTreeNode = (list = []) => {
+    return list.map(item => ({
+      id: item.id,
+      pId: item.parentId,
+      value: item.id,
+      title: item.areaName,
+      isLeaf: item.areaLevel === 2,
+    }))
   };
 
-  onLoadData = treeNode =>
-    new Promise(resolve => {
-      const { id } = treeNode.props;
-      setTimeout(() => {
-        this.setState({
-          treeData: this.state.treeData.concat([
-            this.genTreeNode(id, false),
-            this.genTreeNode(id, true),
-          ]),
-        });
-        resolve();
-      }, 300);
-    });
+  onLoadData = treeNode => {
+    const { data, actions, taskPositionList } = this.props
+    const { id } = treeNode.props;
+    return actions.getAsyncAreaList({ pid: id }).then(({ data }) => {
+      this.setState({
+        treeData: this.state.treeData.concat(this.getTreeNode(data)),
+      });
+    })
+  }
 
   componentDidMount() {
-    const { data, actions, taskPositionList } = this.props
-    const { budget } = data;
+    const { actions } = this.props
+    // 获取初始城市列表
+    actions.getAsyncAreaList().then(({ data }) => {
+      this.setState({
+        treeData: this.state.treeData.concat(this.getTreeNode(data)),
+      });
+    })
   }
 
   // 暂存 & 上一步
   cached = () => {
     let newVal = Object.assign({}, this.props.form.getFieldsValue())
+    newVal.result = this.state.result
+    newVal.treeData = this.state.treeData
     this.props.prev("budget", newVal)
   }
 
@@ -698,37 +607,42 @@ class BudgetFor12306 extends React.Component {
     this.props.form.validateFields((err, values) => {
       if (!err) {
         let newVal = Object.assign({}, values)
+        newVal.result = this.state.result
+        newVal.treeData = this.state.treeData
         this.props.next("budget", newVal)
       }
     });
   }
 
-  calculation = (amount = 0, taskOrderType) => {
-    if (isNaN(amount) || amount <= 0) {
-      return this.setState({
-        actionNum: 0,
-        amount: 0
-      });
-    }
-    const { data, actions } = this.props
-    actions.TPQueryActionNum({
-      "amount": amount,
-      "taskOrderType": taskOrderType
-    }).then(({ data }) => {
-      this.setState({
-        actionNum: data,
-        amount: amount + data
-      });
-    })
+  calculation = () => {
+    setTimeout(() => {
+      const values = this.props.form.getFieldsValue([
+        "putType",
+        "mediaType",
+        "actionNum",
+        "actionDay",
+        "leavePlace",
+        "arrivePlace",
+        "deliverySex",
+        "deliverySeat",
+        "deliveryAges",
+        "deliveryTrainType",
+      ])
+      if (!values.actionNum) return
+      const { actions } = this.props
+      actions.TPTripPriceCalculation(values).then(({ data }) => {
+        this.setState({ result: data });
+      })
+    }, 0);
   }
 
   render() {
     const { form, formLayout, data, actions, balance } = this.props
-    const { actionNum, amount } = this.state
+    const { result } = this.state
     const { base, budget } = data
     const { getFieldDecorator, getFieldValue } = form
 
-    const tProps = {
+    const treeProps = {
       dropdownStyle: { maxHeight: 400, overflow: 'auto' },
       treeData: this.state.treeData,
       treeDataSimpleMode: true,
@@ -740,41 +654,45 @@ class BudgetFor12306 extends React.Component {
       loadData: this.onLoadData
     }
 
-    let maxAmount = Math.min(balance, MAX_BUDGET_AMOUNT);
+    // 按量投放
+    const PA = getFieldValue("putType") === 1
+    // 按天数投放
+    const PB = getFieldValue("putType") === 2
+
     return (
       <Form onSubmit={this.handleSubmit}  {...formLayout}>
         <FormItem label="投放模式">
-          {getFieldDecorator('location2', {
-            initialValue: budget.location2 || 2,
+          {getFieldDecorator('putType', {
+            initialValue: budget.putType || 2,
             rules: [ {
               required: true,
               message: '请选择投放模式'
             } ]
           })(
-            <Radio.Group>
-              <Radio key={1} value={1}>按天数投放</Radio>
-              <Radio key={2} value={2}>按量投放</Radio>
+            <Radio.Group onChange={this.calculation}>
+              <Radio value={2}>按天数投放</Radio>
+              <Radio value={1}>按量投放</Radio>
             </Radio.Group>
           )}
         </FormItem>
         <FormItem label="内容类型">
-          {getFieldDecorator('location1', {
-            initialValue: budget.location1 || 2,
+          {getFieldDecorator('mediaType', {
+            initialValue: budget.mediaType || 3,
             rules: [ {
               required: true,
               message: '请选择内容类型'
             } ]
           })(
-            <Radio.Group>
-              <Radio key={1} value={1}>图文+链接+视频</Radio>
-              <Radio key={2} value={2}>图文+链接</Radio>
+            <Radio.Group onChange={this.calculation}>
+              <Radio value={3}>图文+链接+视频</Radio>
+              <Radio value={4}>图文+链接</Radio>
             </Radio.Group>
           )}
         </FormItem>
-        <FormItem label="输入投放天数">
+        {PB && <FormItem label="输入投放天数">
           <div className='flex-form-input-container'>
-            {getFieldDecorator('totalDay', {
-              initialValue: budget.totalDay,
+            {getFieldDecorator('actionDay', {
+              initialValue: budget.actionDay,
               validateFirst: true,
               rules: [
                 { required: true, message: '请输入投放天数' },
@@ -792,9 +710,7 @@ class BudgetFor12306 extends React.Component {
                 precision={0}
                 min={1}
                 style={{ flex: "auto" }}
-                onChange={val => {
-                  this.calculation()
-                }}
+                onChange={this.calculation}
                 placeholder="输入投放天数"
               />
             )}
@@ -803,11 +719,11 @@ class BudgetFor12306 extends React.Component {
               任务账户余额：{numeral(balance).format('0,0.00')} 元
             </div>
           </div>
-        </FormItem>
-        <FormItem label="输入投放条数">
+        </FormItem>}
+        {PA && <FormItem label="输入投放条数">
           <div className='flex-form-input-container'>
-            {getFieldDecorator('totalCount', {
-              initialValue: budget.totalCount,
+            {getFieldDecorator('actionNum', {
+              initialValue: budget.actionNum,
               validateFirst: true,
               rules: [
                 { required: true, message: '请输入投放条数' },
@@ -828,9 +744,7 @@ class BudgetFor12306 extends React.Component {
                 step={100}
                 formatter={value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                 parser={value => value.replace(/\$\s?|(,*)/g, '')}
-                onChange={val => {
-                  this.calculation()
-                }}
+                onChange={this.calculation}
                 placeholder="输入投放条数"
               />
             )}
@@ -839,75 +753,91 @@ class BudgetFor12306 extends React.Component {
               任务账户余额：{numeral(balance).format('0,0.00')} 元
             </div>
           </div>
-        </FormItem>
+        </FormItem>}
         <FormItem label="出发城市">
-          {getFieldDecorator('startCity', {
-            initialValue: budget.startCity,
+          {getFieldDecorator('leavePlace', {
+            initialValue: budget.leavePlace,
             validateFirst: true,
             rules: [
               { required: true, message: '请选择出发城市', type: 'array' },
             ]
           })(
-            <TreeSelect {...tProps} searchPlaceholder="请选择出发城市" />
+            <TreeSelect {...treeProps} searchPlaceholder="请选择出发城市" onChange={() => {
+              PA && this.calculation()
+            }} />
           )}
         </FormItem>
         <FormItem label="到达城市">
-          {getFieldDecorator('endCity', {
-            initialValue: budget.endCity,
+          {getFieldDecorator('arrivePlace', {
+            initialValue: budget.arrivePlace,
             validateFirst: true,
             rules: [
               { required: true, message: '请选择到达城市', type: 'array' },
             ]
           })(
-            <TreeSelect {...tProps} searchPlaceholder="请选择到达城市" />
+            <TreeSelect {...treeProps} searchPlaceholder="请选择到达城市" onChange={() => {
+              PA && this.calculation()
+            }} />
           )}
         </FormItem>
-        <FormItem label="车次类型">
-          {getFieldDecorator('typecc', {
-            initialValue: budget.typecc,
+        {PA && <FormItem label="车次类型">
+          {getFieldDecorator('deliveryTrainType', {
+            initialValue: budget.deliveryTrainType,
           })(
-            <CheckGroup options={CC_OPTIONS} />
+            <CheckGroup options={TRAIN_TYPE_OPTIONS} onChange={() => {
+              PA && this.calculation()
+            }} />
           )}
-        </FormItem>
-        <FormItem label="坐席类型" wrapperCol={{span: 20}}>
-          {getFieldDecorator('typeaa', {
-            initialValue: budget.typeaa,
+        </FormItem>}
+        {PA && <FormItem label="坐席类型" wrapperCol={{ span: 20 }}>
+          {getFieldDecorator('deliverySeat', {
+            initialValue: budget.deliverySeat,
           })(
-            <CheckGroup options={ZX_OPTIONS} />
+            <CheckGroup options={SEAT_OPTIONS} onChange={() => {
+              PA && this.calculation()
+            }} />
           )}
-        </FormItem>
-        <FormItem label="人群性别">
-          {getFieldDecorator('type334234', {
-            initialValue: budget.type334234,
+        </FormItem>}
+        {PA && <FormItem label="人群性别">
+          {getFieldDecorator('deliverySex', {
+            initialValue: budget.deliverySex || 0,
           })(
-            <Radio.Group>
-              <Radio value={1}>全部</Radio>
-              <Radio value={2}>男</Radio>
-              <Radio value={3}>女</Radio>
+            <Radio.Group onChange={() => {
+              PA && this.calculation()
+            }}>
+              <Radio value={0}>全部</Radio>
+              <Radio value={10}>男</Radio>
+              <Radio value={11}>女</Radio>
             </Radio.Group>
           )}
-        </FormItem>
-        <FormItem label="是否限定年龄">
-          {getFieldDecorator('type66666', {
-            initialValue: budget.type66666,
+        </FormItem>}
+        {PA && <FormItem label="是否限定年龄">
+          {getFieldDecorator('_deliveryAges', {
+            initialValue: budget._deliveryAges || 2,
           })(
-            <Radio.Group>
-              <Radio value={1}>否</Radio>
-              <Radio value={2}>是</Radio>
+            <Radio.Group onChange={(e) => {
+              e.target.value === 1 && this.calculation()
+            }}>
+              <Radio value={2}>否</Radio>
+              <Radio value={1}>是</Radio>
             </Radio.Group>
           )}
-        </FormItem>
-        <FormItem label="配置年龄区间" wrapperCol={{span: 20}}>
-          {getFieldDecorator('typeasasdaa', {
-            initialValue: budget.typeasasdaa,
+        </FormItem>}
+        {getFieldValue("_deliveryAges") === 1 &&
+        <FormItem label="配置年龄区间" wrapperCol={{ span: 20 }} onChange={() => {
+          PA && this.calculation()
+        }}>
+          {getFieldDecorator('deliveryAges', {
+            initialValue: budget.deliveryAges,
             rules: [
               { type: 'array', max: 4, message: '最多不超过4项' }
             ]
           })(
-            <Checkbox.Group options={NL_OPTIONS} />
+            <Checkbox.Group options={AGES_OPTIONS} />
           )}
-        </FormItem>
-        <Alert message='投放单价为6元/条，原价300,000元，折扣返现10,000元，实付290,000元'/>
+        </FormItem>}
+        <Alert
+          message={`投放单价为${result.unitPrice}元/条，原价${result.totalAmount}元，折扣返现${result.discount}元，实付${result.actualPayment}元`} />
         <footer>
           <FormItem label=' '>
             {this.props.isEdit ? null : <Button onClick={this.cached}>上一步</Button>}

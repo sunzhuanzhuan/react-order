@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Input, Form, DatePicker, Checkbox, Row, Col } from 'antd';
+import { Input, Form, Button, Checkbox, Row, Col, message } from 'antd';
 import { OssUpload } from 'wbyui'
 import { action, formItemLayout } from "./ModalContent";
 //第二次质检不通过
@@ -10,12 +10,26 @@ function QualityFailed(props) {
       setToken(authToken)
     })
   }, [])
-  const { form } = props
-  const { getFieldDecorator } = form
+  const { form, changeWechatPage, id, setModalProps, actions } = props
+  const { getFieldDecorator, validateFields } = form
+  function submitForm() {
+    validateFields(async (err, values) => {
+      if (!err) {
+        let valueNews = { ...values }
+        valueNews.snapshotUrl = values.snapshotUrl[0].url
+        valueNews.approveReason = values.approveReason.join(',')
+        //二次质检不通过
+        await actions.TPApprovedSecondFailure({ id, ...valueNews })
+        setModalProps({ visible: false })
+        message.success('操作成功')
+        changeWechatPage()
+      }
+    })
+  }
   const options = ['内容已被删除', '内容发布错误', '其他（请备注原因）']
   return <Form layout='horizontal'>
     <Form.Item label='选择原因' {...formItemLayout}>
-      {getFieldDecorator('reson', {
+      {getFieldDecorator('approveReason', {
         rules: [{ required: true, message: '请选择原因' }],
       })(
         <Checkbox.Group style={{ width: '100%', marginTop: 12 }}>
@@ -28,13 +42,13 @@ function QualityFailed(props) {
       )}
     </Form.Item>
     <Form.Item label='备注' {...formItemLayout}>
-      {getFieldDecorator('read', {
+      {getFieldDecorator('remark', {
       })(
         <Input placeholder="请输入备注" />
       )}
     </Form.Item>
     <Form.Item label='上传文章快照' {...formItemLayout}>
-      {getFieldDecorator('keyss', {
+      {getFieldDecorator('snapshotUrl', {
         valuePropName: 'fileList',
         getValueFromEvent: e => e && e.fileList,
         rules: [
@@ -54,6 +68,10 @@ function QualityFailed(props) {
         />
       )}
     </Form.Item>
+    <div className='button-footer'>
+      <Button onClick={() => setModalProps({ visible: false })}>取消</Button>
+      <Button type='primary' onClick={submitForm}>确定</Button>
+    </div>
   </Form >
 }
 const QualityFailedForm = Form.create()(QualityFailed)

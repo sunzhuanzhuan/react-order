@@ -1,10 +1,12 @@
 import React from 'react'
 import { Form, Input, DatePicker, Select, Button } from 'antd'
 import moment from 'moment'
+import { otherOrderStateList } from '../../constants/orderConfig'
 const format = 'YYYY-MM-DD'
 const { RangePicker } = DatePicker
 function CooperationForm(props) {
-  const { getFieldDecorator, validateFields, resetFields } = props.form
+  const { resetPlatform, form } = props
+  const { getFieldDecorator, validateFields, resetFields } = form
   //搜索
   function searchForm(e) {
     e.preventDefault();
@@ -48,9 +50,9 @@ function CooperationForm(props) {
       </Form.Item>
       <Form.Item label='订单状态'>
         {getFieldDecorator('form.otherOrderState', {})(
-          <Select style={{ minWidth: 170 }}>
-            {[1, 2].map(one => <Select.Option key={one}>
-              {one}
+          <Select style={{ minWidth: 170 }} placeholder='请选择' allowClear>
+            {otherOrderStateList.map(one => <Select.Option key={one.key} value={one.key}>
+              {one.name}
             </Select.Option>)}
 
           </Select>
@@ -75,9 +77,7 @@ function CooperationForm(props) {
         <Button type='primary' onClick={searchForm}>查询</Button>
         <Button style={{ marginLeft: 20 }} onClick={() => {
           resetFields()
-          props.getPlatformOrderList({
-            page: { currentPage: 1, pageSize: 10 }
-          })
+          resetPlatform()
         }}>重置</Button>
       </Form.Item>
     </Form>
