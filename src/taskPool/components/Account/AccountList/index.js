@@ -169,11 +169,11 @@ function AccountList(props) {
         rowSelection={rowSelection}
         scroll={{ x: 1800 }}
         pagination={{
-          pageSize: Number(accountList.pageSize),
+          pageSize: accountList.pageSize,
           showSizeChanger: true,
           showQuickJumper: true,
-          total: Number(accountList.total),
-          current: Number(accountList.pageNum),
+          total: accountList.total,
+          current: accountList.pageNum,
           onShowSizeChange: (current, size) => {
             props.changePage({ page: { currentPage: current, pageSize: size } })
           },
@@ -189,7 +189,7 @@ function AccountList(props) {
 }
 
 export default AccountList
-export const KpiTable = ({ data }) => {
+export const KpiTable = ({ data = {} }) => {
   const columnsKpi = [{
     title: '多图文第一条',
     dataIndex: 'mediaIndex1stReadKpiNum',

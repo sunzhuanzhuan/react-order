@@ -1,10 +1,12 @@
 import React, { useState } from 'react'
-import { Table, Modal, Button, message, Icon } from 'antd'
+import { Table, Modal, Button, message, Icon, Alert } from 'antd'
 import { otherOrderStateMap, PARTNER_AWAIT, PENDING, OVER, MEDIUM_AWAIT, MEDIUM_REJECT, PARTNER_REJECT } from '../../constants/orderConfig'
 import api from '@/api'
 import Scolltable from '@/components/Scolltable/Scolltable.js'
 import CooperationModel, { RejectForm } from './CooperationModel'
 import MessageIcon from '../../base/MessageIcon'
+import moment from 'moment'
+const format = 'YYYY-MM-DD'
 const { confirm } = Modal;
 function CooperationList(props) {
   const [selectedRow, setSelectedRow] = useState([])
@@ -16,7 +18,7 @@ function CooperationList(props) {
       title: title,
       okText: okText,
       onOk() {
-        updatePlatformOrderAsync({ operationFlag: 1, adOrderId: adOrderId })
+        updatePlatformOrderAsync({ operationFlag: 1, adOrderIds: adOrderId })
       },
     });
   }
@@ -36,8 +38,8 @@ function CooperationList(props) {
   const columns = [
     {
       title: '订单ID',
-      dataIndex: 'orderId',
-      key: 'orderId',
+      dataIndex: 'adOrderId',
+      key: 'adOrderId',
     },
     {
       title: '任务名称',
@@ -45,7 +47,7 @@ function CooperationList(props) {
       key: 'adOrderName',
       render: (text, record) => {
         //adOrderId
-        return <a>dd</a>
+        return <a>{text}</a>
       }
     },
     {
@@ -67,11 +69,16 @@ function CooperationList(props) {
       title: '任务创建时间',
       dataIndex: 'createdAt',
       key: 'createdAt',
+      render: text => `${moment(text).format(format)}`
     },
     {
       title: '投放开始~结束时间',
       dataIndex: 'orderStartEndDate',
       key: 'orderStartEndDate',
+      width: '260px',
+      align: 'center',
+      render: (text, record) => `${moment(record.orderEndDate).format(format)} ~ 
+      ${moment(record.orderEndDate).format(format)}`
     },
     {
       title: '创建销售',
@@ -84,7 +91,7 @@ function CooperationList(props) {
       key: 'otherOrderState',
       render: (text, record) => <div>
         {otherOrderStateMap[text]}
-        {text == MEDIUM_REJECT || text == PARTNER_REJECT ? <MessageIcon title={record.reason} /> : null}
+        {text == MEDIUM_REJECT || text == PARTNER_REJECT ? <MessageIcon title={record.refusalReason} /> : null}
       </div>
     },
     {
@@ -100,7 +107,8 @@ function CooperationList(props) {
         const pending = record.otherOrderState == PENDING
         const commProps = {
           okFn: updatePlatformFileAsync,
-          adOrderId: record.orderId,
+          adOrderId: record.adOrderId,
+          item: record,
           cancelFn: () => setModalProps({ visible: false }),
         }
         return <>
@@ -109,6 +117,8 @@ function CooperationList(props) {
               title: '请上传执行单并录入结算金额',
               visible: true,
               content: <CooperationModel isPrice={partner_await}
+                fileUrl={record.execOrderUrl}
+                fileName={record.execOrderName}
                 {...commProps}
               />
             })
@@ -119,6 +129,8 @@ function CooperationList(props) {
               title: '请上传结案报告',
               visible: true,
               content: <CooperationModel
+                fileUrl={record.finalReportUrl}
+                fileName={record.finalReportName}
                 {...commProps} />
             })
           }><IconType value={record.finalReportUrl} />  上传结案报告</a> : null
@@ -143,21 +155,21 @@ function CooperationList(props) {
         const pending = record.otherOrderState == PENDING
         //已完成
         const over = record.otherOrderState == OVER
-        const { orderId, execOrderUrl, finalReportUrl } = record
+        const { adOrderId, execOrderUrl, finalReportUrl } = record
         return <div className='children-mr'>
-          {medium_await ? <Button type='primary' onClick={() => orderOK('确认订单递交给合作平台', [orderId])}>确认</Button> : null}
-          {partner_await ? <Button type='primary' disabled={!execOrderUrl} onClick={() => orderOK('确认后执行单和结算金额不可撤回', [orderId])}>确认</Button> : null}
-          {pending ? <Button disabled={!finalReportUrl} type='primary' onClick={() => orderOK('确认后结案报告不可撤回', [orderId])}>确定</Button> : null}
+          {medium_await ? <Button type='primary' onClick={() => orderOK('确认订单递交给合作平台', [adOrderId])}>确认</Button> : null}
+          {partner_await ? <Button type='primary' disabled={!execOrderUrl} onClick={() => orderOK('确认后执行单和结算金额不可撤回', [adOrderId])}>确认</Button> : null}
+          {pending ? <Button disabled={!finalReportUrl} type='primary' onClick={() => orderOK('确认后结案报告不可撤回', [adOrderId])}>确定</Button> : null}
           {medium_await || partner_await ? <Button type='primary'
             onClick={() => setModalProps({
               title: '驳回',
               visible: true,
               content: <RejectForm
-                adOrderId={[orderId]}
+                adOrderId={[adOrderId]}
                 okFn={updatePlatformOrderAsync}
                 cancelFn={() => setModalProps({ visible: false })} />
             })}>驳回</Button> : null}
-          {medium_await || partner_await || pending || over ? <Button onClick={() => window.open(`orders-coodetail?orderId=${orderId}`)}>查看详情</Button> : null}
+          <Button onClick={() => window.open(`orders-coodetail?orderId=${adOrderId}`)}>查看详情</Button>
         </div>
       },
     },
@@ -166,9 +178,10 @@ function CooperationList(props) {
     rowSelection: selectedRow,
     onChange: (selectedRowKeys) => setSelectedRow(selectedRowKeys)
   }
-
+  const selectedRowSize = selectedRow.length
   return (
     <>
+      <Alert message={`已选择 ${selectedRowSize} 个账号，合计：${platformOrderList.total} 个`} type="info" style={{ marginTop: 20 }} />
       <Scolltable scrollClassName='.ant-table-body' widthScroll={2000}>
         <Table dataSource={list}
           columns={columns}
@@ -179,8 +192,8 @@ function CooperationList(props) {
             pageSize: platformOrderList.pageSize || 1,
             showSizeChanger: true,
             showQuickJumper: true,
-            total: 20,
-            current: 1,
+            total: platformOrderList.total,
+            current: platformOrderList.pageNum,
             onShowSizeChange: (current, size) => {
               changePage({ page: { currentPage: current, pageSize: size } })
             },

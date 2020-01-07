@@ -7,8 +7,16 @@ import * as actions from '@/taskPool/actions';
 import { bindActionCreators } from 'redux';
 import { withRouter } from 'react-router-dom'
 import DataCurve from '../components/Order/DataCurve'
+import './OrderWechatDetail.less';
 import qs from 'qs'
-function CooperationDetail(props) {
+import moment from 'moment'
+import numeral from 'numeral'
+import { otherOrderStateMap } from '../constants/orderConfig'
+const format = 'YYYY-MM-DD HH:mm:ss'
+const getNumber = (value) => {
+  return numeral(value).format(',')
+}
+function OrderWechatDetail(props) {
   const { actions, orderReducers } = props
   const [modalProps, setModalProps] = useState({ title: '' })
   const { orderMcnDetailInfo = {}, dataCurvelist = [] } = orderReducers
@@ -32,20 +40,21 @@ function CooperationDetail(props) {
     { label: '领取时间', content: orderMcnDetailInfo.receiveAt },
 
     { label: '所属公司', content: orderMcnDetailInfo.companyName },
-    { label: '订单状态', content: orderMcnDetailInfo.orderStateDesc },
+    { label: '订单状态', content: <div className='red-text'>{orderMcnDetailInfo.orderStateDesc}</div> },
     { label: '预计推送时间', content: orderMcnDetailInfo.expectedPublishedTime },
     { label: '行业分类', content: orderMcnDetailInfo.industryName, span: 2 },
     { label: '阅读单价', content: '' },
-    { label: '任务模式', content: orderMcnDetailInfo.taskPatternDesc, span: 2 },
+    { label: '任务模式', content: <div className='red-text'>{orderMcnDetailInfo.taskPatternDesc}</div>, span: 2 },
     { label: '发布保留时长', content: '', },
     { label: '', content: '', span: 2 },
-    { label: '申请阅读数', content: orderMcnDetailInfo.expectActionNum },
+    { label: '申请阅读数', content: <div className='red-text'>{getNumber(orderMcnDetailInfo.expectActionNum)}</div> },
 
   ]
   const orderInfo = [
-    { label: '订单冻结金额', content: orderMcnDetailInfo.maxAmount, span: 3 },
-    { label: '消耗预算', content: orderMcnDetailInfo.realAmount, span: 3 },
-    { label: '实际结算', content: orderMcnDetailInfo.realActionNum, span: 3 },
+    { label: '订单状态', content: orderMcnDetailInfo.orderStateDesc, span: 3 },
+    { label: '订单冻结金额', content: `${getNumber(orderMcnDetailInfo.maxAmount)}元`, span: 3 },
+    { label: '消耗预算', content: `${getNumber(orderMcnDetailInfo.realAmount)}元`, span: 3 },
+    { label: '实际结算', content: `${getNumber(orderMcnDetailInfo.realActionNum)}元`, span: 3 },
   ]
   function openData() {
     setModalProps({
@@ -61,7 +70,7 @@ function CooperationDetail(props) {
     setModalProps({
       visible: true,
       title: '文章链接',
-      content: <img src={orderMcnDetailInfo.snapshotUrl} />
+      content: <div className='article-img'><img src={orderMcnDetailInfo.snapshotUrl} /></div>
     })
   }
   const articleInfo = [
@@ -106,43 +115,53 @@ function CooperationDetail(props) {
     { label: '取消结算原因', content: <a onClick={cancelReason} >查看</a>, span: 3 },
   ]
   return (
-    <Spin spinning={isLoading}>
-
-      <BreadCrumbs link='/order/task/orders-manage' text={<h2>订单详情</h2>} />
-      <TitleBox title='基本信息' >
-        <Descriptions>
-          {baseInfo.map(item => <Descriptions.Item key={item.label} label={item.label} span={item.span}>{item.content}</Descriptions.Item>)}
-        </Descriptions>
-      </TitleBox>
-      <TitleBox title='订单信息' >
-        <Descriptions>
-          {orderInfo.map(item => <Descriptions.Item key={item.label} label={item.label} span={item.span}>{item.content}</Descriptions.Item>)}
-        </Descriptions>
-      </TitleBox>
-      <TitleBox title='博主信息' >
-        <Row style={{ color: 'rgba(0, 0, 0, 0.85)', fontSize: 13 }}>
-          <Col span={6}> 博主名称{1}</Col>
-          <Col span={6}>Account ID{12306}</Col>
-        </Row>
-      </TitleBox>
-      <TitleBox title='文章信息' >
-        <Descriptions>
-          {articleInfo.map(item => <Descriptions.Item key={item.label} label={item.label} span={item.span}>{item.content}</Descriptions.Item>)}
-        </Descriptions>
-      </TitleBox>
-      <TitleBox title='订单备注' >
-        <Descriptions>
-          {remark2.map(item => <Descriptions.Item key={item.label} label={item.label} span={item.span}>{item.content}</Descriptions.Item>)}
-        </Descriptions>
-      </TitleBox>
-      <Modal
-        visible={modalProps.visible}
-        footer={null}
-        onCancel={() => setModalProps({ ...modalProps, visible: false })}
-        {...modalProps}
-      >
-        {modalProps.content}
-      </Modal>
+    <Spin spinning={isLoading} >
+      <div className='order-wechat-detail'>
+        <BreadCrumbs link='/order/task/orders-manage' text={<h2>订单详情</h2>} />
+        <TitleBox title='基本信息' >
+          <Descriptions>
+            {baseInfo.map(item => <Descriptions.Item key={item.label} label={item.label} span={item.span}>{item.content}</Descriptions.Item>)}
+          </Descriptions>
+        </TitleBox>
+        <TitleBox title='订单状态' >
+          <Descriptions>
+            {orderInfo.map(item => <Descriptions.Item key={item.label} label={item.label} span={item.span}>{item.content}</Descriptions.Item>)}
+          </Descriptions>
+        </TitleBox>
+        <TitleBox title='博主信息' >
+          <Row className='account'>
+            <Col span={6}> 博主名称
+            <div className='account-name'>
+                <img src={orderMcnDetailInfo.avatarUrl} alt='博主头像' />
+                <span>{orderMcnDetailInfo.accountName}</span>
+              </div>
+            </Col>
+            <Col span={6}>Account ID
+              <div className='account-name'>
+                {orderMcnDetailInfo.accountId}
+              </div>
+            </Col>
+          </Row>
+        </TitleBox>
+        <TitleBox title='文章信息' >
+          <Descriptions>
+            {articleInfo.map(item => <Descriptions.Item key={item.label} label={item.label} span={item.span}>{item.content}</Descriptions.Item>)}
+          </Descriptions>
+        </TitleBox>
+        <TitleBox title='订单备注' >
+          <Descriptions>
+            {remark2.map(item => <Descriptions.Item key={item.label} label={item.label} span={item.span}>{item.content}</Descriptions.Item>)}
+          </Descriptions>
+        </TitleBox>
+        <Modal
+          visible={modalProps.visible}
+          footer={null}
+          onCancel={() => setModalProps({ ...modalProps, visible: false })}
+          {...modalProps}
+        >
+          {modalProps.content}
+        </Modal>
+      </div>
     </Spin>
   )
 }
@@ -156,7 +175,7 @@ const mapDispatchToProps = (dispatch) => ({
   }, dispatch)
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(CooperationDetail))
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(OrderWechatDetail))
 const ContentRow = ({ list = [] }) => {
   return list.map(item => <Row key={item.name} style={{ paddingBottom: 6, color: 'rgba(0, 0, 0, 0.85)', fontSize: 13 }}>
     <Col span={4}>{item.name}</Col>

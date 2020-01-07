@@ -4,6 +4,7 @@ import { Steps, Col, Row, Descriptions, Divider } from 'antd'
 import { getOrderStep, MEDIUM_REJECT, PARTNER_REJECT, deliverySeatMap, deliverySexMap, mediaTypeMap, putTypeMap } from '../constants/orderConfig'
 import api from '@/api'
 import moment from 'moment'
+import numeral from 'numeral'
 const format = 'YYYY-MM-DD HH:mm:ss'
 const { Step } = Steps;
 function CooperationDetail() {
@@ -30,8 +31,8 @@ function CooperationDetail() {
   ]
 
   const orderFile = [
-    { name: '执行单：', content: <a href={orderDetail.execOrderUrl}>ming</a> },
-    { name: '结案报告：', content: <a href={orderDetail.finalReportUrl}>ming</a> },
+    { name: '执行单：', content: <a href={orderDetail.execOrderUrl}>{orderDetail.execOrderName}</a> },
+    { name: '结案报告：', content: <a href={orderDetail.finalReportUrl}>{orderDetail.finalReportName}</a> },
   ]
   const baseInfo = [
     { label: '订单ID', content: orderDetail.adOrderId },
@@ -39,13 +40,13 @@ function CooperationDetail() {
     { label: '投放模式', content: putTypeMap[orderDetail.putType] },
     { label: '所属公司', content: orderDetail.companyName },
     { label: '内容类型', content: mediaTypeMap[orderDetail.mediaType] },
-    { label: '阅读单价', content: orderDetail.unitPrice },
+    { label: '阅读单价', content: `${orderDetail.unitPrice}元/条` },
     { label: '行业分类', content: orderDetail.industry },
-    { label: '出发城市/车站', content: orderDetail.leavePalce },
-    { label: '投放条数', content: orderDetail.actionNum },
+    { label: '出发城市/车站', content: orderDetail.leavePlace },
+    { label: '投放条数', content: <div style={{ color: 'red' }}>{numeral(orderDetail.actionNum).format(',')}条</div> },
     { label: '投放开始日期', content: moment(orderDetail.orderStartDate * 1000).format(format) },
     { label: '到达城市/车站', content: orderDetail.arrivePlace },
-    { label: '任务预算', content: orderDetail.totalAmount },
+    { label: '任务预算', content: <div style={{ color: 'red' }}>{numeral(orderDetail.totalAmount).format(',')}元</div> },
     { label: '投放结束日期', content: orderDetail.orderEndDate },
     { label: '坐席类型', content: deliverySeatMap[orderDetail.deliverySeat], span: 2 },
     { label: '投放持续时间', content: orderDetail.durationDay },
@@ -63,7 +64,9 @@ function CooperationDetail() {
       </TitleBox>
       <TitleBox title='基本信息' >
         <Descriptions>
-          {baseInfo.map(item => <Descriptions.Item key={item.label} label={item.label} span={item.span}>{item.content}</Descriptions.Item>)}
+          {baseInfo.map(item => <Descriptions.Item key={item.label} label={item.label} span={item.span} >
+            {item.content}
+          </Descriptions.Item>)}
         </Descriptions>
       </TitleBox>
       <TitleBox title='任务内容' >
