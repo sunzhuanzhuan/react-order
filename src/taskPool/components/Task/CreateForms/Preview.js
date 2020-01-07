@@ -12,11 +12,12 @@ import {
   getCountDownTimeText,
   getIndustryName,
   openNewWindowPreviewForWeibo,
-  openNewWindowPreviewForWeixin
+  openNewWindowPreviewForWeixin,
+  openNewWindowPreviewFor12306
 } from "@/taskPool/constants/utils";
 import numeral from '@/util/numeralExpand'
 import { OssUpload } from 'wbyui'
-import { wxPositionToFields } from '@/taskPool/constants/config';
+import { AGES_OPTIONS, SEAT_OPTIONS, wxPositionToFields } from '@/taskPool/constants/config';
 import moment from 'moment';
 
 const { Text } = Typography;
@@ -254,9 +255,9 @@ class PreviewForWeixin extends React.Component {
           <Descriptions.Item label="发布后保留时长">{base.retainTime}小时</Descriptions.Item>
           <Descriptions.Item label="任务预算">{numeral(budget.totalAmount)
             .format("0,0.00")} 元</Descriptions.Item>
-          <Descriptions.Item label="冻结服务费">{numeral(budget.actionNum)
+          <Descriptions.Item label="冻结服务费">{numeral(budget.serviceFee)
             .format("0,0.00")} 元</Descriptions.Item>
-          <Descriptions.Item label="实际扣款">{numeral(budget.amount)
+          <Descriptions.Item label="实际扣款">{numeral(budget.actualPayment)
             .format("0,0.00")} 元</Descriptions.Item>
           <Descriptions.Item label="内容发布位置">{this.getLocationLimited(budget)}</Descriptions.Item>
           {
@@ -311,6 +312,17 @@ class PreviewFor12306 extends React.Component {
     this.state = { submitLoading: false };
   }
 
+  preview = () => {
+    const { data } = this.props
+    const { base, budget, content } = data
+    const { video = [{}], image = [{}] } = content
+    openNewWindowPreviewFor12306({
+      content: content.content,
+      video: video[0].url,
+      images: image[0].url,
+    })
+  }
+
   success = () => {
     Modal.success({
       className: 'center-success-modal',
@@ -328,41 +340,33 @@ class PreviewFor12306 extends React.Component {
     body.orderName = base.orderName
     body.companyId = base.company.key
     body.companyName = base.company.label
-    body.orderStartDate = base.orderDate[0]
-    body.orderEndDate = base.orderDate[1]
+    body.orderStartDate = base.orderStartDate
+    body.orderEndDate = base.orderStartDate
     body.platformId = base.platformId
     body.industry = [ ...base.industry ].pop()
     body.businessScopeId = base.businessScopeId
 
-    body.totalAmount = budget.totalAmount
+    body.totalAmount = budget.result.totalAmount
 
-    body.adOrderWeixinContent = {
-      "author": content.author,
-      "content": content.richContent.toRAW(),
-      "contentText": content.richContent.toText(),
-      "coverImageUrl": content.coverImage[0].url,
-      "coverImageName": content.coverImage[0].name,
-      "remark": content.remark || content.richContent.toText().replace(/\s/g, '').slice(0, 54),
-      "articleUrl": content.articleUrl,
-      "title": content.title,
+    body.adOrderTripContent = {
+      "content": content.content,
+      "imageUrl": content.image && content.image[0].url,
+      "imageName": content.image && content.image[0].url,
+      "videoUrl": content.video && content.video[0].name,
+      "videoName": content.video && content.video[0].name,
 
-      "retainTime": base.retainTime,
-      "locationLimited": budget.locationLimited,
-      "locationLimitedInfo": budget.locationLimitedInfo && budget.locationLimitedInfo.join(','),
-      "taskPattern": base.taskPattern,
+      "putType": budget.putType,
+      "mediaType": budget.mediaType,
 
-      "mediaAvgReadNumLimit": budget._mediaAvgReadNumLimit ? budget.mediaAvgReadNumLimit : 0,
-      "followerGenderRatioLimit": budget._followerGenderRatioLimit ? budget.followerGenderRatioLimit : 0,
-      "minNumOfReadLimit": budget._minNumOfReadLimit ? budget.minNumOfReadLimit : 0,
-      "followerCountLimit": budget._followerCountLimit ? budget.followerCountLimit : 0,
+      "leavePlace": budget.leavePlace && budget.leavePlace.toString(),
+      "arrivePlace": budget.arrivePlace && budget.arrivePlace.toString(),
+      "deliverySex": budget.deliverySex && budget.deliverySex.toString(),
+      "deliverySeat": budget.deliverySeat && budget.deliverySeat.toString(),
+      "deliveryAges": budget.deliveryAges && budget.deliveryAges.toString(),
+      "deliveryTrainType": budget.deliveryTrainType && budget.deliveryTrainType.toString(),
 
-      "mediaCountLimit": budget.mediaCountLimit ? 1 : 2,
-      "onlyVerified": budget.onlyVerified ? 1 : 2,
-
-      "wxOneNumber": budget.wxOneNumber,
-      "wxTwoNumber": budget.wxTwoNumber,
-      "wxOtherNumber": budget.wxOtherNumber,
-      "showPictureUrl": base.showPictureUrl[0].url
+      "actionNum": budget.actionNum,
+      "actionDay": budget.actionDay
     }
 
 
@@ -388,6 +392,36 @@ class PreviewFor12306 extends React.Component {
     })
   }
 
+  /**
+   * 获取地区id对应的地区名称
+   * @param areaIds
+   */
+  getAreaName = (areaIds = []) => {
+    if (areaIds.length === 0) {
+      return '-'
+    }
+    const { base, budget, content } = this.props.data
+    const sources = budget.treeData || []
+    return areaIds.map(id => sources.find(item => item.id === id))
+      .filter(Boolean)
+      .map(item => item.title)
+      .join('，')
+  }
+
+  /**
+   * 根据value 展示 label
+   * @param values
+   * @param sources
+   */
+  value2label = (values = [], sources) => {
+    if (values.length === 0) {
+      return '-'
+    }
+    return values.map(value => sources.find(item => item.value === value))
+      .filter(Boolean)
+      .map(item => item.label)
+      .join('，')
+  }
 
   render() {
 
@@ -409,34 +443,52 @@ class PreviewFor12306 extends React.Component {
             {base.orderStartDate.format('YYYY-MM-DD')}
           </Descriptions.Item>
           <Descriptions.Item label="投放结束日期">
-            {base.putType === 2 && moment(base.orderStartDate).add(budget.actionDay, 'd').format('YYYY-MM-DD')}
-            {(base.putType === 1 && base.orderEndDate) ?  base.orderEndDate.format('YYYY-MM-DD') : "无"}
+            {budget.putType === 2 && moment(base.orderStartDate).add(budget.actionDay, 'd').format(
+              'YYYY-MM-DD')}
+            {budget.putType === 1 && (base.orderEndDate ? base.orderEndDate.format('YYYY-MM-DD') : base.orderStartDate.format(
+              'YYYY-MM-DD'))}
           </Descriptions.Item>
           <Descriptions.Item label="任务持续时间">
-            {base.putType === 2 && <div>{budget.actionDay}天</div>}
-
-            {
-            getCountDownTimeText(base.orderEndDate,0,5,base.orderStartDate)
-          }
+            {budget.putType === 2 && <div>{budget.actionDay}天</div>}
+            {budget.putType === 1 && (base.orderEndDate ? getCountDownTimeText(base.orderEndDate,
+              0,
+              5,
+              base.orderStartDate) : '1天')
+            }
           </Descriptions.Item>
           <Descriptions.Item label="任务预算">
-            {numeral(budget.totalAmount).format("0,0.00")} 元</Descriptions.Item>
+            {numeral(budget.result.actualPayment).format("0,0.00")} 元
+          </Descriptions.Item>
           <Descriptions.Item label="投放模式">
-            {base.putType === 1 && "按量投放"}
-            {base.putType === 2 && "按天投放"}
+            {budget.putType === 1 && "按量投放"}
+            {budget.putType === 2 && "按天投放"}
           </Descriptions.Item>
-          <Descriptions.Item label="冻结服务费">
-            {numeral(budget.actionNum).format("0,0.00")} 元</Descriptions.Item>
-          <Descriptions.Item label="实际扣款">
-            {numeral(budget.amount).format("0,0.00")} 元</Descriptions.Item>
+          <Descriptions.Item label="出发城市">
+            {this.getAreaName(budget.leavePlace)}
+          </Descriptions.Item>
+          <Descriptions.Item label="到达城市">
+            {this.getAreaName(budget.arrivePlace)}
+          </Descriptions.Item>
+          {budget.putType === 1 && <Descriptions.Item label="坐席类型">
+            {this.value2label(budget.deliverySeat, SEAT_OPTIONS)}
+          </Descriptions.Item>}
+          {budget.putType === 1 && <Descriptions.Item label="人群性别">
+            {budget.deliverySex === 0 && "全部"}
+            {budget.deliverySex === 10 && "男"}
+            {budget.deliverySex === 11 && "女"}
+          </Descriptions.Item>}
+          {budget.putType === 1 && <Descriptions.Item label="年龄区间">
+            {this.value2label(budget.deliveryAges, AGES_OPTIONS)}
+          </Descriptions.Item>}
+          <Descriptions.Item label="内容类型">
+            {budget.mediaType === 3 && "图文+链接+视频"}
+            {budget.mediaType === 4 && "图文+链接"}
+          </Descriptions.Item>
           <Descriptions.Item label="阅读单价">
-            {budget.result.unitPrice}
-          </Descriptions.Item>
-          <Descriptions.Item label="阅读数">
-            {budget.result.unitPrice}
+            {budget.result.unitPrice} 元/条
           </Descriptions.Item>
           {
-            base.putType === 1 && <Descriptions.Item label="预计阅读数">
+            budget.putType === 1 && <Descriptions.Item label="预计阅读数">
               <div className='text-red'>{budget.actionNum}条</div>
             </Descriptions.Item>
           }
