@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Table, Modal, Button, message, Icon } from 'antd'
+import { Table, Modal, Button, message, Icon, Alert } from 'antd'
 import { otherOrderStateMap, PARTNER_AWAIT, PENDING, OVER, MEDIUM_AWAIT, MEDIUM_REJECT, PARTNER_REJECT } from '../../constants/orderConfig'
 import api from '@/api'
 import Scolltable from '@/components/Scolltable/Scolltable.js'
@@ -18,7 +18,7 @@ function CooperationList(props) {
       title: title,
       okText: okText,
       onOk() {
-        updatePlatformOrderAsync({ operationFlag: 1, adOrderId: adOrderId })
+        updatePlatformOrderAsync({ operationFlag: 1, adOrderIds: adOrderId })
       },
     });
   }
@@ -91,7 +91,7 @@ function CooperationList(props) {
       key: 'otherOrderState',
       render: (text, record) => <div>
         {otherOrderStateMap[text]}
-        {text == MEDIUM_REJECT || text == PARTNER_REJECT ? <MessageIcon title={record.reason} /> : null}
+        {text == MEDIUM_REJECT || text == PARTNER_REJECT ? <MessageIcon title={record.refusalReason} /> : null}
       </div>
     },
     {
@@ -108,6 +108,7 @@ function CooperationList(props) {
         const commProps = {
           okFn: updatePlatformFileAsync,
           adOrderId: record.adOrderId,
+          item: record,
           cancelFn: () => setModalProps({ visible: false }),
         }
         return <>
@@ -116,6 +117,8 @@ function CooperationList(props) {
               title: '请上传执行单并录入结算金额',
               visible: true,
               content: <CooperationModel isPrice={partner_await}
+                fileUrl={record.execOrderUrl}
+                fileName={record.execOrderName}
                 {...commProps}
               />
             })
@@ -126,6 +129,8 @@ function CooperationList(props) {
               title: '请上传结案报告',
               visible: true,
               content: <CooperationModel
+                fileUrl={record.finalReportUrl}
+                fileName={record.finalReportName}
                 {...commProps} />
             })
           }><IconType value={record.finalReportUrl} />  上传结案报告</a> : null
@@ -164,7 +169,7 @@ function CooperationList(props) {
                 okFn={updatePlatformOrderAsync}
                 cancelFn={() => setModalProps({ visible: false })} />
             })}>驳回</Button> : null}
-          {medium_await || partner_await || pending || over ? <Button onClick={() => window.open(`orders-coodetail?orderId=${adOrderId}`)}>查看详情</Button> : null}
+          <Button onClick={() => window.open(`orders-coodetail?orderId=${adOrderId}`)}>查看详情</Button>
         </div>
       },
     },
@@ -173,9 +178,10 @@ function CooperationList(props) {
     rowSelection: selectedRow,
     onChange: (selectedRowKeys) => setSelectedRow(selectedRowKeys)
   }
-
+  const selectedRowSize = selectedRow.length
   return (
     <>
+      <Alert message={`已选择 ${selectedRowSize} 个账号，合计：${platformOrderList.total} 个`} type="info" style={{ marginTop: 20 }} />
       <Scolltable scrollClassName='.ant-table-body' widthScroll={2000}>
         <Table dataSource={list}
           columns={columns}

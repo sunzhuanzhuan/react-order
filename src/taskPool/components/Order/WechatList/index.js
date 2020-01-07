@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react'
 import { Table, Input, Badge, Divider, Button, message } from 'antd'
-import { orderStateMap } from '../config'
+import { orderStateMap } from '../../../constants/orderConfig'
 import CancelPaymentForm from './CancelPaymentForm'
 import AbnormalForm from './AbnormalForm'
 import QualityFailedForm from './QualityFailedForm'
