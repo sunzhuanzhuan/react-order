@@ -14,64 +14,79 @@ import Cooperation from '../components/Setting/Cooperation';
 import Notice from '../components/Setting/Notice';
 
 const { SubMenu } = Menu;
-const Settings = (props) => {
-  const [current, setCurrent] = useState('discover')
-  const handleClick = (e) => {
-    setCurrent(e.key)
-  }
-  useEffect(() => {
-    if (current == 'price') {
-      props.actions.TPGetReadUnitPriceConfig({})
-    } else if (current == 'discover') {
-      props.actions.TPGetQualityConfig({})
+class Settings extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      current: 'discover'
     }
-  }, [])
+  }
+  componentDidMount = () => {
+    if (this.state.current == 'price') {
+      this.props.actions.TPGetReadUnitPriceConfig({})
+    } else if (this.state.current == 'discover') {
+      this.props.actions.TPGetQualityConfig({})
+    }
+  }
 
-  const { readUnitPriceConfig, qualityConfig, addRetainTime } = props.settingReducers
-  console.log(addRetainTime)
-  return (
-    <div>
-      <Menu mode="horizontal" onClick={handleClick} selectedKeys={current}>
-        <Menu.Item key="price">
-          建议博主报价
-        </Menu.Item>
-        <Menu.Item key="discover">
-          质检配置
-        </Menu.Item>
-        <Menu.Item key="select">
-          抽佣率配置
-        </Menu.Item>
-        <SubMenu
-          title={
-            <span className="submenu-title-wrapper">
-              任务配置
-            </span>
-          }
-        >
-          <Menu.ItemGroup >
-            <Menu.Item key="weichat">微信公众号</Menu.Item>
-            <Menu.Item key="cooperation">合作平台</Menu.Item>
-          </Menu.ItemGroup>
-        </SubMenu>
-        <Menu.Item key="notice">
-          通知配置
-        </Menu.Item>
-      </Menu>
-      {current == 'price' ? <Price readUnitPriceConfig={readUnitPriceConfig}
-        TPReadUnitPriceConfig={props.actions.TPReadUnitPriceConfig}
-        TPGetReadUnitPriceConfig={props.actions.TPGetReadUnitPriceConfig}
-      /> : null}
-      {current == 'discover' ? <Discover
-        qualityConfig={qualityConfig}
-        TPAddRetainTime={props.TPAddRetainTime}
-        addRetainTime={addRetainTime} /> : null}
-      {current == 'select' ? <Select /> : null}
-      {current == 'weichat' ? <Weichat /> : null}
-      {current == 'cooperation' ? <Cooperation /> : null}
-      {current == 'notice' ? <Notice /> : null}
-    </div>
-  );
-};
+
+  handleClick = (e) => {
+    this.setState({ current: e.key }, () => {
+      if (this.state.current == 'price') {
+        this.props.actions.TPGetReadUnitPriceConfig({})
+      } else if (this.state.current == 'discover') {
+        this.props.actions.TPGetQualityConfig({})
+      }
+    })
+  }
+  render() {
+    let { readUnitPriceConfig, qualityConfig, addRetainTime } = this.props.settingReducers
+    const { current } = this.state
+    return (
+      <div>
+        <Menu mode="horizontal" onClick={this.handleClick} selectedKeys={current}>
+          <Menu.Item key="price">
+            建议博主报价
+          </Menu.Item>
+          <Menu.Item key="discover">
+            质检配置
+          </Menu.Item>
+          <Menu.Item key="select">
+            抽佣率配置
+          </Menu.Item>
+          <SubMenu
+            title={
+              <span className="submenu-title-wrapper">
+                任务配置
+              </span>
+            }
+          >
+            <Menu.ItemGroup >
+              <Menu.Item key="weichat">微信公众号</Menu.Item>
+              <Menu.Item key="cooperation">合作平台</Menu.Item>
+            </Menu.ItemGroup>
+          </SubMenu>
+          <Menu.Item key="notice">
+            通知配置
+          </Menu.Item>
+        </Menu>
+        {current == 'price' ? <Price readUnitPriceConfig={readUnitPriceConfig}
+          TPReadUnitPriceConfig={this.props.actions.TPReadUnitPriceConfig}
+          TPGetReadUnitPriceConfig={this.props.actions.TPGetReadUnitPriceConfig}
+        /> : null}
+        {current == 'discover' ? <Discover
+          qualityConfig={qualityConfig}
+          TPAddRetainTime={this.props.actions.TPAddRetainTime}
+          addRetainTime={addRetainTime} /> : null}
+        {current == 'select' ? <Select /> : null}
+        {current == 'weichat' ? <Weichat /> : null}
+        {current == 'cooperation' ? <Cooperation /> : null}
+        {current == 'notice' ? <Notice /> : null}
+      </div>
+    );
+  }
+
+}
 
 const mapStateToProps = (state) => ({
   settingReducers: state.taskPoolReducers
