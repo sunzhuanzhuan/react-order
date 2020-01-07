@@ -13,6 +13,7 @@ export const otherOrderStateMap = {
   [PENDING]: '待执行',
   [OVER]: '已完成'
 }
+export const otherOrderStateList = Object.keys(otherOrderStateMap).map(one => ({ key: one, name: otherOrderStateMap[one] }))
 
 const orderStep = {
   0: ['待媒介处理', '待合作方确定', '待执行', '已完成'],
@@ -47,6 +48,6 @@ export const mediaTypeMap = {
 }
 //投放模式 
 export const putTypeMap = {
-  '1': '按天 ',
-  '2': '按量'
+  '1': '按天投放',
+  '2': '按量投放'
 }

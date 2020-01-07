@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import { Form, Input, Button } from 'antd'
 import { OssUpload } from 'wbyui'
-import { action, formItemLayout } from "./WechatList/ModalContent";
+import { action } from "./WechatList/ModalContent";
 const { TextArea } = Input;
-
+export const formItemLayout = {
+  labelCol: { span: 6 },
+  wrapperCol: { span: 14 },
+}
 function CooperationModel(props) {
   const [token, setToken] = useState('')
   useEffect(() => {

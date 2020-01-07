@@ -4,6 +4,7 @@ import * as actions from '@/taskPool/actions';
 import { WechatList, CooperationList, CooperationForm, WechatForm } from '../components/Order'
 import { Tabs, Modal, Spin } from 'antd';
 import { bindActionCreators } from 'redux';
+
 const { TabPane } = Tabs;
 const baseSearch = { page: { currentPage: 1, pageSize: 10 }, form: {} }
 
@@ -23,13 +24,14 @@ const Orders = (props) => {
   function callback(key) {
     setOrderType(key)
     if (key == 2) {
-      searchAction()
+      searchAction(baseSearch)
     }
     if (key == 1) {
-      searchWechatAction()
+      searchWechatAction(baseSearch)
     }
     setModalProps({ content: null, title: null })
   }
+
   //微信
   async function getAllMcnOrderListAsync(params) {
     setLoading(true)
@@ -39,13 +41,20 @@ const Orders = (props) => {
   }
   //操作筛选项
   function searchWechatAction(params) {
-    getAllMcnOrderListAsync({ ...params, ...baseSearch, })
+    getAllMcnOrderListAsync({ ...baseSearch, ...params, })
   }
   //操作分页使用查询
   function changeWechatPage(params) {
     getAllMcnOrderListAsync({ ...weChatSearch, ...params })
   }
-
+  //清空
+  function resetWachat() {
+    setWeChatSearch(baseSearch)
+  }
+  //
+  function resetPlatform() {
+    setCooSearch(baseSearch)
+  }
   //合作平台
   async function getPlatformOrderListAsync(params) {
     setLoading(true)
@@ -55,7 +64,8 @@ const Orders = (props) => {
   }
   //操作筛选项
   function searchAction(params) {
-    getPlatformOrderListAsync({ ...params, ...baseSearch, })
+    console.log("TCL: searchAction -> params", params)
+    getPlatformOrderListAsync({ ...baseSearch, ...params, })
   }
   //操作分页使用查询
   function changePage(params) {
@@ -71,7 +81,8 @@ const Orders = (props) => {
     platformOrderList,
     searchAction,
     changePage,
-    actions
+    actions,
+    resetPlatform
   }
   const weChatProps = {
     allMcnOrderList,
@@ -79,7 +90,8 @@ const Orders = (props) => {
     changeWechatPage,
     mcnOrderStateList,
     actions,
-    setModalProps
+    setModalProps,
+    resetWachat
   }
   return (
     <div>

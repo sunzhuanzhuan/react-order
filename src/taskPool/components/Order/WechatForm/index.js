@@ -3,7 +3,7 @@ import { Form, Input, InputNumber, DatePicker, Button, Select } from 'antd'
 import moment from 'moment'
 const { RangePicker } = DatePicker;
 function WeChatForm(props) {
-  const { form, mcnOrderStateList = [] } = props
+  const { form, mcnOrderStateList = [], resetWachat } = props
   const { validateFields, getFieldDecorator, resetFields } = form
   function submitForm() {
     validateFields((err, values) => {
@@ -18,15 +18,15 @@ function WeChatForm(props) {
           allValue.form.expectedPublishedTimeStart = values.expectedPublishedTime[0]
           allValue.form.expectedPublishedTimeEnd = values.expectedPublishedTime[1]
           delete allValue.expectedPublishedTime
-        }
 
+        }
         props.searchWechatAction(allValue)
       }
     })
   }
   function resetForm() {
     resetFields()
-    props.searchWechatAction({ form: {} })
+    resetWachat()
   }
   //
   return (
