@@ -51,7 +51,7 @@ export default {
     TPUpdatePlatformOrder: `${cooperationPlatform}/updatePlatformOrder`,//（同意(批量)、驳回（批量））
     TPUpdatePlatformFile: `${cooperationPlatform}/updatePlatformFile`,//（上传执行单、上传结案报告）
     TPGetPlatformOrderDetail: `${cooperationPlatform}/platformOrderDetail`,//合作平台订单详情
-    TPGetAllMcnOrderList: `${mcnOrder}/getAllMcnOrder`,//蜂窝派订单列表（搜索）
+    TPGetAllMcnOrderList: `${mcnOrder}/getAllMcnOrder_2`,//蜂窝派订单列表（搜索）
     TPApprovedFirstFailure: `${mcnOrder}/approvedFirstFailure`,//一次质检不通过
     TPApprovedFirstSuccess: `${mcnOrder}/approvedFirstSuccess`,//一次质检通过
     TPApprovedSecondFailure: `${mcnOrder}/approvedSecondFailure`,//二次质检不通过

@@ -1,11 +1,11 @@
 import React, { useMemo } from 'react'
 import { Table, Input, Badge, Divider, Button, message } from 'antd'
-import { orderStateMap } from '../../../constants/orderConfig'
 import CancelPaymentForm from './CancelPaymentForm'
 import AbnormalForm from './AbnormalForm'
 import QualityFailedForm from './QualityFailedForm'
 import Scolltable from '@/components/Scolltable/Scolltable.js'
 import EditReceiptForm from './EditReceiptForm'
+import OrderMcnStatus from '../../../base/OrderMcnStatus'
 import numeral from 'numeral';
 export default function WachatList(props) {
   const { setModalProps, allMcnOrderList = {}, actions, changeWechatPage } = props
@@ -92,7 +92,7 @@ export default function WachatList(props) {
       dataIndex: 'orderStateDesc',
       key: 'orderStateDesc',
       render: text => <div>
-        <Badge status={orderStateMap[text]} />{text}
+        <OrderMcnStatus value={text} />
       </div>
     },
     {
