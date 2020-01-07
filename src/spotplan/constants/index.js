@@ -376,29 +376,6 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
         )}
       </FormItem>
     }
-  }, {
-    title: 'Client（非必填）',
-    dataIndex: 'client',
-    key: 'client',
-    align: 'center',
-    width: 210,
-    render: (text, record) => {
-      return record.is_inward_send == 1 || record.last_apply_status == 1 || record.last_apply_status == 2 ? position[text] : <FormItem>
-        {getFieldDecorator(`${record.order_id}.client`)(
-          <Select placeholder="请选择" style={{ width: 120 }} onChange={(value) => {
-            handleUpdate({ order_id: record.order_id, price_id: record.price_id, client: value || '' })
-          }} allowClear>
-            <Option value={1}>天猫</Option>
-            <Option value={2}>京东</Option>
-            <Option value={3}>唯品会</Option>
-            <Option value={4}>考拉</Option>
-            <Option value={5}>苏宁易购</Option>
-            <Option value={6}>线上（其他）</Option>
-            <Option value={7}>线下</Option>
-          </Select>
-        )}
-      </FormItem>
-    }
   },
   {
     title: '发文时间（微信必填）',
@@ -433,6 +410,29 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
               handleUpdate({ order_id: record.order_id, price_id: record.price_id, publish_articles_at: getFieldValue(`${record.order_id}.publish_articles_at`).format("YYYY-MM-DD HH:mm:ss") })
             }
           }} />
+        )}
+      </FormItem>
+    }
+  }, {
+    title: 'Client（非必填）',
+    dataIndex: 'client',
+    key: 'client',
+    align: 'center',
+    width: 210,
+    render: (text, record) => {
+      return record.is_inward_send == 1 || record.last_apply_status == 1 || record.last_apply_status == 2 ? position[text] : <FormItem>
+        {getFieldDecorator(`${record.order_id}.client`)(
+          <Select placeholder="请选择" style={{ width: 120 }} onChange={(value) => {
+            handleUpdate({ order_id: record.order_id, price_id: record.price_id, client: value || '' })
+          }} allowClear>
+            <Option value={1}>天猫</Option>
+            <Option value={2}>京东</Option>
+            <Option value={3}>唯品会</Option>
+            <Option value={4}>考拉</Option>
+            <Option value={5}>苏宁易购</Option>
+            <Option value={6}>线上（其他）</Option>
+            <Option value={7}>线下</Option>
+          </Select>
         )}
       </FormItem>
     }
@@ -1126,6 +1126,16 @@ export const ArticalCols = [
     align: 'center',
     className: "columns",
   }, {
+    title: '账号ID',
+    dataIndex: 'weibo_id',
+    key: 'weibo_id',
+    align: 'center',
+    className: "columns",
+    render: (text, record) => {
+      const flag = record.weibo_type == 23 ? true : false;
+      return <div>{flag ? '-' : text}</div>
+    }
+  }, {
     title: 'PriceID',
     dataIndex: 'price_id',
     key: 'price_id',
@@ -1163,6 +1173,26 @@ export const ArticalCols = [
     title: '发文时间',
     dataIndex: 'publish_articles_at',
     key: 'publish_articles_at',
+    align: 'center',
+    className: "columns",
+    render: text => {
+      return text ? text : '-'
+    }
+  },
+  {
+    title: 'Client',
+    dataIndex: 'client',
+    key: 'client',
+    align: 'center',
+    className: "columns",
+    render: text => {
+      return text ? clientName[text] : '-'
+    }
+  },
+  {
+    title: 'content type',
+    dataIndex: 'content_type',
+    key: 'content_type',
     align: 'center',
     className: "columns",
     render: text => {
