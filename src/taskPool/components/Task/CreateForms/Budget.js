@@ -333,6 +333,7 @@ class BudgetForWeixin extends React.Component {
                   this.readField.calculation(val)
                 }}
                 placeholder="请输入金额"
+                disabled={this.props.isUpdate}
               />
             )}
             <div className='flex-form-input-suffix'>

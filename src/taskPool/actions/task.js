@@ -90,3 +90,9 @@ export const {
 } = createHttpAction('TPMcnOrderListByTemp', Interface.task.mcnOrderListByTemp, {
   method: 'post'
 });
+// 查询博主申请列表
+export const {
+  TPMcnOrderEvaluate,
+} = createHttpAction('TPMcnOrderEvaluate', Interface.task.mcnOrderEvaluate, {
+  method: 'post'
+});
