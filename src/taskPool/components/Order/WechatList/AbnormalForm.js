@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { Form, DatePicker, Button, message, InputNumber } from 'antd';
 import { OssUpload } from 'wbyui'
-import request from '@/api'
+import moment from 'moment'
+const format = 'YYYY-MM-DD HH:mm:ss'
 import { action, formItemLayout } from "./ModalContent";
 //质检异常
 function Abnormal(props) {
@@ -18,6 +19,7 @@ function Abnormal(props) {
       if (!err) {
         let valueNews = { ...values }
         valueNews.snapshotUrl = values.snapshotUrl[0].url
+        valueNews.publishedTime = moment(values.publishedTime).format(format)
         if (isShowRead) {
           //二检异常通过
           await actions.TPApprovedSecondSuccess({ id, ...valueNews })
@@ -31,12 +33,37 @@ function Abnormal(props) {
       }
     })
   }
+  //禁用日期
+  function disabledDate(date) {
+    return date < moment().subtract(1, 'd').endOf('day')
+  }
+  function range(start, end) {
+    const result = [];
+    for (let i = start; i < end; i++) {
+      result.push(i);
+    }
+    return result;
+  }
+  //禁用时间
+  function disabledTime(dateTime) {
+    if (moment(dateTime).isSame(moment(), 'day')) {
+      const hourStart = moment().hours()
+      const minutesStart = moment().minutes()
+      return {
+        disabledHours: () => range(0, 60).splice(0, hourStart),
+        disabledMinutes: () => range(0, minutesStart),
+        disabledSeconds: () => range(0, 60),
+      };
+    }
+  }
   return <Form layout='horizontal'>
     <Form.Item label='发文日期' {...formItemLayout}>
       {getFieldDecorator('publishedTime', {
         rules: [{ required: true, message: '请添加发文日期' }],
       })(
-        <DatePicker showTime placeholder="请添加发文日期" />
+        <DatePicker showTime placeholder="请添加发文日期" disabledDate={disabledDate}
+          disabledTime={disabledTime}
+        />
       )}
     </Form.Item>
     {
@@ -60,7 +87,7 @@ function Abnormal(props) {
           authToken={token}
           listType='picture-card'
           rule={{
-            bizzCode: 'FWP_TRIP_IMG_UPLOAD',
+            bizzCode: 'FWP_IMG_UPLOAD',
             max: 2,
             suffix: 'png,jpg,jpeg,gif,webp'
           }}

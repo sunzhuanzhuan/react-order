@@ -11,7 +11,7 @@ export default function WachatList(props) {
   const { setModalProps, allMcnOrderList = {}, actions, changeWechatPage } = props
   const { list = [] } = allMcnOrderList
   async function noPass(id) {
-    await actions.TPApprovedFirstFailure(id)
+    await actions.TPApprovedFirstFailure({ id: id })
     message.success('操作成功')
     setModalProps({ visible: false })
     changeWechatPage()
