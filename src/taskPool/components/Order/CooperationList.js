@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Table, Modal, Button, message, Icon } from 'antd'
+import { Table, Modal, Button, message, Icon, Alert } from 'antd'
 import { otherOrderStateMap, PARTNER_AWAIT, PENDING, OVER, MEDIUM_AWAIT, MEDIUM_REJECT, PARTNER_REJECT } from '../../constants/orderConfig'
 import api from '@/api'
 import Scolltable from '@/components/Scolltable/Scolltable.js'
@@ -10,6 +10,7 @@ const format = 'YYYY-MM-DD'
 const { confirm } = Modal;
 function CooperationList(props) {
   const [selectedRow, setSelectedRow] = useState([])
+  const [isCleanSelected, setIscleanSelected] = useState(false)
   const { platformOrderList = {}, setModalProps, changePage, actions } = props
   const { list = [] } = platformOrderList
   //合作方确认
@@ -18,14 +19,17 @@ function CooperationList(props) {
       title: title,
       okText: okText,
       onOk() {
-        updatePlatformOrderAsync({ operationFlag: 1, adOrderId: adOrderId })
+        updatePlatformOrderAsync({ operationFlag: 1, adOrderIds: adOrderId })
       },
     });
   }
   //驳回、同意
   async function updatePlatformOrderAsync(params) {
+    setIscleanSelected(false)
     await actions.TPUpdatePlatformOrder(params)
     changePage()
+    setIscleanSelected(true)
+    setSelectedRow([])
     message.success('操作成功')
   }
 
@@ -91,7 +95,7 @@ function CooperationList(props) {
       key: 'otherOrderState',
       render: (text, record) => <div>
         {otherOrderStateMap[text]}
-        {text == MEDIUM_REJECT || text == PARTNER_REJECT ? <MessageIcon title={record.reason} /> : null}
+        {text == MEDIUM_REJECT || text == PARTNER_REJECT ? <MessageIcon title={record.refusalReason} /> : null}
       </div>
     },
     {
@@ -108,6 +112,7 @@ function CooperationList(props) {
         const commProps = {
           okFn: updatePlatformFileAsync,
           adOrderId: record.adOrderId,
+          item: record,
           cancelFn: () => setModalProps({ visible: false }),
         }
         return <>
@@ -116,6 +121,8 @@ function CooperationList(props) {
               title: '请上传执行单并录入结算金额',
               visible: true,
               content: <CooperationModel isPrice={partner_await}
+                fileUrl={record.execOrderUrl}
+                fileName={record.execOrderName}
                 {...commProps}
               />
             })
@@ -126,6 +133,8 @@ function CooperationList(props) {
               title: '请上传结案报告',
               visible: true,
               content: <CooperationModel
+                fileUrl={record.finalReportUrl}
+                fileName={record.finalReportName}
                 {...commProps} />
             })
           }><IconType value={record.finalReportUrl} />  上传结案报告</a> : null
@@ -164,7 +173,7 @@ function CooperationList(props) {
                 okFn={updatePlatformOrderAsync}
                 cancelFn={() => setModalProps({ visible: false })} />
             })}>驳回</Button> : null}
-          {medium_await || partner_await || pending || over ? <Button onClick={() => window.open(`orders-coodetail?orderId=${adOrderId}`)}>查看详情</Button> : null}
+          <Button onClick={() => window.open(`orders-coodetail?orderId=${adOrderId}`)}>查看详情</Button>
         </div>
       },
     },
@@ -173,15 +182,17 @@ function CooperationList(props) {
     rowSelection: selectedRow,
     onChange: (selectedRowKeys) => setSelectedRow(selectedRowKeys)
   }
-
+  const selectedRowSize = selectedRow.length
   return (
     <>
+      <Alert message={`已选择 ${selectedRowSize} 个账号，合计：${platformOrderList.total || '-'} 个`} type="info" style={{ marginTop: 20 }} />
       <Scolltable scrollClassName='.ant-table-body' widthScroll={2000}>
         <Table dataSource={list}
+          key={isCleanSelected}//确认执行空清空选中数据
           columns={columns}
           rowSelection={rowSelection}
           scroll={{ x: 1800 }}
-          rowKey='orderId'
+          rowKey='adOrderId'
           pagination={{
             pageSize: platformOrderList.pageSize || 1,
             showSizeChanger: true,
@@ -216,6 +227,6 @@ export default CooperationList
 
 
 
-const IconType = (value) => {
+const IconType = ({ value }) => {
   return value ? <Icon type="check-circle" theme="filled" style={{ color: '#5ccd5c' }} /> : <Icon type="exclamation-circle" theme="filled" style={{ color: '#fd3d11' }} />
 }

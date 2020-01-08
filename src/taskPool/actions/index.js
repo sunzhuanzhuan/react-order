@@ -16,16 +16,6 @@ export * from './setting'
 // });
 
 
-// 获取任务大厅行业列表
-export const {
-  TPGetTaskIndustry
-} = createHttpAction('TPGetTaskIndustry', Interface.getTaskIndustry);
-
-// 下线任务
-export const {
-  TPOffline
-} = createHttpAction('TPOffline', Interface.offline);
-
 // 根据公司名称模糊查询公司列表
 export const {
   TPFuzzyQueryCompany
@@ -56,13 +46,6 @@ export const TPTaskDetailClear = createAction('TPTaskDetailClear', (data) => {
   return { data }
 })
 
-// 查询博主领取列表
-export const {
-  TPMcnOrderList,
-  TPMcnOrderList_success
-} = createHttpAction('TPMcnOrderList', Interface.mcnOrderList, {
-  method: 'post'
-});
 
 // 异常任务管理列表
 export const {

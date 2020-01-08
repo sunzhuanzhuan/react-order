@@ -30,6 +30,7 @@ export const orderMcnDetailInfo = handleActions({
 //获取数据曲线
 export const dataCurvelist = handleActions({
   [order.TPQueryDataCurve_success]: (state, action) => {
-    return [...action.payload.data]
+    const { data = [] } = { ...action.payload }
+    return [...data]
   },
 }, [])

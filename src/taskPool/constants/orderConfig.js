@@ -51,3 +51,4 @@ export const putTypeMap = {
   '1': '按天投放',
   '2': '按量投放'
 }
+

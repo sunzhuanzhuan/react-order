@@ -1,5 +1,5 @@
 import React from 'react'
-import { Tag, Divider } from 'antd'
+import { Tag, Divider, Icon } from 'antd'
 import TitleBox from '../../base/TitleBox'
 import './DetailsShow.less'
 import { PopoverIcon } from '../../base/MessageIcon'
@@ -20,7 +20,13 @@ function DetailsShow(props) {
     { label: "账号名称", value: base.snsName },
     { label: "账号ID", value: base.snsId },
     { label: "主页链接", value: '' },
-    { label: "二维码", value: <div>img</div> },
+    {
+      label: "二维码", value: <div>
+        <PopoverIcon type="qrcode" marginLeft='0'
+          content={<img src={base.qrCodeUrl} width='100' height='100' alt='二维码' />}
+        />
+      </div>
+    },
     { label: "账号简介", value: base.introduction },
     { label: "account ID", value: accountId }
   ]
@@ -45,7 +51,7 @@ function DetailsShow(props) {
       <TitleBox title='数据信息'>
         <div className='data-right'>
           <LineList list={[{ label: '粉丝数：', value: base.followerCount },
-          { label: '粉丝数截图：', value: <img src={base.followerCountScreenshotUrl} /> }]} />
+          { label: '粉丝数截图：', value: <img src={base.followerCountScreenshotUrl} width='200' height='200' onClick={() => window.open(base.followerCountScreenshotUrl)} className='follower-count-img' /> }]} />
         </div>
         <Divider orientation="left">内容分类</Divider>
         <div className='data-right'>
@@ -78,7 +84,7 @@ function DetailsShow(props) {
             { label: '受众性别：', value: <AudienceLine list={getTypeList(1)} /> },
             { label: '受众地域Top3：', value: <AudienceArea list={getTypeList(2)} /> },
             { label: '受众年龄Top3：', value: <AudienceLine list={getTypeList(3)} /> },
-            { label: '数据截图：', value: <img src={1} /> },
+            { label: '数据截图：', value: <img src={1} width='200' height='200' onClick={() => window.open(base.followerCountScreenshotUrl)} className='follower-count-img' /> },
             { label: 'KPI/KPI上线', value: base.birthDate }
           ]} />
         </div>

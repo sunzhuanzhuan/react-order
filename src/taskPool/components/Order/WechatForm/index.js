@@ -1,6 +1,7 @@
 import React from 'react'
 import { Form, Input, InputNumber, DatePicker, Button, Select } from 'antd'
 import moment from 'moment'
+const format = 'YYYY-MM-DD HH:mm:ss'
 const { RangePicker } = DatePicker;
 function WeChatForm(props) {
   const { form, mcnOrderStateList = [], resetWachat } = props
@@ -10,13 +11,13 @@ function WeChatForm(props) {
       if (!err) {
         let allValue = { ...values }
         if (values.receiveAt) {
-          allValue.form.receiveAtStart = values.receiveAt[0]
-          allValue.form.receiveAtEnd = values.receiveAt[1]
+          allValue.form.receiveAtStart = moment(values.receiveAt[0]).format(format)
+          allValue.form.receiveAtEnd = moment(values.receiveAt[1]).format(format)
           delete allValue.receiveAt
         }
         if (values.expectedPublishedTime) {
-          allValue.form.expectedPublishedTimeStart = values.expectedPublishedTime[0]
-          allValue.form.expectedPublishedTimeEnd = values.expectedPublishedTime[1]
+          allValue.form.expectedPublishedTimeStart = moment(values.expectedPublishedTime[0]).format(format)
+          allValue.form.expectedPublishedTimeEnd = moment(values.expectedPublishedTime[1]).format(format)
           delete allValue.expectedPublishedTime
 
         }
@@ -50,8 +51,8 @@ function WeChatForm(props) {
         <Form.Item label='订单状态'>
           {getFieldDecorator('form.orderState', {})(
             <Select style={{ width: 170 }} placeholder='请选择' >
-              {mcnOrderStateList.map(one => <Select.Option key={one.label} value={one.label}>
-                {one.value}
+              {mcnOrderStateList.map(one => <Select.Option key={one.stateKey} value={one.stateKey}>
+                {one.mcnOrderStateName}
               </Select.Option>)}
             </Select>
           )}

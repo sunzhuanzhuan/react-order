@@ -15,10 +15,12 @@ function CooperationForm(props) {
         if (values.orderStartDate) {
           values.form.orderStartDateStart = moment(values.orderStartDate[0]).format(format)
           values.form.orderStartDateEnd = moment(values.orderStartDate[1]).format(format)
+          delete values.orderStartDate
         }
         if (values.orderEndDate) {
           values.form.orderEndDateStart = moment(values.orderEndDate[0]).format(format)
           values.form.orderEndDateEnd = moment(values.orderEndDate[1]).format(format)
+          delete values.orderEndDate
         }
         props.searchAction(values)
       }

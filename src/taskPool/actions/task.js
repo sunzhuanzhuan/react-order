@@ -14,6 +14,11 @@ export const {
   method: 'post'
 });
 
+// 下线任务
+export const {
+  TPOfflineTask
+} = createHttpAction('TPOfflineTask', Interface.task.offline);
+
 // 获取任务大厅行业列表
 export const {
   TPGetIndustryCatalog
@@ -34,6 +39,12 @@ export const {
 export const {
   TPAddTask
 } = createHttpAction('TPAddTask', Interface.task.addTask, {
+  method: 'post'
+});
+// 更新任务
+export const {
+  TPUpdateTask
+} = createHttpAction('TPUpdateTask', Interface.task.updateTask, {
   method: 'post'
 });
 
@@ -69,3 +80,32 @@ export const {
   TPTaskDetail,
   TPTaskDetail_success
 } = createHttpAction('TPTaskDetail', Interface.task.taskDetail);
+
+// 查询博主领取列表
+export const {
+  TPMcnOrderList,
+  TPMcnOrderList_success
+} = createHttpAction('TPMcnOrderList', Interface.task.mcnOrderList, {
+  method: 'post'
+});
+// 查询博主申请列表
+export const {
+  TPMcnOrderListByTemp,
+  TPMcnOrderListByTemp_success
+} = createHttpAction('TPMcnOrderListByTemp', Interface.task.mcnOrderListByTemp, {
+  method: 'post'
+});
+// 查询博主申请列表
+export const {
+  TPMcnOrderEvaluate,
+} = createHttpAction('TPMcnOrderEvaluate', Interface.task.mcnOrderEvaluate, {
+  method: 'post'
+});
+
+// 获取任务大厅行业列表(分页查询行业列表)
+export const {
+  TPGetIndustryList,
+  TPGetIndustryList_success
+} = createHttpAction('TPGetIndustryList', Interface.task.getIndustryList, {
+  method: 'post'
+});

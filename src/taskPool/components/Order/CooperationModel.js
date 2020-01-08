@@ -4,7 +4,7 @@ import { OssUpload } from 'wbyui'
 import { action } from "./WechatList/ModalContent";
 const { TextArea } = Input;
 export const formItemLayout = {
-  labelCol: { span: 6 },
+  labelCol: { span: 9 },
   wrapperCol: { span: 14 },
 }
 function CooperationModel(props) {
@@ -31,11 +31,20 @@ function CooperationModel(props) {
       }
     });
   }
+  const { fileName, fileUrl, item } = props
+  const defaultFile = fileUrl ? [{
+    uid: '-1',
+    name: fileName,
+    status: 'done',
+    url: fileUrl,
+  }] : []
   return (
     <Form layout='horizontal'>
       {props.isPrice ? <Form.Item label='合作平台结算金额（元）' {...formItemLayout}>
         {getFieldDecorator('platformSettlementAmount', {
-          rules: [{ required: true, message: '请输入合作平台结算金额!' }],
+          initialValue: item.platformSettlementAmount,
+          rules: [{ required: true, message: '请输入合作平台结算金额!' },
+          { max: 13, message: '最大输入13位数字!' }],
         })(
           <Input placeholder="请输入" />,
         )}
@@ -43,6 +52,7 @@ function CooperationModel(props) {
       <Form.Item label={`上传${props.isPrice ? '执行单' : '结案报告'}`} {...formItemLayout}>
         {getFieldDecorator('fileUrl', {
           valuePropName: 'fileList',
+          initialValue: defaultFile,
           getValueFromEvent: e => e && e.fileList,
           rules: [
             { message: `请上传${props.isPrice ? '执行单' : '结案报告'}`, required: true, type: "array" }
@@ -76,13 +86,16 @@ function Reject(props) {
   function okFn() {
     validateFields((err, values) => {
       if (!err) {
-        props.okFn({ operationFlag: 2, adOrderId: props.adOrderId, ...values })
+        props.okFn({ operationFlag: 2, adOrderIds: props.adOrderId, ...values })
         props.cancelFn()
       }
     });
   }
   return <Form layout='horizontal'>
-    <Form.Item label='驳回原因' {...formItemLayout}>
+    <Form.Item label='驳回原因'
+      labelCol={{ span: 4 }}
+      wrapperCol={{ span: 20 }}
+    >
       {getFieldDecorator('refusalReason', {
         rules: [{ required: true, message: '请输入驳回原因!' }],
       })(
