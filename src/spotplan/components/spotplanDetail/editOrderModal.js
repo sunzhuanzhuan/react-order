@@ -89,7 +89,7 @@ class EditOrderModal extends React.Component {
         <FormItem label='账号名称' {...formItemLayout}>{data && data[0].weibo_name}</FormItem>
         <FormItem label='账号ID（必填）' {...formItemLayout}>
           {getFieldDecorator('weibo_id', {
-            initialValue: data && data[0].weibo_id == 23 ? null : data && data[0].weibo_id || '',
+            initialValue: data && data[0].weibo_type == 23 ? '-' : data && data[0].weibo_id || '',
             rules: [{ required: true, message: '请填写账号ID' }, {
               validator: (rule, value, callback) => {
                 let reg = /^[^\u4e00-\u9fa5]{0,255}$/

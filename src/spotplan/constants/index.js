@@ -172,7 +172,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
           }]
         })(
           <Input onFocus={() => {
-            if (record.weibo_id == 23) {
+            if (record.weibo_type == 23) {
               let newWei = `${record.order_id}.weibo_id`;
               setFieldsValue({ [newWei]: '' });
             }
