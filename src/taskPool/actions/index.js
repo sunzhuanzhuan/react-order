@@ -7,16 +7,6 @@ export * from './task'
 export * from './attribute'
 
 
-// 获取任务大厅行业列表
-export const {
-  TPGetTaskIndustry
-} = createHttpAction('TPGetTaskIndustry', Interface.getTaskIndustry);
-
-// 下线任务
-export const {
-  TPOffline
-} = createHttpAction('TPOffline', Interface.offline);
-
 // 根据公司名称模糊查询公司列表
 export const {
   TPFuzzyQueryCompany

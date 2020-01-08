@@ -4,9 +4,7 @@ const cooperationPlatform = prefix + '/cooperationPlatform/v2'
 const mcnOrder = prefix + '/mcnOrder/v1'
 const configManage = prefix + '/configManage/v1'
 export default {
-  getTaskIndustry: prefix + "/common/v1/getTaskIndustry",
   TPGetTaskPosition: prefix + "/adOrder/v1/getTaskLocationInfoB",
-  offline: prefix + "/adOrder/v1/offline",
   taskManageList: prefix + "/adOrder/v1/list",
   fuzzyQueryCompany: prefix + "/company/v1/fuzzyQuery",
   queryAvailableBalance: prefix + "/finance/v1/queryAvailableBalance",
@@ -84,6 +82,9 @@ export default {
     mcnOrderList: prefix + "/adOrder/v1/mcnOrderList",
     mcnOrderListByTemp: prefix + "/adOrder/v1/mcnOrderList",
     mcnOrderEvaluate: mcnOrder + "/mcnOrderEvaluate",
+    getIndustryList: configManage + "/getIndustryList",
+    offline: prefix + "/adOrder/v1/offline",
+
   }
 }
 

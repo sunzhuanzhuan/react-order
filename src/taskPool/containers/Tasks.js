@@ -271,7 +271,7 @@ const Tasks = (props) => {
       title: '下线任务',
       content: `确认下线 ${record.companyName} —— “${record.orderName}” 的任务么？`,
       onOk: () => {
-        return actions.TPOffline({ id }).then(() => {
+        return actions.TPOfflineTask({ id }).then(() => {
           message.success('下线成功')
           getList({page: { currentPage: 1 }})
         })
@@ -285,7 +285,7 @@ const Tasks = (props) => {
       title: '上线任务',
       content: `任务还未到上线时间，确定要立即上线该任务么？？`,
       onOk: () => {
-        return actions.TPOffline({ id }).then(() => {
+        return actions.TPOfflineTask({ id }).then(() => {
           message.success('上线成功')
           getList({page: { currentPage: 1 }})
         })
@@ -299,7 +299,7 @@ const Tasks = (props) => {
       title: '终止任务',
       content: `确认终止 ${record.companyName} —— “${record.orderName}” 的任务么？`,
       onOk: () => {
-        return actions.TPOffline({ id }).then(() => {
+        return actions.TPOfflineTask({ id }).then(() => {
           message.success('任务已终止')
           getList({page: { currentPage: 1 }})
         })

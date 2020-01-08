@@ -4,7 +4,7 @@ import { bindActionCreators } from "redux";
 import * as commonActions from '@/actions'
 import * as actions from '../actions'
 import LoadingWrapped from '@/base/LoadingWrapped';
-import { useParams } from 'react-router-dom'
+import { useParams, useHistory } from 'react-router-dom'
 import { DetailsFor12306, DetailsForWeiXin } from '@/taskPool/components/Task/Details';
 import { Empty } from 'antd';
 
@@ -16,6 +16,7 @@ const children = {
 
 const TaskDetail = (props) => {
   const { id } = useParams()
+  const history = useHistory()
   const [ loading, setLoading ] = useState(true)
 
   useEffect(() => {
@@ -29,7 +30,7 @@ const TaskDetail = (props) => {
       setLoading(false)
     })
   }
-  const { actions, history, taskPoolData } = props
+  const { actions, taskPoolData } = props
   const { mcnOrderList, taskDetail, mcnOrderListByTemp } = taskPoolData
   const Child = children[taskDetail.platformId || "default"]
 
@@ -41,6 +42,7 @@ const TaskDetail = (props) => {
           mcnOrderList={mcnOrderList}
           mcnOrderListByTemp={mcnOrderListByTemp}
           actions={actions}
+          history={history}
         />
       </div>
     </LoadingWrapped>
