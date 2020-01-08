@@ -83,6 +83,7 @@ export default {
     taskDetail: prefix + "/adOrder/v1/detail_2",
     mcnOrderList: prefix + "/adOrder/v1/mcnOrderList",
     mcnOrderListByTemp: prefix + "/adOrder/v1/mcnOrderList",
+    mcnOrderEvaluate: mcnOrder + "/mcnOrderEvaluate",
   }
 }
 

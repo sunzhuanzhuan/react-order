@@ -9,7 +9,7 @@ import {
   Divider,
   Table,
   Modal,
-  Badge, message
+  Badge, message, Rate
 } from 'antd'
 import Section from "@/base/Section";
 import {
@@ -32,193 +32,50 @@ import {
 } from "@/taskPool/constants/config";
 import numeral from '@/util/numeralExpand';
 import { Link } from 'react-router-dom'
+import OrderMcnStatus from '@/taskPool/base/OrderMcnStatus';
 
-const columns = [
-  {
-    title: '博主名称',
-    dataIndex: 'snsName',
-    render: (name, record) => {
-      return <KolInfo title={name} avatar={record.avatarUrl} />
-    }
-  },
-  {
-    title: 'Account_ID',
-    dataIndex: 'accountId',
-    render: (data, record) => {
-      return data
-    }
-  },
-  {
-    title: '领取时间',
-    align: "center",
-    dataIndex: 'receiveAt',
-    render: (date, record) => {
-      return dateDisplayByLen(date, "m")
-    }
-  },
-  {
-    title: '预计推送时间',
-    align: "center",
-    dataIndex: 'expectedPublishedTime',
-    render: (date, record) => {
-      return dateDisplayByLen(date, "m")
-    }
-  },
-  {
-    title: '图文发布位置',
-    align: "center",
-    dataIndex: 'locationLimitedInfo',
-    render: (locationLimitedInfo, record) => {
-      return locationLimitedInfo
-    }
-  },
-  {
-    title: 'KPI阅读/实际阅读',
-    align: "center",
-    dataIndex: 'KPI阅读/实际阅读',
-    render: (data, record) => {
-      const { expectActionNum, realActionNum } = record;
-      return `${expectActionNum || 0}/${realActionNum || 0}`
-    }
-  },
-  {
-    title: '预算消耗',
-    align: "center",
-    dataIndex: 'adAmount',
-    render: (amount, record) => {
-      return <Yuan value={record.orderState === MCN_ORDER_STATE_UNQUALIFIED ? 0 : amount}
-                   format={"0,0.00"} style={{ color: "#333" }} />
-    }
-  },
-  {
-    title: '服务费消耗',
-    align: "center",
-    dataIndex: 'serviceAmount',
-    render: (amount, record) => {
-      return <Yuan value={record.orderState === MCN_ORDER_STATE_UNQUALIFIED ? 0 : amount}
-                   format={"0,0.00"} style={{ color: "#333" }} />
-    }
-  },
-  {
-    title: '订单状态',
-    align: "center",
-    dataIndex: 'orderState',
-    render: (amount, record) => {
-      return amount
-    }
-  },
-  {
-    title: '操作',
-    dataIndex: 'contentUrl',
-    align: "center",
-    render: (url, record) => {
-      return record.orderState === MCN_ORDER_STATE_CANCEL ? null : <div>
-        {url && <a target="_blank" href={url}>查看文章</a>}
-        {record.snapshotUrl && <>
-          <Divider type="vertical" />
-          <a target="_blank" href={record.snapshotUrl}>查看快照</a>
-        </>}
-        <>
-          <Divider type="vertical" />
-          <Link to={`/order/task/orders-coodetail?orderId=${record.orderId}`} target="_blank" >查看数据统计</Link>
-        </>
-        <>
-          <Divider type="vertical" />
-          <a>评价</a>
-        </>
-      </div>
-    }
+
+class RaterModal extends React.Component {
+  state = {
+    value: 0,
+    loading: false
+  };
+
+  handleChange = value => {
+    this.setState({ value });
+  };
+
+  submit = () => {
+    this.setState({ loading: true });
+    this.props.action({
+      mcnOrderId: this.props.id,
+      orderScore: this.state.value
+    }).then(() => {
+      this.setState({ loading: false });
+      this.props.cancel()
+    }).catch(() => {
+      this.setState({ loading: false });
+    })
   }
-]
-const columnsByTemp = [
-  {
-    title: '博主',
-    dataIndex: 'snsName',
-    render: (name, record) => {
-      return <KolInfo title={name} avatar={record.avatarUrl} />
-    }
-  },
-  {
-    title: 'Account_ID',
-    dataIndex: 'accountId',
-    render: (data, record) => {
-      return data
-    }
-  },
-  {
-    title: '领取时间',
-    align: "center",
-    dataIndex: 'createdAt',
-    render: (date, record) => {
-      return dateDisplayByLen(date, "m")
-    }
-  },
-  {
-    title: '执行状态',
-    align: "center",
-    dataIndex: 'executionState',
-    render: (executionState, record) => {
-      return executionState === 1 ? "已执行" : "未执行"
-    }
-  },
-  {
-    title: '质检状态',
-    align: "center",
-    dataIndex: 'orderState',
-    render: (status, record) => {
-      return <QAStatus status={status} />
-    }
-  },
-  {
-    title: 'KPI阅读/实际阅读',
-    align: "center",
-    dataIndex: 'KPI阅读/实际阅读',
-    render: (data, record) => {
-      const { expectActionNum, realActionNum } = record;
-      return `${expectActionNum || 0}/${realActionNum || 0}`
-    }
-  },
-  // {
-  //   title: '达成数',
-  //   align: "center",
-  //   dataIndex: 'realActionNum',
-  //   render: (realActionNum, record) => {
-  //     return <div>{record.orderState === MCN_ORDER_STATE_UNQUALIFIED ? "-" : realActionNum || '-'}</div>
-  //   }
-  // },
-  {
-    title: '结算价格',
-    align: "center",
-    dataIndex: 'adRealAmount',
-    render: (amount, record) => {
-      return <Yuan value={record.orderState === MCN_ORDER_STATE_UNQUALIFIED ? 0 : amount}
-                   format={"0,0.00"} style={{ color: "#333" }} />
-    }
-  },
-  {
-    title: '成本价格',
-    align: "center",
-    dataIndex: 'realAmount',
-    render: (amount, record) => {
-      return <Yuan value={record.orderState === MCN_ORDER_STATE_UNQUALIFIED ? 0 : amount}
-                   format={"0,0.00"} style={{ color: "#333" }} />
-    }
-  },
-  {
-    title: '操作',
-    dataIndex: 'contentUrl',
-    align: "center",
-    render: (url, record) => {
-      return record.orderState === MCN_ORDER_STATE_CANCEL ? null : <div>
-        {url && <a target="_blank" href={url}>查看文章</a>}
-        {record.snapshotUrl && <span>
-          <Divider type="vertical" />
-          <a target="_blank" href={record.snapshotUrl}>查看快照</a>
-        </span>}
-      </div>
-    }
+
+  render() {
+    const { value, loading } = this.state;
+    const desc = [ '1星', '2星', '3星', '4星', '5星' ];
+    return (
+      <Modal visible width={300} footer={null} centered onCancel={this.props.cancel}>
+        <div style={{ textAlign: 'center', paddingTop: 20 }}>
+          总体
+          <Rate style={{ margin: "0 10px" }} tooltips={desc} onChange={this.handleChange}
+                value={value} />
+          {/*{value ? <span>{desc[value - 1]}</span> : ""}*/}
+          <br />
+          <Button loading={loading} onClick={this.submit} disabled={!value}
+                  style={{ marginTop: 20, width: 120 }} type="primary">确定</Button>
+        </div>
+      </Modal>
+    );
   }
-]
+}
 
 export default class DetailsForWeiXin extends Component {
   constructor(props) {
@@ -245,13 +102,206 @@ export default class DetailsForWeiXin extends Component {
       },
       listLoading: false,
       listLoadingByTemp: false,
-      detailLoading: false
+      detailLoading: false,
+      raterOrderId: 0
     }
+
+    this.columns = [
+      {
+        title: '博主名称',
+        dataIndex: 'snsName',
+        render: (name, record) => {
+          return <KolInfo title={name} avatar={record.avatarUrl} />
+        }
+      },
+      {
+        title: 'Account_ID',
+        dataIndex: 'accountId',
+        render: (data, record) => {
+          return data
+        }
+      },
+      {
+        title: '领取时间',
+        align: "center",
+        dataIndex: 'receiveAt',
+        render: (date, record) => {
+          return dateDisplayByLen(date, "m")
+        }
+      },
+      {
+        title: '预计推送时间',
+        align: "center",
+        dataIndex: 'expectedPublishedTime',
+        render: (date, record) => {
+          return dateDisplayByLen(date, "m")
+        }
+      },
+      {
+        title: '图文发布位置',
+        align: "center",
+        dataIndex: 'locationLimitedInfo',
+        render: (locationLimitedInfo, record) => {
+          return locationLimitedInfo
+        }
+      },
+      {
+        title: 'KPI阅读/实际阅读',
+        align: "center",
+        dataIndex: 'KPI阅读/实际阅读',
+        render: (data, record) => {
+          const { expectActionNum, realActionNum } = record;
+          return `${expectActionNum || 0}/${realActionNum || 0}`
+        }
+      },
+      {
+        title: '预算消耗',
+        align: "center",
+        dataIndex: 'adAmount',
+        render: (amount, record) => {
+          return <Yuan value={record.orderState === MCN_ORDER_STATE_UNQUALIFIED ? 0 : amount}
+                       format={"0,0.00"} style={{ color: "#333" }} />
+        }
+      },
+      {
+        title: '服务费消耗',
+        align: "center",
+        dataIndex: 'serviceAmount',
+        render: (amount, record) => {
+          return <Yuan value={record.orderState === MCN_ORDER_STATE_UNQUALIFIED ? 0 : amount}
+                       format={"0,0.00"} style={{ color: "#333" }} />
+        }
+      },
+      {
+        title: '订单状态',
+        align: "center",
+        dataIndex: 'orderState',
+        render: (state, record) => {
+          return <OrderMcnStatus value={state} />
+        }
+      },
+      {
+        title: '操作',
+        dataIndex: 'contentUrl',
+        align: "center",
+        render: (url, record) => {
+          return record.orderState === MCN_ORDER_STATE_CANCEL ? null : <div>
+            {url && <a target="_blank" href={url}>查看文章</a>}
+            {record.snapshotUrl && <>
+              <Divider type="vertical" />
+              <a target="_blank" href={record.snapshotUrl}>查看快照</a>
+            </>}
+            <>
+              <Divider type="vertical" />
+              <Link to={`/order/task/orders-coodetail?orderId=${record.orderId}`}
+                    target="_blank">查看数据统计</Link>
+            </>
+            <>
+              <Divider type="vertical" />
+              <a>评价</a>
+            </>
+          </div>
+        }
+      }
+    ]
+    this.columnsByTemp = [
+      {
+        title: '博主',
+        dataIndex: 'snsName',
+        render: (name, record) => {
+          return <KolInfo title={name} avatar={record.avatarUrl} />
+        }
+      },
+      {
+        title: 'Account_ID',
+        dataIndex: 'accountId',
+        render: (data, record) => {
+          return data
+        }
+      },
+      {
+        title: '领取时间',
+        align: "center",
+        dataIndex: 'createdAt',
+        render: (date, record) => {
+          return dateDisplayByLen(date, "m")
+        }
+      },
+      {
+        title: '执行状态',
+        align: "center",
+        dataIndex: 'executionState',
+        render: (executionState, record) => {
+          return executionState === 1 ? "已执行" : "未执行"
+        }
+      },
+      {
+        title: '质检状态',
+        align: "center",
+        dataIndex: 'orderState',
+        render: (status, record) => {
+          return <QAStatus status={status} />
+        }
+      },
+      {
+        title: 'KPI阅读/实际阅读',
+        align: "center",
+        dataIndex: 'KPI阅读/实际阅读',
+        render: (data, record) => {
+          const { expectActionNum, realActionNum } = record;
+          return `${expectActionNum || 0}/${realActionNum || 0}`
+        }
+      },
+      // {
+      //   title: '达成数',
+      //   align: "center",
+      //   dataIndex: 'realActionNum',
+      //   render: (realActionNum, record) => {
+      //     return <div>{record.orderState === MCN_ORDER_STATE_UNQUALIFIED ? "-" : realActionNum || '-'}</div>
+      //   }
+      // },
+      {
+        title: '结算价格',
+        align: "center",
+        dataIndex: 'adRealAmount',
+        render: (amount, record) => {
+          return <Yuan value={record.orderState === MCN_ORDER_STATE_UNQUALIFIED ? 0 : amount}
+                       format={"0,0.00"} style={{ color: "#333" }} />
+        }
+      },
+      {
+        title: '成本价格',
+        align: "center",
+        dataIndex: 'realAmount',
+        render: (amount, record) => {
+          return <Yuan value={record.orderState === MCN_ORDER_STATE_UNQUALIFIED ? 0 : amount}
+                       format={"0,0.00"} style={{ color: "#333" }} />
+        }
+      },
+      {
+        title: '操作',
+        dataIndex: 'contentUrl',
+        align: "center",
+        render: (url, record) => {
+          return record.orderState === MCN_ORDER_STATE_CANCEL ? null : <div>
+            {url && <a target="_blank" href={url}>查看文章</a>}
+            {record.snapshotUrl && <span>
+          <Divider type="vertical" />
+          <a target="_blank" href={record.snapshotUrl}>查看快照</a>
+        </span>}
+          </div>
+        }
+      }
+    ]
   }
 
   componentWillUnmount() {
     const { actions } = this.props
     actions.TPTaskDetailClear()
+  }
+
+  handleRater = (raterOrderId) => {
+    this.setState({ raterOrderId });
   }
 
   // 下线
@@ -270,7 +320,7 @@ export default class DetailsForWeiXin extends Component {
   }
 
   preview = () => {
-    const { details } = this.props.taskPoolData
+    const { details } = this.props
 
     const content = details.adOrderWeixinContent
     let richContent;
@@ -367,8 +417,8 @@ export default class DetailsForWeiXin extends Component {
   }
 
   render() {
-    const { mcnOrderListByTemp, mcnOrderList: { keys, source, total, pageNum, pageSize }, details } = this.props
-    const { listLoading, search, listLoadingByTemp, searchByTemp } = this.state
+    const { mcnOrderListByTemp, mcnOrderList: { keys, source, total, pageNum, pageSize }, details, actions } = this.props
+    const { listLoading, search, listLoadingByTemp, searchByTemp, raterOrderId } = this.state
 
     const dataSource = keys.map(key => source[key]);
     const dataSourceByTemp = mcnOrderListByTemp.keys.map(key => mcnOrderListByTemp.source[key]);
@@ -376,6 +426,7 @@ export default class DetailsForWeiXin extends Component {
     const features = details.adOrderWeixinContent
 
     return <>
+      {raterOrderId > 0 && <RaterModal action={actions.TPMcnOrderEvaluate} cancel={() => this.handleRater(0)} id={raterOrderId} />}
       <PageHeader
         onBack={() => this.props.history.go(-1)}
         title="任务详情"
@@ -486,7 +537,7 @@ export default class DetailsForWeiXin extends Component {
           <Table
             loading={listLoadingByTemp}
             dataSource={dataSourceByTemp}
-            columns={columnsByTemp}
+            columns={this.columnsByTemp}
             pagination={{
               size: 'small',
               total: mcnOrderListByTemp.total,
@@ -512,7 +563,7 @@ export default class DetailsForWeiXin extends Component {
           <Table
             loading={listLoading}
             dataSource={dataSource}
-            columns={columns}
+            columns={this.columns}
             pagination={{
               size: 'small',
               total,
