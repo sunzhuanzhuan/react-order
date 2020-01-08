@@ -29,6 +29,8 @@ function AccountDetails(props) {
     ...searchParam, accountDetail, actions,
     accountEstimateDetails
   }
+  console.log("TCL: AccountDetails -> searchParam", searchParam)
+
   const {
     auditState//审核状态   1：待审核（默认） 2：未通过 3：已通过
   } = accountDetail
@@ -39,7 +41,7 @@ function AccountDetails(props) {
 
         <Collapse defaultActiveKey={['1', '2']}>
           <Panel header="账号审核" key="1">
-            <DetailsShow accountDetail={accountDetail} />
+            <DetailsShow accountDetail={accountDetail}  {...searchParam} />
             {auditState == 1 ? <AuditResults accountDetail={accountDetail} actions={actions} {...searchParam} /> : null}
           </Panel>
           {auditState == 3 ? <Panel header="内容评估" key="2">

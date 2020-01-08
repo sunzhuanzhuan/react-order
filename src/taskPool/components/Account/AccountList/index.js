@@ -5,10 +5,7 @@ import MessageIcon from '../../../base/MessageIcon'
 import './index.less'
 import TextArea from 'antd/lib/input/TextArea'
 const { confirm } = Modal;
-const shelfState = {
-  1: { name: '上架', state: 'success' },
-  2: { name: '下架', state: 'error' }
-}
+
 function AccountList(props) {
   const [selectedRow, setSelectedRow] = useState([])
   const { setModalProps, batchUpdateAccountStateAsync, accountList, updateAccountStateMsgAsync } = props
@@ -64,9 +61,7 @@ function AccountList(props) {
       dataIndex: 'shelfState',
       key: 'shelfState',
       align: 'center',
-      render: text => {
-        return text ? <Badge status={shelfState[text].state} text={shelfState[text].name} /> : null
-      }
+      render: (text, record) => <StateInfo value={text} okText='上架' errorText='下架' errorReson={record.remark} />
     },
     {
       title: 'KPI / KPI上限',
@@ -146,7 +141,7 @@ function AccountList(props) {
       title: '填写下架原因（50字以内）',
       content: (props) => <ReasonForm okText='确认下架'
         onOk={(value) => updateAccountStateMsgAsync(
-          { remark: value, accountId: accountId, operationFlag: 2 }
+          { remark: value, accountId: accountId, shelfState: 2 }
         )} {...props} />,
       visible: true,
     })
@@ -155,14 +150,14 @@ function AccountList(props) {
     confirm({
       title: '确认上架吗?',
       onOk() {
-        updateAccountStateMsgAsync({ accountId: accountId, operationFlag: 1 })
+        updateAccountStateMsgAsync({ accountId: accountId, shelfState: 1 })
       },
       onCancel() { },
     });
   }
   const isShowCheacked = selectedRow.length == 0
   return (<>
-    {isShowCheacked ? null : <Alert message={<span>已选择 <a>{selectedRow.length}</a> 个账号    合计：{10} 个</span>} type="info" />}
+    <Alert message={<span>已选择 <a>{selectedRow.length}</a> 个账号    合计：{accountList.total} 个</span>} type="info" />
     <br />
     <Scolltable scrollClassName='.ant-table-body' widthScroll={2000}>
       <Table dataSource={list} columns={columns} rowKey='accountId'
@@ -216,9 +211,9 @@ export const StateInfo = ({ value, okText = '正常', errorText = '异常', erro
   return value ? <div>
     {value == 1 && <Badge status='success' text={okText}></Badge>}
     {value == 2 && <><Badge status='error' text={errorText}></Badge>
-      <MessageIcon title={errorReson || '无'} />
+      <MessageIcon title={errorReson || ''} />
     </>}
-  </div> : '-'
+  </div> : ''
 }
 
 function Reason(props) {
