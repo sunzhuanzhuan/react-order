@@ -145,7 +145,7 @@ const IndustryList = (props) => {
           {
             record.industryLevel === 1 && <>
               <Divider type="vertical" />
-              <a onClick={() => offline(id, record)}>添加行业</a>
+              <Link to={`/order/task/attributes-create/${id}/${record.industryName}`}>添加行业</Link>
             </>
           }
         </div>

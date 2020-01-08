@@ -40,7 +40,7 @@ class Business extends Component {
           <Route path="/order/task/clues-manage" component={Clues} />
           <Route path="/order/task/clues-details" component={CluesDetails} />
           <Route path="/order/task/attributes-manage" component={Attributes} />
-          <Route path="/order/task/attributes-create" component={CreateAttribute} />
+          <Route path="/order/task/attributes-create/:id/:name" component={CreateAttribute} />
           <Route path="/order/task/platform-manage" component={Platform} />
           <Route path="/order/task/settings-manage" component={Settings} />
           <Route path="/order/task/account-manage" component={Account} />
