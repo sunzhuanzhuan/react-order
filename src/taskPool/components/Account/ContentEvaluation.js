@@ -80,7 +80,7 @@ class ContentEvaluation extends React.Component {
     };
   }
   componentDidMount = async () => {
-    const { data } = await this.props.actions.getAccountEstimateDetails({ accountId: this.props.accountId })
+    const { data } = await this.props.actions.TPGetAccountEstimateDetails({ accountId: this.props.accountId })
     this.setState({ data: data, dataSource: data.estimateitems })
   }
   handleDelete = key => {
@@ -99,8 +99,8 @@ class ContentEvaluation extends React.Component {
     this.setState({ dataSource: newData });
   };
   submitForm = async () => {
-    this.props.actions.accountEstimateSubmit({ estimateitems: this.state.dataSource })
-    this.props.actions.getAccountEstimateDetails({ accountId: this.props.accountId })
+    this.props.actions.TPAccountEstimateSubmit({ estimateitems: this.state.dataSource })
+    this.props.actions.TPGetAccountEstimateDetails({ accountId: this.props.accountId })
   }
   render() {
     const { dataSource, } = this.state;

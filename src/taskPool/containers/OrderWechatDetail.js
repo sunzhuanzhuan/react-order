@@ -35,8 +35,8 @@ function OrderWechatDetail(props) {
     { label: '发布平台', content: orderMcnDetailInfo.platformName },
     { label: '图文发布位置', content: orderMcnDetailInfo.locationLimitedInfo },
 
-    { label: '任务ID', content: orderMcnDetailInfo.adOrderNumber },
-    { label: '订单ID', content: orderMcnDetailInfo.mcnOrderId },
+    { label: '任务ID', content: orderMcnDetailInfo.adOrderId },
+    { label: '订单ID', content: orderMcnDetailInfo.id },
     { label: '领取时间', content: orderMcnDetailInfo.receiveAt },
 
     { label: '所属公司', content: orderMcnDetailInfo.companyName },
@@ -50,12 +50,6 @@ function OrderWechatDetail(props) {
     { label: '申请阅读数', content: <div className='red-text'>{getNumber(orderMcnDetailInfo.expectActionNum)}</div> },
 
   ]
-  const orderInfo = [
-    { label: '订单状态', content: orderMcnDetailInfo.orderStateDesc, span: 3 },
-    { label: '订单冻结金额', content: `${getNumber(orderMcnDetailInfo.maxAmount)}元`, span: 3 },
-    { label: '消耗预算', content: `${getNumber(orderMcnDetailInfo.realAmount)}元`, span: 3 },
-    { label: '实际结算', content: `${getNumber(orderMcnDetailInfo.realActionNum)}元`, span: 3 },
-  ]
   function openData() {
     setModalProps({
       visible: true,
@@ -66,6 +60,13 @@ function OrderWechatDetail(props) {
       </div>
     })
   }
+  const orderInfo = [
+    { label: '订单状态', content: orderMcnDetailInfo.orderStateDesc, span: 3 },
+    { label: '订单冻结金额', content: `${getNumber(orderMcnDetailInfo.maxAmount)}元`, span: 3 },
+    { label: '消耗预算', content: `${getNumber(orderMcnDetailInfo.realAmount)}元`, span: 3 },
+    { label: '实际结算', content: `${getNumber(orderMcnDetailInfo.realActionNum)}元`, span: 3 },
+  ]
+
   function openArticleImg() {
     setModalProps({
       visible: true,
@@ -75,8 +76,7 @@ function OrderWechatDetail(props) {
   }
   const articleInfo = [
     { label: '文章快照', content: <a onClick={openArticleImg}>查看</a> },
-    { label: '文章链接', content: <a href={orderMcnDetailInfo.snapshotUrl} target='_blank'>查看</a> },
-    { label: '数据曲线', content: <a onClick={openData} >查看</a> },
+    { label: '文章链接', content: <a href={orderMcnDetailInfo.snapshotUrl} target='_blank'>查看</a>, span: 2 },
   ]
   const secondReasonInfo = [
     { label: '原因', content: orderMcnDetailInfo.maxAmount, span: 3 },
@@ -147,6 +147,7 @@ function OrderWechatDetail(props) {
           <Descriptions>
             {articleInfo.map(item => <Descriptions.Item key={item.label} label={item.label} span={item.span}>{item.content}</Descriptions.Item>)}
           </Descriptions>
+          <ContentRow list={[{ name: '数据曲线：', content: <DataCurve data={dataCurvelist} /> }]} />
         </TitleBox>
         <TitleBox title='订单备注' >
           <Descriptions>
@@ -178,8 +179,8 @@ const mapDispatchToProps = (dispatch) => ({
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(OrderWechatDetail))
 const ContentRow = ({ list = [] }) => {
   return list.map(item => <Row key={item.name} style={{ paddingBottom: 6, color: 'rgba(0, 0, 0, 0.85)', fontSize: 13 }}>
-    <Col span={4}>{item.name}</Col>
-    <Col span={12}>{item.content}</Col>
+    <Col span={2}>{item.name}</Col>
+    <Col span={22}>{item.content}</Col>
   </Row>)
 }
 

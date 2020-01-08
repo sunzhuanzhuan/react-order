@@ -181,13 +181,13 @@ function CooperationList(props) {
   const selectedRowSize = selectedRow.length
   return (
     <>
-      <Alert message={`已选择 ${selectedRowSize} 个账号，合计：${platformOrderList.total} 个`} type="info" style={{ marginTop: 20 }} />
+      <Alert message={`已选择 ${selectedRowSize} 个账号，合计：${platformOrderList.total||'-'} 个`} type="info" style={{ marginTop: 20 }} />
       <Scolltable scrollClassName='.ant-table-body' widthScroll={2000}>
         <Table dataSource={list}
           columns={columns}
           rowSelection={rowSelection}
           scroll={{ x: 1800 }}
-          rowKey='orderId'
+          rowKey='adOrderId'
           pagination={{
             pageSize: platformOrderList.pageSize || 1,
             showSizeChanger: true,
