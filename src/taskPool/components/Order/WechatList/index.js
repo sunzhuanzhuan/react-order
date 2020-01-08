@@ -103,13 +103,13 @@ export default function WachatList(props) {
       fixed: 'right',
       width: '180px',
       render: (text, record) => {
-        const { id, realAmount } = record
+        const { id, realAmount, receiveAt } = record
         return <div>
           {record.orderStateDesc == '一检异常待处理' ? <>
             <a onClick={() => setModalProps({
               visible: true,
               title: '第一次质检异常审核通过',
-              content: (props) => <AbnormalForm {...props} id={id} />
+              content: (props) => <AbnormalForm {...props} id={id} receiveAt={receiveAt} />
             })}>通过</a><Divider type="vertical" />
             <a onClick={() => noPass(id)}>不通过</a>
           </> : null}
@@ -118,7 +118,7 @@ export default function WachatList(props) {
               <a onClick={() => setModalProps({
                 visible: true,
                 title: '第二次质检异常审核通过',
-                content: (props) => <AbnormalForm isShowRead={true} id={id} {...props} />
+                content: (props) => <AbnormalForm isShowRead={true} id={id} {...props} receiveAt={receiveAt} />
               })}>通过</a><Divider type="vertical" />
               <a onClick={() => setModalProps({
                 visible: true,
