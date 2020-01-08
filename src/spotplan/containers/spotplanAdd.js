@@ -78,6 +78,7 @@ class SpotplanAdd extends React.Component {
     } else {
       return this.props.actions.postUpdateSpotplanOrder({ flag: 1, spotplan_id: search.spotplan_id, ...obj }).then((response) => {
         message.success('更新完成！', 1);
+        this.props.actions.getSpotplanEditOrder({ spotplan_id: search.spotplan_id });
         return response
       })
     }
