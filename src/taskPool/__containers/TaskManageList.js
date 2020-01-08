@@ -114,7 +114,7 @@ class TaskManageList extends Component {
       title: '确认要下线此蜂窝派任务吗?',
       content: "蜂窝派任务下线后，不可重新上线。已领取蜂窝派任务的博主，可执行。未消耗的余额，会在之后返还到您的蜂窝派任务账户余额中。",
       onOk: () => {
-        return actions.TPOffline({ id }).then(() => {
+        return actions.TPOfflineTask({ id }).then(() => {
           message.success('下线成功')
           this.getList()
         })

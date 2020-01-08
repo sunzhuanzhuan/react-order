@@ -79,7 +79,7 @@ export default class DetailsFor12306 extends Component {
               {details.taskIndustryInfo.parentName}/{details.taskIndustryInfo.industryName}
             </Descriptions.Item>
             <Descriptions.Item label="经营内容">
-              {details.scopeName}元
+              {details.scopeName}
             </Descriptions.Item>
             <Descriptions.Item label="投放开始日期">
               {dateDisplayByLen(details.orderStartDate, 'd')}
