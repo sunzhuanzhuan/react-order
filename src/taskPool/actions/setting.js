@@ -50,3 +50,17 @@ export const {
 } = createHttpAction('TPUpdateCommissionConfig', Interface.setting.TPUpdateCommissionConfig, {
   method: 'post'
 });
+// 查询任务设置
+export const {
+  TPTaskCheck,
+  TPTaskCheck_success
+} = createHttpAction('TPTaskCheck', Interface.setting.TPTaskCheck, {
+  method: 'get'
+});
+// 设置任务
+export const {
+  TPUpdateTaskCheck,
+  TPUpdateTaskCheck_success
+} = createHttpAction('TPUpdateTaskCheck', Interface.setting.TPUpdateTaskCheck, {
+  method: 'post'
+});

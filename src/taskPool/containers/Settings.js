@@ -34,6 +34,8 @@ class Settings extends React.Component {
       this.props.actions.TPGetQualityConfig({})
     } else if (key == 'select') {
       this.props.actions.TPQueryCommissionConfig()
+    } else if (key == 'weichat') {
+      this.props.actions.TPTaskCheck()
     }
   }
   handleClick = (e) => {
@@ -42,7 +44,7 @@ class Settings extends React.Component {
     this.handleDealTab(e.key)
   }
   render() {
-    let { readUnitPriceConfig, qualityConfig, addRetainTime, commissionConfig, taskCheckConfig } = this.props.settingReducers
+    let { readUnitPriceConfig, qualityConfig, addRetainTime, commissionConfig, taskCheck } = this.props.settingReducers
     const { current } = this.state
     return (
       <div>
@@ -86,7 +88,9 @@ class Settings extends React.Component {
           commissionConfig={commissionConfig}
           TPUpdateCommissionConfig={this.props.actions.TPUpdateCommissionConfig}
           TPQueryCommissionConfig={this.props.actions.TPQueryCommissionConfig} /> : null}
-        {current == 'weichat' ? <Weichat taskCheckConfig={taskCheckConfig} /> : null}
+        {current == 'weichat' ? <Weichat taskCheck={taskCheck}
+          TPTaskCheck={this.props.actions.TPTaskCheck}
+          TPUpdateTaskCheck={this.props.actions.TPUpdateTaskCheck} /> : null}
         {current == 'cooperation' ? <Cooperation /> : null}
         {current == 'notice' ? <Notice /> : null}
       </div>

@@ -25,4 +25,9 @@ export const commissionConfig = handleActions({
     return { ...action.payload.data }
   },
 }, {})
-
+// 任务设置
+export const taskCheck = handleActions({
+  [setting.TPTaskCheck_success]: (state, action) => {
+    return { ...action.payload.data }
+  },
+}, {})

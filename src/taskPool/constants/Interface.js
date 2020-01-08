@@ -45,6 +45,8 @@ export default {
     TPChangeQualityConfig: prefix + "/configManage/v1/changeQualityConfig",
     TPQueryCommissionConfig: prefix + "/configManage/v1/queryCommissionConfig",
     TPUpdateCommissionConfig: prefix + "/configManage/v1/commissionConfig",
+    TPTaskCheck: prefix + "/configManage/v1/queryTaskCheckQualifications",
+    TPUpdateTaskCheck: prefix + "/configManage/v1/taskCheckQualifications",
   },
   account: {
     TPGetAccountList: `${accountMapping}/getAccountList`,//账号管理
