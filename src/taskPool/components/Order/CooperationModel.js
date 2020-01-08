@@ -92,7 +92,10 @@ function Reject(props) {
     });
   }
   return <Form layout='horizontal'>
-    <Form.Item label='驳回原因' {...formItemLayout}>
+    <Form.Item label='驳回原因'
+      labelCol={{ span: 4 }}
+      wrapperCol={{ span: 20 }}
+    >
       {getFieldDecorator('refusalReason', {
         rules: [{ required: true, message: '请输入驳回原因!' }],
       })(

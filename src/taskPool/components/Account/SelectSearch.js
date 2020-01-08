@@ -6,7 +6,8 @@ const { Option } = Select;
 const baseParam = {
   page: {
     currentPage: 1, pageSize: 20
-  }
+  },
+  form: {}
 }
 class SelectSearch extends React.Component {
   constructor(props) {
@@ -24,18 +25,18 @@ class SelectSearch extends React.Component {
   getData = value => {
     const {
       searchKey = '',
-      url = 'operator-gateway/accountMapping/v2/selectUserAndMediaByUserName'
+      url = '/operator-gateway/accountMapping/v2/selectUserAndMediaByUserName'
     } = this.props
     this.lastFetchId += 1;
     const fetchId = this.lastFetchId;
     this.setState({ data: [], fetching: true });
-    api.post(url, ({ [searchKey]: value, ...baseParam })).
+    api.post(url, ({ ...baseParam, form: { [searchKey]: value } })).
       then(({ data }) => {
         if (fetchId !== this.lastFetchId) {
           // for fetch callback order
           return;
         }
-        this.setState({ data: data.list, fetching: false });
+        this.setState({ data: data.list || [], fetching: false });
       })
   };
 
@@ -61,7 +62,7 @@ class SelectSearch extends React.Component {
         notFoundContent={fetching ? <Spin size="small" /> : null}
         filterOption={false}
         onSearch={this.getData}
-        onFocus={this.getData}
+        // onFocus={this.getData}
         onChange={this.handleChange}
         style={{ width: '100%', minWidth: 174 }}
       >

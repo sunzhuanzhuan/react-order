@@ -10,6 +10,7 @@ const format = 'YYYY-MM-DD'
 const { confirm } = Modal;
 function CooperationList(props) {
   const [selectedRow, setSelectedRow] = useState([])
+  const [isCleanSelected, setIscleanSelected] = useState(false)
   const { platformOrderList = {}, setModalProps, changePage, actions } = props
   const { list = [] } = platformOrderList
   //合作方确认
@@ -24,8 +25,11 @@ function CooperationList(props) {
   }
   //驳回、同意
   async function updatePlatformOrderAsync(params) {
+    setIscleanSelected(false)
     await actions.TPUpdatePlatformOrder(params)
     changePage()
+    setIscleanSelected(true)
+    setSelectedRow([])
     message.success('操作成功')
   }
 
@@ -181,9 +185,10 @@ function CooperationList(props) {
   const selectedRowSize = selectedRow.length
   return (
     <>
-      <Alert message={`已选择 ${selectedRowSize} 个账号，合计：${platformOrderList.total||'-'} 个`} type="info" style={{ marginTop: 20 }} />
+      <Alert message={`已选择 ${selectedRowSize} 个账号，合计：${platformOrderList.total || '-'} 个`} type="info" style={{ marginTop: 20 }} />
       <Scolltable scrollClassName='.ant-table-body' widthScroll={2000}>
         <Table dataSource={list}
+          key={isCleanSelected}//确认执行空清空选中数据
           columns={columns}
           rowSelection={rowSelection}
           scroll={{ x: 1800 }}
@@ -222,6 +227,6 @@ export default CooperationList
 
 
 
-const IconType = (value) => {
+const IconType = ({ value }) => {
   return value ? <Icon type="check-circle" theme="filled" style={{ color: '#5ccd5c' }} /> : <Icon type="exclamation-circle" theme="filled" style={{ color: '#fd3d11' }} />
 }
