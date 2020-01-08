@@ -570,7 +570,7 @@ class BudgetFor12306 extends React.Component {
       pId: item.parentId,
       value: item.id,
       title: item.areaName,
-      isLeaf: item.areaLevel === 2,
+      isLeaf: item.areaLevel === 3,
     }))
   };
 

@@ -28,7 +28,7 @@ const { TabPane } = Tabs;
 
 
 const Attributes = (props) => {
-  const [ active, setActive ] = useState("2")
+  const [ active, setActive ] = useState("1")
 
   const tabChange = (key) => {
     setActive(key)

@@ -9,7 +9,7 @@ import * as actions from '@/taskPool/actions';
 import { connect } from 'react-redux';
 import CertificateGroupsList from '../components/Attribute/CertificateGroupsList';
 import BusinessScopesList from '../components/Attribute/BusinessScopesList';
-
+import { useParams } from 'react-router-dom'
 
 const formLayout = {
   labelCol: { span: 4 },
@@ -17,79 +17,74 @@ const formLayout = {
   labelAlign: "left",
   colon: false
 }
-
-
-// 创建二级行业
-const CreateAttribute = (props) => {
-  const { getFieldDecorator } = props.form
-  const [ scopes, setScopes ] = useState([
-    {
-      "id": "culpa",
-      "scopeName": "irure labore amet in",
-      "isContainsQualifications": "fugiat exercitation amet mollit",
-      "qualificationsGroupList": [
-        {
-          "groupQualificationMappingReqList": [
-            {
-              "qualificationId": 81924413.69033054,
-              "qualificationName": "adipisicing"
-            }
-          ]
-        },
-        {
-          "groupQualificationMappingReqList": [
-            {
-              "qualificationId": 67740272.55666697,
-              "qualificationName": "proident"
-            },
-            {
-              "qualificationId": 95082469.91043901,
-              "qualificationName": "Lorem fugiat id ex"
-            },
-            {
-              "qualificationId": 808148.265889436,
-              "qualificationName": "reprehenderit in eu laboris veniam"
-            },
-            {
-              "qualificationId": -44952203.24123279,
-              "qualificationName": "deserunt Lorem proident"
-            },
-            {
-              "qualificationId": 59708877.96718669,
-              "qualificationName": "in tempor a"
-            }
-          ]
-        },
-        {
-          "groupQualificationMappingReqList": [
-            {
-              "qualificationId": 57427188.56540319,
-              "qualificationName": "dolore sunt"
-            }
-          ]
-        },
-        {
-          "groupQualificationMappingReqList": [
-            {
-              "qualificationId": -66589732.4744714,
-              "qualificationName": "voluptate nostrud ad"
-            },
-            {
-              "qualificationId": -59699756.16261789,
-              "qualificationName": "Lorem dolor elit enim"
-            },
-            {
-              "qualificationId": 48720158.77379301,
-              "qualificationName": "aliqua Excepteur do i"
-            },
-            {
-              "qualificationId": -79829143.32640822,
-              "qualificationName": "exercitation"
-            }
-          ]
-        }
-      ]
-    },
+  /*[
+  {
+    "id": "culpa",
+    "scopeName": "irure labore amet in",
+    "isContainsQualifications": "fugiat exercitation amet mollit",
+    "qualificationsGroupList": [
+      {
+        "groupQualificationMappingReqList": [
+          {
+            "qualificationId": 81924413.69033054,
+            "qualificationName": "adipisicing"
+          }
+        ]
+      },
+      {
+        "groupQualificationMappingReqList": [
+          {
+            "qualificationId": 67740272.55666697,
+            "qualificationName": "proident"
+          },
+          {
+            "qualificationId": 95082469.91043901,
+            "qualificationName": "Lorem fugiat id ex"
+          },
+          {
+            "qualificationId": 808148.265889436,
+            "qualificationName": "reprehenderit in eu laboris veniam"
+          },
+          {
+            "qualificationId": -44952203.24123279,
+            "qualificationName": "deserunt Lorem proident"
+          },
+          {
+            "qualificationId": 59708877.96718669,
+            "qualificationName": "in tempor a"
+          }
+        ]
+      },
+      {
+        "groupQualificationMappingReqList": [
+          {
+            "qualificationId": 57427188.56540319,
+            "qualificationName": "dolore sunt"
+          }
+        ]
+      },
+      {
+        "groupQualificationMappingReqList": [
+          {
+            "qualificationId": -66589732.4744714,
+            "qualificationName": "voluptate nostrud ad"
+          },
+          {
+            "qualificationId": -59699756.16261789,
+            "qualificationName": "Lorem dolor elit enim"
+          },
+          {
+            "qualificationId": 48720158.77379301,
+            "qualificationName": "aliqua Excepteur do i"
+          },
+          {
+            "qualificationId": -79829143.32640822,
+            "qualificationName": "exercitation"
+          }
+        ]
+      }
+    ]
+  },
     {
       "id": "ullamco sunt tempor",
       "scopeName": "aliqua des",
@@ -176,8 +171,15 @@ const CreateAttribute = (props) => {
         }
       ]
     }
-  ])
+  ]*/
+
+// 创建二级行业
+const CreateAttribute = (props) => {
+  const { getFieldDecorator } = props.form
+  const [ scopes, setScopes ] = useState()
   const [ groups, setGroups ] = useState([])
+
+  const { name, id } = useParams()
 
   const handleSubmit = e => {
     e.preventDefault();
@@ -193,7 +195,7 @@ const CreateAttribute = (props) => {
       <Form {...formLayout} className='task-pool-page-container create-attribute-page'
             onSubmit={handleSubmit}>
         <Form.Item label={<span>&nbsp;&nbsp;&nbsp;一级行业名称</span>}>
-          安师大收到
+          {name}
         </Form.Item>
         <Form.Item label="二级行业名称">
           {
