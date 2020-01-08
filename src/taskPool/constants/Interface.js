@@ -47,7 +47,7 @@ export default {
     TPAddRetainTime: prefix + "/configManage/v1/addRetainTime",
     TPChangeQualityConfig: prefix + "/configManage/v1/changeQualityConfig",
     TPQueryCommissionConfig: prefix + "/configManage/v1/queryCommissionConfig",
-    TPUpdateCommissionConfig: prefix + "/configManage/v1/commissionConfig"
+    TPUpdateCommissionConfig: prefix + "/configManage/v1/commissionConfig",
   },
   account: {
     TPGetAccountList: `${accountMapping}/getAccountList`,//账号管理

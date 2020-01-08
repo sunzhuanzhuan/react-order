@@ -23,30 +23,26 @@ class Settings extends React.Component {
   }
   componentDidMount = () => {
     const { current } = this.state
-    if (current == 'price') {
+    this.handleDealTab(current)
+
+  }
+
+  handleDealTab = (key) => {
+    if (key == 'price') {
       this.props.actions.TPGetReadUnitPriceConfig({})
-    } else if (current == 'discover') {
+    } else if (key == 'discover') {
       this.props.actions.TPGetQualityConfig({})
-    } else if (current == 'select') {
+    } else if (key == 'select') {
       this.props.actions.TPQueryCommissionConfig()
     }
   }
-
-
   handleClick = (e) => {
     const { current } = this.state
-    this.setState({ current: e.key }, () => {
-      if (current == 'price') {
-        this.props.actions.TPGetReadUnitPriceConfig({})
-      } else if (current == 'discover') {
-        this.props.actions.TPGetQualityConfig({})
-      } else if (current == 'select') {
-        this.props.actions.TPQueryCommissionConfig()
-      }
-    })
+    this.setState({ current: e.key })
+    this.handleDealTab(e.key)
   }
   render() {
-    let { readUnitPriceConfig, qualityConfig, addRetainTime, commissionConfig } = this.props.settingReducers
+    let { readUnitPriceConfig, qualityConfig, addRetainTime, commissionConfig, taskCheckConfig } = this.props.settingReducers
     const { current } = this.state
     return (
       <div>
@@ -90,7 +86,7 @@ class Settings extends React.Component {
           commissionConfig={commissionConfig}
           TPUpdateCommissionConfig={this.props.actions.TPUpdateCommissionConfig}
           TPQueryCommissionConfig={this.props.actions.TPQueryCommissionConfig} /> : null}
-        {current == 'weichat' ? <Weichat /> : null}
+        {current == 'weichat' ? <Weichat taskCheckConfig={taskCheckConfig} /> : null}
         {current == 'cooperation' ? <Cooperation /> : null}
         {current == 'notice' ? <Notice /> : null}
       </div>
