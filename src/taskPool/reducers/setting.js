@@ -19,3 +19,10 @@ export const addRetainTime = handleActions({
     return { ...action.payload.data }
   },
 }, {})
+// 抽佣率设置
+export const commissionConfig = handleActions({
+  [setting.TPQueryCommissionConfig_success]: (state, action) => {
+    return { ...action.payload.data }
+  },
+}, {})
+

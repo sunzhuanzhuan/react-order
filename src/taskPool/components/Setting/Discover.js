@@ -9,18 +9,20 @@ class Discover extends React.Component {
       visible: false,
       isAdd: 'add',
       timeVal: null,
-      saveArrTime: this.props.qualityConfig.retainTimeList || [],
+      saveArrTime: props.qualityConfig.retainTimeList || [],
       item: {},
       deleteArr: [],
       selectArr: [],
-      textSimilar: '',
-      contentTime: ''
+      textSimilar: props.qualityConfig.textSimilarity,
+      contentTime: props.qualityConfig.contentUrlTimeout
     }
 
   }
   componentWillReceiveProps = (props) => {
     this.setState({
-      saveArrTime: props.qualityConfig.retainTimeList
+      saveArrTime: props.qualityConfig.retainTimeList,
+      textSimilar: props.qualityConfig.textSimilarity,
+      contentTime: props.qualityConfig.contentUrlTimeout
     })
   }
 
@@ -78,10 +80,10 @@ class Discover extends React.Component {
       textSimilarity: this.state.textSimilar,
       retainTimeList: [...dele, ...select]
     }
-    console.log(params)
-    // this.props.actions.TPChangeQualityConfig({}).then(() => {
-    //   message.success('')
-    // })
+    this.props.TPChangeQualityConfig(params).then(() => {
+      this.props.TPGetQualityConfig({})
+      message.success('设置成功', 3)
+    })
 
     // console.log(dele)
     // console.log(select)
@@ -124,12 +126,14 @@ class Discover extends React.Component {
         <h3 style={{ marginTop: '10px' }}>保留时长设置</h3>
         <p><Checkbox value="24" checked={true}>24小时</Checkbox></p>
         <p><Checkbox value="48" checked={true}>48小时</Checkbox></p>
-        {saveArrTime.map((item, index) => {
-          return <p key={index}>
-            <Checkbox value={item.id} defaultChecked={item.isOnline == 1 ? true : false} onChange={this.handleChange}>{item.retainTime}小时</Checkbox>
-            <Button type="link" onClick={() => this.handleOpenModal(false, item)}>删除</Button>
-          </p>
-        })}
+        <Checkbox.Group>
+          {saveArrTime.map((item, index) => {
+            return <p key={index}>
+              <Checkbox value={item.id} defaultChecked={item.isOnline == 1 ? true : false} onChange={this.handleChange}>{item.retainTime}小时</Checkbox>
+              <Button type="link" onClick={() => this.handleOpenModal(false, item)}>删除</Button>
+            </p>
+          })}
+        </Checkbox.Group>
 
         {/* <p><Checkbox value="48" defaultChecked>48小时</Checkbox></p>
           <p><Checkbox value="72" defaultChecked>72小时</Checkbox></p> */}
@@ -141,7 +145,7 @@ class Discover extends React.Component {
           onCancel={this.handleCancel}
           destroyOnClose={true}
         >
-          <div>{isAdd ? <p>新增保留时长：<InputNumber id="readTime" onChange={this.onSaveTime} />小时</p> : <p>确定要删除“{item.retainTime}小时”的保留时长选项么?</p>}</div>
+          <div>{isAdd ? <div>新增保留时长：<InputNumber id="readTime" onChange={this.onSaveTime} />小时</div> : <div>确定要删除“{item.retainTime}小时”的保留时长选项么?</div>}</div>
         </Modal>
       </div>
       <p style={{ textAlign: 'center', marginTop: '40px' }}><Button type="primary" onClick={this.handleApply} >应用配置</Button></p>

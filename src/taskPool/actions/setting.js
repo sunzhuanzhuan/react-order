@@ -36,3 +36,17 @@ export const {
 } = createHttpAction('TPChangeQualityConfig', Interface.setting.TPChangeQualityConfig, {
   method: 'post'
 });
+//查询抽佣率
+export const {
+  TPQueryCommissionConfig,
+  TPQueryCommissionConfig_success
+} = createHttpAction('TPQueryCommissionConfig', Interface.setting.TPQueryCommissionConfig, {
+  method: 'get'
+});
+// 修改抽佣率
+export const {
+  TPUpdateCommissionConfig,
+  TPUpdateCommissionConfig_success
+} = createHttpAction('TPUpdateCommissionConfig', Interface.setting.TPUpdateCommissionConfig, {
+  method: 'post'
+});

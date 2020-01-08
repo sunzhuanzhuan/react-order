@@ -18,29 +18,35 @@ class Settings extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      current: 'discover'
+      current: 'weichat'
     }
   }
   componentDidMount = () => {
-    if (this.state.current == 'price') {
+    const { current } = this.state
+    if (current == 'price') {
       this.props.actions.TPGetReadUnitPriceConfig({})
-    } else if (this.state.current == 'discover') {
+    } else if (current == 'discover') {
       this.props.actions.TPGetQualityConfig({})
+    } else if (current == 'select') {
+      this.props.actions.TPQueryCommissionConfig()
     }
   }
 
 
   handleClick = (e) => {
+    const { current } = this.state
     this.setState({ current: e.key }, () => {
-      if (this.state.current == 'price') {
+      if (current == 'price') {
         this.props.actions.TPGetReadUnitPriceConfig({})
-      } else if (this.state.current == 'discover') {
+      } else if (current == 'discover') {
         this.props.actions.TPGetQualityConfig({})
+      } else if (current == 'select') {
+        this.props.actions.TPQueryCommissionConfig()
       }
     })
   }
   render() {
-    let { readUnitPriceConfig, qualityConfig, addRetainTime } = this.props.settingReducers
+    let { readUnitPriceConfig, qualityConfig, addRetainTime, commissionConfig } = this.props.settingReducers
     const { current } = this.state
     return (
       <div>
@@ -76,10 +82,14 @@ class Settings extends React.Component {
         /> : null}
         {current == 'discover' ? <Discover
           TPChangeQualityConfig={this.props.actions.TPChangeQualityConfig}
+          TPGetQualityConfig={this.props.actions.TPGetQualityConfig}
           qualityConfig={qualityConfig}
           TPAddRetainTime={this.props.actions.TPAddRetainTime}
           addRetainTime={addRetainTime} /> : null}
-        {current == 'select' ? <Select /> : null}
+        {current == 'select' ? <Select
+          commissionConfig={commissionConfig}
+          TPUpdateCommissionConfig={this.props.actions.TPUpdateCommissionConfig}
+          TPQueryCommissionConfig={this.props.actions.TPQueryCommissionConfig} /> : null}
         {current == 'weichat' ? <Weichat /> : null}
         {current == 'cooperation' ? <Cooperation /> : null}
         {current == 'notice' ? <Notice /> : null}
