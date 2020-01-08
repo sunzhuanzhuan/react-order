@@ -36,6 +36,12 @@ export const {
 } = createHttpAction('TPAddTask', Interface.task.addTask, {
   method: 'post'
 });
+// 更新任务
+export const {
+  TPUpdateTask
+} = createHttpAction('TPUpdateTask', Interface.task.updateTask, {
+  method: 'post'
+});
 
 // 根据行业ID获取经营内容
 export const {
@@ -69,3 +75,18 @@ export const {
   TPTaskDetail,
   TPTaskDetail_success
 } = createHttpAction('TPTaskDetail', Interface.task.taskDetail);
+
+// 查询博主领取列表
+export const {
+  TPMcnOrderList,
+  TPMcnOrderList_success
+} = createHttpAction('TPMcnOrderList', Interface.task.mcnOrderList, {
+  method: 'post'
+});
+// 查询博主申请列表
+export const {
+  TPMcnOrderListByTemp,
+  TPMcnOrderListByTemp_success
+} = createHttpAction('TPMcnOrderListByTemp', Interface.task.mcnOrderListByTemp, {
+  method: 'post'
+});

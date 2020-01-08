@@ -11,7 +11,6 @@ export default {
   fuzzyQueryCompany: prefix + "/company/v1/fuzzyQuery",
   queryAvailableBalance: prefix + "/finance/v1/queryAvailableBalance",
   queryActionNum: prefix + "/adOrder/v1/queryActionNum",
-  mcnOrderList: prefix + "/adOrder/v1/mcnOrderList",
   getMcnReviewOrderList: prefix + "/mcnGrapLog/v1/getMcnReviewOrderList",
   approvedSuccess: prefix + "/mcnGrapLog/v1/approvedSuccess",
   approvedFailure: prefix + "/mcnGrapLog/v1/approvedFailure",
@@ -75,12 +74,15 @@ export default {
     queryRetainTimeList: configManage + "/queryRetainTimeList",
     getTaskLocationInfoB: prefix + "/adOrder/v1/getTaskLocationInfoB",
     addTask: prefix + "/adOrder/v1/add",
+    updateTask: prefix + "/adOrder/v1/update",
     tripPriceCalculation: prefix + "/adOrder/v1/trip/priceCalculation",
     weixinPriceCalculation: prefix + "/adOrder/v1/weixin/priceCalculation",
     getBusinessScopeList: configManage + "/getBusinessScopeList",
     queryQualificationsGroup: configManage + "/queryQualificationsGroup",
     queryTaskCheckQualifications: configManage + "/queryTaskCheckQualifications",
     taskDetail: prefix + "/adOrder/v1/detail_2",
+    mcnOrderList: prefix + "/adOrder/v1/mcnOrderList",
+    mcnOrderListByTemp: prefix + "/adOrder/v1/mcnOrderList",
   }
 }
 

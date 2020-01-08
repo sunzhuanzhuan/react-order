@@ -9,7 +9,6 @@ import {
   FormBudget,
   FormContent, FormPreview
 } from "../components/Task/CreateForms/index";
-import { parseUrlQuery } from "@/util/parseUrl";
 import update from 'immutability-helper'
 import moment from 'moment';
 import { useParams } from 'react-router-dom'
@@ -35,7 +34,8 @@ let forms = {
     FormBudget[12306],
     FormContent[12306],
     FormPreview[12306]
-  ]
+  ],
+  'default': []
 }
 
 const formLayout = {
@@ -119,7 +119,6 @@ const UpdateTask = (props) => {
             onlyVerified: feature.onlyVerified === 1,
             mediaAvgReadNumLimit: feature.mediaAvgReadNumLimit,
 
-
             wxOneNumber: feature.wxOneNumber,
             wxTwoNumber: feature.wxTwoNumber,
             wxOtherNumber: feature.wxOtherNumber,
@@ -154,6 +153,10 @@ const UpdateTask = (props) => {
   }
 
   const prev = (key, data) => {
+    let target = current - 1
+    if(target === 0){
+      target = 1
+    }
     setCurrent(current - 1)
     setDataState(update(state,
       {
@@ -238,7 +241,7 @@ const UpdateTask = (props) => {
   }
   const { base, budget, content } = state
   const { actions, taskPoolData = {} } = props;
-  const { platformId = 9 } = base
+  const { platformId = "default" } = base
   const FormComponent = forms[platformId][current] || Empty
   return (
     <LoadingWrapped loading={loading}>
@@ -253,6 +256,8 @@ const UpdateTask = (props) => {
         </header>
         <main>
           {taskPositionList.length > 0 && <FormComponent
+            isUpdate
+            taskId={taskId}
             formLayout={formLayout}
             next={next}
             prev={prev}

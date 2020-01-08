@@ -123,7 +123,7 @@ const Filters = (props) => {
       if (!err) {
         let filter = {
           page: { currentPage: 1 },
-          form: { ...values, active }
+          form: { ...values, platformId: active }
         }
         props.search(filter)
       }

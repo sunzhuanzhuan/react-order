@@ -343,7 +343,7 @@ const Tasks = (props) => {
     }
   }
 
-  const columns = getColumns(that.current.search.form.active, { offline, online, stop })
+  const columns = getColumns(that.current.search.form.platformId, { offline, online, stop })
 
   return (
     <div className='task-pool-page-container tasks-page'>

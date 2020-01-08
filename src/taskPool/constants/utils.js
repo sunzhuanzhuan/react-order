@@ -58,7 +58,7 @@ export const openNewWindowPreviewFor12306 = ({ content = "", video = "", images 
 
 // 倒计时显示
 export const getCountDownTimeText = (date, min = 5, precision = 5, assort = moment()) => {
-  const diff = moment(date) - assort
+  const diff = moment(date) - moment(assort)
   const duration = moment.duration(diff, 'milliseconds')
   if (diff < 0) {
     return `已过期`

@@ -47,13 +47,6 @@ export const TPTaskDetailClear = createAction('TPTaskDetailClear', (data) => {
   return { data }
 })
 
-// 查询博主领取列表
-export const {
-  TPMcnOrderList,
-  TPMcnOrderList_success
-} = createHttpAction('TPMcnOrderList', Interface.mcnOrderList, {
-  method: 'post'
-});
 
 // 异常任务管理列表
 export const {
