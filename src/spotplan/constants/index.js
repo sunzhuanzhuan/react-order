@@ -33,6 +33,16 @@ let position = {
   7: '七条',
   8: '八条',
 }
+let clientName = {
+  1: '天猫',
+  2: '京东',
+  3: '唯品会',
+  4: '考拉',
+  5: '苏宁易购',
+  6: '线上（其他）',
+  7: '七条',
+  8: '线下',
+}
 export const CheckModalFunc = handleDel => [
   {
     title: '订单ID',
@@ -138,14 +148,42 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
     }
   },
   {
-    title: '账号ID',
+    title: '账号ID（必填）',
     dataIndex: 'weibo_id',
     key: 'weibo_id',
     align: 'center',
     width: 120,
     render: (text, record) => {
-      const flag = record.weibo_type == 23 ? true : false;
-      return flag ? '-' : text
+      return <FormItem>
+        {getFieldDecorator(`${record.order_id}.weibo_id`, {
+          validateTrigger: ['onChange'],
+          validateFirst: true,
+          rules: [{ required: true, message: '请填写账号ID' }, {
+            validator: (rule, value, callback) => {
+              let reg = /^[^\u4e00-\u9fa5]{0,255}$/
+              if (value == '') {
+                callback('请输入')
+              } else if (!reg.test(value)) {
+                callback('请输入中文除外的，最多255个字符')
+              } else {
+                callback()
+              }
+            }
+          }]
+        })(
+          <Input onFocus={() => {
+            if (record.weibo_type == 23) {
+              let newWei = `${record.order_id}.weibo_id`;
+              setFieldsValue({ [newWei]: '' });
+            }
+          }} onBlur={(e) => {
+            if (e.target.value != record.weibo_id) {
+              handleUpdate({ order_id: record.order_id, price_id: record.price_id, weibo_id: e.target.value })
+            }
+          }} />
+        )
+        }
+      </FormItem>
     }
   },
   {
@@ -202,7 +240,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
             }
           }]
         })(
-          <InputNumber precision={0} max={99999999} min={1} style={{ width: 150 }} onBlur={(e) => {
+          <InputNumber precision={2} max={99999999} min={1} style={{ width: 150 }} onBlur={(e) => {
             validateFields([`${record.order_id}.cost`], (errors, values) => {
               if (!errors) {
                 if (e.target.value != '' && e.target.value != record.cost) {
@@ -248,7 +286,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
             }
           }]
         })(
-          <InputNumber precision={0} max={999999999} min={1} style={{ width: 150 }} onBlur={(e) => {
+          <InputNumber precision={2} max={999999999} min={1} style={{ width: 150 }} onBlur={(e) => {
             validateFields([`${record.order_id}.costwithfee`], (errors, values) => {
               if (!errors) {
                 if (e.target.value != '' && e.target.value != record.costwithfee) {
@@ -307,14 +345,22 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
     }
   },
   {
-    title: '发文位置（非必填）',
+    title: '发文位置（微信必填）',
     dataIndex: 'publish_articles_address',
     key: 'publish_articles_address',
     align: 'center',
     width: 210,
     render: (text, record) => {
       return record.is_inward_send == 1 || record.last_apply_status == 1 || record.last_apply_status == 2 ? position[text] : <FormItem>
-        {getFieldDecorator(`${record.order_id}.publish_articles_address`)(
+        {getFieldDecorator(`${record.order_id}.publish_articles_address`, {
+          validateTrigger: ['onChange'],
+          validateFirst: true,
+          rules: [
+            {
+              required: record.weibo_type == 9 ? true : false,
+              message: '请填写发文位置',
+            }]
+        })(
           <Select placeholder="请选择" style={{ width: 120 }} onChange={(value) => {
             handleUpdate({ order_id: record.order_id, price_id: record.price_id, publish_articles_address: value || '' })
           }} allowClear>
@@ -332,14 +378,22 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
     }
   },
   {
-    title: '发文时间（非必填）',
+    title: '发文时间（微信必填）',
     dataIndex: 'publish_articles_at',
     key: 'publish_articles_at',
     align: 'center',
     width: 210,
     render: (text, record) => {
       return record.is_inward_send == 1 || record.last_apply_status == 1 || record.last_apply_status == 2 ? text : <FormItem>
-        {getFieldDecorator(`${record.order_id}.publish_articles_at`)(
+        {getFieldDecorator(`${record.order_id}.publish_articles_at`, {
+          validateTrigger: ['onChange'],
+          validateFirst: true,
+          rules: [
+            {
+              required: record.weibo_type == 9 ? true : false,
+              message: '请填写发文时间',
+            }]
+        })(
           <DatePicker dropdownClassName="sp-calendar" allowClear={record.publish_articles_at == null ? true : false} showTime={{ defaultValue: moment('00:00:00', 'HH:mm:ss') }} format="YYYY-MM-DD HH:mm:ss" placeholder="请输入" style={{ width: 130 }} onOk={(value) => {
             handleUpdate({ order_id: record.order_id, price_id: record.price_id, publish_articles_at: value.format("YYYY-MM-DD HH:mm:ss") })
           }} onBlur={() => {
@@ -358,6 +412,55 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
           }} />
         )}
       </FormItem>
+    }
+  }, {
+    title: 'Client（非必填）',
+    dataIndex: 'client',
+    key: 'client',
+    align: 'center',
+    width: 210,
+    render: (text, record) => {
+      return record.is_inward_send == 1 || record.last_apply_status == 1 || record.last_apply_status == 2 ? position[text] : <FormItem>
+        {getFieldDecorator(`${record.order_id}.client`)(
+          <Select placeholder="请选择" style={{ width: 120 }} onChange={(value) => {
+            handleUpdate({ order_id: record.order_id, price_id: record.price_id, client: value || '' })
+          }} allowClear>
+            <Option value={1}>天猫</Option>
+            <Option value={2}>京东</Option>
+            <Option value={3}>唯品会</Option>
+            <Option value={4}>考拉</Option>
+            <Option value={5}>苏宁易购</Option>
+            <Option value={6}>线上（其他）</Option>
+            <Option value={7}>线下</Option>
+          </Select>
+        )}
+      </FormItem>
+    }
+  }, {
+    title: 'content type（非必填）',
+    dataIndex: 'content_type',
+    key: 'content_type',
+    align: 'center',
+    width: 240,
+    render: (text, record) => {
+      // const flag = (record.customer_confirmation_status == 11 && [0, 4].includes(parseInt(record.last_apply_status))) ? true : false;
+      return record.is_inward_send == 1 || record.last_apply_status == 1 || record.last_apply_status == 2 ? <Tooltip title={<div style={{ width: '200px' }}>{text}</div>}>
+        <div style={{ width: '180px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{text}
+        </div>
+      </Tooltip> : <FormItem>
+          {getFieldDecorator(`${record.order_id}.content_type`, {
+            rules: [
+              { max: 255, message: '不能超过255字' }
+            ]
+          })(
+            <TextArea autosize={false} style={{ width: 140, height: 86, resize: 'none', marginRight: '20px' }} placeholder='请填写内容类型' onBlur={(e) => {
+              if (e.target.value != record.content_type) {
+                handleUpdate({ order_id: record.order_id, price_id: record.price_id, content_type: e.target.value })
+              }
+            }} />
+          )
+          }
+        </FormItem>
     }
   },
   {
@@ -386,7 +489,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
           }
         </FormItem>
     }
-  },
+  }, {},
   {
     title: '操作',
     dataIndex: 'action',
@@ -610,7 +713,7 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     align: 'center',
     width: 120,
     render: text => {
-      return <div>{text && numeral(text).format('0,0') || '-'}</div>
+      return <div>{text && numeral(text).format('0,0.00') || '-'}</div>
     }
   },
   {
@@ -620,7 +723,7 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     align: 'center',
     width: 120,
     render: text => {
-      return <div>{text && numeral(text).format('0,0') || '-'}</div>
+      return <div>{text && numeral(text).format('0,0.00') || '-'}</div>
     }
   },
   {
@@ -663,6 +766,24 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     render: text => {
       return text ? text : '-'
     }
+  }, {
+    title: 'Client',
+    dataIndex: 'client',
+    key: 'client',
+    align: 'center',
+    width: 120,
+    render: text => {
+      return text ? clientName[text] : '-'
+    }
+  }, {
+    title: 'content type',
+    dataIndex: 'content_type',
+    key: 'content_type',
+    align: 'center',
+    width: 120,
+    render: text => {
+      return text ? text : '-'
+    }
   },
   {
     title: '备注',
@@ -676,7 +797,7 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
         </div>
       </Tooltip> : '-'
     }
-  },
+  }, {},
   {
     title: '操作',
     dataIndex: 'action',
@@ -708,7 +829,7 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
           record.stopAndUpdate == 1 ?
             <div> <a href='javascript:;' onClick={() => {
               handleUpdateArtical(record.order_id)
-            }}>更新发文时间</a> </div> : null}
+            }}>修改订单信息</a> </div> : null}
 
         {
           record.is_inward_send == 1 || record.last_apply_status == 1 || record.last_apply_status == 2 ? null : <div><a href='javascript:;' onClick={() => {
@@ -1005,6 +1126,16 @@ export const ArticalCols = [
     align: 'center',
     className: "columns",
   }, {
+    title: '账号ID',
+    dataIndex: 'weibo_id',
+    key: 'weibo_id',
+    align: 'center',
+    className: "columns",
+    render: (text, record) => {
+      const flag = record.weibo_type == 23 ? true : false;
+      return <div>{flag ? '-' : text}</div>
+    }
+  }, {
     title: 'PriceID',
     dataIndex: 'price_id',
     key: 'price_id',
@@ -1042,6 +1173,26 @@ export const ArticalCols = [
     title: '发文时间',
     dataIndex: 'publish_articles_at',
     key: 'publish_articles_at',
+    align: 'center',
+    className: "columns",
+    render: text => {
+      return text ? text : '-'
+    }
+  },
+  {
+    title: 'Client',
+    dataIndex: 'client',
+    key: 'client',
+    align: 'center',
+    className: "columns",
+    render: text => {
+      return text ? clientName[text] : '-'
+    }
+  },
+  {
+    title: 'content type',
+    dataIndex: 'content_type',
+    key: 'content_type',
     align: 'center',
     className: "columns",
     render: text => {

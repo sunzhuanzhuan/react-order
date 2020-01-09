@@ -20,7 +20,7 @@ class EditOrderModal extends React.Component {
         if (!values.publish_articles_address) {
           values.publish_articles_address = ''
         }
-        this.props.actions.postUpdateSpotplanOrder({ ...values, spotplan_id, order_id: data[0].order_id }).then((res) => {
+        this.props.actions.postUpdateSpotplanOrder({ ...values, spotplan_id, order_id: data[0].order_id, flag: 2 }).then((res) => {
           if (!res.data.type) {
             message.success('操作成功！', 2);
             this.props.onCancel();
@@ -87,6 +87,24 @@ class EditOrderModal extends React.Component {
         <FormItem label='需求名称' {...formItemLayout}>{data && data[0].requirement_name}</FormItem>
         <FormItem label='平台' {...formItemLayout}>{data && data[0].weibo_type_name}</FormItem>
         <FormItem label='账号名称' {...formItemLayout}>{data && data[0].weibo_name}</FormItem>
+        <FormItem label='账号ID（必填）' {...formItemLayout}>
+          {getFieldDecorator('weibo_id', {
+            initialValue: data && data[0].weibo_type == 23 ? '-' : data && data[0].weibo_id || '',
+            rules: [{ required: true, message: '请填写账号ID' }, {
+              validator: (rule, value, callback) => {
+                let reg = /^[^\u4e00-\u9fa5]{0,255}$/
+                if (!reg.test(value)) {
+                  callback('请输入中文除外的，最多255个字符')
+                } else {
+                  callback()
+                }
+              }
+            }]
+          })(
+            <Input style={{ width: 240 }} />
+          )
+          }
+        </FormItem>
         <FormItem label='价格名称' {...formItemLayout}>
           {getFieldDecorator('price_name', {
             initialValue: data && data[0].price_name || '',
@@ -104,7 +122,7 @@ class EditOrderModal extends React.Component {
             {
               validator: this.checkCost
             }]
-          })(<InputNumber precision={0} max={99999999} min={1} style={{ width: 200 }} onChange={(value) => {
+          })(<InputNumber precision={2} max={99999999} min={1} style={{ width: 200 }} onChange={(value) => {
             if (value != data && data[0].cost) {
               if (data && data[0].service_rate) {
                 let num = Number(value) * (1 + (Number(data[0].service_rate) / 100)).toString()
@@ -127,7 +145,7 @@ class EditOrderModal extends React.Component {
             {
               validator: this.checkCostfee
             }]
-          })(<InputNumber max={999999999} min={1} precision={0} style={{ width: 200 }} />
+          })(<InputNumber max={999999999} min={1} precision={2} style={{ width: 200 }} />
           )}
         </FormItem>
         <FormItem label='账号分类' {...formItemLayout}>
@@ -146,9 +164,10 @@ class EditOrderModal extends React.Component {
             <TextArea autosize={{ minRows: 2, maxRows: 6 }} />
           )}
         </FormItem>
-        <FormItem label='发文位置（非必填）' {...formItemLayout}>
+        <FormItem label='发文位置（微信必填）' {...formItemLayout}>
           {getFieldDecorator('publish_articles_address', {
             initialValue: data && data[0].publish_articles_address || '',
+            rules: [{ required: data && data[0].weibo_type == 9 ? true : false, message: '请填写发文位置' }]
           })(
             <Select placeholder="请选择" style={{ width: 120 }} allowClear>
               <Option value={1}>头条</Option>
@@ -162,9 +181,10 @@ class EditOrderModal extends React.Component {
             </Select>
           )}
         </FormItem>
-        <FormItem label='发文时间（非必填）' {...formItemLayout}>
+        <FormItem label='发文时间（微信必填）' {...formItemLayout}>
           {getFieldDecorator('publish_articles_at', {
-            initialValue: data ? moment(data[0].publish_articles_at).isValid() ? moment(data[0].publish_articles_at) : undefined : ''
+            initialValue: data ? moment(data[0].publish_articles_at).isValid() ? moment(data[0].publish_articles_at) : undefined : '',
+            rules: [{ required: data && data[0].weibo_type == 9 ? true : false, message: '请填写发文时间' }]
           })(
             <DatePicker format="YYYY-MM-DD HH:mm:ss" placeholder="请输入" showTime={{ defaultValue: moment('00:00:00', 'HH:mm:ss') }}
               onBlur={() => {
@@ -176,6 +196,29 @@ class EditOrderModal extends React.Component {
                 }
               }}
               style={{ width: 150 }} allowClear={moment(data[0].publish_articles_at).isValid() ? false : true} />
+          )}
+        </FormItem>
+        <FormItem label='Client（非必填）' {...formItemLayout}>
+          {getFieldDecorator('client', {
+            initialValue: data && data[0].client || '',
+          })(
+            <Select placeholder="请选择" style={{ width: 120 }} allowClear>
+              <Option value={1}>天猫</Option>
+              <Option value={2}>京东</Option>
+              <Option value={3}>唯品会</Option>
+              <Option value={4}>考拉</Option>
+              <Option value={5}>苏宁易购</Option>
+              <Option value={6}>线上（其他）</Option>
+              <Option value={7}>线下</Option>
+            </Select>
+          )}
+        </FormItem>
+        <FormItem label='content type（非必填）' {...formItemLayout}>
+          {getFieldDecorator('content_type', {
+            initialValue: data && data[0].content_type || '',
+            rules: [{ max: 255, message: '不能超过255个汉字' }]
+          })(
+            <TextArea placeholder='请填写内容类型' autosize={{ minRows: 4, maxRows: 6 }} />
           )}
         </FormItem>
         <FormItem label='备注信息（非必填)' {...formItemLayout}>
