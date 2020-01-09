@@ -41,7 +41,7 @@ function CooperationForm(props) {
         )}
       </Form.Item>
       <Form.Item label='订单ID'>
-        {getFieldDecorator('form.orderId', {})(
+        {getFieldDecorator('form.adOrderId', {})(
           <Input placeholder='请输入' />
         )}
       </Form.Item>

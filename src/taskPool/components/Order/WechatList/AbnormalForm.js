@@ -12,7 +12,7 @@ function Abnormal(props) {
       setToken(authToken)
     })
   }, [])
-  const { isShowRead, form, id, changeWechatPage, setModalProps, actions } = props
+  const { isShowRead, form, id, changeWechatPage, setModalProps, actions, receiveAt } = props
   const { getFieldDecorator, validateFields } = form
   function submitForm() {
     validateFields(async (err, values) => {
@@ -35,7 +35,7 @@ function Abnormal(props) {
   }
   //禁用日期
   function disabledDate(date) {
-    return date < moment().subtract(1, 'd').endOf('day')
+    return date < moment(receiveAt).subtract(1, 'd').endOf('day')
   }
   function range(start, end) {
     const result = [];
@@ -46,19 +46,33 @@ function Abnormal(props) {
   }
   //禁用时间
   function disabledTime(dateTime) {
-    if (moment(dateTime).isSame(moment(), 'day')) {
-      const hourStart = moment().hours()
-      const minutesStart = moment().minutes()
+    const startDate = moment(receiveAt)
+    const hourStart = moment(startDate).hours()
+    const minutesStart = moment(startDate).minutes()
+    const minutesSeconds = moment(startDate).seconds()
+    if (moment(dateTime).isSame(startDate, 'minutes')) {
       return {
-        disabledHours: () => range(0, 60).splice(0, hourStart),
+        disabledHours: () => range(0, hourStart),
         disabledMinutes: () => range(0, minutesStart),
-        disabledSeconds: () => range(0, 60),
+        disabledSeconds: () => range(0, minutesSeconds),
+      };
+    }
+    if (moment(dateTime).isSame(startDate, 'hours')) {
+      return {
+        disabledHours: () => range(0, hourStart),
+        disabledMinutes: () => range(0, minutesStart),
+      };
+    }
+    if (moment(dateTime).isSame(startDate, 'day')) {
+      return {
+        disabledHours: () => range(0, hourStart),
       };
     }
   }
   return <Form layout='horizontal'>
     <Form.Item label='发文日期' {...formItemLayout}>
       {getFieldDecorator('publishedTime', {
+        initialValue: moment(receiveAt),
         rules: [{ required: true, message: '请添加发文日期' }],
       })(
         <DatePicker showTime placeholder="请添加发文日期" disabledDate={disabledDate}

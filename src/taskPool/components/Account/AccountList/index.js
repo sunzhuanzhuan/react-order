@@ -4,6 +4,7 @@ import Scolltable from '@/components/Scolltable/Scolltable.js'
 import MessageIcon from '../../../base/MessageIcon'
 import './index.less'
 import TextArea from 'antd/lib/input/TextArea'
+import { auditStateMap, estimateStateMap, Wait_Audit, No_Pass, OK_PASS, WAIT_ESTIMATE, OK_ESTIMATE } from '../../../constants/accountConfig'
 const { confirm } = Modal;
 
 function AccountList(props) {
@@ -38,9 +39,7 @@ function AccountList(props) {
       key: 'auditState',
       align: 'center',
       render: (text, record) => text ? <div>
-        {text == 1 && '待审核'}
-        {text == 2 && '未通过'}
-        {text == 3 && '已通过'}
+        {auditStateMap[text]}
         <div>{record.auditTime}</div>
       </div> : '-'
     },
@@ -50,11 +49,35 @@ function AccountList(props) {
       key: 'estimateState',
       align: 'center',
       render: (text, record) => text ? <div>
-        {text == 1 && "待评估"}
-        {text == 2 && "已评估"}
+        {estimateStateMap[text]}
         {true && <span className='color-box'>{record.estimateGrade || 'C'}</span>}
         <div>{record.estimateTime}</div>
       </div> : '-'
+    },
+    {
+      title: '粉丝数',
+      dataIndex: 'followerCount',
+      key: 'followerCount',
+      align: 'center',
+    },
+    {
+      title: '内容分类',
+      dataIndex: 'followerCount1',
+      key: 'followerCount1',
+      align: 'center',
+    },
+    {
+      title: '受众',
+      dataIndex: 'acceptCrowdVal',
+      key: 'acceptCrowdVal',
+      align: 'center',
+      render: (text, record) => {
+        return text ? <div>
+          性别：
+          年龄：
+          地域：
+        </div> : null
+      }
     },
     {
       title: '上下架状态',
@@ -101,9 +124,9 @@ function AccountList(props) {
         const { accountId, auditState, estimateState, shelfState } = record
         const url = `/order/task/account-details?accountId=${accountId}`
         return <div className='children-mr'>
-          {auditState == 1 ? <Button type='primary' onClick={() => window.open(url, "_self")}>审核</Button> : null}
-          {auditState == 2 || estimateState == 2 ? <Button type='primary' onClick={() => window.open(url, "_self")}>查看详情</Button> : null}
-          {estimateState == 1 ? <Button type='primary' onClick={() => window.open(url, "_self")}>评估</Button> : null}
+          {auditState == Wait_Audit ? <Button type='primary' onClick={() => window.open(url, "_self")}>审核</Button> : null}
+          {auditState == No_Pass || estimateState == OK_ESTIMATE ? <Button type='primary' onClick={() => window.open(url, "_self")}>查看详情</Button> : null}
+          {estimateState == WAIT_ESTIMATE ? <Button type='primary' onClick={() => window.open(url, "_self")}>评估</Button> : null}
           {shelfState == 1 ? <Button onClick={() => offTake(accountId)}>下架</Button> : null}
           {shelfState == 2 ? <Button onClick={() => onTake(accountId)}>上架</Button> : null}
         </div>
@@ -113,7 +136,10 @@ function AccountList(props) {
   ];
   const rowSelection = {
     rowSelection: selectedRow,
-    onChange: (selectedRowKeys) => setSelectedRow(selectedRowKeys)
+    onChange: (selectedRowKeys) => setSelectedRow(selectedRowKeys),
+    getCheckboxProps: record => ({
+      disabled: record.auditState !== Wait_Audit,
+    }),
   }
   function batchPast() {
     confirm({
