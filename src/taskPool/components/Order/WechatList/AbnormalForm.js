@@ -47,20 +47,32 @@ function Abnormal(props) {
   //禁用时间
   function disabledTime(dateTime) {
     const startDate = moment(receiveAt)
-    if (moment(dateTime).isSame(startDate, 'day')) {
-      const hourStart = moment(startDate).hours()
-      const minutesStart = moment(startDate).minutes()
-      const minutesSeconds = moment(startDate).seconds()
+    const hourStart = moment(startDate).hours()
+    const minutesStart = moment(startDate).minutes()
+    const minutesSeconds = moment(startDate).seconds()
+    if (moment(dateTime).isSame(startDate, 'minutes')) {
       return {
         disabledHours: () => range(0, hourStart),
         disabledMinutes: () => range(0, minutesStart),
         disabledSeconds: () => range(0, minutesSeconds),
       };
     }
+    if (moment(dateTime).isSame(startDate, 'hours')) {
+      return {
+        disabledHours: () => range(0, hourStart),
+        disabledMinutes: () => range(0, minutesStart),
+      };
+    }
+    if (moment(dateTime).isSame(startDate, 'day')) {
+      return {
+        disabledHours: () => range(0, hourStart),
+      };
+    }
   }
   return <Form layout='horizontal'>
     <Form.Item label='发文日期' {...formItemLayout}>
       {getFieldDecorator('publishedTime', {
+        initialValue: moment(receiveAt),
         rules: [{ required: true, message: '请添加发文日期' }],
       })(
         <DatePicker showTime placeholder="请添加发文日期" disabledDate={disabledDate}

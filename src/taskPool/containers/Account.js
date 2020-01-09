@@ -2,16 +2,18 @@ import React, { useState, useEffect } from 'react'
 import { connect } from 'react-redux'
 import * as actions from '@/taskPool/actions';
 import { bindActionCreators } from 'redux';
-import AccountForm from '../components/Account/AccountForm'
+import { AccountTabsForm } from '../components/Account/AccountForm'
 import AccountList from '../components/Account/AccountList'
 import { Modal, Tabs, Spin, Button, Badge, message } from 'antd'
 import TitleBox from '../base/TitleBox'
+
 const baseSearch = { page: { currentPage: 1, pageSize: 10 }, form: {} }
 function Account(props) {
   const [modalProps, setModalProps] = useState({ title: '', content: '' })
   const [searchParam, setSearchParam] = useState(baseSearch)
   const [claimTotal, setClaimTotal] = useState(0)
   const [loading, setLoading] = useState(true)
+  const [selectedTab, setSelectedTab] = useState(1)
   useEffect(() => {
     getAccountListAsync(searchParam)
     actions.TPGetFiltersMeta()
@@ -66,12 +68,15 @@ function Account(props) {
     updateAccountStateMsgAsync,
     batchUpdateAccountStateAsync
   }
+
+  const formProps = {
+    searchAction, onReset, orderIndustryCategory, selectedTab
+  }
   return (
     <div>
       <h2>账号列表</h2>
       <TitleBox title='筛选项' >
-        <AccountForm searchAction={searchAction} onReset={onReset}
-          orderIndustryCategory={orderIndustryCategory} />
+        <AccountTabsForm formProps={formProps} />
       </TitleBox>
 
       <Spin spinning={loading}>
@@ -86,6 +91,7 @@ function Account(props) {
         {...modalProps}
         visible={modalProps.visible}
         footer={null}
+        destroyOnClose={true}
         onCancel={() => setModalProps({ ...modalProps, visible: false })}
       >
         {modalProps.content && modalProps.content(comProps)}

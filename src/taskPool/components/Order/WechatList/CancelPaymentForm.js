@@ -53,7 +53,7 @@ function CancelPayment(props) {
           authToken={token}
           listType='picture-card'
           rule={{
-            bizzCode: 'ORDER_IMG_UPLOAD',
+            bizzCode: 'FWP_ORDER_REFUSE',
             max: 50,
           }}
           len={1}

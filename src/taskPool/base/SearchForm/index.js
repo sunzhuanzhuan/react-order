@@ -1,5 +1,5 @@
 import React from 'react'
-import { Form, Input, Select, DatePicker } from 'antd'
+import { Form, Input, Select, DatePicker, InputNumber } from 'antd'
 import './index.less'
 const { RangePicker } = DatePicker;
 function SearchForm(props) {
@@ -13,6 +13,8 @@ function SearchForm(props) {
             {item[dataShow]}
           </Select.Option>)}
         </Select>
+      case 'inputNumber':
+        return <InputNumber placeholder={`请输入`} />
       case 'rangePicker':
         return <RangePicker placeholder={['开始时间', '结束时间']} />
       default:
@@ -23,10 +25,10 @@ function SearchForm(props) {
     formConfig.map(one => {
       return <Form.Item key={one.key} label={one.label} >
         {one.text ? <div style={{ display: 'flex' }}>
-          <div style={{ minWidth: 32, alignItems: 'baseline' }}>{one.text[0]}</div>
+          <div style={{ minWidth: 32, lineHeight: '37px' }}>{one.text[0]}</div>
           {getFieldDecorator(`form.${one.key}`, {})(
             getChildren(one)
-          )}&nbsp;&nbsp;{one.text[1]}
+          )}&nbsp;&nbsp;<div style={{ lineHeight: '37px' }}>{one.text[1]}</div>
         </div> : getFieldDecorator(`form.${one.key}`, {})(
           getChildren(one)
         )}

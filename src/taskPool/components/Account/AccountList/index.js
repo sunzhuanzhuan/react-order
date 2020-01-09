@@ -57,6 +57,31 @@ function AccountList(props) {
       </div> : '-'
     },
     {
+      title: '粉丝数',
+      dataIndex: 'followerCount',
+      key: 'followerCount',
+      align: 'center',
+    },
+    {
+      title: '内容分类',
+      dataIndex: 'followerCount1',
+      key: 'followerCount1',
+      align: 'center',
+    },
+    {
+      title: '受众',
+      dataIndex: 'acceptCrowdVal',
+      key: 'acceptCrowdVal',
+      align: 'center',
+      render: (text, record) => {
+        return text ? <div>
+          性别：
+          年龄：
+          地域：
+        </div> : null
+      }
+    },
+    {
       title: '上下架状态',
       dataIndex: 'shelfState',
       key: 'shelfState',

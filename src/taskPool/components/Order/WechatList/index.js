@@ -148,7 +148,7 @@ export default function WachatList(props) {
       fixed: 'right',
       width: '180px',
       render: (text, record) => {
-        const { id, orderState } = record
+        const { id, orderState, contentUrl } = record
         return <div>
           {record.orderStateDesc == '待执行' ? <> <a onClick={() => setModalProps({
             visible: true,
@@ -158,7 +158,7 @@ export default function WachatList(props) {
           {record.orderStateDesc == '待修改' ? <><a onClick={() => setModalProps({
             visible: true,
             title: '修改回执',
-            content: (props) => <EditReceiptForm orderState={orderState}  {...props} id={id} />
+            content: (props) => <EditReceiptForm orderState={orderState} contentUrl={contentUrl}  {...props} id={id} />
           })}>修改回执 </a><Divider type="vertical" /></> : null}
           <a href={`/order/task/orders-wechatdetail?id=${id}`}>详情</a>
         </div>
