@@ -26,7 +26,7 @@ class UpdateArticalModal extends React.Component {
             })
             Modal.confirm({
               title: '修改订单信息',
-              content: '发文时间提交成功之后，会同步到客户系统，是否确认提交？',
+              content: '修改内容提交成功之后，会同步到客户系统，是否确认提交？',
               onOk: () => {
                 this.props.handleSubmitArticalTime({
                   ...values,

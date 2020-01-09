@@ -93,10 +93,7 @@ class EditOrderModal extends React.Component {
             rules: [{ required: true, message: '请填写账号ID' }, {
               validator: (rule, value, callback) => {
                 let reg = /^[^\u4e00-\u9fa5]{0,255}$/
-                if (value == '') {
-                  callback('请填写账号ID')
-                }
-                else if (!reg.test(value)) {
+                if (!reg.test(value)) {
                   callback('请输入中文除外的，最多255个字符')
                 } else {
                   callback()
@@ -187,7 +184,7 @@ class EditOrderModal extends React.Component {
         <FormItem label='发文时间（微信必填）' {...formItemLayout}>
           {getFieldDecorator('publish_articles_at', {
             initialValue: data ? moment(data[0].publish_articles_at).isValid() ? moment(data[0].publish_articles_at) : undefined : '',
-            rules: [{ required: data && data[0].weibo_type == 9 ? true : false, message: '请填写账号ID' }]
+            rules: [{ required: data && data[0].weibo_type == 9 ? true : false, message: '请填写发文时间' }]
           })(
             <DatePicker format="YYYY-MM-DD HH:mm:ss" placeholder="请输入" showTime={{ defaultValue: moment('00:00:00', 'HH:mm:ss') }}
               onBlur={() => {
