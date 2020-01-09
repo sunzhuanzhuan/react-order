@@ -76,7 +76,7 @@ function Account(props) {
     <div>
       <h2>账号列表</h2>
       <TitleBox title='筛选项' >
-        <AccountTabsForm formProps={formProps} />
+        <AccountTabsForm formProps={formProps}  {...formProps} />
       </TitleBox>
 
       <Spin spinning={loading}>

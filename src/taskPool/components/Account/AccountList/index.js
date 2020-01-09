@@ -136,7 +136,10 @@ function AccountList(props) {
   ];
   const rowSelection = {
     rowSelection: selectedRow,
-    onChange: (selectedRowKeys) => setSelectedRow(selectedRowKeys)
+    onChange: (selectedRowKeys) => setSelectedRow(selectedRowKeys),
+    getCheckboxProps: record => ({
+      disabled: record.auditState !== Wait_Audit,
+    }),
   }
   function batchPast() {
     confirm({

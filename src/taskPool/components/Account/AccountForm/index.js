@@ -36,6 +36,7 @@ function AccountTabs(props) {
   function onSearch(e) {
     e.preventDefault();
     validateFields((err, values) => {
+      console.log("TCL: onSearch -> values", values)
       const { estimatetime, auditTime, identity } = values.form
       if (auditTime) {
         values.form.auditStartTime = moment(auditTime[0]).format(format)
