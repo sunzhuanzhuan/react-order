@@ -13,6 +13,8 @@ export const otherOrderStateMap = {
   [PENDING]: '待执行',
   [OVER]: '已完成'
 }
+
+
 export const otherOrderStateList = Object.keys(otherOrderStateMap).map(one => ({ key: one, name: otherOrderStateMap[one] }))
 
 const orderStep = {

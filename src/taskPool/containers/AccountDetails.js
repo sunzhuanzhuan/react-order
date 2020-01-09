@@ -9,6 +9,7 @@ import ContentEvaluation from '../components/Account/ContentEvaluation'
 import AuditResults from '../components/Account/AuditResults'
 import qs from 'qs'
 import { withRouter } from 'react-router-dom'
+import { Wait_Audit, WAIT_ESTIMATE, OK_PASS } from '../constants/accountConfig'
 const { Panel } = Collapse;
 function AccountDetails(props) {
   const [modalProps, setModalProps] = useState({ title: '', content: '' })
@@ -32,7 +33,8 @@ function AccountDetails(props) {
   console.log("TCL: AccountDetails -> searchParam", searchParam)
 
   const {
-    auditState//审核状态   1：待审核（默认） 2：未通过 3：已通过
+    auditState,//审核状态   1：待审核（默认） 2：未通过 3：已通过
+    estimateState
   } = accountDetail
   return (
     <div className='task-account-details'>
@@ -42,9 +44,9 @@ function AccountDetails(props) {
         <Collapse defaultActiveKey={['1', '2']}>
           <Panel header="账号审核" key="1">
             <DetailsShow accountDetail={accountDetail}  {...searchParam} />
-            {auditState == 1 ? <AuditResults accountDetail={accountDetail} actions={actions} {...searchParam} /> : null}
+            {auditState == Wait_Audit ? <AuditResults accountDetail={accountDetail} actions={actions} {...searchParam} /> : null}
           </Panel>
-          {auditState == 3 ? <Panel header="内容评估" key="2">
+          {auditState == OK_PASS && estimateState == WAIT_ESTIMATE ? <Panel header="内容评估" key="2">
             <ContentEvaluation {...contentProps} />
           </Panel> : null}
         </Collapse>

@@ -38,3 +38,20 @@ export default {
   ],
 }
 
+//审核状态
+export const Wait_Audit = 1
+export const No_Pass = 2
+export const OK_PASS = 3
+export const auditStateMap = {
+  [Wait_Audit]: '待审核',
+  [No_Pass]: '未通过',
+  [OK_PASS]: '已通过',
+}
+//评估状态
+export const WAIT_ESTIMATE = 1
+export const OK_ESTIMATE = 2
+
+export const estimateStateMap = {
+  [WAIT_ESTIMATE]: "待评估",
+  [OK_ESTIMATE]: "已评估",
+}
