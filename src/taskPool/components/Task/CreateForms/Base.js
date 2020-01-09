@@ -10,6 +10,7 @@ import numeral from '@/util/numeralExpand';
 import moment, { duration } from 'moment';
 import { getCountDownTimeText } from '@/taskPool/constants/utils';
 import QuestionTip from '@/base/QuestionTip';
+import { MEDIA_TASK_PATTERN_BIDDING, MEDIA_TASK_PATTERN_RUSH } from '@/taskPool/constants/config';
 
 const { RangePicker } = DatePicker
 const FormItem = Form.Item
@@ -238,15 +239,15 @@ class BaseForMedia extends React.Component {
           <b>竞标模式</b> 固定阅读数，由博主自由报价后再对所报价格进行选择
         </div>} /></span>}>
           {getFieldDecorator('taskPattern', {
-            initialValue: base.taskPattern || 1,
+            initialValue: base.taskPattern || MEDIA_TASK_PATTERN_RUSH,
             rules: [ {
               required: true,
               message: '选择任务模式'
             } ]
           })(
             <Radio.Group>
-              <Radio value={1}>抢单模式</Radio>
-              <Radio value={2}>竞标模式</Radio>
+              <Radio value={MEDIA_TASK_PATTERN_RUSH}>抢单模式</Radio>
+              <Radio value={MEDIA_TASK_PATTERN_BIDDING}>竞标模式</Radio>
             </Radio.Group>
           )}
         </FormItem>

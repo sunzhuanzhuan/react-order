@@ -66,7 +66,9 @@ class CertificateGroup extends React.Component {
             label: item.qualificationName,
             key: item.qualificationId,
           }))}
-          notFoundContent={this.state.searching ? <Spin size="small" /> : null}
+          notFoundContent={this.state.searching ? <Spin size="small" /> : <div>
+            <a> <Icon type="plus"/> 新增资质</a>
+          </div>}
           filterOption={false}
           onSearch={this.searchCertificate}
           onChange={this.handleChange}

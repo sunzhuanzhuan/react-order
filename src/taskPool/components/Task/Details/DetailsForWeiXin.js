@@ -28,7 +28,7 @@ import { convertRawToHTML } from 'braft-convert'
 import {
   AD_ORDER_STATE_OFFLINE,
   MCN_ORDER_STATE_CANCEL,
-  MCN_ORDER_STATE_UNQUALIFIED
+  MCN_ORDER_STATE_UNQUALIFIED, MEDIA_TASK_PATTERN_BIDDING, MEDIA_TASK_PATTERN_RUSH
 } from "@/taskPool/constants/config";
 import numeral from '@/util/numeralExpand';
 import { Link } from 'react-router-dom'
@@ -444,8 +444,8 @@ export default class DetailsForWeiXin extends Component {
             <Descriptions.Item label="任务ID">{details.adOrderNumber}</Descriptions.Item>
             <Descriptions.Item label="任务模式">
               <div className='text-red'>
-                {features.taskPattern === 1 && "抢单模式"}
-                {features.taskPattern === 2 && "竞标模式"}
+                {features.taskPattern === MEDIA_TASK_PATTERN_RUSH && "抢单模式"}
+                {features.taskPattern === MEDIA_TASK_PATTERN_BIDDING && "竞标模式"}
               </div>
             </Descriptions.Item>
             <Descriptions.Item label="图文发布位置">
@@ -481,10 +481,10 @@ export default class DetailsForWeiXin extends Component {
             <Descriptions.Item label="博主限制">
               {this.getLimit(features)}
             </Descriptions.Item>
-            {features.taskPattern === 1 && <Descriptions.Item label="阅读单价">
+            {features.taskPattern === MEDIA_TASK_PATTERN_RUSH && <Descriptions.Item label="阅读单价">
               {this.getUnitPrice(features)}
             </Descriptions.Item>}
-            {features.taskPattern === 2 && <Descriptions.Item label="阅读数">
+            {features.taskPattern === MEDIA_TASK_PATTERN_BIDDING && <Descriptions.Item label="阅读数">
               {this.getReadNumber(features)}
             </Descriptions.Item>}
             <Descriptions.Item label="推广文章">
@@ -495,10 +495,10 @@ export default class DetailsForWeiXin extends Component {
                 <a onClick={this.preview}>查看文章</a>
               </div>
             </Descriptions.Item>
-            {features.taskPattern === 1 && <Descriptions.Item label="预计阅读数">
+            {features.taskPattern === MEDIA_TASK_PATTERN_RUSH && <Descriptions.Item label="预计阅读数">
               {details.retainTime}
             </Descriptions.Item>}
-            {features.taskPattern === 2 && <Descriptions.Item label="预计平均阅读单价">
+            {features.taskPattern === MEDIA_TASK_PATTERN_BIDDING && <Descriptions.Item label="预计平均阅读单价">
               {details.retainTime}
             </Descriptions.Item>}
           </Descriptions>
@@ -530,7 +530,7 @@ export default class DetailsForWeiXin extends Component {
           </Descriptions>
         </Section.Content>
       </Section>
-      {features.taskPattern === 2 && <Section>
+      {features.taskPattern === MEDIA_TASK_PATTERN_BIDDING && <Section>
         <Section.Header title={<span>已申请博主 {
           <span className='text-red'>{total}</span>} 位</span>} level={5} />
         <Section.Content>

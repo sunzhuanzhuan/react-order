@@ -23,7 +23,7 @@ import {
   wxPositionToFields,
   TRAIN_TYPE_OPTIONS,
   AGES_OPTIONS,
-  SEAT_OPTIONS
+  SEAT_OPTIONS, MEDIA_TASK_PATTERN_RUSH, MEDIA_TASK_PATTERN_BIDDING
 } from '@/taskPool/constants/config';
 
 const { SHOW_PARENT } = TreeSelect;
@@ -49,6 +49,11 @@ class UnitPrice extends React.Component {
 
   state = {
     readNums: [ 0 ]
+  }
+
+  componentDidMount() {
+    const { base, budget } = this.props.data
+    this.calculation(budget.totalAmount)
   }
 
   calculation = (amount, numObj) => {
@@ -180,13 +185,13 @@ class ReadNumber extends React.Component {
               >
                 {getFieldDecorator(wxPositionToFields[item.locationKey], {
                   initialValue: budget[wxPositionToFields[item.locationKey]],
-                  rules: [ {
-                    required: true,
-                    message: '必填'
-                  } ]
+                  rules: [
+                    { required: true, message: '必填' }
+                  ]
                 })(
                   <InputNumber
                     min={1}
+                    precision={0}
                     step={500}
                     onChange={val => {
                       this.calculation()
@@ -301,8 +306,8 @@ class BudgetForWeixin extends React.Component {
     let maxAmount = Math.min(balance, MAX_BUDGET_AMOUNT);
     return (
       <Form onSubmit={this.handleSubmit}  {...formLayout}>
-        {base.taskPattern === 1 && <h2>抢单模式</h2>}
-        {base.taskPattern === 2 && <h2>竞标模式</h2>}
+        {base.taskPattern === MEDIA_TASK_PATTERN_RUSH && <h2>抢单模式</h2>}
+        {base.taskPattern === MEDIA_TASK_PATTERN_BIDDING && <h2>竞标模式</h2>}
         <FormItem label="任务预算(元)">
           <div className='flex-form-input-container'>
             {getFieldDecorator('totalAmount', {
@@ -391,13 +396,13 @@ class BudgetForWeixin extends React.Component {
               </div>
             </FormItem> : null
         }
-        {base.taskPattern === 1 && <UnitPrice
+        {base.taskPattern === MEDIA_TASK_PATTERN_RUSH && <UnitPrice
           ref={node => this.readField = node}
           form={form}
           data={data}
           taskPositionList={this.props.taskPositionList}
         />}
-        {base.taskPattern === 2 && <ReadNumber
+        {base.taskPattern === MEDIA_TASK_PATTERN_BIDDING && <ReadNumber
           ref={node => this.readField = node}
           form={form}
           data={data}
@@ -560,7 +565,7 @@ class BudgetFor12306 extends React.Component {
         discount: 0,
         actualPayment: 0,
       },
-      treeData: [],
+      treeData: budget.treeData || [],
     }
   }
 
@@ -586,10 +591,11 @@ class BudgetFor12306 extends React.Component {
 
   componentDidMount() {
     const { actions } = this.props
+    const { treeData } = this.state
     // 获取初始城市列表
-    actions.getAsyncAreaList().then(({ data }) => {
+    treeData.length === 0 && actions.getAsyncAreaList().then(({ data }) => {
       this.setState({
-        treeData: this.state.treeData.concat(this.getTreeNode(data)),
+        treeData: treeData.concat(this.getTreeNode(data)),
       });
     })
   }
@@ -629,7 +635,15 @@ class BudgetFor12306 extends React.Component {
         "deliveryAges",
         "deliveryTrainType",
       ])
-      if (!values.actionNum) return
+      if (!(values.actionNum || values.actionDay)) return
+
+      values.leavePlace = values.leavePlace && values.leavePlace.toString()
+      values.arrivePlace = values.arrivePlace && values.arrivePlace.toString()
+      values.deliverySex = values.deliverySex && values.deliverySex.toString()
+      values.deliverySeat = values.deliverySeat && values.deliverySeat.toString()
+      values.deliveryAges = values.deliveryAges && values.deliveryAges.toString()
+      values.deliveryTrainType = values.deliveryTrainType && values.deliveryTrainType.toString()
+
       const { actions } = this.props
       actions.TPTripPriceCalculation(values).then(({ data }) => {
         this.setState({ result: data });
@@ -655,10 +669,12 @@ class BudgetFor12306 extends React.Component {
       loadData: this.onLoadData
     }
 
+    // 投放模式
+    const _putType = getFieldValue("putType") || budget.putType
     // 按量投放
-    const PA = getFieldValue("putType") === 1
+    const PA = _putType === 1
     // 按天数投放
-    const PB = getFieldValue("putType") === 2
+    const PB = _putType === 2
 
     return (
       <Form onSubmit={this.handleSubmit}  {...formLayout}>
@@ -764,7 +780,7 @@ class BudgetFor12306 extends React.Component {
             ]
           })(
             <TreeSelect {...treeProps} searchPlaceholder="请选择出发城市" onChange={() => {
-              PA && this.calculation()
+              this.calculation()
             }} />
           )}
         </FormItem>
@@ -777,7 +793,7 @@ class BudgetFor12306 extends React.Component {
             ]
           })(
             <TreeSelect {...treeProps} searchPlaceholder="请选择到达城市" onChange={() => {
-              PA && this.calculation()
+              this.calculation()
             }} />
           )}
         </FormItem>
@@ -786,7 +802,7 @@ class BudgetFor12306 extends React.Component {
             initialValue: budget.deliveryTrainType,
           })(
             <CheckGroup options={TRAIN_TYPE_OPTIONS} onChange={() => {
-              PA && this.calculation()
+              this.calculation()
             }} />
           )}
         </FormItem>}
@@ -795,7 +811,7 @@ class BudgetFor12306 extends React.Component {
             initialValue: budget.deliverySeat,
           })(
             <CheckGroup options={SEAT_OPTIONS} onChange={() => {
-              PA && this.calculation()
+              this.calculation()
             }} />
           )}
         </FormItem>}
@@ -804,7 +820,7 @@ class BudgetFor12306 extends React.Component {
             initialValue: budget.deliverySex || 0,
           })(
             <Radio.Group onChange={() => {
-              PA && this.calculation()
+              this.calculation()
             }}>
               <Radio value={0}>全部</Radio>
               <Radio value={10}>男</Radio>
@@ -817,16 +833,16 @@ class BudgetFor12306 extends React.Component {
             initialValue: budget._deliveryAges || 2,
           })(
             <Radio.Group onChange={(e) => {
-              e.target.value === 1 && this.calculation()
+              this.calculation()
             }}>
               <Radio value={2}>否</Radio>
               <Radio value={1}>是</Radio>
             </Radio.Group>
           )}
         </FormItem>}
-        {getFieldValue("_deliveryAges") === 1 &&
+        {PA && getFieldValue("_deliveryAges") === 1 &&
         <FormItem label="配置年龄区间" wrapperCol={{ span: 20 }} onChange={() => {
-          PA && this.calculation()
+          this.calculation()
         }}>
           {getFieldDecorator('deliveryAges', {
             initialValue: budget.deliveryAges,

@@ -17,7 +17,12 @@ import {
 } from "@/taskPool/constants/utils";
 import numeral from '@/util/numeralExpand'
 import { OssUpload } from 'wbyui'
-import { AGES_OPTIONS, SEAT_OPTIONS, wxPositionToFields } from '@/taskPool/constants/config';
+import {
+  AGES_OPTIONS, MEDIA_TASK_PATTERN_BIDDING,
+  MEDIA_TASK_PATTERN_RUSH,
+  SEAT_OPTIONS,
+  wxPositionToFields
+} from '@/taskPool/constants/config';
 import moment from 'moment';
 
 const { Text } = Typography;
@@ -242,8 +247,8 @@ class PreviewForWeixin extends React.Component {
         <Descriptions title={header} column={1}>
           <Descriptions.Item label="任务模式">
             <div className='text-red'>
-              {base.taskPattern === 1 && "抢单模式"}
-              {base.taskPattern === 2 && "竞标模式"}
+              {base.taskPattern === MEDIA_TASK_PATTERN_RUSH && "抢单模式"}
+              {base.taskPattern === MEDIA_TASK_PATTERN_BIDDING && "竞标模式"}
             </div>
           </Descriptions.Item>
           <Descriptions.Item label="所属公司">{base.company.label}</Descriptions.Item>
@@ -267,22 +272,22 @@ class PreviewForWeixin extends React.Component {
             .format("0,0.00")} 元</Descriptions.Item>
           <Descriptions.Item label="内容发布位置">{this.getLocationLimited(budget)}</Descriptions.Item>
           {
-            base.taskPattern === 1 && <Descriptions.Item label="阅读单价">
+            base.taskPattern === MEDIA_TASK_PATTERN_RUSH && <Descriptions.Item label="阅读单价">
               {this.getUnitPrice(budget)}
             </Descriptions.Item>
           }
           {
-            base.taskPattern === 2 && <Descriptions.Item label="阅读数">
+            base.taskPattern === MEDIA_TASK_PATTERN_BIDDING && <Descriptions.Item label="阅读数">
               {this.getReadNumber(budget)}
             </Descriptions.Item>
           }
           {
-            base.taskPattern === 1 && <Descriptions.Item label="预计阅读数">
+            base.taskPattern === MEDIA_TASK_PATTERN_RUSH && <Descriptions.Item label="预计阅读数">
               <div className='text-red'>{budget.readNums.join(" ~ ")}</div>
             </Descriptions.Item>
           }
           {
-            base.taskPattern === 2 && <Descriptions.Item label="预计平均阅读单价">
+            base.taskPattern === MEDIA_TASK_PATTERN_BIDDING && <Descriptions.Item label="预计平均阅读单价">
               <div className='text-red'>{budget.unitPrice}元/阅读</div>
             </Descriptions.Item>
           }

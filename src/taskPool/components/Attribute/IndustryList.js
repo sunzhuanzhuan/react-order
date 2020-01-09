@@ -118,7 +118,7 @@ const IndustryList = (props) => {
     },
     {
       title: '创建时间',
-      dataIndex: 'createAt',
+      dataIndex: 'createdAt',
       render: (text, record) => {
         return text
       }

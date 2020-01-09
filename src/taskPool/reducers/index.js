@@ -3,6 +3,7 @@ import { handleActions, handleAction } from 'redux-actions';
 import * as order from './order'
 import * as account from './account'
 import * as task from './task'
+import * as attribute from './attribute'
 import { reducersResponseList } from '../constants/utils';
 
 import {
@@ -54,5 +55,6 @@ export default combineReducers({
   ...order,
   ...account,
   ...task,
+  ...attribute,
   clueDetail
 })
