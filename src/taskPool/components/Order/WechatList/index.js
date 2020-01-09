@@ -1,11 +1,12 @@
 import React, { useMemo } from 'react'
-import { Table, Input, Badge, Divider, Button, message } from 'antd'
+import { Table, Modal, Badge, Divider, Button, message } from 'antd'
 import CancelPaymentForm from './CancelPaymentForm'
 import AbnormalForm from './AbnormalForm'
 import QualityFailedForm from './QualityFailedForm'
 import Scolltable from '@/components/Scolltable/Scolltable.js'
 import EditReceiptForm from './EditReceiptForm'
 import OrderMcnStatus from '../../../base/OrderMcnStatus'
+import { PopoverText } from '../../../base/MessageIcon'
 import numeral from 'numeral';
 export default function WachatList(props) {
   const { setModalProps, allMcnOrderList = {}, actions, changeWechatPage } = props
@@ -15,6 +16,17 @@ export default function WachatList(props) {
     message.success('操作成功')
     setModalProps({ visible: false })
     changeWechatPage()
+  }
+  function lookReason(title, content) {
+    Modal.info({
+      title: title,
+      content: (
+        <div>
+          {content}
+        </div>
+      ),
+      onOk() { },
+    });
   }
   const columns = [
     {
@@ -101,7 +113,7 @@ export default function WachatList(props) {
       key: '质检操作name',
       align: 'center',
       fixed: 'right',
-      width: '180px',
+      width: '150px',
       render: (text, record) => {
         const { id, realAmount, receiveAt } = record
         return <div>
@@ -146,7 +158,7 @@ export default function WachatList(props) {
       key: 'orderOperation',
       align: 'center',
       fixed: 'right',
-      width: '180px',
+      width: '140px',
       render: (text, record) => {
         const { id, orderState, contentUrl } = record
         return <div>
@@ -166,19 +178,23 @@ export default function WachatList(props) {
     },
     {
       title: '备注',
-      dataIndex: '备注name',
-      key: '备注name',
+      dataIndex: 'orderRemark',
+      key: 'orderRemark',
       align: 'center',
       fixed: 'right',
-      width: '80px',
+      width: '50px',
       render: (text, record) => {
-        <a >查看</a>
+        const { orderStateDesc, orderRemark } = record
+        return orderStateDesc == '取消结算' || orderStateDesc == '不合格' ?
+          <a onClick={() => lookReason(orderRemark)}>查看</a>
+          : null
       }
     },
   ];
   return (
     <Scolltable scrollClassName='.ant-table-body' widthScroll={2100}>
       <Table
+        style={{ marginTop: 20 }}
         dataSource={list}
         columns={columns}
         scroll={{ x: 2000 }}
