@@ -132,82 +132,23 @@ const CreateTask = (props) => {
           label: companyName,
           key: companyId
         } : undefined,
-        "orderName": "123123",
-        "industry": [
-          "1",
-          "11"
-        ],
-        "orderStartDate": moment("2020-06-15"),
-        "orderEndDate": moment("2020-07-15"),
-        "businessScopeId": "1"
       },
-      budget: {
-        "putType": 2,
-        "mediaType": 3,
-        "leavePlace": [
-          "370000201107018839"
-        ],
-        "arrivePlace": [
-          "370000201107018839"
-        ],
-        "actionNum": 333,
-        "actionDay": 1,
-        "result": {
-          "unitPrice": 69138,
-          "totalAmount": 85699,
-          "discount": 91427,
-          "actualPayment": 12666
-        }
-      },
-      content: {
-        "content": "123123123",
-        "image": [
-          {
-            "uid": "rc-upload-1578043231178-13",
-            "name": "a_01.png",
-            "url": "http://prd-wby-img.oss-cn-beijing.aliyuncs.com/ORDER_IMG_UPLOAD/5f5e950b91604060be76b130fc5ff60e.png"
-          }
-        ],
-        "video": [
-          {
-            "uid": "rc-upload-1578043231178-11",
-            "name": "test.mp4",
-            "url": "http://prd-wby-img.oss-cn-beijing.aliyuncs.com/ORDER_VIDEO_UPLOAD/a6f682e4423f433da41c18a70500c213.mp4"
-          }
-        ],
-        "qualificationsFile": [
-          {
-            "files": [
-              {
-                "uid": "rc-upload-1578043231178-15",
-                "name": "a_01.png",
-                "url": "http://prd-wby-img.oss-cn-beijing.aliyuncs.com/F_TASK_CANCEL/06078579679c4f0a8732779537a6aacb.png"
-              }
-            ],
-            "id": 1
-          },
-          {
-            "files": [
-              {
-                "uid": "rc-upload-1578043231178-17",
-                "name": "a_01.png",
-                "url": "http://prd-wby-img.oss-cn-beijing.aliyuncs.com/F_TASK_CANCEL/b413180adaea4fa49400d8537b36b3a9.png"
-              }
-            ],
-            "id": 2
-          }
-        ]
-      }
+      budget: {},
+      content: {}
     }
   })
 
   const getCompanyBalance = (company = {}) => {
-    actions.TPQueryAvailableBalance({
-      companyId: company.key,
-      accountType: 1
-    }).then(({ data }) => {
-      setBalance(data)
-    })
+    if(company.key){
+      actions.TPQueryAvailableBalance({
+        companyId: company.key,
+        accountType: 1
+      }).then(({ data }) => {
+        setBalance(data)
+      })
+    }else {
+      setBalance(0)
+    }
   }
 
 
@@ -232,8 +173,8 @@ const CreateTask = (props) => {
   useEffect(() => {
     const { actions } = props
     // 获取任务大厅行业列表
-    actions.TPGetIndustryCatalog().then(({ data: industryList }) => {
-      setIndustryList(industryList)
+    actions.TPGetIndustryCatalog().then(({ data }) => {
+      setIndustryList(data.industryList || [])
     })
     // 获取上传图片token
     actions.getNewToken().then(({ data: authToken }) => {
@@ -268,8 +209,8 @@ const CreateTask = (props) => {
   // 获取经营内容列表
   const getBusinessScope = ([ industryId ]) => {
     const { actions } = props
-    actions.TPGetBusinessScopeList({ industryId }).then(({ data }) => {
-      setBusinessScopeList(data)
+    actions.TPGetIndustryCatalog({ industryId }).then(({ data }) => {
+      setBusinessScopeList(data.businessScopeList || [])
       // 假如列表为空则直接获取行业下的资质组
       if (data.length === 0) {
         this.getQualificationsGroup([ industryId ])

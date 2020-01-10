@@ -66,8 +66,3 @@ export const mcnOrderListByTemp = handleActions({
     return reducersResponseList.initList()
   }
 }, reducersResponseList.initList())
-
-// 行业列表
-export const taskIndustryList = handleActions({
-  [TPGetIndustryList_success]: reducersResponseList('id')
-}, reducersResponseList.initList())

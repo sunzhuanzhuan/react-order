@@ -33,7 +33,7 @@ function getColumns(active, operation) {
         },
         {
           title: '任务创建时间',
-          dataIndex: 'createAt',
+          dataIndex: 'createdAt',
           render: (date, record) => {
             return <div>
               {date}
@@ -114,7 +114,7 @@ function getColumns(active, operation) {
           width: 180,
           render: (id, record) => {
             return <div>
-              <NavLink to={'/order/task/detail/' + id}>详情</NavLink>
+              <NavLink to={'/order/task/tasks-details/' + id}>详情</NavLink>
               {
                 record.orderState === 1 && <>
                   <Divider type="vertical" />

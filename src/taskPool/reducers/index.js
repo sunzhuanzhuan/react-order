@@ -6,6 +6,7 @@ import * as platform from './platform'
 import * as setting from './setting'
 import * as task from './task'
 import * as clue from './clue'
+import * as attribute from './attribute'
 import { reducersResponseList } from '../constants/utils';
 
 import {
@@ -53,5 +54,6 @@ export default combineReducers({
   ...platform,
   ...setting,
   ...task,
-  ...clue
+  ...clue,
+  ...attribute,
 })

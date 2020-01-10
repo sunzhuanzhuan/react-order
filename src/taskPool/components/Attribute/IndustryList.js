@@ -118,7 +118,7 @@ const IndustryList = (props) => {
     },
     {
       title: '创建时间',
-      dataIndex: 'createAt',
+      dataIndex: 'createdAt',
       render: (text, record) => {
         return text
       }
@@ -129,7 +129,16 @@ const IndustryList = (props) => {
       key: 'option',
       render: (id, record) => {
         return <div>
-          <Link to={'/order/task/detail/' + id}>编辑</Link>
+          {
+            record.industryLevel === 1 && <>
+              <a onClick={() => {}}>编辑</a>
+            </>
+          }
+          {
+            record.industryLevel === 2 && <>
+              <Link to={'/order/task/attributes-update/' + id}>编辑</Link>
+            </>
+          }
           {
             record.isOnline === 1 && <>
               <Divider type="vertical" />
@@ -145,7 +154,7 @@ const IndustryList = (props) => {
           {
             record.industryLevel === 1 && <>
               <Divider type="vertical" />
-              <a onClick={() => offline(id, record)}>添加行业</a>
+              <Link to={`/order/task/attributes-create/${id}/${record.industryName}`}>添加行业</Link>
             </>
           }
         </div>

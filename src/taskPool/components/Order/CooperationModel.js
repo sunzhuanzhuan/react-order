@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Form, Input, Button } from 'antd'
+import { Form, Input, Button, InputNumber } from 'antd'
 import { OssUpload } from 'wbyui'
 import { action } from "./WechatList/ModalContent";
 const { TextArea } = Input;
@@ -43,8 +43,11 @@ function CooperationModel(props) {
       {props.isPrice ? <Form.Item label='合作平台结算金额（元）' {...formItemLayout}>
         {getFieldDecorator('platformSettlementAmount', {
           initialValue: item.platformSettlementAmount,
-          rules: [{ required: true, message: '请输入合作平台结算金额!' },
-          { max: 13, message: '最大输入13位数字!' }],
+          rules: [
+            { required: true, message: '请输入合作平台结算金额!' },
+            { max: 13, message: '最大输入13位数字!' },
+            { pattern: '^[0-9]*$', message: '请输入数字' }
+          ],
         })(
           <Input placeholder="请输入" />,
         )}

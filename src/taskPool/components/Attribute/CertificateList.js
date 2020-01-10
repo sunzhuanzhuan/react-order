@@ -5,9 +5,11 @@ import React, { useEffect, useRef, useState } from 'react';
 import Filters from '@/taskPool/components/Attribute/Filters';
 import { Badge, Divider, message, Modal, Table } from 'antd';
 import { Link } from 'react-router-dom';
+import CertificateOperationModal from '@/taskPool/components/Attribute/CertificateOperationModal';
 
 const CertificateList = (props) => {
   const [ searching, setSearching ] = useState(false)
+  const [ id, setId ] = useState(0)
   const that = useRef({
     search: {
       page: {
@@ -31,7 +33,7 @@ const CertificateList = (props) => {
     setSearching(true)
     that.current.search = search
 
-    props.actions.TPGetIndustryList(search).finally(() => {
+    props.actions.TPQueryQualificationList(search).finally(() => {
       setSearching(false)
     })
   }
@@ -58,7 +60,7 @@ const CertificateList = (props) => {
     },
     {
       title: '资质名称',
-      dataIndex: 'industryName',
+      dataIndex: 'qualificationName',
       render: (name, record) => {
         return name
       }
@@ -78,7 +80,7 @@ const CertificateList = (props) => {
       key: 'option',
       render: (id, record) => {
         return <div>
-          <Link to={'/order/task/detail/' + id}>编辑</Link>
+          <a onClick={() => setId(id)}>编辑</a>
           <Divider type="vertical" />
           <a onClick={() => offline(id, record)}>删除</a>
         </div>
@@ -86,7 +88,7 @@ const CertificateList = (props) => {
     }
   ]
 
-  const { taskIndustryList: { keys, source, total, pageNum, pageSize } } = props.taskPoolData
+  const { qualificationList: { keys, source, total, pageNum, pageSize } } = props.taskPoolData
 
   const dataSource = keys.map(key => source[key])
 
@@ -110,6 +112,7 @@ const CertificateList = (props) => {
 
   return (
     <div>
+      {id > 0 && <CertificateOperationModal type="update" id={id} onClose={() => setId(false)}/>}
       <Table
         locale={{ emptyText: "还没有任务可以展示" }}
         loading={searching}

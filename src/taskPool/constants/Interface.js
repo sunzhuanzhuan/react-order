@@ -90,6 +90,11 @@ export default {
   },
   attribute: {
     queryQualificationByName: configManage + "/queryQualificationByName",
+    checkQualification: configManage + "/checkQualification",
+    queryQualificationList: configManage + "/queryQualificationList",
+    addQualification: configManage + "/addQualification",
+    addOrUpdateIndustryInfo: configManage + "/addOrUpdateIndustryInfo",
+    getIndustryInfo: configManage + "/getIndustryInfo",
   },
   task: {
     getIndustryCatalog: configManage + "/getIndustryCatalog",
@@ -103,7 +108,7 @@ export default {
     getBusinessScopeList: configManage + "/getBusinessScopeList",
     queryQualificationsGroup: configManage + "/queryQualificationsGroup",
     queryTaskCheckQualifications: configManage + "/queryTaskCheckQualifications",
-    taskDetail: prefix + "/adOrder/v1/detail_2",
+    taskDetail: prefix + "/adOrder/v1/detail",
     mcnOrderList: prefix + "/adOrder/v1/mcnOrderList",
     mcnOrderListByTemp: prefix + "/adOrder/v1/mcnOrderList",
     mcnOrderEvaluate: mcnOrder + "/mcnOrderEvaluate",

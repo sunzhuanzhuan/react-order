@@ -15,18 +15,18 @@ function EditReceipt(props) {
       setToken(authToken)
     })
   }, [])
-  const { form, id, changeWechatPage, orderState, setModalProps, actions, platformId = '9' } = props
+  const { form, id, changeWechatPage, orderState, setModalProps, actions, contentUrl, platformId = '9' } = props
   const { getFieldDecorator, validateFields } = form
   function submitForm() {
     validateFields(async (err, values) => {
       if (!err) {
         //回执链接调整_质检前修改
         if (orderState == 200) {
-          await actions.TPFristFailureUpdateContentUrl({ id: id, ...values, platformId: platformId })
+          await actions.TPUpdateContentUrl({ id: id, ...values, platformId: platformId })
         }
         //回执链接调整
         else if (orderState == 320) {
-          await actions.TPUpdateContentUrl({ id: id, ...values, platformId: platformId })
+          await actions.TPFristFailureUpdateContentUrl({ id: id, ...values, platformId: platformId })
         }
         setModalProps({ visible: false })
         message.success('操作成功')
@@ -37,6 +37,7 @@ function EditReceipt(props) {
   return <Form layout='horizontal'>
     <Form.Item label='回执链接' {...formItemLayout}>
       {getFieldDecorator('contentUrl', {
+        initialValue: contentUrl
         // rules: [
         //   { required: true, message: '请填写理由' },
         // ],

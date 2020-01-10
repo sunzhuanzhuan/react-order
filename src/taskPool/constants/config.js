@@ -34,6 +34,11 @@ const MCN_ORDER_EXCUTE_WAIT = 1; //执行结果待确认
 const MCN_ORDER_EXCUTE_CANCEL = 2; //执行结果取消
 const MCN_ORDER_EXCUTE_CONFIRM = 3; //执行结果确认
 
+// 媒体平台任务模式(微信)任务模式
+export const MEDIA_TASK_PATTERN_BIDDING = 1; //竞标
+export const MEDIA_TASK_PATTERN_RUSH = 2; //抢单
+
+
 // 任务执行状态文本及对应操作
 export const confirmexestate = {
   [MCN_ORDER_UNEXCUTE]: {

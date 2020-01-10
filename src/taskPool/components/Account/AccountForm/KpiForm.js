@@ -1,5 +1,5 @@
 import React from 'react'
-import { Form, Input } from 'antd'
+import { Form, Input, InputNumber } from 'antd'
 
 function KpiForm(props) {
   const { form } = props
@@ -26,11 +26,11 @@ function KpiForm(props) {
           {one.name}
           {getFieldDecorator(`form.${one.startKey}`, {
           })(
-            <Input placeholder='请输入' style={{ width: 100, margin: '0px 6px' }} />
+            <InputNumber placeholder='请输入' style={{ width: 100, margin: '0px 6px' }} />
           )}-
-        {getFieldDecorator(`form.${one.endKey}`, {
+          {getFieldDecorator(`form.${one.endKey}`, {
           })(
-            <Input placeholder='请输入' style={{ width: 100, margin: '0px 6px' }} />
+            <InputNumber placeholder='请输入' style={{ width: 100, margin: '0px 6px' }} />
           )}</span>)}
       </Form.Item>
     </div>

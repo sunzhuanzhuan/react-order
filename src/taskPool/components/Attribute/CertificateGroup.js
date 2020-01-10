@@ -6,19 +6,21 @@ import React, { Component, useState } from 'react';
 import { Spin, Dropdown, Tag, Icon, Tooltip, Select, Popover, message, Input } from 'antd';
 import debounce from 'lodash/debounce';
 import './index.less'
+import CertificateOperationModal from '@/taskPool/components/Attribute/CertificateOperationModal';
 
 
 class CertificateGroup extends React.Component {
+
+  state = {
+    searching: false,
+    data: [],
+    isAdd: false
+  }
 
   constructor(props) {
     super(props);
     this.lastFetchId = 0;
     this.searchCertificate = debounce(this.searchCertificate, 800);
-  }
-
-  state = {
-    searching: false,
-    data: []
   }
 
   searchCertificate = value => {
@@ -51,6 +53,14 @@ class CertificateGroup extends React.Component {
 
     return (
       <>
+        {this.state.isAdd &&
+        <CertificateOperationModal
+          type="add" onClose={() =>
+          this.setState({ isAdd: false })}
+          onOk={(name) => {
+            this.searchCertificate(name)
+          }}
+        />}
         <h4 className='certificate-group-container-title'>
           以下资质广告主上传时须必选其一
           <a className='certificate-group-container-delete' onClick={this.props.onDelete}>删除</a>
@@ -59,7 +69,7 @@ class CertificateGroup extends React.Component {
           className='popup-search-certificate-list'
           showSearch
           mode='multiple'
-          placeholder="请选择资质"
+          placeholder="请搜索并选择资质"
           maxTagTextLength={12}
           labelInValue
           value={this.props.value.map(item => ({
@@ -72,6 +82,9 @@ class CertificateGroup extends React.Component {
           onChange={this.handleChange}
           style={{ width: '100%' }}
         >
+          <Select.Option disabled key="disabled">
+            <a onClick={() => this.setState({ isAdd: true })}> <Icon type="plus" /> 新增资质</a>
+          </Select.Option>
           {
             this.state.data.map(item =>
               <Select.Option key={item.id}>
