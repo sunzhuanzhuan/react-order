@@ -13,16 +13,20 @@ const format = 'YYYY-MM-DD'
 const formConfig = [
   { label: 'accountID', type: 'inputNumber', key: 'accountId' },
   { label: '平台ID', type: 'inputNumber', key: 'platformId' },
-  { label: '账号名称', type: 'input', key: 'snsName' }]
+  { label: '账号名称', type: 'input', key: 'snsName' },
+  { label: '粉丝性别比例', type: 'select', key: 'genderProportion', },
+]
 
-const formConfig2 = [{ label: '审核状态', type: 'select', key: 'auditState', isDefault: true },
-{ label: '评估状态', type: 'select', key: 'estimateState', isDefault: true },
-{ label: '评估等级', type: 'select', key: 'estimateGrade', },
-{ label: '上下架状态', type: 'select', key: 'shelfState', },
-{ label: '抢单接单状态', type: 'select', key: 'seckillState', },
-{ label: '竞价接单状态', type: 'select', key: 'biddingState', },
-{ label: '审核时间', type: 'rangePicker', key: 'auditTime', },
-{ label: '评估时间', type: 'rangePicker', key: 'estimatetime', }]
+const formConfig2 = [
+  { label: '审核状态', type: 'select', key: 'auditState', isDefault: true },
+  { label: '评估状态', type: 'select', key: 'estimateState', isDefault: true },
+  { label: '评估等级', type: 'select', key: 'estimateGrade', },
+  { label: '上下架状态', type: 'select', key: 'shelfState', },
+  { label: '抢单接单状态', type: 'select', key: 'seckillState', },
+  { label: '竞价接单状态', type: 'select', key: 'biddingState', },
+  { label: '审核时间', type: 'rangePicker', key: 'auditTime', },
+  { label: '评估时间', type: 'rangePicker', key: 'estimatetime', }
+]
 
 
 export const formItemLayout = {
@@ -102,7 +106,6 @@ function AccountForm(props) {
 const audienceConfig = [
   { label: '粉丝数', text: ['大于', '个'], type: 'inputNumber', key: 'followerCount' },
   { label: '28天内第一条平均阅读', text: ['高于'], key: 'mediaIndex1AvgReadNum28d' },
-  { label: '粉丝性别比例', type: 'select', key: 'genderProportion', },
   { label: '认证号', type: 'select', key: 'isVerified', },
 ]
 

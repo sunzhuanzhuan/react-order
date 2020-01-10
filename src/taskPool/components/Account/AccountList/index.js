@@ -3,6 +3,7 @@ import { Table, Badge, Button, Alert, Modal, Input, Form, message } from 'antd'
 import Scolltable from '@/components/Scolltable/Scolltable.js'
 import MessageIcon from '../../../base/MessageIcon'
 import './index.less'
+import { WBYPlatformIcon } from "wbyui"
 import TextArea from 'antd/lib/input/TextArea'
 import { auditStateMap, estimateStateMap, Wait_Audit, No_Pass, OK_PASS, WAIT_ESTIMATE, OK_ESTIMATE } from '../../../constants/accountConfig'
 const { confirm } = Modal;
@@ -19,7 +20,7 @@ function AccountList(props) {
       key: 'accountId',
     },
     {
-      title: '平台ID',
+      title: '账号ID',
       dataIndex: 'platformId',
       key: 'platformId',
     },
@@ -27,6 +28,13 @@ function AccountList(props) {
       title: '账号名称',
       dataIndex: 'snsName',
       key: 'snsName',
+      render: (text) => {
+        return <span className="tab-icon-style"><WBYPlatformIcon
+          weibo_type={text || '9'}
+          icon_type={"default"}
+          widthSize={15}
+        /></span>
+      }
     },
     {
       title: '主账号名称',

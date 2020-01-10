@@ -14,7 +14,7 @@ function SearchForm(props) {
           </Select.Option>)}
         </Select>
       case 'inputNumber':
-        return <InputNumber placeholder={`请输入`} />
+        return <InputNumber placeholder={`请输入`} style={{ width: 170 }} />
       case 'rangePicker':
         return <RangePicker placeholder={['开始时间', '结束时间']} />
       default:
