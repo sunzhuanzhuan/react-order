@@ -20,6 +20,7 @@ function OrderWechatDetail(props) {
   const { actions, orderReducers } = props
   const [modalProps, setModalProps] = useState({ title: '' })
   const { orderMcnDetailInfo = {}, dataCurvelist = [] } = orderReducers
+  const { orderStateDesc } = orderMcnDetailInfo
   const [isLoading, setIsLoading] = useState(true)
   useEffect(() => {
     getOrderDetail()
@@ -114,6 +115,7 @@ function OrderWechatDetail(props) {
   const remark3 = [
     { label: '取消结算原因', content: <a onClick={cancelReason} >查看</a>, span: 3 },
   ]
+  const remark = { '待修改': remark1, '不合格': remark2, '取消结算': remark3 }
   return (
     <Spin spinning={isLoading} >
       <div className='order-wechat-detail'>
@@ -151,7 +153,15 @@ function OrderWechatDetail(props) {
         </TitleBox>
         <TitleBox title='订单备注' >
           <Descriptions>
-            {remark2.map(item => <Descriptions.Item key={item.label} label={item.label} span={item.span}>{item.content}</Descriptions.Item>)}
+            {remark[orderStateDesc] ?
+              remark[orderStateDesc].map(item => <Descriptions.Item
+                key={item.label}
+                label={item.label}
+                span={item.span}>
+                {item.content}
+              </Descriptions.Item>)
+              : null
+            }
           </Descriptions>
         </TitleBox>
         <Modal

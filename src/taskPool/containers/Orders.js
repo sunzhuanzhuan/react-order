@@ -99,11 +99,11 @@ const Orders = (props) => {
       <Spin spinning={loading}>
         <Tabs onChange={callback} defaultActiveKey='1' >
           <TabPane tab="微信公众号" key="1">
-            <WechatForm {...weChatProps} />
+            <WechatForm {...weChatProps} key={orderType} />
             <WechatList {...comProps} {...weChatProps} />
           </TabPane>
           <TabPane tab="合作平台" key="2">
-            <CooperationForm  {...platformProps} />
+            <CooperationForm  {...platformProps} key={orderType} />
             <CooperationList {...comProps} {...platformProps} />
           </TabPane>
         </Tabs>

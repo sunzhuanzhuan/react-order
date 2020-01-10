@@ -3,19 +3,11 @@ import { Tag, Divider, Icon } from 'antd'
 import TitleBox from '../../base/TitleBox'
 import './DetailsShow.less'
 import { PopoverIcon } from '../../base/MessageIcon'
+import { auditStateMap } from '../../constants/accountConfig'
 function DetailsShow(props) {
   const { accountDetail = {}, accountId } = props
   const { base = {}, acceptCrowd = [], auditState = 1, remark } = accountDetail
   const { classification = [] } = base
-  function getType(type) {
-    if (type == 2) {
-      return <div>未通过<PopoverIcon title='未通过原因' content={remark} placement="bottom" /></div>
-    } else if (type == 3) {
-      return '已通过'
-    } else {
-      return '待审核'
-    }
-  }
   const baseConfig = [
     { label: "账号名称", value: base.snsName },
     { label: "账号ID", value: base.snsId },
@@ -40,7 +32,10 @@ function DetailsShow(props) {
         <div className='base-info'>
           <div className='avatar'>
             <img src='http://img.weiboyi.com/vol1/1/102/124/y/a/635qoq6r22qn11rn9p5o506o4op229o2/default.jpg' />
-            <Tag color="volcano">{getType(2)}</Tag>
+            <Tag color="volcano">
+              {auditStateMap[auditState]}
+              {auditState == 2 && <PopoverIcon title='未通过原因' content={remark} placement="bottom" />}
+            </Tag>
           </div>
           <div className='info'>
             <LineList list={baseConfig} />
