@@ -34,4 +34,17 @@ export const {
   method: 'post'
 });
 
+// 行业添加/更新
+export const {
+  TPAddOrUpdateIndustryInfo,
+} = createHttpAction('TPAddOrUpdateIndustryInfo', Interface.attribute.addOrUpdateIndustryInfo, {
+  method: 'post'
+});
+
+// 行业添加/更新
+export const {
+  TPGetIndustryInfo,
+} = createHttpAction('TPGetIndustryInfo', Interface.attribute.getIndustryInfo);
+
+
 
