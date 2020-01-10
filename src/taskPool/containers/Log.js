@@ -31,7 +31,7 @@ const Log = (props) => {
   useEffect(() => {
     let params = {
       page: {
-        currentPage: 1,
+        pageNum: 1,
         pageSize: 50
       }
     }
@@ -44,14 +44,15 @@ const Log = (props) => {
       setListLoading(false)
     })
   }
+  const { log: { list = [], total, pageNum, pageSize } } = props.clueReducers
   const pagination = {
-    total: 100,
-    pageSize: 10,
-    currentPage: 1,
+    total: total,
+    pageSize: pageSize,
+    current: pageNum,
     onChange: (current) => {
       let params = {
         page: {
-          currentPage: current,
+          pageNum: current,
           pageSize: 50
         }
       }
@@ -59,11 +60,10 @@ const Log = (props) => {
     },
     showQuickJumper: true
   }
-  const { log = [] } = props.clueReducers
   return (
     <div>
       <h2 style={{ marginBottom: '30px' }}>操作日志列表</h2>
-      {log && <Table loading={listLoading} columns={columns} dataSource={log} pagination={pagination} />}
+      {list && <Table loading={listLoading} columns={columns} dataSource={list} pagination={pagination} />}
     </div>
   );
 };

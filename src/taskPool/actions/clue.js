@@ -10,7 +10,8 @@ export const {
 });
 //线索列表
 export const {
-  TPPostClueList
+  TPPostClueList,
+  TPPostClueList_success
 } = createHttpAction('TPPostClueList', Interface.clue.TPPostClueList, {
   method: 'post'
 });
