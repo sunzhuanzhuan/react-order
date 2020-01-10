@@ -264,6 +264,16 @@ const CreateIndustryBySecond = (props) => {
             onChange={d => setScopes(d)}
           />
         </Form.Item>
+        <Form.Item label="备注">
+          {getFieldDecorator('remark', {
+            rules: []
+          })(
+            <Input.TextArea
+              autoSize={{ minRows: 5, maxRows: 5 }}
+              placeholder="请输入"
+            />
+          )}
+        </Form.Item>
         <Form.Item label=' '>
           <Button type="primary" htmlType="submit" loading={loading}>确定</Button>
         </Form.Item>

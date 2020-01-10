@@ -9,32 +9,14 @@ import * as commonActions from '@/actions';
 import * as actions from '@/taskPool/actions';
 import { connect } from 'react-redux';
 
-// 验证资质名函数 防抖处理
-const debouncedCheckName = debounce((cb) => cb(), 800)
-
 const formItemLayout = {
   labelCol: { span: 4, },
   wrapperCol: { span: 19 },
   colon: false
 }
-const CertificateAddForm = (props) => {
+const IndustryAddForm = (props) => {
   const [ loading, setLoading ] = useState()
 
-
-  // 判断资质名是否存在
-  const asyncValidateNameRepeat = (rule, value, callback) => {
-    debouncedCheckName(() => {
-      props.actions.TPCheckQualification({ qualificationName: value }).then(({ data }) => {
-        if (!data) {
-          callback("资质名称已经存在，请重新输入")
-        } else {
-          callback()
-        }
-      }).catch(() => {
-        callback("请求错误, 校验失败")
-      })
-    })
-  }
 
   // 提交
   const handleSubmit = e => {
@@ -42,7 +24,14 @@ const CertificateAddForm = (props) => {
     props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         setLoading(true)
-        props.actions.TPAddQualification(values)
+        const body = {
+          industryLevel: 1,
+          industryName: values.industryName,
+          remark: values.remark,
+          businessScopeList: [],
+          qualificationsGroupList: []
+        }
+        props.actions.TPAddOrUpdateIndustryInfo(body)
           .then(() => {
             message.success("添加成功!")
             setLoading(false)
@@ -60,20 +49,17 @@ const CertificateAddForm = (props) => {
 
   const mProps = {
     visible: true,
-    title: '新增资质'
+    title: '新增一级行业'
   }
   return (
     <Modal {...mProps} okButtonProps={{ loading }} onOk={handleSubmit} onCancel={props.onClose}>
       <Form {...formItemLayout} colon={false}>
-        <Form.Item label="资质名称">
-          {getFieldDecorator('qualificationName', {
-            validateFirst: true,
-            rules: [
-              { required: true, message: '请填写评论数' },
-              { validator: asyncValidateNameRepeat }
-            ]
-          })(
-            <Input placeholder="请输入" />
+        <Form.Item label="行业名称">
+          {getFieldDecorator(`industryName`,
+            {
+              rules: [ { required: true, message: '行业名称不能为空' } ]
+            })(
+            <Input placeholder='请输入行业名称' />
           )}
         </Form.Item>
         <Form.Item label="备注">
@@ -90,26 +76,10 @@ const CertificateAddForm = (props) => {
     </Modal>
   );
 };
-const WrappedCertificateAddForm = Form.create()(CertificateAddForm)
+const WrappedIndustryAddForm = Form.create()(IndustryAddForm)
 
-const CertificateUpdateForm = (props) => {
+const IndustryUpdateForm = (props) => {
   const [ loading, setLoading ] = useState()
-
-
-  // 判断资质名是否存在
-  const asyncValidateNameRepeat = (rule, value, callback) => {
-    debouncedCheckName(() => {
-      props.actions.TPCheckQualification({ qualificationName: value, id: props.record.id }).then(({ data }) => {
-        if (!data) {
-          callback("资质名称已经存在，请重新输入")
-        } else {
-          callback()
-        }
-      }).catch(() => {
-        callback("请求错误, 校验失败")
-      })
-    })
-  }
 
   // 提交
   const handleSubmit = e => {
@@ -117,8 +87,15 @@ const CertificateUpdateForm = (props) => {
     props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         setLoading(true)
-        values.id = props.record.id
-        props.actions.TPUpdateQualification(values)
+        const body = {
+          id: props.record.id,
+          industryLevel: 1,
+          industryName: values.industryName,
+          remark: values.remark,
+          businessScopeList: [],
+          qualificationsGroupList: []
+        }
+        props.actions.TPAddOrUpdateIndustryInfo(body)
           .then(() => {
             message.success("修改成功!")
             setLoading(false)
@@ -136,21 +113,18 @@ const CertificateUpdateForm = (props) => {
 
   const mProps = {
     visible: true,
-    title: '编辑资质'
+    title: '编辑一级行业'
   }
   return (
     <Modal {...mProps} okButtonProps={{ loading }} onOk={handleSubmit} onCancel={props.onClose}>
       <Form {...formItemLayout} colon={false}>
         <Form.Item label="资质名称">
-          {getFieldDecorator('qualificationName', {
-            initialValue: props.record.qualificationName,
-            validateFirst: true,
-            rules: [
-              { required: true, message: '请填写评论数' },
-              { validator: asyncValidateNameRepeat }
-            ]
-          })(
-            <Input placeholder="请输入" />
+          {getFieldDecorator(`industryName`,
+            {
+              initialValue: props.record.industryName,
+              rules: [ { required: true, message: '行业名称不能为空' } ]
+            })(
+            <Input placeholder='请输入行业名称' />
           )}
         </Form.Item>
         <Form.Item label="备注">
@@ -168,14 +142,16 @@ const CertificateUpdateForm = (props) => {
     </Modal>
   );
 };
-const WrappedCertificateUpdateForm = Form.create()(CertificateUpdateForm)
+const WrappedIndustryUpdateForm = Form.create()(IndustryUpdateForm)
 
 
-const CertificateOperationModal = (props) => {
+const IndustryOperationModal = (props) => {
+  console.log(props, '____');
+
   return (
     <>
-      {props.type === "add" && <WrappedCertificateAddForm {...props} />}
-      {props.type === "update" && <WrappedCertificateUpdateForm {...props} />}
+      {props.type === "add" && <WrappedIndustryAddForm {...props} />}
+      {props.type === "update" && <WrappedIndustryUpdateForm {...props} />}
     </>
   );
 };
@@ -187,4 +163,4 @@ const mapDispatchToProps = (dispatch) => ({
   }, dispatch)
 })
 
-export default connect(null, mapDispatchToProps)(CertificateOperationModal);
+export default connect(null, mapDispatchToProps)(IndustryOperationModal);

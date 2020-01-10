@@ -23,6 +23,7 @@ import { connect } from 'react-redux';
 import IndustryList from '../components/Attribute/IndustryList';
 import CertificateList from '@/taskPool/components/Attribute/CertificateList';
 import CertificateOperationModal from '@/taskPool/components/Attribute/CertificateOperationModal';
+import IndustryOperationModal from '@/taskPool/components/Attribute/industryOperationModal';
 
 const { Title } = Typography;
 const { TabPane } = Tabs;
@@ -31,7 +32,9 @@ const { TabPane } = Tabs;
 const Attributes = (props) => {
   const [ active, setActive ] = useState("1")
   const [ addQ, setAddQ ] = useState(false)
-
+  const [ addI, setAddI ] = useState(false)
+  const industryTable = useRef(null)
+  const certificateTable = useRef(null)
   const tabChange = (key) => {
     setActive(key)
   }
@@ -39,12 +42,28 @@ const Attributes = (props) => {
 
   return (
     <div className='task-pool-page-container attributes-page'>
-      {addQ && <CertificateOperationModal type="add" onClose={() => setAddQ(false)} />}
+      {addI && <IndustryOperationModal
+        type="add"
+        onClose={() => {
+          setAddI(false)
+        }}
+        onOk={() => {
+          industryTable && industryTable.current.getList()
+        }}
+      />}
+      {addQ && <CertificateOperationModal
+        type="add"
+        onClose={() => {
+          setAddQ(false)
+        }}
+        onOk={() => {
+          certificateTable && certificateTable.current.getList()
+        }}
+      />}
       <Title level={4}>属性管理</Title>
       <Tabs activeKey={active} onChange={tabChange} animated={false} tabBarExtraContent={
         <>
-          {active === "1" && <Button icon="plus" type="primary" onClick={() => {
-          }}>
+          {active === "1" && <Button icon="plus" type="primary" onClick={() => setAddI(true)}>
             添加新行业
           </Button>}
           {active === "2" && <Button icon="plus" type="primary" onClick={() => setAddQ(true)}>
@@ -53,10 +72,12 @@ const Attributes = (props) => {
         </>
       }>
         <TabPane key={1} tab="行业分类管理">
-          <IndustryList taskPoolData={props.taskPoolData} actions={props.actions} />
+          <IndustryList ref={industryTable} taskPoolData={props.taskPoolData}
+                        actions={props.actions} />
         </TabPane>
         <TabPane key={2} tab="行业资质管理">
-          <CertificateList taskPoolData={props.taskPoolData} actions={props.actions} />
+          <CertificateList ref={certificateTable} taskPoolData={props.taskPoolData}
+                           actions={props.actions} />
         </TabPane>
       </Tabs>
 

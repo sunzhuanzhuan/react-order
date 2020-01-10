@@ -70,6 +70,7 @@ export default {
     addQualification: configManage + "/addQualification",
     addOrUpdateIndustryInfo: configManage + "/addOrUpdateIndustryInfo",
     getIndustryInfo: configManage + "/getIndustryInfo",
+    updateQualification: configManage + "/updateQualification",
   },
   task: {
     getIndustryCatalog: configManage + "/getIndustryCatalog",

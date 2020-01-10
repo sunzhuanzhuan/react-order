@@ -1,15 +1,19 @@
 /**
  * Created by lzb on 2020-01-08.
  */
-import React, { useEffect, useRef, useState } from 'react';
+import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import Filters from '@/taskPool/components/Attribute/Filters';
 import { Badge, Divider, message, Modal, Table } from 'antd';
 import { Link } from 'react-router-dom';
 import CertificateOperationModal from '@/taskPool/components/Attribute/CertificateOperationModal';
+import IndustryOperationModal from '@/taskPool/components/Attribute/industryOperationModal';
 
-const CertificateList = (props) => {
+const CertificateList = (props, ref) => {
   const [ searching, setSearching ] = useState(false)
   const [ id, setId ] = useState(0)
+  const [ record, setRecord ] = useState({})
+
+
   const that = useRef({
     search: {
       page: {
@@ -21,11 +25,17 @@ const CertificateList = (props) => {
     isOfflineRequest: false
   })
 
+  useImperativeHandle(ref, () => ({
+    getList: () => {
+      that.current.getList();
+    }
+  }));
+
   useEffect(() => {
     getList()
   }, [])
 
-  const getList = (params = {}) => {
+  const getList = that.current.getList = (params = {}) => {
     let search = {
       page: Object.assign({}, that.current.search.page, params.page),
       form: Object.assign({}, that.current.search.form, params.form)
@@ -38,15 +48,15 @@ const CertificateList = (props) => {
     })
   }
 
-  // 下线行业分类
-  const offline = (id, record) => {
+  // 删除行业资质
+  const deleted = (id, record) => {
     const { actions } = props
     Modal.confirm({
-      title: '下线行业分类',
-      content: `确认要下线${record.industryLevel === 1 ? '一' : '二'}级分类“${record.industryName}”么？`,
+      title: '删除行业资质',
+      content: `确认要删除行业资质“${record.qualificationName}”么？`,
       onOk: () => {
-        return actions.TPOfflineTask({ id }).then(() => {
-          message.success('下线成功')
+        return actions.TPUpdateQualification({ id: record.id,  isDeleted: 1}).then(() => {
+          message.success('删除成功')
           getList({ page: { currentPage: 1 } })
         })
       }
@@ -80,9 +90,12 @@ const CertificateList = (props) => {
       key: 'option',
       render: (id, record) => {
         return <div>
-          <a onClick={() => setId(id)}>编辑</a>
+          <a onClick={() => {
+            setId(id)
+            setRecord(record)
+          }}>编辑</a>
           <Divider type="vertical" />
-          <a onClick={() => offline(id, record)}>删除</a>
+          <a onClick={() => deleted(id, record)}>删除</a>
         </div>
       }
     }
@@ -112,7 +125,16 @@ const CertificateList = (props) => {
 
   return (
     <div>
-      {id > 0 && <CertificateOperationModal type="update" id={id} onClose={() => setId(false)}/>}
+      {id > 0 && <CertificateOperationModal
+        record={record}
+        type="update"
+        id={id}
+        onClose={() => {
+        setId(false)
+        setRecord({})
+      }}
+        onOk={() => getList()}
+      />}
       <Table
         locale={{ emptyText: "还没有任务可以展示" }}
         loading={searching}
@@ -124,4 +146,4 @@ const CertificateList = (props) => {
   );
 };
 
-export default CertificateList;
+export default forwardRef(CertificateList);
