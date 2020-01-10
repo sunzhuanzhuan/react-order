@@ -18,7 +18,7 @@ class Settings extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      current: 'weichat'
+      current: 'cooperation'
     }
   }
   componentDidMount = () => {
@@ -36,6 +36,24 @@ class Settings extends React.Component {
       this.props.actions.TPQueryCommissionConfig()
     } else if (key == 'weichat') {
       this.props.actions.TPTaskCheck()
+    } else if (key == 'notice') {
+      let params = {
+        page: {
+          currentPage: 1,
+          pageSize: 100
+        },
+        form: {
+          platformId: 9,
+          notificationType: 11
+        }
+      }
+      this.props.actions.TPGetNotificationList(params)
+    } else {
+      this.props.actions.TPGetDimensionConfig({})
+      this.props.actions.TPGetTaskLaunchConfigLiang({ offerType: 3 })
+      this.props.actions.TPGetTaskLaunchConfigTian({ offerType: 1 })
+      this.props.actions.TPGetTaskLaunchConfigHui({ offerType: 4 })
+
     }
   }
   handleClick = (e) => {
@@ -44,7 +62,8 @@ class Settings extends React.Component {
     this.handleDealTab(e.key)
   }
   render() {
-    let { readUnitPriceConfig, qualityConfig, addRetainTime, commissionConfig, taskCheck } = this.props.settingReducers
+    let { readUnitPriceConfig, qualityConfig, addRetainTime, commissionConfig, taskCheck, notificationList,
+      dimensionConfig, taskLaunchConfigLiang, taskLaunchConfigTian, taskLaunchConfigHui } = this.props.settingReducers
     const { current } = this.state
     return (
       <div>
@@ -91,8 +110,22 @@ class Settings extends React.Component {
         {current == 'weichat' ? <Weichat taskCheck={taskCheck}
           TPTaskCheck={this.props.actions.TPTaskCheck}
           TPUpdateTaskCheck={this.props.actions.TPUpdateTaskCheck} /> : null}
-        {current == 'cooperation' ? <Cooperation /> : null}
-        {current == 'notice' ? <Notice /> : null}
+        {current == 'cooperation' ? <Cooperation
+          TPDimensionConfig={this.props.actions.TPDimensionConfig}
+          TPGetDimensionConfig={this.props.actions.TPGetDimensionConfig}
+          dimensionConfig={dimensionConfig}
+          taskLaunchConfigLiang={taskLaunchConfigLiang}
+          taskLaunchConfigTian={taskLaunchConfigTian}
+          taskLaunchConfigHui={taskLaunchConfigHui}
+          TPGetTaskLaunchConfigLiang={this.props.actions.TPGetTaskLaunchConfigLiang}
+          TPGetTaskLaunchConfigTian={this.props.actions.TPGetTaskLaunchConfigTian}
+          TPGetTaskLaunchConfigHui={this.props.actions.TPGetTaskLaunchConfigHui}
+        /> : null}
+        {current == 'notice' ? <Notice
+          notificationList={notificationList}
+          TPGetNotificationList={this.props.actions.TPGetNotificationList}
+          TPDeleteNotice={this.props.actions.TPDeleteNotice}
+        /> : null}
       </div>
     );
   }

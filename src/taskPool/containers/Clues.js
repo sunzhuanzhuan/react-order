@@ -42,14 +42,26 @@ const Clues = (props) => {
   };
 
   const columns = getColumns(search.active || 1, clickModal)
+  const { actions, history, taskPoolData } = props
+  const { taskManageList: { keys, source, total, pageNum, pageSize } } = taskPoolData
+
+  const dataSource = keys.map(key => source[key])
   const pagination = {
-    total: 100,
-    pageSize: 10,
-    current: 1,
-    onChange: (current) => {
-      getList({ pageNum: current, ...search })
+    total,
+    pageSize,
+    current: pageNum,
+    showQuickJumper: true,
+    showSizeChanger: true,
+    onChange: (currentPage) => {
+      getList({
+        page: { currentPage }
+      })
     },
-    showQuickJumper: true
+    onShowSizeChange: (currentPage, pageSize) => {
+      getList({
+        page: { pageSize, currentPage: 1 }
+      })
+    }
   }
 
   return (

@@ -64,3 +64,51 @@ export const {
 } = createHttpAction('TPUpdateTaskCheck', Interface.setting.TPUpdateTaskCheck, {
   method: 'post'
 });
+// 获取通知人员的列表
+export const {
+  TPGetNotificationList,
+  TPGetNotificationList_success
+} = createHttpAction('TPGetNotificationList', Interface.setting.TPGetNotificationList, {
+  method: 'post'
+});
+// 删除通知人员
+export const {
+  TPDeleteNotice
+} = createHttpAction('TPDeleteNotice', Interface.setting.TPDeleteNotice, {
+  method: 'post'
+});
+// 应用12306的账号等级
+export const {
+  TPDimensionConfig,
+  TPDimensionConfig_success
+} = createHttpAction('TPDimensionConfig', Interface.setting.TPDimensionConfig, {
+  method: 'post'
+});
+// 获取12306的账号等级
+export const {
+  TPGetDimensionConfig,
+  TPGetDimensionConfig_success
+} = createHttpAction('TPGetDimensionConfig', Interface.setting.TPGetDimensionConfig, {
+  method: 'post'
+});
+// 任务要求
+export const {
+  TPGetTaskLaunchConfigLiang,
+  TPGetTaskLaunchConfigLiang_success
+} = createHttpAction('TPGetTaskLaunchConfigLiang', Interface.setting.TPGetTaskLaunchConfigLiang, {
+  method: 'post'
+});
+// 包天模式
+export const {
+  TPGetTaskLaunchConfigTian,
+  TPGetTaskLaunchConfigTian_success
+} = createHttpAction('TPGetTaskLaunchConfigTian', Interface.setting.TPGetTaskLaunchConfigTian, {
+  method: 'post'
+});
+// 返现优惠
+export const {
+  TPGetTaskLaunchConfigHui,
+  TPGetTaskLaunchConfigHui_success
+} = createHttpAction('TPGetTaskLaunchConfigHui', Interface.setting.TPGetTaskLaunchConfigHui, {
+  method: 'post'
+});

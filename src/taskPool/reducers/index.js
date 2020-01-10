@@ -5,6 +5,7 @@ import * as account from './account'
 import * as platform from './platform'
 import * as setting from './setting'
 import * as task from './task'
+import * as clue from './clue'
 import { reducersResponseList } from '../constants/utils';
 
 import {
@@ -41,12 +42,6 @@ export const financeTradeRecord = handleActions({
   [TPQueryMcnFinancePaymentPage_success]: reducersResponseList(),
 }, reducersResponseList.initList())
 
-// 获取线索详情
-export const clueDetail = handleActions({
-  [TPGetClueDetail_success]: (state, action) => {
-    return { ...action.payload.data }
-  }
-}, {});
 
 export default combineReducers({
   mcnReviewOrderList,
@@ -58,5 +53,5 @@ export default combineReducers({
   ...platform,
   ...setting,
   ...task,
-  clueDetail
+  ...clue
 })

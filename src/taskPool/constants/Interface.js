@@ -27,7 +27,7 @@ export default {
   TPMcnOrderConfirmFinish: prefix + "/mcnOrder/v1/mcnOrderConfirmFinish",
   TPMcnOrderConfirmCancel: prefix + "/mcnOrder/v1/mcnOrderConfirmCancel",
   clue: {
-    TPPostOperationLog: prefix + "/configmanage/v1/queryOperationLog",
+    TPPostOperationLog: prefix + "/configManage/v1/queryOperationLog",
     TPPostClueList: prefix + "/adclue/v1/queryAdClueList",
     TPGetClueDetail: prefix + "/adclue/v1/queryAdClueInfo",
   },
@@ -47,6 +47,13 @@ export default {
     TPUpdateCommissionConfig: prefix + "/configManage/v1/commissionConfig",
     TPTaskCheck: prefix + "/configManage/v1/queryTaskCheckQualifications",
     TPUpdateTaskCheck: prefix + "/configManage/v1/taskCheckQualifications",
+    TPGetNotificationList: prefix + "/configManage/v1/getNotificationList",
+    TPDeleteNotice: prefix + "/configManage/v1/notificationChange",
+    TPDimensionConfig: prefix + "/cooperationPlatform/v2/dimensionConfig",
+    TPGetDimensionConfig: prefix + "/cooperationPlatform/v2/getDimensionConfig",
+    TPGetTaskLaunchConfigLiang: prefix + "/cooperationPlatform/v2/getTaskLaunchConfig",
+    TPGetTaskLaunchConfigTian: prefix + "/cooperationPlatform/v2/getTaskLaunchConfig",
+    TPGetTaskLaunchConfigHui: prefix + "/cooperationPlatform/v2/getTaskLaunchConfig"
   },
   account: {
     TPGetAccountList: `${accountMapping}/getAccountList`,//账号管理
