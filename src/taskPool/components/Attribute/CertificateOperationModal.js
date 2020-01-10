@@ -46,7 +46,8 @@ const CertificateAddForm = (props) => {
           .then(() => {
             message.success("添加成功!")
             setLoading(false)
-            props.onClose && props.onClose
+            props.onOk && props.onOk(values.qualificationName)
+            props.onClose && props.onClose()
           })
           .catch(() => {
             setLoading(false)

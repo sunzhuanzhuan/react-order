@@ -129,7 +129,16 @@ const IndustryList = (props) => {
       key: 'option',
       render: (id, record) => {
         return <div>
-          <Link to={'/order/task/detail/' + id}>编辑</Link>
+          {
+            record.industryLevel === 1 && <>
+              <a onClick={() => {}}>编辑</a>
+            </>
+          }
+          {
+            record.industryLevel === 2 && <>
+              <Link to={'/order/task/attributes-update/' + id}>编辑</Link>
+            </>
+          }
           {
             record.isOnline === 1 && <>
               <Divider type="vertical" />

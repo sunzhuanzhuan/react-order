@@ -68,6 +68,8 @@ export default {
     checkQualification: configManage + "/checkQualification",
     queryQualificationList: configManage + "/queryQualificationList",
     addQualification: configManage + "/addQualification",
+    addOrUpdateIndustryInfo: configManage + "/addOrUpdateIndustryInfo",
+    getIndustryInfo: configManage + "/getIndustryInfo",
   },
   task: {
     getIndustryCatalog: configManage + "/getIndustryCatalog",

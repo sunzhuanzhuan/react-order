@@ -42,15 +42,17 @@ const redirectToOtherProjects = ({ location: { pathname = '/error', search = '' 
 // 项目内路由
 const routes = () => (
   <App history={history}>
-    <Switch>
-      <Route path="/order/trinity/reconciliations" component={Reconciliations} />
-      <Route path="/order/publicOrderList" component={PublicOrderList} />
-      <Route path="/order/closing-report" component={ClosingReport} />
-      <Route path="/order/business" component={Business} />
-      <Route path="/order/spotplan" component={SpotPlan} />
-      <Route path="/order/task" component={Task} />
-      <Route render={() => linkTo('/error')} />
-    </Switch>
+    <ConfigProvider getPopupContainer={() => document.getElementById('app-content-children-id')}>
+      <Switch>
+        <Route path="/order/trinity/reconciliations" component={Reconciliations} />
+        <Route path="/order/publicOrderList" component={PublicOrderList} />
+        <Route path="/order/closing-report" component={ClosingReport} />
+        <Route path="/order/business" component={Business} />
+        <Route path="/order/spotplan" component={SpotPlan} />
+        <Route path="/order/task" component={Task} />
+        <Route render={() => linkTo('/error')} />
+      </Switch>
+    </ConfigProvider>
   </App>
 );
 

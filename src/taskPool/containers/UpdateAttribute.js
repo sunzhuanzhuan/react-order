@@ -10,6 +10,7 @@ import { connect } from 'react-redux';
 import CertificateGroupsList from '../components/Attribute/CertificateGroupsList';
 import BusinessScopesList from '../components/Attribute/BusinessScopesList';
 import { useParams, useHistory } from 'react-router-dom'
+import LoadingWrapped from '@/base/LoadingWrapped';
 
 const formLayout = {
   labelCol: { span: 4 },
@@ -181,6 +182,7 @@ const handleGroups = (_groups = []) => {
     }
   })
 }
+
 const handleScopes = (_scopes = []) => {
   return Object.values(_scopes).map(item => {
     return {
@@ -191,15 +193,32 @@ const handleScopes = (_scopes = []) => {
   })
 }
 
-// 创建二级行业
-const CreateIndustryBySecond = (props) => {
+// 编辑二级行业
+const UpdateIndustryBySecond = (props) => {
   const { getFieldDecorator } = props.form
   const [ scopes, setScopes ] = useState([])
   const [ groups, setGroups ] = useState([])
   const [ loading, setLoading ] = useState(false)
+  const [ details, setDetails ] = useState({})
+  const [ detailsLoading, setDetailsLoading ] = useState(true)
 
-  const { name, pid } = useParams()
+  const { id } = useParams()
   const history = useHistory()
+
+  useEffect(() => {
+    getDetails()
+  }, [])
+
+  const getDetails = () => {
+    props.actions.TPGetIndustryInfo({ industryId: id }).then(({ data }) => {
+      setDetails(data)
+      setGroups(data.qualificationsGroupList)
+      setScopes(data.businessScopeList)
+      setDetailsLoading(false)
+    }).catch((err) => {
+      setDetailsLoading(err)
+    })
+  }
 
   const handleSubmit = e => {
     e.preventDefault();
@@ -210,7 +229,7 @@ const CreateIndustryBySecond = (props) => {
         const body = {
           industryLevel: 2,
           industryName: values.industryName,
-          parentId: pid,
+          parentId: id,
           remark: values.remark,
           businessScopeList: scope,
           qualificationsGroupList: group
@@ -228,18 +247,20 @@ const CreateIndustryBySecond = (props) => {
       }
     });
   };
+
   return (
-    <>
-      <h3>添加二级行业</h3>
-      <Form {...formLayout} className='task-pool-page-container create-attribute-page'
+    <LoadingWrapped loading={detailsLoading}>
+      <h3>编辑二级行业</h3>
+      <Form {...formLayout} className='task-pool-page-container update-attribute-page'
             onSubmit={handleSubmit}>
         <Form.Item label={<span>&nbsp;&nbsp;&nbsp;一级行业名称</span>}>
-          {name}
+          {details.parentName}
         </Form.Item>
         <Form.Item label="二级行业名称">
           {
             getFieldDecorator(`industryName`,
               {
+                initialValue: details.industryName,
                 rules: [ { required: true, message: '行业名称不能为空' } ]
               })(
               <Input placeholder='请输入行业名称' />
@@ -268,7 +289,7 @@ const CreateIndustryBySecond = (props) => {
           <Button type="primary" htmlType="submit" loading={loading}>确定</Button>
         </Form.Item>
       </Form>
-    </>
+    </LoadingWrapped>
   );
 };
 
@@ -285,4 +306,4 @@ const mapDispatchToProps = (dispatch) => ({
   }, dispatch)
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(Form.create()(CreateIndustryBySecond));
+export default connect(mapStateToProps, mapDispatchToProps)(Form.create()(UpdateIndustryBySecond));

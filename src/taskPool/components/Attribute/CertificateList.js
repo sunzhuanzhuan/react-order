@@ -60,7 +60,7 @@ const CertificateList = (props) => {
     },
     {
       title: '资质名称',
-      dataIndex: 'industryName',
+      dataIndex: 'qualificationName',
       render: (name, record) => {
         return name
       }

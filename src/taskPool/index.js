@@ -11,6 +11,7 @@ import OrderWechatDetail from './containers/OrderWechatDetail';
 import Clues from './containers/Clues';
 import Attributes from './containers/Attributes';
 import CreateAttribute from './containers/CreateAttribute';
+import UpdateAttribute from './containers/UpdateAttribute';
 import Settings from './containers/Settings';
 import Account from './containers/Account';
 import AccountReceive from './containers/AccountReceive';
@@ -40,7 +41,8 @@ class Business extends Component {
           <Route path="/order/task/clues-manage" component={Clues} />
           <Route path="/order/task/clues-details" component={CluesDetails} />
           <Route path="/order/task/attributes-manage" component={Attributes} />
-          <Route path="/order/task/attributes-create/:id/:name" component={CreateAttribute} />
+          <Route path="/order/task/attributes-create/:pid/:name" component={CreateAttribute} />
+          <Route path="/order/task/attributes-update/:id" component={UpdateAttribute} />
           <Route path="/order/task/platform-manage" component={Platform} />
           <Route path="/order/task/settings-manage" component={Settings} />
           <Route path="/order/task/account-manage" component={Account} />
