@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Table, Input, Button, Form, InputNumber, Modal } from 'antd';
+import { Table, Input, Button, Form, InputNumber, Modal, message } from 'antd';
 import { columnsTian } from './Config'
 
 const { confirm } = Modal;
@@ -26,6 +26,10 @@ class CooperationTian extends React.Component {
   }
   handleDelete = () => {
     const { data, selectWeTian } = this.state
+    if (selectWeTian.length == 0) {
+      message.error('请选择要删除的项')
+      return
+    }
     confirm({
       title: '删除',
       content: '是否删减维度',
@@ -33,14 +37,17 @@ class CooperationTian extends React.Component {
       okType: 'danger',
       cancelText: '否',
       onOk: (() => {
-        for (let i = 0; i < selectWeTian.length; i++) {
-          for (let j = 0; j < data.length; j++) {
-            if (selectWeTian[i] == data[j].id) {
-              data.splice(j, 1)
-            }
-          }
-        }
-        this.setState({})
+        this.props.TPDeleteTaskLaunch(selectWeTian).then(() => {
+          this.props.TPGetTaskLaunchConfigTian({ offerType: 1 })
+        })
+        // for (let i = 0; i < selectWeTian.length; i++) {
+        //   for (let j = 0; j < data.length; j++) {
+        //     if (selectWeTian[i] == data[j].id) {
+        //       data.splice(j, 1)
+        //     }
+        //   }
+        // }
+        // this.setState({})
       }).bind(this),
       onCancel() {
 

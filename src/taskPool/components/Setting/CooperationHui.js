@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Table, Input, Button, Form, InputNumber, Modal } from 'antd';
+import { Table, Input, Button, Form, InputNumber, Modal, message } from 'antd';
 import { columnsHui } from './Config'
 
 const { confirm } = Modal;
@@ -26,6 +26,10 @@ class CooperationHui extends React.Component {
   }
   handleDelete = () => {
     const { data, selectWeHui } = this.state
+    if (selectWeHui.length == 0) {
+      message.error('请选择要删除的项')
+      return
+    }
     confirm({
       title: '删除',
       content: '是否删减维度',
@@ -33,14 +37,17 @@ class CooperationHui extends React.Component {
       okType: 'danger',
       cancelText: '否',
       onOk: (() => {
-        for (let i = 0; i < selectWeHui.length; i++) {
-          for (let j = 0; j < data.length; j++) {
-            if (selectWeHui[i] == data[j].id) {
-              data.splice(j, 1)
-            }
-          }
-        }
-        this.setState({})
+        // for (let i = 0; i < selectWeHui.length; i++) {
+        //   for (let j = 0; j < data.length; j++) {
+        //     if (selectWeHui[i] == data[j].id) {
+        //       data.splice(j, 1)
+        //     }
+        //   }
+        // }
+        // this.setState({})
+        this.props.TPDeleteTaskLaunch(selectWeHui).then(() => {
+          this.props.TPGetTaskLaunchConfigHui({ offerType: 4 })
+        })
       }).bind(this),
       onCancel() {
 
