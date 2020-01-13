@@ -37,6 +37,10 @@ class CertificateGroup extends React.Component {
       });
   };
 
+  componentDidMount() {
+    // this.searchCertificate('')
+  }
+
   handleChange = (value) => {
     this.setState({
       searching: false,

@@ -113,7 +113,7 @@ export default class BusinessScopesList extends React.Component {
                     className="business-scope-container-title-close-btn "
                     icon='delete'
                     type="link"
-                    onClick={this.deleteScope}>
+                    onClick={() => this.deleteScope(index)}>
                     删除
                   </Button>
                 </h3>

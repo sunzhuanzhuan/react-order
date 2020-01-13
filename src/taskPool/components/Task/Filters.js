@@ -119,7 +119,6 @@ const Filters = (props) => {
   const submit = e => {
     e && e.preventDefault();
     props.form.validateFields((err, values) => {
-      console.log(values, '_____');
       if (!err) {
         let filter = {
           page: { currentPage: 1 },

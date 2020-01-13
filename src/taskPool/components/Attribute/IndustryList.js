@@ -49,7 +49,7 @@ const IndustryList = (props, ref) => {
       title: '下线行业分类',
       content: `确认要下线${record.industryLevel === 1 ? '一': '二'}级分类“${record.industryName}”么？`,
       onOk: () => {
-        return actions.TPOfflineTask({ id }).then(() => {
+        return actions.TPAddOrUpdateIndustryInfo({ id, isOnline: 2 }).then(() => {
           message.success('下线成功')
           getList({page: { currentPage: 1 }})
         })
@@ -63,7 +63,7 @@ const IndustryList = (props, ref) => {
       title: '上线行业分类',
       content: `确认要上线${record.industryLevel === 1 ? '一': '二'}级分类“${record.industryName}”么？`,
       onOk: () => {
-        return actions.TPOfflineTask({ id }).then(() => {
+        return actions.TPAddOrUpdateIndustryInfo({ id, isOnline: 1 }).then(() => {
           message.success('上线成功')
           getList({page: { currentPage: 1 }})
         })

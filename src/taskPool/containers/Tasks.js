@@ -115,6 +115,10 @@ function getColumns(active, operation) {
           render: (id, record) => {
             return <div>
               <NavLink to={'/order/task/tasks-details/' + id}>详情</NavLink>
+              <>
+                  <Divider type="vertical" />
+                  <a onClick={() => operation.offline(id, record)}>修改</a>
+                </>
               {
                 record.orderState === 1 && <>
                   <Divider type="vertical" />
