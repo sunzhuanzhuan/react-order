@@ -112,3 +112,15 @@ export const {
 } = createHttpAction('TPGetTaskLaunchConfigHui', Interface.setting.TPGetTaskLaunchConfigHui, {
   method: 'post'
 });
+// 删除包天啥的
+export const {
+  TPDeleteTaskLaunch
+} = createHttpAction('TPDeleteTaskLaunch', Interface.setting.TPDeleteTaskLaunch, {
+  method: 'post'
+});
+// 删除维度
+export const {
+  TPDeleteDimension
+} = createHttpAction('TPDeleteDimension', Interface.setting.TPDeleteDimension, {
+  method: 'post'
+});

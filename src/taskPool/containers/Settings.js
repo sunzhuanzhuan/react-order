@@ -18,7 +18,7 @@ class Settings extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      current: 'cooperation'
+      current: 'price'
     }
   }
   componentDidMount = () => {
@@ -113,6 +113,8 @@ class Settings extends React.Component {
         {current == 'cooperation' ? <Cooperation
           TPDimensionConfig={this.props.actions.TPDimensionConfig}
           TPGetDimensionConfig={this.props.actions.TPGetDimensionConfig}
+          TPDeleteTaskLaunch={this.props.actions.TPDeleteTaskLaunch}
+          TPDeleteDimension={this.props.actions.TPDeleteDimension}
           dimensionConfig={dimensionConfig}
           taskLaunchConfigLiang={taskLaunchConfigLiang}
           taskLaunchConfigTian={taskLaunchConfigTian}

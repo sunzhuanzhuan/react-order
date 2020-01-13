@@ -54,7 +54,9 @@ export default {
     TPGetDimensionConfig: prefix + "/cooperationPlatform/v2/getDimensionConfig",
     TPGetTaskLaunchConfigLiang: prefix + "/cooperationPlatform/v2/getTaskLaunchConfig",
     TPGetTaskLaunchConfigTian: prefix + "/cooperationPlatform/v2/getTaskLaunchConfig",
-    TPGetTaskLaunchConfigHui: prefix + "/cooperationPlatform/v2/getTaskLaunchConfig"
+    TPGetTaskLaunchConfigHui: prefix + "/cooperationPlatform/v2/getTaskLaunchConfig",
+    TPDeleteTaskLaunch: prefix + "/cooperationPlatform/v2/deleteTaskLaunchConfig",
+    TPDeleteDimension: prefix + "/cooperationPlatform/v2/deleteDimensionConfig"
   },
   account: {
     TPGetAccountList: `${accountMapping}/getAccountList`,//账号管理

@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Table, Input, Button, Form, Modal, Select, InputNumber } from 'antd';
+import { Table, Input, Button, Form, Modal, Select, InputNumber, message } from 'antd';
 import { columnsWeidu } from './Config'
 import CooperationTask from './CooperationTask'
 import CooperationTian from './CooperationTian'
@@ -32,50 +32,34 @@ class Cooperation extends React.Component {
       let arrkey = Object.keys(values)
       let arr = []
       let letter = ['B', 'C', 'D', 'E']
-      let selectArr = []
+      // let selectArr = []
       for (let i = 0; i < arrkey.length; i++) {
         arr.push({ groupId: arrkey[i], itemTypef: values[arrkey[i]].itemTypef || [], offerTypes: [] })
         for (let j = 0; j < 4; j++) {
           arr[i].offerTypes.push({ offerType: j + 1, unitPrice: values[arrkey[i]][letter[j]] })
         }
       }
-      for (let m = 0; m < selectWeiDu.length; m++) {
-        for (let n = 0; n < arr.length; n++) {
-          if (arr[n].groupId == selectWeiDu[m]) {
-            selectArr.push(arr[n])
-          }
+      console.log(arr)
+      // for (let m = 0; m < selectWeiDu.length; m++) {
+      //   for (let n = 0; n < arr.length; n++) {
+      //     if (arr[n].groupId == selectWeiDu[m]) {
+      //       selectArr.push(arr[n])
+      //     }
 
-        }
+      //   }
 
-      }
-      this.props.TPDimensionConfig({ itemTypes: selectArr }).then(() => {
+      // }
+      this.props.TPDimensionConfig({ itemTypes: arr }).then(() => {
         this.props.TPGetDimensionConfig({})
       })
     });
   }
-
-  handleSubmitXian = e => {
-    e.preventDefault();
-    this.props.form.validateFields((err, values) => {
-      if (!err) {
-        console.log('Received values of form: ', values);
-      }
-    });
-  }
-  handleChange = (value) => {
-    // setSelectWeiDu(value)
-  }
-  handleSubmitBaotian = e => {
-    e.preventDefault();
-    this.props.form.validateFields((err, values) => {
-      if (!err) {
-        console.log('Received values of form: ', values);
-      }
-    });
-  }
-
   handleDeleteAccount = () => {
     const { data, selectWeiDu } = this.state
+    if (selectWeiDu.length == 0) {
+      message.error('请选择要删除的项')
+      return
+    }
     confirm({
       title: '删除',
       content: '是否删减维度',
@@ -83,14 +67,17 @@ class Cooperation extends React.Component {
       okType: 'danger',
       cancelText: '否',
       onOk: (() => {
-        for (let i = 0; i < selectWeiDu.length; i++) {
-          for (let j = 0; j < data.length; j++) {
-            if (selectWeiDu[i] == data[j].groupId) {
-              data.splice(j, 1)
-            }
-          }
-        }
-        this.setState({})
+        // for (let i = 0; i < selectWeiDu.length; i++) {
+        //   for (let j = 0; j < data.length; j++) {
+        //     if (selectWeiDu[i] == data[j].groupId) {
+        //       data.splice(j, 1)
+        //     }
+        //   }
+        // }
+        this.props.TPDeleteDimension(selectWeiDu).then(() => {
+          this.props.TPGetDimensionConfig({})
+        })
+        // this.setState({})
       }).bind(this),
       onCancel() {
 
@@ -141,11 +128,10 @@ class Cooperation extends React.Component {
     // console.log(selectWeiDu)
     return (
       <div>
-        <div>
-          <h4>1、维度配置</h4>
+        <div style={{ marginLeft: '30px', marginTop: '20px' }}>
+          <h2 style={{ fontSize: '20px' }}>1、维度配置</h2>
           <Form onSubmit={this.handleApplyAccount}>
-            <h2 style={{ marginTop: '20px' }}>微信公众号</h2>
-            <h3 style={{ marginLeft: '30px', marginBottom: '10px' }}>账号等级维度 单位：（元/阅读）</h3>
+            <h4 style={{ marginLeft: '30px', marginBottom: '10px' }}>账号等级维度 单位：（元/阅读）</h4>
             <Table
               style={{ marginLeft: '30px' }}
               bordered
@@ -161,22 +147,26 @@ class Cooperation extends React.Component {
               <Button type="primary" htmlType="submit">应用配置</Button>
             </Form.Item>
           </Form>
-          <h4>2、任务要求</h4>
+          <h4 style={{ fontSize: '20px' }}>2、任务要求</h4>
           <CooperationTask
             taskLaunchConfigLiang={taskLaunchConfigLiang}
             TPGetTaskLaunchConfigLiang={TPGetTaskLaunchConfigLiang}
+            TPDeleteTaskLaunch={this.props.TPDeleteTaskLaunch}
+          />
+
+          <h4 style={{ fontSize: '20px' }}>3、包天模式</h4>
+          <CooperationTian
+            taskLaunchConfigTian={taskLaunchConfigTian}
+            TPGetTaskLaunchConfigTian={TPGetTaskLaunchConfigTian}
+            TPDeleteTaskLaunch={this.props.TPDeleteTaskLaunch}
+          />
+          <h4 style={{ fontSize: '20px' }}>4、返现优惠</h4>
+          <CooperationHui
+            taskLaunchConfigHui={taskLaunchConfigHui}
+            TPGetTaskLaunchConfigHui={TPGetTaskLaunchConfigHui}
+            TPDeleteTaskLaunch={this.props.TPDeleteTaskLaunch}
           />
         </div>
-        <h4>3、包天模式</h4>
-        <CooperationTian
-          taskLaunchConfigTian={taskLaunchConfigTian}
-          TPGetTaskLaunchConfigTian={TPGetTaskLaunchConfigTian}
-        />
-        <h4>4、返现优惠</h4>
-        <CooperationHui
-          taskLaunchConfigHui={taskLaunchConfigHui}
-          TPGetTaskLaunchConfigHui={TPGetTaskLaunchConfigHui}
-        />
       </div>
     );
   }

@@ -3,21 +3,6 @@ module.exports = function (app) {
   // app.use(proxy('/api/spotplan/',
   //   { target: 'http://192.168.100.117:30010', changeOrigin: true }
   // ));
-<<<<<<< HEAD
-  // app.use(proxy('/api/operator-gateway/configManage/',
-  //   { target: 'http://yapi.ops.tst-weiboyi.com/mock/129', changeOrigin: true }
-  // ));
-  // app.use(proxy('/api/operator-gateway/adOrder/v1/trip/priceCalculation',
-  //   { target: 'http://yapi.ops.tst-weiboyi.com/mock/129', changeOrigin: true }
-  // ));
-  // app.use(proxy('/api/operator-gateway/adOrder/v1/weixin/priceCalculation',
-  //   { target: 'http://yapi.ops.tst-weiboyi.com/mock/129', changeOrigin: true }
-  // ));
-  // app.use(proxy('/api/operator-gateway/adOrder/v1/detail_2',
-  //   { target: 'http://yapi.ops.tst-weiboyi.com/mock/129', changeOrigin: true }
-  // ));
-=======
->>>>>>> 6ae2d1e0c65b40c2eeb87f0700a3eae795881c5b
   // app.use(proxy('/api/operator-gateway/',
   //   { target: 'http://yapi.ops.tst-weiboyi.com/mock/129', changeOrigin: true }
   // ));

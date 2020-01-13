@@ -38,7 +38,7 @@ export const columnsWeidu = (getFieldDecorator) => {
               {getFieldDecorator(`${record.groupId}.B`, {
                 initialValue: item.unitPrice
               })(
-                <Input />
+                <InputNumber min={0} precision={2} />
               )
               }
             </Form.Item>
@@ -55,7 +55,7 @@ export const columnsWeidu = (getFieldDecorator) => {
               {getFieldDecorator(`${record.groupId}.C`, {
                 initialValue: item.unitPrice
               })(
-                <Input />
+                <InputNumber min={0} precision={2} />
               )
               }
             </Form.Item>
@@ -71,7 +71,7 @@ export const columnsWeidu = (getFieldDecorator) => {
               {getFieldDecorator(`${record.groupId}.D`, {
                 initialValue: item.unitPrice
               })(
-                <Input />
+                <InputNumber min={0} precision={2} />
               )
               }
             </Form.Item>
@@ -88,7 +88,7 @@ export const columnsWeidu = (getFieldDecorator) => {
               {getFieldDecorator(`${record.groupId}.E`, {
                 initialValue: item.unitPrice
               })(
-                <Input />
+                <InputNumber min={0} precision={2} />
               )
               }
             </Form.Item>
@@ -107,7 +107,7 @@ export const columnsTian = (getFieldDecorator) => [
         {getFieldDecorator(`${record.id}.B`, {
           initialValue: val
         })(
-          <InputNumber />
+          <InputNumber min={0} />
         )
         }
       </Form.Item>
@@ -121,7 +121,7 @@ export const columnsTian = (getFieldDecorator) => [
         {getFieldDecorator(`${record.id}.C`, {
           initialValue: val
         })(
-          <InputNumber />
+          <InputNumber min={0} precision={2} />
         )
         }
       </Form.Item>
@@ -138,7 +138,7 @@ export const columnsHui = (getFieldDecorator) => {
           {getFieldDecorator(`${record.id}.B`, {
             initialValue: val
           })(
-            <InputNumber />
+            <InputNumber min={0} precision={2} />
           )
           }
         </Form.Item>
@@ -152,7 +152,7 @@ export const columnsHui = (getFieldDecorator) => {
           {getFieldDecorator(`${record.id}.C`, {
             initialValue: val
           })(
-            <InputNumber />
+            <InputNumber min={0} precision={2} />
           )
           }
         </Form.Item>
