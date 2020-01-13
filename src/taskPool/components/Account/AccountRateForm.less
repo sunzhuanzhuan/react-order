@@ -1,0 +1,48 @@
+.account-rate-table {
+  width: 100%;
+  border: 1px solid #eee;
+
+
+  tr {
+    .is-required::before {
+      margin-right: 4px;
+      color: #f5222d;
+      font-size: 13px;
+      font-family: SimSun, sans-serif;
+      line-height: 1;
+      content: '*';
+    }
+
+    th {
+
+      background: #fafafa;
+      padding: 10px;
+      text-align: center;
+
+      .desc {
+        font-size: 12px;
+        font-weight: 400
+      }
+    }
+
+    td {
+      padding: 4px 10px;
+      text-align: center;
+
+    }
+
+    td:nth-child(3) {
+      text-align: left;
+    }
+  }
+
+  .ant-form-item-control {
+    display: flex !important;
+    justify-content: center;
+
+    .ant-form-explain {
+      padding-top: 15px;
+      padding-left: 14px;
+    }
+  }
+}
