@@ -30,6 +30,7 @@ export default {
     TPPostOperationLog: prefix + "/configManage/v1/queryOperationLog",
     TPPostClueList: prefix + "/adclue/v1/queryAdClueList",
     TPGetClueDetail: prefix + "/adclue/v1/queryAdClueInfo",
+    TPClueConfirm: prefix + "/adclue/v1/clueConfirm"
   },
   platform: {
     TPGetPlatformList: prefix + "/cooperationPlatform/v2/getPlatformList",

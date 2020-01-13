@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Table, Modal, Input, message, Icon, Tooltip } from 'antd';
 import * as actions from '@/taskPool/actions';
+import * as commonActions from '@/actions';
 import AddForm from '../components/Platform/Add'
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -14,6 +15,7 @@ const Platform = (props) => {
   const [listLoading, setListLoading] = useState(false)
   const [row, setRow] = useState([])
   const [type, setType] = useState('add')
+  const [authToken, setAuthToken] = useState('null')
 
   useEffect(() => {
     getList({ pageNum: 1, pageSize: 50 })
@@ -22,6 +24,9 @@ const Platform = (props) => {
   async function getList(params) {
     setListLoading(true)
     await props.actions.TPGetPlatformList(params)
+    props.actions.getNewToken().then(({ data: authToken }) => {
+      setAuthToken({ authToken })
+    })
     setListLoading(false)
   }
   const handleEdit = (record, type) => {
@@ -132,7 +137,7 @@ const Platform = (props) => {
   const handleCancel = () => {
     setVisible(false)
   }
-  const { platformList: { list, pageNum, pageSize, total } } = props.platformReducers
+  const { platformList: { list, pageNum, pageSize, total }, } = props.platformReducers
   const pagination = {
     total: total,
     pageSize: 50,
@@ -142,14 +147,14 @@ const Platform = (props) => {
     },
     showQuickJumper: true
   }
-  // console.log(platformList)
+  console.log(authToken)
   return <div>
     <h2>合作平台管理</h2>
     <Button type="primary" onClick={() => {
       setVisible(true)
       setType('add')
     }}>添加合作平台</Button>
-    <Modal
+    {authToken && <Modal
       title="添加合作平台"
       visible={visible}
       footer={null}
@@ -160,9 +165,10 @@ const Platform = (props) => {
         type={type}
         setVisible={setVisible}
         platformReducers={props.platformReducers}
+        data={authToken}
         getList={getList}
         TPSavePlatform={props.actions.TPSavePlatform} />
-    </Modal>
+    </Modal>}
     <h3 style={{ margin: '20px 0' }}>合计<a>{total}</a>个</h3>
     <Table loading={listLoading} columns={columns} dataSource={list} pagination={pagination} />
     {visibleQuit ? <Quit
@@ -180,6 +186,7 @@ const mapStateToProps = (state) => ({
 })
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators({
+    ...commonActions,
     ...actions
   }, dispatch)
 })

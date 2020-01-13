@@ -19,13 +19,17 @@ import { Link } from "react-router-dom";
 const { Title } = Typography;
 
 function getColumns(active, clickModal) {
-  console.log(active)
   let columns = []
   switch (active) {
     case "9":
       columns = [
         {
           title: '任务ID',
+          dataIndex: 'id',
+          align: 'center'
+        },
+        {
+          title: '平台名称',
           dataIndex: 'id',
           align: 'center'
         },
@@ -48,7 +52,7 @@ function getColumns(active, clickModal) {
           align: 'center'
         },
         {
-          title: '任务状态',
+          title: '线索状态',
           dataIndex: 'clueState',
           align: 'center',
           render: (val, record) => {
@@ -80,40 +84,36 @@ function getColumns(active, clickModal) {
     case "1000":
       columns = [
         {
-          title: '任务ID',
-          dataIndex: 'adOrderNumber',
+          title: '线索ID',
+          dataIndex: 'id',
+          align: 'center',
         },
         {
-          title: '任务名称',
-          dataIndex: 'orderName',
-          width: 220,
-          render: (name, record) => {
-            return <TaskInfo platformId={record.platformId} name={name} />
-          }
-        },
-        {
-          title: '任务创建时间',
+          title: '线索提交时间',
           dataIndex: 'createAt',
+          align: 'center',
           render: (date, record) => {
             return <div>
-              {date}
+              {record.createdAtBegin}-{record.createdAtEnd}
             </div>
           }
         },
         {
           title: '任务起止时间',
+          align: 'center',
           dataIndex: 'orderStartDate',
           width: 170,
           render: (date, record) => {
             return <div>
               {date}
               <br />
-              {record.orderEndDate}
+              {record.extensionStartTimeEnd}
             </div>
           }
         },
         {
-          title: '创建人',
+          title: '客户名称',
+          align: 'center',
           dataIndex: 'createdName',
           render: (name, record) => {
             return <div>
@@ -122,45 +122,40 @@ function getColumns(active, clickModal) {
           }
         },
         {
-          title: '客户名称',
-          dataIndex: 'companyName',
-          render: (companyName, record) => {
+          title: '预算金额',
+          align: 'center',
+          dataIndex: 'extensionBudget',
+          render: (extensionBudget, record) => {
             return <div>
-              {companyName}
+              {extensionBudget}
             </div>
           }
-        },
-        {
-          title: '任务状态',
-          dataIndex: 'orderState',
-          render: (state, record) => {
-            return <TaskStatus status={state} />
-          }
-        },
-        {
-          title: '预算金额',
-          dataIndex: 'availableAmount',
         },
         {
           title: '任务类型',
-          dataIndex: 'taskPattern',
-          render: (taskPattern, record) => {
-            return <div>
-              {taskPattern}
-            </div>
+          align: 'center',
+          dataIndex: 'orderState',
+          render: (extensionTypeDesc, record) => {
+            return extensionTypeDesc
+          }
+        },
+        {
+          title: '线索状态',
+          align: 'center',
+          dataIndex: 'clueState',
+          render: (val, record) => {
+            return val == 2 ? <Badge status="success" text="已处理" /> : <Badge status="processing" text="未处理" />
           }
         },
         {
           title: '操作',
           dataIndex: 'id',
+          fixed: 'right',
           align: 'center',
-          render: (id, record) => {
-            return <div>
-              {record.orderState === 1 && <span>
-                <Divider type="vertical" />
-                <a onClick={() => this.offline(id)}>下线</a>
-              </span>}
-            </div>
+          render: (val, record) => {
+            return <p><Link target="_blank" to={`/order/task/clues-details?platform=weixin&id=${record.id}`}>
+              详情
+          </Link>{record.clueState == 1 ? <a onClick={() => { clickModal(true, record) }}>/确定处理</a> : null}</p>
           }
         }
       ]
@@ -240,7 +235,7 @@ const Clues = (props) => {
       <Table
         loading={false}
         dataSource={dataSource}
-        scroll={{ x: 1800 }}
+        scroll={{ x: 1500 }}
         pagination={pagination}
         columns={columns}
       />

@@ -34,7 +34,7 @@ const AddForm = (props) => {
     });
 
   }
-  const { platformDetail = {} } = props.platformReducers
+  const { platformDetail = {} } = props.platformReducers;
   return <div>
     <Form onSubmit={handleSubmit}>
       <Form.Item label="合作平台名称" {...formItemLayout}>
@@ -97,7 +97,7 @@ const AddForm = (props) => {
           <Input placeholder="请输入" style={{ width: '300px' }} disabled={props.type == 'query'} />,
         )}
       </Form.Item>
-      {/* <Form.Item label="上传合同" {...formItemLayout}>
+      <Form.Item label="上传合同" {...formItemLayout}>
         {getFieldDecorator('contractEnclosureUrl', {
           valuePropName: 'fileList',
           getValueFromEvent: e => e && e.fileList,
@@ -106,12 +106,12 @@ const AddForm = (props) => {
           ]
         })(
           <OssUpload
-            // authToken={data.authToken}
+            authToken={props.data.authToken}
             listType='picture-card'
+            disabled={props.type == 'query'}
             rule={{
-              bizzCode: 'ORDER_IMG_UPLOAD',
+              bizzCode: 'FWP_SUPPLY_UPLOAD_TYPE',
               max: 20,
-              suffix: 'png,jpg,jpeg,gif,webp'
             }}
             len={1}
             tipContent={() => '上传合同的大小不能超过20Mb'}
@@ -127,18 +127,18 @@ const AddForm = (props) => {
           ]
         })(
           <OssUpload
-            // authToken={data.authToken}
+            authToken={props.data.authToken}
             listType='picture-card'
+            disabled={props.type == 'query'}
             rule={{
-              bizzCode: 'ORDER_IMG_UPLOAD',
+              bizzCode: 'FWP_SUPPLY_UPLOAD_TYPE',
               max: 20,
-              suffix: 'png,jpg,jpeg,gif,webp'
             }}
             len={1}
             tipContent={() => '上传授权书的大小不能超过20Mb'}
           />
         )}
-      </Form.Item> */}
+      </Form.Item>
       <p style={{ textAlign: 'center', marginTop: '20px' }}>
         <Button type="primary" onClick={() => props.setVisible(false)}>取消</Button>
         <Button type="primary" style={{ marginLeft: '20px' }} htmlType="submit">保存并提交</Button>

@@ -22,3 +22,10 @@ export const {
 } = createHttpAction('TPGetClueDetail', Interface.clue.TPGetClueDetail, {
   method: 'get'
 });
+// 处理线索
+export const {
+  TPClueConfirm,
+  TPClueConfirm_success
+} = createHttpAction('TPClueConfirm', Interface.clue.TPClueConfirm, {
+  method: 'post'
+});

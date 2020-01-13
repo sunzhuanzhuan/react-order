@@ -18,6 +18,7 @@ const ClueDetail = (props) => {
     setVisible(true)
   }
   const handleOk = () => {
+    props.actions.TPClueConfirm({ id: 1, clueState: 2 })
     setVisible(false)
   }
   const handleCancel = () => {
@@ -71,12 +72,12 @@ const ClueDetail = (props) => {
         </Card>
       </div>
       {visible ? <Modal
-        title="Basic Modal"
+        title="确认处理"
         visible={visible}
         onOk={handleOk}
         onCancel={handleCancel}
       >
-        <p>确认已经处理（{props.clueDetail.adInfo.companyName}）——“任务名”的线索么？</p>
+        <p>确认已经处理（{props.clueDetail.adInfo.companyName}）的线索么？</p>
       </Modal> : null}
     </div>
   );
