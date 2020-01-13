@@ -6,8 +6,9 @@ import { PopoverIcon } from '../../base/MessageIcon'
 import { auditStateMap } from '../../constants/accountConfig'
 function DetailsShow(props) {
   const { accountDetail = {}, accountId } = props
-  const { base = {}, acceptCrowd = [], auditState = 1, remark } = accountDetail
+  const { base = {}, acceptCrowd = {}, auditState = 1, remark } = accountDetail
   const { classification = [] } = base
+  const { sex = {}, age = [], area = [] } = acceptCrowd
   const baseConfig = [
     { label: "账号名称", value: base.snsName },
     { label: "账号ID", value: base.snsId },
@@ -22,10 +23,7 @@ function DetailsShow(props) {
     { label: "账号简介", value: base.introduction },
     { label: "account ID", value: accountId }
   ]
-  function getTypeList(type) {
-    const list = acceptCrowd.filter(one => type == one.acceptCrowdType)
-    return list[0] && list[0].acceptCrowdVal || []
-  }
+
   return (
     <div className='task-account-details'>
       <TitleBox title='基础信息'>
@@ -76,9 +74,14 @@ function DetailsShow(props) {
         <Divider orientation="left">受众信息</Divider>
         <div className='data-right'>
           <LineList list={[
-            { label: '受众性别：', value: <AudienceLine list={getTypeList(1)} /> },
-            { label: '受众地域Top3：', value: <AudienceArea list={getTypeList(2)} /> },
-            { label: '受众年龄Top3：', value: <AudienceLine list={getTypeList(3)} /> },
+            {
+              label: '受众性别：', value: <div>
+                男（{sex.manRate}）
+                女（{sex.womanRate}）
+              </div>
+            },
+            { label: '受众地域Top3：', value: <AudienceArea list={area} /> },
+            { label: '受众年龄Top3：', value: <AudienceLine list={age} /> },
             { label: '数据截图：', value: <img src={1} width='200' height='200' onClick={() => window.open(base.followerCountScreenshotUrl)} className='follower-count-img' /> },
             { label: 'KPI/KPI上线', value: base.birthDate }
           ]} />
@@ -99,11 +102,11 @@ const LineList = ({ list = [] }) => {
 
 const AudienceLine = ({ list = [] }) => {
   return <div className='audience-line'>
-    {list.map(item => <div key={item.position} className='audience-line-item'>
-      <span className='type'>{item.position}（{item.acceptCrowdVal}）</span>
+    {list.map(item => <div key={item.description} className='audience-line-item'>
+      <span className='type'>{item.description}（{item.value}）</span>
     </div>)}
   </div>
 }
 const AudienceArea = ({ list = [] }) => {
-  return list.map(one => <Tag color="blue" key={one.position}>{one.acceptCrowdVal}</Tag>)
+  return list.map(one => <Tag color="blue" key={one.description}>{one.description}</Tag>)
 }
