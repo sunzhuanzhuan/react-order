@@ -83,7 +83,8 @@ function AccountList(props) {
       align: 'center',
       width: '120px',
       render: (text, record) => {
-        const { sex = {}, age = [], area = [] } = text
+        const { acceptCrowd = {} } = record
+        const { sex = {}, age = [], area = [] } = acceptCrowd
         const { manRate, womanRate } = sex
         return text ? <div>
           <div>性别：男{getValue(manRate)}女{getValue(womanRate)}</div>
