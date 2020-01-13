@@ -72,12 +72,16 @@ const UpdateTask = (props) => {
   const [ state, setDataState ] = useState({ base: {}, budget: {}, content: {} })
 
   const getCompanyBalance = (company = {}) => {
-    actions.TPQueryAvailableBalance({
-      companyId: company.key,
-      accountType: 1
-    }).then(({ data }) => {
-      setBalance(data)
-    })
+    if(company.key){
+      actions.TPQueryAvailableBalance({
+        companyId: company.key,
+        accountType: 1
+      }).then(({ data }) => {
+        setBalance(data)
+      })
+    }else {
+      setBalance(0)
+    }
   }
 
   // 处理数据
@@ -95,10 +99,10 @@ const UpdateTask = (props) => {
             },
             orderName: detail.orderName,
             taskPattern: 2,
-            industry: [ detail.industry.industryParentId, detail.industry.industryId ],
+            industry: [ detail.taskIndustryInfo.parentId, detail.taskIndustryInfo.id ].filter(Boolean),
             orderDate: [ moment(detail.orderStartDate), moment(detail.orderEndDate) ],
             showPictureUrl: [ {
-              uid: feature.showPictureUrl.slice(-8),
+              uid: feature.showPictureUrl,
               url: feature.showPictureUrl
             } ],
             businessScope: detail.businessScope,
@@ -170,8 +174,8 @@ const UpdateTask = (props) => {
     getDetail()
 
     // 获取任务大厅行业列表
-    actions.TPGetIndustryCatalog().then(({ data: industryList }) => {
-      setIndustryList(industryList)
+    actions.TPGetIndustryCatalog().then(({ data }) => {
+      setIndustryList(data.industryList || [])
     })
     // 获取上传图片token
     actions.getNewToken().then(({ data: authToken }) => {
@@ -203,8 +207,8 @@ const UpdateTask = (props) => {
   // 获取经营内容列表
   const getBusinessScope = ([ industryId ]) => {
     const { actions } = props
-    actions.TPGetBusinessScopeList({ industryId }).then(({ data }) => {
-      setBusinessScopeList(data)
+    actions.TPGetIndustryCatalog({ industryId }).then(({ data }) => {
+      setBusinessScopeList(data.businessScopeList || [])
       // 假如列表为空则直接获取行业下的资质组
       if (data.length === 0) {
         this.getQualificationsGroup([ industryId ])

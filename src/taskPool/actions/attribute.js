@@ -34,6 +34,13 @@ export const {
   method: 'post'
 });
 
+// 更新/删除 资质
+export const {
+  TPUpdateQualification,
+} = createHttpAction('TPUpdateQualification', Interface.attribute.updateQualification, {
+  method: 'post'
+});
+
 // 行业添加/更新
 export const {
   TPAddOrUpdateIndustryInfo,

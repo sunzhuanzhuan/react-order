@@ -96,6 +96,7 @@ export default {
     addQualification: configManage + "/addQualification",
     addOrUpdateIndustryInfo: configManage + "/addOrUpdateIndustryInfo",
     getIndustryInfo: configManage + "/getIndustryInfo",
+    updateQualification: configManage + "/updateQualification",
   },
   task: {
     getIndustryCatalog: configManage + "/getIndustryCatalog",
@@ -115,6 +116,7 @@ export default {
     mcnOrderEvaluate: mcnOrder + "/mcnOrderEvaluate",
     getIndustryList: configManage + "/getIndustryList",
     offline: prefix + "/adOrder/v1/offline",
+    online: prefix + "/adOrder/v1/online",
 
   }
 }

@@ -11,6 +11,11 @@ import { connect } from 'react-redux';
 import { TaskBudgetConsumptions, TaskInfo, TaskStatus } from '@/taskPool/base/ColumnsDataGroup';
 import { NavLink } from 'react-router-dom';
 import Yuan from '@/base/Yuan';
+import {
+  AD_ORDER_STATE_END, AD_ORDER_STATE_FINISH,
+  AD_ORDER_STATE_PROCESSING,
+  AD_ORDER_STATE_WAIT_RELEASED
+} from '@/taskPool/constants/config';
 
 const { Title } = Typography;
 
@@ -112,23 +117,28 @@ function getColumns(active, operation) {
           dataIndex: 'id',
           align: 'center',
           width: 180,
+          fixed: 'right',
           render: (id, record) => {
             return <div>
               <NavLink to={'/order/task/tasks-details/' + id}>详情</NavLink>
+              <>
+                  <Divider type="vertical" />
+                <NavLink to={'/order/task/tasks-update/' + id}>修改</NavLink>
+                </>
               {
-                record.orderState === 1 && <>
+                record.orderState === AD_ORDER_STATE_PROCESSING && <>
                   <Divider type="vertical" />
                   <a onClick={() => operation.offline(id, record)}>下线</a>
                 </>
               }
               {
-                record.orderState === 1 && <>
+                record.orderState === AD_ORDER_STATE_WAIT_RELEASED && <>
                   <Divider type="vertical" />
                   <a onClick={() => operation.online(id, record)}>上线</a>
                 </>
               }
               {
-                record.orderState === 1 && <>
+                record.orderState === AD_ORDER_STATE_WAIT_RELEASED && <>
                   <Divider type="vertical" />
                   <a onClick={() => operation.stop(id, record)}>终止</a>
                 </>
@@ -149,12 +159,12 @@ function getColumns(active, operation) {
           dataIndex: 'orderName',
           width: 220,
           render: (name, record) => {
-            return <TaskInfo platformId={record.platformId} name={name} />
+            return name
           }
         },
         {
           title: '任务创建时间',
-          dataIndex: 'createAt',
+          dataIndex: 'createdAt',
           render: (date, record) => {
             return <div>
               {date}
@@ -200,31 +210,32 @@ function getColumns(active, operation) {
         },
         {
           title: '预算金额',
-          dataIndex: 'availableAmount',
+          dataIndex: 'totalAmount',
           align: "right",
-          render: (availableAmount, record) => {
+          render: (totalAmount, record) => {
             return <>
-              <Yuan className='text-gray' value={record.freezeAmount} format='0,0.00' />
-              <Yuan className='text-gray' value={availableAmount} format='0,0.00' />
+              <Yuan className='text-black' value={totalAmount} format='0,0.00' />
             </>
           }
         },
         {
           title: '任务类型',
-          dataIndex: 'taskPattern',
-          render: (taskPattern, record) => {
-            return <div>
-              {taskPattern}
-            </div>
+          dataIndex: 'mediaType',
+          render: (type, record) => {
+            return <>
+              {type === 3 && "视频+图"}
+              {type === 4 && "图"}
+            </>
           }
         },
         {
           title: '任务模式',
-          dataIndex: 'mcnCount',
+          dataIndex: 'putType',
           align: "right",
-          render: (mcnCount, record) => {
+          render: (type, record) => {
             return <>
-              {mcnCount} / {record.mcnApplyCount}
+              {type === 1 && "按量投放"}
+              {type === 2 && "按天数投放"}
             </>
           }
         },
@@ -232,13 +243,17 @@ function getColumns(active, operation) {
           title: '操作',
           dataIndex: 'id',
           align: 'center',
+          width: 180,
+          fixed: 'right',
           render: (id, record) => {
             return <div>
-              <NavLink to={'/order/task/detail/' + id}>查看</NavLink>
-              {record.orderState === 1 && <span>
-              <Divider type="vertical" />
-              <a onClick={() => this.offline(id)}>下线</a>
-            </span>}
+              <NavLink to={'/order/task/tasks-details/' + id}>详情</NavLink>
+              {
+                record.orderState === AD_ORDER_STATE_FINISH && <>
+                  <Divider type="vertical" />
+                  <a onClick={() => operation.stop(id, record)}>数据</a>
+                </>
+              }
             </div>
           }
         }
@@ -285,7 +300,7 @@ const Tasks = (props) => {
       title: '上线任务',
       content: `任务还未到上线时间，确定要立即上线该任务么？？`,
       onOk: () => {
-        return actions.TPOfflineTask({ id }).then(() => {
+        return actions.TPOnlineTask({ id }).then(() => {
           message.success('上线成功')
           getList({page: { currentPage: 1 }})
         })

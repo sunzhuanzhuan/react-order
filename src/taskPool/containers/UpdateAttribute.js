@@ -227,6 +227,7 @@ const UpdateIndustryBySecond = (props) => {
         let group = handleGroups(values._groups)
         let scope = handleScopes(values._scopes)
         const body = {
+          id,
           industryLevel: 2,
           industryName: values.industryName,
           parentId: id,
