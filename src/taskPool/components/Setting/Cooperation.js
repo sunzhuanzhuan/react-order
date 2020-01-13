@@ -1,269 +1,185 @@
 
 import React, { useState } from 'react';
 import { Table, Input, Button, Form, Modal, Select, InputNumber } from 'antd';
+import { columnsWeidu } from './Config'
+import CooperationTask from './CooperationTask'
+import CooperationTian from './CooperationTian'
+import CooperationHui from './CooperationHui'
 const { Option } = Select;
 const { confirm } = Modal;
 
-const Cooperation = (props) => {
-  const [selectWeiDu, setSelectWeiDu] = useState([])
-  const [data, setData] = useState([{ name: 1 }, { name: 2 }, { name: 3 }])
-  const [selectedRows, setSelectedRows] = useState([])
-
-  const { getFieldDecorator, getFieldValue, setFieldsValue, validateFields } = props.form;
-  const handleSubmit = e => {
-    e.preventDefault();
-    props.form.validateFields((err, values) => {
-      if (!err) {
-        console.log('Received values of form: ', values);
-      }
-    });
-  }
-  const handleSubmitTask = e => {
-    e.preventDefault();
-    props.form.validateFields((err, values) => {
-      if (!err) {
-        console.log('Received values of form: ', values);
-      }
-    });
-  }
-  const handleSubmitXian = e => {
-    e.preventDefault();
-    props.form.validateFields((err, values) => {
-      if (!err) {
-        console.log('Received values of form: ', values);
-      }
-    });
-  }
-  const handleChange = (value) => {
-    setSelectWeiDu(value)
-  }
-  const handleSubmitBaotian = e => {
-    e.preventDefault();
-    props.form.validateFields((err, values) => {
-      if (!err) {
-        console.log('Received values of form: ', values);
-      }
-    });
-  }
-  const columns = [
-    {
-      title: '定向维度',
-      dataIndex: 'name',
-      width: '30%',
-      render: (val, record) => {
-        console.log(val)
-        return <Form.Item>
-          {getFieldDecorator(`${record.name}.index`)(
-            <Select mode="tags" style={{ width: '300px' }} onChange={handleChange} placeholder="添加维度">
-              <Option value='1'>乘车日期</Option>
-              <Option value='2'>目的地城市</Option>
-              <Option value='3'>出发城市</Option>
-              <Option value='4'>性别</Option>
-              <Option value='5'>年龄</Option>
-              <Option value='6'>车次字头</Option>
-              <Option value='7'>坐席</Option>
-            </Select>
-          )
-          }
-        </Form.Item>
-
-      }
-    },
-    {
-      title: '图文形式折扣售价（元/条）',
-      dataIndex: 'age1',
-      render: (val, record) => {
-        return <Form.Item>
-          {getFieldDecorator(`${record.name}.age1`)(
-            <Input />
-          )
-          }
-        </Form.Item>
-      }
-    },
-    {
-      title: '视频形式折扣售价（元/条）',
-      dataIndex: 'address2',
-      render: (val, record) => {
-        return <Form.Item>
-          {getFieldDecorator(`${record.name}.address2`)(
-            <Input />
-          )
-          }
-        </Form.Item>
-      }
-    }, {
-      title: '图文形式刊例价（元/条）',
-      dataIndex: 'age3',
-      render: (val, record) => {
-        return <Form.Item>
-          {getFieldDecorator(`${record.name}.age3`)(
-            <Input />
-          )
-          }
-        </Form.Item>
-      }
-    },
-    {
-      title: '视频形式刊例价（元/条）',
-      dataIndex: 'address4',
-      render: (val, record) => {
-        return <Form.Item>
-          {getFieldDecorator(`${record.name}.address4`)(
-            <Input />
-          )
-          }
-        </Form.Item>
-      }
+class Cooperation extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      selectWeiDu: [],
+      data: props.dimensionConfig.itemTypes || [],
+      selectedRows: []
     }
-  ];
-  const columnsTian = [
-    {
-      title: '投放天数（天）',
-      dataIndex: 'age1',
-      render: (val, record) => {
-        return <Form.Item>
-          {getFieldDecorator(`${record.age1}.age1`)(
-            <InputNumber />
-          )
-          }
-        </Form.Item>
+
+  }
+  componentWillReceiveProps = (props) => {
+    this.setState({
+      data: props.dimensionConfig.itemTypes
+    })
+  }
+
+  handleApplyAccount = e => {
+    e.preventDefault();
+    this.props.form.validateFields((err, values) => {
+      console.log('Received values of form: ', values);
+      const { selectWeiDu } = this.state;
+      let arrkey = Object.keys(values)
+      let arr = []
+      let letter = ['B', 'C', 'D', 'E']
+      let selectArr = []
+      for (let i = 0; i < arrkey.length; i++) {
+        arr.push({ groupId: arrkey[i], itemTypef: values[arrkey[i]].itemTypef || [], offerTypes: [] })
+        for (let j = 0; j < 4; j++) {
+          arr[i].offerTypes.push({ offerType: j + 1, unitPrice: values[arrkey[i]][letter[j]] })
+        }
       }
-    },
-    {
-      title: '对外售价（元）',
-      dataIndex: 'age1',
-      render: (val, record) => {
-        return <Form.Item>
-          {getFieldDecorator(`${record.age1}.age1`)(
-            <InputNumber />
-          )
+      for (let m = 0; m < selectWeiDu.length; m++) {
+        for (let n = 0; n < arr.length; n++) {
+          if (arr[n].groupId == selectWeiDu[m]) {
+            selectArr.push(arr[n])
           }
-        </Form.Item>
+
+        }
+
       }
-    },
-  ]
-  const columnsXian = [
-    {
-      title: '对外售价（元）',
-      dataIndex: 'age1',
-      render: (val, record) => {
-        return <Form.Item>
-          {getFieldDecorator(`${record.age1}.age1`)(
-            <InputNumber />
-          )
-          }
-        </Form.Item>
+      this.props.TPDimensionConfig({ itemTypes: selectArr }).then(() => {
+        this.props.TPGetDimensionConfig({})
+      })
+    });
+  }
+
+  handleSubmitXian = e => {
+    e.preventDefault();
+    this.props.form.validateFields((err, values) => {
+      if (!err) {
+        console.log('Received values of form: ', values);
       }
-    },
-    {
-      title: '返现金额（元）',
-      dataIndex: 'age1',
-      render: (val, record) => {
-        return <Form.Item>
-          {getFieldDecorator(`${record.age1}.age1`)(
-            <InputNumber />
-          )
-          }
-        </Form.Item>
+    });
+  }
+  handleChange = (value) => {
+    // setSelectWeiDu(value)
+  }
+  handleSubmitBaotian = e => {
+    e.preventDefault();
+    this.props.form.validateFields((err, values) => {
+      if (!err) {
+        console.log('Received values of form: ', values);
       }
-    },
-  ]
-  const handleDelete = () => {
+    });
+  }
+
+  handleDeleteAccount = () => {
+    const { data, selectWeiDu } = this.state
     confirm({
       title: '删除',
       content: '是否删减维度',
       okText: '是',
       okType: 'danger',
       cancelText: '否',
-      onOk() {
-        console.log(selectedRows)
-      },
+      onOk: (() => {
+        for (let i = 0; i < selectWeiDu.length; i++) {
+          for (let j = 0; j < data.length; j++) {
+            if (selectWeiDu[i] == data[j].groupId) {
+              data.splice(j, 1)
+            }
+          }
+        }
+        this.setState({})
+      }).bind(this),
       onCancel() {
 
       },
     });
   }
-  const handleAdd = () => {
-    setData([...data, { name: new Date().getTime() }])
-  }
-  const rowSelection = {
-    onChange: (selectedRowKeys, selectedRows) => {
-      // console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-      setSelectedRows(selectedRows)
+  handleAddAccount = () => {
+    let params = {
+      groupId: new Date().getTime(),
+      itemTypes: [],
+      offerTypes: [
+        {
+          offerType: 1,
+          unitPrice: ''
+        },
+        {
+          offerType: 2,
+          unitPrice: ''
+        }, {
+          offerType: 3,
+          unitPrice: ''
+        }, {
+          offerType: 4,
+          unitPrice: ''
+        },
+      ]
     }
-  };
-  return (
-    <div>
+    this.state.data.push(params)
+    this.setState({})
+  }
+
+  render() {
+    const { getFieldDecorator, getFieldValue, setFieldsValue, validateFields } = this.props.form;
+    const { itemTypes = [] } = this.props.dimensionConfig
+    const { taskLaunchConfigLiang, taskLaunchConfigTian, taskLaunchConfigHui, TPGetTaskLaunchConfigLiang,
+      TPGetTaskLaunchConfigTian, TPGetTaskLaunchConfigHui
+    } = this.props
+    const { data, selectWeiDu } = this.state
+    const rowSelection = {
+      onChange: (selectedRowKeys, selectedRows) => {
+        this.setState({
+          selectWeiDu: selectedRowKeys
+        })
+        // console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+        // setSelectedRows(selectedRows)
+      }
+    };
+    // console.log(selectWeiDu)
+    return (
       <div>
-        <h4>1、维度配置</h4>
-        <Form onSubmit={handleSubmit}>
-          <h2 style={{ marginTop: '20px' }}>微信公众号</h2>
-          <h3 style={{ marginLeft: '30px', marginBottom: '10px' }}>账号等级维度 单位：（元/阅读）</h3>
-          <Table
-            style={{ marginLeft: '30px' }}
-            bordered
-            dataSource={data}
-            columns={columns}
-            pagination={false}
-            rowSelection={rowSelection}
+        <div>
+          <h4>1、维度配置</h4>
+          <Form onSubmit={this.handleApplyAccount}>
+            <h2 style={{ marginTop: '20px' }}>微信公众号</h2>
+            <h3 style={{ marginLeft: '30px', marginBottom: '10px' }}>账号等级维度 单位：（元/阅读）</h3>
+            <Table
+              style={{ marginLeft: '30px' }}
+              bordered
+              rowKey={record => record.groupId}
+              dataSource={data}
+              columns={columnsWeidu(getFieldDecorator)}
+              pagination={false}
+              rowSelection={rowSelection}
+            />
+            <Form.Item style={{ textAlign: 'center', marginTop: '20px' }}>
+              <Button type="primary" onClick={this.handleAddAccount}>新增维度</Button>
+              <Button type="primary" style={{ margin: '0 20px' }} onClick={this.handleDeleteAccount}>删除维度</Button>
+              <Button type="primary" htmlType="submit">应用配置</Button>
+            </Form.Item>
+          </Form>
+          <h4>2、任务要求</h4>
+          <CooperationTask
+            taskLaunchConfigLiang={taskLaunchConfigLiang}
+            TPGetTaskLaunchConfigLiang={TPGetTaskLaunchConfigLiang}
           />
-          <Form.Item style={{ textAlign: 'center', marginTop: '20px' }}>
-            <Button type="primary" onClick={handleAdd}>新增维度</Button>
-            <Button type="primary" style={{ margin: '0 20px' }} onClick={handleDelete}>删除维度</Button>
-            <Button type="primary" htmlType="submit">应用配置</Button>
-          </Form.Item>
-        </Form>
-        <h4>2、任务要求</h4>
-        <Form layout="inline" onSubmit={handleSubmitTask}>
-          <Form.Item label="单条执行单起投量级（条）">
-            {getFieldDecorator('username', {
-              rules: [{ required: true, message: '请输入' }],
-            })(
-              <InputNumber precision={0} />,
-            )}
-          </Form.Item>
-          <Form.Item>
-            <Button type="primary" htmlType="submit" >
-              应用配置
-          </Button>
-          </Form.Item>
-        </Form>
+        </div>
+        <h4>3、包天模式</h4>
+        <CooperationTian
+          taskLaunchConfigTian={taskLaunchConfigTian}
+          TPGetTaskLaunchConfigTian={TPGetTaskLaunchConfigTian}
+        />
+        <h4>4、返现优惠</h4>
+        <CooperationHui
+          taskLaunchConfigHui={taskLaunchConfigHui}
+          TPGetTaskLaunchConfigHui={TPGetTaskLaunchConfigHui}
+        />
       </div>
-      <h4>3、包天模式</h4>
-      <Form onSubmit={handleSubmitBaotian}>
-        <Table
-          style={{ marginLeft: '30px' }}
-          bordered
-          dataSource={data}
-          columns={columnsTian}
-          pagination={false}
-          rowSelection={rowSelection}
-        />
-        <Form.Item style={{ textAlign: 'center', marginTop: '20px' }}>
-          <Button type="primary" onClick={handleAdd}>新增投放天数</Button>
-          <Button type="primary" style={{ margin: '0 20px' }} onClick={handleDelete}>删除投放天数</Button>
-          <Button type="primary" htmlType="submit">应用配置</Button>
-        </Form.Item>
-      </Form>
-      <h4>4、返现优惠</h4>
-      <Form onSubmit={handleSubmitXian}>
-        <Table
-          style={{ marginLeft: '30px' }}
-          bordered
-          dataSource={data}
-          columns={columnsXian}
-          pagination={false}
-          rowSelection={rowSelection}
-        />
-        <Form.Item style={{ textAlign: 'center', marginTop: '20px' }}>
-          <Button type="primary" onClick={handleAdd}>新增返现优惠</Button>
-          <Button type="primary" style={{ margin: '0 20px' }} onClick={handleDelete}>删除返现优惠</Button>
-          <Button type="primary" htmlType="submit">应用配置</Button>
-        </Form.Item>
-      </Form>
-    </div>
-  );
-};
+    );
+  }
+}
 
 export default Form.create()(Cooperation);

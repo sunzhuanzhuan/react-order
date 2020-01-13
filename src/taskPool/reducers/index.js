@@ -2,7 +2,10 @@ import { combineReducers } from 'redux'
 import { handleActions, handleAction } from 'redux-actions';
 import * as order from './order'
 import * as account from './account'
+import * as platform from './platform'
+import * as setting from './setting'
 import * as task from './task'
+import * as clue from './clue'
 import * as attribute from './attribute'
 import { reducersResponseList } from '../constants/utils';
 
@@ -40,12 +43,6 @@ export const financeTradeRecord = handleActions({
   [TPQueryMcnFinancePaymentPage_success]: reducersResponseList(),
 }, reducersResponseList.initList())
 
-// 获取线索详情
-export const clueDetail = handleActions({
-  [TPGetClueDetail_success]: (state, action) => {
-    return { ...action.payload.data }
-  }
-}, {});
 
 export default combineReducers({
   mcnReviewOrderList,
@@ -54,7 +51,9 @@ export default combineReducers({
   taskStatus,
   ...order,
   ...account,
+  ...platform,
+  ...setting,
   ...task,
+  ...clue,
   ...attribute,
-  clueDetail
 })

@@ -1,69 +1,88 @@
 
-import React, { } from 'react';
-import { Table, Input, Button, Popconfirm, Form } from 'antd';
+import React, { useEffect } from 'react';
+import { Table, InputNumber, Button, Popconfirm, Form, message } from 'antd';
 const Price = (props) => {
   const columns = [
     {
       title: '账号等级/发文位置',
-      dataIndex: 'name',
+      dataIndex: 'accountGarde',
       align: 'center',
       width: '50px',
 
     },
     {
       title: '多图文第一条',
-      dataIndex: 'age',
       align: 'center',
       width: '100px',
       render: (val, record) => {
-        return <Form.Item>{getFieldDecorator(`${record.name}.one`, {
-          rules: [{ required: true, message: 'Please input your username!' }],
-          initialValue: 0
-        })(
-          <Input
-            placeholder="Username"
-          />,
-        )}</Form.Item>
+        return record.offerTypes.map((item) => {
+          if (item.offerPosition == 1) {
+            return <Form.Item>{getFieldDecorator(`${record.accountGarde}.one`, {
+              rules: [{ required: true, message: 'Please input your username!' }],
+              initialValue: item.unitPrice || 0
+            })(
+              <InputNumber precision={2} />,
+            )}</Form.Item>
+          }
+        })
       }
     },
     {
       title: '多图文第二条',
-      dataIndex: 'address',
       align: 'center',
       width: '100px',
       render: (val, record) => {
-        return <Form.Item>{getFieldDecorator(`${record.name}.two`, {
-          rules: [{ required: true, message: 'Please input your username!' }],
-          initialValue: 0
-        })(
-          <Input
-            placeholder="Username"
-          />,
-        )}</Form.Item>
+        return record.offerTypes.map((item) => {
+          if (item.offerPosition == 2) {
+            return <Form.Item>{getFieldDecorator(`${record.accountGarde}.two`, {
+              rules: [{ required: true, message: 'Please input your username!' }],
+              initialValue: item.unitPrice || 0
+            })(
+              <InputNumber precision={2} />,
+            )}</Form.Item>
+          }
+        })
       }
     }, {
       title: '多图文3-N条',
-      dataIndex: 'oo',
       align: 'center',
       width: '100px',
       render: (val, record) => {
-        return <Form.Item>{getFieldDecorator(`${record.name}.three`, {
-          rules: [{ required: true, message: 'Please input your username!' }],
-          initialValue: 0
-        })(
-          <Input
-            placeholder="Username"
-          />,
-        )}</Form.Item>
+        return record.offerTypes.map((item) => {
+          if (item.offerPosition == 3) {
+            return <Form.Item>{getFieldDecorator(`${record.accountGarde}.three`, {
+              rules: [{ required: true, message: 'Please input your username!' }],
+              initialValue: item.unitPrice || 0
+            })(
+              <InputNumber precision={2} />,
+            )}</Form.Item>
+          }
+        })
       }
     }]
   const { getFieldDecorator, getFieldValue, setFieldsValue, validateFields } = props.form;
 
   const handleSubmit = e => {
     e.preventDefault();
+    let arr = [{}, {}, {}, {}, {}]
+    let letter = ['A', 'B', 'C', 'D', 'E']
+    let word = ['one', 'two', 'three']
     props.form.validateFields((err, values) => {
       if (!err) {
-        console.log('Received values of form: ', values);
+        for (let j = 0; j < 5; j++) {
+          arr[j].accountGarde = letter[j];
+          arr[j].offerTypes = [];
+          let item = values[letter[j]]
+          for (let i = 0; i < 3; i++) {
+            arr[j].offerTypes.push({ offerPosition: i + 1, unitPrice: item[word[i]] || 0 })
+          }
+        }
+        props.TPReadUnitPriceConfig({ accountGardes: arr }).then(() => {
+          message.success('设置成功')
+          props.TPGetReadUnitPriceConfig({})
+        })
+        console.log(arr)
+
       }
     });
   }
@@ -75,7 +94,8 @@ const Price = (props) => {
         <Table
           style={{ marginLeft: '30px' }}
           bordered
-          dataSource={[{ name: 'A' }, { name: 'B' }, { name: 'C' }, { name: 'D' }, { name: 'E' }]}
+          rowKey={record => record.accountGarde}
+          dataSource={props.readUnitPriceConfig}
           columns={columns}
           pagination={false}
         />

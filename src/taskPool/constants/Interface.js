@@ -26,10 +26,36 @@ export default {
   TPApprovedSecondSuccess: prefix + "/mcnOrder/v1/approvedSecondSuccess",
   TPMcnOrderConfirmFinish: prefix + "/mcnOrder/v1/mcnOrderConfirmFinish",
   TPMcnOrderConfirmCancel: prefix + "/mcnOrder/v1/mcnOrderConfirmCancel",
-  TPPostOperationLog: prefix + "/configmanage/v1/queryOperationLog",
-  TPPostClueList: prefix + "/adclue/v1/queryAdClueList",
-  TPGetClueDetail: prefix + "/adclue/v1/queryAdClueInfo",
-
+  clue: {
+    TPPostOperationLog: prefix + "/configManage/v1/queryOperationLog",
+    TPPostClueList: prefix + "/adclue/v1/queryAdClueList",
+    TPGetClueDetail: prefix + "/adclue/v1/queryAdClueInfo",
+    TPClueConfirm: prefix + "/adclue/v1/clueConfirm"
+  },
+  platform: {
+    TPGetPlatformList: prefix + "/cooperationPlatform/v2/getPlatformList",
+    TPSavePlatform: prefix + "/cooperationPlatform/v2/savePlatform",
+    TPPlatformDetail: prefix + "/cooperationPlatform/v2/getPlatformDetail",
+    TPPUpdatePlatform: prefix + "/cooperationPlatform/v2/updatePlatform",
+  },
+  setting: {
+    TPReadUnitPriceConfig: prefix + "/cooperationPlatform/v2/suggestReadUnitPriceConfig",
+    TPGetReadUnitPriceConfig: prefix + "/cooperationPlatform/v2/getSuggestReadUnitPriceConfig",
+    TPGetQualityConfig: prefix + "/configManage/v1/getQualityConfig",
+    TPAddRetainTime: prefix + "/configManage/v1/addRetainTime",
+    TPChangeQualityConfig: prefix + "/configManage/v1/changeQualityConfig",
+    TPQueryCommissionConfig: prefix + "/configManage/v1/queryCommissionConfig",
+    TPUpdateCommissionConfig: prefix + "/configManage/v1/commissionConfig",
+    TPTaskCheck: prefix + "/configManage/v1/queryTaskCheckQualifications",
+    TPUpdateTaskCheck: prefix + "/configManage/v1/taskCheckQualifications",
+    TPGetNotificationList: prefix + "/configManage/v1/getNotificationList",
+    TPDeleteNotice: prefix + "/configManage/v1/notificationChange",
+    TPDimensionConfig: prefix + "/cooperationPlatform/v2/dimensionConfig",
+    TPGetDimensionConfig: prefix + "/cooperationPlatform/v2/getDimensionConfig",
+    TPGetTaskLaunchConfigLiang: prefix + "/cooperationPlatform/v2/getTaskLaunchConfig",
+    TPGetTaskLaunchConfigTian: prefix + "/cooperationPlatform/v2/getTaskLaunchConfig",
+    TPGetTaskLaunchConfigHui: prefix + "/cooperationPlatform/v2/getTaskLaunchConfig"
+  },
   account: {
     TPGetAccountList: `${accountMapping}/getAccountList`,//账号管理
     TPUpdateAccountStateMsg: `${accountMapping}/updateAccountStateMsg`,//上下架

@@ -7,7 +7,8 @@ import {
   Button, Row, Col, Form,
   Input, Tabs, Select, DatePicker
 } from "antd";
-import { cluePlatformTypes } from "../../constants/config";
+import { platformTypes } from "../../constants/config";
+import { useHistory } from 'react-router-dom'
 import moment from 'moment';
 
 const { TabPane } = Tabs;
@@ -20,59 +21,58 @@ const FilterForm = (props) => {
   return (
     <Row className="flex-form-layout">
       <Col span={4}>
-        <Form.Item label="任务名称">
-          {getFieldDecorator('snsName', {})(
-            <Input placeholder="请输入" allowClear />
-          )}
-        </Form.Item>
-      </Col>
-      <Col span={4}>
         <Form.Item label="线索ID">
-          {getFieldDecorator('isFa33mous', {})(
+          {getFieldDecorator('id', {})(
             <Input placeholder="请输入" allowClear />
           )}
         </Form.Item>
       </Col>
-      <Col span={4}>
+      {props.active == 9 ? <Col span={4}>
         <Form.Item label="客户名称">
-          {getFieldDecorator('isFamous', {})(
+          {getFieldDecorator('createdName', {})(
             <Input placeholder="请输入" allowClear />
           )}
         </Form.Item>
-      </Col>
-      <Col span={4}>
-        <Form.Item label="线索状态">
-          {getFieldDecorator('isFamou22s', {})(
-            <Select placeholder="请选择" allowClear>
-              <Option value="1">是</Option>
-              <Option value="2">否</Option>
-            </Select>
-          )}
-        </Form.Item>
-      </Col>
-      {props.active == 1 ? <Col span={4}>
-        <Form.Item label="任务类型">
-          {getFieldDecorator('isFamous2', {})(
-            <Select placeholder="请选择" allowClear>
-              <Option value="1">是</Option>
-              <Option value="2">否</Option>
-            </Select>
-          )}
-        </Form.Item>
-      </Col> : <Col span={4}>
-          <Form.Item label="任务模式">
-            {getFieldDecorator('isFamous2', {})(
+      </Col> :
+        <Col span={4}>
+          <Form.Item label="任务类型">
+            {getFieldDecorator('extensionBudget', {})(
               <Select placeholder="请选择" allowClear>
-                <Option value="1">是</Option>
-                <Option value="2">否</Option>
+                <Option value="0">全部</Option>
+                <Option value="4">图文</Option>
+                <Option value="3">图文+视频</Option>
               </Select>
             )}
           </Form.Item>
         </Col>}
-
-      <Col span={9}>
+      <Col span={4}>
+        <Form.Item label="线索状态">
+          {getFieldDecorator('clueState', {})(
+            <Select placeholder="请选择" allowClear>
+              <Option value="0">全部</Option>
+              <Option value="1">未处理</Option>
+              <Option value="2">已处理</Option>
+            </Select>
+          )}
+        </Form.Item>
+      </Col>
+      <Col span={7}>
+        <Form.Item label="线索提交时间">
+          {getFieldDecorator('createdAtBegin', {})(
+            <RangePicker
+              format="YYYY-MM-DD HH:mm"
+              showTime={{
+                format: "mm:ss",
+                defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment('23:59:59', 'HH:mm:ss')]
+              }}
+              style={{ width: '100%' }}
+            />
+          )}
+        </Form.Item>
+      </Col>
+      <Col span={7}>
         <Form.Item label="任务创建时间">
-          {getFieldDecorator('platformId', {})(
+          {getFieldDecorator('extensionStartTimeEnd', {})(
             <RangePicker
               format="YYYY-MM-DD HH:mm"
               showTime={{
@@ -84,22 +84,7 @@ const FilterForm = (props) => {
           )}
         </Form.Item>
       </Col>
-
-      <Col span={9}>
-        <Form.Item label="线索开始时间">
-          {getFieldDecorator('platformId', {})(
-            <RangePicker
-              format="YYYY-MM-DD HH:mm"
-              showTime={{
-                format: "mm:ss",
-                defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment('23:59:59', 'HH:mm:ss')]
-              }}
-              style={{ width: '100%' }}
-            />
-          )}
-        </Form.Item>
-      </Col>
-      <Col span={5}>
+      <Col span={3}>
         <Form.Item>
           <Button type="primary" htmlType="submit" style={{ marginRight: 10 }}>查询</Button>
           <Button type="primary" ghost onClick={() => props.form.resetFields()}>重置</Button>
@@ -110,7 +95,8 @@ const FilterForm = (props) => {
 }
 
 const Filters = (props) => {
-  const [active, setActive] = useState('1')
+  const [active, setActive] = useState(platformTypes[0].id)
+  const history = useHistory()
   useEffect(() => {
     submit()
   }, [active])
@@ -123,8 +109,12 @@ const Filters = (props) => {
   const submit = e => {
     e && e.preventDefault();
     props.form.validateFields((err, values) => {
+      console.log(values, '_____');
       if (!err) {
-        let filter = Object.assign({ pageNum: 1, active }, values)
+        let filter = {
+          page: { currentPage: 1 },
+          form: { ...values, platformId: active }
+        }
         props.search(filter)
       }
     });
@@ -134,7 +124,7 @@ const Filters = (props) => {
     <Form className="page-filter" onSubmit={submit} layout="inline">
       <Tabs activeKey={active} onChange={tabChange} animated={false}>
         {
-          cluePlatformTypes.map(pane => (
+          platformTypes.map(pane => (
             <TabPane key={pane.id} tab={
               <span>
                 {pane.title}

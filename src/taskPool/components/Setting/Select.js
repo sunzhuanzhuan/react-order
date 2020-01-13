@@ -1,46 +1,81 @@
 
-import React, { useState } from 'react';
-import { InputNumber, Button, Icon, Tooltip } from 'antd';
-const Select = (props) => {
-
-  const [total, setTotal] = useState(null)
-  const [ad, setAd] = useState(null)
-  const [bz, setBz] = useState(null)
-
-  const handleTotal = () => {
-    setTotal(Number(ad) + Number(bz))
-  }
-  const handleAd = (e) => {
-    setAd(e.target.value)
+import React, { useState, useEffect } from 'react';
+import { InputNumber, Button, Icon, Tooltip, message } from 'antd';
+class Select extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      total: props.totalProportion,
+      ad: props.adProportion,
+      bz: props.accountProportion
+    }
 
   }
-  const handleBz = (e) => {
-    setBz(e.target.value)
+  handleTotal = () => {
+    const { ad, bz } = this.state
+    this.setState({
+      total: Number(ad) + Number(bz)
+    })
+  }
+  handleAd = (e) => {
+    this.setState({
+      ad: e.target.value
+    })
 
   }
-  return (
-    <div>
-      <div style={{ marginLeft: '30px' }}>
-        <h2 style={{ marginTop: '20px' }}>微信公众号</h2>
-        <p>总抽佣率： <InputNumber precision={2} value={total} /> %</p>
-        <p>广告主率： <InputNumber precision={2} min={0} max={100} onBlur={handleAd} /> %</p>
-        <p>博主率：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<InputNumber precision={2} min={0} max={100} onBlur={handleBz} /> %
+  handleBz = (e) => {
+    this.setState({
+      bz: e.target.value
+    })
+
+  }
+  handleApply = () => {
+    const { total, ad, bz } = this.state
+    let params = {
+      totalProportion: total,
+      adProportion: ad,
+      accountProportion: bz
+    }
+    this.props.TPUpdateCommissionConfig(params).then(() => {
+      message.success('设置成功')
+      this.props.TPQueryCommissionConfig()
+    })
+  }
+
+  componentWillReceiveProps = (props) => {
+    this.setState({
+      total: props.commissionConfig.totalProportion,
+      ad: props.commissionConfig.adProportion,
+      bz: props.commissionConfig.accountProportion
+    })
+  }
+  render() {
+    const { totalProportion, adProportion, accountProportion } = this.props.commissionConfig;
+    const { total, ad, bz } = this.state
+    return (
+      <div>
+        <div style={{ marginLeft: '30px' }}>
+          <h2 style={{ marginTop: '20px' }}>微信公众号</h2>
+          <div>总抽佣率： {totalProportion && <InputNumber precision={2} defaultValue={totalProportion} value={total} />} %</div>
+          <div style={{ margin: '10px 0' }}>广告主率： {adProportion && <InputNumber precision={2} value={ad} min={0} max={100} onBlur={this.handleAd} defaultValue={ad} />} %</div>
+          <div>博主率：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{accountProportion && <InputNumber precision={2} value={bz} min={0} max={100} onBlur={this.handleBz} defaultValue={bz} />} %
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span>
-            <Tooltip placement="topLeft" title={'总抽佣率=广告主率+博主率'}>
-              <Button type="link" onClick={handleTotal}>计算</Button>
-            </Tooltip>
-            <span>提示
-            <Tooltip placement="topLeft" title={'只需设定两个抽佣率即可'}>
-                <Icon type="question-circle" />
+              <Tooltip placement="topLeft" title={'总抽佣率=广告主率+博主率'}>
+                <Button type="link" onClick={this.handleTotal}>计算</Button>
               </Tooltip>
+              <span>提示
+            <Tooltip placement="topLeft" title={'只需设定两个抽佣率即可'}>
+                  <Icon type="question-circle" />
+                </Tooltip>
+              </span>
             </span>
-          </span>
-        </p>
-      </div>
-      <p style={{ textAlign: 'center', marginTop: '40px' }}><Button type="primary">应用配置</Button></p>
+          </div>
+        </div>
+        <p style={{ textAlign: 'center', marginTop: '40px' }}><Button type="primary" onClick={this.handleApply}>应用配置</Button></p>
 
-    </div>
-  );
-};
+      </div>
+    );
+  }
+}
 
 export default Select;

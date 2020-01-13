@@ -1,4 +1,4 @@
-import React, { } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Table } from 'antd';
 import { connect } from 'react-redux'
 import * as actions from '@/taskPool/actions';
@@ -7,49 +7,69 @@ import { bindActionCreators } from 'redux';
 
 
 const Log = (props) => {
+  const [listLoading, setListLoading] = useState(false)
   const columns = [
     {
       title: '用户名',
       dataIndex: 'id',
+      width: '30%',
       key: 'id'
     },
     {
       title: '记录时间',
+      width: '30%',
       dataIndex: 'createdAt',
       key: 'createdAt',
     },
     {
       title: '操作记录',
+      width: '40%',
       dataIndex: 'remark',
       key: 'remark',
     }
   ]
+  useEffect(() => {
+    let params = {
+      page: {
+        pageNum: 1,
+        pageSize: 50
+      }
+    }
+    getList(params)
+  }, [])
 
-  const getList = () => {
-    const { actions } = this.props
-    this.setState({ listLoading: true })
-    actions.postOperationLog().finally(() => {
-      this.setState({ listLoading: false })
+  const getList = (params) => {
+    setListLoading(true)
+    props.actions.TPPostOperationLog(params).then(() => {
+      setListLoading(false)
     })
   }
+  const { log: { list = [], total, pageNum, pageSize } } = props.clueReducers
   const pagination = {
-    total: 100,
-    pageSize: 10,
-    currentPage: 1,
+    total: total,
+    pageSize: pageSize,
+    current: pageNum,
     onChange: (current) => {
-      getList({ currentPage: current })
+      let params = {
+        page: {
+          pageNum: current,
+          pageSize: 50
+        }
+      }
+      getList(params)
     },
     showQuickJumper: true
   }
   return (
     <div>
-      <Table loading={false} columns={columns} dataSource={[]} pagination={pagination} />
+      <h2 style={{ marginBottom: '30px' }}>操作日志列表</h2>
+      {list && <Table loading={listLoading} columns={columns} dataSource={list} pagination={pagination} />}
     </div>
   );
 };
 
 const mapStateToProps = (state) => ({
-  orderReducers: state.taskPoolReducers
+  clueReducers: state.taskPoolReducers
 })
 
 const mapDispatchToProps = (dispatch) => ({
