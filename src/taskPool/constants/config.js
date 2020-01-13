@@ -6,11 +6,15 @@ import { Link } from "react-router-dom";
 /**
  * 广告商任务状态
  */
-export const AD_ORDER_STATE_UNPAID = 0 // 未支付
-export const AD_ORDER_STATE_PROCESSING = 1 // 进行中
-export const AD_ORDER_STATE_EXPIRY = 2 // 过期
-export const AD_ORDER_STATE_OFFLINE = 3 // 下线
-export const AD_ORDER_STATE_END = 4 // 结束
+export const AD_ORDER_STATE_UNPAID = 100 // 待支付
+export const AD_ORDER_STATE_WAIT_RELEASED = 200 // 待发布
+export const AD_ORDER_STATE_PROCESSING = 300 // 进行中
+export const AD_ORDER_STATE_EXPIRY = 400 // 过期
+export const AD_ORDER_STATE_OFFLINE = 500 // 下线
+export const AD_ORDER_STATE_FINISH = 600 // 任务结束结束
+export const AD_ORDER_STATE_END = 250 // 终结
+
+
 
 /**
  * 博主任务状态

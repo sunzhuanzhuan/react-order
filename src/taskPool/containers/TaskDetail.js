@@ -28,6 +28,8 @@ const TaskDetail = (props) => {
     setLoading(true);
     actions.TPTaskDetail({ id }).then(() => {
       setLoading(false)
+    }).catch(e => {
+      setLoading(e)
     })
   }
   const { actions, taskPoolData } = props
@@ -43,6 +45,7 @@ const TaskDetail = (props) => {
           mcnOrderListByTemp={mcnOrderListByTemp}
           actions={actions}
           history={history}
+          reload={getDetail}
         />
       </div>
     </LoadingWrapped>

@@ -61,7 +61,7 @@ class PreviewForWeixin extends React.Component {
       title: '提交成功',
       content: '您可在任务管理页随时查看进度',
       onOk: () => {
-        this.props.history.push('/order/task/manage')
+        this.props.history.push('/order/task/tasks-manage')
       }
     })
   }
@@ -253,7 +253,7 @@ class PreviewForWeixin extends React.Component {
           </Descriptions.Item>
           <Descriptions.Item label="所属公司">{base.company.label}</Descriptions.Item>
           <Descriptions.Item label="行业分类">{
-            base.industry.map(id => getIndustryName(this.props.industryList, id).industryName).join(
+            base.industry.map(id => getIndustryName(this.props.industryList, parseInt(id)).industryName).join(
               '/')
           }</Descriptions.Item>
           <Descriptions.Item

@@ -11,59 +11,6 @@ import {
 } from "../components/Task/CreateForms/index";
 import { parseUrlQuery } from "@/util/parseUrl";
 import update from 'immutability-helper'
-import moment from 'moment';
-import BraftEditor from 'braft-editor';
-
-/**
- * base: {
-        platformId: defaultPlatformId,
-        company: lockCompanySelect ? {
-          label: companyName,
-          key: companyId
-        } : undefined,
-        orderName: "安师大",
-        taskPattern: 2,
-        industry: ["2", "21"],
-        orderDate: [moment("2019-12-30"), moment("2020-01-30")],
-        showPictureUrl: [{
-          uid: "asdasd",
-          url: "http://prd-wby-img.oss-cn-beijing.aliyuncs.com/ORDER_IMG_UPLOAD/39069087673a43beb9d7bf18ca1c3a5a.jpg"
-        }],
-        businessScope: "1",
-        "retainTime": 24,
-      },
- budget: {
-        "totalAmount": 666,
-        "locationLimited": 1,
-        "_followerCountLimit": true,
-        "mediaCountLimit": true,
-        "_mediaAvgReadNumLimit": true,
-        "_followerGenderRatioLimit": true,
-        "_minNumOfReadLimit": true,
-        "onlyVerified": true,
-        "followerCountLimit": 11111,
-        "locationLimitedInfo": [
-          "w1",
-          "w2"
-        ],
-        "wxOneNumber": 23,
-        "wxTwoNumber": 43,
-        "mediaAvgReadNumLimit": 111111,
-        "followerGenderRatioLimit": 2,
-        "minNumOfReadLimit": 11,
-        "actionNum": 951,
-        "amount": 1617,
-        "unitPrice": "10.09"
-      },
- content: {
-        title: '22322',
-        coverImage:  [{
-          uid: "asdasd",
-          url: "http://prd-wby-img.oss-cn-beijing.aliyuncs.com/ORDER_IMG_UPLOAD/39069087673a43beb9d7bf18ca1c3a5a.jpg"
-        }],
-        richContent: BraftEditor.createEditorState('sss')
-      }
- */
 
 const { Step } = Steps;
 let forms = {
@@ -84,7 +31,8 @@ let forms = {
     FormBudget[12306],
     FormContent[12306],
     FormPreview[12306]
-  ]
+  ],
+  'default': []
 }
 
 const formLayout = {

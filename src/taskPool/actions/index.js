@@ -8,12 +8,6 @@ export * from './attribute'
 export * from './clue'
 export * from './platform'
 export * from './setting'
-// // 新增任务
-// export const {
-//   TPAddTask
-// } = createHttpAction('TPAddTask', Interface.addTask, {
-//   method: 'post'
-// });
 
 
 // 根据公司名称模糊查询公司列表
