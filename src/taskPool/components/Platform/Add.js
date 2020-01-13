@@ -27,7 +27,11 @@ const AddForm = (props) => {
         console.log('Received values of form: ', values);
         props.TPSavePlatform({ ...values }).then(() => {
           props.setVisible(false)
-          props.getList({ pageNum: 1, pageSize: 50 })
+          let page = {
+            currentPage: 1,
+            pageSize: 50
+          }
+          props.getList(page)
         })
 
       }

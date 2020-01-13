@@ -18,7 +18,11 @@ const Platform = (props) => {
   const [authToken, setAuthToken] = useState('null')
 
   useEffect(() => {
-    getList({ pageNum: 1, pageSize: 50 })
+    let page = {
+      currentPage: 1,
+      pageSize: 50
+    }
+    getList(page)
   }, [])
 
   async function getList(params) {
@@ -46,7 +50,11 @@ const Platform = (props) => {
       onOk() {
         props.actions.TPPUpdatePlatform({ id: record.id, operationFlag: 1 }).then(() => {
           message.success('删除成功')
-          getList({ pageNum: 1, pageSize: 50 })
+          let page = {
+            currentPage: 1,
+            pageSize: 50
+          }
+          getList(page)
         })
       },
       onCancel() { },
@@ -141,9 +149,13 @@ const Platform = (props) => {
   const pagination = {
     total: total,
     pageSize: 50,
-    current: pageNum || 1,
+    current: pageNum,
     onChange: (current) => {
-      getList({ pageNum: current, pageSize: 50 })
+      let page = {
+        currentPage: current,
+        pageSize: 50
+      }
+      getList(page)
     },
     showQuickJumper: true
   }
@@ -205,7 +217,11 @@ class Quit extends React.Component {
     } else {
       this.props.TPPUpdatePlatform({ id: row.id, operationFlag: 2, terminationReason: val }).then(() => {
         this.props.setVisibleQuit(false)
-        this.props.getList({ pageNum: 1, pageSize: 50 })
+        let page = {
+          currentPage: 1,
+          pageSize: 50
+        }
+        this.props.getList(page)
       })
 
     }
