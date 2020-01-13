@@ -26,13 +26,14 @@ import {
 } from "@/taskPool/constants/utils";
 import { convertRawToHTML } from 'braft-convert'
 import {
-  AD_ORDER_STATE_OFFLINE,
+  AD_ORDER_STATE_OFFLINE, AD_ORDER_STATE_PROCESSING, AD_ORDER_STATE_WAIT_RELEASED,
   MCN_ORDER_STATE_CANCEL,
   MCN_ORDER_STATE_UNQUALIFIED, MEDIA_TASK_PATTERN_BIDDING, MEDIA_TASK_PATTERN_RUSH
 } from "@/taskPool/constants/config";
 import numeral from '@/util/numeralExpand';
 import { Link } from 'react-router-dom'
 import OrderMcnStatus from '@/taskPool/base/OrderMcnStatus';
+import { TaskRemainingTime } from '@/taskPool/base/ColumnsDataGroup/TaskStatus';
 
 
 class RaterModal extends React.Component {
@@ -102,7 +103,6 @@ export default class DetailsForWeiXin extends Component {
       },
       listLoading: false,
       listLoadingByTemp: false,
-      detailLoading: false,
       raterOrderId: 0
     }
 
@@ -304,16 +304,44 @@ export default class DetailsForWeiXin extends Component {
     this.setState({ raterOrderId });
   }
 
-  // 下线
-  offline = (id) => {
-    const { actions } = this.props
+  // 下线任务
+  offline = (id, record) => {
+    const { actions, reload } = this.props
     Modal.confirm({
-      title: '确认要下线此蜂窝派任务吗?',
-      content: "蜂窝派任务下线后，不可重新上线。已领取蜂窝派任务的博主，可执行。未消耗的余额，会在之后返还到您的蜂窝派任务账户余额中。",
+      title: '下线任务',
+      content: `确认下线 ${record.companyName} —— “${record.orderName}” 的任务么？`,
       onOk: () => {
         return actions.TPOfflineTask({ id }).then(() => {
           message.success('下线成功')
-          this.getDetail()
+          reload()
+        })
+      }
+    })
+  }
+  // 上线任务
+  online = (id, record) => {
+    const { actions , reload } = this.props
+    Modal.confirm({
+      title: '上线任务',
+      content: `任务还未到上线时间，确定要立即上线该任务么？？`,
+      onOk: () => {
+        return actions.TPOnlineTask({ id }).then(() => {
+          message.success('上线成功')
+          reload()
+        })
+      }
+    })
+  }
+  // 终止任务
+  stop = (id, record) => {
+    const { actions, reload  } = this.props
+    Modal.confirm({
+      title: '终止任务',
+      content: `确认终止 ${record.companyName} —— “${record.orderName}” 的任务么？`,
+      onOk: () => {
+        return actions.TPOfflineTask({ id }).then(() => {
+          message.success('任务已终止')
+          reload()
         })
       }
     })
@@ -397,17 +425,17 @@ export default class DetailsForWeiXin extends Component {
 
   // 预览阅读单价
   getUnitPrice = (budget) => {
-    const list = []
+    const list = budget.quoteList || []
     return list.map(o => {
-      return <div key={o.name}>{o.name} {numeral(o.value).format("0,0")}元/阅读</div>
+      return <div key={o.location}>{o.location} {numeral(o.price).format("0,0")}元/阅读</div>
     })
   }
 
   // 预览阅读数
   getReadNumber = (budget) => {
-    const list = []
+    const list = budget.quoteList || []
     return list.map(o => {
-      return <div key={o.name}>{o.name} {numeral(o.value).format("0,0")}阅读</div>
+      return <div key={o.location}>{o.location} {numeral(o.price).format("0,0")}阅读</div>
     })
   }
 
@@ -431,10 +459,26 @@ export default class DetailsForWeiXin extends Component {
         onBack={() => this.props.history.go(-1)}
         title="任务详情"
         extra={
-          details.orderState === 1 ?
-            <Button type="primary" ghost onClick={() => this.offline(details.id)}>
-              下线
-            </Button> : <TaskStatus status={details.orderState} />
+          <>
+            {
+              details.orderState === AD_ORDER_STATE_WAIT_RELEASED &&
+              <Button type="primary" ghost onClick={() => this.online(details.id, details)}>
+                上线
+              </Button>
+            }
+            {
+              details.orderState === AD_ORDER_STATE_WAIT_RELEASED &&
+              <Button type="primary" ghost onClick={() => this.stop(details.id, details)}>
+                终止
+              </Button>
+            }
+            {
+              details.orderState === AD_ORDER_STATE_PROCESSING &&
+              <Button type="primary" ghost onClick={() => this.offline(details.id, details)}>
+                下线
+              </Button>
+            }
+          </>
         }
       />
       <Section>
@@ -476,7 +520,9 @@ export default class DetailsForWeiXin extends Component {
               {details.actualPayment}元
             </Descriptions.Item>
             <Descriptions.Item label="行业分类">
-              {details.taskIndustryInfo.parentName}/{details.taskIndustryInfo.industryName}
+              {
+                [details.taskIndustryInfo.parentName, details.taskIndustryInfo.industryName].filter(Boolean).join('/')
+              }
             </Descriptions.Item>
             <Descriptions.Item label="博主限制">
               {this.getLimit(features)}
@@ -496,10 +542,10 @@ export default class DetailsForWeiXin extends Component {
               </div>
             </Descriptions.Item>
             {features.taskPattern === MEDIA_TASK_PATTERN_RUSH && <Descriptions.Item label="预计阅读数">
-              {details.retainTime}
+              {details.unifiedNumber}
             </Descriptions.Item>}
             {features.taskPattern === MEDIA_TASK_PATTERN_BIDDING && <Descriptions.Item label="预计平均阅读单价">
-              {details.retainTime}
+              {details.unifiedNumber}
             </Descriptions.Item>}
           </Descriptions>
         </Section.Content>
@@ -511,8 +557,8 @@ export default class DetailsForWeiXin extends Component {
             <Descriptions.Item label="任务状态">
               <TaskStatus status={details.orderState} />
             </Descriptions.Item>
-            <Descriptions.Item label="任务剩余天数">
-              {getCountDownTimeText(details.orderEndDate)}
+            <Descriptions.Item label="任务剩余时间">
+              <TaskRemainingTime status={details.orderState} startDate={details.orderStartDate} endDate={details.orderEndDate}/>
             </Descriptions.Item>
             <Descriptions.Item label="已用预算/可用预算">
               <Yuan value={details.usedAmount} className="text-red" />

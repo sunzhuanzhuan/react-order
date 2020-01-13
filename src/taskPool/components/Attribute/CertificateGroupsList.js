@@ -89,7 +89,7 @@ export default class CertificateGroupsList extends React.Component {
                       } ]
                     })(
                     <CertificateGroup
-                      onDelete={this.deleteGroup}
+                      onDelete={() => this.deleteGroup(index)}
                       search={this.props.search}
                       onChange={(certificates) => {
                         this.onChildrenChange(index, certificates)

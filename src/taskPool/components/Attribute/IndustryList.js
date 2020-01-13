@@ -1,13 +1,18 @@
 /**
  * Created by lzb on 2020-01-08.
  */
-import React, { useRef, useState } from 'react';
+import React, { forwardRef, useImperativeHandle, useRef, useState } from 'react';
 import Filters from '@/taskPool/components/Attribute/Filters';
 import { Badge, Divider, message, Modal, Table } from 'antd';
 import { Link } from 'react-router-dom';
+import CertificateOperationModal from '@/taskPool/components/Attribute/CertificateOperationModal';
+import IndustryOperationModal from '@/taskPool/components/Attribute/industryOperationModal';
 
-const IndustryList = (props) => {
+const IndustryList = (props, ref) => {
   const [ searching, setSearching ] = useState(false)
+  const [ id, setId ] = useState(0)
+  const [ record, setRecord ] = useState({})
+
   const that = useRef({
     search: {
       page: {
@@ -18,8 +23,13 @@ const IndustryList = (props) => {
     },
     isOfflineRequest: false
   })
+  useImperativeHandle(ref, () => ({
+    getList: () => {
+      that.current.getList();
+    }
+  }));
 
-  const getList = (params = {}) => {
+  const getList = that.current.getList = (params = {}) => {
     let search = {
       page: Object.assign({}, that.current.search.page, params.page),
       form: Object.assign({}, that.current.search.form, params.form)
@@ -39,7 +49,7 @@ const IndustryList = (props) => {
       title: '下线行业分类',
       content: `确认要下线${record.industryLevel === 1 ? '一': '二'}级分类“${record.industryName}”么？`,
       onOk: () => {
-        return actions.TPOfflineTask({ id }).then(() => {
+        return actions.TPAddOrUpdateIndustryInfo({ id, isOnline: 2 }).then(() => {
           message.success('下线成功')
           getList({page: { currentPage: 1 }})
         })
@@ -53,7 +63,7 @@ const IndustryList = (props) => {
       title: '上线行业分类',
       content: `确认要上线${record.industryLevel === 1 ? '一': '二'}级分类“${record.industryName}”么？`,
       onOk: () => {
-        return actions.TPOfflineTask({ id }).then(() => {
+        return actions.TPAddOrUpdateIndustryInfo({ id, isOnline: 1 }).then(() => {
           message.success('上线成功')
           getList({page: { currentPage: 1 }})
         })
@@ -131,7 +141,10 @@ const IndustryList = (props) => {
         return <div>
           {
             record.industryLevel === 1 && <>
-              <a onClick={() => {}}>编辑</a>
+              <a onClick={() => {
+                setId(id)
+                setRecord(record)
+              }}>编辑</a>
             </>
           }
           {
@@ -185,6 +198,16 @@ const IndustryList = (props) => {
 
   return (
     <div>
+      {id > 0 && <IndustryOperationModal
+        record={record}
+        type="update"
+        id={id}
+        onClose={() => {
+          setId(false)
+          setRecord({})
+        }}
+        onOk={() => getList()}
+      />}
       <Filters search={getList} operation={{}} />
       <Table
         locale={{ emptyText: "还没有任务可以展示" }}
@@ -197,4 +220,4 @@ const IndustryList = (props) => {
   );
 };
 
-export default IndustryList;
+export default forwardRef(IndustryList);

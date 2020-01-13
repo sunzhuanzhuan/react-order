@@ -37,6 +37,10 @@ class CertificateGroup extends React.Component {
       });
   };
 
+  componentDidMount() {
+    // this.searchCertificate('')
+  }
+
   handleChange = (value) => {
     this.setState({
       searching: false,
@@ -57,8 +61,8 @@ class CertificateGroup extends React.Component {
         <CertificateOperationModal
           type="add" onClose={() =>
           this.setState({ isAdd: false })}
-          onOk={(name) => {
-            this.searchCertificate(name)
+          onOk={(record = {}) => {
+            this.searchCertificate(record.qualificationName)
           }}
         />}
         <h4 className='certificate-group-container-title'>

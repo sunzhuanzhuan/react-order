@@ -25,6 +25,7 @@ import {
   AGES_OPTIONS,
   SEAT_OPTIONS, MEDIA_TASK_PATTERN_RUSH, MEDIA_TASK_PATTERN_BIDDING
 } from '@/taskPool/constants/config';
+import boolean from 'less/lib/less/functions/boolean';
 
 const { SHOW_PARENT } = TreeSelect;
 
@@ -88,7 +89,7 @@ class UnitPrice extends React.Component {
     let checked = getFieldValue('locationLimited') === 1 ? (getFieldValue('locationLimitedInfo') || []).map(
       (key) => {
         return this.props.taskPositionList.find(item => key === item.locationKey)
-      }) : this.props.taskPositionList
+      }).filter(Boolean) : this.props.taskPositionList
 
     return checked.length > 0 && (
       <div>
@@ -104,14 +105,17 @@ class UnitPrice extends React.Component {
               >
                 {getFieldDecorator(wxPositionToFields[item.locationKey], {
                   initialValue: budget[wxPositionToFields[item.locationKey]],
-                  rules: [ {
-                    required: true,
-                    message: '必填'
-                  } ]
+                  rules: [
+                    { required: true, validator: (rule, value, callback) => {
+                        if (value <= 0) {
+                          callback(rule.message)
+                        }
+                        callback()
+                      } , message: '请输入大于零的单价' }
+                    ]
                 })(
                   <InputNumber
                     precision={2}
-                    min={0.1}
                     onChange={val => {
                       this.calculation()
                     }}
@@ -186,7 +190,12 @@ class ReadNumber extends React.Component {
                 {getFieldDecorator(wxPositionToFields[item.locationKey], {
                   initialValue: budget[wxPositionToFields[item.locationKey]],
                   rules: [
-                    { required: true, message: '必填' }
+                    { required: true, validator: (rule, value, callback) => {
+                        if (value <= 0) {
+                          callback(rule.message)
+                        }
+                        callback()
+                      } , message: '请输入大于零的阅读数' }
                   ]
                 })(
                   <InputNumber

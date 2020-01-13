@@ -47,7 +47,7 @@ class BaseForMedia extends React.Component {
   render() {
     const { form, formLayout, data, actions, taskRetainTimeList } = this.props
     const { base } = data
-    const { getFieldDecorator, getFieldValue } = form
+    const { getFieldDecorator, getFieldValue, resetFields } = form
 
     return (
       <Form onSubmit={this.handleSubmit}  {...formLayout}>
@@ -122,6 +122,7 @@ class BaseForMedia extends React.Component {
               allowClear={false}
               onChange={val => {
                 this.props.getBusinessScope(val.slice(-1))
+                resetFields(["businessScopeId"])
               }}
               options={this.props.industryList}
               placeholder='请选择行业'
@@ -319,7 +320,7 @@ class BaseForPartner extends React.Component {
 
     const { form, formLayout, data, actions } = this.props
     const { base } = data
-    const { getFieldDecorator, getFieldValue } = form
+    const { getFieldDecorator, getFieldValue, resetFields } = form
 
     return (
       <Form onSubmit={this.handleSubmit}  {...formLayout}>
@@ -389,6 +390,7 @@ class BaseForPartner extends React.Component {
               allowClear={false}
               onChange={val => {
                 this.props.getBusinessScope(val.slice(-1))
+                resetFields(["businessScopeId"])
               }}
               options={this.props.industryList}
               placeholder='请选择行业'
