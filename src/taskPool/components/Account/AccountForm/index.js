@@ -56,9 +56,10 @@ function AccountTabs(props) {
       searchAction && searchAction(values)
     })
   }
-  function onResetForm() {
+  function onResetForm(value) {
     resetFields()
     props.onReset && props.onReset()
+    props.setSelectedTab && props.setSelectedTab(value)
   }
   const formProps = {
     ...props.formProps,

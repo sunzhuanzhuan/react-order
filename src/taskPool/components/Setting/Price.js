@@ -18,10 +18,9 @@ const Price = (props) => {
         return record.offerTypes.map((item) => {
           if (item.offerPosition == 1) {
             return <Form.Item>{getFieldDecorator(`${record.accountGarde}.one`, {
-              rules: [{ required: true, message: 'Please input your username!' }],
               initialValue: item.unitPrice || 0
             })(
-              <InputNumber precision={2} />,
+              <InputNumber precision={2} min={0} />,
             )}</Form.Item>
           }
         })
@@ -35,10 +34,9 @@ const Price = (props) => {
         return record.offerTypes.map((item) => {
           if (item.offerPosition == 2) {
             return <Form.Item>{getFieldDecorator(`${record.accountGarde}.two`, {
-              rules: [{ required: true, message: 'Please input your username!' }],
               initialValue: item.unitPrice || 0
             })(
-              <InputNumber precision={2} />,
+              <InputNumber precision={2} min={0} />,
             )}</Form.Item>
           }
         })
@@ -51,10 +49,9 @@ const Price = (props) => {
         return record.offerTypes.map((item) => {
           if (item.offerPosition == 3) {
             return <Form.Item>{getFieldDecorator(`${record.accountGarde}.three`, {
-              rules: [{ required: true, message: 'Please input your username!' }],
               initialValue: item.unitPrice || 0
             })(
-              <InputNumber precision={2} />,
+              <InputNumber precision={2} min={0} />,
             )}</Form.Item>
           }
         })

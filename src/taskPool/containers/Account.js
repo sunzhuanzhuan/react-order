@@ -23,8 +23,9 @@ function Account(props) {
   const { accountList, orderIndustryCategory = [] } = acconutReducers
   async function getAccountListAsync(params) {
     setLoading(true)
-    await actions.TPGetAccountList(params)
-    setSearchParam(params)
+    const paramsNow = { ...params, form: { tabIdentityId: selectedTab }, }
+    await actions.TPGetAccountList(paramsNow)
+    setSearchParam(paramsNow)
     setLoading(false)
   }
   //获取领取列表数
@@ -70,7 +71,7 @@ function Account(props) {
   }
 
   const formProps = {
-    searchAction, onReset, orderIndustryCategory, selectedTab
+    searchAction, onReset, orderIndustryCategory, selectedTab, setSelectedTab
   }
   return (
     <div>

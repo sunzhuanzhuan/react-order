@@ -10,6 +10,13 @@ export const readUnitPriceConfig = handleActions({
 //获取质检配置数据
 export const qualityConfig = handleActions({
   [setting.TPGetQualityConfig_success]: (state, action) => {
+    let list = action.payload.data.retainTimeList || []
+    for (let i = 0; i < list.length; i++) {
+      if (list[i].retainTime == 24 || list[i].retainTime == 48) {
+        list.splice(i, 1)
+      }
+    }
+
     return { ...action.payload.data }
   },
 }, {})
@@ -28,9 +35,9 @@ export const commissionConfig = handleActions({
 // 任务设置
 export const taskCheck = handleActions({
   [setting.TPTaskCheck_success]: (state, action) => {
-    return { ...action.payload.data }
+    return [...action.payload.data]
   },
-}, {})
+}, [])
 // 获取通知人员的列表
 export const notificationList = handleActions({
   [setting.TPGetNotificationList_success]: (state, action) => {
