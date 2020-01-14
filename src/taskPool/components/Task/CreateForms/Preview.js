@@ -96,9 +96,9 @@ class PreviewForWeixin extends React.Component {
       "taskPattern": base.taskPattern,
 
       "mediaAvgReadNumLimit": budget._mediaAvgReadNumLimit ? budget.mediaAvgReadNumLimit : -1,
-      "followerGenderRatioLimit": budget._followerGenderRatioLimit ? budget.followerGenderRatioLimit : 0,
-      "minNumOfReadLimit": budget._minNumOfReadLimit ? budget.minNumOfReadLimit : 0,
-      "followerCountLimit": budget._followerCountLimit ? budget.followerCountLimit : 0,
+      "followerGenderRatioLimit": budget._followerGenderRatioLimit ? budget.followerGenderRatioLimit : -1,
+      "minNumOfReadLimit": budget._minNumOfReadLimit ? budget.minNumOfReadLimit : -1,
+      "followerCountLimit": budget._followerCountLimit ? budget.followerCountLimit : -1,
 
       "mediaCountLimit": budget.mediaCountLimit ? 1 : 2,
       "onlyVerified": budget.onlyVerified ? 1 : 2,
