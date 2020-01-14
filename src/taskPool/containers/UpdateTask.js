@@ -98,7 +98,7 @@ const UpdateTask = (props) => {
               key: detail.companyId
             },
             orderName: detail.orderName,
-            taskPattern: 2,
+            taskPattern: feature.taskPattern,
             industry: [ detail.taskIndustryInfo.parentId, detail.taskIndustryInfo.id ].filter(Boolean),
             orderDate: [ moment(detail.orderStartDate), moment(detail.orderEndDate) ],
             showPictureUrl: [ {
