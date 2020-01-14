@@ -68,19 +68,19 @@ class CooperationTian extends React.Component {
           arr.push({ offerType: 1, id: arrkey[i] || new Date().getTime(), launchDay: values[arrkey[i]]['B'], taskOfferPrice: values[arrkey[i]]['C'] })
 
         }
-        for (let m = 0; m < selectWeTian.length; m++) {
-          for (let n = 0; n < arr.length; n++) {
-            if (arr[n].id == selectWeTian[m]) {
-              selectArr.push(arr[n])
-            }
+        // for (let m = 0; m < selectWeTian.length; m++) {
+        //   for (let n = 0; n < arr.length; n++) {
+        //     if (arr[n].id == selectWeTian[m]) {
+        //       selectArr.push(arr[n])
+        //     }
 
-          }
+        //   }
 
-        }
-        console.log(selectArr)
-        // this.props.TPGetTaskLaunchConfigTian(selectArr).then(() => {
-        //   this.props.TPGetTaskLaunchConfigTian({})
-        // })
+        // }
+        // console.log(selectArr)
+        this.props.TPUpdateTaskLaunchConfig(arr).then(() => {
+          this.props.TPGetTaskLaunchConfigTian({ offerType: 1 })
+        })
       }
     });
   }

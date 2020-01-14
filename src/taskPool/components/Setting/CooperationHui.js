@@ -68,18 +68,18 @@ class CooperationHui extends React.Component {
           arr.push({ offerType: 4, id: arrkey[i] || new Date().getTime(), taskOfferPrice: values[arrkey[i]]['B'], discountPrice: values[arrkey[i]]['C'] })
 
         }
-        for (let m = 0; m < selectWeHui.length; m++) {
-          for (let n = 0; n < arr.length; n++) {
-            if (arr[n].id == selectWeHui[m]) {
-              selectArr.push(arr[n])
-            }
+        // for (let m = 0; m < selectWeHui.length; m++) {
+        //   for (let n = 0; n < arr.length; n++) {
+        //     if (arr[n].id == selectWeHui[m]) {
+        //       selectArr.push(arr[n])
+        //     }
 
-          }
+        //   }
 
-        }
-        console.log(selectArr)
-        this.props.TPGetTaskLaunchConfigHui(selectArr).then(() => {
-          this.props.TPGetTaskLaunchConfigHui({})
+        // }
+        // console.log(selectArr)
+        this.props.TPUpdateTaskLaunchConfig(arr).then(() => {
+          this.props.TPGetTaskLaunchConfigHui({ offerType: 4 })
         })
       }
     });

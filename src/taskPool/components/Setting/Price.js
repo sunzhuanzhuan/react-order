@@ -15,15 +15,24 @@ const Price = (props) => {
       align: 'center',
       width: '100px',
       render: (val, record) => {
-        return record.offerTypes.map((item) => {
-          if (item.offerPosition == 1) {
-            return <Form.Item>{getFieldDecorator(`${record.accountGarde}.one`, {
-              initialValue: item.unitPrice || 0
-            })(
-              <InputNumber precision={2} min={0} />,
-            )}</Form.Item>
-          }
-        })
+        if (record.offerTypes) {
+          return record.offerTypes.map((item) => {
+            if (item.offerPosition == 1) {
+              return <Form.Item>{getFieldDecorator(`${record.accountGarde}.one`, {
+                initialValue: item.unitPrice || 0
+              })(
+                <InputNumber precision={2} min={0} />,
+              )}</Form.Item>
+            }
+          })
+        } else {
+          return <Form.Item>{getFieldDecorator(`${record.accountGarde}.one`, {
+            initialValue: 0
+          })(
+            <InputNumber precision={2} min={0} />,
+          )}</Form.Item>
+        }
+
       }
     },
     {
@@ -31,30 +40,48 @@ const Price = (props) => {
       align: 'center',
       width: '100px',
       render: (val, record) => {
-        return record.offerTypes.map((item) => {
-          if (item.offerPosition == 2) {
-            return <Form.Item>{getFieldDecorator(`${record.accountGarde}.two`, {
-              initialValue: item.unitPrice || 0
-            })(
-              <InputNumber precision={2} min={0} />,
-            )}</Form.Item>
-          }
-        })
+        if (record.offerTypes) {
+          return record.offerTypes.map((item) => {
+            if (item.offerPosition == 2) {
+              return <Form.Item>{getFieldDecorator(`${record.accountGarde}.two`, {
+                initialValue: item.unitPrice || 0
+              })(
+                <InputNumber precision={2} min={0} />,
+              )}</Form.Item>
+            }
+          })
+        } else {
+          return <Form.Item>{getFieldDecorator(`${record.accountGarde}.two`, {
+            initialValue: 0
+          })(
+            <InputNumber precision={2} min={0} />,
+          )}</Form.Item>
+        }
+
       }
     }, {
       title: '多图文3-N条',
       align: 'center',
       width: '100px',
       render: (val, record) => {
-        return record.offerTypes.map((item) => {
-          if (item.offerPosition == 3) {
-            return <Form.Item>{getFieldDecorator(`${record.accountGarde}.three`, {
-              initialValue: item.unitPrice || 0
-            })(
-              <InputNumber precision={2} min={0} />,
-            )}</Form.Item>
-          }
-        })
+        if (record.offerTypes) {
+          return record.offerTypes.map((item) => {
+            if (item.offerPosition == 3) {
+              return <Form.Item>{getFieldDecorator(`${record.accountGarde}.three`, {
+                initialValue: item.unitPrice || 0
+              })(
+                <InputNumber precision={2} min={0} />,
+              )}</Form.Item>
+            }
+          })
+        } else {
+          return <Form.Item>{getFieldDecorator(`${record.accountGarde}.three`, {
+            initialValue: 0
+          })(
+            <InputNumber precision={2} min={0} />,
+          )}</Form.Item>
+        }
+
       }
     }]
   const { getFieldDecorator, getFieldValue, setFieldsValue, validateFields } = props.form;

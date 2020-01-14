@@ -1,10 +1,31 @@
 
 import React, { } from 'react';
-import { Table, Button, Modal } from 'antd';
+import { Table, Button, Modal, Select } from 'antd';
+// import debounce from 'lodash/debounce';
 const { confirm } = Modal;
-
-
+const { Option } = Select;
 const Notice = (props) => {
+  // const handleSearch = debounce(fetchData, 800);
+
+  // const fetchData = (value) => {
+  //   if (!value) {
+  //     return
+  //   }
+  //   let { TPQueryUserInfo } = props
+  //   let search = {
+  //     page: {
+  //       currentPage: 1,
+  //       pageSize: 30
+  //     },
+  //     form: {
+  //       userName: 1,
+  //       realName: 1
+  //     }
+  //   }
+  //   const { user_info } = props.login
+  //   console.log(user_info)
+  //   // TPQueryUserInfo()
+  // }
   const handleDelete = (record) => {
     confirm({
       title: '删除人员',
@@ -86,12 +107,29 @@ const Notice = (props) => {
       }
     },
   ];
-  const { list = [] } = props.notificationList
+  const handleChange = () => {
+
+  }
+  const { list = [], } = props.notificationList
+
   return (
     <div>
       <h2 style={{ marginTop: '20px' }}>微信公众号</h2>
       <div style={{ marginLeft: '30px' }}>
-        <h3 style={{ margin: '10px 0' }}>质检异常短信通知 <Button type="primary">添加人员</Button></h3>
+        <h3 style={{ margin: '10px 0' }}>质检异常短信通知
+        <div style={{ margin: '30px 0' }}>
+            <span style={{ fontSize: '12px', marginRight: '10px' }}>选择需要通知的人员:</span>
+            <Select
+              style={{ width: '200px' }}
+              mode="multiple"
+              placeholder="Please select"
+              defaultValue={['a10', 'c12']}
+            // onChange={handleSearch}
+            >
+              <Option value="jack">Jack</Option>
+            </Select>
+          </div>
+        </h3>
         <Table dataSource={list} columns={columns} pagination={false} />
       </div>
     </div>
