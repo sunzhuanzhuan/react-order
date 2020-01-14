@@ -121,10 +121,12 @@ function getColumns(active, operation) {
           render: (id, record) => {
             return <div>
               <NavLink to={'/order/task/tasks-details/' + id}>详情</NavLink>
-              <>
+              {
+                record.orderState === AD_ORDER_STATE_WAIT_RELEASED && <>
                   <Divider type="vertical" />
-                <NavLink to={'/order/task/tasks-update/' + id}>修改</NavLink>
+                  <NavLink to={'/order/task/tasks-update/' + id}>修改</NavLink>
                 </>
+              }
               {
                 record.orderState === AD_ORDER_STATE_PROCESSING && <>
                   <Divider type="vertical" />

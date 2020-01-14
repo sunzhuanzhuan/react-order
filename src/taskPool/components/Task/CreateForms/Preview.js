@@ -125,7 +125,7 @@ class PreviewForWeixin extends React.Component {
     // 处理提交数据
     const values = this.handleValues(data)
     if (this.props.isUpdate) {
-      actions.TPUpdateTask({...values, id: this.props.taskId}).then(this.success).finally(() => {
+      actions.TPUpdateTask({ ...values, id: this.props.taskId }).then(this.success).finally(() => {
         this.setState({
           submitLoading: false
         });
@@ -253,7 +253,8 @@ class PreviewForWeixin extends React.Component {
           </Descriptions.Item>
           <Descriptions.Item label="所属公司">{base.company.label}</Descriptions.Item>
           <Descriptions.Item label="行业分类">{
-            base.industry.map(id => getIndustryName(this.props.industryList, parseInt(id)).industryName).join(
+            base.industry.map(id => getIndustryName(this.props.industryList,
+              parseInt(id)).industryName).join(
               '/')
           }</Descriptions.Item>
           <Descriptions.Item
@@ -362,8 +363,8 @@ class PreviewFor12306 extends React.Component {
     body.adOrderTripContent = {
       "content": content.content,
       "imageUrl": content.image && content.image[0].url,
-      "imageName": content.image && content.image[0].url,
-      "videoUrl": content.video && content.video[0].name,
+      "imageName": content.image && content.image[0].name,
+      "videoUrl": content.video && content.video[0].url,
       "videoName": content.video && content.video[0].name,
 
       "putType": budget.putType,
@@ -377,7 +378,13 @@ class PreviewFor12306 extends React.Component {
       "deliveryTrainType": budget.deliveryTrainType && budget.deliveryTrainType.toString(),
 
       "actionNum": budget.actionNum,
-      "actionDay": budget.actionDay
+      "actionDay": budget.actionDay,
+
+      "qualificationsFile": content.qualificationsFile.map(({ files: [ file ], id }) => ({
+        fileUrl: file.url,
+        fileName: file.name,
+        qualificationsGroupId: id
+      }))
     }
 
 
@@ -397,7 +404,7 @@ class PreviewFor12306 extends React.Component {
     const values = this.handleValues(data)
 
     if (this.props.isUpdate) {
-      actions.TPUpdateTask({...values, id: this.props.taskId}).then(this.success).finally(() => {
+      actions.TPUpdateTask({ ...values, id: this.props.taskId }).then(this.success).finally(() => {
         this.setState({
           submitLoading: false
         });

@@ -88,7 +88,9 @@ export default class DetailsForWeiXin extends Component {
           pageSize: 20
         },
         form: {
-          adOrderId: props.id
+          adOrderId: props.details.id,
+          isReceive: 1
+
         }
       },
       searchByTemp: {
@@ -97,8 +99,8 @@ export default class DetailsForWeiXin extends Component {
           pageSize: 20
         },
         form: {
-          adOrderId: props.id,
-          isReceive: 1
+          adOrderId: props.details.id,
+          isReceive: 2
         }
       },
       listLoading: false,
@@ -220,7 +222,7 @@ export default class DetailsForWeiXin extends Component {
         }
       },
       {
-        title: '领取时间',
+        title: '申请时间',
         align: "center",
         dataIndex: 'createdAt',
         render: (date, record) => {
@@ -228,15 +230,12 @@ export default class DetailsForWeiXin extends Component {
         }
       },
       {
-        title: '执行状态',
+        title: '预计推送时间',
         align: "center",
-        dataIndex: 'executionState',
-        render: (executionState, record) => {
-          return executionState === 1 ? "已执行" : "未执行"
-        }
+        dataIndex: 'expectedPublishedTime'
       },
       {
-        title: '质检状态',
+        title: '申请阅读数',
         align: "center",
         dataIndex: 'orderState',
         render: (status, record) => {
@@ -244,38 +243,26 @@ export default class DetailsForWeiXin extends Component {
         }
       },
       {
-        title: 'KPI阅读/实际阅读',
+        title: '图文发布位置',
         align: "center",
-        dataIndex: 'KPI阅读/实际阅读',
-        render: (data, record) => {
-          const { expectActionNum, realActionNum } = record;
-          return `${expectActionNum || 0}/${realActionNum || 0}`
-        }
-      },
-      // {
-      //   title: '达成数',
-      //   align: "center",
-      //   dataIndex: 'realActionNum',
-      //   render: (realActionNum, record) => {
-      //     return <div>{record.orderState === MCN_ORDER_STATE_UNQUALIFIED ? "-" : realActionNum || '-'}</div>
-      //   }
-      // },
-      {
-        title: '结算价格',
-        align: "center",
-        dataIndex: 'adRealAmount',
-        render: (amount, record) => {
-          return <Yuan value={record.orderState === MCN_ORDER_STATE_UNQUALIFIED ? 0 : amount}
-                       format={"0,0.00"} style={{ color: "#333" }} />
-        }
+        dataIndex: 'locationLimitedInfo'
       },
       {
-        title: '成本价格',
+        title: '阅读单价',
         align: "center",
-        dataIndex: 'realAmount',
-        render: (amount, record) => {
-          return <Yuan value={record.orderState === MCN_ORDER_STATE_UNQUALIFIED ? 0 : amount}
-                       format={"0,0.00"} style={{ color: "#333" }} />
+        dataIndex: 'unitPrice'
+      },
+      {
+        title: '预计消耗预算',
+        align: "center",
+        dataIndex: 'adMaxAmount'
+      },
+      {
+        title: '申请状态',
+        align: "center",
+        dataIndex: 'orderStateDesc',
+        render: (state, record) => {
+          return <OrderMcnStatus value={state} />
         }
       },
       {
@@ -283,8 +270,8 @@ export default class DetailsForWeiXin extends Component {
         dataIndex: 'contentUrl',
         align: "center",
         render: (url, record) => {
-          return record.orderState === MCN_ORDER_STATE_CANCEL ? null : <div>
-            {url && <a target="_blank" href={url}>查看文章</a>}
+          return <div>
+            <a target="_blank" href={url}>接受 </a>
             {record.snapshotUrl && <span>
           <Divider type="vertical" />
           <a target="_blank" href={record.snapshotUrl}>查看快照</a>
@@ -578,7 +565,7 @@ export default class DetailsForWeiXin extends Component {
       </Section>
       {features.taskPattern === MEDIA_TASK_PATTERN_BIDDING && <Section>
         <Section.Header title={<span>已申请博主 {
-          <span className='text-red'>{total}</span>} 位</span>} level={5} />
+          <span className='text-red'>{mcnOrderListByTemp.total}</span>} 位</span>} level={5} />
         <Section.Content>
           <Table
             loading={listLoadingByTemp}
