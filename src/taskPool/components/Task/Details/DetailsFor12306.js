@@ -76,7 +76,9 @@ export default class DetailsFor12306 extends Component {
               </div>
             </Descriptions.Item>
             <Descriptions.Item label="行业分类">
-              {details.taskIndustryInfo.parentName}/{details.taskIndustryInfo.industryName}
+              {
+                [details.taskIndustryInfo.parentName, details.taskIndustryInfo.industryName].filter(Boolean).join('/')
+              }
             </Descriptions.Item>
             <Descriptions.Item label="经营内容">
               {details.scopeName}

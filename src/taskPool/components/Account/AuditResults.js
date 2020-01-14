@@ -52,7 +52,7 @@ function AuditResults(props) {
               </Radio.Group>
             )}
           </FormItem>
-          {getFieldValue('auditState') == 2 ? <FormItem label='不通过类型' {...formLayout}>
+          {getFieldValue('auditState') == 2 ? <> <FormItem label='不通过类型' {...formLayout}>
             {getFieldDecorator(`refusedType`, {
               initialValue: refusedType,
               rules: [
@@ -64,18 +64,19 @@ function AuditResults(props) {
                 <Radio value='2'>其他</Radio>
               </Radio.Group>
             )}
-          </FormItem> : null}
-          {getFieldValue('refusedType') == 2 ? <FormItem label='其他原因' {...formLayout}>
-            {getFieldDecorator(`remark`, {
-              initialValue: remark,
-              rules: [
-                { max: 50, message: '不超过50个字' },
-                { required: true, message: '请填写原因' }
-              ],
-            })(
-              <TextArea rows={4} placeholder='请填写原因，不超过50个字' />
-            )}
-          </FormItem> : null}
+          </FormItem>
+            {getFieldValue('refusedType') == 2 ? <FormItem label='其他原因' {...formLayout}>
+              {getFieldDecorator(`remark`, {
+                initialValue: remark,
+                rules: [
+                  { max: 50, message: '不超过50个字' },
+                  { required: true, message: '请填写原因' }
+                ],
+              })(
+                <TextArea rows={4} placeholder='请填写原因，不超过50个字' />
+              )}
+            </FormItem> : null}</>
+            : null}
         </Form>
         <div className='button-footer'>
           <Button onClick={goBack}>返回</Button>

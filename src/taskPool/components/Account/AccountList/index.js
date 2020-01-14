@@ -12,7 +12,9 @@ function AccountList(props) {
   const [selectedRow, setSelectedRow] = useState([])
   const { setModalProps, batchUpdateAccountStateAsync, accountList, updateAccountStateMsgAsync } = props
   const { list = [] } = accountList
-
+  function getValue(value) {
+    return value > 0 || value == 0 ? value : '-'
+  }
   const columns = [
     {
       title: 'account ID',
@@ -76,14 +78,18 @@ function AccountList(props) {
     },
     {
       title: '受众',
-      dataIndex: 'acceptCrowdVal',
-      key: 'acceptCrowdVal',
+      dataIndex: 'acceptCrowd',
+      key: 'acceptCrowd',
       align: 'center',
+      width: '120px',
       render: (text, record) => {
+        const { acceptCrowd = {} } = record
+        const { sex = {}, age = [], area = [] } = acceptCrowd
+        const { manRate, womanRate } = sex
         return text ? <div>
-          性别：
-          年龄：
-          地域：
+          <div>性别：男{getValue(manRate)}女{getValue(womanRate)}</div>
+          <div>年龄：{age.map(one => `${one.description}`)}</div>
+          <div>地域：{area.map(one => `${one.description}`)}</div>
         </div> : null
       }
     },
