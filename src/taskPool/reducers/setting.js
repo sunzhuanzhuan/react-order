@@ -4,7 +4,18 @@ import * as setting from '../actions/setting'
 // 获取阅读价格
 export const readUnitPriceConfig = handleActions({
   [setting.TPGetReadUnitPriceConfig_success]: (state, action) => {
-    return [...action.payload.data.accountGardes]
+    if (action.payload.data) {
+      return [...action.payload.data.accountGardes]
+    } else {
+      let arr = [{ accountGarde: 'A' }
+        , { accountGarde: 'B' }
+        , { accountGarde: 'C' }
+        , { accountGarde: 'D' }
+        , { accountGarde: 'E' }]
+      return arr
+    }
+
+
   },
 }, [])
 //获取质检配置数据
@@ -65,6 +76,12 @@ export const taskLaunchConfigTian = handleActions({
 //返现优惠
 export const taskLaunchConfigHui = handleActions({
   [setting.TPGetTaskLaunchConfigHui_success]: (state, action) => {
+    return { ...action.payload.data }
+  },
+}, {})
+// 获取人员
+export const userInfo = handleActions({
+  [setting.TPQueryUserInfo_success]: (state, action) => {
     return { ...action.payload.data }
   },
 }, {})

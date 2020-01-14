@@ -18,7 +18,7 @@ class Settings extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      current: 'price'
+      current: 'notice'
     }
   }
   componentDidMount = () => {
@@ -63,7 +63,7 @@ class Settings extends React.Component {
   }
   render() {
     let { readUnitPriceConfig, qualityConfig, addRetainTime, commissionConfig, taskCheck, notificationList,
-      dimensionConfig, taskLaunchConfigLiang, taskLaunchConfigTian, taskLaunchConfigHui } = this.props.settingReducers
+      dimensionConfig, taskLaunchConfigLiang, taskLaunchConfigTian, taskLaunchConfigHui, userInfo, login } = this.props.settingReducers
     const { current } = this.state
     return (
       <div>
@@ -113,6 +113,7 @@ class Settings extends React.Component {
         {current == 'cooperation' ? <Cooperation
           TPDimensionConfig={this.props.actions.TPDimensionConfig}
           TPGetDimensionConfig={this.props.actions.TPGetDimensionConfig}
+          TPUpdateTaskLaunchConfig={this.props.actions.TPUpdateTaskLaunchConfig}
           TPDeleteTaskLaunch={this.props.actions.TPDeleteTaskLaunch}
           TPDeleteDimension={this.props.actions.TPDeleteDimension}
           dimensionConfig={dimensionConfig}
@@ -125,6 +126,9 @@ class Settings extends React.Component {
         /> : null}
         {current == 'notice' ? <Notice
           notificationList={notificationList}
+          login={login}
+          userInfo={userInfo}
+          TPQueryUserInfo={this.props.actions.TPQueryUserInfo}
           TPGetNotificationList={this.props.actions.TPGetNotificationList}
           TPDeleteNotice={this.props.actions.TPDeleteNotice}
         /> : null}
@@ -135,7 +139,8 @@ class Settings extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-  settingReducers: state.taskPoolReducers
+  settingReducers: state.taskPoolReducers,
+  login: state.loginReducers,
 })
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators({
