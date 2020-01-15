@@ -80,11 +80,11 @@ function AccountReceiveList(props) {
     <Table dataSource={claimAccountList.list} columns={columns} rowKey='accountId'
       rowSelection={rowSelection}
       pagination={{
-        pageSize: 2,
+        pageSize: claimAccountList.pageSize,
         showSizeChanger: true,
         showQuickJumper: true,
-        total: 20,
-        current: 1,
+        total: claimAccountList.total,
+        current: claimAccountList.pages,
         onShowSizeChange: (current, size) => {
           changePage({ page: { currentPage: current, pageSize: size } })
         },
