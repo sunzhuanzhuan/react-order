@@ -124,3 +124,16 @@ export const {
 } = createHttpAction('TPDeleteDimension', Interface.setting.TPDeleteDimension, {
   method: 'post'
 });
+// 更新包天优惠啥的
+export const {
+  TPUpdateTaskLaunchConfig
+} = createHttpAction('TPUpdateTaskLaunchConfig', Interface.setting.TPUpdateTaskLaunchConfig, {
+  method: 'post'
+});
+// 获取人员列表
+export const {
+  TPQueryUserInfo,
+  TPQueryUserInfo_success
+} = createHttpAction('TPQueryUserInfo', Interface.setting.TPQueryUserInfo, {
+  method: 'post'
+});

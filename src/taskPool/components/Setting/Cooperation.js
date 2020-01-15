@@ -113,7 +113,7 @@ class Cooperation extends React.Component {
     const { getFieldDecorator, getFieldValue, setFieldsValue, validateFields } = this.props.form;
     const { itemTypes = [] } = this.props.dimensionConfig
     const { taskLaunchConfigLiang, taskLaunchConfigTian, taskLaunchConfigHui, TPGetTaskLaunchConfigLiang,
-      TPGetTaskLaunchConfigTian, TPGetTaskLaunchConfigHui
+      TPGetTaskLaunchConfigTian, TPGetTaskLaunchConfigHui, TPUpdateTaskLaunchConfig
     } = this.props
     const { data, selectWeiDu } = this.state
     const rowSelection = {
@@ -152,6 +152,7 @@ class Cooperation extends React.Component {
             taskLaunchConfigLiang={taskLaunchConfigLiang}
             TPGetTaskLaunchConfigLiang={TPGetTaskLaunchConfigLiang}
             TPDeleteTaskLaunch={this.props.TPDeleteTaskLaunch}
+            TPUpdateTaskLaunchConfig={TPUpdateTaskLaunchConfig}
           />
 
           <h4 style={{ fontSize: '20px' }}>3、包天模式</h4>
@@ -159,12 +160,14 @@ class Cooperation extends React.Component {
             taskLaunchConfigTian={taskLaunchConfigTian}
             TPGetTaskLaunchConfigTian={TPGetTaskLaunchConfigTian}
             TPDeleteTaskLaunch={this.props.TPDeleteTaskLaunch}
+            TPUpdateTaskLaunchConfig={TPUpdateTaskLaunchConfig}
           />
           <h4 style={{ fontSize: '20px' }}>4、返现优惠</h4>
           <CooperationHui
             taskLaunchConfigHui={taskLaunchConfigHui}
             TPGetTaskLaunchConfigHui={TPGetTaskLaunchConfigHui}
             TPDeleteTaskLaunch={this.props.TPDeleteTaskLaunch}
+            TPUpdateTaskLaunchConfig={TPUpdateTaskLaunchConfig}
           />
         </div>
       </div>
