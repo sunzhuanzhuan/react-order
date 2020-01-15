@@ -11,9 +11,9 @@ function AccountReceiveList(props) {
       key: 'accountId',
     },
     {
-      title: '平台ID',
-      dataIndex: 'platformId',
-      key: 'platformId',
+      title: '账号ID',
+      dataIndex: 'snsId',
+      key: 'snsId',
     },
     {
       title: '账号名称',
