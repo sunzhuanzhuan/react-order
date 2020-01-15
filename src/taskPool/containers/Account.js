@@ -23,7 +23,7 @@ function Account(props) {
   const { accountList, orderIndustryCategory = [] } = acconutReducers
   async function getAccountListAsync(params) {
     setLoading(true)
-    const paramsNow = { ...params, form: { tabIdentityId: selectedTab }, }
+    const paramsNow = { ...params, form: { ...params.form, tabIdentityId: selectedTab }, }
     await actions.TPGetAccountList(paramsNow)
     setSearchParam(paramsNow)
     setLoading(false)
