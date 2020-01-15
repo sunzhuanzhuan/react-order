@@ -63,7 +63,7 @@ class Settings extends React.Component {
   }
   render() {
     let { readUnitPriceConfig, qualityConfig, addRetainTime, commissionConfig, taskCheck, notificationList,
-      dimensionConfig, taskLaunchConfigLiang, taskLaunchConfigTian, taskLaunchConfigHui, userInfo, login } = this.props.settingReducers
+      dimensionConfig, taskLaunchConfigLiang, taskLaunchConfigTian, taskLaunchConfigHui, userInfo, tpUserInfo } = this.props.settingReducers
     const { current } = this.state
     return (
       <div>
@@ -126,11 +126,13 @@ class Settings extends React.Component {
         /> : null}
         {current == 'notice' ? <Notice
           notificationList={notificationList}
-          login={login}
+          login={this.props.login}
           userInfo={userInfo}
+          tpUserInfo={tpUserInfo}
+          TPUpdateUserInfo={this.props.actions.TPUpdateUserInfo}
           TPQueryUserInfo={this.props.actions.TPQueryUserInfo}
           TPGetNotificationList={this.props.actions.TPGetNotificationList}
-          TPDeleteNotice={this.props.actions.TPDeleteNotice}
+          TPUpdateNotice={this.props.actions.TPUpdateNotice}
         /> : null}
       </div>
     );
@@ -140,7 +142,7 @@ class Settings extends React.Component {
 
 const mapStateToProps = (state) => ({
   settingReducers: state.taskPoolReducers,
-  login: state.loginReducers,
+  login: state.loginReducer,
 })
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators({

@@ -56,31 +56,37 @@ const FilterForm = (props) => {
           )}
         </Form.Item>
       </Col>
-      <Col span={7}>
+      <Col span={12}>
         <Form.Item label="线索提交时间">
-          {getFieldDecorator('createdAtBegin', {})(
-            <RangePicker
-              format="YYYY-MM-DD HH:mm"
+          {getFieldDecorator('createdAtBegin')(
+            <DatePicker format="YYYY-MM-DD HH:mm:ss"
               showTime={{
-                format: "mm:ss",
-                defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment('23:59:59', 'HH:mm:ss')]
-              }}
-              style={{ width: '100%' }}
-            />
+                defaultValue: moment('00:00:00', 'HH:mm:ss')
+              }} placeholder='开始日期' />
+          )}
+          ~
+						{getFieldDecorator('createdAtEnd')(
+            <DatePicker format="YYYY-MM-DD HH:mm:ss"
+              showTime={{
+                defaultValue: moment("23:59:59", 'HH:mm:ss')
+              }} placeholder='结束日期' />
           )}
         </Form.Item>
       </Col>
-      <Col span={7}>
+      <Col span={12}>
         <Form.Item label="任务创建时间">
-          {getFieldDecorator('extensionStartTimeEnd', {})(
-            <RangePicker
-              format="YYYY-MM-DD HH:mm"
+          {getFieldDecorator('extensionStartTime')(
+            <DatePicker format="YYYY-MM-DD HH:mm:ss"
               showTime={{
-                format: "mm:ss",
-                defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment('23:59:59', 'HH:mm:ss')]
-              }}
-              style={{ width: '100%' }}
-            />
+                defaultValue: moment('00:00:00', 'HH:mm:ss')
+              }} placeholder='开始日期' />
+          )}
+          ~
+						{getFieldDecorator('extensionEndTime')(
+            <DatePicker format="YYYY-MM-DD HH:mm:ss"
+              showTime={{
+                defaultValue: moment("23:59:59", 'HH:mm:ss')
+              }} placeholder='结束日期' />
           )}
         </Form.Item>
       </Col>
@@ -109,12 +115,25 @@ const Filters = (props) => {
   const submit = e => {
     e && e.preventDefault();
     props.form.validateFields((err, values) => {
-      console.log(values, '_____');
       if (!err) {
+        if (values.createdAtBegin) {
+          values.createdAtBegin = moment(values.createdAtBegin)._d
+          //values.createdAtBegin = '2020-12-12 23:34:43'
+        }
+        if (values.createdAtEnd) {
+          values.createdAtEnd = moment(values.createdAtEnd)._d
+        }
+        if (values.extensionStartTime) {
+          values.extensionStartTime = moment(values.extensionStartTime)._d
+        }
+        if (values.extensionEndTime) {
+          values.extensionEndTime = moment(values.extensionEndTime)._d
+        }
         let filter = {
           page: { currentPage: 1 },
           form: { ...values, platformId: active }
         }
+        console.log(values, '_____');
         props.search(filter)
       }
     });

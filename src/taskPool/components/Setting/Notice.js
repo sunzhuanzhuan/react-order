@@ -1,31 +1,36 @@
 
-import React, { } from 'react';
-import { Table, Button, Modal, Select } from 'antd';
-// import debounce from 'lodash/debounce';
+import React, { useState } from 'react';
+import { Table, Button, Modal, Select, Spin } from 'antd';
+import debounce from 'lodash/debounce';
 const { confirm } = Modal;
 const { Option } = Select;
 const Notice = (props) => {
-  // const handleSearch = debounce(fetchData, 800);
-
-  // const fetchData = (value) => {
-  //   if (!value) {
-  //     return
-  //   }
-  //   let { TPQueryUserInfo } = props
-  //   let search = {
-  //     page: {
-  //       currentPage: 1,
-  //       pageSize: 30
-  //     },
-  //     form: {
-  //       userName: 1,
-  //       realName: 1
-  //     }
-  //   }
-  //   const { user_info } = props.login
-  //   console.log(user_info)
-  //   // TPQueryUserInfo()
-  // }
+  const [fetching, setFetching] = useState(false)
+  const [userData, setUserData] = useState([])
+  const [selectedUser, setSelectedUser] = useState([])
+  let fetchData = (value) => {
+    if (!value) {
+      return
+    }
+    let { TPQueryUserInfo } = props
+    const { userLoginInfo: { user_info } } = props.login
+    let search = {
+      page: {
+        currentPage: 1,
+        pageSize: 30
+      },
+      form: {
+        userName: user_info.username,
+        realName: value
+      }
+    }
+    setFetching(true)
+    TPQueryUserInfo(search).then((res) => {
+      setFetching(false)
+      setUserData(res.data.list)
+    })
+  }
+  fetchData = debounce(fetchData, 800);
   const handleDelete = (record) => {
     confirm({
       title: '删除人员',
@@ -50,7 +55,7 @@ const Notice = (props) => {
             notificationType: 11
           }
         }
-        return props.TPDeleteNotice(params).then(() => {
+        return props.TPUpdateNotice(params).then(() => {
           props.TPGetNotificationList(config)
         })
 
@@ -107,10 +112,28 @@ const Notice = (props) => {
       }
     },
   ];
-  const handleChange = () => {
+  const handleChange = (value) => {
+    setSelectedUser(value)
+  }
+  const handleApply = () => {
+    props.TPUpdateNotice(selectedUser).then(() => {
+      let params = {
+        page: {
+          currentPage: 1,
+          pageSize: 100
+        },
+        form: {
+          platformId: 9,
+          notificationType: 11
+        }
+      }
+      props.TPGetNotificationList(params)
+    })
+    console.log(selectedUser);
 
   }
-  const { list = [], } = props.notificationList
+  const { list = [], } = props.notificationList;
+  const { list: searchList = [] } = props.tpUserInfo
 
   return (
     <div>
@@ -118,19 +141,26 @@ const Notice = (props) => {
       <div style={{ marginLeft: '30px' }}>
         <h3 style={{ margin: '10px 0' }}>质检异常短信通知
         <div style={{ margin: '30px 0' }}>
-            <span style={{ fontSize: '12px', marginRight: '10px' }}>选择需要通知的人员:</span>
+            <span style={{ fontSize: '12px', marginRight: '10px' }}>请搜索需要通知的人员:</span>
             <Select
-              style={{ width: '200px' }}
+              style={{ width: '500px' }}
               mode="multiple"
-              placeholder="Please select"
-              defaultValue={['a10', 'c12']}
-            // onChange={handleSearch}
+              notFoundContent={fetching ? <Spin size="small" /> : null}
+              placeholder="请搜索需要通知的人员"
+              onSearch={fetchData}
+              onChange={handleChange}
             >
-              <Option value="jack">Jack</Option>
+              {userData.map((item, index) => {
+                return <Option value={item.userId} key={index}>{item.realName}({item.jobTypes})</Option>
+              })}
+
             </Select>
           </div>
         </h3>
         <Table dataSource={list} columns={columns} pagination={false} />
+        <p style={{ marginTop: '50px', textAlign: 'center' }}>
+          <Button type="primary" onClick={handleApply}>应用配置</Button>
+        </p>
       </div>
     </div>
   );
