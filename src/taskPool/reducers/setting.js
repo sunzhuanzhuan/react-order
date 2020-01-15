@@ -80,7 +80,7 @@ export const taskLaunchConfigHui = handleActions({
   },
 }, {})
 // 获取人员
-export const userInfo = handleActions({
+export const tpUserInfo = handleActions({
   [setting.TPQueryUserInfo_success]: (state, action) => {
     return { ...action.payload.data }
   },

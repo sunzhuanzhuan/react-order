@@ -30,7 +30,7 @@ function getColumns(active, clickModal) {
         },
         {
           title: '平台名称',
-          dataIndex: 'id',
+          dataIndex: 'platformName',
           align: 'center'
         },
         {
@@ -38,12 +38,18 @@ function getColumns(active, clickModal) {
           dataIndex: 'createdAt',
           align: 'center',
           width: 220,
+          // render: (date, record) => {
+          //   return <div>
+          //     {record.createdAtBegin}-{record.createdAtEnd}
+          //   </div>
+          // }
         },
         {
           title: '任务起止时间',
+          dataIndex: 'extensionStartTime',
           align: 'center',
           render: (date, record) => {
-            return record.extensionStartTime - record.extensionEndTime
+            return <span>{record.extensionStartTime} - {record.extensionEndTime}</span>
           }
         },
         {
@@ -232,10 +238,11 @@ const Clues = (props) => {
     < div className='task-pool-page-container tasks-page' >
       <Title level={4}>线索管理</Title>
       <Filters search={getList} />
+      <div style={{ height: '30px' }}></div>
       <Table
         loading={false}
         dataSource={dataSource}
-        scroll={{ x: 1500 }}
+        scroll={{ x: 1200 }}
         pagination={pagination}
         columns={columns}
       />
