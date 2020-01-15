@@ -6,6 +6,7 @@ import {
   Tooltip,
   Legend,
 } from "bizcharts";
+import { Empty } from "antd";
 
 class Gradient extends React.Component {
   render() {
@@ -20,7 +21,7 @@ class Gradient extends React.Component {
     };
     return (
       <div>
-        <Chart height={400} data={data} scale={cols} forceFit padding={[60, 80]}>
+        {data.length > 0 ? <Chart height={400} data={data} scale={cols} forceFit padding={[60, 80]}>
           <Axis
             name="fetchedTime"
             title={"时间"}
@@ -43,7 +44,7 @@ class Gradient extends React.Component {
             size={2}
             shape="smooth"
           />
-        </Chart>
+        </Chart> : <Empty style={{ marginTop: 100, width: 300 }} />}
 
       </div>
     );
