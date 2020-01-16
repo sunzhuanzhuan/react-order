@@ -49,7 +49,7 @@ export default {
     TPTaskCheck: prefix + "/configManage/v1/queryTaskCheckQualifications",
     TPUpdateTaskCheck: prefix + "/configManage/v1/taskCheckQualifications",
     TPGetNotificationList: prefix + "/configManage/v1/getNotificationList",
-    TPDeleteNotice: prefix + "/configManage/v1/notificationChange",
+    TPUpdateNotice: prefix + "/configManage/v1/notificationChange",
     TPDimensionConfig: prefix + "/cooperationPlatform/v2/dimensionConfig",
     TPGetDimensionConfig: prefix + "/cooperationPlatform/v2/getDimensionConfig",
     TPGetTaskLaunchConfigLiang: prefix + "/cooperationPlatform/v2/getTaskLaunchConfig",
@@ -58,7 +58,7 @@ export default {
     TPDeleteTaskLaunch: prefix + "/cooperationPlatform/v2/deleteTaskLaunchConfig",
     TPDeleteDimension: prefix + "/cooperationPlatform/v2/deleteDimensionConfig",
     TPUpdateTaskLaunchConfig: prefix + "/cooperationPlatform/v2/taskLaunchConfig",
-    TPQueryUserInfo: prefix + "/configManage/v1/queryUserInfo"
+    TPQueryUserInfo: prefix + "/configManage/v1/queryUserInfo",
   },
   account: {
     TPGetAccountList: `${accountMapping}/getAccountList`,//账号管理

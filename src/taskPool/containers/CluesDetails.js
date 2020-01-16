@@ -10,7 +10,7 @@ const ClueDetail = (props) => {
   const [visible, setVisible] = useState(false)
   useEffect(() => {
     // 线索详情
-    props.actions.TPGetClueDetail({ id: 1 });
+    props.actions.TPGetClueDetail({ id: search.id });
 
   }, [])
 
@@ -18,7 +18,7 @@ const ClueDetail = (props) => {
     setVisible(true)
   }
   const handleOk = () => {
-    props.actions.TPClueConfirm({ id: 1, clueState: 2 })
+    props.actions.TPClueConfirm({ id: search.id, clueState: 2 })
     setVisible(false)
   }
   const handleCancel = () => {

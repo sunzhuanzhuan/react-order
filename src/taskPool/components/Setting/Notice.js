@@ -1,42 +1,48 @@
 
-import React, { } from 'react';
-import { Table, Button, Modal, Select } from 'antd';
-// import debounce from 'lodash/debounce';
+import React, { useState } from 'react';
+import { Table, Button, Modal, Select, Spin } from 'antd';
+import debounce from 'lodash/debounce';
 const { confirm } = Modal;
 const { Option } = Select;
 const Notice = (props) => {
-  // const handleSearch = debounce(fetchData, 800);
-
-  // const fetchData = (value) => {
-  //   if (!value) {
-  //     return
-  //   }
-  //   let { TPQueryUserInfo } = props
-  //   let search = {
-  //     page: {
-  //       currentPage: 1,
-  //       pageSize: 30
-  //     },
-  //     form: {
-  //       userName: 1,
-  //       realName: 1
-  //     }
-  //   }
-  //   const { user_info } = props.login
-  //   console.log(user_info)
-  //   // TPQueryUserInfo()
-  // }
+  const [fetching, setFetching] = useState(false)
+  const [userData, setUserData] = useState([])
+  const [selectedUser, setSelectedUser] = useState([])
+  const [value, setValue] = useState([])
+  let fetchData = (value) => {
+    if (!value) {
+      return
+    }
+    let { TPQueryUserInfo } = props
+    const { userLoginInfo: { user_info } } = props.login
+    let search = {
+      page: {
+        currentPage: 1,
+        pageSize: 30
+      },
+      form: {
+        userName: value
+      }
+    }
+    setFetching(true)
+    setUserData([])
+    TPQueryUserInfo(search).then((res) => {
+      setFetching(false)
+      setUserData(res.data.list)
+    })
+  }
+  fetchData = debounce(fetchData, 1000);
   const handleDelete = (record) => {
     confirm({
       title: '删除人员',
-      content: `确定要在通知列表中${record.personnelName}删除么？`,
+      content: `确定要在通知列表中${record.realName}删除么？`,
       okText: '确定',
       okType: 'danger',
       cancelText: '取消',
       onOk() {
         let params = {
-          userId: record.id,
-          isDelete: 1,
+          userIds: [record.userId],
+          isDeleted: 1,
           notificationType: 11,
           platformId: 9
         }
@@ -50,7 +56,7 @@ const Notice = (props) => {
             notificationType: 11
           }
         }
-        return props.TPDeleteNotice(params).then(() => {
+        return props.TPUpdateNotice(params).then(() => {
           props.TPGetNotificationList(config)
         })
 
@@ -71,23 +77,23 @@ const Notice = (props) => {
     },
     {
       title: '姓名',
-      dataIndex: 'personnelName',
+      dataIndex: 'realName',
       align: 'center',
       width: 100,
-      key: 'personnelName',
+      key: 'realName',
     }, {
       title: '岗位名称',
-      dataIndex: 'jobType',
+      dataIndex: 'jobTypes',
       align: 'center',
       width: 100,
-      key: 'jobType',
+      key: 'jobTypes',
     },
     {
       title: '手机号',
-      dataIndex: 'mobile',
+      dataIndex: 'cellPhone',
       align: 'center',
       width: 100,
-      key: 'mobile',
+      key: 'cellPhone',
     },
     {
       title: '邮箱',
@@ -107,30 +113,64 @@ const Notice = (props) => {
       }
     },
   ];
-  const handleChange = () => {
+  const handleChange = (value) => {
+    setSelectedUser(value)
+    setFetching(false)
+    setValue(value)
+  }
+  const handleApply = () => {
+    let config = {
+      userIds: selectedUser,
+      notificationType: 11,
+      platformId: 9
+    }
+    props.TPUpdateNotice(config).then(() => {
+      setValue([])
+      let params = {
+        page: {
+          currentPage: 1,
+          pageSize: 100
+        },
+        form: {
+          platformId: 9,
+          notificationType: 11
+        }
+      }
+      props.TPGetNotificationList(params)
+    })
+
 
   }
-  const { list = [], } = props.notificationList
-
+  const { list = [], } = props.notificationList;
+  const { list: searchList = [] } = props.tpUserInfo
   return (
     <div>
       <h2 style={{ marginTop: '20px' }}>微信公众号</h2>
       <div style={{ marginLeft: '30px' }}>
         <h3 style={{ margin: '10px 0' }}>质检异常短信通知
         <div style={{ margin: '30px 0' }}>
-            <span style={{ fontSize: '12px', marginRight: '10px' }}>选择需要通知的人员:</span>
+            <span style={{ fontSize: '12px', marginRight: '10px' }}>请搜索需要通知的人员:</span>
             <Select
-              style={{ width: '200px' }}
+              style={{ width: '500px' }}
               mode="multiple"
-              placeholder="Please select"
-              defaultValue={['a10', 'c12']}
-            // onChange={handleSearch}
+              value={value}
+              notFoundContent={fetching ? <Spin size="small" /> : '暂无数据'}
+              placeholder="请搜索需要通知的人员"
+              onSearch={fetchData}
+              filterOption={false}
+              onChange={handleChange}
             >
-              <Option value="jack">Jack</Option>
+              {userData.map((item, index) => {
+                return <Option value={item.userId} key={index}>{item.realName}({item.jobTypes})</Option>
+              })}
+
             </Select>
           </div>
         </h3>
         <Table dataSource={list} columns={columns} pagination={false} />
+        <p style={{ marginTop: '50px', textAlign: 'center' }}>
+          <Button type="primary" onClick={handleApply}>应用配置</Button>
+        </p>
       </div>
     </div>
   );

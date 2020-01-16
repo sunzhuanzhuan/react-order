@@ -41,8 +41,8 @@ function AccountForm(props) {
           <Input placeholder='请输入' />
         )}
       </Form.Item>
-      <Form.Item label='平台ID'>
-        {getFieldDecorator(`form.platformId`, {})(
+      <Form.Item label='账号ID'>
+        {getFieldDecorator(`form.snsId`, {})(
           <Input placeholder='请输入' />
         )}
       </Form.Item>

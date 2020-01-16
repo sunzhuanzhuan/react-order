@@ -3,7 +3,8 @@ import { Tag, Divider, Icon } from 'antd'
 import TitleBox from '../../base/TitleBox'
 import './DetailsShow.less'
 import { PopoverIcon } from '../../base/MessageIcon'
-import { auditStateMap } from '../../constants/accountConfig'
+import { auditStateMap, getValueByFormat } from '../../constants/accountConfig'
+import numeral from 'numeral'
 function DetailsShow(props) {
   const { accountDetail = {}, accountId } = props
   const { base = {}, acceptCrowd = {}, auditState = 1, remark } = accountDetail
@@ -76,8 +77,8 @@ function DetailsShow(props) {
           <LineList list={[
             {
               label: '受众性别：', value: <div>
-                男（{sex.manRate}）
-                女（{sex.womanRate}）
+                <Tag color="geekblue"> 男 [{getValueByFormat(sex.manRate)}]</Tag>
+                <Tag color="geekblue"> 女 [{getValueByFormat(sex.womanRate)}]</Tag>
               </div>
             },
             { label: '受众地域Top3：', value: <AudienceArea list={area} /> },
@@ -102,9 +103,8 @@ const LineList = ({ list = [] }) => {
 
 const AudienceLine = ({ list = [] }) => {
   return <div className='audience-line'>
-    {list.map(item => <div key={item.description} className='audience-line-item'>
-      <span className='type'>{item.description}（{item.value}）</span>
-    </div>)}
+    {list.map(item => <Tag key={item.description} color="purple"> <span className='type'>  {item.description} [{getValueByFormat(item.value)}]</span>
+    </Tag>)}
   </div>
 }
 const AudienceArea = ({ list = [] }) => {

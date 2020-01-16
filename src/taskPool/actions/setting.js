@@ -73,8 +73,8 @@ export const {
 });
 // 删除通知人员
 export const {
-  TPDeleteNotice
-} = createHttpAction('TPDeleteNotice', Interface.setting.TPDeleteNotice, {
+  TPUpdateNotice
+} = createHttpAction('TPUpdateNotice', Interface.setting.TPUpdateNotice, {
   method: 'post'
 });
 // 应用12306的账号等级
@@ -135,5 +135,12 @@ export const {
   TPQueryUserInfo,
   TPQueryUserInfo_success
 } = createHttpAction('TPQueryUserInfo', Interface.setting.TPQueryUserInfo, {
+  method: 'post'
+});
+// 应用人员列表
+export const {
+  TPUpdateUserInfo,
+  TPUpdateUserInfo_success
+} = createHttpAction('TPUpdateUserInfo', Interface.setting.TPUpdateUserInfo, {
   method: 'post'
 });

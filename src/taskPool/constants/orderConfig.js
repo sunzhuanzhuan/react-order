@@ -16,14 +16,15 @@ export const otherOrderStateMap = {
 
 
 export const otherOrderStateList = Object.keys(otherOrderStateMap).map(one => ({ key: one, name: otherOrderStateMap[one] }))
-
-const orderStep = {
-  0: ['待媒介处理', '待合作方确定', '待执行', '已完成'],
-  [MEDIUM_REJECT]: ['待媒介处理', '媒介驳回'],
-  [PARTNER_REJECT]: ['待媒介处理', '待合作方确定', '合作方驳回'],
-}
+const tabList = ['待媒介处理', '待合作方确定', '待执行', '已完成']
 export const getOrderStep = (type) => {
-  return orderStep[type] ? orderStep[type] : orderStep[0]
+  if (type == MEDIUM_REJECT) {
+    return { list: ['待媒介处理', '媒介驳回'], key: 1 }
+  } else if (type == PARTNER_REJECT) {
+    return { list: ['待媒介处理', '待合作方确定', '合作方驳回'], key: 2 }
+  } else {
+    return { list: tabList, key: tabList.indexOf(otherOrderStateMap[type]) }
+  }
 }
 //坐席类型
 export const deliverySeatMap = {

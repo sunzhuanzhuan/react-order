@@ -42,7 +42,7 @@ const AccountComments = (props) => {
     </Form.Item>
     <div className='button-footer'>
       <Button onClick={() => window.open('/order/task/account-manage', "_self")}>返回</Button>
-      <Button type='primary' onClick={submitForm} disabled={estimateDescribe}>提交</Button>
+      <Button type='primary' key={estimateDescribe} onClick={submitForm} disabled={estimateDescribe}>提交</Button>
     </div>
   </Form>
 }

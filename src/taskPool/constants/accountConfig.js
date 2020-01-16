@@ -1,3 +1,5 @@
+import numeral from 'numeral'
+
 export default {
   auditState: [
     { value: 1, name: "待审核" },
@@ -54,4 +56,13 @@ export const OK_ESTIMATE = 2
 export const estimateStateMap = {
   [WAIT_ESTIMATE]: "待评估",
   [OK_ESTIMATE]: "已评估",
+}
+//value是否存在
+export const getValueIsExist = (value) => {
+  return value == 0 || value > 0
+}
+export const getValueByFormat = (value, format = '0%') => {
+  return getValueIsExist(value) ?
+    numeral(value).format(format)
+    : '-'
 }

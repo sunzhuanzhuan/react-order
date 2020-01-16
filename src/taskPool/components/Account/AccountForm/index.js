@@ -57,14 +57,17 @@ function AccountTabs(props) {
     })
   }
   function onResetForm(value) {
-    resetFields()
-    props.onReset && props.onReset()
+    itemResetForm()
     props.setSelectedTab && props.setSelectedTab(value)
+  }
+  function itemResetForm() {
+    props.onReset && props.onReset()
+    resetFields()
   }
   const formProps = {
     ...props.formProps,
+    onReset: itemResetForm,
     form,
-    onReset: onResetForm,
     onSearch
   }
   return <Form layout='inline' className='use-form-search'>
