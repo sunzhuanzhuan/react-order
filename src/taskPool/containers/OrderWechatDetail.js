@@ -9,10 +9,7 @@ import { withRouter } from 'react-router-dom'
 import DataCurve from '../components/Order/DataCurve'
 import './OrderWechatDetail.less';
 import qs from 'qs'
-import moment from 'moment'
 import numeral from 'numeral'
-import { otherOrderStateMap } from '../constants/orderConfig'
-const format = 'YYYY-MM-DD HH:mm:ss'
 const getNumber = (value) => {
   return numeral(value).format(',')
 }
@@ -119,7 +116,7 @@ function OrderWechatDetail(props) {
   return (
     <Spin spinning={isLoading} >
       <div className='order-wechat-detail'>
-        <BreadCrumbs link='/order/task/orders-manage' text={<h2>订单详情</h2>} />
+        <BreadCrumbs link='/order/task/orders-manage/1' text={<h2>订单详情</h2>} />
         <TitleBox title='基本信息' >
           <Descriptions>
             {baseInfo.map(item => <Descriptions.Item key={item.label} label={item.label} span={item.span}>{item.content}</Descriptions.Item>)}
@@ -135,7 +132,7 @@ function OrderWechatDetail(props) {
             <Col span={6}> 博主名称
             <div className='account-name'>
                 <img src={orderMcnDetailInfo.avatarUrl} alt='博主头像' />
-                <span>{orderMcnDetailInfo.accountName}</span>
+                <span>{orderMcnDetailInfo.snsName}</span>
               </div>
             </Col>
             <Col span={6}>Account ID

@@ -173,7 +173,7 @@ function CooperationList(props) {
                 okFn={updatePlatformOrderAsync}
                 cancelFn={() => setModalProps({ visible: false })} />
             })}>驳回</Button> : null}
-          <Button onClick={() => window.open(`orders-coodetail?orderId=${adOrderId}`)}>查看详情</Button>
+          <Button onClick={() => window.open(`/order/task/orders-coodetail?orderId=${adOrderId}`, '_self')}>查看详情</Button>
         </div>
       },
     },
