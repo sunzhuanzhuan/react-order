@@ -34,7 +34,7 @@ function OrderWechatDetail(props) {
   const baseInfo = [
     { label: '任务名称', content: orderMcnDetailInfo.orderName },
     { label: '发布平台', content: orderMcnDetailInfo.platformName },
-    { label: '图文发布位置', content: orderMcnDetailInfo.locationLimitedInfo },
+    { label: '图文发布位置', content: orderMcnDetailInfo.locationInfo },
 
     { label: '任务ID', content: orderMcnDetailInfo.adOrderId },
     { label: '订单ID', content: orderMcnDetailInfo.id },
@@ -44,7 +44,7 @@ function OrderWechatDetail(props) {
     { label: '订单状态', content: <div className='red-text'>{orderMcnDetailInfo.orderStateDesc}</div> },
     { label: '预计推送时间', content: orderMcnDetailInfo.expectedPublishedTime },
     { label: '行业分类', content: orderMcnDetailInfo.industryName, span: 2 },
-    { label: '阅读单价', content: '' },
+    { label: '阅读单价', content: orderMcnDetailInfo.unitPrice },
     { label: '任务模式', content: <div className='red-text'>{orderMcnDetailInfo.taskPatternDesc}</div>, span: 2 },
     { label: '发布保留时长', content: '', },
     { label: '', content: '', span: 2 },
