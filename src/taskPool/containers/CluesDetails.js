@@ -18,8 +18,10 @@ const ClueDetail = (props) => {
     setVisible(true)
   }
   const handleOk = () => {
-    props.actions.TPClueConfirm({ id: search.id, clueState: 2 })
-    setVisible(false)
+    props.actions.TPClueConfirm({ id: search.id, clueState: 2 }).then(() => {
+      props.actions.TPGetClueDetail({ id: search.id });
+      setVisible(false)
+    })
   }
   const handleCancel = () => {
     setVisible(false)
@@ -29,7 +31,7 @@ const ClueDetail = (props) => {
       <PageHeader
         onBack={() => props.history.push('/order/task/clues-manage')}
         title="线索详情"
-        extra={<Button type="primary" style={{ float: 'right' }} onClick={showModal}>确认处理</Button>}
+        extra={props.clueDetail.clueState == 1 ? <Button type="primary" style={{ float: 'right' }} onClick={showModal}>确认处理</Button> : null}
       />
       <div style={{ background: '#ECECEC', padding: '30px' }}>
         {search.platform == 'weixin' ? <Card title="基本信息" bordered={false} style={{ width: '100%', margin: '20px 0' }}>
@@ -77,7 +79,7 @@ const ClueDetail = (props) => {
         onOk={handleOk}
         onCancel={handleCancel}
       >
-        <p>确认已经处理（{props.clueDetail.adInfo.companyName}）的线索么？</p>
+        <p>确认已经处理（ {props.clueDetail.companyFullName} ）的线索么？</p>
       </Modal> : null}
     </div>
   );
