@@ -88,7 +88,6 @@ export default {
     TPFristFailureUpdateContentUrl: `${mcnOrder}/fristFailureUpdateContentUrl`,//回执链接调整
     TPGetMcnOrderStateList: `${mcnOrder}/getMcnOrderStateList`,//获取订单状态列表
     TPUpdateContentUrl: `${mcnOrder}/updateContentUrl`,//回执链接调整_质检前修改
-    TPApplyConfirm: `${mcnOrder}/applyConfirm`,//订单确认/拒绝
     TPFailureReasons: `${mcnOrder}/failureReasons`,//订单失败原因查询
     TPOrderInfo: `${mcnOrder}/orderInfo`,//订单详情
     TPQueryDataCurve: `${mcnOrder}/queryDataCurve`,//获取数据曲线
@@ -121,6 +120,7 @@ export default {
     getIndustryList: configManage + "/getIndustryList",
     offline: prefix + "/adOrder/v1/offline",
     online: prefix + "/adOrder/v1/online",
+    applyConfirm: mcnOrder + "/applyConfirm",
 
   }
 }

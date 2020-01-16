@@ -64,7 +64,7 @@ const CreateIndustryBySecond = (props) => {
         props.actions.TPAddOrUpdateIndustryInfo(body)
           .then(() => {
             message.success("添加成功")
-            history.back()
+            history.go(-1)
             setLoading(false)
           })
           .catch(() => {
