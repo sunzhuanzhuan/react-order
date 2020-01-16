@@ -12,17 +12,20 @@ const Log = (props) => {
     {
       title: '用户名',
       dataIndex: 'id',
+      align: 'center',
       width: '30%',
       key: 'id'
     },
     {
       title: '记录时间',
+      align: 'center',
       width: '30%',
       dataIndex: 'createdAt',
       key: 'createdAt',
     },
     {
       title: '操作记录',
+      align: 'center',
       width: '40%',
       dataIndex: 'remark',
       key: 'remark',
