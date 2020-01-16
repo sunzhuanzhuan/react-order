@@ -9,10 +9,7 @@ import { withRouter } from 'react-router-dom'
 import DataCurve from '../components/Order/DataCurve'
 import './OrderWechatDetail.less';
 import qs from 'qs'
-import moment from 'moment'
 import numeral from 'numeral'
-import { otherOrderStateMap } from '../constants/orderConfig'
-const format = 'YYYY-MM-DD HH:mm:ss'
 const getNumber = (value) => {
   return numeral(value).format(',')
 }
@@ -34,7 +31,7 @@ function OrderWechatDetail(props) {
   const baseInfo = [
     { label: '任务名称', content: orderMcnDetailInfo.orderName },
     { label: '发布平台', content: orderMcnDetailInfo.platformName },
-    { label: '图文发布位置', content: orderMcnDetailInfo.locationLimitedInfo },
+    { label: '图文发布位置', content: orderMcnDetailInfo.locationInfo },
 
     { label: '任务ID', content: orderMcnDetailInfo.adOrderId },
     { label: '订单ID', content: orderMcnDetailInfo.id },
@@ -44,7 +41,7 @@ function OrderWechatDetail(props) {
     { label: '订单状态', content: <div className='red-text'>{orderMcnDetailInfo.orderStateDesc}</div> },
     { label: '预计推送时间', content: orderMcnDetailInfo.expectedPublishedTime },
     { label: '行业分类', content: orderMcnDetailInfo.industryName, span: 2 },
-    { label: '阅读单价', content: '' },
+    { label: '阅读单价', content: orderMcnDetailInfo.unitPrice },
     { label: '任务模式', content: <div className='red-text'>{orderMcnDetailInfo.taskPatternDesc}</div>, span: 2 },
     { label: '发布保留时长', content: '', },
     { label: '', content: '', span: 2 },
@@ -119,7 +116,7 @@ function OrderWechatDetail(props) {
   return (
     <Spin spinning={isLoading} >
       <div className='order-wechat-detail'>
-        <BreadCrumbs link='/order/task/orders-manage' text={<h2>订单详情</h2>} />
+        <BreadCrumbs link='/order/task/orders-manage/1' text={<h2>订单详情</h2>} />
         <TitleBox title='基本信息' >
           <Descriptions>
             {baseInfo.map(item => <Descriptions.Item key={item.label} label={item.label} span={item.span}>{item.content}</Descriptions.Item>)}
@@ -135,7 +132,7 @@ function OrderWechatDetail(props) {
             <Col span={6}> 博主名称
             <div className='account-name'>
                 <img src={orderMcnDetailInfo.avatarUrl} alt='博主头像' />
-                <span>{orderMcnDetailInfo.accountName}</span>
+                <span>{orderMcnDetailInfo.snsName}</span>
               </div>
             </Col>
             <Col span={6}>Account ID

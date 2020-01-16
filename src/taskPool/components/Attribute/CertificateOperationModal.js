@@ -68,8 +68,9 @@ const CertificateAddForm = (props) => {
         <Form.Item label="资质名称">
           {getFieldDecorator('qualificationName', {
             validateFirst: true,
+            validateTrigger: ['onBlur'],
             rules: [
-              { required: true, message: '请填写评论数' },
+              { required: true, message: '请填写资质名称' },
               { validator: asyncValidateNameRepeat }
             ]
           })(
@@ -146,7 +147,7 @@ const CertificateUpdateForm = (props) => {
             initialValue: props.record.qualificationName,
             validateFirst: true,
             rules: [
-              { required: true, message: '请填写评论数' },
+              { required: true, message: '请填写资质名称' },
               { validator: asyncValidateNameRepeat }
             ]
           })(

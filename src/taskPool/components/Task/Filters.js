@@ -120,9 +120,20 @@ const Filters = (props) => {
     e && e.preventDefault();
     props.form.validateFields((err, values) => {
       if (!err) {
+        let allValue = { ...values }
+        if (values.createdAt) {
+          allValue.createdAtBegin = values.createdAt[0]
+          allValue.createdAtEnd = values.createdAt[1]
+          delete allValue.createdAt
+        }
+        if (values.startAt) {
+          allValue.orderStartDateBegin = values.startAt[0]
+          allValue.orderStartDateEnd = values.startAt[1]
+          delete allValue.startAt
+        }
         let filter = {
           page: { currentPage: 1 },
-          form: { ...values, platformId: active }
+          form: { ...allValue, platformId: active }
         }
         props.search(filter)
       }

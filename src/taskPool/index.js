@@ -34,7 +34,7 @@ class Business extends Component {
           <Route path="/order/task/tasks-create" component={CreateTask} />
           <Route path="/order/task/tasks-update/:id" component={UpdateTask} />
           <Route path="/order/task/tasks-details/:id" component={TaskDetail} />
-          <Route path="/order/task/orders-manage" component={Orders} />
+          <Route path="/order/task/orders-manage/:id" component={Orders} />
           <Route path="/order/task/orders-coodetail" component={OrderCooDetail} />
           <Route path="/order/task/orders-wechatdetail" component={OrderWechatDetail} />
 

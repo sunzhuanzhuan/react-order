@@ -133,6 +133,9 @@ const UpdateTask = (props) => {
           },
           content: {
             title: feature.title,
+            author: feature.author,
+            remark: feature.remark,
+            articleUrl: feature.articleUrl,
             coverImage: [ {
               uid: feature.coverImageName,
               url: feature.coverImageUrl

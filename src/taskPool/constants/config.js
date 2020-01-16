@@ -14,23 +14,27 @@ export const AD_ORDER_STATE_OFFLINE = 500 // 下线
 export const AD_ORDER_STATE_FINISH = 600 // 任务结束结束
 export const AD_ORDER_STATE_END = 250 // 终结
 
-
-
 /**
  * 博主任务状态
  */
-export const MCN_ORDER_STATE_WILL_QA = 1 // 待质检
-export const MCN_ORDER_STATE_FIRST_QA = 2 // 待一检
-export const MCN_ORDER_STATE_QA_ING = 3 // 质检中
-export const MCN_ORDER_STATE_DEDUCTION = 4 // 有扣款
-export const MCN_ORDER_STATE_UNQUALIFIED = 5 // 质检不合格已退款
-export const MCN_ORDER_STATE_CANCEL = 6 // 已取消
-export const MCN_ORDER_STATE_QUALIFIED = 7 // 已完结
-export const MCN_ORDER_STATE_FIRST_QA_ERROR = 8 // 一检异常待处理
-export const MCN_ORDER_STATE_DEDUCTION_REWRITE_LINK = 9 // 链接待调整
-export const MCN_ORDER_STATE_QUALIFIED_WILL_SECOND_QA = 10 // 待二检
-export const MCN_ORDER_STATE_QUALIFIED_SECOND_QA_ERROR = 11 // 二检异常待处理
-export const MCN_ORDER_STATE_QUALIFIED_WAIT_REQA = 12 // 待复检
+export const MCN_ORDER_STATE_APPLY = 100 // 已申请 (100,"待接受","待确认")
+export const MCN_ORDER_STATE_APPLY_REFUSE = 110 // 已拒绝 (110,"拒绝","已拒绝")
+export const MCN_ORDER_STATE_WAIT_WRITE_URL = 200 // 待回填 (200, "待回填","待执行")
+export const MCN_ORDER_STATE_CANCEL_BY_ACCOUNT = 210 // 博主取消任务 (210, "博主取消任务","已取消")
+export const MCN_ORDER_STATE_CANCEL_OVER_TIME = 220 // 超时取消任务 (220, "回填超时取消任务","已取消")
+export const MCN_ORDER_STATE_WAIT_QUALIFY = 300 // 待一检 (300, "待一检","待一检")
+export const MCN_ORDER_STATE_FIRST_QUALIFY_EXCEPTION_WAITING = 310 // 一检异常待处理
+export const MCN_ORDER_STATE_URL_EXCEPTION_WAITING = 320 // 回执待修改
+export const MCN_ORDER_STATE_WAIT_REPEAT_QUALIFY = 330 // 待复检
+export const MCN_ORDER_STATE_REPEAT_QUALIFY_FAIL = 340 // 复检失败
+export const MCN_ORDER_STATE_WAIT_2ST_QUALIFY = 400 // 待二次检查
+export const MCN_ORDER_STATE_SECOND_QUALIFY_EXCEPTION_WAITING = 410 // 二检异常待处理
+export const MCN_ORDER_STATE_SECOND_FAIL = 400 // 二检失败 不合格
+export const MCN_ORDER_STATE_RESULT_CONFIRM = 900 // 待确认 合格
+export const MCN_ORDER_STATE_OFFLINE = 910 // 订单完成
+export const MCN_ORDER_STATE_CANCEL = 920 // 已取消
+export const MCN_ORDER_STATE_OFFLINE_PART = 930 // 有扣款
+
 
 // 任务执行状态
 const MCN_ORDER_UNEXCUTE = 0; //未执行
@@ -62,43 +66,37 @@ export const confirmexestate = {
     children: '执行结果确认'
   },
 }
+
 //博主任务状态文本及对应操作
 export const statusKeyToProps = {
-  [MCN_ORDER_STATE_WILL_QA]: {
+  [MCN_ORDER_STATE_WAIT_WRITE_URL]: {
     children: '待回填',
     showoperate: 'show',
     actionarr: [
       { title: '添加回执', actionKey: 'TPUpdateContentUrl', isAdd: true },
     ]
   },
-  [MCN_ORDER_STATE_FIRST_QA]: {
+  [MCN_ORDER_STATE_WAIT_QUALIFY]: {
     children: '待一检',
     showoperate: 'show',
     actionarr: [
       { title: '修改回执', actionKey: 'TPUpdateContentUrl' },
     ]
   },
-  [MCN_ORDER_STATE_QA_ING]: {
-    children: '质检中',
-  },
-  [MCN_ORDER_STATE_DEDUCTION]: {
+  [MCN_ORDER_STATE_OFFLINE_PART]: {
     children: '有扣款',
-  },
-  [MCN_ORDER_STATE_UNQUALIFIED]: {
-    children: '质检不合格退款',
-    style: { color: '#ff365d' },
   },
   [MCN_ORDER_STATE_CANCEL]: {
     children: '已取消',
   },
-  [MCN_ORDER_STATE_QUALIFIED]: {
+  [MCN_ORDER_STATE_OFFLINE]: {
     children: '已完结',
     style: { color: '#0cad67' },
     showoperate: 'show',
     actionarr: [],
     confirmexestate
   },
-  [MCN_ORDER_STATE_FIRST_QA_ERROR]: {
+  [MCN_ORDER_STATE_FIRST_QUALIFY_EXCEPTION_WAITING]: {
     children: '一检异常待处理',
     showoperate: 'show',
     actionarr: [
@@ -106,17 +104,17 @@ export const statusKeyToProps = {
       { title: '不通过', actionKey: 'TPApprovedFristFailure' },
     ]
   },
-  [MCN_ORDER_STATE_DEDUCTION_REWRITE_LINK]: {
+  [MCN_ORDER_STATE_URL_EXCEPTION_WAITING]: {
     children: '链接待调整',
     showoperate: 'show',
     actionarr: [
       { title: '修改回执', actionKey: 'TPFristFailureUpdateContentUrl' }
     ]
   },
-  [MCN_ORDER_STATE_QUALIFIED_WILL_SECOND_QA]: {
+  [MCN_ORDER_STATE_WAIT_2ST_QUALIFY]: {
     children: '待二检',
   },
-  [MCN_ORDER_STATE_QUALIFIED_SECOND_QA_ERROR]: {
+  [MCN_ORDER_STATE_SECOND_QUALIFY_EXCEPTION_WAITING]: {
     children: '二检异常待处理',
     showoperate: 'show',
     actionarr: [
@@ -124,7 +122,7 @@ export const statusKeyToProps = {
       { title: '不合格', actionKey: 'TPApprovedSecondFailure' },
     ]
   },
-  [MCN_ORDER_STATE_QUALIFIED_WAIT_REQA]: {
+  [MCN_ORDER_STATE_WAIT_REPEAT_QUALIFY]: {
     children: '待复检'
   }
 }

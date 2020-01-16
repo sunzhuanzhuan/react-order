@@ -5,7 +5,7 @@ import MessageIcon from '../../../base/MessageIcon'
 import './index.less'
 import { WBYPlatformIcon } from "wbyui"
 import TextArea from 'antd/lib/input/TextArea'
-import { auditStateMap, estimateStateMap, Wait_Audit, No_Pass, OK_PASS, WAIT_ESTIMATE, OK_ESTIMATE } from '../../../constants/accountConfig'
+import { auditStateMap, estimateStateMap, Wait_Audit, No_Pass, OK_PASS, WAIT_ESTIMATE, OK_ESTIMATE, getValueByFormat } from '../../../constants/accountConfig'
 const { confirm } = Modal;
 
 function AccountList(props) {
@@ -23,8 +23,8 @@ function AccountList(props) {
     },
     {
       title: '账号ID',
-      dataIndex: 'platformId',
-      key: 'platformId',
+      dataIndex: 'snsId',
+      key: 'snsId',
     },
     {
       title: '账号名称',
@@ -35,7 +35,7 @@ function AccountList(props) {
           weibo_type={text || '9'}
           icon_type={"default"}
           widthSize={15}
-        /></span>
+        />{text}</span>
       }
     },
     {
@@ -57,6 +57,7 @@ function AccountList(props) {
       title: '评估状态',
       dataIndex: 'estimateState',
       key: 'estimateState',
+      width: '80px',
       align: 'center',
       render: (text, record) => text ? <div>
         {estimateStateMap[text]}
@@ -81,15 +82,15 @@ function AccountList(props) {
       dataIndex: 'acceptCrowd',
       key: 'acceptCrowd',
       align: 'center',
-      width: '120px',
+      width: '200px',
       render: (text, record) => {
         const { acceptCrowd = {} } = record
         const { sex = {}, age = [], area = [] } = acceptCrowd
         const { manRate, womanRate } = sex
-        return text ? <div>
-          <div>性别：男{getValue(manRate)}女{getValue(womanRate)}</div>
-          <div>年龄：{age.map(one => `${one.description}`)}</div>
-          <div>地域：{area.map(one => `${one.description}`)}</div>
+        return text ? <div className='accept-crowd'>
+          <div>性别：男{getValueByFormat(manRate)} | 女{getValueByFormat(womanRate)}</div>
+          <div>年龄：{getStringByList(age)} </div>
+          <div>地域：{getStringByList(area)}</div>
         </div> : null
       }
     },
@@ -104,7 +105,7 @@ function AccountList(props) {
       title: 'KPI / KPI上限',
       dataIndex: 'kpiTarget',
       key: 'kpiTarget',
-      width: '330px',
+      width: '380px',
       align: 'center',
       render: text => <KpiTable data={text} />
     },
@@ -199,10 +200,10 @@ function AccountList(props) {
   return (<>
     <Alert message={<span>已选择 <a>{selectedRow.length}</a> 个账号    合计：{accountList.total} 个</span>} type="info" />
     <br />
-    <Scolltable scrollClassName='.ant-table-body' widthScroll={2000}>
+    <Scolltable scrollClassName='.ant-table-body' widthScroll={2600}>
       <Table dataSource={list} columns={columns} rowKey='accountId'
         rowSelection={rowSelection}
-        scroll={{ x: 1800 }}
+        scroll={{ x: 2400 }}
         pagination={{
           pageSize: accountList.pageSize,
           showSizeChanger: true,
@@ -247,6 +248,12 @@ export const KpiTable = ({ data = {} }) => {
   },]
   return <Table pagination={false} rowKey='mediaIndex1stReadKpiNum' columns={columnsKpi} dataSource={[data]} className='kpi-table' bordered />
 }
+//受众展示处理
+function getStringByList(list = []) {
+  const length = list.length
+  return length ? list.map((one, index) => `${one.description}${index + 1 == length ? '' : ' | '}`) : '-'
+}
+//状态处理
 export const StateInfo = ({ value, okText = '正常', errorText = '异常', errorReson }) => {
   return value ? <div>
     {value == 1 && <Badge status='success' text={okText}></Badge>}
@@ -255,7 +262,7 @@ export const StateInfo = ({ value, okText = '正常', errorText = '异常', erro
     </>}
   </div> : ''
 }
-
+//原因Form
 function Reason(props) {
   const { setModalProps, form, okText = '确认不通过' } = props
   const { getFieldDecorator, validateFields } = form
