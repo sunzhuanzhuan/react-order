@@ -114,3 +114,11 @@ export const {
 } = createHttpAction('TPGetIndustryList', Interface.task.getIndustryList, {
   method: 'post'
 });
+
+
+// 订单确认/拒绝
+export const {
+  TPApplyConfirm,
+} = createHttpAction('TPApplyConfirm', Interface.task.applyConfirm, {
+  method: 'post'
+});

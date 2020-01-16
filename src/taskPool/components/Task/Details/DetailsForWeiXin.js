@@ -26,9 +26,13 @@ import {
 } from "@/taskPool/constants/utils";
 import { convertRawToHTML } from 'braft-convert'
 import {
-  AD_ORDER_STATE_OFFLINE, AD_ORDER_STATE_PROCESSING, AD_ORDER_STATE_WAIT_RELEASED,
-  MCN_ORDER_STATE_CANCEL,
-  MCN_ORDER_STATE_UNQUALIFIED, MEDIA_TASK_PATTERN_BIDDING, MEDIA_TASK_PATTERN_RUSH
+  AD_ORDER_STATE_OFFLINE,
+  AD_ORDER_STATE_PROCESSING,
+  AD_ORDER_STATE_WAIT_RELEASED,
+  MCN_ORDER_STATE_APPLY, MCN_ORDER_STATE_APPLY_REFUSE,
+  MCN_ORDER_STATE_CANCEL, MCN_ORDER_STATE_OFFLINE,
+  MEDIA_TASK_PATTERN_BIDDING,
+  MEDIA_TASK_PATTERN_RUSH
 } from "@/taskPool/constants/config";
 import numeral from '@/util/numeralExpand';
 import { Link } from 'react-router-dom'
@@ -161,7 +165,7 @@ export default class DetailsForWeiXin extends Component {
         align: "center",
         dataIndex: 'adAmount',
         render: (amount, record) => {
-          return <Yuan value={record.orderState === MCN_ORDER_STATE_UNQUALIFIED ? 0 : amount}
+          return <Yuan value={record.orderState ? 0 : amount}
                        format={"0,0.00"} style={{ color: "#333" }} />
         }
       },
@@ -170,38 +174,38 @@ export default class DetailsForWeiXin extends Component {
         align: "center",
         dataIndex: 'serviceAmount',
         render: (amount, record) => {
-          return <Yuan value={record.orderState === MCN_ORDER_STATE_UNQUALIFIED ? 0 : amount}
+          return <Yuan value={record.orderState ? 0 : amount}
                        format={"0,0.00"} style={{ color: "#333" }} />
         }
       },
       {
         title: '订单状态',
         align: "center",
-        dataIndex: 'orderState',
-        render: (state, record) => {
-          return <OrderMcnStatus value={state} />
+        dataIndex: 'orderStateDesc',
+        render: (desc, record) => {
+          return <OrderMcnStatus value={desc} />
         }
       },
       {
         title: '操作',
-        dataIndex: 'contentUrl',
+        dataIndex: 'orderState',
         align: "center",
-        render: (url, record) => {
-          return record.orderState === MCN_ORDER_STATE_CANCEL ? null : <div>
-            {url && <a target="_blank" href={url}>查看文章</a>}
+        render: (state, record) => {
+          return state === MCN_ORDER_STATE_CANCEL ? null : <div>
+            <a target="_blank" href={record.url || undefined}>查看文章</a>
             {record.snapshotUrl && <>
               <Divider type="vertical" />
               <a target="_blank" href={record.snapshotUrl}>查看快照</a>
             </>}
             <>
               <Divider type="vertical" />
-              <Link to={`/order/task/orders-coodetail?orderId=${record.orderId}`}
+              <Link to={`/order/task/orders-coodetail?orderId=${record.id}`}
                     target="_blank">查看数据统计</Link>
             </>
-            <>
+            {state === MCN_ORDER_STATE_OFFLINE && <>
               <Divider type="vertical" />
-              <a>评价</a>
-            </>
+              <a onClick={() => this.setState({raterOrderId: record.id})}>评价</a>
+            </>}
           </div>
         }
       }
@@ -237,7 +241,7 @@ export default class DetailsForWeiXin extends Component {
       {
         title: '申请阅读数',
         align: "center",
-        dataIndex: 'orderState',
+        dataIndex: 'orderStates',
         render: (status, record) => {
           return <QAStatus status={status} />
         }
@@ -255,27 +259,31 @@ export default class DetailsForWeiXin extends Component {
       {
         title: '预计消耗预算',
         align: "center",
-        dataIndex: 'adMaxAmount'
+        dataIndex: 'adMaxAmount',
+        render: (amount) => {
+          return <Yuan value={amount} format={"0,0.00"} style={{ color: "#333" }} />
+        }
       },
       {
         title: '申请状态',
         align: "center",
-        dataIndex: 'orderStateDesc',
+        dataIndex: 'orderState',
         render: (state, record) => {
-          return <OrderMcnStatus value={state} />
+          return <div>
+            {state === MCN_ORDER_STATE_APPLY && "待处理"}
+            {state === MCN_ORDER_STATE_APPLY_REFUSE && "已拒绝"}
+          </div>
         }
       },
       {
         title: '操作',
-        dataIndex: 'contentUrl',
+        dataIndex: 'id',
         align: "center",
-        render: (url, record) => {
-          return <div>
-            <a target="_blank" href={url}>接受 </a>
-            {record.snapshotUrl && <span>
-          <Divider type="vertical" />
-          <a target="_blank" href={record.snapshotUrl}>查看快照</a>
-        </span>}
+        render: (id, record) => {
+          return record.orderState === MCN_ORDER_STATE_APPLY && <div>
+            <a onClick={() => this.agree(id, record)}>接受</a>
+            <Divider type="vertical" />
+            <a onClick={() => this.refuse(id, record)}>拒绝</a>
           </div>
         }
       }
@@ -307,7 +315,7 @@ export default class DetailsForWeiXin extends Component {
   }
   // 上线任务
   online = (id, record) => {
-    const { actions , reload } = this.props
+    const { actions, reload } = this.props
     Modal.confirm({
       title: '上线任务',
       content: `任务还未到上线时间，确定要立即上线该任务么？？`,
@@ -321,7 +329,7 @@ export default class DetailsForWeiXin extends Component {
   }
   // 终止任务
   stop = (id, record) => {
-    const { actions, reload  } = this.props
+    const { actions, reload } = this.props
     Modal.confirm({
       title: '终止任务',
       content: `确认终止 ${record.companyName} —— “${record.orderName}” 的任务么？`,
@@ -329,6 +337,35 @@ export default class DetailsForWeiXin extends Component {
         return actions.TPOfflineTask({ id }).then(() => {
           message.success('任务已终止')
           reload()
+        })
+      }
+    })
+  }
+
+  // 接受
+  agree = (id, record) => {
+    const { actions, reload } = this.props
+    Modal.confirm({
+      title: '确认接受',
+      content: `确认接受 “${record.snsName}” 执行该任务么？`,
+      onOk: () => {
+        return actions.TPApplyConfirm({ mcnOrderId: id, OrderState: 1 }).then(() => {
+          message.success('已确认接受')
+          reload()
+        })
+      }
+    })
+  }
+  // 拒绝
+  refuse = (id, record) => {
+    const { actions, reload } = this.props
+    Modal.confirm({
+      title: '确认拒绝',
+      content: `确认拒绝 “${record.snsName}” 执行该任务么？`,
+      onOk: () => {
+        return actions.TPApplyConfirm({ mcnOrderId: id, OrderState: 2 }).then(() => {
+          message.success('已确认拒绝')
+          this.getListByTemp()
         })
       }
     })
@@ -441,7 +478,9 @@ export default class DetailsForWeiXin extends Component {
     const features = details.adOrderWeixinContent
 
     return <>
-      {raterOrderId > 0 && <RaterModal action={actions.TPMcnOrderEvaluate} cancel={() => this.handleRater(0)} id={raterOrderId} />}
+      {raterOrderId > 0 &&
+      <RaterModal action={actions.TPMcnOrderEvaluate} cancel={() => this.handleRater(0)}
+                  id={raterOrderId} />}
       <PageHeader
         onBack={() => this.props.history.go(-1)}
         title="任务详情"
@@ -508,7 +547,8 @@ export default class DetailsForWeiXin extends Component {
             </Descriptions.Item>
             <Descriptions.Item label="行业分类">
               {
-                [details.taskIndustryInfo.parentName, details.taskIndustryInfo.industryName].filter(Boolean).join('/')
+                [ details.taskIndustryInfo.parentName, details.taskIndustryInfo.industryName ].filter(
+                  Boolean).join('/')
               }
             </Descriptions.Item>
             <Descriptions.Item label="博主限制">
@@ -531,7 +571,8 @@ export default class DetailsForWeiXin extends Component {
             {features.taskPattern === MEDIA_TASK_PATTERN_RUSH && <Descriptions.Item label="预计阅读数">
               {details.unifiedNumber}
             </Descriptions.Item>}
-            {features.taskPattern === MEDIA_TASK_PATTERN_BIDDING && <Descriptions.Item label="预计平均阅读单价">
+            {features.taskPattern === MEDIA_TASK_PATTERN_BIDDING &&
+            <Descriptions.Item label="预计平均阅读单价">
               {details.unifiedNumber}
             </Descriptions.Item>}
           </Descriptions>
@@ -545,7 +586,8 @@ export default class DetailsForWeiXin extends Component {
               <TaskStatus status={details.orderState} />
             </Descriptions.Item>
             <Descriptions.Item label="任务剩余时间">
-              <TaskRemainingTime status={details.orderState} startDate={details.orderStartDate} endDate={details.orderEndDate}/>
+              <TaskRemainingTime status={details.orderState} startDate={details.orderStartDate}
+                                 endDate={details.orderEndDate} />
             </Descriptions.Item>
             <Descriptions.Item label="已用预算/可用预算">
               <Yuan value={details.usedAmount} className="text-red" />

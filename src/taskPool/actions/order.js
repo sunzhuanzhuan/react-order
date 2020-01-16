@@ -92,13 +92,6 @@ export const {
 } = createHttpAction('TPUpdateContentUrl', Interface.order.TPUpdateContentUrl, {
   method: 'post'
 })
-//订单确认/拒绝
-export const {
-  TPApplyConfirm,
-  TPApplyConfirm_success,
-} = createHttpAction('TPApplyConfirm', Interface.order.TPApplyConfirm, {
-  method: 'post'
-})
 //订单失败原因查询
 export const {
   TPFailureReasons,
