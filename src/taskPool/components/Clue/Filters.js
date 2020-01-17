@@ -5,7 +5,7 @@
 import React, { useEffect, useState } from 'react';
 import {
   Button, Row, Col, Form,
-  Input, Tabs, Select, DatePicker
+  Input, Tabs, Select, DatePicker, InputNumber
 } from "antd";
 import { platformTypes } from "../../constants/config";
 import { useHistory } from 'react-router-dom'
@@ -23,7 +23,7 @@ const FilterForm = (props) => {
       <Col span={4}>
         <Form.Item label="线索ID">
           {getFieldDecorator('id', {})(
-            <Input placeholder="请输入" allowClear />
+            <InputNumber placeholder="请输入" allowClear />
           )}
         </Form.Item>
       </Col>

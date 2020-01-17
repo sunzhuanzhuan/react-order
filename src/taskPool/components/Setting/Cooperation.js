@@ -49,6 +49,7 @@ class Cooperation extends React.Component {
       //   }
 
       // }
+      console.log(JSON.stringify(arr))
       this.props.TPDimensionConfig({ itemTypes: arr }).then(() => {
         this.props.TPGetDimensionConfig({})
       })
