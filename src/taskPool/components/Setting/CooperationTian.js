@@ -37,7 +37,7 @@ class CooperationTian extends React.Component {
       okType: 'danger',
       cancelText: '否',
       onOk: (() => {
-        this.props.TPDeleteTaskLaunch(selectWeTian).then(() => {
+        this.props.TPDeleteTaskLaunch({ ids: selectWeTian }).then(() => {
           this.props.TPGetTaskLaunchConfigTian({ offerType: 1 })
         })
         // for (let i = 0; i < selectWeTian.length; i++) {

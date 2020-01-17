@@ -12,7 +12,13 @@ export const columnsWeidu = (getFieldDecorator) => {
       render: (val, record) => {
         return <Form.Item>
           {getFieldDecorator(`${record.groupId}.itemTypef`, {
-            initialValue: val
+            initialValue: val,
+            rules: [
+              {
+                required: true,
+                message: '请选择定向维度',
+              },
+            ],
           })(
             <Select mode="tags" style={{ width: '300px' }} placeholder="添加维度">
               <Option value='1'>乘车日期</Option>
@@ -36,7 +42,13 @@ export const columnsWeidu = (getFieldDecorator) => {
           if (item.offerType == 1) {
             return <Form.Item>
               {getFieldDecorator(`${record.groupId}.B`, {
-                initialValue: item.unitPrice
+                initialValue: item.unitPrice,
+                rules: [
+                  {
+                    required: true,
+                    message: '请输入图文形式折扣售价',
+                  },
+                ],
               })(
                 <InputNumber min={0} precision={2} />
               )
@@ -53,7 +65,13 @@ export const columnsWeidu = (getFieldDecorator) => {
           if (item.offerType == 2) {
             return <Form.Item>
               {getFieldDecorator(`${record.groupId}.C`, {
-                initialValue: item.unitPrice
+                initialValue: item.unitPrice,
+                rules: [
+                  {
+                    required: true,
+                    message: '请输入视频形式折扣售价',
+                  },
+                ],
               })(
                 <InputNumber min={0} precision={2} />
               )
@@ -69,7 +87,13 @@ export const columnsWeidu = (getFieldDecorator) => {
           if (item.offerType == 3) {
             return <Form.Item>
               {getFieldDecorator(`${record.groupId}.D`, {
-                initialValue: item.unitPrice
+                initialValue: item.unitPrice,
+                rules: [
+                  {
+                    required: true,
+                    message: '请输入图文形式刊例价',
+                  },
+                ],
               })(
                 <InputNumber min={0} precision={2} />
               )
@@ -86,7 +110,13 @@ export const columnsWeidu = (getFieldDecorator) => {
           if (item.offerType == 4) {
             return <Form.Item>
               {getFieldDecorator(`${record.groupId}.E`, {
-                initialValue: item.unitPrice
+                initialValue: item.unitPrice,
+                rules: [
+                  {
+                    required: true,
+                    message: '请输入视频形式刊例价',
+                  },
+                ],
               })(
                 <InputNumber min={0} precision={2} />
               )
@@ -105,7 +135,13 @@ export const columnsTian = (getFieldDecorator) => [
     render: (val, record, index) => {
       return <Form.Item>
         {getFieldDecorator(`${record.id}.B`, {
-          initialValue: val
+          initialValue: val,
+          rules: [
+            {
+              required: true,
+              message: '请输入投放天数',
+            },
+          ],
         })(
           <InputNumber min={0} />
         )
@@ -119,7 +155,13 @@ export const columnsTian = (getFieldDecorator) => [
     render: (val, record, index) => {
       return <Form.Item>
         {getFieldDecorator(`${record.id}.C`, {
-          initialValue: val
+          initialValue: val,
+          rules: [
+            {
+              required: true,
+              message: '请输入对外售价',
+            },
+          ],
         })(
           <InputNumber min={0} precision={2} />
         )
@@ -136,7 +178,13 @@ export const columnsHui = (getFieldDecorator) => {
       render: (val, record, index) => {
         return <Form.Item>
           {getFieldDecorator(`${record.id}.B`, {
-            initialValue: val
+            initialValue: val,
+            rules: [
+              {
+                required: true,
+                message: '请输入对外售价',
+              },
+            ],
           })(
             <InputNumber min={0} precision={2} />
           )
@@ -150,7 +198,13 @@ export const columnsHui = (getFieldDecorator) => {
       render: (val, record) => {
         return <Form.Item>
           {getFieldDecorator(`${record.id}.C`, {
-            initialValue: val
+            initialValue: val,
+            rules: [
+              {
+                required: true,
+                message: '请输入返现金额',
+              },
+            ],
           })(
             <InputNumber min={0} precision={2} />
           )

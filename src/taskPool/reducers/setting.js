@@ -4,7 +4,7 @@ import * as setting from '../actions/setting'
 // 获取阅读价格
 export const readUnitPriceConfig = handleActions({
   [setting.TPGetReadUnitPriceConfig_success]: (state, action) => {
-    if (action.payload.data) {
+    if (Object.values(action.payload.data).length > 0) {
       return [...action.payload.data.accountGardes]
     } else {
       let arr = [{ accountGarde: 'A' }

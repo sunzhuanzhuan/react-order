@@ -45,7 +45,7 @@ class CooperationHui extends React.Component {
         //   }
         // }
         // this.setState({})
-        this.props.TPDeleteTaskLaunch(selectWeHui).then(() => {
+        this.props.TPDeleteTaskLaunch({ ids: selectWeHui }).then(() => {
           this.props.TPGetTaskLaunchConfigHui({ offerType: 4 })
         })
       }).bind(this),
