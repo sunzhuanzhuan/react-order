@@ -160,7 +160,7 @@ function AccountList(props) {
     confirm({
       title: '确认批量通过?',
       onOk() {
-        batchUpdateAccountStateAsync({ operationFlag: 1, accountId: selectedRow })
+        batchUpdateAccountStateAsync({ operationFlag: 1, accountIds: selectedRow })
         setSelectedRow([])
       },
       onCancel() {
@@ -171,7 +171,7 @@ function AccountList(props) {
     setModalProps({
       title: '填写批量不通过原因（50字以内）',
       content: (props) => <ReasonForm onOk={(value) => batchUpdateAccountStateAsync(
-        { remark: value, accountId: selectedRow, operationFlag: 2 }
+        { remark: value, accountIds: selectedRow, operationFlag: 2 }
       )} setSelectedRow={setSelectedRow} {...props} />,
       visible: true,
     })
