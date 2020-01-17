@@ -78,7 +78,7 @@ class CooperationTian extends React.Component {
 
         // }
         // console.log(selectArr)
-        this.props.TPUpdateTaskLaunchConfig(arr).then(() => {
+        this.props.TPUpdateTaskLaunchConfig({ taskOffers: arr }).then(() => {
           this.props.TPGetTaskLaunchConfigTian({ offerType: 1 })
         })
       }

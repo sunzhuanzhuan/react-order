@@ -5,7 +5,7 @@
 import React, { useEffect, useState } from 'react';
 import {
   Button, Row, Col, Form,
-  Input, Tabs, Select, DatePicker
+  Input, Tabs, Select, DatePicker, InputNumber
 } from "antd";
 import { platformTypes } from "../../constants/config";
 import { useHistory } from 'react-router-dom'
@@ -23,7 +23,7 @@ const FilterForm = (props) => {
       <Col span={4}>
         <Form.Item label="线索ID">
           {getFieldDecorator('id', {})(
-            <Input placeholder="请输入" allowClear />
+            <InputNumber placeholder="请输入" allowClear />
           )}
         </Form.Item>
       </Col>
@@ -36,9 +36,8 @@ const FilterForm = (props) => {
       </Col> :
         <Col span={4}>
           <Form.Item label="任务类型">
-            {getFieldDecorator('extensionBudget', {})(
+            {getFieldDecorator('extensionType', {})(
               <Select placeholder="请选择" allowClear>
-                <Option value="0">全部</Option>
                 <Option value="4">图文</Option>
                 <Option value="3">图文+视频</Option>
               </Select>
@@ -49,7 +48,6 @@ const FilterForm = (props) => {
         <Form.Item label="线索状态">
           {getFieldDecorator('clueState', {})(
             <Select placeholder="请选择" allowClear>
-              <Option value="0">全部</Option>
               <Option value="1">未处理</Option>
               <Option value="2">已处理</Option>
             </Select>
@@ -75,14 +73,14 @@ const FilterForm = (props) => {
       </Col>
       <Col span={12}>
         <Form.Item label="任务创建时间">
-          {getFieldDecorator('extensionStartTime')(
+          {getFieldDecorator('extensionStartTimeBegin')(
             <DatePicker format="YYYY-MM-DD HH:mm:ss"
               showTime={{
                 defaultValue: moment('00:00:00', 'HH:mm:ss')
               }} placeholder='开始日期' />
           )}
           ~
-						{getFieldDecorator('extensionEndTime')(
+						{getFieldDecorator('extensionStartTimeEnd')(
             <DatePicker format="YYYY-MM-DD HH:mm:ss"
               showTime={{
                 defaultValue: moment("23:59:59", 'HH:mm:ss')
@@ -116,9 +114,15 @@ const Filters = (props) => {
     e && e.preventDefault();
     props.form.validateFields((err, values) => {
       if (!err) {
+        for (let key in values) {
+          if (values[key] == '') {
+            values[key] = undefined
+          }
+
+        }
+        console.log(values, '_____');
         if (values.createdAtBegin) {
           values.createdAtBegin = moment(values.createdAtBegin)._d
-          //values.createdAtBegin = '2020-12-12 23:34:43'
         }
         if (values.createdAtEnd) {
           values.createdAtEnd = moment(values.createdAtEnd)._d
@@ -133,7 +137,7 @@ const Filters = (props) => {
           page: { currentPage: 1 },
           form: { ...values, platformId: active }
         }
-        console.log(values, '_____');
+
         props.search(filter)
       }
     });

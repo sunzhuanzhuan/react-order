@@ -19,7 +19,7 @@ import { Link } from "react-router-dom";
 const { Title } = Typography;
 
 function getColumns(active, clickModal) {
-  let columns = []
+  let columns = [];
   switch (active) {
     case "9":
       columns = [
@@ -37,17 +37,13 @@ function getColumns(active, clickModal) {
           title: '线索提交时间',
           dataIndex: 'createdAt',
           align: 'center',
-          width: 220,
-          // render: (date, record) => {
-          //   return <div>
-          //     {record.createdAtBegin}-{record.createdAtEnd}
-          //   </div>
-          // }
+          width: 220
         },
         {
           title: '任务起止时间',
           dataIndex: 'extensionStartTime',
           align: 'center',
+          width: 350,
           render: (date, record) => {
             return <span>{record.extensionStartTime} - {record.extensionEndTime}</span>
           }
@@ -75,14 +71,13 @@ function getColumns(active, clickModal) {
         },
         {
           title: '操作',
-          fixed: 'right',
           align: 'center',
           width: 150,
           dataIndex: 'actions',
           render: (val, record) => {
-            return <p><Link target="_blank" to={`/order/task/clues-details?platform=weixin&id=${record.id}`}>
+            return <div>{record.clueState == 1 ? <div><Link target="_blank" to={`/order/task/clues-details?platform=weixin&id=${record.id}`}>
               详情
-          </Link>{record.clueState == 1 ? <a onClick={() => { clickModal(true, record) }}>/确定处理</a> : null}</p>
+        </Link> <a onClick={() => { clickModal(true, record) }}>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;确定处理</a></div> : null}</div>
           }
         }
       ]
@@ -97,23 +92,22 @@ function getColumns(active, clickModal) {
         {
           title: '线索提交时间',
           dataIndex: 'createAt',
+          width: 240,
           align: 'center',
           render: (date, record) => {
             return <div>
-              {record.createdAtBegin}-{record.createdAtEnd}
+              {record.createdAt}
             </div>
           }
         },
         {
           title: '任务起止时间',
           align: 'center',
-          dataIndex: 'orderStartDate',
-          width: 170,
+          dataIndex: 'extensionStartTime',
+          width: 380,
           render: (date, record) => {
             return <div>
-              {date}
-              <br />
-              {record.extensionStartTimeEnd}
+              {date}-{record.extensionEndTime}
             </div>
           }
         },
@@ -140,10 +134,7 @@ function getColumns(active, clickModal) {
         {
           title: '任务类型',
           align: 'center',
-          dataIndex: 'orderState',
-          render: (extensionTypeDesc, record) => {
-            return extensionTypeDesc
-          }
+          dataIndex: 'extensionTypeDesc'
         },
         {
           title: '线索状态',
@@ -155,13 +146,13 @@ function getColumns(active, clickModal) {
         },
         {
           title: '操作',
-          dataIndex: 'id',
-          fixed: 'right',
           align: 'center',
           render: (val, record) => {
-            return <p><Link target="_blank" to={`/order/task/clues-details?platform=weixin&id=${record.id}`}>
-              详情
-          </Link>{record.clueState == 1 ? <a onClick={() => { clickModal(true, record) }}>/确定处理</a> : null}</p>
+            return <div>
+              {record.clueState == 1 ? <div><Link target="_blank" to={`/order/task/clues-details?platform=cooper&id=${record.id}`}>
+                详情
+        </Link> <a onClick={() => { clickModal(true, record) }}>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;确定处理</a> </div> : null
+              }</div>
           }
         }
       ]
@@ -204,7 +195,10 @@ const Clues = (props) => {
     setVisible(value)
   }
   const handleOk = () => {
-    setVisible(false)
+    props.actions.TPClueConfirm({ id: record.id, clueState: 2 }).then(() => {
+      getList()
+      setVisible(false)
+    })
   };
 
   const handleCancel = () => {
@@ -242,7 +236,6 @@ const Clues = (props) => {
       <Table
         loading={false}
         dataSource={dataSource}
-        scroll={{ x: 1200 }}
         pagination={pagination}
         columns={columns}
       />

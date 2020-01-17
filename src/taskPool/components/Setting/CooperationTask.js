@@ -7,7 +7,7 @@ class CooperationTask extends React.Component {
     this.props.form.validateFields((err, values) => {
       if (!err) {
         console.log('Received values of form: ', values);
-        this.props.TPUpdateTaskLaunchConfig([{ offerType: 3, ...values }]).then(() => {
+        this.props.TPUpdateTaskLaunchConfig({ taskOffers: [{ offerType: 3, ...values }] }).then(() => {
           this.props.TPGetTaskLaunchConfigLiang({ offerType: 3 })
         })
       }

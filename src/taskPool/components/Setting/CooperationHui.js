@@ -78,7 +78,8 @@ class CooperationHui extends React.Component {
 
         // }
         // console.log(selectArr)
-        this.props.TPUpdateTaskLaunchConfig(arr).then(() => {
+        console.log(JSON.stringify(arr))
+        this.props.TPUpdateTaskLaunchConfig({ taskOffers: arr }).then(() => {
           this.props.TPGetTaskLaunchConfigHui({ offerType: 4 })
         })
       }
