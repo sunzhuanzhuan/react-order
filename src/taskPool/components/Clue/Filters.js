@@ -29,7 +29,18 @@ const FilterForm = (props) => {
       </Col>
       {props.active == 9 ? <Col span={4}>
         <Form.Item label="客户名称">
-          {getFieldDecorator('createdName', {})(
+          {getFieldDecorator('createdName', {
+            rules: [{
+              validator: (rule, value, callback) => {
+                let regEx = /^[A-z0-9\\u4e00-\\u9fa5]*$/
+                if (!regEx.test(value)) {
+                  callback('只能支持英文中文和数字')
+                } else {
+                  callback()
+                }
+              }
+            }]
+          })(
             <Input placeholder="请输入" allowClear />
           )}
         </Form.Item>
