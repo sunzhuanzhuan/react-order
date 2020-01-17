@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Table, Input, Button, Form, InputNumber } from 'antd';
+import { Table, Input, Button, Form, InputNumber, message } from 'antd';
 class CooperationTask extends React.Component {
   handleSubmitTask = e => {
     e.preventDefault();
@@ -8,7 +8,10 @@ class CooperationTask extends React.Component {
       if (!err) {
         console.log('Received values of form: ', values);
         this.props.TPUpdateTaskLaunchConfig({ taskOffers: [{ offerType: 3, ...values }] }).then(() => {
+          message.success('应用成功')
           this.props.TPGetTaskLaunchConfigLiang({ offerType: 3 })
+        }).catch(({ errorMsg }) => {
+          message.error(errorMsg || '操作失败，请重试！');
         })
       }
     });

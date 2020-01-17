@@ -65,7 +65,10 @@ class Cooperation extends React.Component {
         // }
         console.log(JSON.stringify(arr))
         this.props.TPDimensionConfig({ itemTypes: arr }).then(() => {
+          message.success('应用成功')
           this.props.TPGetDimensionConfig({})
+        }).catch(({ errorMsg }) => {
+          message.error(errorMsg || '操作失败，请重试！');
         })
       }
 
