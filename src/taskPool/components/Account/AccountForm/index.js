@@ -12,7 +12,7 @@ import './index.less'
 const format = 'YYYY-MM-DD'
 const formConfig = [
   { label: 'accountID', type: 'inputNumber', key: 'accountId' },
-  { label: '平台ID', type: 'inputNumber', key: 'platformId' },
+  { label: '账号ID', type: 'input', key: 'snsId' },
   { label: '账号名称', type: 'input', key: 'snsName' },
   { label: '粉丝性别比例', type: 'select', key: 'genderProportion', },
 ]
