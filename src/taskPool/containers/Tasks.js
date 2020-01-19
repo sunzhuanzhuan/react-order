@@ -31,7 +31,7 @@ function getColumns(active, operation) {
         {
           title: '任务名称',
           dataIndex: 'orderName',
-          width: 220,
+          width: 246,
           render: (name, record) => {
             return <TaskInfo platformId={record.platformId} name={name} />
           }

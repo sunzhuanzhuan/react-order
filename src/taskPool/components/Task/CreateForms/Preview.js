@@ -613,7 +613,6 @@ class PreviewForWeibo extends React.Component {
   }
 
   render() {
-    // TODO: 行业接口调用, 根据code显示汉字
     const { data } = this.props
     const { submitLoading } = this.state
     const { base, budget, content } = data
