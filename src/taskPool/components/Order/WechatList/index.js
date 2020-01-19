@@ -193,7 +193,7 @@ export default function WachatList(props) {
     },
   ];
   return (
-    <Scolltable scrollClassName='.ant-table-body' widthScroll={2100}>
+    <Scolltable scrollClassName='.ant-table-body' widthScroll={2200}>
       <Table
         style={{ marginTop: 20 }}
         dataSource={list}
