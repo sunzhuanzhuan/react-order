@@ -37,7 +37,7 @@ class CooperationTian extends React.Component {
       okType: 'danger',
       cancelText: '否',
       onOk: (() => {
-        this.props.TPDeleteTaskLaunch(selectWeTian).then(() => {
+        this.props.TPDeleteTaskLaunch({ ids: selectWeTian }).then(() => {
           this.props.TPGetTaskLaunchConfigTian({ offerType: 1 })
         })
         // for (let i = 0; i < selectWeTian.length; i++) {
@@ -78,8 +78,10 @@ class CooperationTian extends React.Component {
 
         // }
         // console.log(selectArr)
-        this.props.TPUpdateTaskLaunchConfig(arr).then(() => {
+        this.props.TPUpdateTaskLaunchConfig({ taskOffers: arr }).then(() => {
           this.props.TPGetTaskLaunchConfigTian({ offerType: 1 })
+        }).catch(({ errorMsg }) => {
+          message.error(errorMsg || '操作失败，请重试！');
         })
       }
     });

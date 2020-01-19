@@ -4,6 +4,8 @@ import { Steps, Col, Row, Descriptions, Divider } from 'antd'
 import { getOrderStep, MEDIUM_REJECT, PARTNER_REJECT, deliverySeatMap, deliverySexMap, mediaTypeMap, putTypeMap } from '../constants/orderConfig'
 import api from '@/api'
 import numeral from 'numeral'
+import BreadCrumbs from '../base/BreadCrumbs'
+
 import qs from 'qs'
 const { Step } = Steps;
 function CooperationDetail() {
@@ -60,6 +62,7 @@ function CooperationDetail() {
   const orderStep = getOrderStep(otherOrderState)
   return (
     <div>
+      <BreadCrumbs link='/order/task/orders-manage/2' text={<h2>订单详情</h2>} />
       <TitleBox title='订单状态' >
         <Steps current={orderStep.key}>
           {orderStep.list.map(item => <Step key={item} title={item} />)}

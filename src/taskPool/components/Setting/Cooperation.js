@@ -28,30 +28,50 @@ class Cooperation extends React.Component {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       console.log('Received values of form: ', values);
-      const { selectWeiDu } = this.state;
-      let arrkey = Object.keys(values)
-      let arr = []
-      let letter = ['B', 'C', 'D', 'E']
-      // let selectArr = []
-      for (let i = 0; i < arrkey.length; i++) {
-        arr.push({ groupId: arrkey[i], itemTypef: values[arrkey[i]].itemTypef || [], offerTypes: [] })
-        for (let j = 0; j < 4; j++) {
-          arr[i].offerTypes.push({ offerType: j + 1, unitPrice: values[arrkey[i]][letter[j]] })
+      if (!err) {
+        const { selectWeiDu } = this.state;
+        let arrkey = Object.keys(values)
+        let arr = []
+        let letter = ['B', 'C', 'D', 'E']
+        // let selectArr = []
+        for (let i = 0; i < arrkey.length; i++) {
+          if (values[arrkey[i]].itemTypef) {
+            arr.push({ groupId: arrkey[i], itemTypef: values[arrkey[i]].itemTypef || [], offerTypes: [] })
+          } else {
+            return message.error('请填写定向维度')
+          }
+          for (let j = 0; j < 4; j++) {
+            // if () {
+
+            // } else if () {
+
+            // } else if () {
+
+            // } else {
+
+            // }
+            arr[i].offerTypes.push({ offerType: j + 1, unitPrice: values[arrkey[i]][letter[j]] })
+          }
         }
+        console.log(arr)
+        // for (let m = 0; m < selectWeiDu.length; m++) {
+        //   for (let n = 0; n < arr.length; n++) {
+        //     if (arr[n].groupId == selectWeiDu[m]) {
+        //       selectArr.push(arr[n])
+        //     }
+
+        //   }
+
+        // }
+        console.log(JSON.stringify(arr))
+        this.props.TPDimensionConfig({ itemTypes: arr }).then(() => {
+          message.success('应用成功')
+          this.props.TPGetDimensionConfig({})
+        }).catch(({ errorMsg }) => {
+          message.error(errorMsg || '操作失败，请重试！');
+        })
       }
-      console.log(arr)
-      // for (let m = 0; m < selectWeiDu.length; m++) {
-      //   for (let n = 0; n < arr.length; n++) {
-      //     if (arr[n].groupId == selectWeiDu[m]) {
-      //       selectArr.push(arr[n])
-      //     }
 
-      //   }
-
-      // }
-      this.props.TPDimensionConfig({ itemTypes: arr }).then(() => {
-        this.props.TPGetDimensionConfig({})
-      })
     });
   }
   handleDeleteAccount = () => {
@@ -74,7 +94,8 @@ class Cooperation extends React.Component {
         //     }
         //   }
         // }
-        this.props.TPDeleteDimension(selectWeiDu).then(() => {
+        // let string = selectWeiDu.toString()
+        this.props.TPDeleteDimension({ groupIds: selectWeiDu }).then(() => {
           this.props.TPGetDimensionConfig({})
         })
         // this.setState({})
@@ -91,17 +112,17 @@ class Cooperation extends React.Component {
       offerTypes: [
         {
           offerType: 1,
-          unitPrice: ''
+          unitPrice: undefined
         },
         {
           offerType: 2,
-          unitPrice: ''
+          unitPrice: undefined
         }, {
           offerType: 3,
-          unitPrice: ''
+          unitPrice: undefined
         }, {
           offerType: 4,
-          unitPrice: ''
+          unitPrice: undefined
         },
       ]
     }

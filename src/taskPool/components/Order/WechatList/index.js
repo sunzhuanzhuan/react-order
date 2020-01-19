@@ -6,7 +6,6 @@ import QualityFailedForm from './QualityFailedForm'
 import Scolltable from '@/components/Scolltable/Scolltable.js'
 import EditReceiptForm from './EditReceiptForm'
 import OrderMcnStatus from '../../../base/OrderMcnStatus'
-import { PopoverText } from '../../../base/MessageIcon'
 import numeral from 'numeral';
 export default function WachatList(props) {
   const { setModalProps, allMcnOrderList = {}, actions, changeWechatPage } = props
@@ -68,11 +67,13 @@ export default function WachatList(props) {
       title: '领取时间',
       dataIndex: 'receiveAt',
       key: 'receiveAt',
+      align: 'center'
     },
     {
       title: '预计推送时间',
       dataIndex: 'expectedPublishedTime',
       key: 'expectedPublishedTime',
+      align: 'center'
     },
     {
       title: '实际阅读/KPI',

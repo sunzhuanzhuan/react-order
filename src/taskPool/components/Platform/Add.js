@@ -22,10 +22,11 @@ const AddForm = (props) => {
     e.preventDefault();
     props.form.validateFields((err, values) => {
       if (!err) {
-        values.cooperationStartTime = values.time[0]._d;
-        values.cooperationEndTime = values.time[1]._d
+        values.cooperationStartTime = moment(values.cooperationStartTime)._d;
+        values.cooperationEndTime = moment(values.cooperationEndTime)._d
+        values.cooperationArea = [{ "areaCode": 100000, "areaName": "北京" }, { "areaCode": 200000, "areaName": "上海" }]
         console.log('Received values of form: ', values);
-        props.TPSavePlatform({ ...values }).then(() => {
+        props.TPSavePlatform({ ...values, }).then(() => {
           props.setVisible(false)
           let search = {
             page: {

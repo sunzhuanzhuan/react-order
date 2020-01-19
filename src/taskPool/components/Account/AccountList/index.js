@@ -57,6 +57,7 @@ function AccountList(props) {
       title: '评估状态',
       dataIndex: 'estimateState',
       key: 'estimateState',
+      width: '80px',
       align: 'center',
       render: (text, record) => text ? <div>
         {estimateStateMap[text]}
@@ -81,15 +82,14 @@ function AccountList(props) {
       dataIndex: 'acceptCrowd',
       key: 'acceptCrowd',
       align: 'center',
-      width: '230px',
+      width: '200px',
       render: (text, record) => {
         const { acceptCrowd = {} } = record
         const { sex = {}, age = [], area = [] } = acceptCrowd
         const { manRate, womanRate } = sex
-        const ageSize = age.length
-        return text ? <div>
+        return text ? <div className='accept-crowd'>
           <div>性别：男{getValueByFormat(manRate)} | 女{getValueByFormat(womanRate)}</div>
-          <div>年龄：{getStringByList(age)}</div>
+          <div>年龄：{getStringByList(age)} </div>
           <div>地域：{getStringByList(area)}</div>
         </div> : null
       }
@@ -105,7 +105,7 @@ function AccountList(props) {
       title: 'KPI / KPI上限',
       dataIndex: 'kpiTarget',
       key: 'kpiTarget',
-      width: '330px',
+      width: '380px',
       align: 'center',
       render: text => <KpiTable data={text} />
     },
@@ -160,7 +160,7 @@ function AccountList(props) {
     confirm({
       title: '确认批量通过?',
       onOk() {
-        batchUpdateAccountStateAsync({ operationFlag: 1, accountId: selectedRow })
+        batchUpdateAccountStateAsync({ operationFlag: 1, accountIds: selectedRow })
         setSelectedRow([])
       },
       onCancel() {
@@ -171,7 +171,7 @@ function AccountList(props) {
     setModalProps({
       title: '填写批量不通过原因（50字以内）',
       content: (props) => <ReasonForm onOk={(value) => batchUpdateAccountStateAsync(
-        { remark: value, accountId: selectedRow, operationFlag: 2 }
+        { remark: value, accountIds: selectedRow, operationFlag: 2 }
       )} setSelectedRow={setSelectedRow} {...props} />,
       visible: true,
     })
@@ -200,10 +200,10 @@ function AccountList(props) {
   return (<>
     <Alert message={<span>已选择 <a>{selectedRow.length}</a> 个账号    合计：{accountList.total} 个</span>} type="info" />
     <br />
-    <Scolltable scrollClassName='.ant-table-body' widthScroll={2000}>
+    <Scolltable scrollClassName='.ant-table-body' widthScroll={2600}>
       <Table dataSource={list} columns={columns} rowKey='accountId'
         rowSelection={rowSelection}
-        scroll={{ x: 1800 }}
+        scroll={{ x: 2400 }}
         pagination={{
           pageSize: accountList.pageSize,
           showSizeChanger: true,

@@ -32,13 +32,15 @@ class Select extends React.Component {
   handleApply = () => {
     const { total, ad, bz } = this.state
     let params = {
-      totalProportion: total,
-      adProportion: ad,
-      accountProportion: bz
+      totalProportion: Number(total),
+      adProportion: Number(ad),
+      accountProportion: Number(bz)
     }
     this.props.TPUpdateCommissionConfig(params).then(() => {
       message.success('设置成功')
       this.props.TPQueryCommissionConfig()
+    }).catch(({ errorMsg }) => {
+      message.error(errorMsg || '操作失败，请重试！');
     })
   }
 
