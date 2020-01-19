@@ -14,11 +14,18 @@ class Discover extends React.Component {
       deleteArr: [],
       selectArr: [],
       textSimilar: props.qualityConfig.textSimilarity,
-      contentTime: props.qualityConfig.contentUrlTimeout
+      contentTime: props.qualityConfig.contentUrlTimeout,
+      arr: []
     }
 
   }
   componentWillReceiveProps = (props) => {
+    props.qualityConfig.retainTimeList.map((item) => {
+      if (item.isOnline == 1) {
+        this.state.arr.push(item.id)
+      }
+
+    })
     this.setState({
       saveArrTime: props.qualityConfig.retainTimeList,
       textSimilar: props.qualityConfig.textSimilarity,
@@ -78,8 +85,11 @@ class Discover extends React.Component {
     let params = {
       contentUrlTimeout: this.state.contentTime,
       textSimilarity: this.state.textSimilar,
-      retainTimeList: [...dele, ...select]
+      retainTimeList: [...dele, ...select],
+      platformId: '9'
     }
+    console.log(dele)
+    console.log(select)
     this.props.TPChangeQualityConfig(params).then(() => {
       this.props.TPGetQualityConfig({})
       message.success('设置成功', 3)
@@ -87,8 +97,7 @@ class Discover extends React.Component {
       message.error(errorMsg || '操作失败，请重试！');
     })
 
-    // console.log(dele)
-    // console.log(select)
+
   }
   handleChange = (e) => {
     if (e.target.checked) {
@@ -117,21 +126,21 @@ class Discover extends React.Component {
     })
   }
   render() {
-    const { visible, isAdd, saveArrTime = [], item } = this.state;
+    const { visible, isAdd, saveArrTime = [], item, arr } = this.state;
     return <div>
       <h2 style={{ marginTop: '20px' }}>微信公众号</h2>
       <div style={{ marginLeft: '30px' }}>
         <h3 style={{ marginTop: '10px' }}>回执链接时限设置</h3>
-        <span>时限设置为 {this.props.qualityConfig.contentUrlTimeout && <InputNumber style={{ width: '60px' }} precision={0} onChange={this.contentTime} min={0} defaultValue={this.props.qualityConfig.contentUrlTimeout} />} 小时</span>
+        <span>时限设置为 {this.props.qualityConfig.contentUrlTimeout > -1 ? <InputNumber style={{ width: '60px' }} precision={0} onChange={this.contentTime} min={0} defaultValue={this.props.qualityConfig.contentUrlTimeout} /> : null} 小时</span>
         <h3 style={{ marginTop: '10px' }}>第一次质检文本匹配率设置</h3>
-        <span>文本匹配率不低于{this.props.qualityConfig.textSimilarity && <InputNumber style={{ width: '60px' }} onChange={this.textSimilar} precision={0} min={0} max={100} defaultValue={this.props.qualityConfig.textSimilarity} />}%时，第一次质检合格</span>
+        <span>文本匹配率不低于{this.props.qualityConfig.textSimilarity > -1 ? <InputNumber style={{ width: '60px' }} onChange={this.textSimilar} precision={0} min={0} max={100} defaultValue={this.props.qualityConfig.textSimilarity} /> : null}%时，第一次质检合格</span>
         <h3 style={{ marginTop: '10px' }}>保留时长设置</h3>
         <p><Checkbox value="24" checked={true}>24小时</Checkbox></p>
         <p><Checkbox value="48" checked={true}>48小时</Checkbox></p>
-        <Checkbox.Group>
+        <Checkbox.Group defaultValue={arr}>
           {saveArrTime.map((item, index) => {
             return <p key={index}>
-              <Checkbox value={item.id} defaultChecked={item.isOnline == 1 ? true : false} onChange={this.handleChange}>{item.retainTime}小时</Checkbox>
+              <Checkbox value={item.id} onChange={this.handleChange}>{item.retainTime}小时</Checkbox>
               <Button type="link" onClick={() => this.handleOpenModal(false, item)}>删除</Button>
             </p>
           })}

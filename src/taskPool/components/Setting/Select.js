@@ -34,7 +34,8 @@ class Select extends React.Component {
     let params = {
       totalProportion: Number(total),
       adProportion: Number(ad),
-      accountProportion: Number(bz)
+      accountProportion: Number(bz),
+      platformId: '9'
     }
     this.props.TPUpdateCommissionConfig(params).then(() => {
       message.success('设置成功')
