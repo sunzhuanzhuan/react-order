@@ -48,10 +48,17 @@ export const {
   method: 'post'
 });
 
-// 行业添加/更新
+// 行业详情
 export const {
   TPGetIndustryInfo,
 } = createHttpAction('TPGetIndustryInfo', Interface.attribute.getIndustryInfo);
+
+// 行业上下线
+export const {
+  TPIndustryOnOff,
+} = createHttpAction('TPIndustryOnOff', Interface.attribute.industryOnOff, {
+  method: 'post'
+});
 
 
 

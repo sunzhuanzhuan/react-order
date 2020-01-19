@@ -100,6 +100,7 @@ export default {
     addOrUpdateIndustryInfo: configManage + "/addOrUpdateIndustryInfo",
     getIndustryInfo: configManage + "/getIndustryInfo",
     updateQualification: configManage + "/updateQualification",
+    industryOnOff: configManage + "/industry/onoff",
   },
   task: {
     getIndustryCatalog: configManage + "/getIndustryCatalog",
