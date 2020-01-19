@@ -51,7 +51,7 @@ function CooperationList(props) {
       key: 'orderName',
       render: (text, record) => {
         //adOrderId
-        return <a>{text}</a>
+        return <a href={`/order/task/tasks-details/${record.adOrderId}`} >{text}</a>
       }
     },
     {
