@@ -32,7 +32,7 @@ const FilterForm = (props) => {
           {getFieldDecorator('createdName', {
             rules: [{
               validator: (rule, value, callback) => {
-                let regEx = /^[A-z0-9\\u4e00-\\u9fa5]*$/
+                let regEx = /^[\u4e00-\u9fa5_a-zA-Z0-9]+$/
                 if (!regEx.test(value)) {
                   callback('只能支持英文中文和数字')
                 } else {
