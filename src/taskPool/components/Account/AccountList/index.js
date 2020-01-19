@@ -182,7 +182,7 @@ function AccountList(props) {
       title: '填写下架原因（50字以内）',
       content: (props) => <ReasonForm okText='确认下架'
         onOk={(value) => updateAccountStateMsgAsync(
-          { remark: value, accountId: accountId, shelfState: 2 }
+          { remark: value.reason, accountId: accountId, shelfState: 2 }
         )} {...props} />,
       visible: true,
     })
