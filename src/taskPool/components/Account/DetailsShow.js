@@ -77,8 +77,8 @@ function DetailsShow(props) {
           <LineList list={[
             {
               label: '受众性别：', value: <div>
-                <Tag color="geekblue"> 男 [{getValueByFormat(sex.manRate)}]</Tag>
-                <Tag color="geekblue"> 女 [{getValueByFormat(sex.womanRate)}]</Tag>
+                <Tag color="geekblue"> 男 [{getValueByFormat(sex.manRate)}%] </Tag>
+                <Tag color="geekblue"> 女 [{getValueByFormat(sex.womanRate)}%] </Tag>
               </div>
             },
             { label: '受众地域Top3：', value: <AudienceArea list={area} /> },
@@ -103,7 +103,7 @@ const LineList = ({ list = [] }) => {
 
 const AudienceLine = ({ list = [] }) => {
   return <div className='audience-line'>
-    {list.map(item => <Tag key={item.description} color="purple"> <span className='type'>  {item.description} [{getValueByFormat(item.value)}]</span>
+    {list.map(item => <Tag key={item.description} color="purple"> <span className='type'>  {item.description} [{getValueByFormat(item.value)}%]</span>
     </Tag>)}
   </div>
 }

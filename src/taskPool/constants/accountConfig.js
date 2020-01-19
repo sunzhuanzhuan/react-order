@@ -1,3 +1,10 @@
+/*
+ * @Descripttion: 
+ * @Author: wangxinyue
+ * @Date: 2020-01-15 10:14:33
+ * @LastEditors  : wangxinyue
+ * @LastEditTime : 2020-01-19 15:46:48
+ */
 import numeral from 'numeral'
 
 export default {
@@ -61,7 +68,7 @@ export const estimateStateMap = {
 export const getValueIsExist = (value) => {
   return value == 0 || value > 0
 }
-export const getValueByFormat = (value, format = '0%') => {
+export const getValueByFormat = (value, format = '0') => {
   return getValueIsExist(value) ?
     numeral(value).format(format)
     : '-'

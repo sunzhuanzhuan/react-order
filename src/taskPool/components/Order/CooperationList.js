@@ -47,11 +47,11 @@ function CooperationList(props) {
     },
     {
       title: '任务名称',
-      dataIndex: 'adOrderName',
-      key: 'adOrderName',
+      dataIndex: 'orderName',
+      key: 'orderName',
       render: (text, record) => {
         //adOrderId
-        return <a>{text}</a>
+        return <a href={`/order/task/tasks-details/${record.adOrderId}`} >{text}</a>
       }
     },
     {

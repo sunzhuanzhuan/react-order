@@ -43,7 +43,7 @@ function OrderWechatDetail(props) {
     { label: '行业分类', content: orderMcnDetailInfo.industryName, span: 2 },
     { label: '阅读单价', content: orderMcnDetailInfo.unitPrice },
     { label: '任务模式', content: <div className='red-text'>{orderMcnDetailInfo.taskPatternDesc}</div>, span: 2 },
-    { label: '发布保留时长', content: '', },
+    { label: '发布保留时长', content: orderMcnDetailInfo.retainTime },
     { label: '', content: '', span: 2 },
     { label: '申请阅读数', content: <div className='red-text'>{getNumber(orderMcnDetailInfo.expectActionNum)}</div> },
 
@@ -62,19 +62,19 @@ function OrderWechatDetail(props) {
     { label: '订单状态', content: orderMcnDetailInfo.orderStateDesc, span: 3 },
     { label: '订单冻结金额', content: `${getNumber(orderMcnDetailInfo.maxAmount)}元`, span: 3 },
     { label: '消耗预算', content: `${getNumber(orderMcnDetailInfo.realAmount)}元`, span: 3 },
-    { label: '实际结算', content: `${getNumber(orderMcnDetailInfo.realActionNum)}元`, span: 3 },
+    { label: '实际结算', content: `${getNumber(orderMcnDetailInfo.paymentAmount)}元`, span: 3 },
   ]
 
   function openArticleImg() {
     setModalProps({
       visible: true,
-      title: '文章链接',
+      title: '文章快照',
       content: <div className='article-img'><img src={orderMcnDetailInfo.snapshotUrl} /></div>
     })
   }
   const articleInfo = [
     { label: '文章快照', content: <a onClick={openArticleImg}>查看</a> },
-    { label: '文章链接', content: <a href={orderMcnDetailInfo.snapshotUrl} target='_blank'>查看</a>, span: 2 },
+    { label: '文章链接', content: <a href={orderMcnDetailInfo.contentUrl} target='_blank'>查看</a>, span: 2 },
   ]
   const secondReasonInfo = [
     { label: '原因', content: orderMcnDetailInfo.maxAmount, span: 3 },

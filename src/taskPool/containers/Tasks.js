@@ -31,7 +31,7 @@ function getColumns(active, operation) {
         {
           title: '任务名称',
           dataIndex: 'orderName',
-          width: 220,
+          width: 246,
           render: (name, record) => {
             return <TaskInfo platformId={record.platformId} name={name} />
           }
@@ -222,13 +222,10 @@ function getColumns(active, operation) {
           }
         },
         {
-          title: '任务类型',
-          dataIndex: 'mediaType',
-          render: (type, record) => {
-            return <>
-              {type === 3 && "视频+图"}
-              {type === 4 && "图"}
-            </>
+          title: '内容类型',
+          dataIndex: 'mediaTypeDesc',
+          render: (desc, record) => {
+            return desc
           }
         },
         {
