@@ -130,6 +130,7 @@ export default class DetailsForWeiXin extends Component {
       {
         title: '领取时间',
         align: "center",
+        width: 100,
         dataIndex: 'receiveAt',
         render: (date, record) => {
           return dateDisplayByLen(date, "m")
@@ -138,6 +139,7 @@ export default class DetailsForWeiXin extends Component {
       {
         title: '预计推送时间',
         align: "center",
+        width: 100,
         dataIndex: 'expectedPublishedTime',
         render: (date, record) => {
           return dateDisplayByLen(date, "m")

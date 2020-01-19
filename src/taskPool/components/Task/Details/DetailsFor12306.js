@@ -24,6 +24,7 @@ import {
   openNewWindowPreviewFor12306
 } from "@/taskPool/constants/utils";
 import { convertRawToHTML } from 'braft-convert'
+import moment from 'moment';
 
 
 export default class DetailsFor12306 extends Component {
@@ -81,7 +82,7 @@ export default class DetailsFor12306 extends Component {
               }
             </Descriptions.Item>
             <Descriptions.Item label="经营内容">
-              {details.scopeName}
+              {details.taskIndustryInfo.scopeName}
             </Descriptions.Item>
             <Descriptions.Item label="投放开始日期">
               {dateDisplayByLen(details.orderStartDate, 'd')}
@@ -90,35 +91,35 @@ export default class DetailsFor12306 extends Component {
               {dateDisplayByLen(details.orderEndDate, 'd')}
             </Descriptions.Item>
             <Descriptions.Item label="投放持续天数">
-              {getCountDownTimeText(details.orderEndDate, 0, 5, details.orderStartDate)}
+              {getCountDownTimeText(moment(details.orderEndDate).add(1,'d'), 0, 3, details.orderStartDate)}
             </Descriptions.Item>
             <Descriptions.Item label="任务预算">
               {details.totalAmount}元
             </Descriptions.Item>
             <Descriptions.Item label="所属公司">{details.companyName}</Descriptions.Item>
             <Descriptions.Item label="出发城市">
-              {features.leavePlaceDesc}
+              {features.leavePlaceDesc || '-'}
             </Descriptions.Item>
             <Descriptions.Item label="到达城市">
-              {features.arrivePlaceDesc}
+              {features.arrivePlaceDesc || '-'}
             </Descriptions.Item>
             {features.putType === 1 && <Descriptions.Item label="车次类型">
-              {features.deliveryTrainTypeDesc}
+              {features.deliveryTrainTypeDesc || '-'}
             </Descriptions.Item>}
             {features.putType === 1 && <Descriptions.Item label="坐席类型">
-              {features.deliverySeatDesc}
+              {features.deliverySeatDesc || '-'}
             </Descriptions.Item>}
             {features.putType === 1 && <Descriptions.Item label="人群性别">
-              {features.deliverySexDesc}
+              {features.deliverySexDesc || '-'}
             </Descriptions.Item>}
             {features.putType === 1 && <Descriptions.Item label="年龄区间">
-              {features.deliveryAgesDesc}
+              {features.deliveryAgesDesc || '-'}
             </Descriptions.Item>}
             <Descriptions.Item label="内容类型">
               {features.mediaTypeDesc}
             </Descriptions.Item>
             <Descriptions.Item label="阅读单价">
-              {features.unitPrice} 元/条
+              {features.unitPrice} 元/{features.putType === 1 ? '条' : '天'}
             </Descriptions.Item>
             {features.putType === 1 && <Descriptions.Item label="预计阅读数">
                 <div className='text-red'>{features.actionNum}条</div>
@@ -126,9 +127,6 @@ export default class DetailsFor12306 extends Component {
             <Descriptions.Item label="内容预览">
               <a onClick={this.preview}>查看</a>
             </Descriptions.Item>
-            {features.putType === 1 && <Descriptions.Item label="预计阅读数">
-              {details.actionNum}
-            </Descriptions.Item>}
           </Descriptions>
         </Section.Content>
       </Section>
