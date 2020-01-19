@@ -11,7 +11,7 @@ export const AD_ORDER_STATE_WAIT_RELEASED = 200 // 待发布
 export const AD_ORDER_STATE_PROCESSING = 300 // 进行中
 export const AD_ORDER_STATE_EXPIRY = 400 // 过期
 export const AD_ORDER_STATE_OFFLINE = 500 // 下线
-export const AD_ORDER_STATE_FINISH = 600 // 任务结束结束
+export const AD_ORDER_STATE_FINISH = 600 // 任务结束
 export const AD_ORDER_STATE_END = 250 // 终结
 
 /**

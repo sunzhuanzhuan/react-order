@@ -77,10 +77,10 @@ function getColumns(active, operation) {
         },
         {
           title: '任务类型',
-          dataIndex: 'taskPattern',
-          render: (taskPattern, record) => {
+          dataIndex: 'taskPatternDesc',
+          render: (text, record) => {
             return <div>
-              {taskPattern}
+              {text}
             </div>
           }
         },
@@ -97,18 +97,19 @@ function getColumns(active, operation) {
           align: "right",
           render: (mcnCount, record) => {
             return <>
-              {mcnCount} / {record.mcnApplyCount}
+              {mcnCount || '-'} / {record.mcnApplyCount || '-'}
             </>
           }
         },
         {
           title: '已用预算/可用预算',
-          dataIndex: 'availableAmount',
+          dataIndex: 'usedAmount',
           align: "right",
-          render: (availableAmount, record) => {
+          render: (usedAmount, record) => {
             return <>
-              <Yuan className='text-gray' value={record.freezeAmount} format='0,0.00' />
-              <Yuan className='text-gray' value={availableAmount} format='0,0.00' />
+              <Yuan className='text-gray' value={usedAmount} format='0,0.00' />
+              <br />
+              <Yuan className='text-gray' value={record.availableAmount} format='0,0.00' />
             </>
           }
         },

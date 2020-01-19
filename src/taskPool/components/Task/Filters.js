@@ -7,7 +7,15 @@ import {
   Button, Row, Col, Form,
   Input, Tabs, Select, DatePicker
 } from "antd";
-import { platformTypes } from "../../constants/config";
+import {
+  AD_ORDER_STATE_EXPIRY,
+  AD_ORDER_STATE_FINISH,
+  AD_ORDER_STATE_OFFLINE,
+  AD_ORDER_STATE_PROCESSING,
+  AD_ORDER_STATE_UNPAID,
+  AD_ORDER_STATE_WAIT_RELEASED,
+  platformTypes
+} from "../../constants/config";
 import moment from 'moment';
 import { useHistory } from 'react-router-dom'
 
@@ -47,14 +55,14 @@ const FilterForm = (props) => {
       </Col>
       <Col span={5}>
         <Form.Item label="创建人">
-          {getFieldDecorator('isFamous', {})(
+          {getFieldDecorator('createName', {})(
             <Input placeholder="请输入" allowClear />
           )}
         </Form.Item>
       </Col>
       <Col span={5}>
         <Form.Item label="任务名称">
-          {getFieldDecorator('snsName', {})(
+          {getFieldDecorator('orderName', {})(
             <Input placeholder="请输入" allowClear />
           )}
         </Form.Item>
@@ -75,20 +83,20 @@ const FilterForm = (props) => {
       </Col>
       <Col span={5}>
         <Form.Item label="任务状态">
-          {getFieldDecorator('type', {})(
+          {getFieldDecorator('orderState', {})(
             <Select placeholder="请选择" allowClear>
-              <Option value="1">待发布</Option>
-              <Option value="2">进行中</Option>
-              <Option value="3">已下线</Option>
-              <Option value="4">已结束</Option>
-              <Option value="5">已过期</Option>
+              <Option value={AD_ORDER_STATE_WAIT_RELEASED}>待发布</Option>
+              <Option value={AD_ORDER_STATE_PROCESSING}>进行中</Option>
+              <Option value={AD_ORDER_STATE_OFFLINE}>已下线</Option>
+              <Option value={AD_ORDER_STATE_FINISH}>已结束</Option>
+              <Option value={AD_ORDER_STATE_EXPIRY}>已过期</Option>
             </Select>
           )}
         </Form.Item>
       </Col>
       <Col span={5}>
         <Form.Item label="任务ID">
-          {getFieldDecorator('id', {})(
+          {getFieldDecorator('adOrderNumber', {})(
             <Input placeholder="请输入" allowClear />
           )}
         </Form.Item>
