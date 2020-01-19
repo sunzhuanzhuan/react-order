@@ -88,7 +88,7 @@ function AccountList(props) {
         const { sex = {}, age = [], area = [] } = acceptCrowd
         const { manRate, womanRate } = sex
         return text ? <div className='accept-crowd'>
-          <div>性别：男{getValueByFormat(manRate)} | 女{getValueByFormat(womanRate)}</div>
+          <div>性别：男{getValueByFormat(manRate)}% | 女{getValueByFormat(womanRate)}%</div>
           <div>年龄：{getStringByList(age)} </div>
           <div>地域：{getStringByList(area)}</div>
         </div> : null
