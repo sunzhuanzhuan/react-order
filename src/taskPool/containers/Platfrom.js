@@ -69,6 +69,7 @@ const Platform = (props) => {
     setRow(record)
   }
   const status = {
+    '0': '-',
     '1': '合作中',
     '2': '合作结束',
     '3': '合作终止'
@@ -135,10 +136,10 @@ const Platform = (props) => {
       width: '100px',
       render: (val, record) => {
         return <div>
-          {record.contractState == 2 ? <Button type="link" onClick={() => handleEdit(record, 'edit')}>编辑</Button> : null}
-          {(record.contractState == 3 || record.contractState == 4) ? <Button type="link" onClick={() => handleEdit(record, 'query')}>查看</Button> : null}
-          {(record.contractState == 3 || record.contractState == 4) ? <Button type="link" onClick={() => handleDelete(record)}>删除</Button> : null}
-          {record.contractState == 2 ? <Button type="link" onClick={() => handleStop(record)}>合作终止</Button> : null}
+          {record.contractState == 1 ? <Button type="link" onClick={() => handleEdit(record, 'edit')}>编辑</Button> : null}
+          {(record.contractState == 3 || record.contractState == 2) ? <Button type="link" onClick={() => handleEdit(record, 'query')}>查看</Button> : null}
+          {(record.contractState == 3 || record.contractState == 2) ? <Button type="link" onClick={() => handleDelete(record)}>删除</Button> : null}
+          {record.contractState == 1 ? <Button type="link" onClick={() => handleStop(record)}>合作终止</Button> : null}
         </div>
       },
 
@@ -165,7 +166,11 @@ const Platform = (props) => {
     },
     showQuickJumper: true
   }
-  console.log(authToken)
+  const lei = {
+    "add": '新增',
+    "edit": '编辑',
+    "query": '查看'
+  }
   return <div>
     <h2>合作平台管理</h2>
     <Button type="primary" onClick={() => {
@@ -173,7 +178,7 @@ const Platform = (props) => {
       setType('add')
     }}>添加合作平台</Button>
     {authToken && <Modal
-      title="添加合作平台"
+      title={`${lei[type]}合作平台`}
       visible={visible}
       footer={null}
       destroyOnClose={true}

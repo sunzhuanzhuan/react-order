@@ -148,9 +148,9 @@ export default class DetailsForWeiXin extends Component {
       {
         title: '图文发布位置',
         align: "center",
-        dataIndex: 'locationLimitedInfo',
-        render: (locationLimitedInfo, record) => {
-          return locationLimitedInfo
+        dataIndex: 'locationInfo',
+        render: (locationInfo, record) => {
+          return locationInfo
         }
       },
       {
@@ -165,18 +165,18 @@ export default class DetailsForWeiXin extends Component {
       {
         title: '预算消耗',
         align: "center",
-        dataIndex: 'adAmount',
+        dataIndex: 'realAmount',
         render: (amount, record) => {
-          return <Yuan value={record.orderState ? 0 : amount}
+          return <Yuan value={amount}
                        format={"0,0.00"} style={{ color: "#333" }} />
         }
       },
       {
         title: '服务费消耗',
         align: "center",
-        dataIndex: 'serviceAmount',
+        dataIndex: 'realServiceAmount',
         render: (amount, record) => {
-          return <Yuan value={record.orderState ? 0 : amount}
+          return <Yuan value={amount}
                        format={"0,0.00"} style={{ color: "#333" }} />
         }
       },
@@ -420,7 +420,7 @@ export default class DetailsForWeiXin extends Component {
       },
       {
         text: "近28天内有发文",
-        val: features.mediaCountLimit ? "" : 0
+        val: features.mediaCountLimit === 1 ? "" : 0
       },
       {
         text: "28天内第一条平均阅读高于",
@@ -436,7 +436,7 @@ export default class DetailsForWeiXin extends Component {
       },
       {
         text: "只允许认证号接单",
-        val: features.onlyVerified ? "" : 0
+        val: features.onlyVerified === 1 ? "" : 0
       },
     ]
 

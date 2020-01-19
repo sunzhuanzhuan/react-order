@@ -2,10 +2,10 @@ import React, { } from 'react';
 import { Form, Icon, Input, Button, DatePicker } from 'antd';
 import { OssUpload } from "wbyui";
 import moment from 'moment'
+import './add.less'
 const { RangePicker } = DatePicker;
 
 const AddForm = (props) => {
-
 
   const { getFieldDecorator } = props.form;
   const formItemLayout = {
@@ -22,10 +22,16 @@ const AddForm = (props) => {
     e.preventDefault();
     props.form.validateFields((err, values) => {
       if (!err) {
-        values.cooperationStartTime = moment(values.cooperationStartTime)._d;
-        values.cooperationEndTime = moment(values.cooperationEndTime)._d
+        const { platformDetail = {} } = props.platformReducers;
+        values.cooperationStartTime = moment(values.cooperationStartTime).format('YYYY-MM-DD');
+        values.cooperationEndTime = moment(values.cooperationEndTime).format('YYYY-MM-DD')
         values.cooperationArea = [{ "areaCode": 100000, "areaName": "北京" }, { "areaCode": 200000, "areaName": "上海" }]
-        console.log('Received values of form: ', values);
+        let newValue = JSON.parse(JSON.stringify(values))
+        values.contractEnclosureUrl = newValue.contractEnclosureUrl[0].url
+        values.contractEnclosureName = newValue.contractEnclosureUrl[0].name || platformDetail.contractEnclosureName
+        values.authorEnclosureUrl = newValue.authorEnclosureUrl[0].url
+        values.authorEnclosureName = newValue.authorEnclosureUrl[0].name || platformDetail.authorEnclosureName
+
         props.TPSavePlatform({ ...values, }).then(() => {
           props.setVisible(false)
           let search = {
@@ -42,6 +48,16 @@ const AddForm = (props) => {
 
   }
   const { platformDetail = {} } = props.platformReducers;
+  const formItemLayout1 = {
+    labelCol: {
+      xs: { span: 24 },
+      sm: { span: 6 },
+    },
+    wrapperCol: {
+      xs: { span: 24 },
+      sm: { span: 6 },
+    },
+  }
   return <div>
     <Form onSubmit={handleSubmit}>
       <Form.Item label="合作平台名称" {...formItemLayout}>
@@ -82,19 +98,22 @@ const AddForm = (props) => {
           <Input placeholder="请输入" style={{ width: '300px' }} disabled={props.type == 'query'} />,
         )}
       </Form.Item>
-      <Form.Item label="合作时间" {...formItemLayout}>
-        {getFieldDecorator('cooperationStartTime', {
-          rules: [{ required: true, message: '请选择开始日期' }],
-          initialValue: props.type == 'add' ? null : moment(moment(platformDetail.cooperationStartTime).format('YYYY-MM-DD'), 'YYYY-MM-DD')
-        })(
-          <DatePicker format={'YYYY-MM-DD'} placeholder='开始日期' style={{ width: '150px' }} disabled={props.type == 'query'} />
-        )}~
-          {getFieldDecorator('cooperationEndTime', {
+      <Form.Item label="合作时间" {...formItemLayout} className='cooper'>
+        <Form.Item style={{ display: 'inline-block' }}>
+          {getFieldDecorator('cooperationStartTime', {
+            rules: [{ required: true, message: '请选择开始日期' }],
+            initialValue: props.type == 'add' ? null : moment(moment(platformDetail.cooperationStartTime).format('YYYY-MM-DD'), 'YYYY-MM-DD')
+          })(
+            <DatePicker style={{ width: '150px' }} format={'YYYY-MM-DD'} placeholder='开始日期' disabled={props.type == 'query'} />
+          )}</Form.Item>
+        <span style={{ display: 'inline-block' }}>{'~'}</span>
+        <Form.Item style={{ display: 'inline-block' }} > {getFieldDecorator('cooperationEndTime', {
           rules: [{ required: true, message: '请选择截止日期' }],
           initialValue: props.type == 'add' ? null : moment(moment(platformDetail.cooperationEndTime).format('YYYY-MM-DD'), 'YYYY-MM-DD')
         })(
           <DatePicker format={'YYYY-MM-DD'} placeholder='结束日期' style={{ width: '140px' }} disabled={props.type == 'query'} />
         )}
+        </Form.Item>
       </Form.Item>
       <Form.Item label="合作区域" {...formItemLayout}>
         {getFieldDecorator('cooperationArea', {
@@ -106,6 +125,7 @@ const AddForm = (props) => {
       </Form.Item>
       <Form.Item label="上传合同" {...formItemLayout}>
         {getFieldDecorator('contractEnclosureUrl', {
+          initialValue: props.type == 'add' ? null : [{ url: platformDetail.contractEnclosureUrl, status: 'done', uid: platformDetail.contractEnclosureUrl }],
           valuePropName: 'fileList',
           getValueFromEvent: e => e && e.fileList,
           rules: [
@@ -127,6 +147,7 @@ const AddForm = (props) => {
       </Form.Item>
       <Form.Item label="上传授权书" {...formItemLayout}>
         {getFieldDecorator('authorEnclosureUrl', {
+          initialValue: props.type == 'add' ? null : [{ url: platformDetail.authorEnclosureUrl, status: 'done', uid: platformDetail.authorEnclosureUrl }],
           valuePropName: 'fileList',
           getValueFromEvent: e => e && e.fileList,
           rules: [

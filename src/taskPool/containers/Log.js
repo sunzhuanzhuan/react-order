@@ -11,10 +11,10 @@ const Log = (props) => {
   const columns = [
     {
       title: '用户名',
-      dataIndex: 'id',
+      dataIndex: 'createdName',
       align: 'center',
       width: '30%',
-      key: 'id'
+      key: 'createdName'
     },
     {
       title: '记录时间',
