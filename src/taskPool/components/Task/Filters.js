@@ -13,7 +13,7 @@ import {
   AD_ORDER_STATE_OFFLINE,
   AD_ORDER_STATE_PROCESSING,
   AD_ORDER_STATE_UNPAID,
-  AD_ORDER_STATE_WAIT_RELEASED,
+  AD_ORDER_STATE_WAIT_RELEASED, MEDIA_TASK_PATTERN_BIDDING, MEDIA_TASK_PATTERN_RUSH,
   platformTypes
 } from "../../constants/config";
 import moment from 'moment';
@@ -44,14 +44,22 @@ const FilterForm = (props) => {
         </Form.Item>
       </Col>
       <Col span={5}>
-        <Form.Item label="任务类型">
-          {getFieldDecorator('isFamous2', {})(
+        {props.active === "9" && <Form.Item label="任务类型">
+          {getFieldDecorator('taskPattern', {})(
             <Select placeholder="请选择" allowClear>
-              <Option value="1">抢单</Option>
-              <Option value="2">竞标</Option>
+              <Option value={MEDIA_TASK_PATTERN_RUSH}>抢单</Option>
+              <Option value={MEDIA_TASK_PATTERN_BIDDING}>竞标</Option>
             </Select>
           )}
-        </Form.Item>
+        </Form.Item>}
+        {props.active === "1000" && <Form.Item label="内容类型">
+          {getFieldDecorator('mediaType', {})(
+            <Select placeholder="请选择" allowClear>
+              <Option value={3}>图文</Option>
+              <Option value={4}>图文 + 视频</Option>
+            </Select>
+          )}
+        </Form.Item>}
       </Col>
       <Col span={5}>
         <Form.Item label="创建人">
@@ -169,6 +177,7 @@ const Filters = (props) => {
       <FilterForm
         form={props.form}
         key={"filter-" + active}
+        active={active}
       />
     </Form>
   );
