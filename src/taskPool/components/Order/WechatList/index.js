@@ -6,6 +6,7 @@ import QualityFailedForm from './QualityFailedForm'
 import Scolltable from '@/components/Scolltable/Scolltable.js'
 import EditReceiptForm from './EditReceiptForm'
 import OrderMcnStatus from '../../../base/OrderMcnStatus'
+import { WBYPlatformIcon } from 'wbyui'
 import numeral from 'numeral';
 export default function WachatList(props) {
   const { setModalProps, allMcnOrderList = {}, actions, changeWechatPage } = props
@@ -34,9 +35,13 @@ export default function WachatList(props) {
       key: 'id',
     },
     {
-      title: '任务名称/平台',
+      title: '任务名称',
       dataIndex: 'orderName',
       key: 'orderName',
+      render: ((text, record) => <div>
+        <WBYPlatformIcon weibo_type={9} widthSize={14} />
+        <a href={`/order/task/tasks-details/${record.adOrderId}`} > {text}</a>
+      </div>)
     },
     {
       title: '任务ID',
