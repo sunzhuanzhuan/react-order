@@ -574,11 +574,11 @@ export default class DetailsForWeiXin extends Component {
               </div>
             </Descriptions.Item>
             {features.taskPattern === MEDIA_TASK_PATTERN_RUSH && <Descriptions.Item label="预计阅读数">
-              {details.expect}
+              {features.expect}
             </Descriptions.Item>}
             {features.taskPattern === MEDIA_TASK_PATTERN_BIDDING &&
             <Descriptions.Item label="预计平均阅读单价">
-              {details.expect} 元/阅读
+              {features.expect}
             </Descriptions.Item>}
           </Descriptions>
         </Section.Content>
