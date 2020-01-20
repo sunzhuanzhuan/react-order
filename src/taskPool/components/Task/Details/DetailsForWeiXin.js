@@ -30,7 +30,7 @@ import {
   AD_ORDER_STATE_PROCESSING,
   AD_ORDER_STATE_WAIT_RELEASED,
   MCN_ORDER_STATE_APPLY, MCN_ORDER_STATE_APPLY_REFUSE,
-  MCN_ORDER_STATE_CANCEL, MCN_ORDER_STATE_OFFLINE,
+  MCN_ORDER_STATE_CANCEL, MCN_ORDER_STATE_OFFLINE, MCN_ORDER_STATE_OFFLINE_PART,
   MEDIA_TASK_PATTERN_BIDDING,
   MEDIA_TASK_PATTERN_RUSH
 } from "@/taskPool/constants/config";
@@ -201,10 +201,10 @@ export default class DetailsForWeiXin extends Component {
             </>}
             <>
               <Divider type="vertical" />
-              <Link to={`/order/task/orders-coodetail?orderId=${record.id}`}
+              <Link to={`/order/task/orders-wechatdetail?id=${record.id}`}
                     target="_blank">查看数据统计</Link>
             </>
-            {state === MCN_ORDER_STATE_OFFLINE && <>
+            {(state === MCN_ORDER_STATE_OFFLINE_PART || state === MCN_ORDER_STATE_OFFLINE) && state.isEvaluate === 2 && <>
               <Divider type="vertical" />
               <a onClick={() => this.setState({raterOrderId: record.id})}>评价</a>
             </>}
