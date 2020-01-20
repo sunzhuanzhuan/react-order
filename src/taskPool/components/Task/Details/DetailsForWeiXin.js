@@ -57,7 +57,9 @@ class RaterModal extends React.Component {
       orderScore: this.state.value
     }).then(() => {
       this.setState({ loading: false });
+      message.success('评价完成')
       this.props.cancel()
+      this.props.reload()
     }).catch(() => {
       this.setState({ loading: false });
     })
@@ -204,7 +206,7 @@ export default class DetailsForWeiXin extends Component {
               <Link to={`/order/task/orders-wechatdetail?id=${record.id}`}
                     target="_blank">查看数据统计</Link>
             </>
-            {(state === MCN_ORDER_STATE_OFFLINE_PART || state === MCN_ORDER_STATE_OFFLINE) && state.isEvaluate === 2 && <>
+            {(state === MCN_ORDER_STATE_OFFLINE_PART || state === MCN_ORDER_STATE_OFFLINE) && record.isEvaluate === 2 && <>
               <Divider type="vertical" />
               <a onClick={() => this.setState({raterOrderId: record.id})}>评价</a>
             </>}
@@ -466,8 +468,9 @@ export default class DetailsForWeiXin extends Component {
   }
 
   componentDidMount() {
+    const features = this.props.details.adOrderWeixinContent
     this.getList()
-    this.getListByTemp()
+    features.taskPattern === MEDIA_TASK_PATTERN_BIDDING && this.getListByTemp()
   }
 
   render() {
@@ -482,7 +485,7 @@ export default class DetailsForWeiXin extends Component {
     return <>
       {raterOrderId > 0 &&
       <RaterModal action={actions.TPMcnOrderEvaluate} cancel={() => this.handleRater(0)}
-                  id={raterOrderId} />}
+                  id={raterOrderId} reload={this.getList}/>}
       <PageHeader
         onBack={() => this.props.history.go(-1)}
         title="任务详情"
@@ -571,11 +574,11 @@ export default class DetailsForWeiXin extends Component {
               </div>
             </Descriptions.Item>
             {features.taskPattern === MEDIA_TASK_PATTERN_RUSH && <Descriptions.Item label="预计阅读数">
-              {details.unifiedNumber}
+              {details.expect}
             </Descriptions.Item>}
             {features.taskPattern === MEDIA_TASK_PATTERN_BIDDING &&
             <Descriptions.Item label="预计平均阅读单价">
-              {details.unifiedNumber}
+              {details.expect} 元/阅读
             </Descriptions.Item>}
           </Descriptions>
         </Section.Content>
