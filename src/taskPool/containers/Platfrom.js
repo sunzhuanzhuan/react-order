@@ -33,6 +33,7 @@ const Platform = (props) => {
     props.actions.getNewToken().then(({ data: authToken }) => {
       setAuthToken({ authToken })
     })
+    props.actions.TPAllProvince()
     setListLoading(false)
   }
   const handleEdit = (record, type) => {
@@ -136,7 +137,9 @@ const Platform = (props) => {
       width: '100px',
       render: (val, record) => {
         return <div>
-          {record.contractState == 1 ? <Button type="link" onClick={() => handleEdit(record, 'edit')}>编辑</Button> : null}
+          {/* {record.contractState == 1 ?  */}
+          <Button type="link" onClick={() => handleEdit(record, 'edit')}>编辑</Button>
+          {/* : null} */}
           {(record.contractState == 3 || record.contractState == 2) ? <Button type="link" onClick={() => handleEdit(record, 'query')}>查看</Button> : null}
           {(record.contractState == 3 || record.contractState == 2) ? <Button type="link" onClick={() => handleDelete(record)}>删除</Button> : null}
           {record.contractState == 1 ? <Button type="link" onClick={() => handleStop(record)}>合作终止</Button> : null}
@@ -150,7 +153,7 @@ const Platform = (props) => {
   const handleCancel = () => {
     setVisible(false)
   }
-  const { platformList: { list, pageNum, pageSize, total }, } = props.platformReducers
+  const { platformList: { list, pageNum, pageSize, total }, allProvince } = props.platformReducers
   const pagination = {
     total: total,
     pageSize: 50,
@@ -190,6 +193,7 @@ const Platform = (props) => {
         platformReducers={props.platformReducers}
         data={authToken}
         getList={getList}
+        allProvince={allProvince}
         TPSavePlatform={props.actions.TPSavePlatform} />
     </Modal>}
     <h3 style={{ margin: '20px 0' }}>合计<a>{total}</a>个</h3>

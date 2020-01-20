@@ -28,3 +28,10 @@ export const {
 } = createHttpAction('TPPUpdatePlatform', Interface.platform.TPPUpdatePlatform, {
   method: 'post'
 });
+// 省会列表
+export const {
+  TPAllProvince,
+  TPAllProvince_success
+} = createHttpAction('TPAllProvince', Interface.platform.TPAllProvince, {
+  method: 'get'
+});

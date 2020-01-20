@@ -37,6 +37,10 @@ class Select extends React.Component {
       accountProportion: Number(bz),
       platformId: '9'
     }
+    if (Number(total) != Number(ad) + Number(bz)) {
+      message.error('请检查计算是否准确')
+      return
+    }
     this.props.TPUpdateCommissionConfig(params).then(() => {
       message.success('设置成功')
       this.props.TPQueryCommissionConfig()

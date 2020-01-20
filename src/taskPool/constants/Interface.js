@@ -37,6 +37,7 @@ export default {
     TPSavePlatform: prefix + "/cooperationPlatform/v2/savePlatform",
     TPPlatformDetail: prefix + "/cooperationPlatform/v2/getPlatformDetail",
     TPPUpdatePlatform: prefix + "/cooperationPlatform/v2/updatePlatform",
+    TPAllProvince: prefix + "/common/v1/getAllProvince"
   },
   setting: {
     TPReadUnitPriceConfig: prefix + "/cooperationPlatform/v2/suggestReadUnitPriceConfig",
