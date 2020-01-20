@@ -239,8 +239,8 @@ const UpdateIndustryBySecond = (props) => {
         props.actions.TPAddOrUpdateIndustryInfo(body)
           .then(() => {
             message.success("添加成功")
-            history.back()
             setLoading(false)
+            history.replace('/order/task/attributes-manage')
           })
           .catch(() => {
             setLoading(false)
