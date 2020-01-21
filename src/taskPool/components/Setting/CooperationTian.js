@@ -20,12 +20,12 @@ class CooperationTian extends React.Component {
     })
   }
   handleAdd = () => {
-    let params = { launchDay: '', taskOfferPrice: '', id: new Date().getTime() }
+    let params = { launchDay: '', taskOfferPrice: '', id: new Date().getTime(), feAdd: true, }
     this.state.data.push(params)
     this.setState({})
   }
   handleDelete = () => {
-    const { data, selectWeTian } = this.state
+    const { data, selectWeTian, selectedRows } = this.state
     if (selectWeTian.length == 0) {
       message.error('请选择要删除的项')
       return
@@ -37,9 +37,23 @@ class CooperationTian extends React.Component {
       okType: 'danger',
       cancelText: '否',
       onOk: (() => {
-        this.props.TPDeleteTaskLaunch({ ids: selectWeTian }).then(() => {
-          this.props.TPGetTaskLaunchConfigTian({ offerType: 1 })
+        for (let i = 0; i < selectedRows.length; i++) {
+          if (selectedRows[i].feAdd) {
+            selectedRows.splice(i, 1)
+          }
+        }
+        let arr = []
+        selectedRows.map((item) => {
+          arr.push(item.id)
         })
+        if (arr.length > 0) {
+          this.props.TPDeleteTaskLaunch({ ids: arr }).then(() => {
+            this.props.TPGetTaskLaunchConfigTian({ offerType: 1 })
+          })
+        } else {
+          this.props.TPGetTaskLaunchConfigTian({ offerType: 1 })
+        }
+
         // for (let i = 0; i < selectWeTian.length; i++) {
         //   for (let j = 0; j < data.length; j++) {
         //     if (selectWeTian[i] == data[j].id) {
@@ -92,7 +106,8 @@ class CooperationTian extends React.Component {
     const rowSelection = {
       onChange: (selectedRowKeys, selectedRows) => {
         this.setState({
-          selectWeTian: selectedRowKeys
+          selectWeTian: selectedRowKeys,
+          selectedRows: selectedRows
         })
       }
     };

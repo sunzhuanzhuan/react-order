@@ -137,9 +137,9 @@ const Platform = (props) => {
       width: '100px',
       render: (val, record) => {
         return <div>
-          {/* {record.contractState == 1 ?  */}
-          <Button type="link" onClick={() => handleEdit(record, 'edit')}>编辑</Button>
-          {/* : null} */}
+          {record.contractState == 1 ?
+            <Button type="link" onClick={() => handleEdit(record, 'edit')}>编辑</Button>
+            : null}
           {(record.contractState == 3 || record.contractState == 2) ? <Button type="link" onClick={() => handleEdit(record, 'query')}>查看</Button> : null}
           {(record.contractState == 3 || record.contractState == 2) ? <Button type="link" onClick={() => handleDelete(record)}>删除</Button> : null}
           {record.contractState == 1 ? <Button type="link" onClick={() => handleStop(record)}>合作终止</Button> : null}

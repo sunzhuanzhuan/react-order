@@ -75,7 +75,7 @@ class Cooperation extends React.Component {
     });
   }
   handleDeleteAccount = () => {
-    const { data, selectWeiDu } = this.state
+    const { data, selectedRows, selectWeiDu } = this.state
     if (selectWeiDu.length == 0) {
       message.error('请选择要删除的项')
       return
@@ -87,17 +87,24 @@ class Cooperation extends React.Component {
       okType: 'danger',
       cancelText: '否',
       onOk: (() => {
-        // for (let i = 0; i < selectWeiDu.length; i++) {
-        //   for (let j = 0; j < data.length; j++) {
-        //     if (selectWeiDu[i] == data[j].groupId) {
-        //       data.splice(j, 1)
-        //     }
-        //   }
-        // }
-        // let string = selectWeiDu.toString()
-        this.props.TPDeleteDimension({ groupIds: selectWeiDu }).then(() => {
-          this.props.TPGetDimensionConfig({})
+        for (let i = 0; i < selectedRows.length; i++) {
+          if (selectedRows[i].feAdd) {
+            selectedRows.splice(i, 1)
+          }
+        }
+        let arr = []
+        selectedRows.map((item) => {
+          arr.push(item.groupId)
         })
+        // let string = selectWeiDu.toString()
+        if (arr.length > 0) {
+          this.props.TPDeleteDimension({ groupIds: arr }).then(() => {
+            this.props.TPGetDimensionConfig({})
+          })
+        } else {
+          this.props.TPGetDimensionConfig({})
+        }
+
         // this.setState({})
       }).bind(this),
       onCancel() {
@@ -108,6 +115,7 @@ class Cooperation extends React.Component {
   handleAddAccount = () => {
     let params = {
       groupId: new Date().getTime(),
+      feAdd: true,
       itemTypes: [],
       offerTypes: [
         {
@@ -140,7 +148,8 @@ class Cooperation extends React.Component {
     const rowSelection = {
       onChange: (selectedRowKeys, selectedRows) => {
         this.setState({
-          selectWeiDu: selectedRowKeys
+          selectWeiDu: selectedRowKeys,
+          selectedRows: selectedRows
         })
         // console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
         // setSelectedRows(selectedRows)
