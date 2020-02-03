@@ -71,10 +71,19 @@ class SpotplanAdd extends React.Component {
   }
   handleUpdate = obj => {
     const search = qs.parse(this.props.location.search.substring(1));
-    return this.props.actions.postUpdateSpotplanOrder({ spotplan_id: search.spotplan_id, ...obj }).then((response) => {
-      message.success('更新完成！', 1);
-      return response
-    })
+    let weiboId = obj.weibo_id;
+    let reg = /^[^\u4e00-\u9fa5]{0,255}$/
+    if (weiboId == '' || !reg.test(weiboId)) {
+      message.error('账号id不能为空,并且需要输入中文除外的，最多255个字符')
+    } else {
+      return this.props.actions.postUpdateSpotplanOrder({ flag: 1, spotplan_id: search.spotplan_id, ...obj }).then((response) => {
+        message.success('更新完成！', 1);
+        this.props.actions.getSpotplanEditOrder({ spotplan_id: search.spotplan_id });
+        return response
+      })
+    }
+
+
   }
   handleCheck = (type, order_id, item) => {
     const { orderMaps } = this.state;
