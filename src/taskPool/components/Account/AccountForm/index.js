@@ -42,18 +42,21 @@ function AccountTabs(props) {
     validateFields((err, values) => {
       console.log("TCL: onSearch -> values", values)
       const { estimatetime, auditTime, identity } = values.form
+      let allValues = { ...values }
       if (auditTime) {
-        values.form.auditStartTime = moment(auditTime[0]).format(format)
-        values.form.auditEndTime = moment(auditTime[1]).format(format)
+        allValues.form.auditStartTime = moment(auditTime[0]).format(format)
+        allValues.form.auditEndTime = moment(auditTime[1]).format(format)
+        delete allValues.auditTime
       }
       if (estimatetime) {
-        values.form.estimateStarttime = moment(estimatetime[0]).format(format)
-        values.form.estimateEndtime = moment(estimatetime[1]).format(format)
+        allValues.form.estimateStarttime = moment(estimatetime[0]).format(format)
+        allValues.form.estimateEndtime = moment(estimatetime[1]).format(format)
+        delete allValues.estimatetime
       }
       if (identity) {
-        values.form.identityId = values.form.identity.key
+        allValues.form.identityId = values.form.identity.key
       }
-      searchAction && searchAction(values)
+      searchAction && searchAction(allValues)
     })
   }
   function onResetForm(value) {

@@ -1,3 +1,10 @@
+/*
+ * @Descripttion: 
+ * @Author: wangxinyue
+ * @Date: 2020-01-15 10:14:33
+ * @LastEditors  : wangxinyue
+ * @LastEditTime : 2020-02-03 09:24:35
+ */
 import React from "react";
 import {
   Chart,
@@ -20,7 +27,7 @@ class Gradient extends React.Component {
       }
     };
     return (
-      <div>
+      <div style={{ background: '#fcfcfc', height: 400, width: '100%' }}>
         {data.length > 0 ? <Chart height={400} data={data} scale={cols} forceFit padding={[60, 80]}>
           <Axis
             name="fetchedTime"
@@ -44,7 +51,7 @@ class Gradient extends React.Component {
             size={2}
             shape="smooth"
           />
-        </Chart> : <Empty style={{ marginTop: 100, width: 300 }} />}
+        </Chart> : <Empty style={{ paddingTop: 120, }} />}
 
       </div>
     );
