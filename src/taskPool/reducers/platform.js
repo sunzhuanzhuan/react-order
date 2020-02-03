@@ -12,3 +12,9 @@ export const platformDetail = handleActions({
     return { ...action.payload.data }
   },
 }, {})
+
+export const allProvince = handleActions({
+  [platform.TPAllProvince_success]: (state, action) => {
+    return [...action.payload.data]
+  },
+}, [])

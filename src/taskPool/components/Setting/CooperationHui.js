@@ -20,12 +20,12 @@ class CooperationHui extends React.Component {
     })
   }
   handleAdd = () => {
-    let params = { launchDay: '', taskOfferPrice: '', id: new Date().getTime() }
+    let params = { launchDay: '', taskOfferPrice: '', id: new Date().getTime(), feAdd: true, }
     this.state.data.push(params)
     this.setState({})
   }
   handleDelete = () => {
-    const { data, selectWeHui } = this.state
+    const { data, selectWeHui, selectedRows } = this.state
     if (selectWeHui.length == 0) {
       message.error('请选择要删除的项')
       return
@@ -37,17 +37,23 @@ class CooperationHui extends React.Component {
       okType: 'danger',
       cancelText: '否',
       onOk: (() => {
-        // for (let i = 0; i < selectWeHui.length; i++) {
-        //   for (let j = 0; j < data.length; j++) {
-        //     if (selectWeHui[i] == data[j].id) {
-        //       data.splice(j, 1)
-        //     }
-        //   }
-        // }
-        // this.setState({})
-        this.props.TPDeleteTaskLaunch({ ids: selectWeHui }).then(() => {
-          this.props.TPGetTaskLaunchConfigHui({ offerType: 4 })
+        for (let i = 0; i < selectedRows.length; i++) {
+          if (selectedRows[i].feAdd) {
+            selectedRows.splice(i, 1)
+          }
+        }
+        let arr = []
+        selectedRows.map((item) => {
+          arr.push(item.id)
         })
+        if (arr.length > 0) {
+          this.props.TPDeleteTaskLaunch({ ids: arr }).then(() => {
+            this.props.TPGetTaskLaunchConfigHui({ offerType: 4 })
+          })
+        } else {
+          this.props.TPGetTaskLaunchConfigHui({ offerType: 4 })
+        }
+
       }).bind(this),
       onCancel() {
 
@@ -94,7 +100,8 @@ class CooperationHui extends React.Component {
     const rowSelection = {
       onChange: (selectedRowKeys, selectedRows) => {
         this.setState({
-          selectWeHui: selectedRowKeys
+          selectWeHui: selectedRowKeys,
+          selectedRows: selectedRows
         })
       }
     };

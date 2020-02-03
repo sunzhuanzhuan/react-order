@@ -15,12 +15,13 @@ class Discover extends React.Component {
       selectArr: [],
       textSimilar: props.qualityConfig.textSimilarity,
       contentTime: props.qualityConfig.contentUrlTimeout,
-      arr: []
+      arr: [],
+      noSelect: []
     }
 
   }
   componentWillReceiveProps = (props) => {
-    props.qualityConfig.retainTimeList.map((item) => {
+    props.qualityConfig.retainTimeList && props.qualityConfig.retainTimeList.map((item) => {
       if (item.isOnline == 1) {
         this.state.arr.push(item.id)
       }
@@ -47,9 +48,20 @@ class Discover extends React.Component {
     else {
       this.state.saveArrTime.map((ite, index) => {
         if (ite.id == this.state.item.id) {
+          delete ite.isOnline
           this.state.deleteArr.push(ite)
           this.state.saveArrTime.splice(index, 1);
           this.setState({ visible: false })
+        }
+      })
+      this.state.selectArr.map((ite, index) => {
+        if (ite.id == this.state.item.id) {
+          this.state.selectArr.splice(index, 1);
+        }
+      })
+      this.state.noSelect.map((ite, index) => {
+        if (ite.id == this.state.item.id) {
+          this.state.noSelect.splice(index, 1);
         }
       })
     }
@@ -76,20 +88,26 @@ class Discover extends React.Component {
 
   }
   handleApply = () => {
+
     let dele = this.state.deleteArr.map((item) => {
       return Object.assign(item, { isDeleted: 1 })
     })
     let select = this.state.selectArr.map((item) => {
       return Object.assign(item, { isOnline: 1 })
     })
+    let noSelect = this.state.noSelect.map((item) => {
+      return Object.assign(item, { isOnline: 2 })
+    })
     let params = {
       contentUrlTimeout: this.state.contentTime,
       textSimilarity: this.state.textSimilar,
-      retainTimeList: [...dele, ...select],
+      retainTimeList: [...dele, ...select, ...noSelect],
       platformId: '9'
     }
-    console.log(dele)
-    console.log(select)
+
+    console.log(params);
+    // console.log(noSelect)
+    // console.log(select)
     this.props.TPChangeQualityConfig(params).then(() => {
       this.props.TPGetQualityConfig({})
       message.success('设置成功', 3)
@@ -107,8 +125,9 @@ class Discover extends React.Component {
         }
       })
     } else {
-      this.state.selectArr.map((item, index) => {
+      this.state.saveArrTime.map((item, index) => {
         if (e.target.value == item.id) {
+          this.state.noSelect.push(item)
           this.state.selectArr.splice(index, 1)
         }
       })
