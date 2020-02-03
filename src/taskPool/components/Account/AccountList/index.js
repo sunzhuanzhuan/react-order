@@ -107,7 +107,10 @@ function AccountList(props) {
       key: 'kpiTarget',
       width: '380px',
       align: 'center',
-      render: text => <KpiTable data={text} />
+      render: (text, record) => <div>
+        <KpiTable data={text} />
+        <div style={{ textAlign: "left", marginTop: 4 }}>28天第一条平均阅读数：{record.mediaIndex1AvgReadNum28d || '-'}</div>
+      </div>
     },
     {
       title: '抢单接单状态',
