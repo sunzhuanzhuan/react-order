@@ -46,12 +46,12 @@ function AccountTabs(props) {
       if (auditTime) {
         allValues.form.auditStartTime = moment(auditTime[0]).format(format)
         allValues.form.auditEndTime = moment(auditTime[1]).format(format)
-        delete allValues.auditTime
+        delete allValues.form.auditTime
       }
       if (estimatetime) {
         allValues.form.estimateStarttime = moment(estimatetime[0]).format(format)
         allValues.form.estimateEndtime = moment(estimatetime[1]).format(format)
-        delete allValues.estimatetime
+        delete allValues.form.estimatetime
       }
       if (identity) {
         allValues.form.identityId = values.form.identity.key
