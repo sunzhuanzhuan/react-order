@@ -1,5 +1,12 @@
+/*
+ * @Descripttion: 
+ * @Author: wangxinyue
+ * @Date: 2020-01-15 16:32:16
+ * @LastEditors  : wangxinyue
+ * @LastEditTime : 2020-02-03 14:34:52
+ */
 import React from 'react';
-import { Descriptions, Button, Form, } from 'antd';
+import { Descriptions, Button, Form, message } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
 
 const AccountComments = (props) => {
@@ -22,6 +29,8 @@ const AccountComments = (props) => {
 
   async function actionsUpdate(params) {
     await actions.TPUpdateAccountEstimateDescribe(params)
+    message.success('操作成功')
+    await actions.TPGetAccountEstimateDetails({ accountId: accountId })
   }
   return <Form layout='horizontal' style={{ marginTop: 40 }}>
     <Descriptions>
@@ -37,7 +46,7 @@ const AccountComments = (props) => {
           { required: true, message: '请填写账号评语' }
         ],
       })(
-        <TextArea rows={4} placeholder='请填写账号评语，不超过100个字' readOnly={estimateDescribe} />
+        <TextArea rows={4} placeholder='请填写账号评语，不超过100个字' disabled={estimateDescribe} />
       )}
     </Form.Item>
     <div className='button-footer'>
