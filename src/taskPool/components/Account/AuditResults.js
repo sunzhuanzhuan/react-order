@@ -1,3 +1,10 @@
+/*
+ * @Descripttion: 
+ * @Author: wangxinyue
+ * @Date: 2020-01-13 18:49:08
+ * @LastEditors  : wangxinyue
+ * @LastEditTime : 2020-02-04 11:33:34
+ */
 import React from 'react'
 import { Form, Radio, Button, Modal, message } from 'antd'
 import FormItem from 'antd/lib/form/FormItem'
@@ -41,7 +48,7 @@ function AuditResults(props) {
         <Form layout='horizontal'>
           <FormItem label='是否通过审核'{...formLayout}>
             {getFieldDecorator(`auditState`, {
-              initialValue: auditState,
+              initialValue: auditState == 1 ? undefined : auditState,
               rules: [
                 { required: true, message: '请选择是否通过审核' }
               ],

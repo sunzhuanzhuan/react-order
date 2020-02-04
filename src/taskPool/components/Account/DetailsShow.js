@@ -8,7 +8,7 @@ import numeral from 'numeral'
 function DetailsShow(props) {
   const { accountDetail = {}, accountId } = props
   const { base = {}, acceptCrowd = {}, auditState = 1, remark } = accountDetail
-  const { classification = [] } = base
+  const { classification = [], appraiserImgUrl } = base
   const { sex = {}, age = [], area = [] } = acceptCrowd
   const baseConfig = [
     { label: "账号名称", value: base.snsName },
@@ -83,7 +83,7 @@ function DetailsShow(props) {
             },
             { label: '受众地域Top3：', value: <AudienceArea list={area} /> },
             { label: '受众年龄Top3：', value: <AudienceLine list={age} /> },
-            { label: '数据截图：', value: <img src={1} width='200' height='200' onClick={() => window.open(base.followerCountScreenshotUrl)} className='follower-count-img' /> },
+            { label: '数据截图：', value: <img src={appraiserImgUrl} width='200' height='200' onClick={() => window.open(base.followerCountScreenshotUrl)} className='follower-count-img' /> },
             { label: 'KPI/KPI上线', value: base.birthDate }
           ]} />
         </div>
