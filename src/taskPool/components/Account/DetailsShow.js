@@ -83,7 +83,7 @@ function DetailsShow(props) {
             },
             { label: '受众地域Top3：', value: <AudienceArea list={area} /> },
             { label: '受众年龄Top3：', value: <AudienceLine list={age} /> },
-            { label: '数据截图：', value: <img src={appraiserImgUrl} width='200' height='200' onClick={() => window.open(base.followerCountScreenshotUrl)} className='follower-count-img' /> },
+            { label: '数据截图：', value: <img src={appraiserImgUrl} width='200' height='200' onClick={() => window.open(base.appraiserImgUrl)} className='follower-count-img' /> },
             { label: 'KPI/KPI上线', value: base.birthDate }
           ]} />
         </div>
