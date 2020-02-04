@@ -104,7 +104,7 @@ class BaseForMedia extends React.Component {
             <InputCount max={20} placeholder="请输入任务名称" />
           )}
         </FormItem>
-        {this.props.industryList.length > 0 && <FormItem label="行业分类">
+        <FormItem label="行业分类">
           {getFieldDecorator('industry', {
             initialValue: base.industry,
             rules: [ {
@@ -126,9 +126,10 @@ class BaseForMedia extends React.Component {
               }}
               options={this.props.industryList}
               placeholder='请选择行业'
+              notFoundContent="没有可选择的行业分类"
             />
           )}
-        </FormItem>}
+        </FormItem>
         {this.props.businessScopeList.length > 0 ? <FormItem label="经营内容">
           {getFieldDecorator('businessScopeId', {
             initialValue: base.businessScopeId,

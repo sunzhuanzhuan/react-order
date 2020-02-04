@@ -253,7 +253,7 @@ class PreviewForWeixin extends React.Component {
           </Descriptions.Item>
           <Descriptions.Item label="所属公司">{base.company.label}</Descriptions.Item>
           <Descriptions.Item label="行业分类">{
-            base.industry.map(id => getIndustryName(this.props.industryList,
+            (base.industry || []).map(id => getIndustryName(this.props.industryList,
               parseInt(id)).industryName).join(
               '/')
           }</Descriptions.Item>
@@ -462,7 +462,7 @@ class PreviewFor12306 extends React.Component {
         <Descriptions title={header} column={1}>
           <Descriptions.Item label="所属公司">{base.company.label}</Descriptions.Item>
           <Descriptions.Item label="行业分类">{
-            base.industry.map(id => getIndustryName(this.props.industryList, id).industryName)
+            (base.industry || []).map(id => getIndustryName(this.props.industryList, id).industryName)
               .join('/')
           }</Descriptions.Item>
           <Descriptions.Item label="投放开始日期">
