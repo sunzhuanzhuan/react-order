@@ -1,3 +1,10 @@
+/*
+ * @Descripttion: 
+ * @Author: wangxinyue
+ * @Date: 2020-02-03 09:28:26
+ * @LastEditors  : wangxinyue
+ * @LastEditTime : 2020-02-04 15:43:15
+ */
 import { combineReducers } from 'redux'
 import { handleActions, handleAction } from 'redux-actions';
 import * as setting from '../actions/setting'
@@ -70,15 +77,15 @@ export const taskLaunchConfigLiang = handleActions({
 //包天模式
 export const taskLaunchConfigTian = handleActions({
   [setting.TPGetTaskLaunchConfigTian_success]: (state, action) => {
-    return { ...action.payload.data }
+    return { taskOffers: [], ...action.payload.data }
   },
-}, {})
+}, { taskOffers: [] })
 //返现优惠
 export const taskLaunchConfigHui = handleActions({
   [setting.TPGetTaskLaunchConfigHui_success]: (state, action) => {
-    return { ...action.payload.data }
+    return { taskOffers: [], ...action.payload.data }
   },
-}, {})
+}, { taskOffers: [] })
 // 获取人员
 export const tpUserInfo = handleActions({
   [setting.TPQueryUserInfo_success]: (state, action) => {
