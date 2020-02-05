@@ -53,7 +53,7 @@ function AccountList(props) {
       align: 'center',
       render: (text, record) => text ? <div>
         {auditStateMap[text]}
-        <div>{getDate(record.auditTime)}</div>
+        <div>{text == 2 || text == 3 ? getDate(record.auditTime) : null}</div>
       </div> : '-'
     },
     {
