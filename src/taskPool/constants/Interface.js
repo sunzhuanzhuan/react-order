@@ -122,6 +122,7 @@ export default {
     getIndustryList: configManage + "/getIndustryList",
     offline: prefix + "/adOrder/v1/offline",
     online: prefix + "/adOrder/v1/online",
+    end: prefix + "/adOrder/v1/end",
     applyConfirm: mcnOrder + "/applyConfirm",
 
   }
