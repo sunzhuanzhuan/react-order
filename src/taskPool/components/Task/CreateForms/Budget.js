@@ -77,7 +77,9 @@ class UnitPrice extends React.Component {
       }
       this.setState({
         readNums: result.map(price => numeral(amount).divide(price || 1))
-          .map(num => num.format('0,0'))
+          .map(num => {
+            return isNaN(num.format('0,0')) ? "0.0" : num.format('0,0')
+          })
       });
     }, 0);
   }
@@ -160,8 +162,9 @@ class ReadNumber extends React.Component {
       let sum = Object.values(numObj).filter(Boolean).reduce(function (prev, cur) {
         return prev + cur;
       }, 0)
+      const result = numeral(amount).divide(sum || 1).format('0.00')
       this.setState({
-        unitPrice: numeral(amount).divide(sum || 1).format('0.00')
+        unitPrice:  isNaN(result) ? "0" : result
       });
     }, 0);
   }
@@ -439,7 +442,7 @@ class BudgetForWeixin extends React.Component {
                     required: true,
                     message: '请填写限制数量'
                   } ]
-                })(<InputNumber min={1} style={{ margin: "0 10px" }} />)}
+                })(<InputNumber precision={0} min={1} style={{ margin: "0 10px" }} />)}
                 个
               </FormItem>
             </Col>}
@@ -476,7 +479,7 @@ class BudgetForWeixin extends React.Component {
                     required: true,
                     message: '请填写限制数量'
                   } ]
-                })(<InputNumber min={1} style={{ margin: "0 10px" }} />)}
+                })(<InputNumber precision={0} min={1} style={{ margin: "0 10px" }} />)}
               </FormItem>
             </Col>}
           </Row>
@@ -528,7 +531,7 @@ class BudgetForWeixin extends React.Component {
                     required: true,
                     message: '请填写限制数量'
                   } ]
-                })(<InputNumber min={1} style={{ margin: "0 10px" }} />)}
+                })(<InputNumber precision={0} min={1} style={{ margin: "0 10px" }} />)}
                 个
               </FormItem>
             </Col>}

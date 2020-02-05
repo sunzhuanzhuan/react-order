@@ -171,7 +171,7 @@ class ContentForWeixin extends React.Component {
               authToken={this.props.authToken}
               listType='picture-card'
               rule={{
-                bizzCode: 'ORDER_IMG_UPLOAD',
+                bizzCode: 'FWP_IMG_UPLOAD',
                 max: 2,
                 suffix: 'png,jpg,jpeg,gif,webp'
               }}
@@ -303,7 +303,7 @@ class ContentFor12306 extends React.Component {
               authToken={this.props.authToken}
               listType='picture-card'
               rule={{
-                bizzCode: 'ORDER_IMG_UPLOAD',
+                bizzCode: 'FWP_TRIP_IMG_UPLOAD',
                 max: 1 / 1024 * 50,
                 suffix: 'png,jpg,jpeg,gif,webp'
               }}
@@ -323,8 +323,8 @@ class ContentFor12306 extends React.Component {
               authToken={this.props.authToken}
               listType='picture'
               rule={{
-                bizzCode: 'ORDER_VIDEO_UPLOAD',
-                max: 20,
+                bizzCode: 'FWP_TRIP_VIDEO_UPLOAD',
+                max: 1.5,
                 suffix: 'mp4'
               }}
               tipContent="请上传MP4格式的视频，文件大小需不超过1.5Mb"
@@ -355,7 +355,7 @@ class ContentFor12306 extends React.Component {
                     authToken={this.props.authToken}
                     listType='picture'
                     rule={{
-                      bizzCode: 'F_TASK_CANCEL',
+                      bizzCode: 'FWP_QUALIFICATIONS_UPLOAD',
                       max: 50,
                     }}
                     tipContent="上传格式为全文件，文件大小不超过50Mb"
