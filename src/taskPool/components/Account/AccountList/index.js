@@ -63,12 +63,13 @@ function AccountList(props) {
       align: 'center',
       render: (text, record) => text ? <div>
         {estimateStateMap[text]}
-        {text == 2 ?
+        {text == 2 ? <>
           <span className='color-box'>{record.estimateGrade || 'C'}
-          </span> : null}
-        <div>
-          {estimateStateMap[text] && getDate(record.estimateTime)}
-        </div>
+          </span>
+          <div>
+            {getDate(record.estimateTime)}
+          </div></>
+          : null}
       </div> : '-'
     },
     {
