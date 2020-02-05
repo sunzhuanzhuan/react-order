@@ -3,7 +3,7 @@
  * @Author: wangxinyue
  * @Date: 2020-01-15 10:14:33
  * @LastEditors  : wangxinyue
- * @LastEditTime : 2020-01-19 15:46:48
+ * @LastEditTime : 2020-02-05 10:34:45
  */
 import numeral from 'numeral'
 
@@ -42,8 +42,8 @@ export default {
     { value: 2, name: "女性多" },
   ],
   isVerified: [
-    { value: 1, name: "是" },
-    { value: 2, name: "否" },
+    { value: 1, name: "已认证" },
+    { value: 2, name: "未认证" },
   ],
 }
 

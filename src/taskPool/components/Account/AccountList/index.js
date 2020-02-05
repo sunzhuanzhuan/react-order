@@ -6,6 +6,7 @@ import './index.less'
 import { WBYPlatformIcon } from "wbyui"
 import TextArea from 'antd/lib/input/TextArea'
 import { auditStateMap, estimateStateMap, Wait_Audit, No_Pass, OK_PASS, WAIT_ESTIMATE, OK_ESTIMATE, getValueByFormat } from '../../../constants/accountConfig'
+import moment from 'moment'
 const { confirm } = Modal;
 
 function AccountList(props) {
@@ -50,7 +51,7 @@ function AccountList(props) {
       align: 'center',
       render: (text, record) => text ? <div>
         {auditStateMap[text]}
-        <div>{record.auditTime}</div>
+        <div>{moment(record.auditTime).format('YYYY-MM-DD HH:ss')}</div>
       </div> : '-'
     },
     {
@@ -61,7 +62,7 @@ function AccountList(props) {
       align: 'center',
       render: (text, record) => text ? <div>
         {estimateStateMap[text]}
-        {true && <span className='color-box'>{record.estimateGrade || 'C'}</span>}
+        {text == 2 ? <span className='color-box'>{record.estimateGrade || 'C'}</span> : null}
         <div>{record.estimateTime}</div>
       </div> : '-'
     },
