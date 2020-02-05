@@ -20,8 +20,8 @@ function AccountForm(props) {
         values.form.identityName = identity.label
       }
       if (ownerAdmin) {
-        values.form.identityId = ownerAdmin.key
-        values.form.ownerAdminName = ownerAdmin.label
+        values.form.mediumId = ownerAdmin.key
+        values.form.mediumName = ownerAdmin.label
       }
       delete values.submitTime
       delete values.identity

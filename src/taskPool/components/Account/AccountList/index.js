@@ -8,7 +8,9 @@ import TextArea from 'antd/lib/input/TextArea'
 import { auditStateMap, estimateStateMap, Wait_Audit, No_Pass, OK_PASS, WAIT_ESTIMATE, OK_ESTIMATE, getValueByFormat } from '../../../constants/accountConfig'
 import moment from 'moment'
 const { confirm } = Modal;
-
+function getDate(str) {
+  return str && str.substring(0, 16)
+}
 function AccountList(props) {
   const [selectedRow, setSelectedRow] = useState([])
   const { setModalProps, batchUpdateAccountStateAsync, accountList, updateAccountStateMsgAsync } = props
@@ -51,19 +53,23 @@ function AccountList(props) {
       align: 'center',
       render: (text, record) => text ? <div>
         {auditStateMap[text]}
-        <div>{moment(record.auditTime).format('YYYY-MM-DD HH:ss')}</div>
+        <div>{getDate(record.auditTime)}</div>
       </div> : '-'
     },
     {
       title: '评估状态',
       dataIndex: 'estimateState',
       key: 'estimateState',
-      width: '80px',
       align: 'center',
       render: (text, record) => text ? <div>
         {estimateStateMap[text]}
-        {text == 2 ? <span className='color-box'>{record.estimateGrade || 'C'}</span> : null}
-        <div>{record.estimateTime}</div>
+        {text == 2 ? <>
+          <span className='color-box'>{record.estimateGrade || 'C'}
+          </span>
+          <div>
+            {getDate(record.estimateTime)}
+          </div></>
+          : null}
       </div> : '-'
     },
     {
