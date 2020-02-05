@@ -338,7 +338,7 @@ export default class DetailsForWeiXin extends Component {
       title: '终止任务',
       content: `确认终止 ${record.companyName} —— “${record.orderName}” 的任务么？`,
       onOk: () => {
-        return actions.TPOfflineTask({ id }).then(() => {
+        return actions.TPEndTask({ id }).then(() => {
           message.success('任务已终止')
           reload()
         })

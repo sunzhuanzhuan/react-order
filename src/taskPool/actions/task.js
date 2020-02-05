@@ -24,6 +24,11 @@ export const {
   TPOnlineTask
 } = createHttpAction('TPOnlineTask', Interface.task.online);
 
+// 终止任务
+export const {
+  TPEndTask
+} = createHttpAction('TPEndTask', Interface.task.end);
+
 // 获取任务大厅行业列表
 export const {
   TPGetIndustryCatalog
