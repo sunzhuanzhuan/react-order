@@ -8,6 +8,7 @@ import {
   Input, Tabs, Select, DatePicker
 } from "antd";
 import {
+  AD_ORDER_STATE_END,
   AD_ORDER_STATE_EXPIRY,
   AD_ORDER_STATE_FINISH,
   AD_ORDER_STATE_OFFLINE,
@@ -98,6 +99,7 @@ const FilterForm = (props) => {
               <Option value={AD_ORDER_STATE_OFFLINE}>已下线</Option>
               <Option value={AD_ORDER_STATE_FINISH}>已结束</Option>
               <Option value={AD_ORDER_STATE_EXPIRY}>已过期</Option>
+              <Option value={AD_ORDER_STATE_END}>已终止</Option>
             </Select>
           )}
         </Form.Item>

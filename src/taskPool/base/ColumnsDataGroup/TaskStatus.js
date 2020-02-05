@@ -6,7 +6,7 @@ import {
   AD_ORDER_STATE_EXPIRY,
   AD_ORDER_STATE_OFFLINE,
   AD_ORDER_STATE_PROCESSING,
-  AD_ORDER_STATE_UNPAID, AD_ORDER_STATE_WAIT_RELEASED
+  AD_ORDER_STATE_UNPAID, AD_ORDER_STATE_WAIT_RELEASED, AD_ORDER_STATE_END
 } from "@/taskPool/constants/config";
 
 const { Text } = Typography;
@@ -34,6 +34,10 @@ const statusKeyToProps = {
   [AD_ORDER_STATE_EXPIRY]: {
     status: 'error',
     text: '任务已过期'
+  },
+  [AD_ORDER_STATE_END]: {
+    status: 'error',
+    text: '任务已终止'
   }
 }
 
