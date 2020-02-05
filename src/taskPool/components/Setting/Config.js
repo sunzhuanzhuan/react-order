@@ -20,7 +20,7 @@ export const columnsWeidu = (getFieldDecorator) => {
               },
             ],
           })(
-            <Select style={{ width: '300px' }} placeholder="添加维度">
+            <Select style={{ width: '300px' }} placeholder="添加维度" mode="multiple">
               <Option value='1'>乘车日期</Option>
               <Option value='2'>目的地城市</Option>
               <Option value='3'>出发城市</Option>
