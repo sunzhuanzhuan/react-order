@@ -266,7 +266,7 @@ class BaseForMedia extends React.Component {
               authToken={this.props.authToken}
               listType='picture-card'
               rule={{
-                bizzCode: 'ORDER_IMG_UPLOAD',
+                bizzCode: 'FWP_IMG_UPLOAD',
                 max: 2,
                 suffix: 'png,jpg,jpeg,gif,webp'
               }}
