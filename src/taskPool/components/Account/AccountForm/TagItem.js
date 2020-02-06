@@ -1,3 +1,10 @@
+/*
+ * @Descripttion: 
+ * @Author: wangxinyue
+ * @Date: 2020-01-06 15:29:58
+ * @LastEditors  : wangxinyue
+ * @LastEditTime : 2020-02-06 12:01:21
+ */
 import React, { useEffect, useState } from 'react'
 import './TagItem.less'
 import { Icon } from 'antd'
@@ -23,8 +30,8 @@ function TagItem(props) {
   return (
     <div className='tag-item'>
       {props.list.map(item => {
-        const isActive = value.includes(item.code)
-        return <div key={item.code} className={`item ${isActive ? 'active' : ''}`} onClick={() => changeValue(item.code)}>{item.name}
+        const isActive = value.includes(item.itemKey)
+        return <div key={item.itemKey} className={`item ${isActive ? 'active' : ''}`} onClick={() => changeValue(item.itemKey)}>{item.itemValue}
           {isActive ? <Icon type="close-circle" className='icon' /> : null}
         </div>
       })}

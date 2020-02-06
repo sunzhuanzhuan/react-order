@@ -1,10 +1,17 @@
+/*
+ * @Descripttion: 
+ * @Author: wangxinyue
+ * @Date: 2020-01-06 15:29:58
+ * @LastEditors  : wangxinyue
+ * @LastEditTime : 2020-02-06 12:00:03
+ */
 import { combineReducers } from 'redux'
 import { handleActions, handleAction } from 'redux-actions';
 import * as account from '../actions/account'
 //常见分类
 export const orderIndustryCategory = handleActions({
   [account.TPGetFiltersMeta_success]: (state, action) => {
-    return [...action.payload.data.order_industry_category]
+    return [...action.payload.data.grouped_categories]
   },
 }, [])
 // 账号管理（合作平台）
