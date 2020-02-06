@@ -1,6 +1,9 @@
 import React, { useState } from 'react'
 import { Table, Button, Modal } from 'antd'
 import { KpiTable } from './AccountList'
+function getDate(str) {
+  return str && str.substring(0, 16)
+}
 function AccountReceiveList(props) {
   const [selectedRow, setSelectedRow] = useState([])
   const { claimAccountList, claimAccountAsync, changePage } = props
@@ -34,7 +37,7 @@ function AccountReceiveList(props) {
         {text == 1 && '待审核'}
         {text == 2 && '未通过'}
         {text == 3 && '已通过'}
-        <div>{record.auditTime}</div>
+        <div>{text == 3 || text == 2 ? getDate(record.auditTime) : null}</div>
       </div> : '-'
     },
     {
@@ -50,7 +53,7 @@ function AccountReceiveList(props) {
       dataIndex: 'submitTime',
       key: 'submitTime',
       align: 'center',
-      render: text => text
+      render: text => getDate(text)
     },
     {
       title: '资源媒介经理',

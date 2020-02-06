@@ -196,7 +196,7 @@ export default class DetailsForWeiXin extends Component {
         align: "center",
         render: (state, record) => {
           return state === MCN_ORDER_STATE_CANCEL ? null : <div>
-            <a target="_blank" href={record.url || undefined}>查看文章</a>
+            <a target="_blank" href={record.contentUrl || undefined}>查看文章</a>
             {record.snapshotUrl && <>
               <Divider type="vertical" />
               <a target="_blank" href={record.snapshotUrl}>查看快照</a>
