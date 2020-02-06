@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Table, Badge, Button, Alert, Modal, Input, Form, message } from 'antd'
+import { Table, Badge, Button, Alert, Modal, Input, Form, message, Tag } from 'antd'
 import Scolltable from '@/components/Scolltable/Scolltable.js'
 import MessageIcon from '../../../base/MessageIcon'
 import './index.less'
@@ -80,9 +80,12 @@ function AccountList(props) {
     },
     {
       title: '内容分类',
-      dataIndex: 'followerCount1',
-      key: 'followerCount1',
+      dataIndex: 'classification',
+      key: 'classification',
       align: 'center',
+      render: (text = []) => {
+        return text.map(one => <Tag key={one.name} color="blue">{one.name}</Tag>)
+      }
     },
     {
       title: '粉丝受众',
