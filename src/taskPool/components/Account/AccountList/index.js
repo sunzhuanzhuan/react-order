@@ -85,7 +85,7 @@ function AccountList(props) {
       align: 'center',
     },
     {
-      title: '受众',
+      title: '粉丝受众',
       dataIndex: 'acceptCrowd',
       key: 'acceptCrowd',
       align: 'center',
@@ -213,7 +213,7 @@ function AccountList(props) {
     <Scolltable scrollClassName='.ant-table-body' widthScroll={2600}>
       <Table dataSource={list} columns={columns} rowKey='accountId'
         rowSelection={rowSelection}
-        scroll={{ x: 2400 }}
+        scroll={{ x: 2400, y: 600 }}
         pagination={{
           pageSize: accountList.pageSize,
           showSizeChanger: true,
