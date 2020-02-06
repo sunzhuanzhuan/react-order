@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Table, Badge, Button, Alert, Modal, Input, Form, message } from 'antd'
+import { Table, Badge, Button, Alert, Modal, Input, Form, message, Tag } from 'antd'
 import Scolltable from '@/components/Scolltable/Scolltable.js'
 import MessageIcon from '../../../base/MessageIcon'
 import './index.less'
@@ -33,12 +33,13 @@ function AccountList(props) {
       title: '账号名称',
       dataIndex: 'snsName',
       key: 'snsName',
-      render: (text) => {
-        return <span className="tab-icon-style"><WBYPlatformIcon
-          weibo_type={text || '9'}
-          icon_type={"default"}
-          widthSize={15}
-        />{text}</span>
+      render: (text, record) => {
+        return <span className="tab-icon-style">
+          <WBYPlatformIcon
+            weibo_type={record.platformId || '9'}
+            icon_type={"default"}
+            widthSize={15}
+          /> {text}</span>
       }
     },
     {
@@ -53,7 +54,7 @@ function AccountList(props) {
       align: 'center',
       render: (text, record) => text ? <div>
         {auditStateMap[text]}
-        <div>{getDate(record.auditTime)}</div>
+        <div>{text == 2 || text == 3 ? getDate(record.auditTime) : null}</div>
       </div> : '-'
     },
     {
@@ -80,12 +81,15 @@ function AccountList(props) {
     },
     {
       title: '内容分类',
-      dataIndex: 'followerCount1',
-      key: 'followerCount1',
+      dataIndex: 'classification',
+      key: 'classification',
       align: 'center',
+      render: (text = []) => {
+        return text.map(one => <Tag key={one.name} color="blue">{one.name}</Tag>)
+      }
     },
     {
-      title: '受众',
+      title: '粉丝受众',
       dataIndex: 'acceptCrowd',
       key: 'acceptCrowd',
       align: 'center',
@@ -213,7 +217,7 @@ function AccountList(props) {
     <Scolltable scrollClassName='.ant-table-body' widthScroll={2600}>
       <Table dataSource={list} columns={columns} rowKey='accountId'
         rowSelection={rowSelection}
-        scroll={{ x: 2400 }}
+        scroll={{ x: 2400, y: 600 }}
         pagination={{
           pageSize: accountList.pageSize,
           showSizeChanger: true,

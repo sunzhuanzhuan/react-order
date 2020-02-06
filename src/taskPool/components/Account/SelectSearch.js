@@ -1,3 +1,10 @@
+/*
+ * @Descripttion: 
+ * @Author: wangxinyue
+ * @Date: 2020-01-08 16:29:15
+ * @LastEditors: wangxinyue
+ * @LastEditTime: 2020-02-06 11:35:22
+ */
 import React from 'react'
 import api from '@/api'
 import { Select, Spin } from 'antd';
@@ -55,6 +62,7 @@ class SelectSearch extends React.Component {
     const { searchKey } = this.props
     return (
       <Select
+        allowClear
         labelInValue
         value={value}
         showSearch={true}
