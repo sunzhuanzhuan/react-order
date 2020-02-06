@@ -280,7 +280,7 @@ class ContentFor12306 extends React.Component {
             initialValue: content.content,
             rules: [
               { required: true, message: '请输入内容正文' },
-              { max: 140, message: '最多输入2000个字' }
+              { max: 140, message: '最多输入140个字' }
             ]
           })(
             <Input.TextArea
