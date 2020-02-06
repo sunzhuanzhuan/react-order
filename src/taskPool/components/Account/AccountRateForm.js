@@ -1,7 +1,16 @@
+/*
+ * @Descripttion: 
+ * @Author: wangxinyue
+ * @Date: 2020-01-13 17:57:50
+ * @LastEditors  : wangxinyue
+ * @LastEditTime : 2020-02-06 18:04:23
+ */
 
 import React, { useEffect } from 'react'
-import { Form, Rate, Button, message } from 'antd';
+import { Form, Rate, Button, message, Modal } from 'antd';
 import './AccountRateForm.less'
+const { confirm } = Modal;
+
 function AccountRate(props) {
   const { form, actions, accountEstimateDetails = {}, isDisabled, accountId } = props
   useEffect(() => {
@@ -19,12 +28,18 @@ function AccountRate(props) {
     }
   }
   function saveList() {
-    form.validateFields((error, values) => {
-      if (!error) {
-        const list = estimateitems.map(one => ({ ...one, contentEstimateScore: values[one.dicItemId] }))
-        save(list)
-      }
-    })
+    confirm({
+      title: '是否确定提交评估结果？',
+      onOk() {
+        form.validateFields((error, values) => {
+          if (!error) {
+            const list = estimateitems.map(one => ({ ...one, contentEstimateScore: values[one.dicItemId] }))
+            save(list)
+          }
+        })
+      },
+    });
+
   }
   async function save(list) {
     await actions.TPAccountEstimateSubmit({ estimateitems: list, accountId: accountId })
