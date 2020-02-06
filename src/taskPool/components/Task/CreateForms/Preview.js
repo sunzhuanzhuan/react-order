@@ -510,9 +510,9 @@ class PreviewFor12306 extends React.Component {
             {budget.mediaType === 3 && "图文+链接+视频"}
             {budget.mediaType === 4 && "图文+链接"}
           </Descriptions.Item>
-          <Descriptions.Item label="阅读单价">
+          {budget.putType === 1 && <Descriptions.Item label="阅读单价">
             {budget.result.unitPrice} 元/条
-          </Descriptions.Item>
+          </Descriptions.Item>}
           {
             budget.putType === 1 && <Descriptions.Item label="预计阅读数">
               <div className='text-red'>{budget.actionNum}条</div>

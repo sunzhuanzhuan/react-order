@@ -34,6 +34,10 @@ const CheckboxGroup = Checkbox.Group;
 
 const MAX_BUDGET_AMOUNT = 99999999
 const MAX_FOLLOWER_COUNT = 999999999
+const MAX_ACTION_DAY = 365
+const MAX_UNIT_PRICE = 99.99
+const MAX_UNIT_NUM = 99999
+const MAX_ACTION_NUM = 999999
 
 
 const newFormLayout = {
@@ -117,6 +121,8 @@ class UnitPrice extends React.Component {
                 })(
                   <InputNumber
                     precision={2}
+                    min={0.01}
+                    max={MAX_UNIT_PRICE}
                     onChange={val => {
                       this.calculation()
                     }}
@@ -201,7 +207,8 @@ class ReadNumber extends React.Component {
                   ]
                 })(
                   <InputNumber
-                    min={1}
+                    min={100}
+                    max={MAX_UNIT_NUM}
                     precision={0}
                     step={500}
                     onChange={val => {
@@ -646,7 +653,8 @@ class BudgetFor12306 extends React.Component {
         "deliveryAges",
         "deliveryTrainType",
       ])
-      if (!(values.actionNum || values.actionDay)) return
+      if (isNaN(values.actionNum) && isNaN(values.actionDay)) return
+
 
       values.leavePlace = values.leavePlace && values.leavePlace.toString()
       values.arrivePlace = values.arrivePlace && values.arrivePlace.toString()
@@ -737,8 +745,9 @@ class BudgetFor12306 extends React.Component {
               <InputNumber
                 precision={0}
                 min={1}
+                max={MAX_ACTION_DAY}
                 style={{ flex: "auto" }}
-                onChange={this.calculation}
+                onBlur={this.calculation}
                 placeholder="输入投放天数"
               />
             )}
@@ -767,12 +776,13 @@ class BudgetFor12306 extends React.Component {
             })(
               <InputNumber
                 precision={0}
-                min={1}
+                min={1000}
+                max={MAX_ACTION_NUM}
                 style={{ flex: "auto" }}
                 step={100}
                 formatter={value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                 parser={value => value.replace(/\$\s?|(,*)/g, '')}
-                onChange={this.calculation}
+                onBlur={this.calculation}
                 placeholder="输入投放条数"
               />
             )}
