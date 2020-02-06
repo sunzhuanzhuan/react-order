@@ -196,7 +196,7 @@ export default class DetailsForWeiXin extends Component {
         align: "center",
         render: (state, record) => {
           return state === MCN_ORDER_STATE_CANCEL ? null : <div>
-            <a target="_blank" href={record.url || undefined}>查看文章</a>
+            <a target="_blank" href={record.contentUrl || undefined}>查看文章</a>
             {record.snapshotUrl && <>
               <Divider type="vertical" />
               <a target="_blank" href={record.snapshotUrl}>查看快照</a>
@@ -245,20 +245,25 @@ export default class DetailsForWeiXin extends Component {
       {
         title: '申请阅读数',
         align: "center",
-        dataIndex: 'orderStates',
-        render: (status, record) => {
-          return <QAStatus status={status} />
+        dataIndex: 'expectActionNum',
+        render: (num, record) => {
+          return num || '0'
         }
       },
       {
         title: '图文发布位置',
         align: "center",
-        dataIndex: 'locationLimitedInfo'
+        dataIndex: 'locationInfo'
       },
       {
         title: '阅读单价',
         align: "center",
-        dataIndex: 'unitPrice'
+        dataIndex: 'unitPrice',
+        render: (amount) => {
+          return <>
+            <Yuan value={amount} format={"0,0.00"} style={{ color: "#333" }} /> 元/阅读
+          </>
+        }
       },
       {
         title: '预计消耗预算',
@@ -322,7 +327,7 @@ export default class DetailsForWeiXin extends Component {
     const { actions, reload } = this.props
     Modal.confirm({
       title: '上线任务',
-      content: `任务还未到上线时间，确定要立即上线该任务么？？`,
+      content: `任务还未到上线时间，确定要立即上线该任务么？`,
       onOk: () => {
         return actions.TPOnlineTask({ id }).then(() => {
           message.success('上线成功')
@@ -565,12 +570,12 @@ export default class DetailsForWeiXin extends Component {
             {features.taskPattern === MEDIA_TASK_PATTERN_BIDDING && <Descriptions.Item label="阅读数">
               {this.getReadNumber(features)}
             </Descriptions.Item>}
-            <Descriptions.Item label="推广文章">
+            <Descriptions.Item label="文章封面">
               <div className="content-wrap">
                 <div className='image-wrap'>
                   <img src={(details.adOrderWeixinContent || {}).coverImageUrl} alt="" />
                 </div>
-                <a onClick={this.preview}>查看文章</a>
+                <a onClick={this.preview}>文章预览</a>
               </div>
             </Descriptions.Item>
             {features.taskPattern === MEDIA_TASK_PATTERN_RUSH && <Descriptions.Item label="预计阅读数">

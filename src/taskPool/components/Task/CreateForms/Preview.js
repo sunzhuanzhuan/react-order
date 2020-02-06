@@ -181,7 +181,7 @@ class PreviewForWeixin extends React.Component {
   getUnitPrice = (budget) => {
     const list = this.getLocationMapping(budget)
     return list.map(o => {
-      return <div key={o.name}>{o.name} {numeral(o.value).format("0,0")}元/阅读</div>
+      return <div key={o.name}>{o.name} {numeral(o.value).format("0,0.00")}元/阅读</div>
     })
   }
 
@@ -271,7 +271,7 @@ class PreviewForWeixin extends React.Component {
             .format("0,0.00")} 元</Descriptions.Item>
           <Descriptions.Item label="实际扣款">{numeral(budget.actualPayment)
             .format("0,0.00")} 元</Descriptions.Item>
-          <Descriptions.Item label="内容发布位置">{this.getLocationLimited(budget)}</Descriptions.Item>
+          <Descriptions.Item label="图文发布位置">{this.getLocationLimited(budget)}</Descriptions.Item>
           {
             base.taskPattern === MEDIA_TASK_PATTERN_RUSH && <Descriptions.Item label="阅读单价">
               {this.getUnitPrice(budget)}
@@ -307,7 +307,7 @@ class PreviewForWeixin extends React.Component {
         <Text type="danger">确认无误即可提交。任务将会在设定的开始时间到达时上线。</Text>
         <footer>
           <Button onClick={this.props.prev}>上一步</Button>
-          <Button type="primary" loading={submitLoading} onClick={this.handleSubmit}>提交</Button>
+          <Button type="primary" loading={submitLoading} onClick={this.handleSubmit}>{this.props.isUpdate ? "确认修改": "提交"}</Button>
         </footer>
       </div>
     )
@@ -525,7 +525,7 @@ class PreviewFor12306 extends React.Component {
         <Text type="danger">确认无误即可提交。任务将会在设定的开始时间到达时上线。</Text>
         <footer>
           <Button onClick={this.props.prev}>上一步</Button>
-          <Button type="primary" loading={submitLoading} onClick={this.handleSubmit}>提交</Button>
+          <Button type="primary" loading={submitLoading} onClick={this.handleSubmit}>{this.props.isUpdate ? "确认修改": "提交"}</Button>
         </footer>
       </div>
     )

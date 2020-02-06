@@ -35,13 +35,22 @@ class BaseForMedia extends React.Component {
     this.props.form.validateFields((err, values) => {
       if (!err) {
         let newVal = Object.assign({}, values)
-        this.props.next("base", newVal)
+        if (this.isDiffTaskPattern()) {
+          this.props.next("base", newVal, "budget", {})
+        } else {
+          this.props.next("base", newVal)
+        }
       }
     });
   }
 
   disabledDate = (current) => {
     return current && current < this.state.disabledDateFlag
+  }
+
+  isDiffTaskPattern = () => {
+    const { form, data, setData } = this.props
+    return (form.getFieldValue("taskPattern") !== data.base.taskPattern)
   }
 
   render() {
@@ -122,7 +131,7 @@ class BaseForMedia extends React.Component {
               allowClear={false}
               onChange={val => {
                 this.props.getBusinessScope(val.slice(-1))
-                resetFields(["businessScopeId"])
+                resetFields([ "businessScopeId" ])
               }}
               options={this.props.industryList}
               placeholder='请选择行业'
@@ -271,7 +280,7 @@ class BaseForMedia extends React.Component {
                 suffix: 'png,jpg,jpeg,gif,webp'
               }}
               len={1}
-              tipContent={'请上传PNG,JPG,JPEG,GIF,WEBP格式的图片,最大不能超过2MB'}
+              tipContent={'请上传PNG,JPG,JPEG,GIF,WEBP格式的图片,建议尺寸190*110,最大不能超过2MB'}
             />
           )}
         </FormItem>
@@ -391,7 +400,7 @@ class BaseForPartner extends React.Component {
               allowClear={false}
               onChange={val => {
                 this.props.getBusinessScope(val.slice(-1))
-                resetFields(["businessScopeId"])
+                resetFields([ "businessScopeId" ])
               }}
               options={this.props.industryList}
               placeholder='请选择行业'
