@@ -25,7 +25,6 @@ import {
   AGES_OPTIONS,
   SEAT_OPTIONS, MEDIA_TASK_PATTERN_RUSH, MEDIA_TASK_PATTERN_BIDDING
 } from '@/taskPool/constants/config';
-import boolean from 'less/lib/less/functions/boolean';
 
 const { SHOW_PARENT } = TreeSelect;
 
@@ -67,7 +66,7 @@ class UnitPrice extends React.Component {
         });
       }
       let result = Object.values(numObj)
-        .filter(n => typeof n === 'number')
+        .filter(n => typeof n === 'number' && n >= 0)
         .sort((a, b) => b - a)
       if (result.length > 2) {
         result = [ result[0], result[result.length - 1] ]
@@ -78,7 +77,7 @@ class UnitPrice extends React.Component {
       this.setState({
         readNums: result.map(price => numeral(amount).divide(price || 1))
           .map(num => {
-            return isNaN(num.format('0,0')) ? "0.0" : num.format('0,0')
+            return isNaN(num.format('0')) ? "0" : num.format('0,0')
           })
       });
     }, 0);
@@ -108,7 +107,7 @@ class UnitPrice extends React.Component {
                 {getFieldDecorator(wxPositionToFields[item.locationKey], {
                   initialValue: budget[wxPositionToFields[item.locationKey]],
                   rules: [
-                    { required: true, validator: (rule, value, callback) => {
+                    { required: true, validator: (rule, value = 0, callback) => {
                         if (value <= 0) {
                           callback(rule.message)
                         }
@@ -162,9 +161,9 @@ class ReadNumber extends React.Component {
       let sum = Object.values(numObj).filter(Boolean).reduce(function (prev, cur) {
         return prev + cur;
       }, 0)
-      const result = numeral(amount).divide(sum || 1).format('0.00')
+      const result = numeral(amount).divide(sum).format('0.00')
       this.setState({
-        unitPrice:  isNaN(result) ? "0" : result
+        unitPrice:  isNaN(result) ? "0.00" : result
       });
     }, 0);
   }
@@ -193,7 +192,7 @@ class ReadNumber extends React.Component {
                 {getFieldDecorator(wxPositionToFields[item.locationKey], {
                   initialValue: budget[wxPositionToFields[item.locationKey]],
                   rules: [
-                    { required: true, validator: (rule, value, callback) => {
+                    { required: true, validator: (rule, value = 0, callback) => {
                         if (value <= 0) {
                           callback(rule.message)
                         }
@@ -363,7 +362,7 @@ class BudgetForWeixin extends React.Component {
           }}>包含冻结服务费{serviceFee}元，实际扣款为{actualPayment}元
           </div>
         </FormItem>
-        <FormItem label="内容发布位置" className='taskPosRadio'>
+        <FormItem label="图文发布位置" className='taskPosRadio'>
           {getFieldDecorator('locationLimited', {
             initialValue: budget.locationLimited || 2,
             rules: [ {
@@ -420,7 +419,7 @@ class BudgetForWeixin extends React.Component {
           data={data}
           taskPositionList={this.props.taskPositionList}
         />}
-        <FormItem label={<div>内容发布位置<QuestionTip content={<div>如果指标设置太高会降低任务曝光率
+        <FormItem label={<div>博主限制<QuestionTip content={<div>如果指标设置太高会降低任务曝光率
           <br />请合理设置系数</div>} /></div>}>
           <Row>
             <Col span={7}>

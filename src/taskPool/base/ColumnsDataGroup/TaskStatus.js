@@ -21,23 +21,23 @@ const statusKeyToProps = {
   },
   [AD_ORDER_STATE_PROCESSING]: {
     status: 'processing',
-    text: '任务进行中'
+    text: '进行中'
   },
   [AD_ORDER_STATE_FINISH]: {
     status: 'success',
-    text: '任务已结束'
+    text: '已结束'
   },
   [AD_ORDER_STATE_OFFLINE]: {
     status: 'default',
-    text: '任务已下线'
+    text: '已下线'
   },
   [AD_ORDER_STATE_EXPIRY]: {
     status: 'error',
-    text: '任务已过期'
+    text: '已过期'
   },
   [AD_ORDER_STATE_END]: {
     status: 'error',
-    text: '任务已终止'
+    text: '已终止'
   }
 }
 

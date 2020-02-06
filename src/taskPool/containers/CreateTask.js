@@ -11,6 +11,7 @@ import {
 } from "../components/Task/CreateForms/index";
 import { parseUrlQuery } from "@/util/parseUrl";
 import update from 'immutability-helper'
+import moment from 'moment';
 
 const { Step } = Steps;
 let forms = {
@@ -80,6 +81,24 @@ const CreateTask = (props) => {
           label: companyName,
           key: companyId
         } : undefined,
+        // FIXME: 调试
+        "orderName": "123123",
+        "industry": [
+          1,
+          2
+        ],
+        "orderDate": [
+
+        ],
+        "taskPattern": 2,
+        "showPictureUrl": [
+          {
+            "uid": "rc-upload-1580960941787-2",
+            "url": "http://prd-wby-img.oss-cn-beijing.aliyuncs.com/FWP_IMG_UPLOAD/dcab1be06ee246cb8225b324a98f3656.jpg"
+          }
+        ],
+        "retainTime": 48,
+        "businessScopeId": "1"
       },
       budget: {},
       content: {}
@@ -100,20 +119,21 @@ const CreateTask = (props) => {
   }
 
 
-  const next = (key, data) => {
+  const next = (...arg) => {
     setCurrent(current + 1)
-    setDataState(update(state,
-      {
-        [key]: { $set: data }
-      }
-    ))
+    setData(...arg)
   }
 
-  const prev = (key, data) => {
+  const prev = (...arg) => {
     setCurrent(current - 1)
+    setData(...arg)
+  }
+
+  const setData = (key1, data1, key2, data2) => {
     setDataState(update(state,
       {
-        [key]: { $set: data }
+        [key1]: { $set: data1 },
+        [key2]: { $set: data2 },
       }
     ))
   }
@@ -203,6 +223,7 @@ const CreateTask = (props) => {
           formLayout={formLayout}
           next={next}
           prev={prev}
+          setData={setData}
           data={state}
           actions={actions}
           getCompanyBalance={getCompanyBalance}
