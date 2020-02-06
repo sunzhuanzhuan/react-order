@@ -63,9 +63,9 @@ class Select extends React.Component {
       <div>
         <div style={{ marginLeft: '30px' }}>
           <h2 style={{ marginTop: '20px' }}>微信公众号</h2>
-          <div>总抽佣率： {totalProportion && <InputNumber precision={2} defaultValue={totalProportion} value={total} min={0} />} %</div>
-          <div style={{ margin: '10px 0' }}>广告主率： {adProportion && <InputNumber precision={2} value={ad} min={0} onBlur={this.handleAd} defaultValue={ad} />} %</div>
-          <div>博主率：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{accountProportion && <InputNumber precision={2} value={bz} min={0} onBlur={this.handleBz} defaultValue={bz} />} %
+          <div>总抽佣率： {totalProportion > -1 && <InputNumber precision={2} defaultValue={totalProportion} value={total} min={0} />} %</div>
+          <div style={{ margin: '10px 0' }}>广告主率： {adProportion > -1 && <InputNumber precision={2} value={ad} min={0} onBlur={this.handleAd} defaultValue={ad} />} %</div>
+          <div>博主率：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{accountProportion > -1 && <InputNumber precision={2} value={bz} min={0} onBlur={this.handleBz} defaultValue={bz} />} %
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span>
               <Tooltip placement="topLeft" title={'总抽佣率=广告主率+博主率'}>
                 <Button type="link" onClick={this.handleTotal}>计算</Button>
