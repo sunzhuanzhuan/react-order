@@ -291,7 +291,8 @@ function Reason(props) {
   return <Form>
     <Form.Item>
       {getFieldDecorator(`reason`, {
-        rules: [{ required: true, message: '请填写原因!' }],
+        rules: [{ required: true, message: '请填写原因!' },
+        { max: 50, message: '原因不超过50个字!' }],
       })(
         <TextArea rows={4} placeholder='请填写原因（50字以内）' />
       )}
