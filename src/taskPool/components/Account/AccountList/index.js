@@ -33,12 +33,13 @@ function AccountList(props) {
       title: '账号名称',
       dataIndex: 'snsName',
       key: 'snsName',
-      render: (text) => {
-        return <span className="tab-icon-style"><WBYPlatformIcon
-          weibo_type={text || '9'}
-          icon_type={"default"}
-          widthSize={15}
-        />{text}</span>
+      render: (text, record) => {
+        return <span className="tab-icon-style">
+          <WBYPlatformIcon
+            weibo_type={record.platformId || '9'}
+            icon_type={"default"}
+            widthSize={15}
+          /> {text}</span>
       }
     },
     {
