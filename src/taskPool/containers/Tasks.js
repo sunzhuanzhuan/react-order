@@ -16,6 +16,7 @@ import {
   AD_ORDER_STATE_PROCESSING,
   AD_ORDER_STATE_WAIT_RELEASED
 } from '@/taskPool/constants/config';
+import Scolltable from '@/components/Scolltable';
 
 const { Title } = Typography;
 
@@ -288,7 +289,7 @@ const Tasks = (props) => {
       onOk: () => {
         return actions.TPOfflineTask({ id }).then(() => {
           message.success('下线成功')
-          getList({page: { currentPage: 1 }})
+          getList({ page: { currentPage: 1 } })
         })
       }
     })
@@ -302,7 +303,7 @@ const Tasks = (props) => {
       onOk: () => {
         return actions.TPOnlineTask({ id }).then(() => {
           message.success('上线成功')
-          getList({page: { currentPage: 1 }})
+          getList({ page: { currentPage: 1 } })
         })
       }
     })
@@ -316,7 +317,7 @@ const Tasks = (props) => {
       onOk: () => {
         return actions.TPEndTask({ id }).then(() => {
           message.success('任务已终止')
-          getList({page: { currentPage: 1 }})
+          getList({ page: { currentPage: 1 } })
         })
       }
     })
@@ -365,14 +366,16 @@ const Tasks = (props) => {
       <Title level={4}>任务管理</Title>
       <Filters search={getList} />
       <Alert style={{ margin: '10px 0' }} message={`共有 ${total} 条记录`} />
-      <Table
-        locale={{ emptyText: "还没有任务可以展示" }}
-        loading={searching}
-        dataSource={dataSource}
-        pagination={pagination}
-        columns={columns}
-        scroll={{ x: 1800 }}
-      />
+      <Scolltable scrollClassName='.ant-table-body' widthScroll={1800}>
+        <Table
+          locale={{ emptyText: "还没有任务可以展示" }}
+          loading={searching}
+          dataSource={dataSource}
+          pagination={pagination}
+          columns={columns}
+          scroll={{ x: 1800 }}
+        />
+      </Scolltable>
     </div>
   );
 };

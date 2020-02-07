@@ -13,7 +13,7 @@ import {
   getIndustryName,
   openNewWindowPreviewForWeibo,
   openNewWindowPreviewForWeixin,
-  openNewWindowPreviewFor12306
+  openNewWindowPreviewFor12306, getScopeName
 } from "@/taskPool/constants/utils";
 import numeral from '@/util/numeralExpand'
 import { OssUpload } from 'wbyui'
@@ -331,7 +331,7 @@ class PreviewFor12306 extends React.Component {
     openNewWindowPreviewFor12306({
       content: content.content,
       video: video[0].url,
-      images: image[0].url,
+      image: image[0].url,
     })
   }
 
@@ -341,7 +341,7 @@ class PreviewFor12306 extends React.Component {
       title: '提交成功',
       content: '您可在任务管理页随时查看进度',
       onOk: () => {
-        this.props.history.push('/order/task/manage')
+        this.props.history.push('/order/task/tasks-manage')
       }
     })
   }
@@ -465,6 +465,9 @@ class PreviewFor12306 extends React.Component {
             (base.industry || []).map(id => getIndustryName(this.props.industryList, id).industryName)
               .join('/')
           }</Descriptions.Item>
+          {base.businessScopeId && <Descriptions.Item label="经营内容">{
+            getScopeName(this.props.businessScopeList, base.businessScopeId)
+          }</Descriptions.Item>}
           <Descriptions.Item label="投放开始日期">
             {base.orderStartDate.format('YYYY-MM-DD')}
           </Descriptions.Item>
@@ -522,7 +525,7 @@ class PreviewFor12306 extends React.Component {
             <a onClick={this.preview}>查看</a>
           </Descriptions.Item>
         </Descriptions>
-        <Text type="danger">确认无误即可提交。任务将会在设定的开始时间到达时上线。</Text>
+        <Text type="danger">确认无误即可提交生成订单，由线下媒介经理进行处理。</Text>
         <footer>
           <Button onClick={this.props.prev}>上一步</Button>
           <Button type="primary" loading={submitLoading} onClick={this.handleSubmit}>{this.props.isUpdate ? "确认修改": "提交"}</Button>
@@ -560,7 +563,7 @@ class PreviewForWeibo extends React.Component {
       title: '提交成功',
       content: '您可在任务管理页随时查看进度',
       onOk: () => {
-        this.props.history.push('/order/task/manage')
+        this.props.history.push('/order/task/tasks-manage')
       }
     })
   }
