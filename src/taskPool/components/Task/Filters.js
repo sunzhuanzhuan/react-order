@@ -18,7 +18,7 @@ import {
   platformTypes
 } from "../../constants/config";
 import moment from 'moment';
-import { useHistory } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 
 const { TabPane } = Tabs;
 const { Option } = Select;
@@ -122,8 +122,11 @@ const FilterForm = (props) => {
 }
 
 const Filters = (props) => {
-  const [ active, setActive ] = useState(platformTypes[0].id)
   const history = useHistory()
+  let { active } = useParams()
+  if(!platformTypes.map(item => item.id).includes(active)){
+    active = platformTypes[0].id
+  }
 
   useEffect(() => {
     submit()
@@ -131,7 +134,7 @@ const Filters = (props) => {
 
   const tabChange = (key) => {
     props.form.resetFields()
-    setActive(key)
+    history.push('/order/task/tasks-manage/' + key)
   }
 
   const submit = e => {
@@ -149,6 +152,9 @@ const Filters = (props) => {
           allValue.orderStartDateEnd = values.startAt[1]
           delete allValue.startAt
         }
+        allValue.taskPattern = values.taskPattern
+        allValue.mediaType = values.mediaType
+
         let filter = {
           page: { currentPage: 1 },
           form: { ...allValue, platformId: active }

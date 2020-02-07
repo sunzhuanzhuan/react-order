@@ -50,8 +50,8 @@ function AccountReceiveList(props) {
     },
     {
       title: '提交时间',
-      dataIndex: 'submitTime',
-      key: 'submitTime',
+      dataIndex: 'createdAt',
+      key: 'createdAt',
       align: 'center',
       render: text => getDate(text)
     },

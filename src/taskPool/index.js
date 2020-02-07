@@ -30,7 +30,7 @@ class Business extends Component {
          <Route path="/order/task/review" component={TaskReviewList} />
         <Route path="/order/task/review" component={NewTaskManageList} />
         <Route path="/order/task/remittance_record" component={RemittanceRecordList} />*/}
-          <Route path="/order/task/tasks-manage" component={Tasks} />
+          <Route path="/order/task/tasks-manage/:active" component={Tasks} />
           <Route path="/order/task/tasks-create" component={CreateTask} />
           <Route path="/order/task/tasks-update/:id" component={UpdateTask} />
           <Route path="/order/task/tasks-details/:id" component={TaskDetail} />
@@ -49,7 +49,8 @@ class Business extends Component {
           <Route path="/order/task/account-receive" component={AccountReceive} />
           <Route path="/order/task/account-details" component={AccountDetails} />
           <Route path="/order/task/operation-log" component={operationLog} />
-          <Redirect from="/order/task/create" to='/order/task/tasks-manage' />
+          <Redirect from="/order/task/create" to='/order/task/tasks-manage/9' />
+          <Redirect from="/order/task/tasks-manage" to='/order/task/tasks-manage/9' />
         </Switch >
       </div>
     )
