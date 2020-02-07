@@ -82,7 +82,7 @@ const CreateTask = (props) => {
           key: companyId
         } : undefined,
         // FIXME: 调试
-        "orderName": "123123",
+        /*"orderName": "123123",
         "industry": [
           1,
           2
@@ -98,7 +98,7 @@ const CreateTask = (props) => {
           }
         ],
         "retainTime": 48,
-        "businessScopeId": "1"
+        "businessScopeId": "1"*/
       },
       budget: {},
       content: {}
