@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Table, Button, Modal } from 'antd'
+import { Table, Button, Modal, Alert } from 'antd'
 import { KpiTable } from './AccountList'
 function getDate(str) {
   return str && str.substring(0, 16)
@@ -50,8 +50,8 @@ function AccountReceiveList(props) {
     },
     {
       title: '提交时间',
-      dataIndex: 'submitTime',
-      key: 'submitTime',
+      dataIndex: 'createdAt',
+      key: 'createdAt',
       align: 'center',
       render: text => getDate(text)
     },
@@ -80,6 +80,8 @@ function AccountReceiveList(props) {
   }
 
   return (<>
+    <Alert message={<span>已选择 <a>{selectedRow.length}</a> 个账号    合计：{claimAccountList.total} 个</span>} type="info" />
+    <br />
     <Table dataSource={claimAccountList.list} columns={columns} rowKey='accountId'
       rowSelection={rowSelection}
       pagination={{

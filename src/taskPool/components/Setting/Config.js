@@ -24,10 +24,10 @@ export const columnsWeidu = (getFieldDecorator) => {
               <Option value='1'>乘车日期</Option>
               <Option value='2'>目的地城市</Option>
               <Option value='3'>出发城市</Option>
-              <Option value='4'>性别</Option>
-              <Option value='5'>年龄</Option>
-              <Option value='6'>车次字头</Option>
-              <Option value='7'>坐席</Option>
+              <Option value='5'>性别</Option>
+              <Option value='6'>年龄</Option>
+              <Option value='7'>车次字头</Option>
+              <Option value='8'>坐席</Option>
             </Select>
           )
           }
