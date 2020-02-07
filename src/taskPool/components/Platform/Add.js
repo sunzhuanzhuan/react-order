@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { Form, Icon, Input, Button, DatePicker, Tree } from 'antd';
+import { Form, Icon, Input, Button, DatePicker, TreeSelect } from 'antd';
 import { OssUpload } from "wbyui";
 import moment from 'moment'
 import './add.less'
 const { RangePicker } = DatePicker;
-const { TreeNode } = Tree;
+const { TreeNode } = TreeSelect;
 let arr = []
 class AddForm extends React.Component {
   constructor(props) {
@@ -16,13 +16,20 @@ class AddForm extends React.Component {
   }
   UNSAFE_componentWillReceiveProps = (props) => {
     const { platformDetail } = props.platformReducers;
-    let selectArr = []
+    if (Object.values(platformDetail).length > 0) {
+      platformDetail.cooperationAreaList.map((item) => {
+
+        item.label = item.areaName
+        item.value = item.areaCode
+        item.key = item.areaCode
+      })
+
+    }
 
   }
 
-  onCheck = (checkedKeys, e) => {
-    arr = e.checkedNodes
-    this.props.form.setFieldsValue({ cooperationAreaList: checkedKeys })
+  onChange = (value) => {
+    arr = value
   }
   handleSubmit = e => {
     e.preventDefault();
@@ -34,9 +41,7 @@ class AddForm extends React.Component {
         values.cooperationEndTime = moment(values.cooperationEndTime).format('YYYY-MM-DD')
         let sel = []
         arr.map((item) => {
-          if (item.key) {
-            sel.push({ areaCode: item.key, areaName: item.props.textKey })
-          }
+          sel.push({ areaCode: item.value, areaName: item.label.props.children })
         })
         values.cooperationAreaList = sel;
         let newValue = JSON.parse(JSON.stringify(values))
@@ -89,15 +94,15 @@ class AddForm extends React.Component {
         ) : (
             <span>{item.areaName}</span>
           );
-        // const id = !item.id ? item.largeArea : item.id
+        const id = !item.id ? item.largeArea : item.id
         if (item.areaDataResVOS) {
           return (
-            <TreeNode key={item.id} title={title}>
+            <TreeNode key={id} title={title} value={id}>
               {loop(item.areaDataResVOS)}
             </TreeNode>
           );
         }
-        return <TreeNode key={item.id} title={title} textKey={item.areaName} />;
+        return <TreeNode key={id} title={title} textKey={item.areaName} value={id} />;
       });
     return <div>
       <Form onSubmit={this.handleSubmit}>
@@ -156,22 +161,24 @@ class AddForm extends React.Component {
           )}
           </Form.Item>
         </Form.Item>
-        {this.state.arrAllProvince && <Form.Item label="合作区域" {...formItemLayout}>
+        <Form.Item label="合作区域" {...formItemLayout}>
           {getFieldDecorator('cooperationAreaList', {
             rules: [{ required: true, message: '请输入合作区域' }],
-            initialValue: this.props.type == 'add' ? null : platformDetail.cooperationAreaList.map((item) => item.areaCode),
-            valuePropName: 'checkedKeys',
+            initialValue: this.props.type == 'add' ? null : platformDetail.cooperationAreaList,
+            // valuePropName: 'checkedKeys',
           })(
-            <Tree
+            <TreeSelect
               checkable
               multiple
+              labelInValue
+              treeCheckable
               selectable={false}
-              onCheck={this.onCheck}
+              onChange={this.onChange}
             >
               {loop(allProvince)}
-            </Tree>
+            </TreeSelect>
           )}
-        </Form.Item>}
+        </Form.Item>
         <Form.Item label="上传合同" {...formItemLayout}>
           {getFieldDecorator('contractEnclosureUrl', {
             initialValue: this.props.type == 'add' ? null : [{ url: platformDetail.contractEnclosureUrl, status: 'done', uid: platformDetail.contractEnclosureUrl }],
