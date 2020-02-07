@@ -63,7 +63,7 @@ function CooperationDetail() {
   return (
     <div>
       <BreadCrumbs link='/order/task/orders-manage/2' text={<h2>订单详情</h2>} />
-      <TitleBox title='订单状态' >
+      <TitleBox title='订单进度' >
         <Steps current={orderStep.key}>
           {orderStep.list.map(item => <Step key={item} title={item} />)}
         </Steps>
