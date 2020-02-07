@@ -33,7 +33,8 @@ export default function WachatList(props) {
       title: '订单ID',
       dataIndex: 'orderNumber',
       key: 'orderNumber',
-      align: 'center'
+      align: 'center',
+      width: '130px'
     },
     {
       title: '任务名称/ID',
@@ -202,12 +203,12 @@ export default function WachatList(props) {
     },
   ];
   return (
-    <Scolltable scrollClassName='.ant-table-body' widthScroll={1600}>
+    <Scolltable scrollClassName='.ant-table-body' widthScroll={1700}>
       <Table
         style={{ marginTop: 20 }}
         dataSource={list}
         columns={columns}
-        scroll={{ x: 1400, y: 800 }}
+        scroll={{ x: 1500, y: 800 }}
         pagination={{
           pageSize: allMcnOrderList.pageSize || 1,
           showSizeChanger: true,
