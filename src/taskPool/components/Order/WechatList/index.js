@@ -31,8 +31,8 @@ export default function WachatList(props) {
   const columns = [
     {
       title: '订单ID',
-      dataIndex: 'id',
-      key: 'id',
+      dataIndex: 'orderNumber',
+      key: 'orderNumber',
       align: 'center'
     },
     {
@@ -43,7 +43,7 @@ export default function WachatList(props) {
       render: ((text, record) => <div>
         <WBYPlatformIcon weibo_type={9} widthSize={14} />
         <a href={`/order/task/tasks-details/${record.adOrderId}`} > {text}</a>
-        <div>ID：{record.adOrderId}</div>
+        <div>ID：{record.adOrderNumber}</div>
       </div>)
     },
     {

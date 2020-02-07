@@ -1,3 +1,10 @@
+/*
+ * @Descripttion: 
+ * @Author: wangxinyue
+ * @Date: 2020-01-08 10:30:32
+ * @LastEditors  : wangxinyue
+ * @LastEditTime : 2020-02-07 19:52:23
+ */
 import React from 'react'
 import { Form, Input, InputNumber, DatePicker, Button, Select } from 'antd'
 import moment from 'moment'
@@ -50,8 +57,9 @@ function WeChatForm(props) {
         </Form.Item>
         <Form.Item label='订单状态'>
           {getFieldDecorator('form.orderState', {})(
-            <Select style={{ width: 170 }} placeholder='请选择' >
-              {mcnOrderStateList.map(one => <Select.Option key={one.stateKey} value={one.stateKey}>
+            <Select style={{ width: 170 }}
+              allowClear placeholder='请选择' >
+              {mcnOrderStateList.map(one => <Select.Option key={one.stateKey} value={one.stateKey} >
                 {one.mcnOrderStateName}
               </Select.Option>)}
             </Select>
