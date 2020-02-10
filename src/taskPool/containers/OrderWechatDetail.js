@@ -16,8 +16,7 @@ const getNumber = (value) => {
 function OrderWechatDetail(props) {
   const { actions, orderReducers } = props
   const [modalProps, setModalProps] = useState({ title: '' })
-  const { orderMcnDetailInfo = {}, accountDetail, dataCurvelist = [] } = orderReducers
-  const { base = {} } = accountDetail
+  const { orderMcnDetailInfo = {}, dataCurvelist = [] } = orderReducers
   const { orderStateDesc } = orderMcnDetailInfo
   const [isLoading, setIsLoading] = useState(true)
   useEffect(() => {
@@ -26,7 +25,6 @@ function OrderWechatDetail(props) {
   async function getOrderDetail() {
     const searchParam = qs.parse(props.location.search.substring(1))
     const { data } = await actions.TPOrderInfo({ mcnOrderId: searchParam.id })
-    await actions.TPGetAccountDetail({ accountId: data.accountId })
     actions.TPQueryDataCurve({ mcnOrderId: searchParam.id })
     setIsLoading(false)
   }
@@ -132,7 +130,7 @@ function OrderWechatDetail(props) {
         <TitleBox title='博主信息' >
           <Row className='account'>
             <Col span={6}> 博主名称
-            <div className='account-name cursor-pointer ' onClick={() => window.open(base.accountHomepageUrl, '_target')}>
+            <div className='account-name cursor-pointer ' onClick={() => window.open(`/order/task/account-details?accountId=${orderMcnDetailInfo.accountId}`, '_target')}>
                 <img src={orderMcnDetailInfo.avatarUrl} alt='博主头像' />
                 <a>{orderMcnDetailInfo.snsName}</a>
               </div>
