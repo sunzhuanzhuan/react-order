@@ -34,7 +34,7 @@ const Log = (props) => {
   useEffect(() => {
     let params = {
       page: {
-        pageNum: 1,
+        currentPage: 1,
         pageSize: 50
       }
     }
@@ -55,7 +55,7 @@ const Log = (props) => {
     onChange: (current) => {
       let params = {
         page: {
-          pageNum: current,
+          currentPage: current,
           pageSize: 50
         }
       }
