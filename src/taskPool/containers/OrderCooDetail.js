@@ -40,8 +40,8 @@ function CooperationDetail() {
     { name: '结案报告：', content: <a href={orderDetail.finalReportUrl}>{orderDetail.finalReportName}</a> },
   ]
   const baseInfo = [
-    { label: '订单ID', content: orderId },
-    { label: '任务ID', content: orderId },
+    { label: '订单ID', content: orderDetail.orderNumber },
+    { label: '任务ID', content: orderDetail.adOrderNumber },
     { label: '投放模式', content: putTypeMap[orderDetail.putType] },
     { label: '所属公司', content: orderDetail.companyName },
     { label: '内容类型', content: mediaTypeMap[orderDetail.mediaType] },

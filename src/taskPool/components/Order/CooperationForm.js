@@ -1,3 +1,10 @@
+/*
+ * @Descripttion: 
+ * @Author: wangxinyue
+ * @Date: 2020-01-13 14:02:44
+ * @LastEditors: wangxinyue
+ * @LastEditTime: 2020-02-10 16:20:46
+ */
 import React from 'react'
 import { Form, Input, DatePicker, Select, Button } from 'antd'
 import moment from 'moment'
@@ -41,7 +48,7 @@ function CooperationForm(props) {
         )}
       </Form.Item>
       <Form.Item label='订单ID'>
-        {getFieldDecorator('form.adOrderId', {})(
+        {getFieldDecorator('form.orderNumber', {})(
           <Input placeholder='请输入' />
         )}
       </Form.Item>
