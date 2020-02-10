@@ -35,8 +35,8 @@ function OrderWechatDetail(props) {
     { label: '发布平台', content: orderMcnDetailInfo.platformName },
     { label: '图文发布位置', content: orderMcnDetailInfo.locationInfo },
 
-    { label: '任务ID', content: orderMcnDetailInfo.adOrderId },
-    { label: '订单ID', content: orderMcnDetailInfo.id },
+    { label: '任务ID', content: orderMcnDetailInfo.adOrderNumber },
+    { label: '订单ID', content: orderMcnDetailInfo.orderNumber },
     { label: '领取时间', content: orderMcnDetailInfo.receiveAt },
 
     { label: '所属公司', content: orderMcnDetailInfo.companyName },
