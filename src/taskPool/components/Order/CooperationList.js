@@ -47,18 +47,15 @@ function CooperationList(props) {
       align: 'center'
     },
     {
-      title: '任务ID',
-      dataIndex: 'adOrderNumber',
-      key: 'adOrderNumber',
-      align: 'center'
-    },
-    {
       title: '任务名称',
       dataIndex: 'orderName',
       key: 'orderName',
       render: (text, record) => {
         //adOrderId
-        return <a href={`/order/task/tasks-details/${record.adOrderId}`} >{text}</a>
+        return <div>
+          <a href={`/order/task/tasks-details/${record.adOrderId}`} >{text}</a>
+          <div>ID：{record.adOrderNumber}</div>
+        </div>
       }
     },
     {
@@ -70,6 +67,7 @@ function CooperationList(props) {
       title: '合作平台名称',
       dataIndex: 'platformName',
       key: 'platformName',
+      render: (text, record) => text || '12306'
     },
     {
       title: '预计阅读数',

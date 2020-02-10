@@ -43,9 +43,9 @@ function OrderWechatDetail(props) {
     { label: '订单状态', content: <div className='red-text'>{orderMcnDetailInfo.orderStateDesc}</div> },
     { label: '预计推送时间', content: orderMcnDetailInfo.expectedPublishedTime },
     { label: '行业分类', content: orderMcnDetailInfo.industryName, span: 2 },
-    { label: '阅读单价', content: orderMcnDetailInfo.unitPrice },
+    { label: '阅读单价', content: `${orderMcnDetailInfo.unitPrice}元/阅读` },
     { label: '任务模式', content: <div className='red-text'>{orderMcnDetailInfo.taskPatternDesc}</div>, span: 2 },
-    { label: '发布保留时长', content: orderMcnDetailInfo.retainTime },
+    { label: '发布保留时长', content: `${orderMcnDetailInfo.retainTime}小时` },
     { label: '', content: '', span: 2 },
     { label: '申请阅读数', content: <div className='red-text'>{getNumber(orderMcnDetailInfo.expectActionNum)}</div> },
 
