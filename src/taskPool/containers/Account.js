@@ -76,10 +76,7 @@ function Account(props) {
   return (
     <div>
       <h2>账号列表</h2>
-      <TitleBox title='筛选项' >
-        <AccountTabsForm formProps={formProps}  {...formProps} />
-      </TitleBox>
-
+      <AccountTabsForm formProps={formProps}  {...formProps} />
       <Spin spinning={loading}>
         <a href="/order/task/account-receive" style={{ padding: '10px 0px', display: 'block' }}>
           <Badge count={claimTotal} >

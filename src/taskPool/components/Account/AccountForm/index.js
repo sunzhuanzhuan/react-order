@@ -100,10 +100,10 @@ function AccountForm(props) {
         )}
       </FormItem>
       <SearchForm form={form} formData={accountConfig} formConfig={formConfig2} />
-      <div className='button-footer'>
+      <FormItem>
         <Button type='primary' onClick={onSearch}>筛选</Button>
         <Button style={{ marginLeft: 10 }} onClick={onReset}>重置</Button>
-      </div>
+      </FormItem>
     </>
   )
 }
