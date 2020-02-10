@@ -130,7 +130,7 @@ function AudienceForm(props) {
           <TagItem list={props.orderIndustryCategory} />
         )}
       </FormItem>
-      <div className='button-footer'>
+      <div className='button-footer' style={{ marginTop: 0 }}>
         <Button type='primary' onClick={onSearch}>筛选</Button>
         <Button style={{ marginLeft: 10 }} onClick={onReset}>重置</Button>
       </div>
