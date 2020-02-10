@@ -882,7 +882,7 @@ export const HistoryCols = [
           return <div key={index}>
             <div style={{ textAlign: 'left' }}>【订单ID:{item.order_id}、{item.weibo_name}】</div>
             {item.price_name && <div style={{ textAlign: 'left' }}>价格名称：{item.price_name}</div>}
-            {item.cost && <div style={{ textAlign: 'left' }}>Cost(元)：{numeral(item.cost).format('0,0')}</div>}
+            {item.cost && <div style={{ textAlign: 'left' }}>Cost(元)：{numeral(item.cost).format('0,0.00')}</div>}
             {item.service_rate && <div style={{ textAlign: 'left' }}>服务费率：{item.service_rate}%</div>}
             {item.account_category_name && <div style={{ textAlign: 'left' }}>账号分类：{item.account_category_name}</div>}
             {item.release_form && <div style={{ textAlign: 'left' }}>位置/直发or转发：{item.release_form}</div>}
@@ -907,7 +907,7 @@ export const HistoryCols = [
           return <div key={index}>
             <div style={{ textAlign: 'left' }}>【订单ID:{item.order_id}、{item.weibo_name}】</div>
             {item.price_name && <div style={{ textAlign: 'left' }}>价格名称：<span style={item.price_name != before_item.price_name ? { color: 'red' } : {}}>{item.price_name}</span></div>}
-            {item.cost && <div style={{ textAlign: 'left' }}>Cost(元)：<span style={item.cost != before_item.cost ? { color: 'red' } : {}}>{numeral(item.cost).format('0,0')}</span></div>}
+            {item.cost && <div style={{ textAlign: 'left' }}>Cost(元)：<span style={item.cost != before_item.cost ? { color: 'red' } : {}}>{numeral(item.cost).format('0,0.00')}</span></div>}
             {item.service_rate && <div style={{ textAlign: 'left' }}>服务费率：<span style={item.service_rate != before_item.service_rate ? { color: 'red' } : {}}>{item.service_rate}%</span></div>}
             {item.account_category_name && <div style={{ textAlign: 'left' }}>账号分类：<span style={item.account_category_name != before_item.account_category_name ? { color: 'red' } : {}}>{item.account_category_name}</span></div>}
             {item.release_form && <div style={{ textAlign: 'left' }}>位置/直发or转发：<span style={item.release_form != before_item.release_form ? { color: 'red' } : {}}>{item.release_form}</span></div>}
