@@ -7,25 +7,66 @@ class Select extends React.Component {
     this.state = {
       total: props.totalProportion,
       ad: props.adProportion,
-      bz: props.accountProportion
+      bz: props.accountProportion,
+      totalFlag: false,
+      adFlag: false,
+      bzFlag: false
     }
 
   }
   handleTotal = () => {
-    const { ad, bz } = this.state
+    const { ad, bz, totalFlag, adFlag, bzFlag, total } = this.state
+
+    if (totalFlag && adFlag && bzFlag) {
+      this.setState({
+        total: Number(ad) + Number(bz)
+      })
+    } else if (totalFlag && adFlag) {
+      if (Number(total) - Number(ad) >= 0) {
+        this.setState({
+          bz: Number(total) - Number(ad)
+        })
+      } else {
+        message.error('博主率必须大于等于0')
+      }
+
+    } else if (totalFlag && bzFlag) {
+      if (Number(total) - Number(bz) >= 0) {
+        this.setState({
+          ad: Number(total) - Number(bz)
+        })
+      } else {
+        message.error('广告主率必须大于等于0')
+      }
+
+    } else {
+      this.setState({
+        total: Number(ad) + Number(bz)
+      })
+    }
     this.setState({
-      total: Number(ad) + Number(bz)
+      totalFlag: false,
+      adFlag: false,
+      bzFlag: false
+    })
+  }
+  handleZo = (e) => {
+    this.setState({
+      total: e.target.value,
+      totalFlag: true
     })
   }
   handleAd = (e) => {
     this.setState({
-      ad: e.target.value
+      ad: e.target.value,
+      adFlag: true
     })
 
   }
   handleBz = (e) => {
     this.setState({
-      bz: e.target.value
+      bz: e.target.value,
+      bzFlag: true
     })
 
   }
@@ -63,7 +104,7 @@ class Select extends React.Component {
       <div>
         <div style={{ marginLeft: '30px' }}>
           <h2 style={{ marginTop: '20px' }}>微信公众号</h2>
-          <div>总抽佣率： {totalProportion > -1 && <InputNumber precision={2} defaultValue={totalProportion} value={total} min={0} />} %</div>
+          <div>总抽佣率： {totalProportion > -1 && <InputNumber precision={2} defaultValue={totalProportion} value={total} onBlur={this.handleZo} min={0} />} %</div>
           <div style={{ margin: '10px 0' }}>广告主率： {adProportion > -1 && <InputNumber precision={2} value={ad} min={0} onBlur={this.handleAd} defaultValue={ad} />} %</div>
           <div>博主率：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{accountProportion > -1 && <InputNumber precision={2} value={bz} min={0} onBlur={this.handleBz} defaultValue={bz} />} %
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span>

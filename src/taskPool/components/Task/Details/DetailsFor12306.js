@@ -59,6 +59,7 @@ export default class DetailsFor12306 extends Component {
 
 
     const features = details.adOrderTripContent
+    const isDiscount = features.discount > 0
 
     return <>
       <PageHeader
@@ -95,7 +96,11 @@ export default class DetailsFor12306 extends Component {
             </Descriptions.Item>
             <Descriptions.Item label="任务预算">
               {details.totalAmount}元
+              {isDiscount && <span className='text-red' style={{marginLeft: 4, textDecoration: 'line-through'}}>{features.originalPrice}</span>}
             </Descriptions.Item>
+            {isDiscount && <Descriptions.Item label="优惠金额">
+              <div className='text-red'>{features.discount}元</div>
+            </Descriptions.Item>}
             <Descriptions.Item label="所属公司">{details.companyName}</Descriptions.Item>
             <Descriptions.Item label="出发城市">
               {features.leavePlaceDesc || '-'}
