@@ -1,3 +1,10 @@
+/*
+ * @Descripttion: 
+ * @Author: wangxinyue
+ * @Date: 2020-01-13 14:02:44
+ * @LastEditors  : wangxinyue
+ * @LastEditTime : 2020-02-10 09:34:48
+ */
 import React from 'react'
 import { Form, Input, Select, DatePicker, InputNumber } from 'antd'
 import './index.less'
@@ -5,7 +12,7 @@ const { RangePicker } = DatePicker;
 function SearchForm(props) {
   const { form, formData = [], formConfig = [] } = props
   const { getFieldDecorator } = form
-  function getChildren({ type, key, dataShow = 'name', dataValue = 'value' }) {
+  function getChildren({ type, key, dataShow = 'name', dataValue = 'value', max }) {
     switch (type) {
       case 'select':
         return <Select placeholder='请选择' style={{ width: 170 }} allowClear>
@@ -14,7 +21,7 @@ function SearchForm(props) {
           </Select.Option>)}
         </Select>
       case 'inputNumber':
-        return <InputNumber placeholder={`请输入`} style={{ width: 170 }} />
+        return <InputNumber placeholder={`请输入`} style={{ width: 170 }} max={max} />
       case 'rangePicker':
         return <RangePicker placeholder={['开始时间', '结束时间']} />
       default:
