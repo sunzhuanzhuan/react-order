@@ -31,32 +31,34 @@ export default function WachatList(props) {
   const columns = [
     {
       title: '订单ID',
-      dataIndex: 'id',
-      key: 'id',
+      dataIndex: 'orderNumber',
+      key: 'orderNumber',
+      align: 'center',
+      width: '130px'
     },
     {
-      title: '任务名称',
+      title: '任务名称/ID',
       dataIndex: 'orderName',
       key: 'orderName',
+      width: '160px',
       render: ((text, record) => <div>
         <WBYPlatformIcon weibo_type={9} widthSize={14} />
         <a href={`/order/task/tasks-details/${record.adOrderId}`} > {text}</a>
+        <div>ID：{record.adOrderNumber}</div>
       </div>)
-    },
-    {
-      title: '任务ID',
-      dataIndex: 'adOrderId',
-      key: 'adOrderId',
     },
     {
       title: '任务状态',
       dataIndex: 'adOrderStateDesc',
       key: 'adOrderStateDesc',
+      align: 'center'
+
     },
     {
       title: '任务类型',
       dataIndex: 'taskPatternDesc',
       key: 'taskPatternDesc',
+      align: 'center'
     },
     {
       title: '账号名称',
@@ -67,18 +69,20 @@ export default function WachatList(props) {
       title: 'Account_ID',
       dataIndex: 'accountId',
       key: 'accountId',
+      align: 'right'
     },
     {
-      title: '领取时间',
+      title: '创建时间/推送时间',
       dataIndex: 'receiveAt',
       key: 'receiveAt',
-      align: 'center'
-    },
-    {
-      title: '预计推送时间',
-      dataIndex: 'expectedPublishedTime',
-      key: 'expectedPublishedTime',
-      align: 'center'
+      align: 'center',
+      width: '220px',
+      render: (text, record) => {
+        return <div>
+          创建：{text}<br />
+          推送：{record.expectedPublishedTime}
+        </div>
+      }
     },
     {
       title: '实际阅读/KPI',
@@ -94,116 +98,131 @@ export default function WachatList(props) {
       title: '阅读单价',
       dataIndex: 'unitPrice',
       key: 'unitPrice',
+      render: text => {
+        return <div>
+          {text}元/阅读
+        </div>
+      }
     },
     {
       title: '消耗预算',
       dataIndex: 'adRealAmount',
       key: 'adRealAmount',
+      align: 'right',
+      render: text => {
+        return <div>
+          {text}元
+        </div>
+      }
     },
     {
       title: '实际结算价格',
       dataIndex: 'realAmount',
       key: 'realAmount',
+      align: 'right',
+      render: text => {
+        return <div>
+          {text}元
+        </div>
+      }
     },
     {
       title: '订单状态',
       dataIndex: 'orderStateDesc',
       key: 'orderStateDesc',
-      render: text => <div>
-        <OrderMcnStatus value={text} />
-      </div>
-    },
-    {
-      title: '质检操作',
-      dataIndex: '质检操作name',
-      key: '质检操作name',
       align: 'center',
       fixed: 'right',
-      width: '150px',
+      width: '120px',
       render: (text, record) => {
-        const { id, realAmount, receiveAt } = record
+        const { orderStateDesc, orderRemark } = record
         return <div>
-          {record.orderStateDesc == '一检异常待处理' ? <>
-            <a onClick={() => setModalProps({
-              visible: true,
-              title: '第一次质检异常审核通过',
-              content: (props) => <AbnormalForm {...props} id={id} receiveAt={receiveAt} />
-            })}>通过</a><Divider type="vertical" />
-            <a onClick={() => noPass(id)}>不通过</a>
-          </> : null}
-          {record.orderStateDesc == '二检异常待处理' ?
-            <>
-              <a onClick={() => setModalProps({
-                visible: true,
-                title: '第二次质检异常审核通过',
-                content: (props) => <AbnormalForm isShowRead={true} id={id} {...props} receiveAt={receiveAt} />
-              })}>通过</a><Divider type="vertical" />
-              <a onClick={() => setModalProps({
-                visible: true,
-                title: '第二次质检异常审核不通过',
-                content: (props) => <QualityFailedForm  {...props} id={id} />
-              })}>不通过</a>
-            </> : null}
-          {record.orderStateDesc == '合格' ? <> <a onClick={() => setModalProps({
-            visible: true,
-            title: '确认结算',
-            content: (props) => <PaymentOK  {...props} id={id} realAmount={realAmount} />
-          })}>确认结算</a><Divider type="vertical" />
-            <a onClick={() => setModalProps({
-              visible: true,
-              title: '取消结算',
-              content: (props) => <CancelPaymentForm  {...props} id={id} />
-            })}>取消结算</a>
-          </> : null}
+          <OrderMcnStatus value={text} /><br />
+          {orderStateDesc == '取消结算' || orderStateDesc == '不合格' ?
+            <a onClick={() => lookReason(orderRemark)}>查看</a>
+            : null}
         </div>
-      },
+      }
     },
     {
-      title: '订单操作',
+      title: '操作',
       dataIndex: 'orderOperation',
       key: 'orderOperation',
       align: 'center',
       fixed: 'right',
-      width: '140px',
+      width: '80px',
       render: (text, record) => {
-        const { id, orderState, contentUrl } = record
+        const { id, orderState, contentUrl, realAmount, receiveAt } = record
         return <div>
+          <div>
+            {record.orderStateDesc == '一检异常待处理' ? <>
+              <a onClick={() => setModalProps({
+                visible: true,
+                title: '第一次质检异常审核通过',
+                content: (props) => <AbnormalForm {...props} id={id} receiveAt={receiveAt} />
+              })}>通过</a><br />
+              <a onClick={() => noPass(id)}>不通过</a>
+            </> : null}
+            {record.orderStateDesc == '二检异常待处理' ?
+              <>
+                <a onClick={() => setModalProps({
+                  visible: true,
+                  title: '第二次质检异常审核通过',
+                  content: (props) => <AbnormalForm isShowRead={true} id={id} {...props} receiveAt={receiveAt} />
+                })}>通过</a><br />
+                <a onClick={() => setModalProps({
+                  visible: true,
+                  title: '第二次质检异常审核不通过',
+                  content: (props) => <QualityFailedForm  {...props} id={id} />
+                })}>不通过</a>
+              </> : null}
+            {record.orderStateDesc == '合格' ? <> <a onClick={() => setModalProps({
+              visible: true,
+              title: '确认结算',
+              content: (props) => <PaymentOK  {...props} id={id} realAmount={realAmount} />
+            })}>确认结算</a><br />
+              <a onClick={() => setModalProps({
+                visible: true,
+                title: '取消结算',
+                content: (props) => <CancelPaymentForm  {...props} id={id} />
+              })}>取消结算</a>
+            </> : null}
+          </div>
           {record.orderStateDesc == '待执行' ? <> <a onClick={() => setModalProps({
             visible: true,
             title: '添加回执',
             content: (props) => <EditReceiptForm orderState={200} {...props} id={id} />
-          })}>添加回执 </a> <Divider type="vertical" /></> : null}
+          })}>添加回执 </a> <br /></> : null}
           {record.orderStateDesc == '待修改' ? <><a onClick={() => setModalProps({
             visible: true,
             title: '修改回执',
             content: (props) => <EditReceiptForm orderState={orderState} contentUrl={contentUrl}  {...props} id={id} />
-          })}>修改回执 </a><Divider type="vertical" /></> : null}
+          })}>修改回执 </a><br /></> : null}
           <a href={`/order/task/orders-wechatdetail?id=${id}`}>详情</a>
         </div>
       }
     },
-    {
-      title: '备注',
-      dataIndex: 'orderRemark',
-      key: 'orderRemark',
-      align: 'center',
-      fixed: 'right',
-      width: '50px',
-      render: (text, record) => {
-        const { orderStateDesc, orderRemark } = record
-        return orderStateDesc == '取消结算' || orderStateDesc == '不合格' ?
-          <a onClick={() => lookReason(orderRemark)}>查看</a>
-          : null
-      }
-    },
   ];
   return (
-    <Scolltable scrollClassName='.ant-table-body' widthScroll={2200}>
+    <Scolltable scrollClassName='.ant-table-body' widthScroll={1700}>
       <Table
         style={{ marginTop: 20 }}
         dataSource={list}
         columns={columns}
-        scroll={{ x: 2000 }}
+        scroll={{ x: 1500, y: 800 }}
+        pagination={{
+          pageSize: allMcnOrderList.pageSize || 1,
+          showSizeChanger: true,
+          showQuickJumper: true,
+          total: allMcnOrderList.total,
+          current: allMcnOrderList.pageNum,
+          onShowSizeChange: (current, size) => {
+            changeWechatPage({ page: { currentPage: current, pageSize: size } })
+          },
+
+          onChange: (page, pageSize) => {
+            changeWechatPage({ page: { currentPage: page, pageSize: pageSize } })
+          }
+        }}
         rowKey='id'
       />
     </Scolltable>

@@ -16,7 +16,8 @@ const getNumber = (value) => {
 function OrderWechatDetail(props) {
   const { actions, orderReducers } = props
   const [modalProps, setModalProps] = useState({ title: '' })
-  const { orderMcnDetailInfo = {}, dataCurvelist = [] } = orderReducers
+  const { orderMcnDetailInfo = {}, accountDetail, dataCurvelist = [] } = orderReducers
+  const { base = {} } = accountDetail
   const { orderStateDesc } = orderMcnDetailInfo
   const [isLoading, setIsLoading] = useState(true)
   useEffect(() => {
@@ -24,7 +25,8 @@ function OrderWechatDetail(props) {
   }, [])
   async function getOrderDetail() {
     const searchParam = qs.parse(props.location.search.substring(1))
-    await actions.TPOrderInfo({ mcnOrderId: searchParam.id })
+    const { data } = await actions.TPOrderInfo({ mcnOrderId: searchParam.id })
+    await actions.TPGetAccountDetail({ accountId: data.accountId })
     actions.TPQueryDataCurve({ mcnOrderId: searchParam.id })
     setIsLoading(false)
   }
@@ -33,8 +35,8 @@ function OrderWechatDetail(props) {
     { label: '发布平台', content: orderMcnDetailInfo.platformName },
     { label: '图文发布位置', content: orderMcnDetailInfo.locationInfo },
 
-    { label: '任务ID', content: orderMcnDetailInfo.adOrderId },
-    { label: '订单ID', content: orderMcnDetailInfo.id },
+    { label: '任务ID', content: orderMcnDetailInfo.adOrderNumber },
+    { label: '订单ID', content: orderMcnDetailInfo.orderNumber },
     { label: '领取时间', content: orderMcnDetailInfo.receiveAt },
 
     { label: '所属公司', content: orderMcnDetailInfo.companyName },
@@ -130,9 +132,9 @@ function OrderWechatDetail(props) {
         <TitleBox title='博主信息' >
           <Row className='account'>
             <Col span={6}> 博主名称
-            <div className='account-name'>
+            <div className='account-name cursor-pointer ' onClick={() => window.open(base.accountHomepageUrl, '_target')}>
                 <img src={orderMcnDetailInfo.avatarUrl} alt='博主头像' />
-                <span>{orderMcnDetailInfo.snsName}</span>
+                <a>{orderMcnDetailInfo.snsName}</a>
               </div>
             </Col>
             <Col span={6}>Account ID

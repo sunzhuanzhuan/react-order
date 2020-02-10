@@ -99,7 +99,7 @@ const FilterForm = (props) => {
           )}
         </Form.Item>
       </Col>
-      <Col span={3}>
+      <Col span={6}>
         <Form.Item>
           <Button type="primary" htmlType="submit" style={{ marginRight: 10 }}>查询</Button>
           <Button type="primary" ghost onClick={() => props.form.resetFields()}>重置</Button>

@@ -8,7 +8,7 @@ import numeral from 'numeral'
 function DetailsShow(props) {
   const { accountDetail = {}, accountId } = props
   const { base = {}, acceptCrowd = {}, auditState = 1, remark } = accountDetail
-  const { classification = [], appraiserImgUrl } = base
+  const { classification = [], appraiserImgUrl, avatarUrl } = base
   const { sex = {}, age = [], area = [] } = acceptCrowd
   const baseConfig = [
     { label: "账号名称", value: base.snsName },
@@ -30,7 +30,7 @@ function DetailsShow(props) {
       <TitleBox title='基础信息'>
         <div className='base-info'>
           <div className='avatar'>
-            <img src='http://img.weiboyi.com/vol1/1/102/124/y/a/635qoq6r22qn11rn9p5o506o4op229o2/default.jpg' />
+            <img src={avatarUrl ? avatarUrl : 'http://img.weiboyi.com/vol1/1/102/124/y/a/635qoq6r22qn11rn9p5o506o4op229o2/default.jpg'} />
             <Tag color="volcano">
               {auditStateMap[auditState]}
               {auditState == 2 && <PopoverIcon title='未通过原因' content={remark} placement="bottom" />}
@@ -84,7 +84,7 @@ function DetailsShow(props) {
             { label: '受众地域Top3：', value: <AudienceArea list={area} /> },
             { label: '受众年龄Top3：', value: <AudienceLine list={age} /> },
             { label: '数据截图：', value: <img src={appraiserImgUrl} width='200' height='200' onClick={() => window.open(base.appraiserImgUrl)} className='follower-count-img' /> },
-            { label: 'KPI/KPI上线', value: base.birthDate }
+            { label: 'KPI/KPI上限', value: base.birthDate }
           ]} />
         </div>
       </TitleBox>

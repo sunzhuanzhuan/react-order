@@ -248,10 +248,10 @@ export const KpiTable = ({ data = {} }) => {
     render: (text, record) => <span>{text}/{record.mediaIndex1stReadKpiMaxNum}</span>
   }, {
     title: '多图文第二条',
-    dataIndex: 'mediaIndex2stReadKpiNum',
-    key: 'mediaIndex2stReadKpiNum',
+    dataIndex: 'mediaIndex2ndReadKpiNum',
+    key: 'mediaIndex2ndReadKpiNum',
     align: 'center',
-    render: (text, record) => <span>{text}/{record.mediaIndex2stReadKpiMaxNum}</span>
+    render: (text, record) => <span>{text}/{record.mediaIndex2ndReadKpiMaxNum}</span>
 
   }, {
     title: '多图文第3-n条',

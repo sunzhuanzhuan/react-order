@@ -2,8 +2,8 @@
  * @Descripttion: 
  * @Author: wangxinyue
  * @Date: 2020-01-08 16:29:15
- * @LastEditors: wangxinyue
- * @LastEditTime: 2020-02-06 11:35:22
+ * @LastEditors  : wangxinyue
+ * @LastEditTime : 2020-02-07 20:21:47
  */
 import React from 'react'
 import api from '@/api'
@@ -28,7 +28,19 @@ class SelectSearch extends React.Component {
     value: [],
     fetching: false,
   };
-
+  static getDerivedStateFromProps(props, state) {
+    if (props.value !== state.value) {
+      return {
+        value: props.value
+      };
+    }
+    return null;
+  }
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.value !== prevState.value) {
+      this.setState({ value: this.state.value })
+    }
+  }
   getData = value => {
     const {
       searchKey = '',

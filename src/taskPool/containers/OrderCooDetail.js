@@ -40,8 +40,8 @@ function CooperationDetail() {
     { name: '结案报告：', content: <a href={orderDetail.finalReportUrl}>{orderDetail.finalReportName}</a> },
   ]
   const baseInfo = [
-    { label: '订单ID', content: orderId },
-    { label: '任务ID', content: orderId },
+    { label: '订单ID', content: orderDetail.orderNumber },
+    { label: '任务ID', content: orderDetail.adOrderNumber },
     { label: '投放模式', content: putTypeMap[orderDetail.putType] },
     { label: '所属公司', content: orderDetail.companyName },
     { label: '内容类型', content: mediaTypeMap[orderDetail.mediaType] },
@@ -63,7 +63,7 @@ function CooperationDetail() {
   return (
     <div>
       <BreadCrumbs link='/order/task/orders-manage/2' text={<h2>订单详情</h2>} />
-      <TitleBox title='订单状态' >
+      <TitleBox title='订单进度' >
         <Steps current={orderStep.key}>
           {orderStep.list.map(item => <Step key={item} title={item} />)}
         </Steps>
