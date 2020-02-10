@@ -16,8 +16,7 @@ const getNumber = (value) => {
 function OrderWechatDetail(props) {
   const { actions, orderReducers } = props
   const [modalProps, setModalProps] = useState({ title: '' })
-  const { orderMcnDetailInfo = {}, accountDetail, dataCurvelist = [] } = orderReducers
-  const { base = {} } = accountDetail
+  const { orderMcnDetailInfo = {}, dataCurvelist = [] } = orderReducers
   const { orderStateDesc } = orderMcnDetailInfo
   const [isLoading, setIsLoading] = useState(true)
   useEffect(() => {
@@ -26,7 +25,6 @@ function OrderWechatDetail(props) {
   async function getOrderDetail() {
     const searchParam = qs.parse(props.location.search.substring(1))
     const { data } = await actions.TPOrderInfo({ mcnOrderId: searchParam.id })
-    await actions.TPGetAccountDetail({ accountId: data.accountId })
     actions.TPQueryDataCurve({ mcnOrderId: searchParam.id })
     setIsLoading(false)
   }
@@ -35,17 +33,17 @@ function OrderWechatDetail(props) {
     { label: '发布平台', content: orderMcnDetailInfo.platformName },
     { label: '图文发布位置', content: orderMcnDetailInfo.locationInfo },
 
-    { label: '任务ID', content: orderMcnDetailInfo.adOrderId },
-    { label: '订单ID', content: orderMcnDetailInfo.id },
+    { label: '任务ID', content: orderMcnDetailInfo.adOrderNumber },
+    { label: '订单ID', content: orderMcnDetailInfo.orderNumber },
     { label: '领取时间', content: orderMcnDetailInfo.receiveAt },
 
     { label: '所属公司', content: orderMcnDetailInfo.companyName },
     { label: '订单状态', content: <div className='red-text'>{orderMcnDetailInfo.orderStateDesc}</div> },
     { label: '预计推送时间', content: orderMcnDetailInfo.expectedPublishedTime },
     { label: '行业分类', content: orderMcnDetailInfo.industryName, span: 2 },
-    { label: '阅读单价', content: orderMcnDetailInfo.unitPrice },
+    { label: '阅读单价', content: `${orderMcnDetailInfo.unitPrice}元/阅读` },
     { label: '任务模式', content: <div className='red-text'>{orderMcnDetailInfo.taskPatternDesc}</div>, span: 2 },
-    { label: '发布保留时长', content: orderMcnDetailInfo.retainTime },
+    { label: '发布保留时长', content: `${orderMcnDetailInfo.retainTime}小时` },
     { label: '', content: '', span: 2 },
     { label: '申请阅读数', content: <div className='red-text'>{getNumber(orderMcnDetailInfo.expectActionNum)}</div> },
 
@@ -132,7 +130,7 @@ function OrderWechatDetail(props) {
         <TitleBox title='博主信息' >
           <Row className='account'>
             <Col span={6}> 博主名称
-            <div className='account-name cursor-pointer ' onClick={() => window.open(base.accountHomepageUrl, '_target')}>
+            <div className='account-name cursor-pointer ' onClick={() => window.open(`/order/task/account-details?accountId=${orderMcnDetailInfo.accountId}`, '_target')}>
                 <img src={orderMcnDetailInfo.avatarUrl} alt='博主头像' />
                 <a>{orderMcnDetailInfo.snsName}</a>
               </div>

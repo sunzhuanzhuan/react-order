@@ -111,7 +111,7 @@ function AccountForm(props) {
 
 
 const audienceConfig = [
-  { label: '粉丝数', text: ['大于', '个'], type: 'inputNumber', key: 'followerCount' },
+  { label: '粉丝数', text: ['大于', '个'], type: 'inputNumber', key: 'followerCount', max: 9999999999 },
   { label: '28天内第一条平均阅读', text: ['高于'], key: 'mediaIndex1AvgReadNum28d' },
   { label: '认证号', type: 'select', key: 'isVerified', },
 ]

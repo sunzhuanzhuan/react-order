@@ -56,8 +56,8 @@ const FilterForm = (props) => {
         {props.active === "1000" && <Form.Item label="内容类型">
           {getFieldDecorator('mediaType', {})(
             <Select placeholder="请选择" allowClear>
-              <Option value={3}>图文</Option>
-              <Option value={4}>图文 + 视频</Option>
+              <Option value={4}>图文</Option>
+              <Option value={3}>图文 + 视频</Option>
             </Select>
           )}
         </Form.Item>}

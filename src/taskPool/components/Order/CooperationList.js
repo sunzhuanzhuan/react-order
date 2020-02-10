@@ -42,8 +42,8 @@ function CooperationList(props) {
   const columns = [
     {
       title: '订单ID',
-      dataIndex: 'adOrderId',
-      key: 'adOrderId',
+      dataIndex: 'orderNumber',
+      key: 'orderNumber',
       align: 'center'
     },
     {
@@ -52,7 +52,10 @@ function CooperationList(props) {
       key: 'orderName',
       render: (text, record) => {
         //adOrderId
-        return <a href={`/order/task/tasks-details/${record.adOrderId}`} >{text}</a>
+        return <div>
+          <a href={`/order/task/tasks-details/${record.adOrderId}`} >{text}</a>
+          <div>ID：{record.adOrderNumber}</div>
+        </div>
       }
     },
     {
@@ -64,6 +67,7 @@ function CooperationList(props) {
       title: '合作平台名称',
       dataIndex: 'platformName',
       key: 'platformName',
+      render: (text, record) => text || '12306'
     },
     {
       title: '预计阅读数',
@@ -189,12 +193,12 @@ function CooperationList(props) {
   return (
     <>
       <Alert message={`已选择 ${selectedRowSize} 个账号，合计：${platformOrderList.total || '-'} 个`} type="info" style={{ marginTop: 20 }} />
-      <Scolltable scrollClassName='.ant-table-body' widthScroll={1700}>
+      <Scolltable scrollClassName='.ant-table-body' widthScroll={1800}>
         <Table dataSource={list}
           key={isCleanSelected}//确认执行空清空选中数据
           columns={columns}
           rowSelection={rowSelection}
-          scroll={{ x: 1500 }}
+          scroll={{ x: 1600 }}
           rowKey='adOrderId'
           pagination={{
             pageSize: platformOrderList.pageSize || 1,

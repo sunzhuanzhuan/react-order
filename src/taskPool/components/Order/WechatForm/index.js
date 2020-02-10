@@ -3,7 +3,7 @@
  * @Author: wangxinyue
  * @Date: 2020-01-08 10:30:32
  * @LastEditors  : wangxinyue
- * @LastEditTime : 2020-02-07 19:52:23
+ * @LastEditTime : 2020-02-10 14:50:53
  */
 import React from 'react'
 import { Form, Input, InputNumber, DatePicker, Button, Select } from 'antd'
@@ -46,7 +46,7 @@ function WeChatForm(props) {
           )}
         </Form.Item>
         <Form.Item label='任务ID'>
-          {getFieldDecorator('form.adOrderId', {})(
+          {getFieldDecorator('form.adOrderNumber', {})(
             <InputNumber style={{ width: 170 }} placeholder='请输入' />
           )}
         </Form.Item>
