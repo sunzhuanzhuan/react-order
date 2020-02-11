@@ -143,7 +143,7 @@ export const columnsTian = (getFieldDecorator) => [
             },
           ],
         })(
-          <InputNumber min={0} />
+          <InputNumber min={0} max={9999999999999} />
         )
         }
       </Form.Item>
@@ -163,7 +163,7 @@ export const columnsTian = (getFieldDecorator) => [
             },
           ],
         })(
-          <InputNumber min={0} precision={2} />
+          <InputNumber min={0} precision={2} max={9999999999999} />
         )
         }
       </Form.Item>
@@ -186,7 +186,7 @@ export const columnsHui = (getFieldDecorator) => {
               },
             ],
           })(
-            <InputNumber min={0} precision={2} />
+            <InputNumber min={0} precision={2} max={9999999999999} />
           )
           }
         </Form.Item>
@@ -206,7 +206,7 @@ export const columnsHui = (getFieldDecorator) => {
               },
             ],
           })(
-            <InputNumber min={0} precision={2} />
+            <InputNumber min={0} precision={2} max={9999999999999} />
           )
           }
         </Form.Item>
