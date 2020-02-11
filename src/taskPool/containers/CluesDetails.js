@@ -46,8 +46,8 @@ const ClueDetail = (props) => {
         </Card> : <Card title="基本信息" bordered={false} style={{ width: '100%', margin: '20px 0' }}>
             <p>
               <span style={{ paddingRight: '100px' }}>线索ID：{props.clueDetail.id}</span>
-              <span style={{ paddingRight: '100px' }}>投放模式：{props.clueDetail.adClueTripContentRes && props.clueDetail.adClueTripContentRes.putType}</span>
-              <span>内容类型：{props.clueDetail.adClueTripContentRes && props.clueDetail.adClueTripContentRes.mediaType}</span>
+              <span style={{ paddingRight: '100px' }}>投放模式：{props.clueDetail.adClueTripContentRes && props.clueDetail.adClueTripContentRes.putTypeDescribe}</span>
+              <span>内容类型：{props.clueDetail && props.clueDetail.extensionTypeDesc}</span>
             </p>
             <p>
               <span style={{ paddingRight: '100px' }}>行业分类：{props.clueDetail.extensionIndustryName}</span>
