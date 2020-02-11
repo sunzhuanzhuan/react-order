@@ -3,7 +3,7 @@
  * @Author: wangxinyue
  * @Date: 2020-01-13 14:02:44
  * @LastEditors  : wangxinyue
- * @LastEditTime : 2020-02-10 09:34:48
+ * @LastEditTime : 2020-02-10 19:17:21
  */
 import React from 'react'
 import { Form, Input, Select, DatePicker, InputNumber } from 'antd'
@@ -15,13 +15,13 @@ function SearchForm(props) {
   function getChildren({ type, key, dataShow = 'name', dataValue = 'value', max }) {
     switch (type) {
       case 'select':
-        return <Select placeholder='请选择' style={{ width: 170 }} allowClear>
+        return <Select placeholder='请选择' style={{ width: 110 }} allowClear>
           {formData[key].map(item => <Select.Option key={item[dataValue]}>
             {item[dataShow]}
           </Select.Option>)}
         </Select>
       case 'inputNumber':
-        return <InputNumber placeholder={`请输入`} style={{ width: 170 }} max={max} />
+        return <InputNumber placeholder={`请输入`} style={{ width: 150 }} max={max} />
       case 'rangePicker':
         return <RangePicker placeholder={['开始时间', '结束时间']} />
       default:

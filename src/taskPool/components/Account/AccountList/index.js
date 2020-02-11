@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Table, Badge, Button, Alert, Modal, Input, Form, message, Tag } from 'antd'
+import { Table, Badge, Button, Alert, Modal, Input, Form, message, Tag, Divider } from 'antd'
 import Scolltable from '@/components/Scolltable/Scolltable.js'
 import MessageIcon from '../../../base/MessageIcon'
 import './index.less'
@@ -105,13 +105,7 @@ function AccountList(props) {
         </div> : null
       }
     },
-    {
-      title: '上下架状态',
-      dataIndex: 'shelfState',
-      key: 'shelfState',
-      align: 'center',
-      render: (text, record) => <StateInfo value={text} okText='上架' errorText='下架' errorReson={record.remark} />
-    },
+
     {
       title: 'KPI / KPI上限',
       dataIndex: 'kpiTarget',
@@ -143,21 +137,39 @@ function AccountList(props) {
       }
     },
     {
+      title: '上下架状态',
+      dataIndex: 'shelfState',
+      key: 'shelfState',
+      fixed: 'right',
+      width: '90px',
+      render: (text, record) => <div style={{ paddingLeft: 10 }}><StateInfo value={text} okText='上架' errorText='下架' errorReson={record.remark} /></div>
+    },
+    {
       title: '操作',
       dataIndex: 'settting',
       key: 'settting',
-      width: '230px',
+      width: '130px',
       fixed: 'right',
       align: 'center',
       render: (text, record) => {
         const { accountId, auditState, estimateState, shelfState } = record
         const url = `/order/task/account-details?accountId=${accountId}`
-        return <div className='children-mr'>
-          {auditState == Wait_Audit ? <Button type='primary' onClick={() => window.open(url, "_self")}>审核</Button> : null}
-          {auditState == No_Pass || estimateState == OK_ESTIMATE ? <Button type='primary' onClick={() => window.open(url, "_self")}>查看详情</Button> : null}
-          {estimateState == WAIT_ESTIMATE ? <Button type='primary' onClick={() => window.open(url, "_self")}>评估</Button> : null}
-          {shelfState == 1 ? <Button onClick={() => offTake(accountId)}>下架</Button> : null}
-          {shelfState == 2 ? <Button onClick={() => onTake(accountId)}>上架</Button> : null}
+        return <div>
+          {shelfState == 1 ? <>
+            <a onClick={() => offTake(accountId)}>下架</a>
+            <Divider type='vertical' />
+          </> : null}
+          {shelfState == 2 ? <>
+            <a onClick={() => onTake(accountId)}>上架</a>
+            <Divider type='vertical' />
+          </> : null}
+          {auditState == Wait_Audit ? <>
+            <a type='primary' onClick={() => window.open(url, "_self")}>审核</a>
+          </> : null}
+          {estimateState == WAIT_ESTIMATE ? <>
+            <a type='primary' onClick={() => window.open(url, "_self")}>评估</a>
+          </> : null}
+          {auditState == No_Pass || estimateState == OK_ESTIMATE ? <a type='primary' onClick={() => window.open(url, "_self")}>查看详情</a> : null}
         </div>
       }
     },

@@ -51,7 +51,12 @@ function CooperationDetail() {
     { label: '投放条数', content: <div style={{ color: 'red' }}>{numeral(orderDetail.actionNum).format(',')}条</div> },
     { label: '投放开始日期', content: orderDetail.orderStartDate },
     { label: '到达城市/车站', content: orderDetail.arrivePlace },
-    { label: '任务预算', content: <div style={{ color: 'red' }}>{numeral(orderDetail.totalAmount).format(',')}元</div> },
+    { label: '任务预算', content: <div style={{ color: 'red' }}>{numeral(orderDetail.totalAmount).format(',')}元</div> }]
+  const putType2 = [
+    { label: '投放结束日期', content: orderDetail.orderEndDate, span: 2 },
+    { label: '投放持续时间', content: orderDetail.durationDay },
+  ]
+  const putType1 = [
     { label: '投放结束日期', content: orderDetail.orderEndDate },
     { label: '坐席类型', content: deliverySeatMap[orderDetail.deliverySeat], span: 2 },
     { label: '投放持续时间', content: orderDetail.durationDay },
@@ -59,6 +64,10 @@ function CooperationDetail() {
     { label: '', content: '' },
     { label: '年龄区间', content: orderDetail.deliveryAges, span: 2 },
   ]
+  const putTypeInfo = {
+    1: putType1,
+    2: putType2
+  }
   const orderStep = getOrderStep(otherOrderState)
   return (
     <div>
@@ -70,7 +79,7 @@ function CooperationDetail() {
       </TitleBox>
       <TitleBox title='基本信息' >
         <Descriptions>
-          {baseInfo.map(item => <Descriptions.Item key={item.label} label={item.label} span={item.span} >
+          {[...baseInfo, ...putTypeInfo[orderDetail.putType || 1]].map(item => <Descriptions.Item key={item.label} label={item.label} span={item.span} >
             {item.content}
           </Descriptions.Item>)}
         </Descriptions>
