@@ -24,7 +24,7 @@ function getColumns(active, clickModal) {
     case "9":
       columns = [
         {
-          title: '任务ID',
+          title: '线索ID',
           dataIndex: 'id',
           align: 'center'
         },
