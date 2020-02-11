@@ -127,7 +127,7 @@ class EditOrderModal extends React.Component {
               if (data && data[0].service_rate) {
                 let num = Number(value) * (1 + (Number(data[0].service_rate) / 100)).toString()
                 this.props.form.setFieldsValue({
-                  'costwithfee': num.toFixed(0)
+                  'costwithfee': num.toFixed(2)
                 })
                 this.props.form.validateFields(['costwithfee'])
               }
