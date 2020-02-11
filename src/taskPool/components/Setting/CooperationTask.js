@@ -26,7 +26,7 @@ class CooperationTask extends React.Component {
             rules: [{ required: true, message: '请输入' }],
             initialValue: taskOffers.length > 0 ? taskOffers[0].taskLaunchNum : ''
           })(
-            <InputNumber precision={0} />,
+            <InputNumber precision={0} max={9999999999999} />,
           )}
         </Form.Item>
         <Form.Item>
