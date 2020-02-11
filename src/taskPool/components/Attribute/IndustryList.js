@@ -110,10 +110,9 @@ const IndustryList = (props, ref) => {
     {
       title: '行业备注',
       dataIndex: 'remark',
+      width: 200,
       render: (text, record) => {
-        return <div className="break-all">
-          {text}
-        </div>
+        return text
       }
     },
     {
