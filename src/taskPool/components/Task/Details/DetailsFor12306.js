@@ -58,7 +58,7 @@ export default class DetailsFor12306 extends Component {
     const { details } = this.props
 
 
-    const features = details.adOrderTripConten
+    const features = details.adOrderTripContent
     const isDiscount = features.discount > 0
 
     return <>

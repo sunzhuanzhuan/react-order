@@ -5,15 +5,17 @@ import './DetailsShow.less'
 import { PopoverIcon } from '../../base/MessageIcon'
 import { auditStateMap, getValueByFormat } from '../../constants/accountConfig'
 import numeral from 'numeral'
+import { KpiTable } from './AccountList'
+
 function DetailsShow(props) {
   const { accountDetail = {}, accountId } = props
-  const { base = {}, acceptCrowd = {}, auditState = 1, remark } = accountDetail
-  const { classification = [], appraiserImgUrl, avatarUrl } = base
+  const { base = {}, acceptCrowd = {}, auditState = 1, remark, kpiTarget = {}, appraiserImgUrl = [] } = accountDetail
+  const { classification = [], avatarUrl, } = base
   const { sex = {}, age = [], area = [] } = acceptCrowd
   const baseConfig = [
     { label: "账号名称", value: base.snsName },
     { label: "账号ID", value: base.snsId },
-    { label: "主页链接", value: '' },
+    { label: "主页链接", value: base.accountHomepageUrl },
     {
       label: "二维码", value: <div>
         <PopoverIcon type="qrcode" marginLeft='0'
@@ -55,7 +57,7 @@ function DetailsShow(props) {
         <div className='data-right'>
           <LineList list={[{
             label: '是否认证：',
-            value: (base.isVerified ? '-' : base.isVerified == 1 ? '是' : '否')
+            value: (base.isVerified == 1 ? '是' : base.isVerified == 2 ? '否' : '-')
           }]} />
         </div>
       </TitleBox>
@@ -83,8 +85,13 @@ function DetailsShow(props) {
             },
             { label: '受众地域Top3：', value: <AudienceArea list={area} /> },
             { label: '受众年龄Top3：', value: <AudienceLine list={age} /> },
-            { label: '数据截图：', value: <img src={appraiserImgUrl} width='200' height='200' onClick={() => window.open(base.appraiserImgUrl)} className='follower-count-img' /> },
-            { label: 'KPI/KPI上限', value: base.birthDate }
+            {
+              label: '数据截图：', value: <div>
+                {appraiserImgUrl.map(one => <img src={one.fileUrl} key={one.fileUrl} width='200' height='200' onClick={() => window.open(one.fileUrl)} className='follower-count-img' />)}
+
+              </div>
+            },
+            { label: 'KPI/KPI上限', value: <KpiTable data={kpiTarget} /> }
           ]} />
         </div>
       </TitleBox>
