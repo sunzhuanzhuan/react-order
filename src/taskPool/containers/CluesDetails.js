@@ -79,7 +79,7 @@ const ClueDetail = (props) => {
         onOk={handleOk}
         onCancel={handleCancel}
       >
-        <p>确认已经处理（ {props.clueDetail.companyName} ）的线索么？</p>
+        <p>确认已经处理{props.clueDetail.companyName}的该条线索么？</p>
       </Modal> : null}
     </div>
   );
