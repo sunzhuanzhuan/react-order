@@ -366,7 +366,7 @@ const Tasks = (props) => {
       <Title level={4}>任务管理</Title>
       <Filters search={getList} />
       <Alert style={{ margin: '10px 0' }} message={`共有 ${total} 条记录`} />
-      <Scolltable scrollClassName='.ant-table-body' widthScroll={1800}>
+      <Scolltable scrollClassName='.ant-table-body' widthScroll={2100}>
         <Table
           locale={{ emptyText: "还没有任务可以展示" }}
           loading={searching}
