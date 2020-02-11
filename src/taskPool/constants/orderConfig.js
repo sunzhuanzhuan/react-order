@@ -51,7 +51,7 @@ export const mediaTypeMap = {
 }
 //投放模式 
 export const putTypeMap = {
-  '1': '按天投放',
-  '2': '按量投放'
+  '1': '按量投放',
+  '2': '按天投放'
 }
 
