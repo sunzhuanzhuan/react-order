@@ -171,7 +171,17 @@ class UpdateModal extends React.Component {
           <Col span={2}></Col>
           <Col span={6}>Costwithfee（元）：</Col>
           <Col span={8}>{dataSource && numeral(dataSource[0].costwithfee).format('0,0.00')}</Col>
-          <Col span={8}>{serviceRateAmount.costwithfee ? numeral(serviceRateAmount.costwithfee).format('0,0.00') : dataSource && numeral(dataSource[0].costwithfee).format('0,0.00')}</Col>
+          <Col span={8}>
+            <FormItem>
+              {getFieldDecorator('costwithfee', {
+                initialValue: serviceRateAmount.costwithfee ? serviceRateAmount.costwithfee : dataSource && dataSource[0].costwithfee,
+                rules: [{ required: true, message: '请填写值' }]
+              })(
+                <InputNumber precision={2} placeholder='' style={{ width: 200 }} />
+              )}
+            </FormItem>
+          </Col>
+          {/* <Col span={8}>{serviceRateAmount.costwithfee ? numeral(serviceRateAmount.costwithfee).format('0,0.00') : dataSource && numeral(dataSource[0].costwithfee).format('0,0.00')}</Col> */}
         </Row>
         <Row style={{ lineHeight: '58px' }} gutter={16}>
           <Col span={2}></Col>
