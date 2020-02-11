@@ -60,10 +60,16 @@ class SiderDemo extends React.Component {
         selectedKeys: ["/accountList/list/1"]
       })
     }
-    //订单列表选中处理
+    //任务大厅 - 订单列表选中处理
     if (/\/order\/task\/orders-manage\/\d/.test(nextProps.location.pathname)) {
       this.setState({
         selectedKeys: ["/order/task/orders-manage/1"]
+      })
+    }
+    //任务大厅 - 任务列表选中处理
+    if (/\/order\/task\/tasks-manage\/\d/.test(nextProps.location.pathname)) {
+      this.setState({
+        selectedKeys: ["/order/task/tasks-manage/9"]
       })
     }
     if (/\/accountList\/quotationManage\/detail/.test(nextProps.location.pathname)) {

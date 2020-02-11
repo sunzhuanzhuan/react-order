@@ -23,7 +23,11 @@ import {
   wxPositionToFields,
   TRAIN_TYPE_OPTIONS,
   AGES_OPTIONS,
-  SEAT_OPTIONS, MEDIA_TASK_PATTERN_RUSH, MEDIA_TASK_PATTERN_BIDDING
+  SEAT_OPTIONS,
+  MEDIA_TASK_PATTERN_RUSH,
+  MEDIA_TASK_PATTERN_BIDDING,
+  PUT_TYPE_BY_NUM,
+  PUT_TYPE_BY_DAY
 } from '@/taskPool/constants/config';
 
 const { SHOW_PARENT } = TreeSelect;
@@ -691,23 +695,23 @@ class BudgetFor12306 extends React.Component {
     // 投放模式
     const _putType = getFieldValue("putType") || budget.putType
     // 按量投放
-    const PA = _putType === 1
+    const isNum = _putType === PUT_TYPE_BY_NUM
     // 按天数投放
-    const PB = _putType === 2
+    const isDay = _putType === PUT_TYPE_BY_DAY
 
     return (
       <Form onSubmit={this.handleSubmit}  {...formLayout}>
         <FormItem label="投放模式">
           {getFieldDecorator('putType', {
-            initialValue: budget.putType || 2,
+            initialValue: budget.putType || PUT_TYPE_BY_DAY,
             rules: [ {
               required: true,
               message: '请选择投放模式'
             } ]
           })(
             <Radio.Group onChange={this.calculation}>
-              <Radio value={2}>按天数投放</Radio>
-              <Radio value={1}>按量投放</Radio>
+              <Radio value={PUT_TYPE_BY_DAY}>按天数投放</Radio>
+              <Radio value={PUT_TYPE_BY_NUM}>按量投放</Radio>
             </Radio.Group>
           )}
         </FormItem>
@@ -725,7 +729,7 @@ class BudgetFor12306 extends React.Component {
             </Radio.Group>
           )}
         </FormItem>
-        {PB && <FormItem label="输入投放天数">
+        {isDay && <FormItem label="输入投放天数">
           <div className='flex-form-input-container'>
             {getFieldDecorator('actionDay', {
               initialValue: budget.actionDay,
@@ -757,7 +761,7 @@ class BudgetFor12306 extends React.Component {
             </div>
           </div>
         </FormItem>}
-        {PA && <FormItem label="输入投放条数">
+        {isNum && <FormItem label="输入投放条数">
           <div className='flex-form-input-container'>
             {getFieldDecorator('actionNum', {
               initialValue: budget.actionNum,
@@ -818,7 +822,7 @@ class BudgetFor12306 extends React.Component {
             }} />
           )}
         </FormItem>
-        {PA && <FormItem label="车次类型">
+        {isNum && <FormItem label="车次类型">
           {getFieldDecorator('deliveryTrainType', {
             initialValue: budget.deliveryTrainType,
           })(
@@ -827,7 +831,7 @@ class BudgetFor12306 extends React.Component {
             }} />
           )}
         </FormItem>}
-        {PA && <FormItem label="坐席类型" wrapperCol={{ span: 20 }}>
+        {isNum && <FormItem label="坐席类型" wrapperCol={{ span: 20 }}>
           {getFieldDecorator('deliverySeat', {
             initialValue: budget.deliverySeat,
           })(
@@ -836,7 +840,7 @@ class BudgetFor12306 extends React.Component {
             }} />
           )}
         </FormItem>}
-        {PA && <FormItem label="人群性别">
+        {isNum && <FormItem label="人群性别">
           {getFieldDecorator('deliverySex', {
             initialValue: budget.deliverySex || 0,
           })(
@@ -849,7 +853,7 @@ class BudgetFor12306 extends React.Component {
             </Radio.Group>
           )}
         </FormItem>}
-        {PA && <FormItem label="是否限定年龄">
+        {isNum && <FormItem label="是否限定年龄">
           {getFieldDecorator('_deliveryAges', {
             initialValue: budget._deliveryAges || 2,
           })(
@@ -861,7 +865,7 @@ class BudgetFor12306 extends React.Component {
             </Radio.Group>
           )}
         </FormItem>}
-        {PA && getFieldValue("_deliveryAges") === 1 &&
+        {isNum && getFieldValue("_deliveryAges") === 1 &&
         <FormItem label="配置年龄区间" wrapperCol={{ span: 20 }} onChange={() => {
           this.calculation()
         }}>

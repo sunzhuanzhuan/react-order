@@ -472,7 +472,7 @@ class PreviewFor12306 extends React.Component {
             {base.orderStartDate.format('YYYY-MM-DD')}
           </Descriptions.Item>
           <Descriptions.Item label="投放结束日期">
-            {budget.putType === 2 && moment(base.orderStartDate).add(budget.actionDay, 'd').format(
+            {budget.putType === 2 && moment(base.orderStartDate).add(budget.actionDay - 1, 'd').format(
               'YYYY-MM-DD')}
             {budget.putType === 1 && (base.orderEndDate ? base.orderEndDate.format('YYYY-MM-DD') : base.orderStartDate.format(
               'YYYY-MM-DD'))}
