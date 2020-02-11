@@ -136,7 +136,6 @@ const CertificateList = (props, ref) => {
         onOk={() => getList()}
       />}
       <Table
-        locale={{ emptyText: "还没有任务可以展示" }}
         loading={searching}
         dataSource={dataSource}
         pagination={pagination}

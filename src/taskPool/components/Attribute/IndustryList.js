@@ -110,10 +110,9 @@ const IndustryList = (props, ref) => {
     {
       title: '行业备注',
       dataIndex: 'remark',
+      width: 200,
       render: (text, record) => {
-        return <div className="break-all">
-          {text}
-        </div>
+        return text
       }
     },
     {
@@ -210,7 +209,6 @@ const IndustryList = (props, ref) => {
       />}
       <Filters search={getList} operation={{}} />
       <Table
-        locale={{ emptyText: "还没有任务可以展示" }}
         loading={searching}
         dataSource={dataSource}
         pagination={pagination}
