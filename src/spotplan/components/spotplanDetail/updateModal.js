@@ -67,6 +67,7 @@ class UpdateModal extends React.Component {
   handleUpdate = obj => {
     const { handleUpdate } = this.props;
     handleUpdate({ ...obj }).then(() => {
+      this.props.form.setFieldsValue({ costwithfee: this.props.serviceRateAmount.costwithfee })
       this.setState({ costwithfee: this.props.serviceRateAmount.costwithfee })
       message.success('更新完成！', 1);
     })
