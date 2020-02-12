@@ -3,7 +3,7 @@
  * @Author: wangxinyue
  * @Date: 2020-01-15 10:14:33
  * @LastEditors  : wangxinyue
- * @LastEditTime : 2020-02-05 10:34:45
+ * @LastEditTime : 2020-02-12 16:44:41
  */
 import numeral from 'numeral'
 
@@ -37,7 +37,7 @@ export default {
     { value: 1, name: "正常" },
     { value: 2, name: "异常" },
   ],
-  genderProportion: [
+  manWomenRatio: [
     { value: 1, name: "男性多" },
     { value: 2, name: "女性多" },
   ],
