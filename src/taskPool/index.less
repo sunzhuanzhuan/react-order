@@ -34,15 +34,17 @@
     label.ant-checkbox-wrapper {
       user-select: none;
     }
-    &>header,
-    &>main {
+
+    & > header,
+    & > main {
       width: 800px;
       margin: 10px auto;
     }
 
-    &>header {}
+    & > header {
+    }
 
-    &>main {
+    & > main {
       padding-top: 40px;
 
       footer {
@@ -75,9 +77,12 @@
   }
 
   &.create-attribute-page, &.update-attribute-page {
-    width: 800px;
-    margin: 0 auto;
+    .create-attribute-page-form, .update-attribute-page-form {
+      width: 800px;
+      margin: 0 auto;
+    }
   }
+
   .has-error .form-editor-container {
     border-color: #f5222d;
   }

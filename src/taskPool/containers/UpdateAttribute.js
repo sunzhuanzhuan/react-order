@@ -2,7 +2,7 @@
  * Created by lzb on 2019-12-03.
  */
 import React, { useEffect, useState } from 'react';
-import { Button, Form, Icon, Input, message } from 'antd';
+import { Button, Form, Icon, Input, message, PageHeader } from 'antd';
 import { bindActionCreators } from 'redux';
 import * as commonActions from '@/actions';
 import * as actions from '@/taskPool/actions';
@@ -230,7 +230,7 @@ const UpdateIndustryBySecond = (props) => {
           id,
           industryLevel: 2,
           industryName: values.industryName,
-          parentId: id,
+          parentId: details.parentId,
           remark: values.remark,
           businessScopeList: scope,
           qualificationsGroupList: group
@@ -251,45 +251,51 @@ const UpdateIndustryBySecond = (props) => {
 
   return (
     <LoadingWrapped loading={detailsLoading}>
-      <h3>编辑二级行业</h3>
-      <Form {...formLayout} className='task-pool-page-container update-attribute-page'
-            onSubmit={handleSubmit}>
-        <Form.Item label={<span>&nbsp;&nbsp;&nbsp;一级行业名称</span>}>
-          {details.parentName}
-        </Form.Item>
-        <Form.Item label="二级行业名称">
-          {
-            getFieldDecorator(`industryName`,
-              {
-                initialValue: details.industryName,
-                rules: [ { required: true, message: '行业名称不能为空' } ]
-              })(
-              <Input placeholder='请输入行业名称' />
-            )
-          }
-        </Form.Item>
-        <Form.Item label={<span>&nbsp;&nbsp;&nbsp;所需资质</span>}>
-          <CertificateGroupsList
-            form={props.form}
-            groups={groups}
-            search={props.actions.TPQueryQualificationByName}
-            fieldPrefix="_groups"
-            onChange={d => setGroups(d)}
-          />
-        </Form.Item>
-        <Form.Item label={<span>&nbsp;&nbsp;&nbsp;经营内容</span>}>
-          <BusinessScopesList
-            form={props.form}
-            search={props.actions.TPQueryQualificationByName}
-            fieldPrefix="_scopes"
-            scopes={scopes}
-            onChange={d => setScopes(d)}
-          />
-        </Form.Item>
-        <Form.Item label=' '>
-          <Button type="primary" htmlType="submit" loading={loading}>确定</Button>
-        </Form.Item>
-      </Form>
+      <div className='task-pool-page-container update-attribute-page'>
+        <PageHeader
+          style={{ padding: 0 }}
+          onBack={() => props.history.go(-1)}
+          title="编辑二级行业"
+        />
+        <Form {...formLayout} className='update-attribute-page-form'
+              onSubmit={handleSubmit}>
+          <Form.Item label={<span>&nbsp;&nbsp;&nbsp;一级行业名称</span>}>
+            {details.parentName}
+          </Form.Item>
+          <Form.Item label="二级行业名称">
+            {
+              getFieldDecorator(`industryName`,
+                {
+                  initialValue: details.industryName,
+                  rules: [ { required: true, message: '行业名称不能为空' } ]
+                })(
+                <Input placeholder='请输入行业名称' />
+              )
+            }
+          </Form.Item>
+          <Form.Item label={<span>&nbsp;&nbsp;&nbsp;所需资质</span>}>
+            <CertificateGroupsList
+              form={props.form}
+              groups={groups}
+              search={props.actions.TPQueryQualificationByName}
+              fieldPrefix="_groups"
+              onChange={d => setGroups(d)}
+            />
+          </Form.Item>
+          <Form.Item label={<span>&nbsp;&nbsp;&nbsp;经营内容</span>}>
+            <BusinessScopesList
+              form={props.form}
+              search={props.actions.TPQueryQualificationByName}
+              fieldPrefix="_scopes"
+              scopes={scopes}
+              onChange={d => setScopes(d)}
+            />
+          </Form.Item>
+          <Form.Item label=' '>
+            <Button type="primary" htmlType="submit" loading={loading}>确定</Button>
+          </Form.Item>
+        </Form>
+      </div>
     </LoadingWrapped>
   );
 };

@@ -91,7 +91,7 @@ class CertificateGroup extends React.Component {
           </Select.Option>
           {
             this.state.data.map(item =>
-              <Select.Option key={item.id}>
+              <Select.Option key={item.id} value={item.id}>
                 {item.qualificationName}
               </Select.Option>)
           }
