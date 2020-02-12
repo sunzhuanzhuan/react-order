@@ -114,7 +114,7 @@ function AccountList(props) {
       align: 'center',
       render: (text, record) => <div>
         <KpiTable data={text} />
-        <div style={{ textAlign: "left", marginTop: 4 }}>28天第一条平均阅读数：{record.mediaIndex1AvgReadNum28d || '-'}</div>
+        <div style={{ textAlign: "left", marginTop: 4 }}>28天第一条平均阅读数：{text.mediaIndex1stAvgReadNum28d || '-'}</div>
       </div>
     },
     {

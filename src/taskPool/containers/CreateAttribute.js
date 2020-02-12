@@ -2,7 +2,7 @@
  * Created by lzb on 2019-12-03.
  */
 import React, { useEffect, useState } from 'react';
-import { Button, Form, Icon, Input, message } from 'antd';
+import { Button, Form, Icon, Input, message, PageHeader } from 'antd';
 import { bindActionCreators } from 'redux';
 import * as commonActions from '@/actions';
 import * as actions from '@/taskPool/actions';
@@ -74,9 +74,12 @@ const CreateIndustryBySecond = (props) => {
     });
   };
   return (
-    <>
-      <h3>添加二级行业</h3>
-      <Form {...formLayout} className='task-pool-page-container create-attribute-page'
+    <div className='task-pool-page-container create-attribute-page'>
+      <PageHeader
+        onBack={() => props.history.go(-1)}
+        title="添加二级行业"
+      />
+      <Form {...formLayout} className="create-attribute-page-form"
             onSubmit={handleSubmit}>
         <Form.Item label={<span>&nbsp;&nbsp;&nbsp;一级行业名称</span>}>
           {name}
@@ -123,7 +126,7 @@ const CreateIndustryBySecond = (props) => {
           <Button type="primary" htmlType="submit" loading={loading}>确定</Button>
         </Form.Item>
       </Form>
-    </>
+    </div>
   );
 };
 

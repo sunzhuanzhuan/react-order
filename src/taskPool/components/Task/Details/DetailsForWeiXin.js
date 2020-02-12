@@ -460,7 +460,7 @@ export default class DetailsForWeiXin extends Component {
   getUnitPrice = (budget) => {
     const list = budget.quoteList || []
     return list.map(o => {
-      return <div key={o.location}>{o.location} {numeral(o.price).format("0,0")}元/阅读</div>
+      return <div key={o.location}>{o.location} {numeral(o.price).format("0,0.00")}元/阅读</div>
     })
   }
 
