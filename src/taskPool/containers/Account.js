@@ -78,8 +78,8 @@ function Account(props) {
       <h2>账号列表</h2>
       <AccountTabsForm formProps={formProps}  {...formProps} />
       <Spin spinning={loading}>
-        <a style={{ margin: '20px 0px', display: 'inline-block' }}>
-          <Badge count={claimTotal} onClick={() => window.open('/order/task/account-receive', '_self')}>
+        <a href='/order/task/account-receive' style={{ margin: '20px 0px', display: 'inline-block' }}>
+          <Badge count={claimTotal}>
             <Button type='primary' >账号领取</Button>
           </Badge>
         </a>
