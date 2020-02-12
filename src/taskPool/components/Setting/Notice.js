@@ -141,8 +141,11 @@ const Notice = (props) => {
           notificationType: 11
         }
       }
+      message.success('应用成功')
       props.TPGetNotificationList(params)
-    })
+    }).catch(({ errorMsg }) => {
+      message.error(errorMsg || '应用失败');
+    });
 
 
   }

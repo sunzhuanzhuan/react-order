@@ -1,12 +1,15 @@
 
 import React, { useState } from 'react';
-import { Checkbox, Button } from 'antd';
+import { Checkbox, Button, message } from 'antd';
 const Weichat = (props) => {
   const [arr, setArr] = useState([])
   const handleApply = () => {
     props.TPUpdateTaskCheck(arr).then(() => {
+      message.success('应用成功')
       props.TPTaskCheck()
-    })
+    }).catch(({ errorMsg }) => {
+      message.error(errorMsg || '应用失败');
+    });
   }
   const onChange = (e, item) => {
     for (let i = 0; i < props.taskCheck.length; i++) {
