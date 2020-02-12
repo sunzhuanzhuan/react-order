@@ -14,6 +14,16 @@ import moment from 'moment';
 const { TabPane } = Tabs;
 const { Option } = Select;
 const { RangePicker } = DatePicker
+const formItemLayout = {
+  labelCol: {
+    xs: { span: 24 },
+    sm: { span: 4 },
+  },
+  wrapperCol: {
+    xs: { span: 24 },
+    sm: { span: 20 },
+  },
+};
 
 
 const FilterForm = (props) => {
@@ -21,7 +31,7 @@ const FilterForm = (props) => {
   return (
     <Row className="flex-form-layout">
       <Col span={4}>
-        <Form.Item label="线索ID">
+        <Form.Item label="线索ID" >
           {getFieldDecorator('id', {})(
             <InputNumber placeholder="请输入" allowClear />
           )}
@@ -65,8 +75,8 @@ const FilterForm = (props) => {
           )}
         </Form.Item>
       </Col>
-      <Col span={12}>
-        <Form.Item label="线索提交时间">
+      <Col span={12} style={{ whiteSpace: 'nowrap' }}>
+        <Form.Item label="线索提交时间" {...formItemLayout}>
           {getFieldDecorator('createdAtBegin')(
             <DatePicker format="YYYY-MM-DD HH:mm:ss"
               showTime={{
@@ -82,8 +92,8 @@ const FilterForm = (props) => {
           )}
         </Form.Item>
       </Col>
-      <Col span={12}>
-        <Form.Item label="任务开始时间">
+      <Col span={12} style={{ whiteSpace: 'nowrap' }}>
+        <Form.Item label="任务开始时间" {...formItemLayout}>
           {getFieldDecorator('extensionStartTimeBegin')(
             <DatePicker format="YYYY-MM-DD HH:mm:ss"
               showTime={{
