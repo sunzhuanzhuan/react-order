@@ -46,6 +46,10 @@ const MCN_ORDER_EXCUTE_CONFIRM = 3; //执行结果确认
 export const MEDIA_TASK_PATTERN_BIDDING = 1; //竞标
 export const MEDIA_TASK_PATTERN_RUSH = 2; //抢单
 
+// 12306 投放模式
+export const PUT_TYPE_BY_NUM = 1; //按量投放
+export const PUT_TYPE_BY_DAY = 2; //按天
+
 
 // 任务执行状态文本及对应操作
 export const confirmexestate = {

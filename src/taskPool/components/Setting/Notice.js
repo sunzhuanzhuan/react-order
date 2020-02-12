@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Table, Button, Modal, Select, Spin } from 'antd';
+import { Table, Button, Modal, Select, Spin, message } from 'antd';
 import debounce from 'lodash/debounce';
 const { confirm } = Modal;
 const { Option } = Select;
@@ -10,6 +10,11 @@ const Notice = (props) => {
   const [selectedUser, setSelectedUser] = useState([])
   const [value, setValue] = useState([])
   let fetchData = (value) => {
+    let reg = new RegExp("[\\u4E00-\\u9FFF]+", "g");
+    if (reg.test(value)) {
+      message.error('不允许输入中文')
+      return
+    }
     if (!value) {
       return
     }
@@ -35,7 +40,7 @@ const Notice = (props) => {
   const handleDelete = (record) => {
     confirm({
       title: '删除人员',
-      content: `确定要在通知列表中${record.realName}删除么？`,
+      content: `确定要在通知列表中删除"${record.realName}"么？`,
       okText: '确定',
       okType: 'danger',
       cancelText: '取消',
@@ -82,7 +87,7 @@ const Notice = (props) => {
       width: 100,
       key: 'realName',
     }, {
-      title: '岗位名称',
+      title: '岗位类型',
       dataIndex: 'jobTypes',
       align: 'center',
       width: 100,
@@ -136,8 +141,11 @@ const Notice = (props) => {
           notificationType: 11
         }
       }
+      message.success('应用成功')
       props.TPGetNotificationList(params)
-    })
+    }).catch(({ errorMsg }) => {
+      message.error(errorMsg || '应用失败');
+    });
 
 
   }

@@ -96,7 +96,7 @@ export default class DetailsFor12306 extends Component {
             </Descriptions.Item>
             <Descriptions.Item label="任务预算">
               {details.totalAmount}元
-              {isDiscount && <span className='text-red' style={{marginLeft: 4, textDecoration: 'line-through'}}>{features.originalPrice}</span>}
+              {isDiscount && <span className='text-red' style={{marginLeft: 4, textDecoration: 'line-through'}}>{features.originalPrice}元</span>}
             </Descriptions.Item>
             {isDiscount && <Descriptions.Item label="优惠金额">
               <div className='text-red'>{features.discount}元</div>

@@ -24,7 +24,7 @@ function getColumns(active, clickModal) {
     case "9":
       columns = [
         {
-          title: '任务ID',
+          title: '线索ID',
           dataIndex: 'id',
           align: 'center'
         },
@@ -246,7 +246,7 @@ const Clues = (props) => {
           onOk={handleOk}
           onCancel={handleCancel}
         >
-          <p>确认已经处理{'"' + record.createdName + '"'}的线索么？</p>
+          <p>确认已经处理{record.createdName}的该条线索么？</p>
         </Modal> : null
       }
     </div >
