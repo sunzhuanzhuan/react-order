@@ -30,7 +30,7 @@ function Account(props) {
   }
   //获取领取列表数
   async function getClaimAccountList() {
-    const { data } = await actions.TPGetClaimAccountList({ page: { currentPage: 1, pageSize: 1 }, form: {} })
+    const { data } = await actions.TPGetClaimAccountList({ page: { currentPage: 1, pageSize: 10 }, form: {} })
     setClaimTotal(data.total)
   }
 
