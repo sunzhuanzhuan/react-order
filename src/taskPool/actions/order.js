@@ -22,6 +22,11 @@ export const {
 } = createHttpAction('TPUpdatePlatformFile', Interface.order.TPUpdatePlatformFile, {
   method: 'post'
 });
+//获取微信订单失败原因
+export const {
+  TPQueryApproveReason,
+  TPQueryApproveReason_success,
+} = createHttpAction('TPQueryApproveReason', Interface.order.TPQueryApproveReason)
 
 //订单管理微信公众号
 export const {

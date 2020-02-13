@@ -1,3 +1,4 @@
+
 import { combineReducers } from 'redux'
 import { handleActions, handleAction } from 'redux-actions';
 import * as order from '../actions/order'
@@ -34,3 +35,10 @@ export const dataCurvelist = handleActions({
     return [...data]
   },
 }, [])
+//获取微信失败原因
+export const approveReasonAll = handleActions({
+  [order.TPQueryApproveReason_success]: (state, action) => {
+    const { data = [] } = { ...action.payload }
+    return { ...data }
+  },
+}, {})
