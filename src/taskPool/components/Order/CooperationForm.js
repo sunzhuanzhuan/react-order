@@ -1,15 +1,14 @@
 /*
  * @Descripttion: 
  * @Author: wangxinyue
- * @Date: 2020-01-13 14:02:44
- * @LastEditors: wangxinyue
- * @LastEditTime: 2020-02-10 16:20:46
+ * @Date: 2020-02-10 18:07:19
  */
+
 import React from 'react'
 import { Form, Input, DatePicker, Select, Button } from 'antd'
 import moment from 'moment'
 import { otherOrderStateList } from '../../constants/orderConfig'
-const format = 'YYYY-MM-DD'
+import { getDataByFormat } from '@/taskPool/constants/utils.js'
 const { RangePicker } = DatePicker
 function CooperationForm(props) {
   const { resetPlatform, form } = props
@@ -20,13 +19,13 @@ function CooperationForm(props) {
     validateFields((err, values) => {
       if (!err) {
         if (values.orderStartDate) {
-          values.form.orderStartDateStart = moment(values.orderStartDate[0]).format(format)
-          values.form.orderStartDateEnd = moment(values.orderStartDate[1]).format(format)
+          values.form.orderStartDateStart = getDataByFormat(values.orderStartDate[0])
+          values.form.orderStartDateEnd = getDataByFormat(values.orderStartDate[1])
           delete values.orderStartDate
         }
         if (values.orderEndDate) {
-          values.form.orderEndDateStart = moment(values.orderEndDate[0]).format(format)
-          values.form.orderEndDateEnd = moment(values.orderEndDate[1]).format(format)
+          values.form.orderEndDateStart = getDataByFormat(values.orderEndDate[0])
+          values.form.orderEndDateEnd = getDataByFormat(values.orderEndDate[1])
           delete values.orderEndDate
         }
         props.searchAction(values)

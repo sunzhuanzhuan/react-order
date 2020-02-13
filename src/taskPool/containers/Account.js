@@ -30,7 +30,7 @@ function Account(props) {
   }
   //获取领取列表数
   async function getClaimAccountList() {
-    const { data } = await actions.TPGetClaimAccountList({ page: { currentPage: 1, pageSize: 10 }, form: {} })
+    const { data } = await actions.TPGetClaimAccountList({ page: { currentPage: 1, pageSize: 1 }, form: {} })
     setClaimTotal(data.total)
   }
 
@@ -78,8 +78,8 @@ function Account(props) {
       <h2>账号列表</h2>
       <AccountTabsForm formProps={formProps}  {...formProps} />
       <Spin spinning={loading}>
-        <a href="/order/task/account-receive" style={{ padding: '10px 0px', display: 'block' }}>
-          <Badge count={claimTotal} >
+        <a href='/order/task/account-receive' style={{ margin: '20px 0px', display: 'inline-block' }}>
+          <Badge count={claimTotal}>
             <Button type='primary' >账号领取</Button>
           </Badge>
         </a>
