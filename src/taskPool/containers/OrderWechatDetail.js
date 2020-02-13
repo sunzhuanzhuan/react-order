@@ -97,9 +97,8 @@ function OrderWechatDetail(props) {
       content: [
         { label: '填写理由', content: cancel.approveReason, span: 3 },
         {
-          label: '附件/截图', content: <img src={cancel.url}
-            alt='附件/截图'
-            width="300px" height='300px' />, span: 3
+          label: '附件/截图', content: cancel.url ? <img src={cancel.url}
+            width="300px" height='300px' /> : '-', span: 3
         },
       ]
     }
