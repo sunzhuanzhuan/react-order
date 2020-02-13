@@ -25,6 +25,7 @@ import {
 } from "@/taskPool/constants/utils";
 import { convertRawToHTML } from 'braft-convert'
 import moment from 'moment';
+import { PUT_TYPE_BY_NUM } from '@/taskPool/constants/config';
 
 
 export default class DetailsFor12306 extends Component {
@@ -108,25 +109,25 @@ export default class DetailsFor12306 extends Component {
             <Descriptions.Item label="到达城市">
               {features.arrivePlaceDesc || '-'}
             </Descriptions.Item>
-            {features.putType === 1 && <Descriptions.Item label="车次类型">
+            {features.putType === PUT_TYPE_BY_NUM && <Descriptions.Item label="车次类型">
               {features.deliveryTrainTypeDesc || '-'}
             </Descriptions.Item>}
-            {features.putType === 1 && <Descriptions.Item label="坐席类型">
+            {features.putType === PUT_TYPE_BY_NUM && <Descriptions.Item label="坐席类型">
               {features.deliverySeatDesc || '-'}
             </Descriptions.Item>}
-            {features.putType === 1 && <Descriptions.Item label="人群性别">
+            {features.putType === PUT_TYPE_BY_NUM && <Descriptions.Item label="人群性别">
               {features.deliverySexDesc || '-'}
             </Descriptions.Item>}
-            {features.putType === 1 && <Descriptions.Item label="年龄区间">
+            {features.putType === PUT_TYPE_BY_NUM && <Descriptions.Item label="年龄区间">
               {features.deliveryAgesDesc || '-'}
             </Descriptions.Item>}
             <Descriptions.Item label="内容类型">
               {features.mediaTypeDesc}
             </Descriptions.Item>
             <Descriptions.Item label="阅读单价">
-              {features.unitPrice} 元/{features.putType === 1 ? '条' : '天'}
+              {features.unitPrice} 元/{features.putType === PUT_TYPE_BY_NUM ? '条' : '天'}
             </Descriptions.Item>
-            {features.putType === 1 && <Descriptions.Item label="预计阅读数">
+            {features.putType === PUT_TYPE_BY_NUM && <Descriptions.Item label="预计阅读数">
                 <div className='text-red'>{features.actionNum}条</div>
               </Descriptions.Item>}
             <Descriptions.Item label="内容预览">
