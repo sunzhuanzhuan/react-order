@@ -50,6 +50,10 @@ export const MEDIA_TASK_PATTERN_RUSH = 2; //抢单
 export const PUT_TYPE_BY_NUM = 1; //按量投放
 export const PUT_TYPE_BY_DAY = 2; //按天
 
+// 12306 内容类型
+export const MEDIA_TYPE_VIDEO = 3; //图文+链接+视频
+export const MEDIA_TYPE_IMAGE = 4; //图文+链接
+
 
 // 任务执行状态文本及对应操作
 export const confirmexestate = {

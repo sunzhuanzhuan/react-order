@@ -19,7 +19,7 @@ import numeral from '@/util/numeralExpand'
 import { OssUpload } from 'wbyui'
 import {
   AGES_OPTIONS, MEDIA_TASK_PATTERN_BIDDING,
-  MEDIA_TASK_PATTERN_RUSH,
+  MEDIA_TASK_PATTERN_RUSH, MEDIA_TYPE_IMAGE, MEDIA_TYPE_VIDEO, PUT_TYPE_BY_DAY, PUT_TYPE_BY_NUM,
   SEAT_OPTIONS,
   wxPositionToFields
 } from '@/taskPool/constants/config';
@@ -472,14 +472,14 @@ class PreviewFor12306 extends React.Component {
             {base.orderStartDate.format('YYYY-MM-DD')}
           </Descriptions.Item>
           <Descriptions.Item label="投放结束日期">
-            {budget.putType === 2 && moment(base.orderStartDate).add(budget.actionDay - 1, 'd').format(
+            {budget.putType === PUT_TYPE_BY_DAY && moment(base.orderStartDate).add(budget.actionDay - 1, 'd').format(
               'YYYY-MM-DD')}
-            {budget.putType === 1 && (base.orderEndDate ? base.orderEndDate.format('YYYY-MM-DD') : base.orderStartDate.format(
+            {budget.putType === PUT_TYPE_BY_NUM && (base.orderEndDate ? base.orderEndDate.format('YYYY-MM-DD') : base.orderStartDate.format(
               'YYYY-MM-DD'))}
           </Descriptions.Item>
           <Descriptions.Item label="任务持续时间">
-            {budget.putType === 2 && <div>{budget.actionDay}天</div>}
-            {budget.putType === 1 && (base.orderEndDate ? getCountDownTimeText(base.orderEndDate,
+            {budget.putType === PUT_TYPE_BY_DAY && <div>{budget.actionDay}天</div>}
+            {budget.putType === PUT_TYPE_BY_NUM && (base.orderEndDate ? getCountDownTimeText(base.orderEndDate,
               0,
               5,
               base.orderStartDate) : '1天')
@@ -489,8 +489,8 @@ class PreviewFor12306 extends React.Component {
             {numeral(budget.result.actualPayment).format("0,0.00")} 元
           </Descriptions.Item>
           <Descriptions.Item label="投放模式">
-            {budget.putType === 1 && "按量投放"}
-            {budget.putType === 2 && "按天投放"}
+            {budget.putType === PUT_TYPE_BY_NUM && "按量投放"}
+            {budget.putType === PUT_TYPE_BY_DAY && "按天投放"}
           </Descriptions.Item>
           <Descriptions.Item label="出发城市">
             {this.getAreaName(budget.leavePlace)}
@@ -498,26 +498,26 @@ class PreviewFor12306 extends React.Component {
           <Descriptions.Item label="到达城市">
             {this.getAreaName(budget.arrivePlace)}
           </Descriptions.Item>
-          {budget.putType === 1 && <Descriptions.Item label="坐席类型">
+          {budget.putType === PUT_TYPE_BY_NUM && <Descriptions.Item label="坐席类型">
             {this.value2label(budget.deliverySeat, SEAT_OPTIONS)}
           </Descriptions.Item>}
-          {budget.putType === 1 && <Descriptions.Item label="人群性别">
+          {budget.putType === PUT_TYPE_BY_NUM && <Descriptions.Item label="人群性别">
             {budget.deliverySex === 0 && "全部"}
             {budget.deliverySex === 10 && "男"}
             {budget.deliverySex === 11 && "女"}
           </Descriptions.Item>}
-          {budget.putType === 1 && <Descriptions.Item label="年龄区间">
+          {budget.putType === PUT_TYPE_BY_NUM && <Descriptions.Item label="年龄区间">
             {this.value2label(budget.deliveryAges, AGES_OPTIONS)}
           </Descriptions.Item>}
           <Descriptions.Item label="内容类型">
-            {budget.mediaType === 3 && "图文+链接+视频"}
-            {budget.mediaType === 4 && "图文+链接"}
+            {budget.mediaType === MEDIA_TYPE_VIDEO && "图文+链接+视频"}
+            {budget.mediaType === MEDIA_TYPE_IMAGE && "图文+链接"}
           </Descriptions.Item>
-          {budget.putType === 1 && <Descriptions.Item label="阅读单价">
+          {budget.putType === PUT_TYPE_BY_NUM && <Descriptions.Item label="阅读单价">
             {budget.result.unitPrice} 元/条
           </Descriptions.Item>}
           {
-            budget.putType === 1 && <Descriptions.Item label="预计阅读数">
+            budget.putType === PUT_TYPE_BY_NUM && <Descriptions.Item label="预计阅读数">
               <div className='text-red'>{budget.actionNum}条</div>
             </Descriptions.Item>
           }

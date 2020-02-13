@@ -17,6 +17,7 @@ import { OssUpload } from "wbyui";
 import cookie from "js-cookie";
 import 'braft-editor/dist/index.css'
 import UploadMaterial from "@/taskPool/components/Task/CreateForms/UploadMaterial";
+import { MEDIA_TYPE_VIDEO } from '@/taskPool/constants/config';
 
 
 const FormItem = Form.Item
@@ -312,7 +313,7 @@ class ContentFor12306 extends React.Component {
             />
           )}
         </FormItem>
-        {budget.mediaType === 3 && <FormItem label="上传视频">
+        {budget.mediaType === MEDIA_TYPE_VIDEO && <FormItem label="上传视频">
           {getFieldDecorator('video', {
             initialValue: content.video || [],
             valuePropName: 'fileList',
