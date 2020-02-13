@@ -4,12 +4,11 @@ import accountConfig from '../../../constants/accountConfig'
 import KpiForm from './KpiForm'
 import FormItem from 'antd/lib/form/FormItem'
 import TagItem from './TagItem'
-import moment from 'moment'
 import SearchForm from '../../../base/SearchForm/index'
 import SelectSearch from '../SelectSearch'
 const { TabPane } = Tabs;
 import './index.less'
-const format = 'YYYY-MM-DD'
+import { getDataByFormat } from '@/taskPool/constants/utils.js'
 const formConfig = [
   { label: 'accountID', type: 'inputNumber', key: 'accountId' },
   { label: '粉丝性别比例', type: 'select', key: 'manWomenRatio', },
@@ -39,17 +38,16 @@ function AccountTabs(props) {
   function onSearch(e) {
     e.preventDefault();
     validateFields((err, values) => {
-      console.log("TCL: onSearch -> values", values)
       const { estimatetime, auditTime, identity } = values.form
       let allValues = { ...values }
       if (auditTime) {
-        allValues.form.auditStartTime = moment(auditTime[0]).format(format)
-        allValues.form.auditEndTime = moment(auditTime[1]).format(format)
+        allValues.form.auditStartTime = getDataByFormat(auditTime[0])
+        allValues.form.auditEndTime = getDataByFormat(auditTime[1])
         delete allValues.form.auditTime
       }
       if (estimatetime) {
-        allValues.form.estimateStarttime = moment(estimatetime[0]).format(format)
-        allValues.form.estimateEndtime = moment(estimatetime[1]).format(format)
+        allValues.form.estimateStarttime = getDataByFormat(estimatetime[0])
+        allValues.form.estimateEndtime = getDataByFormat(estimatetime[1])
         delete allValues.form.estimatetime
       }
       if (identity) {

@@ -2,13 +2,13 @@
  * @Descripttion: 
  * @Author: wangxinyue
  * @Date: 2020-01-08 10:30:32
- * @LastEditors  : wangxinyue
- * @LastEditTime : 2020-02-10 14:50:53
+ * @LastEditors  : Please set LastEditors
+ * @LastEditTime : 2020-02-13 15:11:11
  */
 import React from 'react'
 import { Form, Input, InputNumber, DatePicker, Button, Select } from 'antd'
-import moment from 'moment'
 const format = 'YYYY-MM-DD HH:mm:ss'
+import { getDataByFormat } from '@/taskPool/constants/utils.js'
 const { RangePicker } = DatePicker;
 function WeChatForm(props) {
   const { form, mcnOrderStateList = [], resetWachat } = props
@@ -18,13 +18,13 @@ function WeChatForm(props) {
       if (!err) {
         let allValue = { ...values }
         if (values.receiveAt) {
-          allValue.form.receiveAtStart = moment(values.receiveAt[0]).format(format)
-          allValue.form.receiveAtEnd = moment(values.receiveAt[1]).format(format)
+          allValue.form.receiveAtStart = getDataByFormat(values.receiveAt[0], format)
+          allValue.form.receiveAtEnd = getDataByFormat(values.receiveAt[1], format)
           delete allValue.receiveAt
         }
         if (values.expectedPublishedTime) {
-          allValue.form.expectedPublishedTimeStart = moment(values.expectedPublishedTime[0]).format(format)
-          allValue.form.expectedPublishedTimeEnd = moment(values.expectedPublishedTime[1]).format(format)
+          allValue.form.expectedPublishedTimeStart = getDataByFormat(values.expectedPublishedTime[0], format)
+          allValue.form.expectedPublishedTimeEnd = getDataByFormat(values.expectedPublishedTime[1], format)
           delete allValue.expectedPublishedTime
 
         }

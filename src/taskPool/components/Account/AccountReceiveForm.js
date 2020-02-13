@@ -1,9 +1,9 @@
 import React from 'react'
 import { Form, Button, Input, DatePicker } from 'antd'
-import moment from 'moment'
-const format = 'YYYY-MM-DD'
 const { RangePicker } = DatePicker
 import SelectSearch from './SelectSearch'
+import { getDataByFormat } from '@/taskPool/constants/utils.js'
+
 function AccountForm(props) {
   const { form, searchAction, } = props
   const { resetFields, validateFields, getFieldDecorator } = form
@@ -12,8 +12,8 @@ function AccountForm(props) {
     validateFields((err, values) => {
       const { submitTime, identity, ownerAdmin } = values
       if (submitTime) {
-        values.form.submitStartTime = moment(submitTime[0]).format(format)
-        values.form.submitEndTime = moment(submitTime[1]).format(format)
+        values.form.submitStartTime = getDataByFormat(submitTime[0])
+        values.form.submitEndTime = getDataByFormat(submitTime[1])
       }
       if (identity) {
         values.form.identityId = identity.key

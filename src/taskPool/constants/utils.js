@@ -167,3 +167,7 @@ export const reducersResponseList = (primary_key = 'id') => {
 reducersResponseList.initList = (pageSize = 50) => {
   return { keys: [], source: {}, total: 0, pageNum: 1, pageSize, response: {} }
 }
+//查询时间处理
+export function getDataByFormat(data, format = 'YYYY-MM-DD') {
+  return data && moment(data).format(format)
+}
