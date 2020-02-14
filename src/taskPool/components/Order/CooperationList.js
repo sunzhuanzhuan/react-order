@@ -42,14 +42,15 @@ function CooperationList(props) {
   const columns = [
     {
       title: '订单ID',
-      dataIndex: 'orderNumber',
-      key: 'orderNumber',
+      dataIndex: 'adOrderNumber',
+      key: 'adOrderNumber',
       align: 'center'
     },
     {
       title: '任务名称',
       dataIndex: 'orderName',
       key: 'orderName',
+      width: '130px',
       render: (text, record) => {
         //adOrderId
         return <div>
