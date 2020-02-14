@@ -9,6 +9,7 @@ import { Form, Input, DatePicker, Select, Button } from 'antd'
 import moment from 'moment'
 import { otherOrderStateList } from '../../constants/orderConfig'
 import { getDataByFormat } from '@/taskPool/constants/utils.js'
+import SelectSearch from '../Account/SelectSearch'
 const { RangePicker } = DatePicker
 function CooperationForm(props) {
   const { resetPlatform, form } = props
@@ -27,6 +28,10 @@ function CooperationForm(props) {
           values.form.orderEndDateStart = getDataByFormat(values.orderEndDate[0])
           values.form.orderEndDateEnd = getDataByFormat(values.orderEndDate[1])
           delete values.orderEndDate
+        }
+        if (values.salesman) {
+          values.form.salesmanId = values.salesman.key
+          delete values.salesman
         }
         props.searchAction(values)
       }
@@ -77,8 +82,8 @@ function CooperationForm(props) {
         )}
       </Form.Item>
       <Form.Item label='负责销售'>
-        {getFieldDecorator('form.salesman', {})(
-          <Input placeholder='请输入' />
+        {getFieldDecorator('salesman', {})(
+          <SelectSearch searchKey='identityName' />
         )}
       </Form.Item>
       <Form.Item>
