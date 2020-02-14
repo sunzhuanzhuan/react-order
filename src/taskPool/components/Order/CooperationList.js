@@ -42,14 +42,15 @@ function CooperationList(props) {
   const columns = [
     {
       title: '订单ID',
-      dataIndex: 'orderNumber',
-      key: 'orderNumber',
+      dataIndex: 'adOrderNumber',
+      key: 'adOrderNumber',
       align: 'center'
     },
     {
       title: '任务名称',
       dataIndex: 'orderName',
       key: 'orderName',
+      width: '130px',
       render: (text, record) => {
         //adOrderId
         return <div>
@@ -193,12 +194,12 @@ function CooperationList(props) {
   return (
     <>
       <Alert message={`已选择 ${selectedRowSize} 个账号，合计：${platformOrderList.total || '-'} 个`} type="info" style={{ marginTop: 20 }} />
-      <Scolltable scrollClassName='.ant-table-body' widthScroll={1800}>
+      <Scolltable scrollClassName='.ant-table-body' widthScroll={2000}>
         <Table dataSource={list}
           key={isCleanSelected}//确认执行空清空选中数据
           columns={columns}
           rowSelection={rowSelection}
-          scroll={{ x: 1600 }}
+          scroll={{ x: 1800 }}
           rowKey='adOrderId'
           pagination={{
             pageSize: platformOrderList.pageSize || 1,

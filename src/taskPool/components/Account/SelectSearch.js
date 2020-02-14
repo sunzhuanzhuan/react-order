@@ -2,8 +2,8 @@
  * @Descripttion: 
  * @Author: wangxinyue
  * @Date: 2020-01-08 16:29:15
- * @LastEditors  : wangxinyue
- * @LastEditTime : 2020-02-07 20:21:47
+ * @LastEditors  : Please set LastEditors
+ * @LastEditTime : 2020-02-14 15:13:01
  */
 import React from 'react'
 import api from '@/api'
@@ -71,7 +71,7 @@ class SelectSearch extends React.Component {
 
   render() {
     const { fetching, data, value, placeholder = '请输入并选择' } = this.state;
-    const { searchKey } = this.props
+    const { searchKey, idKey = 'identityId' } = this.props
     return (
       <Select
         allowClear
@@ -86,8 +86,8 @@ class SelectSearch extends React.Component {
         onChange={this.handleChange}
         style={{ width: '100%', minWidth: 174 }}
       >
-        {data.map(d => (
-          <Option key={d.identityId}>{d[searchKey]}</Option>
+        {data.map((d, index) => (
+          <Option key={d[idKey]}>{d[searchKey]}</Option>
         ))}
       </Select>
     );

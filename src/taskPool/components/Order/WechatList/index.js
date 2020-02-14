@@ -8,10 +8,22 @@ import EditReceiptForm from './EditReceiptForm'
 import OrderMcnStatus from '../../../base/OrderMcnStatus'
 import { WBYPlatformIcon } from 'wbyui'
 import numeral from 'numeral';
+const { confirm } = Modal;
 export default function WachatList(props) {
   const { setModalProps, allMcnOrderList = {}, actions, changeWechatPage } = props
   const { list = [] } = allMcnOrderList
   async function noPass(id) {
+    confirm({
+      title: '确认一检异常待处理不通过？',
+      onOk() {
+        noPassAsync(id);
+      },
+      onCancel() {
+      },
+    });
+
+  }
+  async function noPassAsync(id) {
     await actions.TPApprovedFirstFailure({ id: id })
     message.success('操作成功')
     setModalProps({ visible: false })

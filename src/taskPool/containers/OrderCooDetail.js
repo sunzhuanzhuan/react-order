@@ -52,6 +52,7 @@ function CooperationDetail() {
     { label: '投放开始日期', content: orderDetail.orderStartDate },
     { label: '到达城市/车站', content: orderDetail.arrivePlace },
     { label: '任务预算', content: <div style={{ color: 'red' }}>{numeral(orderDetail.totalAmount).format(',')}元</div> }]
+    .filter(one => one.label != '阅读单价' || orderDetail.putType == 2)
   const putType2 = [
     { label: '投放结束日期', content: orderDetail.orderEndDate, span: 2 },
     { label: '投放持续时间', content: orderDetail.durationDay },
