@@ -83,7 +83,7 @@ function CooperationForm(props) {
       </Form.Item>
       <Form.Item label='负责销售'>
         {getFieldDecorator('salesman', {})(
-          <SelectSearch searchKey='identityName' />
+          <SelectSearch searchKey='mediaRealName' />
         )}
       </Form.Item>
       <Form.Item>
