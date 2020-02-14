@@ -81,24 +81,6 @@ const CreateTask = (props) => {
           label: companyName,
           key: companyId
         } : undefined,
-        // FIXME: 调试
-        /*"orderName": "123123",
-        "industry": [
-          1,
-          2
-        ],
-        "orderDate": [
-
-        ],
-        "taskPattern": 2,
-        "showPictureUrl": [
-          {
-            "uid": "rc-upload-1580960941787-2",
-            "url": "http://prd-wby-img.oss-cn-beijing.aliyuncs.com/FWP_IMG_UPLOAD/dcab1be06ee246cb8225b324a98f3656.jpg"
-          }
-        ],
-        "retainTime": 48,
-        "businessScopeId": "1"*/
       },
       budget: {},
       content: {}
