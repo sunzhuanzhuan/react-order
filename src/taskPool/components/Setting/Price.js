@@ -105,7 +105,7 @@ const Price = (props) => {
           message.success('设置成功')
           props.TPGetReadUnitPriceConfig({})
         }).catch(({ errorMsg }) => {
-          message.error(errorMsg || '操作失败，请重试！');
+          // message.error(errorMsg || '操作失败，请重试！');
         })
         console.log(arr)
 

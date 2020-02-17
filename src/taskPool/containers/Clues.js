@@ -13,6 +13,7 @@ import * as actions from '@/taskPool/actions';
 import { TaskBudgetConsumptions, TaskInfo, TaskStatus } from '@/taskPool/base/ColumnsDataGroup';
 import { connect } from 'react-redux';
 import numeral from 'numeral'
+import Scolltable from '@/components/Scolltable';
 
 import { Link } from "react-router-dom";
 
@@ -73,6 +74,7 @@ function getColumns(active, clickModal) {
           title: '操作',
           align: 'center',
           width: 150,
+          fixed: 'right',
           dataIndex: 'actions',
           render: (val, record) => {
             return <div>{record.clueState == 1 ? <div><Link target="_blank" to={`/order/task/clues-details?platform=weixin&id=${record.id}`}>
@@ -146,6 +148,8 @@ function getColumns(active, clickModal) {
         },
         {
           title: '操作',
+          fixed: 'right',
+          width: 150,
           align: 'center',
           render: (val, record) => {
             return <div>
@@ -233,22 +237,26 @@ const Clues = (props) => {
       <Title level={4}>线索管理</Title>
       <Filters search={getList} />
       <div style={{ height: '30px' }}></div>
-      <Table
-        loading={false}
-        dataSource={dataSource}
-        pagination={pagination}
-        columns={columns}
-      />
-      {
-        visible ? <Modal
-          title="线索处理"
-          visible={true}
-          onOk={handleOk}
-          onCancel={handleCancel}
-        >
-          <p>确认已经处理{record.createdName}的该条线索么？</p>
-        </Modal> : null
-      }
+      <Scolltable scrollClassName='.ant-table-body' widthScroll={2100}>
+        <Table
+          loading={false}
+          dataSource={dataSource}
+          pagination={pagination}
+          columns={columns}
+          scroll={{ x: 2000 }}
+          rowKey={record => record.id}
+        />
+        {
+          visible ? <Modal
+            title="线索处理"
+            visible={true}
+            onOk={handleOk}
+            onCancel={handleCancel}
+          >
+            <p>确认已经处理{record.createdName}的该条线索么？</p>
+          </Modal> : null
+        }
+      </Scolltable>
     </div >
   );
 };
