@@ -1,21 +1,22 @@
 /*
- * @Descripttion: 
+ * @Descripttion:
  * @Author: wangxinyue
  * @Date: 2020-01-08 16:29:15
- * @LastEditors  : Please set LastEditors
- * @LastEditTime : 2020-02-14 15:13:01
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2020-02-17 17:24:06
  */
-import React from 'react'
-import api from '@/api'
+import React from 'react';
+import api from '@/api';
 import { Select, Spin } from 'antd';
 import debounce from 'lodash/debounce';
 const { Option } = Select;
 const baseParam = {
   page: {
-    currentPage: 1, pageSize: 20
+    currentPage: 1,
+    pageSize: 20
   },
   form: {}
-}
+};
 class SelectSearch extends React.Component {
   constructor(props) {
     super(props);
@@ -26,7 +27,7 @@ class SelectSearch extends React.Component {
   state = {
     data: [],
     value: [],
-    fetching: false,
+    fetching: false
   };
   static getDerivedStateFromProps(props, state) {
     if (props.value !== state.value) {
@@ -38,40 +39,42 @@ class SelectSearch extends React.Component {
   }
   componentDidUpdate(prevProps, prevState) {
     if (this.state.value !== prevState.value) {
-      this.setState({ value: this.state.value })
+      this.setState({ value: this.state.value });
     }
   }
   getData = value => {
     const {
       searchKey = '',
-      url = '/operator-gateway/accountMapping/v2/selectUserAndMediaByUserName'
-    } = this.props
+      url = '/operator-gateway/accountMapping/v2/selectUserAndMediaByUserName',
+      searchProps = {}
+    } = this.props;
     this.lastFetchId += 1;
     const fetchId = this.lastFetchId;
     this.setState({ data: [], fetching: true });
-    api.post(url, ({ ...baseParam, form: { [searchKey]: value } })).
-      then(({ data }) => {
+    api
+      .post(url, { ...baseParam, form: { [searchKey]: value, ...searchProps } })
+      .then(({ data }) => {
         if (fetchId !== this.lastFetchId) {
           // for fetch callback order
           return;
         }
         this.setState({ data: data.list || [], fetching: false });
-      })
+      });
   };
 
   handleChange = value => {
-    const { onChange } = this.props
+    const { onChange } = this.props;
     this.setState({
       value,
       data: [],
-      fetching: false,
+      fetching: false
     });
-    onChange && onChange(value)
+    onChange && onChange(value);
   };
 
   render() {
     const { fetching, data, value, placeholder = '请输入并选择' } = this.state;
-    const { searchKey, idKey = 'identityId' } = this.props
+    const { searchKey, idKey = 'identityId' } = this.props;
     return (
       <Select
         allowClear
@@ -93,4 +96,4 @@ class SelectSearch extends React.Component {
     );
   }
 }
-export default SelectSearch
+export default SelectSearch;
