@@ -129,6 +129,10 @@ const Notice = (props) => {
       notificationType: 11,
       platformId: 9
     }
+    if (selectedUser.length == 0) {
+      message.error('请先添加需要通知的人员')
+      return
+    }
     props.TPUpdateNotice(config).then(() => {
       setValue([])
       let params = {

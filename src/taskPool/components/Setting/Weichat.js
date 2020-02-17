@@ -8,7 +8,7 @@ const Weichat = (props) => {
       message.success('应用成功')
       props.TPTaskCheck()
     }).catch(({ errorMsg }) => {
-      message.error(errorMsg || '应用失败');
+      // message.error(errorMsg || '应用失败');
     });
   }
   const onChange = (e, item) => {

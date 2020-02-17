@@ -11,7 +11,7 @@ class CooperationTask extends React.Component {
           message.success('应用成功')
           this.props.TPGetTaskLaunchConfigLiang({ offerType: 3 })
         }).catch(({ errorMsg }) => {
-          message.error(errorMsg || '操作失败，请重试！');
+          // message.error(errorMsg || '操作失败，请重试！');
         })
       }
     });

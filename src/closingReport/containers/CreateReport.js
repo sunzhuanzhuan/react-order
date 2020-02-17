@@ -125,7 +125,6 @@ export default class CreateReport extends Component {
   }
 
   coreSave(callback) {
-    // TODO: 返回上一步, 是否必须选择订单才能再点下一步
     const { closingReport: { companySource: { summaryId } } } = this.props
     const { selectedRowKeys, companyId, summaryName } = this.state
     if (!selectedRowKeys.length) {
