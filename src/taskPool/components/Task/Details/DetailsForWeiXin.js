@@ -195,7 +195,7 @@ export default class DetailsForWeiXin extends Component {
         dataIndex: 'orderState',
         align: "center",
         render: (state, record) => {
-          return state === MCN_ORDER_STATE_CANCEL ? null : <div>
+          return <div>
             <a target="_blank" href={record.contentUrl || undefined}>查看文章</a>
             {record.snapshotUrl && <>
               <Divider type="vertical" />
@@ -604,7 +604,7 @@ export default class DetailsForWeiXin extends Component {
               &nbsp;/&nbsp;
               <Yuan value={details.availableAmount} className="text-black" />
             </Descriptions.Item>
-            <Descriptions.Item label="有效执行博主数">{details.mcnCount || 0} 位</Descriptions.Item>
+            <Descriptions.Item label="有效执行博主数">{features.completed || 0} 位</Descriptions.Item>
             <Descriptions.Item label="已达成阅读数">{details.realActionNum || '-'}</Descriptions.Item>
 
             <Descriptions.Item label="已用服务费/可用服务费">
