@@ -118,7 +118,6 @@ function getColumns(active, operation) {
           title: '操作',
           dataIndex: 'id',
           align: 'center',
-          width: 180,
           fixed: 'right',
           render: (id, record) => {
             return <div>
@@ -244,7 +243,6 @@ function getColumns(active, operation) {
           title: '操作',
           dataIndex: 'id',
           align: 'center',
-          width: 180,
           fixed: 'right',
           render: (id, record) => {
             return <div>
@@ -266,7 +264,7 @@ function getColumns(active, operation) {
 
 const Tasks = (props) => {
 
-  const [ searching, setSearching ] = useState(false)
+  const [searching, setSearching] = useState(false)
 
   const that = useRef({
     search: {
