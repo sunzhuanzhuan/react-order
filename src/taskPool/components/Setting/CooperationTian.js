@@ -96,7 +96,7 @@ class CooperationTian extends React.Component {
           message.success('应用成功')
           this.props.TPGetTaskLaunchConfigTian({ offerType: 1 })
         }).catch(({ errorMsg }) => {
-          message.error(errorMsg || '操作失败，请重试！');
+          // message.error(errorMsg || '操作失败，请重试！');
         })
       }
     });

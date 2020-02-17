@@ -87,7 +87,7 @@ class Select extends React.Component {
       message.success('设置成功')
       this.props.TPQueryCommissionConfig()
     }).catch(({ errorMsg }) => {
-      message.error(errorMsg || '操作失败，请重试！');
+      // message.error(errorMsg || '操作失败，请重试！');
     })
   }
 

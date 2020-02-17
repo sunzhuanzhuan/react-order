@@ -112,7 +112,7 @@ class Discover extends React.Component {
       this.props.TPGetQualityConfig({})
       message.success('设置成功', 3)
     }).catch(({ errorMsg }) => {
-      message.error(errorMsg || '操作失败，请重试！');
+      // message.error(errorMsg || '操作失败，请重试！');
     })
 
 
