@@ -27,7 +27,7 @@ import {
   MEDIA_TASK_PATTERN_RUSH,
   MEDIA_TASK_PATTERN_BIDDING,
   PUT_TYPE_BY_NUM,
-  PUT_TYPE_BY_DAY
+  PUT_TYPE_BY_DAY, MEDIA_TYPE_VIDEO, MEDIA_TYPE_IMAGE
 } from '@/taskPool/constants/config';
 
 const { SHOW_PARENT } = TreeSelect;
@@ -717,15 +717,15 @@ class BudgetFor12306 extends React.Component {
         </FormItem>
         <FormItem label="内容类型">
           {getFieldDecorator('mediaType', {
-            initialValue: budget.mediaType || 3,
+            initialValue: budget.mediaType || MEDIA_TYPE_VIDEO,
             rules: [ {
               required: true,
               message: '请选择内容类型'
             } ]
           })(
             <Radio.Group onChange={this.calculation}>
-              <Radio value={3}>图文+链接+视频</Radio>
-              <Radio value={4}>图文+链接</Radio>
+              <Radio value={MEDIA_TYPE_VIDEO}>图文+链接+视频</Radio>
+              <Radio value={MEDIA_TYPE_IMAGE}>图文+链接</Radio>
             </Radio.Group>
           )}
         </FormItem>

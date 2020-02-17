@@ -6,7 +6,6 @@ import { linkTo } from '../util/linkTo'
 // moment.fn.toJSON = function () {return moment(this).format("YYYY-MM-DD HH:mm:ss")}
 
 // 懒加载路由级组件
-const Test = lazyLoadComponent(() => import('./containers/Test'))
 const CreateReport = lazyLoadComponent(() => import('./containers/CreateReport'))
 const SummaryListByOrder = lazyLoadComponent(() => import('./containers/SummaryListByOrder'))
 const SummaryReviewList = lazyLoadComponent(() => import('./containers/SummaryReviewList'))
@@ -22,7 +21,6 @@ class ClosingReport extends Component {
     return (
       <div className='closing-report-container'>
         <Switch>
-          <Route path='/order/closing-report/test' component={Test} />
           <Route path='/order/closing-report/create' component={CreateReport} />
           <Route path='/order/closing-report/list/summary-order' component={SummaryListByOrder} />
           <Route path='/order/closing-report/detail/summary' component={SummaryDetail} />

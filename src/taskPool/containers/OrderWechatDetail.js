@@ -16,14 +16,20 @@ const getNumber = (value) => {
 function OrderWechatDetail(props) {
   const { actions, orderReducers } = props
   const [modalProps, setModalProps] = useState({ title: '' })
-  const { orderMcnDetailInfo = {}, dataCurvelist = [] } = orderReducers
-  const { orderStateDesc } = orderMcnDetailInfo
+  const { orderMcnDetailInfo = {}, dataCurvelist = [], approveReasonAll } = orderReducers
+  const { first = {}, second = {}, cancel = {} } = approveReasonAll
   const [isLoading, setIsLoading] = useState(true)
+  const searchParam = qs.parse(props.location.search.substring(1))
   useEffect(() => {
     getOrderDetail()
+    TPQueryApproveReasonAsync()
   }, [])
+  async function TPQueryApproveReasonAsync() {
+    await actions.TPQueryApproveReason({
+      mcnOrderId: searchParam.id,
+    })
+  }
   async function getOrderDetail() {
-    const searchParam = qs.parse(props.location.search.substring(1))
     const { data } = await actions.TPOrderInfo({ mcnOrderId: searchParam.id })
     actions.TPQueryDataCurve({ mcnOrderId: searchParam.id })
     setIsLoading(false)
@@ -48,16 +54,6 @@ function OrderWechatDetail(props) {
     { label: '申请阅读数', content: <div className='red-text'>{getNumber(orderMcnDetailInfo.expectActionNum)}</div> },
 
   ]
-  function openData() {
-    setModalProps({
-      visible: true,
-      title: '数据曲线',
-      width: 800,
-      content: <div>
-        <DataCurve data={dataCurvelist} />
-      </div>
-    })
-  }
   const orderInfo = [
     { label: '订单状态', content: orderMcnDetailInfo.orderStateDesc, span: 3 },
     { label: '订单冻结金额', content: `${getNumber(orderMcnDetailInfo.maxAmount)}元`, span: 3 },
@@ -69,50 +65,55 @@ function OrderWechatDetail(props) {
     setModalProps({
       visible: true,
       title: '文章快照',
-      content: <div className='article-img'><img src={orderMcnDetailInfo.snapshotUrl} /></div>
+      content: <div className='article-img'><img src={orderMcnDetailInfo.snapshotUrl} width='400px' height='400px' /></div>
     })
   }
   const articleInfo = [
     { label: '文章快照', content: <a onClick={openArticleImg}>查看</a> },
     { label: '文章链接', content: <a href={orderMcnDetailInfo.contentUrl} target='_blank'>查看</a>, span: 2 },
   ]
-  const secondReasonInfo = [
-    { label: '原因', content: orderMcnDetailInfo.maxAmount, span: 3 },
-    { label: '备注', content: orderMcnDetailInfo.maxAmount, span: 3 },
-    { label: '图片', content: <img src={orderMcnDetailInfo.maxAmount} />, span: 3 },
-  ]
-  function secondReason() {
-    setModalProps({
-      visible: true,
+  //订单备注
+  const approveTypeMap = {
+    1: {
+      title: '一检不合格原因',
+      content: [
+        { label: '原因', content: first.approveReason, span: 3 },
+      ]
+    },
+    2: {
       title: '二检不合格原因',
-      content: <Descriptions>
-        {secondReasonInfo.map(item => <Descriptions.Item key={item.label} label={item.label} span={item.span}>{item.content}</Descriptions.Item>)}
-      </Descriptions>
-    })
+      content: [
+        { label: '原因', content: second.approveReason, span: 3 },
+        { label: '备注', content: second.remark, span: 3 },
+        {
+          label: '图片', content: <img src={second.url}
+            width="300px" height='300px'
+          />, span: 3
+        },
+      ]
+    },
+    3: {
+      title: '取消结算原因',
+      content: [
+        { label: '填写理由', content: cancel.approveReason, span: 3 },
+        {
+          label: '附件/截图', content: cancel.url ? <img src={cancel.url}
+            width="300px" height='300px' /> : '-', span: 3
+        },
+      ]
+    }
   }
-  const cancelReasonInfo = [
-    { label: '理由', content: orderMcnDetailInfo.maxAmount, span: 3 },
-    { label: '附件/截图', content: <img src={orderMcnDetailInfo.maxAmount} />, span: 3 },
-  ]
-  function cancelReason() {
+  //订单备注弹窗
+  function showModal(type) {
+    const approveType = approveTypeMap[type]
     setModalProps({
       visible: true,
-      title: '取消结算原因',
+      title: approveType.title,
       content: <Descriptions>
-        {cancelReasonInfo.map(item => <Descriptions.Item key={item.label} label={item.label} span={item.span}>{item.content}</Descriptions.Item>)}
+        {approveType.content.map(item => <Descriptions.Item key={item.label} label={item.label} span={item.span}>{item.content}</Descriptions.Item>)}
       </Descriptions>
     })
   }
-  const remark1 = [
-    { label: ' 一检不合格原因', content: <a onClick={openData} >查看</a>, span: 3 },
-  ]
-  const remark2 = [
-    { label: ' 二检不合格原因', content: <a onClick={secondReason} >查看</a>, span: 3 },
-  ]
-  const remark3 = [
-    { label: '取消结算原因', content: <a onClick={cancelReason} >查看</a>, span: 3 },
-  ]
-  const remark = { '待修改': remark1, '不合格': remark2, '取消结算': remark3 }
   return (
     <Spin spinning={isLoading} >
       <div className='order-wechat-detail'>
@@ -150,15 +151,18 @@ function OrderWechatDetail(props) {
         </TitleBox>
         <TitleBox title='订单备注' >
           <Descriptions>
-            {remark[orderStateDesc] ?
-              remark[orderStateDesc].map(item => <Descriptions.Item
-                key={item.label}
-                label={item.label}
-                span={item.span}>
-                {item.content}
-              </Descriptions.Item>)
-              : null
-            }
+            {first.approveReason ?
+              <Descriptions.Item span={3} label='一检不合格原因'>
+                <a onClick={() => showModal(1)} >查看</a>
+              </Descriptions.Item> : null}
+            {second.approveReason ? <Descriptions.Item span={3} label='二检不合格原因'>
+              <a onClick={() => showModal(2)} >查看</a>
+            </Descriptions.Item>
+              : null}
+            {cancel.approveReason ? <Descriptions.Item span={3} label='取消结算原因'>
+              <a onClick={() => showModal(3)} >查看</a>
+            </Descriptions.Item>
+              : null}
           </Descriptions>
         </TitleBox>
         <Modal
@@ -190,4 +194,3 @@ const ContentRow = ({ list = [] }) => {
     <Col span={22}>{item.content}</Col>
   </Row>)
 }
-
