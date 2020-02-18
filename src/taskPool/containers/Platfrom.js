@@ -37,9 +37,10 @@ const Platform = (props) => {
     setListLoading(false)
   }
   const handleEdit = (record, type) => {
-    setVisible(true)
+
     setRow(record)
     props.actions.TPPlatformDetail({ id: record.id }).then(() => {
+      setVisible(true)
       setType(type);
     })
   }
