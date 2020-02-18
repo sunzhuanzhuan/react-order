@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Table, Button, Modal, Alert } from 'antd'
 import { KpiTable } from './AccountList'
+import AccountName from './AccountName'
 function getDate(str) {
   return str && str.substring(0, 16)
 }
@@ -22,6 +23,10 @@ function AccountReceiveList(props) {
       title: '账号名称',
       dataIndex: 'snsName',
       key: 'snsName',
+      render: (text, record) => {
+        const { isVerified, platformId = '9' } = record
+        return <AccountName platformId={platformId} isVerified={isVerified} snsName={text} />
+      }
     },
     {
       title: '主账号名称',
