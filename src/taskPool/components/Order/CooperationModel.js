@@ -112,7 +112,10 @@ function Reject(props) {
     <Form layout="horizontal">
       <Form.Item label="驳回原因" labelCol={{ span: 4 }} wrapperCol={{ span: 20 }}>
         {getFieldDecorator('refusalReason', {
-          rules: [{ required: true, message: '请输入驳回原因!' }]
+          rules: [
+            { required: true, message: '请输入驳回原因!' },
+            { max: 50, message: '驳回原因不超过50个汉字!' }
+          ]
         })(<TextArea placeholder="请输入" rows={4} />)}
       </Form.Item>
       <div className="button-footer">

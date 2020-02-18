@@ -15,11 +15,12 @@ import {
   OK_ESTIMATE,
   getValueByFormat
 } from '../../../constants/accountConfig';
-import moment from 'moment';
+import AccountName from '../AccountName';
 const { confirm } = Modal;
 function getDate(str) {
   return str && str.substring(0, 16);
 }
+
 function AccountList(props) {
   const [selectedRow, setSelectedRow] = useState([]);
   const {
@@ -48,16 +49,8 @@ function AccountList(props) {
       dataIndex: 'snsName',
       key: 'snsName',
       render: (text, record) => {
-        return (
-          <span className="tab-icon-style">
-            <WBYPlatformIcon
-              weibo_type={record.platformId || '9'}
-              icon_type={'default'}
-              widthSize={15}
-            />{' '}
-            {text}
-          </span>
-        );
+        const { isVerified, platformId = '9' } = record
+        return <AccountName platformId={platformId} isVerified={isVerified} snsName={text} />
       }
     },
     {
@@ -77,8 +70,8 @@ function AccountList(props) {
             <div>{text == 2 || text == 3 ? getDate(record.auditTime) : null}</div>
           </div>
         ) : (
-          '-'
-        )
+            '-'
+          )
     },
     {
       title: '评估状态',
@@ -97,8 +90,8 @@ function AccountList(props) {
             ) : null}
           </div>
         ) : (
-          '-'
-        )
+            '-'
+          )
     },
     {
       title: '粉丝数',
@@ -248,7 +241,7 @@ function AccountList(props) {
         batchUpdateAccountStateAsync({ operationFlag: 1, accountIds: selectedRow });
         setSelectedRow([]);
       },
-      onCancel() {}
+      onCancel() { }
     });
   }
   function batchNOPast() {
@@ -296,7 +289,7 @@ function AccountList(props) {
       onOk() {
         updateAccountStateMsgAsync({ accountId: accountId, shelfState: 1 });
       },
-      onCancel() {}
+      onCancel() { }
     });
   }
   const isShowCheacked = selectedRow.length == 0;
@@ -412,8 +405,8 @@ export const StateInfo = ({ value, okText = '正常', errorText = '异常', erro
       )}
     </div>
   ) : (
-    ''
-  );
+      ''
+    );
 };
 //原因Form
 function Reason(props) {
