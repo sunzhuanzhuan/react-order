@@ -14,16 +14,44 @@ import Cooperation from '../components/Setting/Cooperation';
 import Notice from '../components/Setting/Notice';
 
 const { SubMenu } = Menu;
+
+
 class Settings extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      current: 'price'
+      // current: 'price'
     }
+    //是评估师
+    this.isAssessor = props.authorizationsReducers.authVisibleList['appraiserTab']
+    //是合作平台执行
+    this.isPlatformExecution =
+      props.authorizationsReducers.authVisibleList['cooperation.platform.navigation.tab']
+    //是评估师长
+    this.isAssessorNavigation =
+      props.authorizationsReducers.authVisibleList['appraiser.navigation']
+    //是合作平台执行长
+    this.isLeader =
+      props.authorizationsReducers.authVisibleList['assessor.leader.navigation']
   }
+
   componentDidMount = () => {
-    const { current } = this.state
-    this.handleDealTab(current)
+    if (this.isAssessor) {
+      this.handleDealTab('price')
+      this.setState({
+        current: 'price'
+      })
+    } else if (this.isPlatformExecution) {
+      this.handleDealTab('cooperation')
+      this.setState({
+        current: 'cooperation'
+      })
+    } else {
+      this.handleDealTab('price')
+      this.setState({
+        current: 'price'
+      })
+    }
 
   }
 
@@ -68,16 +96,16 @@ class Settings extends React.Component {
     return (
       <div>
         <Menu mode="horizontal" onClick={this.handleClick} selectedKeys={current}>
-          <Menu.Item key="price">
+          {this.isAssessor && <Menu.Item key="price">
             建议博主报价
-          </Menu.Item>
-          <Menu.Item key="discover">
+          </Menu.Item>}
+          {this.isAssessor && <Menu.Item key="discover">
             质检配置
-          </Menu.Item>
-          <Menu.Item key="select">
+          </Menu.Item>}
+          {this.isAssessorNavigation && <Menu.Item key="select">
             抽佣率配置
-          </Menu.Item>
-          <SubMenu
+          </Menu.Item>}
+          {this.isPlatformExecution && <SubMenu
             title={
               <span className="submenu-title-wrapper">
                 任务配置
@@ -85,13 +113,13 @@ class Settings extends React.Component {
             }
           >
             <Menu.ItemGroup >
-              <Menu.Item key="weichat">微信公众号</Menu.Item>
-              <Menu.Item key="cooperation">合作平台</Menu.Item>
+              {this.isLeader && <Menu.Item key="weichat">微信公众号</Menu.Item>}
+              {this.isPlatformExecution && <Menu.Item key="cooperation">合作平台</Menu.Item>}
             </Menu.ItemGroup>
-          </SubMenu>
-          <Menu.Item key="notice">
+          </SubMenu>}
+          {this.isAssessor && <Menu.Item key="notice">
             通知配置
-          </Menu.Item>
+          </Menu.Item>}
         </Menu>
         {current == 'price' ? <Price readUnitPriceConfig={readUnitPriceConfig}
           TPReadUnitPriceConfig={this.props.actions.TPReadUnitPriceConfig}
@@ -143,6 +171,7 @@ class Settings extends React.Component {
 const mapStateToProps = (state) => ({
   settingReducers: state.taskPoolReducers,
   login: state.loginReducer,
+  authorizationsReducers: state.authorizationsReducers
 })
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators({
