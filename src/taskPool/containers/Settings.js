@@ -27,12 +27,9 @@ class Settings extends React.Component {
     //是合作平台执行
     this.isPlatformExecution =
       props.authorizationsReducers.authVisibleList['cooperation.platform.navigation.tab']
-    //是评估师长
-    this.isAssessorNavigation =
-      props.authorizationsReducers.authVisibleList['appraiser.navigation']
     //是合作平台执行长
     this.isLeader =
-      props.authorizationsReducers.authVisibleList['assessor.leader.navigation']
+      props.authorizationsReducers.authVisibleList['admin.check.user']
   }
 
   componentDidMount = () => {
@@ -102,7 +99,7 @@ class Settings extends React.Component {
           {this.isAssessor && <Menu.Item key="discover">
             质检配置
           </Menu.Item>}
-          {this.isAssessorNavigation && <Menu.Item key="select">
+          {this.isLeader && <Menu.Item key="select">
             抽佣率配置
           </Menu.Item>}
           {this.isPlatformExecution && <SubMenu
