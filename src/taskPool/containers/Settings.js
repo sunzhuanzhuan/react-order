@@ -27,7 +27,7 @@ class Settings extends React.Component {
     //是合作平台执行
     this.isPlatformExecution =
       props.authorizationsReducers.authVisibleList['cooperation.platform.navigation.tab']
-    //是合作平台执行长
+    //超级管理员
     this.isLeader =
       props.authorizationsReducers.authVisibleList['admin.check.user']
   }
