@@ -21,7 +21,9 @@ const Orders = props => {
   const isPlatformExecution =
     authorizationsReducers.authVisibleList['cooperation.platform.navigation.tab'];
   useEffect(() => {
-    if (isAssessor) {
+    if (isAssessor && isPlatformExecution) {
+      callback(orderType);
+    } else if (isAssessor) {
       callback('1');
     } else if (isPlatformExecution) {
       callback('2');
