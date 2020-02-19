@@ -64,7 +64,6 @@ class AddForm extends React.Component {
             }
           }
           this.props.getList(search)
-          this.props.setType('add')
         })
 
       }

@@ -178,6 +178,7 @@ const Platform = (props) => {
     <h2>合作平台管理</h2>
     <Button type="primary" onClick={() => {
       setVisible(true)
+      setType('add');
     }}>添加合作平台</Button>
     {authToken && <Modal
       title={`${lei[type]}合作平台`}
