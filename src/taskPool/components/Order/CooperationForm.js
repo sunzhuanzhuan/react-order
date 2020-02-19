@@ -31,6 +31,7 @@ function CooperationForm(props) {
         }
         if (values.salesman) {
           values.form.salesmanId = values.salesman.key;
+          values.form.mediaRealName = values.salesman.label;
           delete values.salesman;
         }
         props.searchAction(values);
