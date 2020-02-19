@@ -4,16 +4,18 @@ import TitleBox from '../../base/TitleBox'
 import './DetailsShow.less'
 import { PopoverIcon } from '../../base/MessageIcon'
 import { auditStateMap, getValueByFormat } from '../../constants/accountConfig'
-import numeral from 'numeral'
+import AccountName from './AccountName'
 import { KpiTable } from './AccountList'
 
 function DetailsShow(props) {
   const { accountDetail = {}, accountId } = props
   const { base = {}, acceptCrowd = {}, auditState = 1, remark, kpiTarget = {}, appraiserImgUrl = [] } = accountDetail
-  const { classification = [], avatarUrl, } = base
+  const { classification = [], avatarUrl, platformId, snsName, isVerified } = base
   const { sex = {}, age = [], area = [] } = acceptCrowd
   const baseConfig = [
-    { label: "账号名称", value: base.snsName },
+    {
+      label: "账号名称", value: <AccountName platformId={platformId} snsName={snsName} isVerified={isVerified} />
+    },
     { label: "账号ID", value: base.snsId },
     { label: "主页链接", value: base.accountHomepageUrl },
     {
@@ -87,8 +89,13 @@ function DetailsShow(props) {
             { label: '受众年龄Top3：', value: <AudienceLine list={age} /> },
             {
               label: '数据截图：', value: <div>
-                {appraiserImgUrl.map(one => <img src={one.fileUrl} key={one.fileUrl} width='200' height='200' onClick={() => window.open(one.fileUrl)} className='follower-count-img' />)}
-
+                {appraiserImgUrl.length > 0 ? appraiserImgUrl.map(one => <img src={one.fileUrl}
+                  key={one.fileUrl}
+                  width='200'
+                  height='200'
+                  onClick={() => window.open(one.fileUrl)} className='follower-count-img'
+                />)
+                  : '-'}
               </div>
             },
             { label: 'KPI/KPI上限', value: <KpiTable data={kpiTarget} /> }
@@ -109,11 +116,11 @@ const LineList = ({ list = [] }) => {
 }
 
 const AudienceLine = ({ list = [] }) => {
-  return <div className='audience-line'>
+  return list.length > 0 ? <div className='audience-line'>
     {list.map(item => <Tag key={item.description} color="purple"> <span className='type'>  {item.description} [{getValueByFormat(item.value)}%]</span>
     </Tag>)}
-  </div>
+  </div> : '-'
 }
 const AudienceArea = ({ list = [] }) => {
-  return list.map(one => <Tag color="blue" key={one.description}>{one.description}</Tag>)
+  return list.length > 0 ? list.map(one => <Tag color="blue" key={one.description}>{one.description}</Tag>) : '-'
 }
