@@ -11,6 +11,7 @@ import moment, { duration } from 'moment';
 import { getCountDownTimeText } from '@/taskPool/constants/utils';
 import QuestionTip from '@/base/QuestionTip';
 import { MEDIA_TASK_PATTERN_BIDDING, MEDIA_TASK_PATTERN_RUSH } from '@/taskPool/constants/config';
+import { uploadRequired } from '@/util/uploadRequired';
 
 const { RangePicker } = DatePicker
 const FormItem = Form.Item
@@ -267,8 +268,9 @@ class BaseForMedia extends React.Component {
             initialValue: base.showPictureUrl,
             valuePropName: 'fileList',
             getValueFromEvent: e => e && e.fileList,
+            validateTrigger: 'onSubmit',
             rules: [
-              { message: '请上传任务封面', required: true, type: "array" }
+              { message: '请上传任务封面', ...uploadRequired }
             ]
           })(
             <OssUpload
