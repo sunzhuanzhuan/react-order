@@ -203,9 +203,9 @@ class AddForm extends React.Component {
           )}
           </Form.Item>
         </Form.Item>
-        <Form.Item label="合作区域" {...formItemLayout}>
+        <Form.Item label="合作地域" {...formItemLayout}>
           {getFieldDecorator('cooperationAreaList', {
-            rules: [{ required: true, message: '请输入合作区域' }],
+            rules: [{ required: true, message: '请输入合作地域' }],
             initialValue: this.props.type == 'add' ? null : platformDetail.cooperationAreaList,
             // valuePropName: 'checkedKeys',
           })(
