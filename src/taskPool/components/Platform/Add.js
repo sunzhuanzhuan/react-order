@@ -140,7 +140,7 @@ class AddForm extends React.Component {
             rules: [{ required: true, message: '请输入联系人电话' }, {
 
               validator: (rule, value, callback) => {
-                if (!(/^1[3456789]\d{9}$/.test(value))) {
+                if (!(/^\d{1,11}$/.test(value))) {
                   callback('最多输入11个数字')
                 } else {
                   callback()
