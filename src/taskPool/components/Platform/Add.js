@@ -14,20 +14,16 @@ class AddForm extends React.Component {
     }
 
   }
-  UNSAFE_componentWillReceiveProps = (props) => {
-    const { platformDetail } = props.platformReducers;
+  componentWillMount = () => {
+    const { platformDetail } = this.props.platformReducers;
     if (Object.values(platformDetail).length > 0) {
       platformDetail.cooperationAreaList.map((item) => {
-
         item.label = item.areaName
         item.value = item.areaCode
         item.key = item.areaCode
       })
-
     }
-
   }
-
   onChange = (value) => {
     arr = value
   }
@@ -36,14 +32,20 @@ class AddForm extends React.Component {
     this.props.form.validateFields((err, values) => {
       if (!err) {
         console.log('values---', values)
+        console.log('values---arr', arr)
         const { platformDetail = {} } = this.props.platformReducers;
         values.cooperationStartTime = moment(values.cooperationStartTime).format('YYYY-MM-DD');
         values.cooperationEndTime = moment(values.cooperationEndTime).format('YYYY-MM-DD')
+
         let sel = []
-        arr.map((item) => {
-          sel.push({ areaCode: item.value, areaName: item.label.props.children })
-        })
-        values.cooperationAreaList = sel;
+        if (arr.length == 0) {
+          values.cooperationAreaList = platformDetail.cooperationAreaList;
+        } else {
+          arr.map((item) => {
+            sel.push({ areaCode: item.value, areaName: typeof (item.label) != 'string' ? item.label.props.children : item.label })
+          })
+          values.cooperationAreaList = sel;
+        }
         let newValue = JSON.parse(JSON.stringify(values))
         values.contractEnclosureUrl = newValue.contractEnclosureUrl[0].url
         values.contractEnclosureName = newValue.contractEnclosureUrl[0].name || platformDetail.contractEnclosureName
@@ -86,7 +88,7 @@ class AddForm extends React.Component {
     };
 
     const loop = data =>
-      data.map(item => {
+      data.map((item, index) => {
         const title = !item.areaName ? (
           <span>
             {item.largeName}
@@ -94,7 +96,7 @@ class AddForm extends React.Component {
         ) : (
             <span>{item.areaName}</span>
           );
-        const id = !item.id ? item.largeArea : item.id
+        const id = !item.id ? item.largeArea : item.id;
         if (item.areaDataResVOS) {
           return (
             <TreeNode key={id} title={title} value={id}>
@@ -116,7 +118,17 @@ class AddForm extends React.Component {
         </Form.Item>
         <Form.Item label="联系人" {...formItemLayout}>
           {getFieldDecorator('contacts', {
-            rules: [{ required: true, message: '请输入联系人' }, { max: 80, message: '最多80个字符' }],
+            validateFirst: true,
+            rules: [{ required: true, message: '请输入联系人' }, {
+
+              validator: (rule, value, callback) => {
+                if (!value.match(/^[\u4e00-\u9fa5]{1,80}$/)) {
+                  callback('最多输入80个汉字')
+                } else {
+                  callback()
+                }
+              }
+            }],
             initialValue: this.props.type == 'add' ? null : platformDetail.contacts
           })(
             <Input placeholder="请输入" style={{ width: '300px' }} disabled={this.props.type == 'query'} />,
@@ -124,13 +136,33 @@ class AddForm extends React.Component {
         </Form.Item>
         <Form.Item label="联系人电话" {...formItemLayout}>
           {getFieldDecorator('mobile', {
-            rules: [{ required: true, message: '请输入联系人电话' }, { max: 13, message: '最多13个字符' }],
-            initialValue: this.props.type == 'add' ? null : platformDetail.mobile
+            validateFirst: true,
+            rules: [{ required: true, message: '请输入联系人电话' }, {
+
+              validator: (rule, value, callback) => {
+                if (!(/^1[3456789]\d{9}$/.test(value))) {
+                  callback('最多输入11个数字')
+                } else {
+                  callback()
+                }
+              }
+            }], initialValue: this.props.type == 'add' ? null : platformDetail.mobile
           })(<Input placeholder="请输入" style={{ width: '300px' }} disabled={this.props.type == 'query'} />, )}
         </Form.Item>
         <Form.Item label="联系人邮箱" {...formItemLayout}>
           {getFieldDecorator('mailbox', {
-            rules: [{ required: true, message: '请输入联系人邮箱' }, { max: 80, message: '最多80个字符' }],
+            validateFirst: true,
+            rules: [{ required: true, message: '请输入联系人邮箱' }, {
+
+              validator: (rule, value, callback) => {
+                var reg = new RegExp("^[a-z0-9A-Z]+[- | a-z0-9A-Z . _]+@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-z]{2,}$");
+                if (!reg.test(value)) {
+                  callback('请输入正确的邮箱')
+                } else {
+                  callback()
+                }
+              }
+            }],
             initialValue: this.props.type == 'add' ? null : platformDetail.mailbox
           })(
             <Input placeholder="请输入" style={{ width: '300px' }} disabled={this.props.type == 'query'} />,
@@ -138,7 +170,17 @@ class AddForm extends React.Component {
         </Form.Item>
         <Form.Item label="媒介负责人" {...formItemLayout}>
           {getFieldDecorator('mediumLeader', {
-            rules: [{ required: true, message: '请输入媒介负责人' }, { max: 80, message: '最多80个字符' }],
+            validateFirst: true,
+            rules: [{ required: true, message: '请输入媒介负责人' }, {
+
+              validator: (rule, value, callback) => {
+                if (!value.match(/^[\u4e00-\u9fa5]{1,80}$/)) {
+                  callback('最多输入80个汉字')
+                } else {
+                  callback()
+                }
+              }
+            }],
             initialValue: this.props.type == 'add' ? null : platformDetail.mediumLeader
           })(
             <Input placeholder="请输入" style={{ width: '300px' }} disabled={this.props.type == 'query'} />,
@@ -161,15 +203,16 @@ class AddForm extends React.Component {
           )}
           </Form.Item>
         </Form.Item>
-        <Form.Item label="合作区域" {...formItemLayout}>
+        <Form.Item label="合作地域" {...formItemLayout}>
           {getFieldDecorator('cooperationAreaList', {
-            rules: [{ required: true, message: '请输入合作区域' }],
+            rules: [{ required: true, message: '请输入合作地域' }],
             initialValue: this.props.type == 'add' ? null : platformDetail.cooperationAreaList,
             // valuePropName: 'checkedKeys',
           })(
             <TreeSelect
               checkable
               multiple
+              disabled={this.props.type == 'query'}
               labelInValue
               treeCheckable
               selectable={false}

@@ -18,6 +18,7 @@ import cookie from "js-cookie";
 import 'braft-editor/dist/index.css'
 import UploadMaterial from "@/taskPool/components/Task/CreateForms/UploadMaterial";
 import { MEDIA_TYPE_VIDEO } from '@/taskPool/constants/config';
+import { uploadRequired } from '@/util/uploadRequired';
 
 
 const FormItem = Form.Item
@@ -30,16 +31,6 @@ const controls = [
   'list-ul', 'list-ol', 'blockquote', 'code', 'link', 'media'
 ]
 
-const uploadRequired = {
-  required: true,
-  type: "array",
-  validator: (rule, value, callback) => {
-    if (value && value.length > 0 && value.every(item => item.url)) {
-      callback()
-    }
-    callback(rule.message)
-  }
-}
 
 /**
  * 微信平台
@@ -164,8 +155,9 @@ class ContentForWeixin extends React.Component {
             initialValue: content.coverImage,
             valuePropName: 'fileList',
             getValueFromEvent: e => e && e.fileList,
+            validateTrigger: 'onSubmit',
             rules: [
-              { message: '请上传文章封面', required: true, type: "array" }
+              { message: '请上传文章封面', ...uploadRequired }
             ]
           })(
             <OssUpload
@@ -298,7 +290,8 @@ class ContentFor12306 extends React.Component {
             initialValue: content.image || [],
             valuePropName: 'fileList',
             getValueFromEvent: e => e && e.fileList,
-            rules: [ { required: true, message: '请上传图片', type: 'array' } ]
+            validateTrigger: 'onSubmit',
+            rules: [ { message: '请上传图片', ...uploadRequired } ]
           })(
             <OssUpload
               authToken={this.props.authToken}
@@ -318,7 +311,8 @@ class ContentFor12306 extends React.Component {
             initialValue: content.video || [],
             valuePropName: 'fileList',
             getValueFromEvent: e => e && e.fileList.slice(-1),
-            rules: [ { required: true, message: '请上传视频', type: 'array' } ]
+            validateTrigger: 'onSubmit',
+            rules: [ { message: '请上传视频', ...uploadRequired } ]
           })(
             <OssUpload
               authToken={this.props.authToken}
@@ -350,7 +344,8 @@ class ContentFor12306 extends React.Component {
                   initialValue: value.files || [],
                   valuePropName: 'fileList',
                   getValueFromEvent: e => e && e.fileList.slice(-1),
-                  rules: [ { required: true, message: '请上传资质', type: 'array' } ]
+                  validateTrigger: 'onSubmit',
+                  rules: [ { message: '请上传资质', ...uploadRequired} ]
                 })(
                   <OssUpload
                     authToken={this.props.authToken}

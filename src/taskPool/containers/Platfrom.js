@@ -37,9 +37,9 @@ const Platform = (props) => {
     setListLoading(false)
   }
   const handleEdit = (record, type) => {
-    setVisible(true)
     setRow(record)
     props.actions.TPPlatformDetail({ id: record.id }).then(() => {
+      setVisible(true)
       setType(type);
     })
   }
@@ -178,13 +178,15 @@ const Platform = (props) => {
     <h2>合作平台管理</h2>
     <Button type="primary" onClick={() => {
       setVisible(true)
-      setType('add')
+      setType('add');
     }}>添加合作平台</Button>
     {authToken && <Modal
       title={`${lei[type]}合作平台`}
       visible={visible}
       footer={null}
       destroyOnClose={true}
+      forceRender={true}
+      maskClosable={false}
       onCancel={() => setVisible(false)}
     >
       <AddForm
