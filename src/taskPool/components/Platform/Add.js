@@ -212,6 +212,7 @@ class AddForm extends React.Component {
             <TreeSelect
               checkable
               multiple
+              disabled={this.props.type == 'query'}
               labelInValue
               treeCheckable
               selectable={false}
