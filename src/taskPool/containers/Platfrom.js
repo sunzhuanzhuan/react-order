@@ -16,6 +16,8 @@ const Platform = (props) => {
   const [row, setRow] = useState([])
   const [type, setType] = useState('add')
   const [authToken, setAuthToken] = useState('null')
+  const [isDestroyOnClose, setIsDestroyOnClose] = useState(true)
+
 
   useEffect(() => {
     let search = {
@@ -37,7 +39,7 @@ const Platform = (props) => {
     setListLoading(false)
   }
   const handleEdit = (record, type) => {
-
+    setIsDestroyOnClose(false)
     setRow(record)
     props.actions.TPPlatformDetail({ id: record.id }).then(() => {
       setVisible(true)
@@ -179,14 +181,20 @@ const Platform = (props) => {
     <h2>合作平台管理</h2>
     <Button type="primary" onClick={() => {
       setVisible(true)
+      setIsDestroyOnClose(true)
       setType('add')
     }}>添加合作平台</Button>
     {authToken && <Modal
       title={`${lei[type]}合作平台`}
       visible={visible}
       footer={null}
-      destroyOnClose={true}
-      onCancel={() => setVisible(false)}
+      destroyOnClose={isDestroyOnClose}
+      forceRender={true}
+      maskClosable={false}
+      onCancel={() => {
+        setVisible(false)
+        setIsDestroyOnClose(true)
+      }}
     >
       <AddForm
         type={type}

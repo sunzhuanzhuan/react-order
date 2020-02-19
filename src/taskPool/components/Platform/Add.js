@@ -122,6 +122,7 @@ class AddForm extends React.Component {
         </Form.Item>
         <Form.Item label="联系人" {...formItemLayout}>
           {getFieldDecorator('contacts', {
+            validateFirst: true,
             rules: [{ required: true, message: '请输入联系人' }, {
 
               validator: (rule, value, callback) => {
@@ -139,6 +140,7 @@ class AddForm extends React.Component {
         </Form.Item>
         <Form.Item label="联系人电话" {...formItemLayout}>
           {getFieldDecorator('mobile', {
+            validateFirst: true,
             rules: [{ required: true, message: '请输入联系人电话' }, {
 
               validator: (rule, value, callback) => {
@@ -153,6 +155,7 @@ class AddForm extends React.Component {
         </Form.Item>
         <Form.Item label="联系人邮箱" {...formItemLayout}>
           {getFieldDecorator('mailbox', {
+            validateFirst: true,
             rules: [{ required: true, message: '请输入联系人邮箱' }, {
 
               validator: (rule, value, callback) => {
@@ -171,6 +174,7 @@ class AddForm extends React.Component {
         </Form.Item>
         <Form.Item label="媒介负责人" {...formItemLayout}>
           {getFieldDecorator('mediumLeader', {
+            validateFirst: true,
             rules: [{ required: true, message: '请输入媒介负责人' }, {
 
               validator: (rule, value, callback) => {
