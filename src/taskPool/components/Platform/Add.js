@@ -14,20 +14,16 @@ class AddForm extends React.Component {
     }
 
   }
-  UNSAFE_componentWillReceiveProps = (props) => {
-    const { platformDetail } = props.platformReducers;
+  componentWillMount = () => {
+    const { platformDetail } = this.props.platformReducers;
     if (Object.values(platformDetail).length > 0) {
       platformDetail.cooperationAreaList.map((item) => {
-
         item.label = item.areaName
         item.value = item.areaCode
         item.key = item.areaCode
       })
-
     }
-
   }
-
   onChange = (value) => {
     arr = value
   }
@@ -68,6 +64,7 @@ class AddForm extends React.Component {
             }
           }
           this.props.getList(search)
+          this.props.setType('add')
         })
 
       }
@@ -92,7 +89,7 @@ class AddForm extends React.Component {
     };
 
     const loop = data =>
-      data.map(item => {
+      data.map((item, index) => {
         const title = !item.areaName ? (
           <span>
             {item.largeName}
@@ -100,7 +97,7 @@ class AddForm extends React.Component {
         ) : (
             <span>{item.areaName}</span>
           );
-        const id = !item.id ? item.largeArea : item.id
+        const id = !item.id ? item.largeArea : item.id;
         if (item.areaDataResVOS) {
           return (
             <TreeNode key={id} title={title} value={id}>
