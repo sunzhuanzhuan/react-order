@@ -91,7 +91,7 @@ function CooperationDetail() {
       <TitleBox title='合作平台信息' >
         <Row style={{ color: 'rgba(0, 0, 0, 0.85)', fontSize: 13 }}>
           <Col span={6}> 合作平台ID：{orderDetail.platformId}</Col>
-          <Col span={6}>合作平台名称：{}</Col>
+          <Col span={6}>合作平台名称：{orderDetail.platformName || '12306'}</Col>
         </Row>
       </TitleBox>
       <TitleBox title='订单文件' >
