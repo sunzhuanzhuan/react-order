@@ -21,6 +21,9 @@ class Settings extends React.Component {
     super(props);
     this.state = {
       // current: 'price'
+      assessor: false,
+      platformExecution: false,
+      leader: false
     }
     //是评估师
     this.isAssessor = props.authorizationsReducers.authVisibleList['appraiserTab']
@@ -33,20 +36,25 @@ class Settings extends React.Component {
   }
 
   componentDidMount = () => {
-    if (this.isAssessor) {
+    if (this.isLeader) {
       this.handleDealTab('price')
       this.setState({
-        current: 'price'
+        current: 'price',
+        leader: true,
+        platformExecution: true,
+        assessor: true
       })
     } else if (this.isPlatformExecution) {
       this.handleDealTab('cooperation')
       this.setState({
-        current: 'cooperation'
+        current: 'cooperation',
+        platformExecution: true
       })
     } else {
       this.handleDealTab('price')
       this.setState({
-        current: 'price'
+        current: 'price',
+        assessor: true
       })
     }
 
@@ -89,20 +97,20 @@ class Settings extends React.Component {
   render() {
     let { readUnitPriceConfig, qualityConfig, addRetainTime, commissionConfig, taskCheck, notificationList,
       dimensionConfig, taskLaunchConfigLiang, taskLaunchConfigTian, taskLaunchConfigHui, userInfo, tpUserInfo } = this.props.settingReducers
-    const { current } = this.state
+    const { current, leader, platformExecution, assessor } = this.state
     return (
       <div>
         <Menu mode="horizontal" onClick={this.handleClick} selectedKeys={current}>
-          {this.isAssessor && <Menu.Item key="price">
+          {assessor && <Menu.Item key="price">
             建议博主报价
           </Menu.Item>}
-          {this.isAssessor && <Menu.Item key="discover">
+          {assessor && <Menu.Item key="discover">
             质检配置
           </Menu.Item>}
-          {this.isLeader && <Menu.Item key="select">
+          {leader && <Menu.Item key="select">
             抽佣率配置
           </Menu.Item>}
-          {this.isPlatformExecution && <SubMenu
+          {platformExecution && <SubMenu
             title={
               <span className="submenu-title-wrapper">
                 任务配置
@@ -110,11 +118,11 @@ class Settings extends React.Component {
             }
           >
             <Menu.ItemGroup >
-              {this.isLeader && <Menu.Item key="weichat">微信公众号</Menu.Item>}
-              {this.isPlatformExecution && <Menu.Item key="cooperation">合作平台</Menu.Item>}
+              {leader && <Menu.Item key="weichat">微信公众号</Menu.Item>}
+              {platformExecution && <Menu.Item key="cooperation">合作平台</Menu.Item>}
             </Menu.ItemGroup>
           </SubMenu>}
-          {this.isAssessor && <Menu.Item key="notice">
+          {assessor && <Menu.Item key="notice">
             通知配置
           </Menu.Item>}
         </Menu>
