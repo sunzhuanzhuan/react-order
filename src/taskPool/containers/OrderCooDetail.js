@@ -40,7 +40,7 @@ function CooperationDetail() {
     { name: '结案报告：', content: <a href={orderDetail.finalReportUrl}>{orderDetail.finalReportName}</a> },
   ]
   const baseInfo = [
-    { label: '订单ID', content: orderDetail.orderNumber },
+    { label: '订单ID', content: orderDetail.adOrderNumber },
     { label: '任务ID', content: orderDetail.adOrderNumber },
     { label: '投放模式', content: putTypeMap[orderDetail.putType] },
     { label: '所属公司', content: orderDetail.companyName },
@@ -91,7 +91,7 @@ function CooperationDetail() {
       <TitleBox title='合作平台信息' >
         <Row style={{ color: 'rgba(0, 0, 0, 0.85)', fontSize: 13 }}>
           <Col span={6}> 合作平台ID：{orderDetail.platformId}</Col>
-          <Col span={6}>合作平台名称：{}</Col>
+          <Col span={6}>合作平台名称：{orderDetail.platformName || '12306'}</Col>
         </Row>
       </TitleBox>
       <TitleBox title='订单文件' >
