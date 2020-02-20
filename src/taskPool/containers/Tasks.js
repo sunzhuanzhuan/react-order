@@ -27,6 +27,7 @@ function getColumns(active, operation) {
       columns = [
         {
           title: '任务ID',
+          width: 110,
           dataIndex: 'adOrderNumber',
         },
         {
@@ -61,6 +62,8 @@ function getColumns(active, operation) {
         {
           title: '创建人',
           dataIndex: 'createdName',
+          width: 100,
+          align: "center",
           render: (name, record) => {
             return <div>
               {name}
@@ -70,6 +73,7 @@ function getColumns(active, operation) {
         {
           title: '客户名称',
           dataIndex: 'companyName',
+          align: "center",
           render: (companyName, record) => {
             return <div>
               {companyName}
@@ -79,6 +83,8 @@ function getColumns(active, operation) {
         {
           title: '任务类型',
           dataIndex: 'taskPatternDesc',
+          width: 80,
+          align: "center",
           render: (text, record) => {
             return <div>
               {text}
@@ -88,6 +94,8 @@ function getColumns(active, operation) {
         {
           title: '任务状态',
           dataIndex: 'orderState',
+          width: 100,
+          align: "center",
           render: (state, record) => {
             return <TaskStatus status={state} />
           }
@@ -96,6 +104,7 @@ function getColumns(active, operation) {
           title: '领取数/申请数',
           dataIndex: 'mcnCount',
           align: "right",
+          width: 120,
           render: (mcnCount, record) => {
             return <>
               {mcnCount || '-'} / {record.mcnApplyCount || '-'}
@@ -150,12 +159,14 @@ function getColumns(active, operation) {
           }
         }
       ]
+      columns.scrollX = 1600
       break;
     case "1000":
       columns = [
         {
           title: '任务ID',
           dataIndex: 'adOrderNumber',
+          width: 110,
         },
         {
           title: '任务名称',
@@ -189,6 +200,8 @@ function getColumns(active, operation) {
         {
           title: '创建人',
           dataIndex: 'createdName',
+          width: 100,
+          align: "center",
           render: (name, record) => {
             return <div>
               {name}
@@ -198,6 +211,7 @@ function getColumns(active, operation) {
         {
           title: '客户名称',
           dataIndex: 'companyName',
+          align: "center",
           render: (companyName, record) => {
             return <div>
               {companyName}
@@ -206,6 +220,8 @@ function getColumns(active, operation) {
         },
         {
           title: '任务状态',
+          width: 80,
+          align: "center",
           dataIndex: 'orderState',
           render: (state, record) => {
             return <TaskStatus status={state} />
@@ -223,6 +239,8 @@ function getColumns(active, operation) {
         },
         {
           title: '内容类型',
+          width: 100,
+          align: "center",
           dataIndex: 'mediaTypeDesc',
           render: (desc, record) => {
             return desc
@@ -231,7 +249,8 @@ function getColumns(active, operation) {
         {
           title: '任务模式',
           dataIndex: 'putType',
-          align: "right",
+          width: 100,
+          align: "center",
           render: (type, record) => {
             return <>
               {type === 1 && "按量投放"}
@@ -244,6 +263,7 @@ function getColumns(active, operation) {
           dataIndex: 'id',
           align: 'center',
           fixed: 'right',
+          width: 100,
           render: (id, record) => {
             return <div>
               <NavLink to={'/order/task/tasks-details/' + id}>详情</NavLink>
@@ -257,6 +277,7 @@ function getColumns(active, operation) {
           }
         }
       ]
+      columns.scrollX = 1400
       break
   }
   return columns
@@ -364,14 +385,14 @@ const Tasks = (props) => {
       <Title level={4}>任务管理</Title>
       <Filters search={getList} />
       <Alert style={{ margin: '10px 0' }} message={`共有 ${total} 条记录`} />
-      <Scolltable scrollClassName='.ant-table-body' widthScroll={2100}>
+      <Scolltable key={columns.scrollX + 2000} scrollClassName='.ant-table-body' widthScroll={columns.scrollX + 2000}>
         <Table
           locale={{ emptyText: "还没有任务可以展示" }}
           loading={searching}
           dataSource={dataSource}
           pagination={pagination}
           columns={columns}
-          scroll={{ x: 1800 }}
+          scroll={{ x: columns.scrollX }}
         />
       </Scolltable>
     </div>
