@@ -27,9 +27,9 @@ class Settings extends React.Component {
     //是合作平台执行
     this.isPlatformExecution =
       props.authorizationsReducers.authVisibleList['cooperation.platform.navigation.tab']
-    //超级管理员
+    //类似于超级管理员
     this.isLeader =
-      props.authorizationsReducers.authVisibleList['admin.check.user']
+      props.authorizationsReducers.authVisibleList['sales.operation.product.admin']
   }
 
   componentDidMount = () => {

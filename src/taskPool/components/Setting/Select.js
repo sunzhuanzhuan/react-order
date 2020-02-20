@@ -98,6 +98,13 @@ class Select extends React.Component {
       bz: props.commissionConfig.accountProportion
     })
   }
+  componentWillMount = () => {
+    this.setState({
+      total: this.props.commissionConfig.totalProportion,
+      ad: this.props.commissionConfig.adProportion,
+      bz: this.props.commissionConfig.accountProportion
+    })
+  }
   render() {
     const { totalProportion, adProportion, accountProportion } = this.props.commissionConfig;
     const { total, ad, bz } = this.state
