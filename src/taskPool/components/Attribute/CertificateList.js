@@ -79,7 +79,7 @@ const CertificateList = (props, ref) => {
       title: '备注',
       dataIndex: 'remark',
       render: (text, record) => {
-        return <div className="break-all">
+        return <div style={{maxWidth: 600}} className="break-all">
           {text}
         </div>
       }
