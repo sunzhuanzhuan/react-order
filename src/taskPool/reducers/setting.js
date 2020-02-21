@@ -29,7 +29,7 @@ export const readUnitPriceConfig = handleActions({
 export const qualityConfig = handleActions({
   [setting.TPGetQualityConfig_success]: (state, action) => {
     let list = action.payload.data.retainTimeList || []
-    for (let i = 0; i < list.length; i++) {
+    for (let i = list.length - 1; i >= 0; i--) {
       if (list[i].retainTime == 24 || list[i].retainTime == 48) {
         list.splice(i, 1)
       }
