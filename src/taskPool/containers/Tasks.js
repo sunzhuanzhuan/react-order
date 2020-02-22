@@ -318,7 +318,7 @@ const Tasks = (props) => {
     const { actions } = props
     Modal.confirm({
       title: '上线任务',
-      content: `任务还未到上线时间，确定要立即上线该任务么？？`,
+      content: `任务还未到上线时间，确定要立即上线该任务么？`,
       onOk: () => {
         return actions.TPOnlineTask({ id }).then(() => {
           message.success('上线成功')
