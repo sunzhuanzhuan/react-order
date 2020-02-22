@@ -12,7 +12,7 @@ function CooperationDetail() {
   const [orderDetail, setOrderDetail] = useState({ qualifications: [] })
   const searchParams = qs.parse(window.location.search.substring(1))
   const { orderId } = searchParams
-  const { qualifications = [], otherOrderState, unitPrice } = orderDetail
+  const { qualifications = [], otherOrderState, unitPrice, putType } = orderDetail
 
   useEffect(() => {
     getPlatformOrderDetail()
@@ -45,14 +45,13 @@ function CooperationDetail() {
     { label: '投放模式', content: putTypeMap[orderDetail.putType] },
     { label: '所属公司', content: orderDetail.companyName },
     { label: '内容类型', content: mediaTypeMap[orderDetail.mediaType] },
-    { label: '阅读单价', content: `${unitPrice ? unitPrice + '元/条' : ''}` },
-    { label: '行业分类', content: orderDetail.industry },
+    { label: '阅读单价', content: `${unitPrice}元/${putType == 2 ? '天' : '条'}` },
+    { label: '行业分类', content: orderDetail.industryName },
     { label: '出发城市/车站', content: orderDetail.leavePlace },
     { label: '投放条数', content: <div style={{ color: 'red' }}>{numeral(orderDetail.actionNum).format(',')}条</div> },
     { label: '投放开始日期', content: orderDetail.orderStartDate },
     { label: '到达城市/车站', content: orderDetail.arrivePlace },
     { label: '任务预算', content: <div style={{ color: 'red' }}>{numeral(orderDetail.totalAmount).format(',')}元</div> }]
-    .filter(one => one.label != '阅读单价' || orderDetail.putType == 2)
   const putType2 = [
     { label: '投放结束日期', content: orderDetail.orderEndDate, span: 2 },
     { label: '投放持续时间', content: orderDetail.durationDay },
