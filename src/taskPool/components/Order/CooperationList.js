@@ -261,7 +261,10 @@ function CooperationList(props) {
   ];
   const rowSelection = {
     rowSelection: selectedRow,
-    onChange: selectedRowKeys => setSelectedRow(selectedRowKeys)
+    onChange: selectedRowKeys => setSelectedRow(selectedRowKeys),
+    getCheckboxProps: record => ({
+      disabled: record.otherOrderState == MEDIUM_REJECT || record.otherOrderState == PARTNER_REJECT || record.otherOrderState == OVER
+    })
   };
   const selectedRowSize = selectedRow.length;
   return (
@@ -331,6 +334,6 @@ const IconType = ({ value }) => {
   return value ? (
     <Icon type="check-circle" theme="filled" style={{ color: '#5ccd5c' }} />
   ) : (
-    <Icon type="exclamation-circle" theme="filled" style={{ color: '#fd3d11' }} />
-  );
+      <Icon type="exclamation-circle" theme="filled" style={{ color: '#fd3d11' }} />
+    );
 };
