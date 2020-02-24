@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import TitleBox from '../base/TitleBox'
-import { Steps, Col, Row, Descriptions, Divider } from 'antd'
+import { Steps, Col, Row, Descriptions, Divider, Spin } from 'antd'
 import { getOrderStep, MEDIUM_REJECT, PARTNER_REJECT, deliverySeatMap, deliverySexMap, mediaTypeMap, putTypeMap } from '../constants/orderConfig'
 import api from '@/api'
 import numeral from 'numeral'
@@ -9,6 +9,7 @@ import BreadCrumbs from '../base/BreadCrumbs'
 import qs from 'qs'
 const { Step } = Steps;
 function CooperationDetail() {
+  const [isLoading, setIsLoading] = useState(true)
   const [orderDetail, setOrderDetail] = useState({ qualifications: [] })
   const searchParams = qs.parse(window.location.search.substring(1))
   const { orderId } = searchParams
@@ -20,6 +21,7 @@ function CooperationDetail() {
   async function getPlatformOrderDetail() {
     const { data } = await api.post('/operator-gateway/cooperationPlatform/v2/platformOrderDetail', { adOrderId: orderId })
     setOrderDetail(data)
+    setIsLoading(false)
   }
   const taskConfig = [
     { name: '内容正文', content: orderDetail.content },
@@ -53,13 +55,13 @@ function CooperationDetail() {
     { label: '到达城市/车站', content: orderDetail.arrivePlace },
     { label: '任务预算', content: <div style={{ color: 'red' }}>{numeral(orderDetail.totalAmount).format(',')}元</div> }]
   const putType2 = [
-    { label: '投放结束日期', content: orderDetail.orderEndDate, span: 2 },
-    { label: '投放持续时间', content: orderDetail.durationDay },
+    { label: '投放结束日期', content: orderDetail.orderEndDate, span: 3 },
+    { label: '投放持续时间', content: orderDetail.durationDay + '天' },
   ]
   const putType1 = [
     { label: '投放结束日期', content: orderDetail.orderEndDate },
     { label: '坐席类型', content: deliverySeatMap[orderDetail.deliverySeat], span: 2 },
-    { label: '投放持续时间', content: orderDetail.durationDay },
+    { label: '投放持续时间', content: orderDetail.durationDay + '天' },
     { label: '人群性别', content: deliverySexMap[orderDetail.deliverySex], span: 2 },
     { label: '', content: '' },
     { label: '年龄区间', content: orderDetail.deliveryAges, span: 2 },
@@ -70,7 +72,7 @@ function CooperationDetail() {
   }
   const orderStep = getOrderStep(otherOrderState)
   return (
-    <div>
+    <Spin spinning={isLoading}>
       <BreadCrumbs link='/order/task/orders-manage/2' text={<h2>订单详情</h2>} />
       <TitleBox title='订单进度' >
         <Steps current={orderStep.key}>
@@ -105,7 +107,7 @@ function CooperationDetail() {
           {otherOrderState == PARTNER_REJECT ? <Descriptions.Item label='合作平台驳回原因：' >{orderDetail.refusalReason}</Descriptions.Item> : null}
         </Descriptions>
       </TitleBox>
-    </div>
+    </Spin>
   )
 }
 
