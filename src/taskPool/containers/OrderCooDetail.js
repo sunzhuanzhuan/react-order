@@ -60,9 +60,9 @@ function CooperationDetail() {
   ]
   const putType1 = [
     { label: '投放结束日期', content: orderDetail.orderEndDate },
-    { label: '坐席类型', content: deliverySeatMap[orderDetail.deliverySeat], span: 2 },
+    { label: '坐席类型', content: orderDetail.deliverySeat, span: 2 },
     { label: '投放持续时间', content: orderDetail.durationDay + '天' },
-    { label: '人群性别', content: deliverySexMap[orderDetail.deliverySex], span: 2 },
+    { label: '人群性别', content: orderDetail.deliverySex, span: 2 },
     { label: '', content: '' },
     { label: '年龄区间', content: orderDetail.deliveryAges, span: 2 },
   ]
