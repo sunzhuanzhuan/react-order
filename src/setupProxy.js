@@ -1,3 +1,8 @@
+/*
+ * @Descripttion: 
+ * @Author: wangxinyue
+ * @Date: 2020-02-24 13:24:22
+ */
 const proxy = require('http-proxy-middleware');
 module.exports = function (app) {
   // app.use(proxy('/api/spotplan/',
@@ -22,6 +27,6 @@ module.exports = function (app) {
   // ));
   // http://easymock.wby.me:7300/mock/5c874e0b73f3100017a641c1/api/summaryData
   app.use(proxy('/api',
-    { target: 'http://nb.fat-weiboyi.com', changeOrigin: true }
+    { target: 'http://nb.pre-weiboyi.com', changeOrigin: true }
   ));
 }
