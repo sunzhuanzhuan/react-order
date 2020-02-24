@@ -128,6 +128,7 @@ function getColumns(active, operation) {
           dataIndex: 'id',
           align: 'center',
           fixed: 'right',
+          width: 180,
           render: (id, record) => {
             return <div>
               <NavLink to={'/order/task/tasks-details/' + id}>详情</NavLink>
