@@ -50,19 +50,25 @@ function CooperationDetail() {
     { label: '阅读单价', content: `${unitPrice}元/${putType == 2 ? '天' : '条'}` },
     { label: '行业分类', content: orderDetail.industryName },
     { label: '出发城市/车站', content: orderDetail.leavePlace },
-    { label: '投放条数', content: <div style={{ color: 'red' }}>{numeral(orderDetail.actionNum).format(',')}条</div> },
-    { label: '投放开始日期', content: orderDetail.orderStartDate },
-    { label: '到达城市/车站', content: orderDetail.arrivePlace },
-    { label: '任务预算', content: <div style={{ color: 'red' }}>{numeral(orderDetail.totalAmount).format(',')}元</div> }]
+  ]
   const putType2 = [
+    { label: '任务预算', content: <div style={{ color: 'red' }}>{numeral(orderDetail.totalAmount).format(',')}元</div> },
+    { label: '投放开始日期', content: orderDetail.orderStartDate },
+    { label: '到达城市/车站', content: orderDetail.arrivePlace, span: 2 },
     { label: '投放结束日期', content: orderDetail.orderEndDate, span: 3 },
     { label: '投放持续时间', content: orderDetail.durationDay + '天' },
   ]
   const putType1 = [
+    { label: '投放条数', content: <div style={{ color: 'red' }}>{numeral(orderDetail.actionNum).format(',')}条</div> },
+    { label: '投放开始日期', content: orderDetail.orderStartDate },
+    { label: '到达城市/车站', content: orderDetail.arrivePlace },
+    { label: '任务预算', content: <div style={{ color: 'red' }}>{numeral(orderDetail.totalAmount).format(',')}元</div> },
     { label: '投放结束日期', content: orderDetail.orderEndDate },
-    { label: '坐席类型', content: deliverySeatMap[orderDetail.deliverySeat], span: 2 },
-    { label: '投放持续时间', content: orderDetail.durationDay + '天' },
-    { label: '人群性别', content: deliverySexMap[orderDetail.deliverySex], span: 2 },
+    { label: '车次类型', content: orderDetail.deliveryTrainType, span: 2 },
+    { label: '', content: '' },
+    { label: '坐席类型', content: orderDetail.deliverySeat, span: 2 },
+    { label: '', content: '' },
+    { label: '人群性别', content: orderDetail.deliverySex, span: 2 },
     { label: '', content: '' },
     { label: '年龄区间', content: orderDetail.deliveryAges, span: 2 },
   ]
