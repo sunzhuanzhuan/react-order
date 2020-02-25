@@ -146,11 +146,17 @@ const Filters = (props) => {
           allValue.createdAtBegin = values.createdAt[0]
           allValue.createdAtEnd = values.createdAt[1]
           delete allValue.createdAt
+        }else {
+          allValue.createdAtBegin = undefined
+          allValue.createdAtEnd = undefined
         }
         if (values.startAt) {
           allValue.orderStartDateBegin = values.startAt[0]
           allValue.orderStartDateEnd = values.startAt[1]
           delete allValue.startAt
+        }else {
+          allValue.orderStartDateBegin = undefined
+          allValue.orderStartDateEnd = undefined
         }
         allValue.taskPattern = values.taskPattern
         allValue.mediaType = values.mediaType
