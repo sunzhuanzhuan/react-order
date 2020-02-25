@@ -119,7 +119,7 @@ class RemittanceRecordList extends Component {
       }
     }
     return <div className='task-pool-page-container review-page'>
-      <Title level={4}>蜂窝派打款列表</Title>
+      <Title level={4}>任务大厅打款列表</Title>
       <Table
         loading={listLoading}
         dataSource={dataSource}

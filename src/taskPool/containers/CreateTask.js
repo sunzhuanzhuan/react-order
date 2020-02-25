@@ -1,4 +1,4 @@
-import React, { Component } from "react"
+import React, { useEffect, useMemo, useReducer, useState } from "react"
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import * as commonActions from '@/actions/index'
@@ -8,24 +8,32 @@ import {
   FormBase,
   FormBudget,
   FormContent, FormPreview
-} from "../components/CreateForms/index";
+} from "../components/Task/CreateForms/index";
 import { parseUrlQuery } from "@/util/parseUrl";
-
+import update from 'immutability-helper'
+import moment from 'moment';
 
 const { Step } = Steps;
 let forms = {
   '9': [
-    FormBase,
+    FormBase.media,
     FormBudget.weixin,
     FormContent.weixin,
     FormPreview.weixin
   ],
   '1': [
-    FormBase,
+    FormBase.media,
     FormBudget.weibo,
     FormContent.weibo,
     FormPreview.weibo
-  ]
+  ],
+  '1000': [
+    FormBase.partner,
+    FormBudget[12306],
+    FormContent[12306],
+    FormPreview[12306]
+  ],
+  'default': []
 }
 
 const formLayout = {
@@ -35,91 +43,181 @@ const formLayout = {
   colon: false
 }
 
+const CreateTask = (props) => {
+  // 获取url上的数据
+  const { step = 1, company = '', platform } = parseUrlQuery()
+  // 步骤
+  const [ current, setCurrent ] = useState(step - 1)
+  // 图片上传Token
+  const [ authToken, setAuthToken ] = useState("")
+  // 行业分类
+  const [ industryList, setIndustryList ] = useState([])
+  // 经营内容
+  const [ businessScopeList, setBusinessScopeList ] = useState([])
+  // 该平台是否需要上传资质
+  const [ isCheckQualification, setIsCheckQualification ] = useState(() => {
+    return (platform === "1000") ? 1 : 2
+      })
+  // 资质组信息
+  const [ qualificationsGroups, setQualificationsGroups ] = useState([])
+  // 账户余额
+  const [ balance, setBalance ] = useState(0)
+  // 任务发文位置
+  const [ taskPositionList, setTaskPositionList ] = useState([])
+  // 任务保留时长列表
+  const [ taskRetainTimeList, setTaskRetainTimeList ] = useState([])
+  // 是否锁定公司选择
+  const [ lockCompanySelect ] = useState(!!company)
 
-class CreateTask extends Component {
-  constructor(props) {
-    super(props);
-    const { step = 1, company = '', platformId } = parseUrlQuery()
-    const [companyId, companyName] = company.split("::")
-    const hasCompany = !!(companyId && companyName)
-    this.state = {
-      current: step - 1,
-      authToken: '',
-      disabled: hasCompany,
-      industryList: [],
+  // 任务数据
+  const [ state, setDataState ] = useState(() => {
+    let defaultPlatformId = Object.keys(forms).indexOf(platform) === -1 ? 9 : Number(platform)
+
+    const [ companyId, companyName ] = company.split("::")
+    return {
       base: {
-        platformId: Number(platformId) || 9,
-        company: hasCompany ? {
+        platformId: defaultPlatformId,
+        company: lockCompanySelect ? {
           label: companyName,
           key: companyId
-        } : undefined
+        } : undefined,
       },
       budget: {},
       content: {}
     }
+  })
+
+  const getCompanyBalance = (company = {}) => {
+    if(company.key){
+      actions.TPQueryAvailableBalance({
+        companyId: company.key,
+        accountType: 1
+      }).then(({ data }) => {
+        setBalance(data)
+      })
+    }else {
+      setBalance(0)
+    }
   }
 
-  componentDidMount() {
-    const { actions } = this.props
+
+  const next = (...arg) => {
+    setCurrent(current + 1)
+    setData(...arg)
+  }
+
+  const prev = (...arg) => {
+    setCurrent(current - 1)
+    setData(...arg)
+  }
+
+  const setData = (key1, data1, key2, data2) => {
+    setDataState(update(state,
+      {
+        [key1]: { $set: data1 },
+        [key2]: { $set: data2 },
+      }
+    ))
+  }
+
+  useEffect(() => {
+    const { actions } = props
     // 获取任务大厅行业列表
-    actions.TPGetTaskIndustry().then(({ data: industryList }) => {
-      this.setState({ industryList })
+    actions.TPGetIndustryCatalog().then(({ data }) => {
+      setIndustryList(data.industryList || [])
     })
     // 获取上传图片token
     actions.getNewToken().then(({ data: authToken }) => {
-      this.setState({ authToken })
+      setAuthToken(authToken)
     })
-    actions.TPGetTaskPosition();
-  }
+    // 获取发文位置
+    actions.TPGetTaskPosition().then(({ data: taskPositionList }) => {
+      setTaskPositionList(taskPositionList)
+    })
+    // 获取保留时长
+    actions.TPQueryRetainTimeList().then(({ data: retainTimeList }) => {
+      setTaskRetainTimeList(retainTimeList)
+    })
 
-  saveFormsData = () => {
-    this.setState({});
-  }
+    /*
+    // 该平台是否需要上传资质
+    actions.TPQueryTaskCheckQualifications({ platformId }).then(({ data }) => {
+      setIsCheckQualification(data.isCheckQualification)
+    })
+    */
 
-  next = (key, data) => {
-    this.setState({
-      current: this.state.current + 1,
-      [key]: data
+    if (company) {
+      getCompanyBalance(state.base.company)
+    }
+
+    if(base.industry || base.businessScopeId){
+      getQualificationsGroup(base.industry, base.businessScopeId)
+    }
+
+  }, [])
+
+  // 获取经营内容列表
+  const getBusinessScope = ([ industryId ]) => {
+    const { actions } = props
+    actions.TPGetIndustryCatalog({ industryId }).then(({ data }) => {
+      setBusinessScopeList(data.businessScopeList || [])
+      // 假如列表为空则直接获取行业下的资质组
+      if (data.length === 0) {
+        this.getQualificationsGroup([ industryId ])
+      }
+    });
+  }
+  // 获取资质组
+  const getQualificationsGroup = ([ industryId ], businessScopeId) => {
+    actions.TPQueryQualificationsGroup({ industryId, businessScopeId }).then(({ data }) => {
+      setQualificationsGroups(data)
     });
   }
 
-  prev = (key, data) => {
-    this.setState({
-      current: this.state.current - 1,
-      [key]: data
-    });
+  const childProps = {
+    current,
+    authToken,
+    industryList,
+    balance,
+    lockCompanySelect,
+    taskPositionList,
+    businessScopeList,
+    taskRetainTimeList,
+    isCheckQualification,
+    qualificationsGroups
   }
-
-
-  render() {
-    const { current, base, budget, content } = this.state
-    const { actions, taskPoolData = {} } = this.props;
-    const { taskPositionList = [] } = taskPoolData;
-    const { platformId = 9 } = base
-    const FormComponent = forms[platformId][current] || Empty
-    return <div className='task-pool-page-container create-page'>
-      <PageHeader onBack={() => this.props.history.push('/order/task/manage')} title="新建蜂窝派任务" />
+  const { base, budget, content } = state
+  const { actions, taskPoolData = {} } = props;
+  const { platformId } = base
+  const FormComponent = forms[platformId][current] || Empty
+  return (
+    <div className='task-pool-page-container create-task-page'>
       <header>
         <Steps current={current}>
-          <Step title="蜂窝派任务基本信息" />
-          <Step title="设置预算" />
-          <Step title="撰写内容" />
-          <Step title="预览" />
+          <Step title="填写信息" description="填写任务基本信息，选择任务模式" disabled />
+          <Step title="设置指标" description="设置任务的指标或预算" />
+          <Step title="撰写内容" description="填写所需发布的内容信息" />
+          <Step title="预览" description="生成任务预览" />
         </Steps>
       </header>
       <main>
-        <FormComponent
+        {taskPositionList.length > 0 && <FormComponent
           formLayout={formLayout}
-          next={this.next}
-          prev={this.prev}
-          data={this.state}
+          next={next}
+          prev={prev}
+          setData={setData}
+          data={state}
           actions={actions}
-          taskPositionList={taskPositionList}
-        />
+          getCompanyBalance={getCompanyBalance}
+          getBusinessScope={getBusinessScope}
+          getQualificationsGroup={getQualificationsGroup}
+          {...childProps}
+        />}
       </main>
     </div>
-  }
-}
+  )
+};
+
 
 const mapStateToProps = (state) => ({
   common: state.commonReducers,

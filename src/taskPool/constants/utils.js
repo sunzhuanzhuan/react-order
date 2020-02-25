@@ -1,6 +1,6 @@
 import moment from "moment";
 
-// 打开新窗口预览
+// 打开新窗口预览 微信
 export const openNewWindowPreviewForWeixin = ({ title = "", content = "", remark = "", author = "", articleUrl = "" }) => {
   const htmlTemplate = `
 <!Doctype html><html><head><link rel="shortcut icon" href="http://www.weiboyi.com/favicon.ico"><title>${title || '预览'}</title><style>html,body{height:100%;margin:0;padding:0;overflow:auto;background-color:#fff}.container{box-sizing:border-box;max-width:677px;min-height:100%;margin:0 auto;padding:30px 8px;overflow:hidden;background-color:#fff}.braft-output-content p{min-height:1em}.braft-output-content .image-wrap img{max-width:100%;height:auto}.braft-output-content ul,.braft-output-content ol{margin:16px 0;padding:0}.braft-output-content blockquote{margin:0 0 10px 0;padding:15px 20px;background-color:#f1f2f3;border-left:solid 5px #ccc;color:#666;font-style:italic}.braft-output-content pre{max-width:100%;max-height:100%;margin:10px 0;padding:15px;overflow:auto;background-color:#f1f2f3;border-radius:3px;color:#666;font-family:monospace;font-size:14px;font-weight:normal;line-height:16px;word-wrap:break-word;white-space:pre-wrap}.braft-output-content pre pre{margin:0;padding:0}.braft-output-content{overflow:hidden}.braft-output-content video{width:100%}.header-title{font-weight: 400;font-size: 22px;line-height: 1.4;margin-bottom: 14px;}.header-author{color: rgba(0, 0, 0, .3);margin-bottom: 22px;line-height: 20px;font-size: 15px;word-wrap: break-word;word-break: break-all;}</style></head><body>
@@ -14,7 +14,7 @@ export const openNewWindowPreviewForWeixin = ({ title = "", content = "", remark
   window.previewWindow.document.close()
 }
 
-// 打开新窗口预览
+// 打开新窗口预览 微博
 export const openNewWindowPreviewForWeibo = ({ content = "", video = "", images = [], mediaType }, type = "direct") => {
   let imagesStr, videoSrc;
   if (mediaType === 1) {
@@ -28,7 +28,27 @@ export const openNewWindowPreviewForWeibo = ({ content = "", video = "", images 
 
   const htmlTemplate = `
 <!Doctype html><html><head><link rel="shortcut icon" href="http://www.weiboyi.com/favicon.ico"><title>${'预览'}</title><style>html,body{height:100%;margin:0;padding:0;overflow:auto;background-color:#fff}.container{box-sizing:border-box;max-width:677px;min-height:100%;margin:0 auto;padding:30px 8px;overflow:hidden;background-color:#fff}.braft-output-content p{min-height:1em}.braft-output-content .image-wrap img{max-width:100%;height:auto}.braft-output-content ul,.braft-output-content ol{margin:16px 0;padding:0}.braft-output-content blockquote{margin:0 0 10px 0;padding:15px 20px;background-color:#f1f2f3;border-left:solid 5px #ccc;color:#666;font-style:italic}.braft-output-content pre{max-width:100%;max-height:100%;margin:10px 0;padding:15px;overflow:auto;background-color:#f1f2f3;border-radius:3px;color:#666;font-family:monospace;font-size:14px;font-weight:normal;line-height:16px;word-wrap:break-word;white-space:pre-wrap}.braft-output-content pre pre{margin:0;padding:0}.braft-output-content{overflow:hidden}.braft-output-content video{width:100%}.header-title{font-weight: 400;font-size: 22px;line-height: 1.4;margin-bottom: 14px;}.header-author{color: rgba(0, 0, 0, .3);margin-bottom: 22px;line-height: 20px;font-size: 15px;word-wrap: break-word;word-break: break-all;}.material-images-wrap{display:flex;margin:0;padding:0;flex-wrap:wrap}.material-images-wrap li{margin:0 10px 10px 0;display:block;width:210px;height:210px;overflow:hidden}.material-images-wrap li a{display:block;cursor:pointer;transition:all .3s;width:100%;height:100%;background:no-repeat center;background-size:cover;background-color: #f8f8f8;}.material-images-wrap li a:hover{transform:scale(1.2)}.material-video-wrap{text-align:center}</style></head><body>
-<div class="container braft-output-content"><p>${content.replace(/\n/g, "<br/>")}</p><ul class='material-images-wrap'  style="display: ${imagesStr ? 'flex' : 'none'}" >${imagesStr}</ul><div class="material-video-wrap"  style="display: ${videoSrc ? 'block' : 'none'}"><video controls width="660" preload="metadata"><source src="${videoSrc}" />抱歉，您的浏览器不支持展示嵌入式视频。<a target="_blank" download href="${videoSrc}">直接下载</a></video></div></body></html>
+<div class="container braft-output-content"><p>${content.replace(/\n/g,
+    "<br/>")}</p><ul class='material-images-wrap'  style="display: ${imagesStr ? 'flex' : 'none'}" >${imagesStr}</ul><div class="material-video-wrap"  style="display: ${videoSrc ? 'block' : 'none'}"><video controls width="660" preload="metadata"><source src="${videoSrc}" />抱歉，您的浏览器不支持展示嵌入式视频。<a target="_blank" download href="${videoSrc}">直接下载</a></video></div></body></html>
+    `
+  if (window.previewWindow) {
+    window.previewWindow.close()
+  }
+  window.previewWindow = window.open()
+  window.previewWindow.document.write(htmlTemplate)
+  window.previewWindow.document.close()
+}
+
+// 打开新窗口预览 12306
+export const openNewWindowPreviewFor12306 = ({ content = "", video = "", image = "" }) => {
+  let imagesStr, videoSrc;
+  imagesStr = `<li><a target="_blank" href="${image}" style="background-image: url('${image}');" /></li>`
+  videoSrc = video
+
+  const htmlTemplate = `
+<!Doctype html><html><head><link rel="shortcut icon" href="http://www.weiboyi.com/favicon.ico"><title>${'预览'}</title><style>html,body{height:100%;margin:0;padding:0;overflow:auto;background-color:#fff}.container{box-sizing:border-box;max-width:677px;min-height:100%;margin:0 auto;padding:30px 8px;overflow:hidden;background-color:#fff}.braft-output-content p{min-height:1em}.braft-output-content .image-wrap img{max-width:100%;height:auto}.braft-output-content ul,.braft-output-content ol{margin:16px 0;padding:0}.braft-output-content blockquote{margin:0 0 10px 0;padding:15px 20px;background-color:#f1f2f3;border-left:solid 5px #ccc;color:#666;font-style:italic}.braft-output-content pre{max-width:100%;max-height:100%;margin:10px 0;padding:15px;overflow:auto;background-color:#f1f2f3;border-radius:3px;color:#666;font-family:monospace;font-size:14px;font-weight:normal;line-height:16px;word-wrap:break-word;white-space:pre-wrap}.braft-output-content pre pre{margin:0;padding:0}.braft-output-content{overflow:hidden}.braft-output-content video{width:100%}.header-title{font-weight: 400;font-size: 22px;line-height: 1.4;margin-bottom: 14px;}.header-author{color: rgba(0, 0, 0, .3);margin-bottom: 22px;line-height: 20px;font-size: 15px;word-wrap: break-word;word-break: break-all;}.material-images-wrap{display:flex;margin:0;padding:0;flex-wrap:wrap}.material-images-wrap li{margin:0 10px 10px 0;display:block;width:210px;height:210px;overflow:hidden}.material-images-wrap li a{display:block;cursor:pointer;transition:all .3s;width:100%;height:100%;background:no-repeat center;background-size:cover;background-color: #f8f8f8;}.material-images-wrap li a:hover{transform:scale(1.2)}.material-video-wrap{text-align:center}</style></head><body>
+<div class="container braft-output-content"><p>${content.replace(/\n/g,
+    "<br/>")}</p><ul class='material-images-wrap'  style="display: ${imagesStr ? 'flex' : 'none'}" >${imagesStr}</ul><div class="material-video-wrap"  style="display: ${videoSrc ? 'block' : 'none'}"><video controls width="320" preload="metadata"><source src="${videoSrc}" />抱歉，您的浏览器不支持展示嵌入式视频。<a target="_blank" download href="${videoSrc}">直接下载</a></video></div></body></html>
     `
   if (window.previewWindow) {
     window.previewWindow.close()
@@ -39,8 +59,8 @@ export const openNewWindowPreviewForWeibo = ({ content = "", video = "", images 
 }
 
 // 倒计时显示
-export const getCountDownTimeText = (date, min = 5, precision = 5) => {
-  const diff = moment(date) - moment()
+export const getCountDownTimeText = (date, min = 5, precision = 5, assort = moment()) => {
+  const diff = moment(date) - moment(assort)
   const duration = moment.duration(diff, 'milliseconds')
   if (diff < 0) {
     return `已过期`
@@ -67,24 +87,38 @@ export const getCountDownTimeText = (date, min = 5, precision = 5) => {
   return text
 }
 
-// 根据行业code获取行业名字
+// 根据行业code获取行业对象
 export const getIndustryName = (source = [], code) => {
-  // itemValue', value: 'itemKey', children: 'childrenList'
-  let value = '';
+  // itemValue', value: 'id', children: 'taskIndustryList'
+  let value = {};
   return loop(source, code);
+
   function loop(item, id) {
     if (!item) return "";
     for (var i = 0; i < item.length; i++) {
-      if (item[i].itemKey === code) {
+      if (item[i].id === code) {
         value = item[i]
         break;
       }
-      if (item[i].childrenList) {
-        loop(item[i].childrenList, code)
+      if (item[i].taskIndustryList) {
+        loop(item[i].taskIndustryList, code)
       }
     }
     return value;
   }
+}
+
+// 根据经营内容code获取经营内容名字
+export const getScopeName = (source = [], code) => {
+  let name = '';
+  if (!source) return "";
+  for (var i = 0; i < source.length; i++) {
+    if (parseInt(source[i].id) === parseInt(code)) {
+      name = source[i].scopeName
+      break;
+    }
+  }
+  return name;
 }
 
 /**
@@ -99,4 +133,41 @@ export const dateDisplayByLen = (date, precision) => {
     return ''
   }
   return date ? date.slice(0, len[precision]) : ''
+}
+
+/**
+ * 处理列表数据为map表
+ * @param primary_key
+ * @returns {function(state, action): {total: *, keys: *, response: *, pageSize: *, source, pageNum: *}}
+ */
+export const reducersResponseList = (primary_key = 'id') => {
+  return (state, action) => {
+    let response = action.payload.data || {}, source = {}
+    const { total = 0, pageNum = 1, pageSize = 50, list = [] } = response
+    const keys = list.map(item => {
+      source[item[primary_key]] = { ...item }
+      source[item[primary_key]]['key'] = item[primary_key]
+      return item[primary_key]
+    })
+    return {
+      total,
+      pageNum,
+      pageSize,
+      keys,
+      source: { ...state.source, ...source },
+      response
+    }
+  }
+}
+
+/**
+ * 初始化列表数据
+ * @returns {{total: number, keys: [], response: {}, pageSize: number, source: {}, pageNum: number}}
+ */
+reducersResponseList.initList = (pageSize = 50) => {
+  return { keys: [], source: {}, total: 0, pageNum: 1, pageSize, response: {} }
+}
+//查询时间处理
+export function getDataByFormat(data, format = 'YYYY-MM-DD') {
+  return data && moment(data).format(format)
 }

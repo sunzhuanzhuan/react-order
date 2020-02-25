@@ -1,5 +1,9 @@
 @import "../indexNbTheme";
 
+.task-pool-router-wrapper {
+  position: relative;
+}
+
 .text-red {
   color: red !important;
 }
@@ -25,16 +29,19 @@
     top: -4px;
   }
 
-  &.create-page {
+  &.create-task-page {
 
+    label.ant-checkbox-wrapper {
+      user-select: none;
+    }
 
-    & > header, & > main {
+    & > header,
+    & > main {
       width: 800px;
       margin: 10px auto;
     }
 
     & > header {
-
     }
 
     & > main {
@@ -63,12 +70,18 @@
         color: #666;
       }
     }
-    
+
     .taskPosCheckboxComp {
       margin: -8px 0 6px 134px;
     }
   }
 
+  &.create-attribute-page, &.update-attribute-page {
+    .create-attribute-page-form, .update-attribute-page-form {
+      width: 800px;
+      margin: 0 auto;
+    }
+  }
 
   .has-error .form-editor-container {
     border-color: #f5222d;
@@ -88,12 +101,14 @@
         vertical-align: top;
       }
     }
+
     .content-wrap {
       display: flex;
 
       .image-wrap {
         width: 140px;
         margin-right: 10px;
+
         img {
           width: 100%;
         }
@@ -132,29 +147,37 @@
   padding: 10px 30px 0 0;
   background: #F7F7F7;
   margin-bottom: 20px;
+
   .ant-form-item-label {
-      margin-left: 15px;
+    margin-left: 15px;
   }
+
   &:after {
-      content: ".";
-      clear: both;
-      display: block;
-      height: 0;
-      overflow: hidden;
-      visibility: hidden;
+    content: ".";
+    clear: both;
+    display: block;
+    height: 0;
+    overflow: hidden;
+    visibility: hidden;
   }
-  .ant-form-item,.ant-form-item-label,.ant-form-item-control-wrapper{
-      display: inline-block;
-      vertical-align: top;
+
+  .ant-form-item,
+  .ant-form-item-label,
+  .ant-form-item-control-wrapper {
+    display: inline-block;
+    vertical-align: top;
   }
+
   .operate-wrapper {
-      float: right;
-      .ant-btn {
-          margin-left: 20px;
-      }
+    float: right;
+
+    .ant-btn {
+      margin-left: 20px;
+    }
   }
+
   .common_search_width {
-      width: 160px;
+    width: 160px;
   }
 }
 
@@ -167,10 +190,40 @@
 }
 
 .task-operate-modal {
-  .reason-block-wrapper{ 
+  .reason-block-wrapper {
     .ant-checkbox-group-item {
       display: block;
       margin-top: 10px;
     }
   }
+}
+
+.children-mr {
+  display: flex;
+
+  .ant-btn {
+    margin: 0px 4px;
+  }
+}
+
+.button-footer {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+
+  .ant-btn {
+
+    margin: 0px 15px;
+  }
+}
+
+.required-red-star {
+  position: relative;
+  left: -8px;
+  width: 0;
+  display: inline-block;
+  color: #f5222d;
+  font-size: 13px;
+  font-family: SimSun, sans-serif;
+  line-height: 1;
 }

@@ -1,0 +1,45 @@
+@import "../../../indexNbTheme";
+
+.check-tag {
+  user-select: none;
+  vertical-align: baseline;
+  font-variant: tabular-nums;
+  color: #666;
+  box-sizing: border-box;
+  margin: 0 20px 0 0;
+  list-style: none;
+  display: inline-block;
+  line-height: 28px;
+  height: 28px;
+  padding: 0 16px;
+  font-size: 14px;
+  transition: all 0.3s cubic-bezier(0.215, 0.61, 0.355, 1);
+  opacity: 1;
+  cursor: pointer;
+  white-space: nowrap;
+  background: #f1f1f1;
+  border-radius: 2px;
+
+  &.checked {
+    color: @primary-color;
+    background: fadeout(@primary-color, 90%);
+
+    &:hover {
+      .anticon {
+        display: inline-block;
+        margin-right: -5px;
+      }
+    }
+  }
+
+  .anticon {
+    display: none
+  }
+
+
+}
+
+.has-error .right-fix-btn {
+  border-left-color: red !important;
+}
+

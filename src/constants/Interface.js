@@ -7,6 +7,7 @@ export default {
     getAllClassifyInfos: '/operator-gateway/common/v1/getAllClassifyInfos',
     getFileRealPath: '/operator-gateway/common/v1/getRealDownLoadPath',
     platformList: '/operator-gateway/common/v1/platformList',
+		areaList: '/operator-gateway/common/v1/areaList',
 	},
 	sourceRulesUrl: {
 		add: '/sourceRule/add',
