@@ -19,6 +19,9 @@ import AccountDetails from './containers/AccountDetails'
 import operationLog from './containers/Log'
 import CluesDetails from './containers/CluesDetails'
 import Platform from './containers/Platfrom'
+import RemittanceRecordList from './containers/RemittanceRecordList'
+
+
 class Business extends Component {
   render() {
     return (
@@ -28,8 +31,8 @@ class Business extends Component {
         <Route path="/order/task/detail/:id" component={TaskDetail} />
         <Route path="/order/task/manage" component={TaskManageList} />
          <Route path="/order/task/review" component={TaskReviewList} />
-        <Route path="/order/task/review" component={NewTaskManageList} />
-        <Route path="/order/task/remittance_record" component={RemittanceRecordList} />*/}
+        <Route path="/order/task/review" component={NewTaskManageList} />*/}
+        <Route path="/order/task/remittance_record" component={RemittanceRecordList} />
           <Route path="/order/task/tasks-manage/:active" component={Tasks} />
           <Route path="/order/task/tasks-create" component={CreateTask} />
           <Route path="/order/task/tasks-update/:id" component={UpdateTask} />
