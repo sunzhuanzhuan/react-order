@@ -25,12 +25,12 @@ function CooperationDetail() {
   }
   const taskConfig = [
     { name: '内容正文', content: orderDetail.content },
-    { name: '图文', content: <div><a href={orderDetail.imageUrl}>{orderDetail.imageName}</a></div> },
-    { name: '视频', content: <a href={orderDetail.vedioUrl}>{orderDetail.vedioName}</a> },
+    { name: '图文', content: <div><a href={orderDetail.imageUrl} target='_blank'>{orderDetail.imageName}</a></div> },
+    { name: '视频', content: <a href={orderDetail.videoUrl}>{orderDetail.videoName}</a> },
     {
       name: '所属公司资质',
       content: <div> {qualifications.map((one, index) => <>
-        <a key={one.name} href={one.fileUrl}>{one.fileName}</a>
+        <a key={one.name} href={one.fileUrl} target='_blank'>{one.fileName}</a>
         {qualifications.length > index + 1 ? <Divider type="vertical" /> : null}
       </>
       )}</div>
@@ -38,8 +38,8 @@ function CooperationDetail() {
   ]
 
   const orderFile = [
-    { name: '执行单：', content: <a href={orderDetail.execOrderUrl}>{orderDetail.execOrderName}</a> },
-    { name: '结案报告：', content: <a href={orderDetail.finalReportUrl}>{orderDetail.finalReportName}</a> },
+    { name: '执行单：', content: <a target='_blank' href={orderDetail.execOrderUrl}>{orderDetail.execOrderName}</a> },
+    { name: '结案报告：', content: <a target='_blank' href={orderDetail.finalReportUrl}>{orderDetail.finalReportName}</a> },
   ]
   const baseInfo = [
     { label: '订单ID', content: orderDetail.adOrderNumber },
