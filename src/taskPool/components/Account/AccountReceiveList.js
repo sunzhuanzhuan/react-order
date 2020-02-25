@@ -94,7 +94,7 @@ function AccountReceiveList(props) {
         showSizeChanger: true,
         showQuickJumper: true,
         total: claimAccountList.total,
-        current: claimAccountList.pages,
+        current: claimAccountList.pageNum,
         onShowSizeChange: (current, size) => {
           changePage({ page: { currentPage: current, pageSize: size } })
         },
