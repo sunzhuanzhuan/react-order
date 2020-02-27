@@ -59,7 +59,10 @@ function AccountForm(props) {
       </Form.Item>
       <Form.Item label='资源媒介经理'>
         {getFieldDecorator(`ownerAdmin`, {})(
-          <SelectSearch searchKey='mediaRealName' />
+          <SelectSearch
+            searchKey='mediaRealName'
+            searchProps={{ isMmediaReal: 2 }}
+          />
         )}
       </Form.Item>
       <Form.Item label='提交时间'>
