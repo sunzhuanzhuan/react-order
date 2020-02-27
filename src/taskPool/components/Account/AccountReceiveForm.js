@@ -60,6 +60,7 @@ function AccountForm(props) {
       <Form.Item label='资源媒介经理'>
         {getFieldDecorator(`ownerAdmin`, {})(
           <SelectSearch
+            idKey="mediaId"
             searchKey='mediaRealName'
             searchProps={{ isMmediaReal: 2 }}
           />
