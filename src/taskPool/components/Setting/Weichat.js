@@ -33,7 +33,7 @@ const Weichat = (props) => {
           </div></div>
       })}
       <p style={{ textAlign: 'center', marginTop: '40px' }}>
-        <Button type="primary" onClick={handleApply} btnDisable={props.btnDisable}>应用配置</Button></p>
+        <Button type="primary" onClick={handleApply} disabled={props.btnDisable}>应用配置</Button></p>
     </div>
   );
 };

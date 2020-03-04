@@ -181,7 +181,7 @@ const Notice = (props) => {
         </h3>
         <Table dataSource={list} columns={columns} pagination={false} />
         <p style={{ marginTop: '50px', textAlign: 'center' }}>
-          <Button type="primary" onClick={handleApply} btnDisable={props.btnDisable}>应用配置</Button>
+          <Button type="primary" onClick={handleApply} disabled={props.btnDisable}>应用配置</Button>
         </p>
       </div>
     </div>

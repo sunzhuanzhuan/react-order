@@ -172,9 +172,9 @@ class Cooperation extends React.Component {
               rowSelection={rowSelection}
             />
             <Form.Item style={{ textAlign: 'center', marginTop: '20px' }}>
-              <Button type="primary" onClick={this.handleAddAccount} btnDisable={this.props.btnDisable}>新增维度</Button>
-              <Button type="primary" style={{ margin: '0 20px' }} onClick={this.handleDeleteAccount} btnDisable={this.props.btnDisable}>删除维度</Button>
-              <Button type="primary" htmlType="submit" btnDisable={this.props.btnDisable}>应用配置</Button>
+              <Button type="primary" onClick={this.handleAddAccount} disabled={this.props.btnDisable}>新增维度</Button>
+              <Button type="primary" style={{ margin: '0 20px' }} onClick={this.handleDeleteAccount} disabled={this.props.btnDisable}>删除维度</Button>
+              <Button type="primary" htmlType="submit" disabled={this.props.btnDisable}>应用配置</Button>
             </Form.Item>
           </Form>
           <h4 style={{ fontSize: '20px' }}>2、任务要求</h4>
