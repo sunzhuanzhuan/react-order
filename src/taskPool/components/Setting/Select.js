@@ -130,7 +130,7 @@ class Select extends React.Component {
             </span>
           </div>
         </div>
-        <p style={{ textAlign: 'center', marginTop: '40px' }}><Button type="primary" onClick={this.handleApply}>应用配置</Button></p>
+        <p style={{ textAlign: 'center', marginTop: '40px' }}><Button type="primary" onClick={this.handleApply} btnDisable={this.props.btnDisable}>应用配置</Button></p>
 
       </div >
     );
