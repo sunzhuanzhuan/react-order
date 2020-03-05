@@ -30,7 +30,7 @@ class CooperationTask extends React.Component {
           )}
         </Form.Item>
         <Form.Item>
-          <Button type="primary" htmlType="submit" >
+          <Button type="primary" htmlType="submit" disabled={this.props.btnDisable} >
             应用配置
           </Button>
         </Form.Item>

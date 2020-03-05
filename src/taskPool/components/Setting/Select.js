@@ -120,7 +120,7 @@ class Select extends React.Component {
           <div style={{ float: 'left', margin: '85px 30px' }}>
             <span>
               <Tooltip placement="topLeft" title={'总抽佣率=广告主率+博主率'}>
-                <Button type="link" onClick={this.handleTotal}>计算</Button>
+                <Button type="link" onClick={this.handleTotal} disabled={this.props.btnDisable}>计算</Button>
               </Tooltip>
               <span>提示
             <Tooltip placement="topLeft" title={'只需设定两个抽佣率即可'}>
@@ -130,7 +130,7 @@ class Select extends React.Component {
             </span>
           </div>
         </div>
-        <p style={{ textAlign: 'center', marginTop: '40px' }}><Button type="primary" onClick={this.handleApply}>应用配置</Button></p>
+        <p style={{ textAlign: 'center', marginTop: '40px' }}><Button type="primary" onClick={this.handleApply} disabled={this.props.btnDisable}>应用配置</Button></p>
 
       </div >
     );

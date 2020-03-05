@@ -20,7 +20,7 @@ class Settings extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      // current: 'price'
+      btnDisable: false,
       assessor: false,
       platformExecution: false,
       leader: false
@@ -62,13 +62,37 @@ class Settings extends React.Component {
 
   handleDealTab = (key) => {
     if (key == 'price') {
-      this.props.actions.TPGetReadUnitPriceConfig({})
+      this.props.actions.TPGetReadUnitPriceConfig({}).then(() => {
+        this.setState({ btnDisable: false })
+      }).catch(({ code }) => {
+        if (code == 5004) {
+          this.setState({ btnDisable: true })
+        }
+      })
     } else if (key == 'discover') {
-      this.props.actions.TPGetQualityConfig({})
+      this.props.actions.TPGetQualityConfig({}).then(() => {
+        this.setState({ btnDisable: false })
+      }).catch(({ code }) => {
+        if (code == 5004) {
+          this.setState({ btnDisable: true })
+        }
+      })
     } else if (key == 'select') {
-      this.props.actions.TPQueryCommissionConfig()
+      this.props.actions.TPQueryCommissionConfig().then(() => {
+        this.setState({ btnDisable: false })
+      }).catch(({ code }) => {
+        if (code == 5004) {
+          this.setState({ btnDisable: true })
+        }
+      })
     } else if (key == 'weichat') {
-      this.props.actions.TPTaskCheck()
+      this.props.actions.TPTaskCheck().then(() => {
+        this.setState({ btnDisable: false })
+      }).catch(({ code }) => {
+        if (code == 5004) {
+          this.setState({ btnDisable: true })
+        }
+      })
     } else if (key == 'notice') {
       let params = {
         page: {
@@ -80,12 +104,42 @@ class Settings extends React.Component {
           notificationType: 11
         }
       }
-      this.props.actions.TPGetNotificationList(params)
+      this.props.actions.TPGetNotificationList(params).then(() => {
+        this.setState({ btnDisable: false })
+      }).catch(({ code }) => {
+        if (code == 5004) {
+          this.setState({ btnDisable: true })
+        }
+      })
     } else {
-      this.props.actions.TPGetDimensionConfig({})
-      this.props.actions.TPGetTaskLaunchConfigLiang({ offerType: 3 })
-      this.props.actions.TPGetTaskLaunchConfigTian({ offerType: 1 })
-      this.props.actions.TPGetTaskLaunchConfigHui({ offerType: 4 })
+      this.props.actions.TPGetDimensionConfig({}).then(() => {
+        this.setState({ btnDisable: false })
+      }).catch(({ code }) => {
+        if (code == 5004) {
+          this.setState({ btnDisable: true })
+        }
+      })
+      this.props.actions.TPGetTaskLaunchConfigLiang({ offerType: 3 }).then(() => {
+        this.setState({ btnDisable: false })
+      }).catch(({ code }) => {
+        if (code == 5004) {
+          this.setState({ btnDisable: true })
+        }
+      })
+      this.props.actions.TPGetTaskLaunchConfigTian({ offerType: 1 }).then(() => {
+        this.setState({ btnDisable: false })
+      }).catch(({ code }) => {
+        if (code == 5004) {
+          this.setState({ btnDisable: true })
+        }
+      })
+      this.props.actions.TPGetTaskLaunchConfigHui({ offerType: 4 }).then(() => {
+        this.setState({ btnDisable: false })
+      }).catch(({ code }) => {
+        if (code == 5004) {
+          this.setState({ btnDisable: true })
+        }
+      })
 
     }
   }
@@ -97,7 +151,7 @@ class Settings extends React.Component {
   render() {
     let { readUnitPriceConfig, qualityConfig, addRetainTime, commissionConfig, taskCheck, notificationList,
       dimensionConfig, taskLaunchConfigLiang, taskLaunchConfigTian, taskLaunchConfigHui, userInfo, tpUserInfo } = this.props.settingReducers
-    const { current, leader, platformExecution, assessor } = this.state
+    const { current, leader, platformExecution, assessor, btnDisable } = this.state
     return (
       <div>
         <Menu mode="horizontal" onClick={this.handleClick} selectedKeys={current}>
@@ -129,21 +183,26 @@ class Settings extends React.Component {
         {current == 'price' ? <Price readUnitPriceConfig={readUnitPriceConfig}
           TPReadUnitPriceConfig={this.props.actions.TPReadUnitPriceConfig}
           TPGetReadUnitPriceConfig={this.props.actions.TPGetReadUnitPriceConfig}
+          btnDisable={btnDisable}
         /> : null}
         {current == 'discover' ? <Discover
           TPChangeQualityConfig={this.props.actions.TPChangeQualityConfig}
           TPGetQualityConfig={this.props.actions.TPGetQualityConfig}
           qualityConfig={qualityConfig}
+          btnDisable={btnDisable}
           TPAddRetainTime={this.props.actions.TPAddRetainTime}
           addRetainTime={addRetainTime} /> : null}
         {current == 'select' ? <Select
+          btnDisable={btnDisable}
           commissionConfig={commissionConfig}
           TPUpdateCommissionConfig={this.props.actions.TPUpdateCommissionConfig}
           TPQueryCommissionConfig={this.props.actions.TPQueryCommissionConfig} /> : null}
         {current == 'weichat' ? <Weichat taskCheck={taskCheck}
+          btnDisable={btnDisable}
           TPTaskCheck={this.props.actions.TPTaskCheck}
           TPUpdateTaskCheck={this.props.actions.TPUpdateTaskCheck} /> : null}
         {current == 'cooperation' ? <Cooperation
+          btnDisable={btnDisable}
           TPDimensionConfig={this.props.actions.TPDimensionConfig}
           TPGetDimensionConfig={this.props.actions.TPGetDimensionConfig}
           TPUpdateTaskLaunchConfig={this.props.actions.TPUpdateTaskLaunchConfig}
@@ -158,6 +217,7 @@ class Settings extends React.Component {
           TPGetTaskLaunchConfigHui={this.props.actions.TPGetTaskLaunchConfigHui}
         /> : null}
         {current == 'notice' ? <Notice
+          btnDisable={btnDisable}
           notificationList={notificationList}
           login={this.props.login}
           userInfo={userInfo}

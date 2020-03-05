@@ -126,7 +126,7 @@ const Price = (props) => {
           pagination={false}
         />
         <Form.Item style={{ textAlign: 'center', marginTop: '20px' }}>
-          <Button type="primary" htmlType="submit">应用配置</Button>
+          <Button type="primary" htmlType="submit" disabled={props.btnDisable}>应用配置</Button>
         </Form.Item>
       </Form>
     </div>

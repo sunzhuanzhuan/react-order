@@ -160,11 +160,11 @@ class Discover extends React.Component {
           {saveArrTime.map((item, index) => {
             return <p key={index}>
               <Checkbox value={item.id} onChange={this.handleChange}>{item.retainTime}小时</Checkbox>
-              <Button type="link" onClick={() => this.handleOpenModal(false, item)}>删除</Button>
+              <Button type="link" onClick={() => this.handleOpenModal(false, item)} disabled={this.props.btnDisable}>删除</Button>
             </p>
           })}
         </Checkbox.Group>
-        <p><Button type="primary" onClick={() => this.handleOpenModal(true)}>新增保留时长</Button></p>
+        <p><Button type="primary" onClick={() => this.handleOpenModal(true)} disabled={this.props.btnDisable}>新增保留时长</Button></p>
         <Modal
           title="新增保留时长"
           visible={visible}
@@ -175,7 +175,7 @@ class Discover extends React.Component {
           <div>{isAdd ? <div>新增保留时长：<InputNumber id="readTime" onChange={this.onSaveTime} min={0} />小时</div> : <div>确定要删除“{item.retainTime}小时”的保留时长选项么?</div>}</div>
         </Modal>
       </div>
-      <p style={{ textAlign: 'center', marginTop: '40px' }}><Button type="primary" onClick={this.handleApply} >应用配置</Button></p>
+      <p style={{ textAlign: 'center', marginTop: '40px' }}><Button type="primary" onClick={this.handleApply} disabled={this.props.btnDisable}>应用配置</Button></p>
 
     </div >
   }

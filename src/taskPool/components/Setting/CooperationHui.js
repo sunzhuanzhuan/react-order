@@ -117,9 +117,9 @@ class CooperationHui extends React.Component {
           rowSelection={rowSelection}
         />
         <Form.Item style={{ textAlign: 'center', marginTop: '20px' }}>
-          <Button type="primary" onClick={this.handleAdd}>新增返现优惠</Button>
-          <Button type="primary" style={{ margin: '0 20px' }} onClick={this.handleDelete}>删除返现优惠</Button>
-          <Button type="primary" htmlType="submit">应用配置</Button>
+          <Button type="primary" onClick={this.handleAdd} disabled={this.props.btnDisable}>新增返现优惠</Button>
+          <Button type="primary" style={{ margin: '0 20px' }} onClick={this.handleDelete} disabled={this.props.btnDisable}>删除返现优惠</Button>
+          <Button type="primary" htmlType="submit" disabled={this.props.btnDisable}>应用配置</Button>
         </Form.Item>
       </Form>}
     </div>
