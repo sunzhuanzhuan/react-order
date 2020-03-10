@@ -110,7 +110,7 @@ function DetailsShow(props) {
             28天第一条平均阅读数：{kpiTarget.mediaIndex1stAvgReadNum28d || '-'}
           </div>
           <div >
-            更新时间：{kpiTarget.kpiValidDataUnixTimestamp ? moment(kpiTarget.kpiValidDataUnixTimestamp) : '-'}
+            更新时间：{kpiTarget.kpiValidDataUnixTimestamp ? moment(kpiTarget.kpiValidDataUnixTimestamp).format('YYYY-MM-DD') : '-'}
           </div>
         </div>
       </TitleBox>
