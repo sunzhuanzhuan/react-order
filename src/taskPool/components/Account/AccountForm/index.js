@@ -11,7 +11,9 @@ import './index.less'
 import { getDataByFormat } from '@/taskPool/constants/utils.js'
 const formConfig = [
   { label: 'accountID', type: 'inputNumber', key: 'accountId' },
-  { label: '粉丝性别比例', type: 'select', key: 'manWomenRatio', },
+  { label: '账号ID', type: 'input', key: 'snsId' },
+  { label: '账号名称', type: 'input', key: 'snsName' },
+
 ]
 
 const formConfig2 = [
@@ -88,8 +90,15 @@ function AccountForm(props) {
   const { getFieldDecorator } = form
   return (
     <>
-      <SearchForm form={form} formData={accountConfig} formConfig={formConfig} />
 
+      <SearchForm form={form} formData={accountConfig} formConfig={formConfig} />
+      <FormItem label='主账号名称'>
+        {getFieldDecorator(`form.identity`, {
+          //rules: [{ required: true, message: 'Please input your username!' }],
+        })(
+          <SelectSearch searchKey='identityName' />
+        )}
+      </FormItem>
       <SearchForm form={form} formData={accountConfig} formConfig={formConfig2} />
       <FormItem>
         <Button type='primary' onClick={onSearch}>筛选</Button>
@@ -102,8 +111,7 @@ function AccountForm(props) {
 
 
 const audienceConfig = [
-  { label: '账号ID', type: 'input', key: 'snsId' },
-  { label: '账号名称', type: 'input', key: 'snsName' },
+  { label: '粉丝性别比例', type: 'select', key: 'manWomenRatio', },
   { label: '粉丝数', text: ['大于', '个'], type: 'inputNumber', key: 'followerCount', max: 9999999999 },
   { label: '28天内第一条平均阅读', text: ['高于'], key: 'mediaIndex1AvgReadNum28d' },
   { label: '认证号', type: 'select', key: 'isVerified', },
@@ -114,13 +122,7 @@ function AudienceForm(props) {
   const { getFieldDecorator } = form
   return (
     <>
-      <FormItem label='主账号名称'>
-        {getFieldDecorator(`form.identity`, {
-          //rules: [{ required: true, message: 'Please input your username!' }],
-        })(
-          <SelectSearch searchKey='identityName' />
-        )}
-      </FormItem>
+
       <SearchForm form={form} formData={accountConfig} formConfig={audienceConfig} />
       <KpiForm form={form} />
       <FormItem label='常见分类' className='classificationIds-flex' {...formItemLayout}>

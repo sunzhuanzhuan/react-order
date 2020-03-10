@@ -6,10 +6,11 @@ import { PopoverIcon } from '../../base/MessageIcon'
 import { auditStateMap, getValueByFormat } from '../../constants/accountConfig'
 import AccountName from './AccountName'
 import { KpiTable } from './AccountList'
+import moment from 'moment'
 
 function DetailsShow(props) {
   const { accountDetail = {}, accountId } = props
-  const { base = {}, acceptCrowd = {}, auditState = 1, remark, kpiTarget = {}, appraiserImgUrl = [], mediaIndex1stAvgReadNum28d, offerAndOtherData = [] } = accountDetail
+  const { base = {}, acceptCrowd = {}, auditState = 1, remark, kpiTarget = {}, appraiserImgUrl = [], mediaIndex1AvgReadNum28d, offerAndOtherData = [] } = accountDetail
   const { classification = [], avatarUrl, platformId, snsName, isVerified } = base
   const { sex = {}, age = [], area = [] } = acceptCrowd
   const baseConfig = [
@@ -104,6 +105,14 @@ function DetailsShow(props) {
       </TitleBox>
       <TitleBox title='任务大厅账号报价及其他数据'>
         <TableAccount data={offerAndOtherData} />
+        <div className='account-other'>
+          <div>
+            28天第一条平均阅读数：{kpiTarget.mediaIndex1stAvgReadNum28d || '-'}
+          </div>
+          <div >
+            更新时间：{kpiTarget.kpiValidDataUnixTimestamp ? moment(kpiTarget.kpiValidDataUnixTimestamp) : '-'}
+          </div>
+        </div>
       </TitleBox>
     </div>
   )
@@ -155,7 +164,7 @@ const TableAccount = ({ data }) => {
         </span>
       )
     }, {
-      title: <div>KPI/KPI上限（更新时间：）</div>,
+      title: <div>KPI/KPI上限</div>,
       dataIndex: 'kpiReadNum',
       key: 'kpiReadNum',
       align: 'center',
@@ -170,7 +179,6 @@ const TableAccount = ({ data }) => {
     rowKey="id"
     columns={columnsKpi}
     dataSource={data}
-    className="kpi-table"
     bordered
   />
 }
