@@ -93,6 +93,7 @@ export default {
     TPFailureReasons: `${mcnOrder}/failureReasons`,//订单失败原因查询
     TPOrderInfo: `${mcnOrder}/orderInfo`,//订单详情
     TPQueryDataCurve: `${mcnOrder}/queryDataCurve`,//获取数据曲线
+
   },
   attribute: {
     queryQualificationByName: configManage + "/queryQualificationByName",

@@ -9,11 +9,9 @@ import SelectSearch from '../SelectSearch'
 const { TabPane } = Tabs;
 import './index.less'
 import { getDataByFormat } from '@/taskPool/constants/utils.js'
+const snsUrl = '/operator-gateway/selectUserIdBySnsNameOrSnsId'
 const formConfig = [
   { label: 'accountID', type: 'inputNumber', key: 'accountId' },
-  { label: '账号ID', type: 'input', key: 'snsId' },
-  { label: '账号名称', type: 'input', key: 'snsName' },
-
 ]
 
 const formConfig2 = [
@@ -40,7 +38,7 @@ function AccountTabs(props) {
   function onSearch(e) {
     e.preventDefault();
     validateFields((err, values) => {
-      const { estimatetime, auditTime, identity } = values.form
+      const { estimatetime, auditTime, identity, snsId, snsName } = values.form
       let allValues = { ...values }
       if (auditTime) {
         allValues.form.auditStartTime = getDataByFormat(auditTime[0])
@@ -54,6 +52,12 @@ function AccountTabs(props) {
       }
       if (identity) {
         allValues.form.identityId = values.form.identity.key
+      }
+      if (snsId) {
+        allValues.form.snsId = values.form.snsId.key
+      }
+      if (snsName) {
+        allValues.form.snsName = values.form.snsName.label
       }
       searchAction && searchAction(allValues)
     })
@@ -90,8 +94,29 @@ function AccountForm(props) {
   const { getFieldDecorator } = form
   return (
     <>
-
       <SearchForm form={form} formData={accountConfig} formConfig={formConfig} />
+      <FormItem label='账号ID'>
+        {getFieldDecorator(`form.snsId`, {
+          //rules: [{ required: true, message: 'Please input your username!' }],
+        })(
+          <SelectSearch
+            searchKey='snsId'
+            seleteNameKey='identityId'
+            idKey={'identityId'}
+            url={snsUrl} />
+        )}
+      </FormItem>
+      <FormItem label='账号名称'>
+        {getFieldDecorator(`form.snsName`, {
+          //rules: [{ required: true, message: 'Please input your username!' }],
+        })(
+          <SelectSearch
+            searchKey='snsName'
+            seleteNameKey='identityName'
+            idKey={'identityId'}
+            url={snsUrl} />
+        )}
+      </FormItem>
       <FormItem label='主账号名称'>
         {getFieldDecorator(`form.identity`, {
           //rules: [{ required: true, message: 'Please input your username!' }],

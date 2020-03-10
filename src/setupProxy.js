@@ -9,9 +9,9 @@ module.exports = function (app) {
   //   { target: 'http://192.168.100.117:30010', changeOrigin: true }
   // ));
 
-  // app.use(proxy('/api/operator-gateway/configManage/',
-  //   { target: 'http://yapi.ops.tst-weiboyi.com/mock/129', changeOrigin: true }
-  // ));
+  app.use(proxy('/api/operator-gateway/selectUserIdBySnsNameOrSnsId',
+    { target: 'http://yapi.ops.tst-weiboyi.com/mock/129', changeOrigin: true }
+  ));
   // app.use(proxy('/api/operator-gateway/adOrder/v1/trip/priceCalculation',
   //   { target: 'http://yapi.ops.tst-weiboyi.com/mock/129', changeOrigin: true }
   // ));
