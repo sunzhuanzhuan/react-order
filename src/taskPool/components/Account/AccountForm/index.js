@@ -38,7 +38,7 @@ function AccountTabs(props) {
   function onSearch(e) {
     e.preventDefault();
     validateFields((err, values) => {
-      const { estimatetime, auditTime, identity, snsId, snsName } = values.form
+      const { estimatetime, auditTime, identity, snsIdentityId, accountIdentityId } = values.form
       let allValues = { ...values }
       if (auditTime) {
         allValues.form.auditStartTime = getDataByFormat(auditTime[0])
@@ -53,11 +53,11 @@ function AccountTabs(props) {
       if (identity) {
         allValues.form.identityId = values.form.identity.key
       }
-      if (snsId) {
-        allValues.form.snsId = values.form.snsId.key
+      if (snsIdentityId) {
+        allValues.form.snsIdentityId = values.form.snsIdentityId.key
       }
-      if (snsName) {
-        allValues.form.snsName = values.form.snsName.label
+      if (accountIdentityId) {
+        allValues.form.accountIdentityId = values.form.accountIdentityId.key
       }
       searchAction && searchAction(allValues)
     })
@@ -96,7 +96,7 @@ function AccountForm(props) {
     <>
       <SearchForm form={form} formData={accountConfig} formConfig={formConfig} />
       <FormItem label='账号ID'>
-        {getFieldDecorator(`form.snsId`, {
+        {getFieldDecorator(`form.snsIdentityId`, {
           //rules: [{ required: true, message: 'Please input your username!' }],
         })(
           <SelectSearch
@@ -107,12 +107,12 @@ function AccountForm(props) {
         )}
       </FormItem>
       <FormItem label='账号名称'>
-        {getFieldDecorator(`form.snsName`, {
+        {getFieldDecorator(`form.accountIdentityId`, {
           //rules: [{ required: true, message: 'Please input your username!' }],
         })(
           <SelectSearch
             searchKey='snsName'
-            seleteNameKey='identityName'
+            seleteNameKey='identityId'
             idKey={'identityId'}
             url={snsUrl} />
         )}
