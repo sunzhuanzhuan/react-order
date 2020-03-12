@@ -26,6 +26,8 @@ import {
 } from "@/taskPool/constants/utils";
 import { convertRawToHTML } from 'braft-convert'
 import {
+  AD_ORDER_STATE_END,
+  AD_ORDER_STATE_EXPIRY,
   AD_ORDER_STATE_OFFLINE,
   AD_ORDER_STATE_PROCESSING,
   AD_ORDER_STATE_WAIT_RELEASED,
@@ -119,7 +121,9 @@ export default class DetailsForWeiXin extends Component {
         title: '博主名称',
         dataIndex: 'snsName',
         render: (name, record) => {
-          return <KolInfo title={name} avatar={record.avatarUrl} />
+          return <KolInfo title={name} avatar={record.avatarUrl} src={
+            this.props.details.orderState === AD_ORDER_STATE_PROCESSING ? "/order/task/account-details?accountId=" + record.accountId : ""
+          }/>
         }
       },
       {
@@ -208,7 +212,7 @@ export default class DetailsForWeiXin extends Component {
             </>
             {(state === MCN_ORDER_STATE_OFFLINE_PART || state === MCN_ORDER_STATE_OFFLINE) && record.isEvaluate === 2 && <>
               <Divider type="vertical" />
-              <a onClick={() => this.setState({raterOrderId: record.id})}>评价</a>
+              <a onClick={() => this.setState({ raterOrderId: record.id })}>评价</a>
             </>}
           </div>
         }
@@ -219,7 +223,9 @@ export default class DetailsForWeiXin extends Component {
         title: '博主',
         dataIndex: 'snsName',
         render: (name, record) => {
-          return <KolInfo title={name} avatar={record.avatarUrl} />
+          return <KolInfo title={name} avatar={record.avatarUrl} src={
+            this.props.details.orderState === AD_ORDER_STATE_PROCESSING ? "/order/task/account-details?accountId=" + record.accountId : ""
+          }/>
         }
       },
       {
@@ -487,13 +493,19 @@ export default class DetailsForWeiXin extends Component {
 
     const features = details.adOrderWeixinContent
 
+    const taskIsFinish = (
+      details.orderState === AD_ORDER_STATE_OFFLINE ||
+      details.orderState === AD_ORDER_STATE_EXPIRY ||
+      details.orderState === AD_ORDER_STATE_END
+    )
+
     return <>
       {raterOrderId > 0 &&
       <RaterModal action={actions.TPMcnOrderEvaluate} cancel={() => this.handleRater(0)}
-                  id={raterOrderId} reload={this.getList}/>}
+                  id={raterOrderId} reload={this.getList} />}
       <PageHeader
         onBack={() => this.props.history.go(-1)}
-        title="任务详情"
+        title={"任务详情 - " + details.orderName}
         extra={
           <>
             {
@@ -611,6 +623,10 @@ export default class DetailsForWeiXin extends Component {
               <Yuan value={details.usedServiceFee} className="text-red" />
               &nbsp;/&nbsp;
               <Yuan value={details.availableServiceFee} className="text-black" />
+              {
+                taskIsFinish &&
+                <span className="text-red">({details.isSettlement === 1 ? "已退还" : "待订单完结"})</span>
+              }
             </Descriptions.Item>
           </Descriptions>
         </Section.Content>

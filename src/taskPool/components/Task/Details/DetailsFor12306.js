@@ -65,7 +65,7 @@ export default class DetailsFor12306 extends Component {
     return <>
       <PageHeader
         onBack={() => this.props.history.go(-1)}
-        title="任务详情"
+        title={"任务详情 - " + details.orderName}
       />
       <Section>
         <Section.Header title="基本信息" level={5} />
