@@ -271,7 +271,7 @@ function getColumns(active, operation) {
               {
                 record.orderState === AD_ORDER_STATE_FINISH && <>
                   <Divider type="vertical" />
-                  <a onClick={() => operation.stop(id, record)}>数据</a>
+                  <a href={record.finalReportUrl} target="_blank">数据</a>
                 </>
               }
             </div>
