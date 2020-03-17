@@ -15,7 +15,7 @@ const formConfig = [
 ]
 
 const formConfig2 = [
-
+  { label: '粉丝性别比例', type: 'select', key: 'manWomenRatio', },
   { label: '审核状态', type: 'select', key: 'auditState', isDefault: true },
   { label: '评估状态', type: 'select', key: 'estimateState', isDefault: true },
   { label: '评估等级', type: 'select', key: 'estimateGrade', },
@@ -136,7 +136,7 @@ function AccountForm(props) {
 
 
 const audienceConfig = [
-  { label: '粉丝性别比例', type: 'select', key: 'manWomenRatio', },
+
   { label: '粉丝数', text: ['大于', '个'], type: 'inputNumber', key: 'followerCount', max: 9999999999 },
   { label: '28天内第一条平均阅读', text: ['高于'], key: 'mediaIndex1AvgReadNum28d' },
   { label: '认证号', type: 'select', key: 'isVerified', },
