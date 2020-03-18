@@ -101,8 +101,7 @@ function AccountForm(props) {
         })(
           <SelectSearch
             searchKey='snsId'
-            seleteNameKey='identityId'
-            idKey={'identityId'}
+            idKey='userId'
             url={snsUrl} />
         )}
       </FormItem>
@@ -112,8 +111,7 @@ function AccountForm(props) {
         })(
           <SelectSearch
             searchKey='snsName'
-            seleteNameKey='identityId'
-            idKey={'identityId'}
+            idKey='userId'
             url={snsUrl} />
         )}
       </FormItem>
