@@ -615,6 +615,10 @@ export default class DetailsForWeiXin extends Component {
               <Yuan value={details.usedAmount} className="text-red" />
               &nbsp;/&nbsp;
               <Yuan value={details.availableAmount} className="text-black" />
+              {
+                taskIsFinish &&
+                <span className="text-red">({details.isSettlement === 1 ? "已退还" : "待订单完结"})</span>
+              }
             </Descriptions.Item>
             <Descriptions.Item label="有效执行博主数">{features.completed || 0} 位</Descriptions.Item>
             <Descriptions.Item label="已达成阅读数">{details.realActionNum || '-'}</Descriptions.Item>
