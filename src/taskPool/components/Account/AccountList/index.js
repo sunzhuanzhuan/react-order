@@ -386,7 +386,7 @@ export const KpiTable = ({ data = {}, mediaIndex1stAvgReadNum28d, isShow28 }) =>
       {isShow28 ? <div style={{ textAlign: 'left', marginTop: 4 }}>
         28天第一条平均阅读数：{mediaIndex1stAvgReadNum28d || '-'}
         <span style={{ float: "right" }}>
-          更新时间：{kpiValidDataUnixTimestamp ? moment(kpiValidDataUnixTimestamp).format('YYYY-MM-DD') : '-'}
+          更新时间：{kpiValidDataUnixTimestamp ? moment(kpiValidDataUnixTimestamp * 1000).format('YYYY-MM-DD') : '-'}
         </span>
       </div> : null}
     </>

@@ -9,7 +9,7 @@ import SelectSearch from '../SelectSearch'
 const { TabPane } = Tabs;
 import './index.less'
 import { getDataByFormat } from '@/taskPool/constants/utils.js'
-const snsUrl = '/operator-gateway/selectUserIdBySnsNameOrSnsId'
+const snsUrl = '/operator-gateway/accountMapping/v2/selectUserIdBySnsNameOrSnsId'
 const formConfig = [
   { label: 'accountID', type: 'inputNumber', key: 'accountId' },
 ]
