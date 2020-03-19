@@ -54,9 +54,11 @@ function AccountTabs(props) {
         allValues.form.identityId = values.form.identity.key
       }
       if (snsIdentityId) {
+        allValues.form.snsId = values.form.snsIdentityId.label
         allValues.form.snsIdentityId = values.form.snsIdentityId.key
       }
       if (accountIdentityId) {
+        allValues.form.snsName = values.form.accountIdentityId.label
         allValues.form.accountIdentityId = values.form.accountIdentityId.key
       }
       searchAction && searchAction(allValues)
