@@ -361,7 +361,7 @@ export const KpiTable = ({ data = {}, mediaIndex1stAvgReadNum28d, isShow28 }) =>
       )
     },
     {
-      title: '多图文第3-n条',
+      title: '多图文第3+N条',
       dataIndex: 'mediaOtherReadKpiNum',
       key: 'mediaOtherReadKpiNum',
       align: 'center',
