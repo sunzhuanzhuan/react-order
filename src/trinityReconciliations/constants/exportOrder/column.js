@@ -33,11 +33,18 @@ export const exportOrderListFunc = (agentInfo) => {
       width: 100,
     },
     {
+      title: '执行价格名称',
+      dataIndex: 'ttp_place_order_at',
+      key: 'excute_price_name',
+      align: 'center',
+      width: 120,
+    },
+    {
       title: '下单时间',
       dataIndex: 'ttp_place_order_at',
       key: 'ttp_place_order_at',
       align: 'center',
-      width: 100,
+      width: 120,
     },
     {
       title: '公司简称',

@@ -367,7 +367,7 @@ export const columns = (props) => {
     {
       title: '执行价格名称',
       dataIndex: 'public_cost_price',
-      key: 'public_cost_name',
+      key: 'excute_price_name',
       align: 'center',
       width: 150,
       render: (text, record) => {
