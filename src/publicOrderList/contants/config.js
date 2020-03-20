@@ -270,7 +270,7 @@ export const columns = (props) => {
       key: 'support_operates',
       align: 'center',
       fixed: 'left',
-      width: 100,
+      width: 150,
       render: (text, record) => {
         let btnArr = []
         operationBtn.forEach(v => {
@@ -363,6 +363,19 @@ export const columns = (props) => {
           </div>
         </div>
       }
+    },
+    {
+      title: '执行价格名称',
+      dataIndex: 'public_cost_price',
+      key: 'public_cost_name',
+      align: 'center',
+      width: 150,
+      render: (text, record) => {
+        return record.public_order && record.public_order.public_order_skus.length != 0 ?
+          <span>{record.public_order.public_order_skus[0].public_cost_price}</span> :
+          null
+      }
+
     },
     {
       title: '三方平台下单价（元）',
@@ -713,7 +726,7 @@ export const columns = (props) => {
       dataIndex: 'execution_status',
       key: 'execution_status',
       align: 'center',
-      width: 50,
+      width: 80,
       render: text => <span>{executionStatusMap[text]}</span>
     }
   ]

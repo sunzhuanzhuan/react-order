@@ -9,6 +9,7 @@ import ModalComponent from '../components/modal/ModalComponent'
 import { filterFormArr, columns, modalParams } from '../contants/config'
 import * as publicOrderListActions from '../actions/publicOrderListActions'
 import './PublicOrderList.less'
+import { getTotalWidth, events } from '@/util';
 const TabPane = Tabs.TabPane;
 const confirm = Modal.confirm;
 
@@ -24,6 +25,18 @@ class PublicOrderList extends Component {
       filterParams: {},
       pageSize: "20"
     }
+    events.on('message', this.collapsedListener); 
+  }
+  collapsedListener = isClosed => {
+		this.setState({leftWidth: isClosed ? 40 : 200});
+  }
+  componentDidMount() {
+     // 获取列表
+    this.getList(0, 1, this.state.pageSize);
+    const leftSlide = document.getElementsByClassName('ant-layout-sider-trigger')[0];
+		const leftWidth = leftSlide && leftSlide.clientWidth;
+
+		this.setState({leftWidth});
   }
   getList = (tab, page, pageSize) => {
     this.setState({
@@ -44,10 +57,6 @@ class PublicOrderList extends Component {
         tableLoading: false
       })
     })
-  }
-  componentWillMount() {
-    // 获取列表
-    this.getList(0, 1, this.state.pageSize)
   }
   // tab切换
   changeTab = (tab) => {
@@ -145,8 +154,10 @@ class PublicOrderList extends Component {
   }
   render() {
     const { form, publicOrderList, orderDetail, loginReducer } = this.props
+    const { leftWidth } = this.state;
     const { UserConfigKey } = loginReducer
     const { babysitter_host = { value: "" } } = UserConfigKey
+    const totalWidth = getTotalWidth(columns({babysitter_host}))
     return <div>
       {/* 第一模块-跳转调账对账周期付款，对接转转 */}
       <StatementComponent />
@@ -167,11 +178,12 @@ class PublicOrderList extends Component {
           <TabPane tab="待贴链接" key="2"></TabPane>
           <TabPane tab="待上传数据截图" key="5"></TabPane>
         </Tabs>
-        <Scolltable scrollClassName='.ant-table-body' widthScroll={3000}>
+        <Scolltable scrollClassName='.ant-table-body' widthScroll={totalWidth + leftWidth}>
           <Table
+            className='public-order-list-table'
             dataSource={Object.keys(publicOrderList).length != 0 ? publicOrderList.items : []}
             columns={columns({ showModal: this.showModal, babysitter_host: babysitter_host })}
-            scroll={{ x: 2700 }}
+            scroll={{ x: totalWidth }}
             loading={this.state.tableLoading}
             pagination={{
               current: Object.keys(publicOrderList).length != 0 ? parseInt(publicOrderList.pagination.current_page) : 0,
