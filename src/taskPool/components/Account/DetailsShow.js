@@ -140,8 +140,8 @@ const TableAccount = ({ data }) => {
   const columnsKpi = [
     {
       title: '位置',
-      dataIndex: 'offerPosition',
-      key: 'offerPosition',
+      dataIndex: 'offerPositionDesc',
+      key: 'offerPositionDesc',
       align: 'center',
     }, {
       title: '阅读单价（元/条）',
