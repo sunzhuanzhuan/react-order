@@ -60,7 +60,7 @@ const Price = (props) => {
 
       }
     }, {
-      title: '多图文3-N条',
+      title: '多图文3+N条',
       align: 'center',
       width: '100px',
       render: (val, record) => {
