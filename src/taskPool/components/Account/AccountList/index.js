@@ -98,7 +98,9 @@ function AccountList(props) {
       title: '粉丝数',
       dataIndex: 'followerCount',
       key: 'followerCount',
-      align: 'center'
+      align: 'center',
+      render: text => getValue(text)
+
     },
     {
       title: '内容分类',
@@ -106,11 +108,11 @@ function AccountList(props) {
       key: 'classification',
       align: 'center',
       render: (text = []) => {
-        return text.map(one => (
+        return text.length > 0 ? text.map(one => (
           <Tag key={one.name} color="blue">
             {one.name}
           </Tag>
-        ));
+        )) : '-';
       }
     },
     {
@@ -401,13 +403,17 @@ function getStringByList(list = []) {
 }
 //状态处理
 export const StateInfo = ({ value, okText = '正常', errorText = '异常', errorReson }) => {
+
   return value ? (
     <div>
       {value == 1 && <Badge status="success" text={okText}></Badge>}
       {value == 2 && (
         <>
           <Badge status="error" text={errorText}></Badge>
-          <MessageIcon title={errorReson || ''} />
+          <MessageIcon title={
+            errorReson.split(',').map(
+              one => <div key={one}>{one}</div>)
+            || ''} />
         </>
       )}
     </div>
