@@ -9,13 +9,13 @@ import SelectSearch from '../SelectSearch'
 const { TabPane } = Tabs;
 import './index.less'
 import { getDataByFormat } from '@/taskPool/constants/utils.js'
+const snsUrl = '/operator-gateway/accountMapping/v2/selectUserIdBySnsNameOrSnsId'
 const formConfig = [
   { label: 'accountID', type: 'inputNumber', key: 'accountId' },
-  { label: '粉丝性别比例', type: 'select', key: 'manWomenRatio', },
 ]
 
 const formConfig2 = [
-
+  { label: '粉丝性别比例', type: 'select', key: 'manWomenRatio', },
   { label: '审核状态', type: 'select', key: 'auditState', isDefault: true },
   { label: '评估状态', type: 'select', key: 'estimateState', isDefault: true },
   { label: '评估等级', type: 'select', key: 'estimateGrade', },
@@ -38,7 +38,7 @@ function AccountTabs(props) {
   function onSearch(e) {
     e.preventDefault();
     validateFields((err, values) => {
-      const { estimatetime, auditTime, identity } = values.form
+      const { estimatetime, auditTime, identity, snsIdentityId, accountIdentityId } = values.form
       let allValues = { ...values }
       if (auditTime) {
         allValues.form.auditStartTime = getDataByFormat(auditTime[0])
@@ -52,6 +52,14 @@ function AccountTabs(props) {
       }
       if (identity) {
         allValues.form.identityId = values.form.identity.key
+      }
+      if (snsIdentityId) {
+        allValues.form.snsId = values.form.snsIdentityId.label
+        allValues.form.snsIdentityId = values.form.snsIdentityId.key
+      }
+      if (accountIdentityId) {
+        allValues.form.snsName = values.form.accountIdentityId.label
+        allValues.form.accountIdentityId = values.form.accountIdentityId.key
       }
       searchAction && searchAction(allValues)
     })
@@ -89,7 +97,33 @@ function AccountForm(props) {
   return (
     <>
       <SearchForm form={form} formData={accountConfig} formConfig={formConfig} />
-
+      <FormItem label='账号ID'>
+        {getFieldDecorator(`form.snsIdentityId`, {
+          //rules: [{ required: true, message: 'Please input your username!' }],
+        })(
+          <SelectSearch
+            searchKey='snsId'
+            idKey='userId'
+            url={snsUrl} />
+        )}
+      </FormItem>
+      <FormItem label='账号名称'>
+        {getFieldDecorator(`form.accountIdentityId`, {
+          //rules: [{ required: true, message: 'Please input your username!' }],
+        })(
+          <SelectSearch
+            searchKey='snsName'
+            idKey='userId'
+            url={snsUrl} />
+        )}
+      </FormItem>
+      <FormItem label='主账号名称'>
+        {getFieldDecorator(`form.identity`, {
+          //rules: [{ required: true, message: 'Please input your username!' }],
+        })(
+          <SelectSearch searchKey='identityName' />
+        )}
+      </FormItem>
       <SearchForm form={form} formData={accountConfig} formConfig={formConfig2} />
       <FormItem>
         <Button type='primary' onClick={onSearch}>筛选</Button>
@@ -102,8 +136,7 @@ function AccountForm(props) {
 
 
 const audienceConfig = [
-  { label: '账号ID', type: 'input', key: 'snsId' },
-  { label: '账号名称', type: 'input', key: 'snsName' },
+
   { label: '粉丝数', text: ['大于', '个'], type: 'inputNumber', key: 'followerCount', max: 9999999999 },
   { label: '28天内第一条平均阅读', text: ['高于'], key: 'mediaIndex1AvgReadNum28d' },
   { label: '认证号', type: 'select', key: 'isVerified', },
@@ -114,13 +147,7 @@ function AudienceForm(props) {
   const { getFieldDecorator } = form
   return (
     <>
-      <FormItem label='主账号名称'>
-        {getFieldDecorator(`form.identity`, {
-          //rules: [{ required: true, message: 'Please input your username!' }],
-        })(
-          <SelectSearch searchKey='identityName' />
-        )}
-      </FormItem>
+
       <SearchForm form={form} formData={accountConfig} formConfig={audienceConfig} />
       <KpiForm form={form} />
       <FormItem label='常见分类' className='classificationIds-flex' {...formItemLayout}>

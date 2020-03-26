@@ -16,6 +16,7 @@ import {
   getValueByFormat
 } from '../../../constants/accountConfig';
 import AccountName from '../AccountName';
+import moment from 'moment';
 const { confirm } = Modal;
 function getDate(str) {
   return str && str.substring(0, 16);
@@ -97,7 +98,9 @@ function AccountList(props) {
       title: '粉丝数',
       dataIndex: 'followerCount',
       key: 'followerCount',
-      align: 'center'
+      align: 'center',
+      render: text => getValue(text)
+
     },
     {
       title: '内容分类',
@@ -105,11 +108,11 @@ function AccountList(props) {
       key: 'classification',
       align: 'center',
       render: (text = []) => {
-        return text.map(one => (
+        return text.length > 0 ? text.map(one => (
           <Tag key={one.name} color="blue">
             {one.name}
           </Tag>
-        ));
+        )) : '-';
       }
     },
     {
@@ -142,10 +145,7 @@ function AccountList(props) {
       align: 'center',
       render: (text, record) => (
         <div>
-          <KpiTable data={text} />
-          <div style={{ textAlign: 'left', marginTop: 4 }}>
-            28天第一条平均阅读数：{text.mediaIndex1stAvgReadNum28d || '-'}
-          </div>
+          <KpiTable data={text} mediaIndex1stAvgReadNum28d={text.mediaIndex1stAvgReadNum28d} isShow28={true} />
         </div>
       )
     },
@@ -338,7 +338,7 @@ function AccountList(props) {
 }
 
 export default AccountList;
-export const KpiTable = ({ data = {} }) => {
+export const KpiTable = ({ data = {}, mediaIndex1stAvgReadNum28d, isShow28 }) => {
   const columnsKpi = [
     {
       title: '多图文第一条',
@@ -363,7 +363,7 @@ export const KpiTable = ({ data = {} }) => {
       )
     },
     {
-      title: '多图文第3-n条',
+      title: '多图文第3+N条',
       dataIndex: 'mediaOtherReadKpiNum',
       key: 'mediaOtherReadKpiNum',
       align: 'center',
@@ -374,15 +374,24 @@ export const KpiTable = ({ data = {} }) => {
       )
     }
   ];
+  const { kpiValidDataUnixTimestamp } = data
   return (
-    <Table
-      pagination={false}
-      rowKey="mediaIndex1stReadKpiNum"
-      columns={columnsKpi}
-      dataSource={[data]}
-      className="kpi-table"
-      bordered
-    />
+    <>
+      <Table
+        pagination={false}
+        rowKey="mediaIndex1stReadKpiNum"
+        columns={columnsKpi}
+        dataSource={[data]}
+        className="kpi-table"
+        bordered
+      />
+      {isShow28 ? <div style={{ textAlign: 'left', marginTop: 4 }}>
+        28天第一条平均阅读数：{mediaIndex1stAvgReadNum28d || '-'}
+        <span style={{ float: "right" }}>
+          更新时间：{kpiValidDataUnixTimestamp ? moment(kpiValidDataUnixTimestamp * 1000).format('YYYY-MM-DD') : '-'}
+        </span>
+      </div> : null}
+    </>
   );
 };
 //受众展示处理
@@ -394,13 +403,17 @@ function getStringByList(list = []) {
 }
 //状态处理
 export const StateInfo = ({ value, okText = '正常', errorText = '异常', errorReson }) => {
+
   return value ? (
     <div>
       {value == 1 && <Badge status="success" text={okText}></Badge>}
       {value == 2 && (
         <>
           <Badge status="error" text={errorText}></Badge>
-          <MessageIcon title={errorReson || ''} />
+          <MessageIcon title={
+            errorReson.split(',').map(
+              one => <div key={one}>{one}</div>)
+            || ''} />
         </>
       )}
     </div>

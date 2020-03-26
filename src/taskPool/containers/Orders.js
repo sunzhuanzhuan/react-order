@@ -43,7 +43,6 @@ const Orders = props => {
     props.history.push({
       pathname: `/order/task/orders-manage/${key}`
     });
-
     setModalProps({ content: null, title: null });
   }
 
@@ -113,7 +112,7 @@ const Orders = props => {
     <div>
       <h2>订单管理</h2>
       <Spin spinning={loading}>
-        <Tabs onChange={callback} defaultActiveKey={orderType}>
+        <Tabs onChange={(key) => window.open(`/order/task/orders-manage/${key}`, '_self')} defaultActiveKey={orderType}>
           {isAssessor && (
             <TabPane tab="微信公众号" key="1">
               <WechatForm {...weChatProps} key={orderType} />

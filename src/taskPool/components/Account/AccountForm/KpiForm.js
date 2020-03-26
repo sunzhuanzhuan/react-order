@@ -14,7 +14,7 @@ function KpiForm(props) {
       startKey: 'mediaIndex2stReadKpiStartNum',
       endKey: 'mediaIndex2stReadKpiEndNum'
     }, {
-      name: '多图文第3-N条',
+      name: '多图文第3+N条',
       startKey: 'mediaOtherReadKpiStartNum',
       endKey: 'mediaOtherReadKpiEndNum'
     },

@@ -3,7 +3,7 @@
  * @Author: wangxinyue
  * @Date: 2020-01-08 16:29:15
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-02-17 17:24:06
+ * @LastEditTime: 2020-03-10 17:47:47
  */
 import React from 'react';
 import api from '@/api';
@@ -74,7 +74,7 @@ class SelectSearch extends React.Component {
 
   render() {
     const { fetching, data, value, placeholder = '请输入并选择' } = this.state;
-    const { searchKey, idKey = 'identityId' } = this.props;
+    const { searchKey, idKey = 'identityId', seleteNameKey } = this.props;
     return (
       <Select
         allowClear
@@ -90,7 +90,7 @@ class SelectSearch extends React.Component {
         style={{ width: '100%', minWidth: 174 }}
       >
         {data.map((d, index) => (
-          <Option key={d[idKey]}>{d[searchKey]}</Option>
+          <Option key={d[idKey]}>{d[seleteNameKey || searchKey]}</Option>
         ))}
       </Select>
     );

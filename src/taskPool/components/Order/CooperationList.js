@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Table, Modal, Button, message, Icon, Alert } from 'antd';
+import { Table, Modal, Button, message, Icon, Alert, Tooltip } from 'antd';
 import {
   otherOrderStateMap,
   PARTNER_AWAIT,
@@ -161,26 +161,32 @@ function CooperationList(props) {
               </a>
             ) : null}
 
-            {pending ? (
-              <a
-                type="primary"
-                onClick={() =>
-                  setModalProps({
-                    title: '请上传结案报告',
-                    visible: true,
-                    content: (
-                      <CooperationModel
-                        fileUrl={record.finalReportUrl}
-                        fileName={record.finalReportName}
-                        {...commProps}
-                      />
-                    )
-                  })
-                }
-              >
-                <IconType value={record.finalReportUrl} /> 上传结案报告
+            {pending ?
+              moment(record.orderEndDate) < moment() ?
+                (
+                  <a
+                    type="primary"
+                    onClick={() =>
+                      setModalProps({
+                        title: '请上传结案报告',
+                        visible: true,
+                        content: (
+                          <CooperationModel
+                            fileUrl={record.finalReportUrl}
+                            fileName={record.finalReportName}
+                            {...commProps}
+                          />
+                        )
+                      })
+                    }
+                  >
+                    <IconType value={record.finalReportUrl} /> 上传结案报告
               </a>
-            ) : null}
+                ) : <Tooltip title='请在订单结束后再上传'>
+                  <Icon type='exclamation-circle' theme="filled"
+                    style={{ color: '#666' }} />
+                  上传结案报告
+               </Tooltip> : null}
           </>
         );
       }
@@ -224,7 +230,7 @@ function CooperationList(props) {
                 type="primary"
                 onClick={() => orderOK('确认后结案报告不可撤回', [adOrderId])}
               >
-                确定
+                确认
               </Button>
             ) : null}
             {medium_await || partner_await ? (

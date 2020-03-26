@@ -1,15 +1,16 @@
 import React from 'react'
-import { Tag, Divider, Icon } from 'antd'
+import { Tag, Divider, Icon, Table } from 'antd'
 import TitleBox from '../../base/TitleBox'
 import './DetailsShow.less'
 import { PopoverIcon } from '../../base/MessageIcon'
 import { auditStateMap, getValueByFormat } from '../../constants/accountConfig'
 import AccountName from './AccountName'
 import { KpiTable } from './AccountList'
+import moment from 'moment'
 
 function DetailsShow(props) {
   const { accountDetail = {}, accountId } = props
-  const { base = {}, acceptCrowd = {}, auditState = 1, remark, kpiTarget = {}, appraiserImgUrl = [] } = accountDetail
+  const { base = {}, acceptCrowd = {}, auditState = 1, remark, kpiTarget = {}, appraiserImgUrl = [], mediaIndex1AvgReadNum28d, offerAndOtherData = [] } = accountDetail
   const { classification = [], avatarUrl, platformId, snsName, isVerified } = base
   const { sex = {}, age = [], area = [] } = acceptCrowd
   const baseConfig = [
@@ -98,8 +99,19 @@ function DetailsShow(props) {
                   : '-'}
               </div>
             },
-            { label: 'KPI/KPI上限', value: <KpiTable data={kpiTarget} /> }
+
           ]} />
+        </div>
+      </TitleBox>
+      <TitleBox title='任务大厅账号报价及其他数据'>
+        <TableAccount data={offerAndOtherData} />
+        <div className='account-other'>
+          <div>
+            28天第一条平均阅读数：{kpiTarget.mediaIndex1stAvgReadNum28d || '-'}
+          </div>
+          <div >
+            更新时间：{kpiTarget.kpiValidDataUnixTimestamp ? moment(kpiTarget.kpiValidDataUnixTimestamp * 1000).format('YYYY-MM-DD') : '-'}
+          </div>
         </div>
       </TitleBox>
     </div>
@@ -123,4 +135,50 @@ const AudienceLine = ({ list = [] }) => {
 }
 const AudienceArea = ({ list = [] }) => {
   return list.length > 0 ? list.map(one => <Tag color="blue" key={one.description}>{one.description}</Tag>) : '-'
+}
+const TableAccount = ({ data }) => {
+  const columnsKpi = [
+    {
+      title: '位置',
+      dataIndex: 'offerPositionDesc',
+      key: 'offerPositionDesc',
+      align: 'center',
+    }, {
+      title: '阅读单价（元/条）',
+      dataIndex: 'unitPrice',
+      key: 'unitPrice',
+      align: 'center',
+      render: (text, record) => (
+        <span>
+          {text}
+        </span>
+      )
+    }, {
+      title: '建议阅读单价（元/条）',
+      dataIndex: 'gradeUnitPrice',
+      key: 'gradeUnitPrice',
+      align: 'center',
+      render: (text, record) => (
+        <span>
+          {text}
+        </span>
+      )
+    }, {
+      title: <div>KPI/KPI上限</div>,
+      dataIndex: 'kpiReadNum',
+      key: 'kpiReadNum',
+      align: 'center',
+      render: (text, record) => (
+        <span>
+          {text}/{record.kpiMaxReadNum}
+        </span>
+      )
+    }]
+  return <Table
+    pagination={false}
+    rowKey="id"
+    columns={columnsKpi}
+    dataSource={data}
+    bordered
+  />
 }
