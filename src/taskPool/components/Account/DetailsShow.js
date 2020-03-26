@@ -9,8 +9,8 @@ import { KpiTable } from './AccountList'
 import moment from 'moment'
 
 function DetailsShow(props) {
-  const { accountDetail = {}, accountId } = props
-  const { base = {}, acceptCrowd = {}, auditState = 1, remark, kpiTarget = {}, appraiserImgUrl = [], mediaIndex1AvgReadNum28d, offerAndOtherData = [] } = accountDetail
+  const { accountDetail = {}, accountId, } = props
+  const { base = {}, acceptCrowd = {}, auditState = 1, remark, kpiTarget = {}, appraiserImgUrl = [], estimateState, mediaIndex1AvgReadNum28d, offerAndOtherData = [] } = accountDetail
   const { classification = [], avatarUrl, platformId, snsName, isVerified } = base
   const { sex = {}, age = [], area = [] } = acceptCrowd
   const baseConfig = [
@@ -104,7 +104,7 @@ function DetailsShow(props) {
         </div>
       </TitleBox>
       <TitleBox title='任务大厅账号报价及其他数据'>
-        <TableAccount data={offerAndOtherData} />
+        <TableAccount data={offerAndOtherData} estimateState={estimateState} />
         <div className='account-other'>
           <div>
             28天第一条平均阅读数：{kpiTarget.mediaIndex1stAvgReadNum28d || '-'}
@@ -136,7 +136,7 @@ const AudienceLine = ({ list = [] }) => {
 const AudienceArea = ({ list = [] }) => {
   return list.length > 0 ? list.map(one => <Tag color="blue" key={one.description}>{one.description}</Tag>) : '-'
 }
-const TableAccount = ({ data }) => {
+const TableAccount = ({ data, estimateState }) => {
   const columnsKpi = [
     {
       title: '位置',
@@ -160,7 +160,7 @@ const TableAccount = ({ data }) => {
       align: 'center',
       render: (text, record) => (
         <span>
-          {text}
+          {estimateState == 2 ? text : '账号完成评估后自动更新'}
         </span>
       )
     }, {
