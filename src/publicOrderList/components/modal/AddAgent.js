@@ -88,7 +88,10 @@ class AddAgent extends Component {
         } else if (values.paymentCompanyCode == "ZF0001") {
           values.paymentCompanyName = "布谷鸟"
         }
-        values.agentStatus = 1
+        values.agentStatus = 1;
+        if(values.invoice_type == 2) {
+          values.agent_tax_rate = 0;
+        }
         this.props.actions.addAgent({ ...values }).then((res) => {
           this.setState({
             visible: false
@@ -310,7 +313,7 @@ class AddAgent extends Component {
                 label="发票税率"
                 {...formLayout}
               >
-                {getFieldDecorator("agentTaxRate", {
+                {getFieldDecorator("agent_tax_rate", {
                   rules: [{
                     required: true, message: '本项为必选项，请选择！',
                   }]
