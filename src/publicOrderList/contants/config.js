@@ -201,6 +201,38 @@ const supportedOperations = {
   "can_cancel_execution_termination_request": "同意/拒绝执行终止"
 }
 
+// 获取执行价格名称展示
+export const getExcutePrice = (data = {}) => {
+  const {sku_type, equities, other_content} = data;
+  const skuTypeComp = sku_type && sku_type.skuTypeName ? 
+    <span key='skuTypeComp'>
+      <span>{`${sku_type.skuTypeName}`}</span>
+      <span className='sku_type_sign'>+</span>
+    </span> : null;
+  const equitiesComp = Array.isArray(equities) && equities.length ? 
+    equities.map(item => {
+      return (
+        <span key={item.equitiesTypeId} className='equities_item_comp'>
+          { item.is_free ? <img className='equities_img' src={require('../img/free.png')} /> : null }
+          <span>{item.equitiesName}</span>
+        </span>
+      )
+    }) : null;
+  const otherContentComp = other_content ? <span key='otherContent' className='equities_item_comp'>{other_content}</span> : null;
+
+  const showComp = [
+    skuTypeComp,
+    equitiesComp,
+    otherContentComp
+  ];
+  let hasVal = false;
+  showComp.forEach(item => {
+    if(item !== null)
+      hasVal = true
+  })
+  return hasVal ? showComp : '-'
+}
+
 // 列表页column
 export const columns = (props) => {
   const operationBtn = [
@@ -366,16 +398,11 @@ export const columns = (props) => {
     },
     {
       title: '执行价格名称',
-      dataIndex: 'public_cost_price',
-      key: 'excute_price_name',
+      dataIndex: 'price_item',
+      key: 'price_item',
       align: 'center',
-      width: 150,
-      render: (text, record) => {
-        return record.public_order && record.public_order.public_order_skus.length != 0 ?
-          <span>{record.public_order.public_order_skus[0].public_cost_price}</span> :
-          null
-      }
-
+      width: 200,
+      render: getExcutePrice
     },
     {
       title: '三方平台下单价（元）',
