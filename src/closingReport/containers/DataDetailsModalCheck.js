@@ -5,7 +5,8 @@ import {
   BaseInfo,
   ExecutionLink,
   ExecutionPic,
-  ExecutionData
+  ExecutionData,
+  PostBuyData
 } from '../components/dataDetails'
 import './DataDetailsModal.less'
 import DataDetailsReviewWrap from '../components/dataDetails/DataDetailsReviewWrap'
@@ -72,6 +73,7 @@ export default class DataDetailsModalCheck extends Component {
       basic_information, // baseInfo
       execution_link,
       execution_screenshot, // executionPic
+      ecom_tracking_data,
       execution_data
     } = platformData
     const props = {
@@ -114,6 +116,9 @@ export default class DataDetailsModalCheck extends Component {
               }
               <DataDetailsReviewWrap {...props} field='execution_data'>
                 <ExecutionData.View data={execution_data} />
+              </DataDetailsReviewWrap>
+              <DataDetailsReviewWrap {...props} field='ecom_tracking_data'>
+                <PostBuyData.View data={ecom_tracking_data}/>
               </DataDetailsReviewWrap>
             </Form>
         }

@@ -5,7 +5,7 @@ import {
   BaseInfo,
   ExecutionLink,
   ExecutionPic,
-  ExecutionData
+  ExecutionData, PostBuyData
 } from '../components/dataDetails'
 import './DataDetailsModal.less'
 import Loading from '../base/Loading'
@@ -38,6 +38,7 @@ export default class DataDetailsModalView extends Component {
       basic_information, // baseInfo
       execution_link,
       execution_screenshot, // executionPic
+      ecom_tracking_data,
       execution_data
     } = platformData
     const title = <h2 className='data-details-header'>平台数据详情
@@ -79,6 +80,10 @@ export default class DataDetailsModalView extends Component {
                 {parseInt(execution_data.status) === 1 && <Agree />}
                 {parseInt(execution_data.status) === 2 && <Refuse reason={execution_data.reason} />}
               </ExecutionData.View>
+              <PostBuyData.View data={ecom_tracking_data}>
+                {parseInt(ecom_tracking_data.status) === 1 && <Agree />}
+                {parseInt(ecom_tracking_data.status) === 2 && <Refuse reason={ecom_tracking_data.reason} />}
+              </PostBuyData.View>
             </div>
         }
       </div>
