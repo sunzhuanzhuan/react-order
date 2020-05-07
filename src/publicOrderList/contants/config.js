@@ -213,7 +213,7 @@ export const getExcutePrice = (data = {}) => {
     equities.map(item => {
       return (
         <span key={item.equitiesTypeId} className='equities_item_comp'>
-          { item.is_free ? <img className='equities_img' src={require('../img/free.png')} /> : null }
+          { item.is_free == 1 ? <img className='equities_img' src={require('../img/free.png')} /> : null }
           <span>{item.equitiesName}</span>
         </span>
       )
