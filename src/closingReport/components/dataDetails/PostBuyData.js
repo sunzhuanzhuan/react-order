@@ -81,8 +81,10 @@ export class View extends Component {
             return <p key={item.id}>
               <span className='title'>{item.display}：</span>
               {
-                item.link_prefix || item.id === 25 ?
-                  <a className='value' target="_blank" href={item.value}>{item.value || '-'}</a> :
+                item.id === 25 ? (
+                  item.checked === 1 ? <span className='value'>无法提供该数据</span> :
+                  <a className='value' target="_blank" href={item.value}>{item.value || '-'}</a>
+                  ) :
                   <span className='value' title={item.value}>
                     <DataFieldFormat
                       not
