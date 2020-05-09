@@ -13,14 +13,14 @@ import { fieldConfig } from '../../constants/config'
  */
 export class Edit extends Component {
   checkSwitchInput = (rule, value = {}, callback) => {
-    if (rule.required === 2 || value.input || value.checked) {
+    if (rule.require === 2 || value.input || value.checked) {
       callback()
       return
     }
     callback(rule.message)
   }
   validatorUrl = link_prefix => (rule, value, callback) => {
-    if (!link_prefix || value.checked) {
+    if (!link_prefix || value.checked || !value.input ) {
       return callback()
     }
     if (link_prefix.some(pre => new RegExp('^' + pre).test(value.input))) return callback()
@@ -47,7 +47,7 @@ export class Edit extends Component {
                     validator: this.checkSwitchInput,
                     message: `请输入${item.display}!`,
                     pattern: /^.{1,5}&/,
-                    required: item.required
+                    require: item.required
                   },
                   { validator: this.validatorUrl(item.link_prefix) }
                 ]
@@ -81,10 +81,14 @@ export class View extends Component {
             return <p key={item.id}>
               <span className='title'>{item.display}：</span>
               {
-                item.link_prefix ?
-                  <a className='value' target="_blank" href={item.value}>{item.value}</a> :
-                  <span className='value' title={item.value}><DataFieldFormat
-                    value={item.checked === 1 ? '无法提供该数据' : item.value} /></span>
+                item.link_prefix || item.id === 25 ?
+                  <a className='value' target="_blank" href={item.value}>{item.value || '-'}</a> :
+                  <span className='value' title={item.value}>
+                    <DataFieldFormat
+                      not
+                      value={item.checked === 1 ? '无法提供该数据' : item.value}
+                    />
+                  </span>
               }
             </p>
           })

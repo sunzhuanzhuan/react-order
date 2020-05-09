@@ -129,6 +129,7 @@ export default class Test extends Component {
     const { actions } = this.props
     // 获取投放数据汇总单信息
     actions.getSummaryTotalInfo({ summary_id }).then(({ data }) => {
+      data = data || {}
       actions.getCompanyPlatforms({ company_id: data.company_id })
     })
     actions.getSummaryOrderInfo({ summary_id }).then(() => {
