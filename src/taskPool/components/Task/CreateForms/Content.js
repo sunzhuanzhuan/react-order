@@ -52,11 +52,11 @@ class ContentForWeixin extends React.Component {
 
   // 富文本编辑自定义上传
   customUpload = (param) => {
-    const { data } = this.props
+    const { data, authToken } = this.props
     let formData = new window.FormData();
     let config = {
       headers: {
-        'Authorization': data.authToken,
+        'Authorization': authToken,
         'sessionId': cookie.get('token')
       },
       onUploadProgress: ({ total, loaded }) => {
