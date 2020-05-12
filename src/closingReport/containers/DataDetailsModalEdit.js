@@ -5,7 +5,8 @@ import {
   BaseInfo,
   ExecutionLink,
   ExecutionPic,
-  ExecutionData
+  ExecutionData,
+  PostBuyData
 } from '../components/dataDetails'
 import './DataDetailsModal.less'
 import { Agree } from '../base/ApprovalStatus'
@@ -45,6 +46,7 @@ export default class DataDetailsModalEdit extends Component {
       basic_information = [],
       execution_link = [],
       execution_screenshot = [],
+      ecom_tracking_data = [],
       data = [],
       screenshot = []
     } = value
@@ -71,6 +73,11 @@ export default class DataDetailsModalEdit extends Component {
     result.screenshot = screenshot.map(item => ({
       id: item.id,
       value: (item.value || []).map(file => file.url),
+      checked: item.checked ? 1 : 2
+    }))
+    result.ecom_tracking_data = ecom_tracking_data.map(item => ({
+      id: item.id,
+      value: item.input,
       checked: item.checked ? 1 : 2
     }))
     return result
@@ -133,6 +140,7 @@ export default class DataDetailsModalEdit extends Component {
       execution_link,
       execution_screenshot, // executionPic
       execution_data,
+      ecom_tracking_data,
       is_main
     } = platformData
     const props = {
@@ -184,6 +192,11 @@ export default class DataDetailsModalEdit extends Component {
                 parseInt(execution_data.status) === 1 ?
                   <ExecutionData.View data={execution_data}><Agree /></ExecutionData.View> :
                   <ExecutionData.Edit data={execution_data}  {...props} />
+              }
+              {
+                parseInt(ecom_tracking_data.status) === 1 ?
+                  <PostBuyData.View data={ecom_tracking_data}><Agree /></PostBuyData.View> :
+                  <PostBuyData.Edit data={ecom_tracking_data} isMain={is_main} {...props} />
               }
             </Form>
         }
