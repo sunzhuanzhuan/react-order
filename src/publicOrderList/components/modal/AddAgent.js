@@ -21,8 +21,6 @@ class AddAgent extends Component {
     super(props)
     this.state = {
       visible: false,
-      cooperationType: '1',
-      paymentType: '1',
       cooperationPlatform: [],
       bankList: [],
       cooperationPlatformId: ''
@@ -66,18 +64,6 @@ class AddAgent extends Component {
       }
     });
   }
-  //选择合作方式
-  changeCooperationType = (e) => {
-    this.setState({
-      cooperationType: e.target.value
-    })
-  }
-  //切换结算方式
-  changePaymentType = (e) => {
-    this.setState({
-      paymentType: e.target.value
-    })
-  }
   //添加代理商
   submit = (e) => {
     e.preventDefault();
@@ -88,7 +74,10 @@ class AddAgent extends Component {
         } else if (values.paymentCompanyCode == "ZF0001") {
           values.paymentCompanyName = "布谷鸟"
         }
-        values.agentStatus = 1
+        values.agentStatus = 1;
+        if(values.invoice_type == 2) {
+          values.agent_tax_rate = 0;
+        }
         this.props.actions.addAgent({ ...values }).then((res) => {
           this.setState({
             visible: false
@@ -140,6 +129,9 @@ class AddAgent extends Component {
       labelCol: { span: 5 },
       wrapperCol: { span: 19 },
     }
+    const invoiceType = form.getFieldValue('invoice_type')
+    const cooperationTypeVal = form.getFieldValue('cooperationType')
+    const paymentTypeVal = form.getFieldValue('paymentType')
     return <div style={{ position: 'absolute', right: '0', top: '2px' }}>
       <Button type="primary"
         onClick={this.showModal}
@@ -208,14 +200,14 @@ class AddAgent extends Component {
               }],
               initialValue: '1'
             })(
-              <RadioGroup onChange={this.changeCooperationType}>
+              <RadioGroup>
                 <Radio value='1'>周期付款</Radio>
                 <Radio value='2'>其他</Radio>
               </RadioGroup>
             )}
           </FormItem>
           {
-            this.state.cooperationType == "1" ?
+            cooperationTypeVal == "1" ?
               <FormItem
                 label="返款比例"
                 {...formLayout}
@@ -284,10 +276,44 @@ class AddAgent extends Component {
               initialValue: '1'
             })(
               <RadioGroup>
-                <Radio value='1' disabled={true}>全部回款</Radio>
+                <Radio value='1'>全部回票</Radio>
+                <Radio value='2'>部分回票</Radio>
+                <Radio value='3'>不回票</Radio>
               </RadioGroup>
             )}
           </FormItem>
+          <FormItem
+            label="回票类型"
+            {...formLayout}
+          >
+            {getFieldDecorator("invoice_type", {
+              initialValue: '1'
+            })(
+              <RadioGroup>
+                <Radio value='2' >增值税普通发票</Radio>
+                <Radio value='1' >增值税专用发票</Radio>
+              </RadioGroup>
+            )}
+          </FormItem>
+          {
+            invoiceType == '1' ? 
+              <FormItem
+                label="发票税率"
+                {...formLayout}
+              >
+                {getFieldDecorator("agent_tax_rate", {
+                  rules: [{
+                    required: true, message: '本项为必选项，请选择！',
+                  }]
+                })(
+                  <RadioGroup>
+                    <Radio value='0.03' >3%</Radio>
+                    <Radio value='0.06' >6%</Radio>
+                  </RadioGroup>
+                )}
+              </FormItem>
+              : null
+          }
           <FormItem
             label="发票开具方"
             {...formLayout}
@@ -315,14 +341,14 @@ class AddAgent extends Component {
               }],
               initialValue: '1'
             })(
-              <RadioGroup onChange={this.changePaymentType}>
+              <RadioGroup>
                 <Radio value='1'>银行转账</Radio>
                 <Radio value='2'>支付宝</Radio>
               </RadioGroup>
             )}
           </FormItem>
           {
-            this.state.paymentType == "1" ?
+            paymentTypeVal == "1" ?
               <div>
                 <FormItem
                   label="开户行"
