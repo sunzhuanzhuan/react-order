@@ -75,7 +75,7 @@ class UpdateArticalModal extends React.Component {
 
       <h4 style={{ padding: '10px 0' }}>已选订单
       订单数量<span style={{ color: 'red', padding: '0 10px' }}>{dataSource.length}个</span></h4>
-      <div className="spArticalUpdate"><Table scroll={{ y: 400 }} rowKey='order_id' bordered columns={ArticalCols} dataSource={dataSource} pagination={false} /></div>
+      <div><Table scroll={{ y: 400 }} rowKey='order_id' bordered columns={ArticalCols} dataSource={dataSource} pagination={false} /></div>
       <Form>
         <Form.Item label='账号ID'>
           {getFieldDecorator('weibo_id', {
