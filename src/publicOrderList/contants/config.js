@@ -204,15 +204,18 @@ const supportedOperations = {
 // 获取执行价格名称展示
 export const getExcutePrice = (data = {}) => {
   const {sku_type, equities, other_content} = data;
+  const isHasEquities = Array.isArray(equities) && equities.length;
   const skuTypeComp = sku_type && sku_type.skuTypeName ? 
     <span key='skuTypeComp'>
       <span>{`${sku_type.skuTypeName}`}</span>
-      <span className='sku_type_sign'>+</span>
+      {
+        isHasEquities ? <span className='sku_type_sign'>+</span> : null
+      }
     </span> : null;
-  const equitiesComp = Array.isArray(equities) && equities.length ? 
+  const equitiesComp = isHasEquities ? 
     equities.map(item => {
       return (
-        <span key={item.equitiesTypeId} className='equities_item_comp'>
+        <span key={+new Date() + Math.random()} className='equities_item_comp'>
           { item.is_free == 1 ? <img className='equities_img' src={require('../img/free.png')} /> : null }
           <span>{item.equitiesName}</span>
         </span>
@@ -398,11 +401,14 @@ export const columns = (props) => {
     },
     {
       title: '执行价格名称',
-      dataIndex: 'price_item',
-      key: 'price_item',
+      dataIndex: 'accept_reservation_chosen_price',
+      key: 'accept_reservation_chosen_price',
       align: 'center',
       width: 200,
-      render: getExcutePrice
+      render: (data = {}) => {
+        const { price_item = {} } = data;
+        return getExcutePrice(price_item)
+      }
     },
     {
       title: '三方平台下单价（元）',

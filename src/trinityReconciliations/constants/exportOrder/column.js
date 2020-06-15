@@ -36,11 +36,14 @@ export const exportOrderListFunc = (agentInfo) => {
     },
     {
       title: '执行价格名称',
-      dataIndex: 'price_item',
-      key: 'price_item',
+      dataIndex: 'accept_reservation_chosen_price',
+      key: 'accept_reservation_chosen_price',
       align: 'center',
       width: 200,
-      render: getExcutePrice
+      render: (data = {}) => {
+        const { price_item = {} } = data;
+        return getExcutePrice(price_item)
+      }
     },
     {
       title: '下单时间',
