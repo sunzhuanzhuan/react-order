@@ -158,7 +158,7 @@ class UpdateModal extends React.Component {
                 initialValue: dataSource && dataSource[0].service_rate || '',
                 rules: [
                   { required: true, message: '请填写值' },
-                  { pattern: /^(([1-9][0-9]|[1-9])(\.\d{1,2})?|0\.\d{1,2}|100(\.00?)?|0)$/, message: '仅可输入0到100之间的数字，小数点最多到后两位' }
+                  { pattern: /^(([1-9][0-9]|[1-9])(\.\d{1,8})?|0\.\d{1,8}|100(\.0{1,8})?|0)$/, message: '仅可输入0到100之间的数字，小数点最多到后八位' }
                 ]
               })(
                 <Input placeholder='' suffix='%' style={{ width: 200 }} onChange={e => {
