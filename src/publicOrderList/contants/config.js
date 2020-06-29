@@ -221,7 +221,7 @@ export const getExcutePrice = (data = {}) => {
         </span>
       )
     }) : null;
-  const otherContentComp = other_content ? <span key='otherContent' className='equities_item_comp'>{other_content}</span> : null;
+  const otherContentComp = other_content ? <span key='otherContent' className='equities_item_comp euitites_other_content'>{other_content}</span> : null;
 
   const showComp = [
     skuTypeComp,
