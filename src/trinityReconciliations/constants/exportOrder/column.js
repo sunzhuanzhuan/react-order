@@ -1,6 +1,7 @@
 import React from "react";
 import qs from 'qs';
 import { Popconfirm, Radio } from 'antd';
+import { getExcutePrice } from "../../../publicOrderList/contants/config";
 
 export const exportOrderListFunc = (agentInfo) => {
   return [
@@ -10,6 +11,7 @@ export const exportOrderListFunc = (agentInfo) => {
       key: 'wby_order_id',
       align: 'center',
       width: 100,
+      fixed: 'left'
     },
     {
       title: agentInfo.length > 0 ? agentInfo[0].cooperationPlatformName : '',
@@ -33,11 +35,22 @@ export const exportOrderListFunc = (agentInfo) => {
       width: 100,
     },
     {
+      title: '执行价格名称',
+      dataIndex: 'accept_reservation_chosen_price',
+      key: 'accept_reservation_chosen_price',
+      align: 'center',
+      width: 200,
+      render: (data = {}) => {
+        const { price_item = {} } = data;
+        return getExcutePrice(price_item)
+      }
+    },
+    {
       title: '下单时间',
       dataIndex: 'ttp_place_order_at',
       key: 'ttp_place_order_at',
       align: 'center',
-      width: 100,
+      width: 120,
     },
     {
       title: '公司简称',

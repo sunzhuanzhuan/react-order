@@ -201,6 +201,41 @@ const supportedOperations = {
   "can_cancel_execution_termination_request": "同意/拒绝执行终止"
 }
 
+// 获取执行价格名称展示
+export const getExcutePrice = (data = {}) => {
+  const {sku_type, equities, other_content} = data;
+  const isHasEquities = Array.isArray(equities) && equities.length;
+  const skuTypeComp = sku_type && sku_type.skuTypeName ? 
+    <span key='skuTypeComp'>
+      <span>{`${sku_type.skuTypeName}`}</span>
+      {
+        isHasEquities ? <span className='sku_type_sign'>+</span> : null
+      }
+    </span> : null;
+  const equitiesComp = isHasEquities ? 
+    equities.map(item => {
+      return (
+        <span key={+new Date() + Math.random()} className='equities_item_comp'>
+          { item.is_free == 1 ? <img className='equities_img' src={require('../img/free.png')} /> : null }
+          <span>{item.equitiesName}</span>
+        </span>
+      )
+    }) : null;
+  const otherContentComp = other_content ? <span key='otherContent' className='equities_item_comp euitites_other_content'>{other_content}</span> : null;
+
+  const showComp = [
+    skuTypeComp,
+    equitiesComp,
+    otherContentComp
+  ];
+  let hasVal = false;
+  showComp.forEach(item => {
+    if(item !== null)
+      hasVal = true
+  })
+  return hasVal ? showComp : '-'
+}
+
 // 列表页column
 export const columns = (props) => {
   const operationBtn = [
@@ -270,7 +305,7 @@ export const columns = (props) => {
       key: 'support_operates',
       align: 'center',
       fixed: 'left',
-      width: 100,
+      width: 150,
       render: (text, record) => {
         let btnArr = []
         operationBtn.forEach(v => {
@@ -362,6 +397,17 @@ export const columns = (props) => {
             <span>{text.platform_name}</span>
           </div>
         </div>
+      }
+    },
+    {
+      title: '执行价格名称',
+      dataIndex: 'accept_reservation_chosen_price',
+      key: 'accept_reservation_chosen_price',
+      align: 'center',
+      width: 200,
+      render: (data = {}) => {
+        const { price_item = {} } = data;
+        return getExcutePrice(price_item)
       }
     },
     {
@@ -713,7 +759,7 @@ export const columns = (props) => {
       dataIndex: 'execution_status',
       key: 'execution_status',
       align: 'center',
-      width: 50,
+      width: 80,
       render: text => <span>{executionStatusMap[text]}</span>
     }
   ]
