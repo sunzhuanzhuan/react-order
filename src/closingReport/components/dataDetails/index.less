@@ -19,6 +19,27 @@
       animation-name: fadeOut;
     }
   }
+
+  .post-buy-data-item-wrap{
+    border: 1px solid #f3f3f3;
+    margin: 24px 0;
+    .delete-data-wrap{
+        line-height: 24px;
+        a{
+            display: none;
+            text-align: right;
+            margin: 12px;
+        }
+    }
+  }
+
+  .post-buy-data-item-wrap:hover{
+    .delete-data-wrap{
+        a{
+            display: block;
+        }
+    }
+  }
 }
 
 .platform-data-detail-module.read {
@@ -300,3 +321,4 @@
     opacity: 0;
   }
 }
+

@@ -36,7 +36,7 @@ export default class DataDetailsModalEdit extends Component {
     })
   }
 
-  componentWillUnmount() {
+  componentWillUnmount () {
     this.props.actions.clearPlatformData()
   }
 
@@ -75,11 +75,14 @@ export default class DataDetailsModalEdit extends Component {
       value: (item.value || []).map(file => file.url),
       checked: item.checked ? 1 : 2
     }))
-    result.ecom_tracking_data = ecom_tracking_data.map(item => ({
-      id: item.id,
-      value: item.input,
-      checked: item.checked ? 1 : 2
-    }))
+    debugger
+    result.ecom_tracking_data = ecom_tracking_data.map((v) => {
+      return v.map(item => ({
+        id: item.id,
+        value: item.input,
+        checked: item.checked ? 1 : 2
+      }))
+    })
     return result
   }
 
@@ -132,7 +135,7 @@ export default class DataDetailsModalEdit extends Component {
     })
   }
 
-  render() {
+  render () {
     const { form, data, platformData } = this.props
     const {
       total, // outline
@@ -185,7 +188,7 @@ export default class DataDetailsModalEdit extends Component {
               }
               {
                 parseInt(execution_screenshot.status) === 1 ?
-                  <ExecutionPic.View data={execution_screenshot}><Agree top={10}/></ExecutionPic.View> :
+                  <ExecutionPic.View data={execution_screenshot}><Agree top={10} /></ExecutionPic.View> :
                   <ExecutionPic.Edit data={execution_screenshot} {...props} />
               }
               {
