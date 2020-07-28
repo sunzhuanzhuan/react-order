@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Form } from 'antd'
+import { Form, Popconfirm } from 'antd'
 import './index.less'
 import SwitchRequiredInput from '../../base/SwitchRequiredInput'
 import DataModuleHeader from '../../base/DataModuleHeader'
@@ -20,8 +20,9 @@ export class Edit extends Component {
     super(props)
     this.state = {
       currentData: props.data && props.data.data.length
-        ? [props.data.data] : []
+        ? props.data.data : []
     }
+    this.count = 0
   }
   checkSwitchInput = () => (rule, value = {}, callback) => {
     if (rule.require === 2 || value.input || value.checked) {
@@ -38,14 +39,13 @@ export class Edit extends Component {
     callback('请输入正确的链接')
   }
 
-  onChange = (i, n) => (changeData) => {
+  onBlur = (i, n) => (changeData) => {
     let tmp = [...this.state.currentData]
     tmp[i][n] = {
       ...tmp[i][n],
       value: changeData.input,
-      checked: changeData.checked
+      checked: changeData.checked ? 1 : 2
     }
-    console.log(tmp)
     this.setState({
       currentData: [
         ...tmp
@@ -75,18 +75,22 @@ export class Edit extends Component {
    * 
   */
   deleteData = (n) => () => {
-    console.log(this.state.currentData, '333333')
     let tmp = [...this.state.currentData]
     tmp.splice(n, 1)
-    console.log(tmp)
+
     this.setState({
-      currentData: [
-        ...tmp
-      ]
+      currentData: []
+    }, () => {
+      this.setState({
+        currentData: [
+          ...tmp
+        ]
+      })
     })
   }
 
   render () {
+    this.count += 1
     const { getFieldDecorator } = this.props.form
     const { currentData } = this.state
     const reason = parseInt(this.props.data.status) === 2 ?
@@ -96,8 +100,20 @@ export class Edit extends Component {
       <div style={{ paddingTop: '10px' }}>
         {
           currentData.map((v, i) => {
-            return <div key={+new Date() + Math.random()} className='post-buy-data-item-wrap'>
-              <a onClick={this.deleteData(i)} className='delete-data-wrap'>删除改组</a>
+            return <div key={i} className='post-buy-data-item-wrap'>
+              {
+                currentData.length > 1 ?
+                  <div className='delete-data-wrap'>
+                    <Popconfirm
+                      title="你确定要删除这组流量宝吗?"
+                      onConfirm={this.deleteData(i)}
+                      placement="topRight"
+                      autoAdjustOverflow={false}
+                      getPopupContainer={(node) => node.parentNode}
+                    >
+                      <a>删除改组</a>
+                    </Popconfirm> </div> : null
+              }
               {
                 v.map((item, n) => {
                   return <Form.Item key={item.id + item.value + item.checked}
@@ -114,12 +130,12 @@ export class Edit extends Component {
                           require: item.required
                         },
                         { validator: this.validatorUrl(item.link_prefix) }
-                      ],
-                      onChange: this.onChange(i, n)
+                      ]
                     })(
                       <SwitchRequiredInput
                         placeholder={`请输入${item.display}`}
                         type={fieldConfig(item.id)}
+                        onBlur={this.onBlur(i, n)}
                       />
                     )}
                   </Form.Item>
@@ -129,7 +145,7 @@ export class Edit extends Component {
           })
         }
       </div>
-      <a onClick={this.addNew} style={{ textAlign: 'right' }}>+新增一组流量宝</a>
+      <a onClick={this.addNew} style={{ textAlign: 'right', display: 'block' }}>+新增一组流量宝</a>
     </div>
   }
 }
