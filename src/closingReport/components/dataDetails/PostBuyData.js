@@ -145,7 +145,12 @@ export class Edit extends Component {
           })
         }
       </div>
-      <a onClick={this.addNew} style={{ float: 'right', display: 'inline-block' }}>+新增一组流量宝</a>
+      {
+        currentData.length < 2 ?
+          <a onClick={this.addNew} style={{ float: 'right', display: 'inline-block' }}>+新增一组流量宝</a>
+          : null
+      }
+
     </div>
   }
 }
