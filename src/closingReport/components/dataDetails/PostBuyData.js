@@ -145,7 +145,7 @@ export class Edit extends Component {
           })
         }
       </div>
-      <a onClick={this.addNew} style={{ textAlign: 'right', display: 'block' }}>+新增一组流量宝</a>
+      <a onClick={this.addNew} style={{ float: 'right', display: 'inline-block' }}>+新增一组流量宝</a>
     </div>
   }
 }
@@ -156,39 +156,38 @@ export class Edit extends Component {
 export class View extends Component {
   render () {
     const { data: { data = [] } } = this.props
-    return <div className='platform-data-detail-module base-info read'>
-      <div className='read-left-head'>
-        流量宝信息
-      </div>
-      <div className='read-right-data'>
-        {
-          data.map((v, i) => {
-            return <div key={i} className='post-buy-date-item-wrap'>
-              {
-                v.map(item => {
-                  return <p key={item.id}>
-                    <span className='title'>{item.display}：</span>
-                    {
-                      item.id === 25 ? (
-                        item.checked === 1 ? <span className='value'>无法提供该数据</span> :
-                          <a className='value' target="_blank" href={item.value}>{item.value || '-'}</a>
-                      ) :
-                        <span className='value' title={item.value}>
-                          <DataFieldFormat
-                            not
-                            value={item.checked === 1 ? '无法提供该数据' : item.value}
-                          />
-                        </span>
-                    }
-                  </p>
-                })
-              }
+    return data.map((v, i) => {
+      return <div key={i} className='platform-data-detail-module base-info read'
+        style={{ borderTop: '1px solid #f3f3f3' }}>
+        <div className='read-left-head'>
+          流量宝信息
             </div>
-          })
-        }
+        <div className='read-right-data'>
+          <div className='post-buy-date-item-wrap'>
+            {
+              v.map(item => {
+                return <p key={item.id}>
+                  <span className='title'>{item.display}：</span>
+                  {
+                    item.id === 25 ? (
+                      item.checked === 1 ? <span className='value'>无法提供该数据</span> :
+                        <a className='value' target="_blank" href={item.value}>{item.value || '-'}</a>
+                    ) :
+                      <span className='value' title={item.value}>
+                        <DataFieldFormat
+                          not
+                          value={item.checked === 1 ? '无法提供该数据' : item.value}
+                        />
+                      </span>
+                  }
+                </p>
+              })
+            }
+          </div>
+        </div>
+        {this.props.children}
       </div>
-      {this.props.children}
-    </div>
+    })
   }
 }
 
