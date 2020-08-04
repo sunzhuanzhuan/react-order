@@ -14,7 +14,7 @@ export default class SwitchRequiredInput extends Component {
     }
   }
 
-  static getDerivedStateFromProps(nextProps) {
+  static getDerivedStateFromProps (nextProps) {
     if ('value' in nextProps) {
       return {
         ...(nextProps.value || {})
@@ -31,9 +31,14 @@ export default class SwitchRequiredInput extends Component {
     this.triggerChange({ input: value })
   }
 
+  handleInputBlur = (e) => {
+    const value = e.target.value
+    this.triggerBlur({ input: value })
+  }
+
   handleNumberChange = (value) => {
     // 单独处理为0的情况
-    if(value === 0) value = '0'
+    if (value === 0) value = '0'
     if (!('value' in this.props)) {
       this.setState({ input: value })
     }
@@ -46,6 +51,7 @@ export default class SwitchRequiredInput extends Component {
       this.setState({ checked, input: '' })
     }
     this.triggerChange({ checked, input: '' })
+    this.triggerBlur({ checked, input: '' })
   }
 
   triggerChange = (changedValue) => {
@@ -55,7 +61,14 @@ export default class SwitchRequiredInput extends Component {
     }
   }
 
-  render() {
+  triggerBlur = (changedValue) => {
+    const onBlur = this.props.onBlur
+    if (onBlur) {
+      onBlur(Object.assign({}, this.state, changedValue))
+    }
+  }
+
+  render () {
     const { checked, input } = this.state
     const { width = 420, placeholder = '请输入', type, disabled } = this.props
     let props = {
@@ -70,6 +83,7 @@ export default class SwitchRequiredInput extends Component {
       case 'input':
         inputComponent = <Input {...props}
           onChange={this.handleInputChange}
+          onBlur={this.handleInputBlur}
         />
         break
       case 'number':
@@ -101,7 +115,8 @@ export default class SwitchRequiredInput extends Component {
     }
     return <div className='switch-required-input'>
       {inputComponent}
-      <Checkbox disabled={disabled} checked={checked} onChange={this.handleCheckChange} style={checked ? { opacity: 1 } : {}}>无法提供该数据</Checkbox>
+      <Checkbox disabled={disabled} checked={checked}
+        onChange={this.handleCheckChange} style={checked ? { opacity: 1 } : {}}>无法提供该数据</Checkbox>
     </div>
   }
 }
