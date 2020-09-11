@@ -277,16 +277,16 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
               if (value.toString().split('.')[0].length > 9) {
                 callback('最多输入9位数')
                 return
-              } else if (value <= 0) {
-                callback('请输入大于0的数')
+              }else if (value == 0) {
+                callback('请输入非0的数')
                 return
-              } else {
+              }else {
                 callback()
               }
             }
           }]
         })(
-          <InputNumber precision={2} max={999999999} min={1} style={{ width: 150 }} onBlur={(e) => {
+          <InputNumber precision={2} max={999999999} style={{ width: 150 }} onBlur={(e) => {
             validateFields([`${record.order_id}.costwithfee`], (errors, values) => {
               if (!errors) {
                 if (e.target.value != '' && e.target.value != record.costwithfee) {

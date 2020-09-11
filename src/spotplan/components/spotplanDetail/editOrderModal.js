@@ -55,8 +55,8 @@ class EditOrderModal extends React.Component {
     if (value1.toString().split('.')[0].length > 9) {
       callback('最多输入9位数')
       return
-    } else if (value1 <= 0) {
-      callback('请输入大于0的数')
+    } else if (value1 == 0) {
+      callback('请输入非0的数')
       return
     } else {
       callback()
@@ -145,7 +145,7 @@ class EditOrderModal extends React.Component {
             {
               validator: this.checkCostfee
             }]
-          })(<InputNumber max={999999999} min={1} precision={2} style={{ width: 200 }} />
+          })(<InputNumber max={999999999} precision={2} style={{ width: 200 }} />
           )}
         </FormItem>
         <FormItem label='账号分类' {...formItemLayout}>
