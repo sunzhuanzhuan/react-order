@@ -226,21 +226,23 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
         {getFieldDecorator(`${record.order_id}.cost`, {
           validateTrigger: ['onChange'],
           validateFirst: true,
-          rules: [{ required: true, message: '请填写cost金额' }, {
-            validator: (rule, value, callback) => {
-              if (value.toString().split('.')[0].length > 8) {
-                callback('最多输入8位数')
-                return
-              } else if (value == 0) {
-                callback('请输入非0的数')
-                return
-              } else {
-                callback()
-              }
-            }
-          }]
+          rules: [{ required: true, message: '请填写cost金额' }
+          // , {
+          //   validator: (rule, value, callback) => {
+          //     if (value.toString().split('.')[0].length > 8) {
+          //       callback('最多输入8位数')
+          //       return
+          //     } else if (value == 0) {
+          //       callback('请输入非0的数')
+          //       return
+          //     } else {
+          //       callback()
+          //     }
+          //   }
+          // }
+        ]
         })(
-          <InputNumber precision={2} max={99999999} style={{ width: 150 }} onBlur={(e) => {
+          <InputNumber precision={2} style={{ width: 150 }} onBlur={(e) => {
             validateFields([`${record.order_id}.cost`], (errors, values) => {
               if (!errors) {
                 if (e.target.value != '' && e.target.value != record.cost) {
@@ -272,21 +274,23 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
         {getFieldDecorator(`${record.order_id}.costwithfee`, {
           validateTrigger: ['onChange'],
           validateFirst: true,
-          rules: [{ required: true, message: '请填写costwithfee金额' }, {
-            validator: (rule, value, callback) => {
-              if (value.toString().split('.')[0].length > 9) {
-                callback('最多输入9位数')
-                return
-              }else if (value == 0) {
-                callback('请输入非0的数')
-                return
-              }else {
-                callback()
-              }
-            }
-          }]
+          rules: [{ required: true, message: '请填写costwithfee金额' }
+          // , {
+          //   validator: (rule, value, callback) => {
+          //     if (value.toString().split('.')[0].length > 9) {
+          //       callback('最多输入9位数')
+          //       return
+          //     }else if (value == 0) {
+          //       callback('请输入非0的数')
+          //       return
+          //     }else {
+          //       callback()
+          //     }
+          //   }
+          // }
+        ]
         })(
-          <InputNumber precision={2} max={999999999} style={{ width: 150 }} onBlur={(e) => {
+          <InputNumber precision={2} style={{ width: 150 }} onBlur={(e) => {
             validateFields([`${record.order_id}.costwithfee`], (errors, values) => {
               if (!errors) {
                 if (e.target.value != '' && e.target.value != record.costwithfee) {
