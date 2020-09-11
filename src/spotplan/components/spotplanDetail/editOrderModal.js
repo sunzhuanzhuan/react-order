@@ -43,8 +43,8 @@ class EditOrderModal extends React.Component {
     if (value.toString().split('.')[0].length > 8) {
       callback('最多输入8位数')
       return
-    } else if (value <= 0) {
-      callback('请输入大于0的数')
+    } else if (value == 0) {
+      callback('请输入非0的数')
       return
     } else {
       callback()
@@ -122,7 +122,7 @@ class EditOrderModal extends React.Component {
             {
               validator: this.checkCost
             }]
-          })(<InputNumber precision={2} max={99999999} min={1} style={{ width: 200 }} onChange={(value) => {
+          })(<InputNumber precision={2} max={99999999} style={{ width: 200 }} onChange={(value) => {
             if (value != data && data[0].cost) {
               if (data && data[0].service_rate) {
                 let num = Number(value) * (1 + (Number(data[0].service_rate) / 100)).toString()
