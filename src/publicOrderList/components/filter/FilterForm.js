@@ -7,6 +7,7 @@
 import React from 'react'
 import { Button } from 'antd';
 import InputComponent from './InputComponent'
+import BatchInputComponent from './BatchInputComponent'
 import DatePickerComponent from './DatePickerComponent'
 import MultidimSelect from './MultidimSelect'
 import SingleSelect from './SingleSelect'
@@ -25,6 +26,14 @@ const FilterForm = (props) => {
       {
         filtersConfig.map(item => {
           switch (item.type) {
+            //批量文本输入组件
+            case "batchInput":
+              return <BatchInputComponent
+                form={form}
+                {...item}
+                layout={layout}
+                key={item.id}
+              />
             // 文本输入组件
             case "input":
               return <InputComponent
