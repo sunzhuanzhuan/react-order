@@ -40,6 +40,9 @@ class BatchInput extends Component {
             this.setState({
                 showBatchModal: false
             });
+            if (this.props.onChange) {
+                this.props.onChange(arr.join(','))
+            }
         } else {
             Modal.error({
                 title: '提示',
