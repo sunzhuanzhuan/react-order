@@ -42,7 +42,7 @@ export const filterFormArr = [
   },
   {
     label: "订单ID",
-    type: "input",
+    type: "batchInput",
     id: "order_id"
   },
   {
