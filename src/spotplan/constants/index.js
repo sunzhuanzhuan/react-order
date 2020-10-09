@@ -229,19 +229,19 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
           validateTrigger: ['onChange'],
           validateFirst: true,
           rules: [{ required: true, message: '请填写cost金额' }
-          // , {
-          //   validator: (rule, value, callback) => {
-          //     if (value.toString().split('.')[0].length > 8) {
-          //       callback('最多输入8位数')
-          //       return
-          //     } else if (value == 0) {
-          //       callback('请输入非0的数')
-          //       return
-          //     } else {
-          //       callback()
-          //     }
-          //   }
-          // }
+          , {
+            validator: (rule, value, callback) => {
+              if (value.toString().split('.')[0].length > 8) {
+                callback('最多输入8位数')
+                return
+              } else if (value <= 0) {
+                callback('请输入大于0的数')
+                return
+              } else {
+                callback()
+              }
+            }
+          }
         ]
         })(
           <InputNumber precision={2} style={{ width: 150 }} onBlur={(e) => {
@@ -296,19 +296,19 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
           validateTrigger: ['onChange'],
           validateFirst: true,
           rules: [{ required: true, message: '请填写costwithfee金额' }
-          // , {
-          //   validator: (rule, value, callback) => {
-          //     if (value.toString().split('.')[0].length > 9) {
-          //       callback('最多输入9位数')
-          //       return
-          //     }else if (value == 0) {
-          //       callback('请输入非0的数')
-          //       return
-          //     }else {
-          //       callback()
-          //     }
-          //   }
-          // }
+          , {
+            validator: (rule, value, callback) => {
+              if (value.toString().split('.')[0].length > 9) {
+                callback('最多输入9位数')
+                return
+              }else if (value <= 0) {
+                callback('请输入大于0的数')
+                return
+              }else {
+                callback()
+              }
+            }
+          }
         ]
         })(
           <InputNumber precision={2} max={999999999} min={1} style={{ width: 250 }} onBlur={(e) => {
@@ -757,7 +757,7 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     key: 'cost',
     align: 'center',
     width: 120,
-    render: (record,text) => {
+    render: (text,record) => {
       return record.is_tax_rebate_account ==2?<div>{text && numeral(text).format('0,0.00') || '-'}</div>:<div>{text && numeral(text).format('0,0.00') || '-'}<br/>
       <span style={{color:'red'}}>返税专用</span>
       </div>
@@ -769,7 +769,7 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     key: 'costwithfee',
     align: 'center',
     width: 120,
-    render:(record,text) => {
+    render:(text,record) => {
       return record.is_tax_rebate_account ==2?<div>{text && numeral(text).format('0,0.00') || '-'}</div>:<div>{text && numeral(text).format('0,0.00') || '-'}<br/>
       <span style={{color:'red'}}>返税专用</span>
       </div>
