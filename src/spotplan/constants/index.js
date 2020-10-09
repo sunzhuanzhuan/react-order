@@ -318,7 +318,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
           }} />
         )
         }
-      </FormItem>:<FormItem  className='tax-costwithfee' label={<span>返税专用，请输入负值且返税金额÷1.06</span>}>
+      </FormItem> : <FormItem  className='tax-costwithfee' label={<span>返税专用，请输入负值且返税金额÷1.06</span>}>
         {getFieldDecorator(`${record.order_id}.costwithfee`, {
           validateTrigger: ['onChange'],
           validateFirst: true,
