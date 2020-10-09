@@ -43,8 +43,8 @@ class EditOrderModal extends React.Component {
     if (value.toString().split('.')[0].length > 8) {
       callback('最多输入8位数')
       return
-    } else if (value <= 0) {
-      callback('请输入大于0的数')
+    } else if (value == 0) {
+      callback('请输入非0的数')
       return
     } else {
       callback()
@@ -55,8 +55,8 @@ class EditOrderModal extends React.Component {
     if (value1.toString().split('.')[0].length > 9) {
       callback('最多输入9位数')
       return
-    } else if (value1 <= 0) {
-      callback('请输入大于0的数')
+    } else if (value1 == 0) {
+      callback('请输入非0的数')
       return
     } else {
       callback()
@@ -122,10 +122,11 @@ class EditOrderModal extends React.Component {
             validateTrigger: ['onChange'],
             validateFirst: true,
             rules: [{ required: true, message: '请填cost金额' },
-            {
-              validator: this.checkCost
-            }]
-          })(<InputNumber precision={2} max={99999999} min={1} style={{ width: 200 }} onChange={(value) => {
+            // {
+            //   validator: this.checkCost
+            // }
+          ]
+          })(<InputNumber precision={2} style={{ width: 200 }} onChange={(value) => {
             if (value != data && data[0].cost) {
               if (data && data[0].service_rate) {
                 let num = Number(value) * (1 + (Number(data[0].service_rate) / 100)).toString()
@@ -145,10 +146,11 @@ class EditOrderModal extends React.Component {
             validateTrigger: ['onChange'],
             validateFirst: true,
             rules: [{ required: true, message: '请填costwithfee金额' },
-            {
-              validator: this.checkCostfee
-            }]
-          })(<InputNumber max={999999999} min={1} precision={2} style={{ width: 200 }} />
+            // {
+            //   validator: this.checkCostfee
+            // }
+          ]
+          })(<InputNumber precision={2} style={{ width: 200 }} />
           )}
         </FormItem>}
         {data[0].is_tax_rebate_account == 1 && <FormItem label='cost' {...formItemLayout}>
