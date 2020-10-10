@@ -122,9 +122,9 @@ class EditOrderModal extends React.Component {
             validateTrigger: ['onChange'],
             validateFirst: true,
             rules: [{ required: true, message: '请填cost金额' },
-            // {
-            //   validator: this.checkCost
-            // }
+            {
+              validator: this.checkCost
+            }
           ]
           })(<InputNumber precision={2} style={{ width: 200 }} onChange={(value) => {
             if (value != data && data[0].cost) {
@@ -146,9 +146,9 @@ class EditOrderModal extends React.Component {
             validateTrigger: ['onChange'],
             validateFirst: true,
             rules: [{ required: true, message: '请填costwithfee金额' },
-            // {
-            //   validator: this.checkCostfee
-            // }
+            {
+              validator: this.checkCostfee
+            }
           ]
           })(<InputNumber precision={2} style={{ width: 200 }} />
           )}
