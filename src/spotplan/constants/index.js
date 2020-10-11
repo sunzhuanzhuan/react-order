@@ -331,10 +331,13 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
           <InputNumber precision={2} style={{ width: 250 ,backgroundColor:'#fffce5'}} className='tax-costwithfee' onBlur={(e) => {
             validateFields([`${record.order_id}.costwithfee`], (errors, values) => {
               if (!errors) {
-                  let newAtCost = `${record.order_id}.cost`;
-                  setFieldsValue({ [newAtCost]:Number(e.target.value)/1.06 });
-                  validateFields([`${record.order_id}.cost`])
-                  handleUpdate({ order_id: record.order_id, price_id: record.price_id, costwithfee: e.target.value })
+                  handleUpdate({ order_id: record.order_id, price_id: record.price_id, costwithfee: e.target.value }).then((res)=>{
+                    if (record.cost) {
+                      let newAt = `${record.order_id}.cost`;
+                      setFieldsValue({ [newAt]: res.data.cost });
+                      validateFields([`${record.order_id}.cost`])
+                    }
+                  })
               
               }
             })
