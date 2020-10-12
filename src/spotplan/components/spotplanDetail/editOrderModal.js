@@ -181,7 +181,7 @@ class EditOrderModal extends React.Component {
           })(<InputNumber precision={2}
             style={{ width: 200 ,backgroundColor:'#fffce4'}}  onChange={(value) => {
             if (value != data && data[0].costwithfee) {
-                let num =(Number(value)/1.06)
+                let num =(Number(value)/(1 + (Number(data[0].service_rate) / 100)))
                 this.props.form.setFieldsValue({
                   'cost': num.toFixed(2)
                 })
