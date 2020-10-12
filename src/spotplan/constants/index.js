@@ -222,7 +222,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
     align: 'center',
     width: 180,
     render: (text, record) => {
-      return record.is_inward_send == 1 || record.last_apply_status == 1 || record.last_apply_status == 2 ? text && numeral(text).format('0,0.00') || '-' :
+      return record.is_inward_send == 1 || record.last_apply_status == 1 || record.last_apply_status == 2 ? record.is_tax_rebate_account ==1?<div>{text && numeral(text).format('0,0.00') || '-'}<br/><span style={{color:'red'}}>返税专用</span> </div>:<div>{text && numeral(text).format('0,0.00') || '-'} </div>:
        //  是否返税账号 1是，2否
       record.is_tax_rebate_account ==2?<FormItem>
         {getFieldDecorator(`${record.order_id}.cost`, {
@@ -271,7 +271,13 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
             validateFields([`${record.order_id}.cost`], (errors, values) => {
               if (!errors) {
                 if (e.target.value != '' && e.target.value != record.cost) {
-                  handleUpdate({ order_id: record.order_id, price_id: record.price_id, cost: e.target.value })
+                  handleUpdate({ order_id: record.order_id, price_id: record.price_id, cost: e.target.value }).then((res)=>{
+                    if (record.costwithfee) {
+                      let newAt = `${record.order_id}.costwithfee`;
+                      setFieldsValue({ [newAt]: res.data.costwithfee });
+                      validateFields([`${record.order_id}.costwithfee`])
+                    }
+                  })
                 }
               }
             })
@@ -289,7 +295,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
     align: 'center',
     width: 300,
     render: (text, record) => {
-      return record.is_inward_send == 1 || record.last_apply_status == 1 || record.last_apply_status == 2 ? text && numeral(text).format('0,0.00') || '-' : 
+      return record.is_inward_send == 1 || record.last_apply_status == 1 || record.last_apply_status == 2 ? record.is_tax_rebate_account ==1?<div>{text && numeral(text).format('0,0.00') || '-'}<br/><span style={{color:'red'}}>返税专用</span> </div>:<div>{text && numeral(text).format('0,0.00') || '-'} </div>: 
     //  是否返税账号 1是，2否
      record.is_tax_rebate_account ==2?<FormItem>
         {getFieldDecorator(`${record.order_id}.costwithfee`, {

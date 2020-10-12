@@ -160,7 +160,18 @@ class EditOrderModal extends React.Component {
             validateTrigger: ['onChange'],
             validateFirst: true,
             rules: [{ required: true, message: '请填cost金额' }]
-          })(<InputNumber precision={2} style={{ width: 200 }} />
+          })(<InputNumber precision={2} style={{ width: 200 }} onChange={(value) => {
+            if (value != data && data[0].cost) {
+              if (data && data[0].service_rate) {
+                let num = Number(value) * (1 + (Number(data[0].service_rate) / 100)).toString()
+                this.props.form.setFieldsValue({
+                  'costwithfee': num.toFixed(2)
+                })
+                this.props.form.validateFields(['costwithfee'])
+              }
+
+            }
+          }}/>
           )}
         </FormItem>}
         {data[0].is_tax_rebate_account == 1 && <FormItem label='costwithfee' {...formItemLayout} style={{float:'left',marginLeft:'100px'}}>
