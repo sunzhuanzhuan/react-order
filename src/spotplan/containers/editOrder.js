@@ -1,5 +1,5 @@
 import React from 'react'
-import { Table, Form, Modal, message } from 'antd'
+import { Table, Form, Modal, message,Alert } from 'antd'
 import { EditOrderFunc } from '../constants'
 import Header from '../components/header'
 import ScrollTable from '../../components/Scolltable'
@@ -65,10 +65,12 @@ class EditOrder extends React.Component {
     const winHeight = document.documentElement.clientHeight - 80 + 'px';
     return <div className='splotplan-edit-container' style={{ height: winHeight, overflowY: 'scroll', overflowX: 'hidden' }}>
       <Header data={headerData} />
-      <h3 className='top-gap'>订单列表</h3>
+      <h3 className='top-gap'>订单列表    
+       <Alert message="若包含返税订单，返税订单的Costwithfee请输入（返税金额/1.06），Cost请输入（Costwithfee金额/1.04）" type="warning" showIcon style={{display:'inline-block',marginLeft:'10px'}}/>
+       </h3>
       <div className='edit-table-container top-gap'>
         <Form>
-          <ScrollTable scrollClassName='.ant-table-body' widthScroll={3000}>
+          <ScrollTable scrollClassName='.ant-table-body' widthScroll={3060}>
             <Table
               className='edit-table'
               rowKey='id'
@@ -76,7 +78,7 @@ class EditOrder extends React.Component {
               dataSource={data && data.list || []}
               bordered
               loading={loading}
-              scroll={{ x: 2544 }}
+              scroll={{ x: 2600 }}
               pagination={data && data.total > 50 ? paginationObj : false}
             />
           </ScrollTable>

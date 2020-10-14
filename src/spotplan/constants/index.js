@@ -222,11 +222,14 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
     align: 'center',
     width: 180,
     render: (text, record) => {
-      return record.is_inward_send == 1 || record.last_apply_status == 1 || record.last_apply_status == 2 ? text && numeral(text).format('0,0.00') || '-' : <FormItem>
+      return record.is_inward_send == 1 || record.last_apply_status == 1 || record.last_apply_status == 2 ? record.is_tax_rebate_account ==1?<div>{text && numeral(text).format('0,0.00') || '-'}<br/><span style={{color:'red'}}>返税专用</span> </div>:<div>{text && numeral(text).format('0,0.00') || '-'} </div>:
+       //  是否返税账号 1是，2否
+      record.is_tax_rebate_account ==2?<FormItem>
         {getFieldDecorator(`${record.order_id}.cost`, {
           validateTrigger: ['onChange'],
           validateFirst: true,
-          rules: [{ required: true, message: '请填写cost金额' }, {
+          rules: [{ required: true, message: '请填写cost金额' }
+          , {
             validator: (rule, value, callback) => {
               if (value.toString().split('.')[0].length > 8) {
                 callback('最多输入8位数')
@@ -238,13 +241,37 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
                 callback()
               }
             }
-          }]
+          }
+        ]
         })(
-          <InputNumber precision={2} max={99999999} min={1} style={{ width: 150 }} onBlur={(e) => {
+          <InputNumber precision={2} style={{ width: 150 }} onBlur={(e) => {
             validateFields([`${record.order_id}.cost`], (errors, values) => {
               if (!errors) {
                 if (e.target.value != '' && e.target.value != record.cost) {
                   handleUpdate({ order_id: record.order_id, price_id: record.price_id, cost: e.target.value }).then((res) => {
+                    if (record.costwithfee) {
+                      let newAt = `${record.order_id}.costwithfee`;
+                      setFieldsValue({ [newAt]: res.data.costwithfee });
+                      validateFields([`${record.order_id}.costwithfee`])
+                    }
+                  })
+                }
+              }
+            })
+
+          }} />
+        )
+        }
+      </FormItem>:
+    <FormItem className='tax-cost' label={<span>返税专用</span>}>
+        {getFieldDecorator(`${record.order_id}.cost`, {
+          rules: [{ required: true, message: '请填写cost金额' }]
+        })(
+          <InputNumber precision={2} style={{ width: 150 }} onBlur={(e) => {
+            validateFields([`${record.order_id}.cost`], (errors, values) => {
+              if (!errors) {
+                if (e.target.value != '' && e.target.value != record.cost) {
+                  handleUpdate({ order_id: record.order_id, price_id: record.price_id, cost: e.target.value }).then((res)=>{
                     if (record.costwithfee) {
                       let newAt = `${record.order_id}.costwithfee`;
                       setFieldsValue({ [newAt]: res.data.costwithfee });
@@ -266,27 +293,31 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
     dataIndex: 'costwithfee',
     key: 'costwithfee',
     align: 'center',
-    width: 180,
+    width: 300,
     render: (text, record) => {
-      return record.is_inward_send == 1 || record.last_apply_status == 1 || record.last_apply_status == 2 ? text && numeral(text).format('0,0.00') || '-' : <FormItem>
+      return record.is_inward_send == 1 || record.last_apply_status == 1 || record.last_apply_status == 2 ? record.is_tax_rebate_account ==1?<div>{text && numeral(text).format('0,0.00') || '-'}<br/><span style={{color:'red'}}>返税专用</span> </div>:<div>{text && numeral(text).format('0,0.00') || '-'} </div>: 
+    //  是否返税账号 1是，2否
+     record.is_tax_rebate_account ==2?<FormItem>
         {getFieldDecorator(`${record.order_id}.costwithfee`, {
           validateTrigger: ['onChange'],
           validateFirst: true,
-          rules: [{ required: true, message: '请填写costwithfee金额' }, {
+          rules: [{ required: true, message: '请填写costwithfee金额' }
+          , {
             validator: (rule, value, callback) => {
               if (value.toString().split('.')[0].length > 9) {
                 callback('最多输入9位数')
                 return
-              } else if (value <= 0) {
+              }else if (value <= 0) {
                 callback('请输入大于0的数')
                 return
-              } else {
+              }else {
                 callback()
               }
             }
-          }]
+          }
+        ]
         })(
-          <InputNumber precision={2} max={999999999} min={1} style={{ width: 150 }} onBlur={(e) => {
+          <InputNumber precision={2} max={999999999} min={1} style={{ width: 250 }} onBlur={(e) => {
             validateFields([`${record.order_id}.costwithfee`], (errors, values) => {
               if (!errors) {
                 if (e.target.value != '' && e.target.value != record.costwithfee) {
@@ -295,6 +326,29 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
               }
             })
           }} />
+        )
+        }
+      </FormItem> : <FormItem  className='tax-costwithfee' label={<span>返税专用，请输入负值且返税金额÷1.06</span>}>
+        {getFieldDecorator(`${record.order_id}.costwithfee`, {
+          validateTrigger: ['onChange'],
+          validateFirst: true,
+          rules: [{ required: true, message: '请填写costwithfee金额' }]
+        })(
+          <InputNumber precision={2} style={{ width: 250 ,backgroundColor:'#fffce5'}} className='tax-costwithfee' onBlur={(e) => {
+            validateFields([`${record.order_id}.costwithfee`], (errors, values) => {
+              if (!errors) {
+                  handleUpdate({ order_id: record.order_id, price_id: record.price_id, costwithfee: e.target.value }).then((res)=>{
+                    if (record.cost) {
+                      let newAt = `${record.order_id}.cost`;
+                      setFieldsValue({ [newAt]: res.data.cost });
+                      validateFields([`${record.order_id}.cost`])
+                    }
+                  })
+              
+              }
+            })
+          }} />
+        
         )
         }
       </FormItem>
@@ -712,8 +766,10 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     key: 'cost',
     align: 'center',
     width: 120,
-    render: text => {
-      return <div>{text && numeral(text).format('0,0.00') || '-'}</div>
+    render: (text,record) => {
+      return record.is_tax_rebate_account ==2?<div>{text && numeral(text).format('0,0.00') || '-'}</div>:<div>{text && numeral(text).format('0,0.00') || '-'}<br/>
+      <span style={{color:'red'}}>返税专用</span>
+      </div>
     }
   },
   {
@@ -722,8 +778,10 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     key: 'costwithfee',
     align: 'center',
     width: 120,
-    render: text => {
-      return <div>{text && numeral(text).format('0,0.00') || '-'}</div>
+    render:(text,record) => {
+      return record.is_tax_rebate_account ==2?<div>{text && numeral(text).format('0,0.00') || '-'}</div>:<div>{text && numeral(text).format('0,0.00') || '-'}<br/>
+      <span style={{color:'red'}}>返税专用</span>
+      </div>
     }
   },
   {

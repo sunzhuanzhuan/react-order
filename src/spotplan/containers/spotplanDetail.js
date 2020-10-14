@@ -658,8 +658,9 @@ function Statistics({ data, flag }) {
   return <div className='spotplan-detail-statistics'>
     <Row className='info-row'>
 
-      <Col style={{ display: 'inline-block', width: 212, marginLeft: '10px' }}>
+      <Col style={{ display: 'inline-block', marginLeft: '10px' }}>
         Costwithfee总计: <span style={{ color: 'red' }}> {numeral(data.costwithfee).format('0,0.00')}元</span>
+        <span style={{marginLeft:'20px'}}>（已包含返税金额+服务费 </span><span style={{ color: 'red', }}> {numeral(data.rebatecostwithfee).format('0,0.00')}元</span>）
       </Col>
 
 
