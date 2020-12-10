@@ -645,7 +645,7 @@ export const SpotplanListFunc = () => [
   }
 ];
 
-export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdateOrder, handleEditOrder, handleDelete, handleHistory, handleAddNumber, handleUpdateArtical) => [
+export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdateOrder, handleEditOrder, handleDelete, handleHistory, handleAddNumber, handleUpdateArtical, handlePriceIdVisible) => [
   {
     title: '订单ID',
     dataIndex: 'order_id',
@@ -882,13 +882,21 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
           record.stopAndUpdate == 1 ?
             <div> <a href='javascript:;' onClick={() => {
               handleUpdateOrder(record.order_id)
-            }}>申请更新信息</a> </div> : null}
+            }}>申请更新信息</a> </div> : null
+        }
         {
           record.stopAndUpdate == 1 ?
             <div> <a href='javascript:;' onClick={() => {
               handleUpdateArtical(record.order_id)
-            }}>修改订单信息</a> </div> : null}
-
+            }}>修改订单信息</a> </div> : null
+        }
+        {
+          // record.stopAndUpdate == 1 ?
+            <div> <a href='javascript:;' onClick={() => {
+              handlePriceIdVisible(record.order_id)
+            }}>修改price id</a> </div>
+            // }}>修改price id</a> </div> : null
+        }
         {
           record.is_inward_send == 1 || record.last_apply_status == 1 || record.last_apply_status == 2 ? null : <div><a href='javascript:;' onClick={() => {
             handleEditOrder(record.order_id)

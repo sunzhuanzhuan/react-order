@@ -17,6 +17,7 @@ import './spotplan.less'
 import qs from 'qs'
 import numeral from 'numeral'
 import FormPO from '../components/poCheck'
+import FormPriceId from '../components/FormPriceId'
 
 const TabPane = Tabs.TabPane;
 const tabPaneList = [
@@ -181,6 +182,12 @@ class SpotPlanDetail extends React.Component {
     const search = qs.parse(this.props.location.search.substring(1));
     this.props.actions.getBasicSpotplanOrderInfo({ spotplan_id: search.spotplan_id, order_id }).then(() => {
       this.setState({ order_id, updateArticalVisible: true });
+    })
+  }
+  handlePriceIdVisible = order_id => {
+    const { isShowPriceIdModal } = this.state;
+    this.setState({
+      isShowPriceIdModal: !isShowPriceIdModal
     })
   }
   //批量-新增账号
@@ -466,7 +473,7 @@ class SpotPlanDetail extends React.Component {
   }
   render() {
     const search = qs.parse(this.props.location.search.substring(1));
-    const { historyVisible, editVisible, updateArticalVisible, changeVisible, quitVisible, updateVisible, selectedRowKeys, type, loading, record, addVisible, rows } = this.state;
+    const { historyVisible, editVisible, updateArticalVisible, changeVisible, quitVisible, updateVisible, selectedRowKeys, type, loading, record, addVisible, rows, isShowPriceIdModal } = this.state;
     const { spotplanExecutor, spotplanPlatform, spotplanPoInfo, spotplanAmount, spotplanEditList, basicSpotplanOrderInfo, updateSpotplanOrder: { before_order = [], after_order = [] }, updateSpotplanOrderLog, serviceRateAmount } = this.props;
     const list = spotplanEditList[type] && spotplanEditList[type].list || [];
     // const checkList = list.reduce((data, current) => {
@@ -474,7 +481,7 @@ class SpotPlanDetail extends React.Component {
     //   return flag ? [...data, current] : data
     // }, []);
     const checked = list.every(item => selectedRowKeys.includes(item.order_id.toString()));
-    const DetailTableCols = DetailTableFunc(this.handleChangeNumber, this.handleQuitOrder, this.handleUpdateOrder, this.handleEditOrder, this.handleDelete, this.handleHistory, this.handleAddNumber, this.handleUpdateArtical);
+    const DetailTableCols = DetailTableFunc(this.handleChangeNumber, this.handleQuitOrder, this.handleUpdateOrder, this.handleEditOrder, this.handleDelete, this.handleHistory, this.handleAddNumber, this.handleUpdateArtical, this.handlePriceIdVisible);
     const rowSelection = {
       selectedRowKeys: selectedRowKeys,
       onChange: this.handleSelectChange,
@@ -593,6 +600,16 @@ class SpotPlanDetail extends React.Component {
       >
         <FormPO wrappedComponentRef={this.saveFormRef} spInfo={spotplanPoInfo} />
       </Modal> : null}
+      <Modal
+        // title="编辑PO单号"
+        visible={isShowPriceIdModal}
+        wrapClassName='price_id_modal'
+        onOk={this.handleOk}
+        onCancel={this.handlePriceIdVisible}
+        maskClosable={false}
+      >
+        <FormPriceId wrappedComponentRef={this.saveFormRef} spInfo={spotplanPoInfo} />
+      </Modal>
     </div>
   }
 }
