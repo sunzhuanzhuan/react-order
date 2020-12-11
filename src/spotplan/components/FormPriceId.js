@@ -43,29 +43,29 @@ export default Form.create()(class extends React.Component {
       time: '确定时间',
     }
     const fakeData = [
-      {
-        priceId: 234234234,
-        label: '多图文第一条',
-        time: '2020-02-03'
-      },
-      {
-        priceId: 234234234,
-        label: '多图文第一条',
-        time: '2020-02-03'
-      },
-      {
-        priceId: 234234234,
-        label: '多图文第一条',
-        time: '2020-02-03'
-      }
+      // {
+      //   priceId: 234234234,
+      //   label: '多图文第一条',
+      //   time: '2020-02-03'
+      // },
+      // {
+      //   priceId: 234234234,
+      //   label: '多图文第一条',
+      //   time: '2020-02-03'
+      // },
+      // {
+      //   priceId: 234234234,
+      //   label: '多图文第一条',
+      //   time: '2020-02-03'
+      // }
     ];
     const isShowHistory = Array.isArray(fakeData) && fakeData.length;
     const history_cls = isShowHistory ? 'history_comp' : 'empty_history_comp';
     return <>
-      <div>当前price id</div>
+      <div className='price_id_title'>当前price id</div>
       <Form>
         <Form.Item>
-          <Select defaultValue="lucy" dropdownClassName='price_id_select_comp' dropdownRender={node => (
+          <Select defaultValue="jadck" dropdownClassName='price_id_select_comp' dropdownRender={node => (
               <>
                 {
                   this.getSelectOption('price id', '价格名称', true)
@@ -73,16 +73,21 @@ export default Form.create()(class extends React.Component {
                 {node}
               </>
             )}>
-            <Option value="jack">
+            <Option value="jadck">
               {
                 this.getSelectOption('234234', '多图文第一条')
               }
             </Option>
-            <Option value="lucy">Lucy</Option>
-            <Option value="disabled" disabled>
-              Disabled
+            <Option value="jsack">
+              {
+                this.getSelectOption('234234', '多图文第一条')
+              }
             </Option>
-            <Option value="Yiminghe">yiminghe</Option>
+            <Option value="jacfk">
+              {
+                this.getSelectOption('234234', '多图文第一条')
+              }
+            </Option>
           </Select>
         </Form.Item>
       </Form>
