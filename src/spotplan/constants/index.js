@@ -893,7 +893,8 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
         {
           // record.stopAndUpdate == 1 ?
             <div> <a href='javascript:;' onClick={() => {
-              handlePriceIdVisible(record.order_id)
+              const { price_id, order_id, price_name } = record;
+              handlePriceIdVisible(price_id, price_name, order_id)
             }}>修改price id</a> </div>
             // }}>修改price id</a> </div> : null
         }

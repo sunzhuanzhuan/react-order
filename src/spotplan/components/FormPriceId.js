@@ -1,8 +1,5 @@
-
-
-
 import React from 'react'
-import { Select, Form } from 'antd'
+import { Select, Form, Spin } from 'antd'
 const { Option } = Select;
 export default Form.create()(class extends React.Component {
   state = {
@@ -14,7 +11,7 @@ export default Form.create()(class extends React.Component {
     isEdit: false
   }
 
-  getSelectOption = (id, label, isTitle) => {
+  getOptionItem = (id, label, isTitle) => {
     const cls = isTitle ? `price_id_select_wrapper margin_item` : 'price_id_select_wrapper'
     return (
       <div className={cls}>
@@ -25,70 +22,70 @@ export default Form.create()(class extends React.Component {
   }
 
   getHistoryItem = (info, isTitle) => {
-    const { priceId, label, time } = info;
+    const { price_id, price_name, created_at } = info;
     const cls = isTitle ? 'history_item_wrapper history_title_item' : 'history_item_wrapper';
     return (
       <div className={cls}>
-        <div className='history_left'>{priceId}</div>
-        <div className='history_center'>{label}</div>
-        <div className='history_right'>{time}</div>
+        <div className='history_left'>{price_id}</div>
+        <div className='history_center'>{price_name}</div>
+        <div className='history_right'>{created_at}</div>
       </div>
     )
   }
 
-  render() {
-    const history_title_info = {
-      priceId: 'price id',
-      label: '价格名称',
-      time: '确定时间',
+  getSelectOption = price => {
+    if(!(Array.isArray(price) && price.length)) {
+      return null
     }
-    const fakeData = [
-      // {
-      //   priceId: 234234234,
-      //   label: '多图文第一条',
-      //   time: '2020-02-03'
-      // },
-      // {
-      //   priceId: 234234234,
-      //   label: '多图文第一条',
-      //   time: '2020-02-03'
-      // },
-      // {
-      //   priceId: 234234234,
-      //   label: '多图文第一条',
-      //   time: '2020-02-03'
-      // }
-    ];
-    const isShowHistory = Array.isArray(fakeData) && fakeData.length;
+    return price.map(item => {
+      const { price_id, price_name } = item;
+      return (
+        <Option value={price_id} key={price_id}>
+          {
+            this.getOptionItem(price_id, price_name)
+          }
+        </Option>
+      )
+    })
+  }
+
+  render() {
+    const { form, priceIdInfo = {}, priceIdHistoryInfo = [], initialValue, loading } = this.props;
+    const { getFieldDecorator } = form;
+    const { rows = []} = priceIdInfo;
+    const { price = [] } = rows[0] || {};
+    const history_title_info = {
+      price_id: 'price id',
+      price_name: '价格名称',
+      created_at: '确定时间',
+    }
+    const isShowHistory = Array.isArray(priceIdHistoryInfo) && priceIdHistoryInfo.length;
     const history_cls = isShowHistory ? 'history_comp' : 'empty_history_comp';
-    return <>
+    return <Spin spinning={Boolean(loading)}>
       <div className='price_id_title'>当前price id</div>
       <Form>
         <Form.Item>
-          <Select defaultValue="jadck" dropdownClassName='price_id_select_comp' dropdownRender={node => (
-              <>
+        {
+          getFieldDecorator('price_id', {
+            initialValue
+          })(
+              <Select 
+                dropdownClassName='price_id_select_comp' 
+                dropdownRender={node => (
+                  <>
+                    {
+                      this.getOptionItem('price id', '价格名称', true)
+                    }
+                    {node}
+                  </>
+                )}
+              >
                 {
-                  this.getSelectOption('price id', '价格名称', true)
+                  this.getSelectOption(price)
                 }
-                {node}
-              </>
-            )}>
-            <Option value="jadck">
-              {
-                this.getSelectOption('234234', '多图文第一条')
-              }
-            </Option>
-            <Option value="jsack">
-              {
-                this.getSelectOption('234234', '多图文第一条')
-              }
-            </Option>
-            <Option value="jacfk">
-              {
-                this.getSelectOption('234234', '多图文第一条')
-              }
-            </Option>
-          </Select>
+              </Select>
+          )
+        }
         </Form.Item>
       </Form>
       <div className='history_label'>历史记录</div>
@@ -97,9 +94,9 @@ export default Form.create()(class extends React.Component {
       }
       <div className={history_cls}>
         {
-          isShowHistory ? fakeData.map(item => this.getHistoryItem(item)) : <div>暂无历史记录</div>
+          isShowHistory ? priceIdHistoryInfo.map(item => this.getHistoryItem(item)) : <div>暂无历史记录</div>
         }
       </div>
-    </>
+    </Spin>
   }
 })

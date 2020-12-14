@@ -21,6 +21,9 @@ export default {
   postUpdatePublishArticlesAt: '/spotplan/updatePublishArticlesAt',
   getExportSpotplamExcel: '/spotplan/exportSpotplamExcel',
   postDeleteSpotplanOrder: '/spotplan/deleteSpotplanOrder',
-  getServiceRateAmount: '/spotplan/getServiceRateAmount'
+  getServiceRateAmount: '/spotplan/getServiceRateAmount',
+  getSpotplanPriceIdInfo: '/spotplan/getOrderList',
+  getSpotplanPriceIdHistoryInfo: '/spotplan/getSpotplanOrderPrice',
+  editSpotplanPriceId: '/spotplan/updateSpotplanOrderPrice'
 
 }

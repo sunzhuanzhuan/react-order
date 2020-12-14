@@ -184,11 +184,51 @@ class SpotPlanDetail extends React.Component {
       this.setState({ order_id, updateArticalVisible: true });
     })
   }
-  handlePriceIdVisible = order_id => {
+  handlePriceIdVisible = (price_id, price_name, order_id) => {
     const { isShowPriceIdModal } = this.state;
+    if(!isShowPriceIdModal) {
+      const queryObj = {
+        settle_type: 1,
+        order_id
+      };
+      this.setState({ priceLoading: true });
+      this.props.actions.getSpotplanPriceIdInfo(queryObj).finally(() => {
+        this.setState({ priceLoading: false })
+      });
+    }
     this.setState({
-      isShowPriceIdModal: !isShowPriceIdModal
+      isShowPriceIdModal: !isShowPriceIdModal, 
+      price_id,
+      price_name,
+      order_id
     })
+  }
+  getPriceNameById = price_id => {
+    const { priceIdInfo = {} } = this.props;
+    const { rows = []} = priceIdInfo;
+    const { price = [] } = rows[0] || {};
+    if(!(Array.isArray(price) && price.length && price_id)) {
+      return;
+    }
+    const priceItem = price.find(item => item.price_id === price_id) || {};
+    return priceItem.price_name;
+  }
+  handleEditPriceIdOk = () => {
+    const {price_id, price_name, order_id, type} = this.state;
+    const new_price_id = this.formRef.props.form.getFieldValue('price_id');
+    const new_price_name = this.getPriceNameById(new_price_id);
+    const submitObj = {
+      order_id,
+      price_id, 
+      price_name, 
+      new_price_id,
+      new_price_name
+    }
+    this.props.actions.editSpotplanPriceId(submitObj).then(() => {
+      const search = qs.parse(this.props.location.search.substring(1));
+      this.queryData({ ...search.keys, spotplan_id: search.spotplan_id, type: type === 'all' ? undefined : type });
+      this.handlePriceIdVisible();
+    });
   }
   //批量-新增账号
   handleAddAccount = order_id => {
@@ -459,7 +499,6 @@ class SpotPlanDetail extends React.Component {
           })
         }
       }
-
     })
   }
 
@@ -473,8 +512,8 @@ class SpotPlanDetail extends React.Component {
   }
   render() {
     const search = qs.parse(this.props.location.search.substring(1));
-    const { historyVisible, editVisible, updateArticalVisible, changeVisible, quitVisible, updateVisible, selectedRowKeys, type, loading, record, addVisible, rows, isShowPriceIdModal } = this.state;
-    const { spotplanExecutor, spotplanPlatform, spotplanPoInfo, spotplanAmount, spotplanEditList, basicSpotplanOrderInfo, updateSpotplanOrder: { before_order = [], after_order = [] }, updateSpotplanOrderLog, serviceRateAmount } = this.props;
+    const { historyVisible, editVisible, updateArticalVisible, changeVisible, quitVisible, updateVisible, selectedRowKeys, type, loading, record, addVisible, rows, isShowPriceIdModal, price_id, priceLoading } = this.state;
+    const { spotplanExecutor, spotplanPlatform, spotplanPoInfo, spotplanAmount, spotplanEditList, basicSpotplanOrderInfo, updateSpotplanOrder: { before_order = [], after_order = [] }, updateSpotplanOrderLog, serviceRateAmount, priceIdInfo = {}, priceIdHistoryInfo = [] } = this.props;
     const list = spotplanEditList[type] && spotplanEditList[type].list || [];
     // const checkList = list.reduce((data, current) => {
     //   const flag = ([12, 21, 25, 31].includes(parseInt(current.customer_confirmation_status)) && [0, 3, 4].includes(parseInt(current.last_apply_status))) ? true : false;
@@ -601,14 +640,19 @@ class SpotPlanDetail extends React.Component {
         <FormPO wrappedComponentRef={this.saveFormRef} spInfo={spotplanPoInfo} />
       </Modal> : null}
       <Modal
-        // title="编辑PO单号"
         visible={isShowPriceIdModal}
         wrapClassName='price_id_modal'
-        onOk={this.handleOk}
-        onCancel={this.handlePriceIdVisible}
         maskClosable={false}
+        onOk={this.handleEditPriceIdOk}
+        onCancel={() => {this.handlePriceIdVisible()}}
       >
-        <FormPriceId wrappedComponentRef={this.saveFormRef} spInfo={spotplanPoInfo} />
+        <FormPriceId 
+          wrappedComponentRef={this.saveFormRef} 
+          loading={priceLoading}
+          priceIdInfo={priceIdInfo} 
+          priceIdHistoryInfo={priceIdHistoryInfo}
+          initialValue={price_id}
+        />
       </Modal>
     </div>
   }
@@ -624,6 +668,8 @@ const mapStateToProps = (state) => {
     updateSpotplanOrder: state.spotplanReducers.updateSpotplanOrder,
     updateSpotplanOrderLog: state.spotplanReducers.updateSpotplanOrderLog,
     serviceRateAmount: state.spotplanReducers.serviceRateAmount,
+    priceIdInfo: state.spotplanReducers.priceIdInfo,
+    priceIdHistoryInfo: state.spotplanReducers.priceIdHistoryInfo,
   }
 }
 const mapDispatchToProps = dispatch => ({
