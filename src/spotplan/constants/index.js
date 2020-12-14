@@ -891,12 +891,11 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
             }}>修改订单信息</a> </div> : null
         }
         {
-          // record.stopAndUpdate == 1 ?
+          record.stopAndUpdate == 1 ?
             <div> <a href='javascript:;' onClick={() => {
               const { price_id, order_id, price_name } = record;
               handlePriceIdVisible(price_id, price_name, order_id)
-            }}>修改price id</a> </div>
-            // }}>修改price id</a> </div> : null
+            }}>修改price id</a> </div> : null
         }
         {
           record.is_inward_send == 1 || record.last_apply_status == 1 || record.last_apply_status == 2 ? null : <div><a href='javascript:;' onClick={() => {
