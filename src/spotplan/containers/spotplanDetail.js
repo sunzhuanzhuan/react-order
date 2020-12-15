@@ -186,16 +186,22 @@ class SpotPlanDetail extends React.Component {
   }
   handlePriceIdVisible = (price_id, price_name, order_id) => {
     const { isShowPriceIdModal } = this.state;
+    const { actions } = this.props;
     if(!isShowPriceIdModal) {
       const queryObj = {
         settle_type: 1,
         order_id
       };
       this.setState({ priceLoading: true });
-      this.props.actions.getSpotplanPriceIdInfo(queryObj).finally(() => {
+      const actionArr = [
+        actions.getSpotplanPriceIdInfo(queryObj),
+        actions.getSpotplanPriceIdHistoryInfo({order_id}),
+      ];
+      Promise.all(actionArr).finally(() => {
         this.setState({ priceLoading: false })
       });
     }
+    
     this.setState({
       isShowPriceIdModal: !isShowPriceIdModal, 
       price_id,

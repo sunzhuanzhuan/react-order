@@ -25,7 +25,7 @@ export default Form.create()(class extends React.Component {
     const { price_id, price_name, created_at } = info;
     const cls = isTitle ? 'history_item_wrapper history_title_item' : 'history_item_wrapper';
     return (
-      <div className={cls}>
+      <div className={cls} key={`${price_id}-${created_at}`}>
         <div className='history_left'>{price_id}</div>
         <div className='history_center'>{price_name}</div>
         <div className='history_right'>{created_at}</div>

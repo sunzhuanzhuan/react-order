@@ -127,9 +127,9 @@ export const priceIdInfo = handleActions({
 
 export const priceIdHistoryInfo = handleActions({
   [getSpotplanPriceIdHistoryInfo_success]: (state, action) => {
-    return {...action.payload.data}
+    return [...action.payload.data]
   }
-}, {})
+}, [])
 
 export default combineReducers({
   spotplanCompanyInfo,
