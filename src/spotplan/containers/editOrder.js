@@ -62,7 +62,8 @@ class EditOrder extends React.Component {
       showQuickJumper: true,
       size: 'small'
     };
-    return <div className='splotplan-edit-container'>
+    const winHeight = document.documentElement.clientHeight - 171 + 'px';
+    return <div className='splotplan-edit-container' style={{ height: winHeight, overflowY: 'scroll', overflowX: 'hidden' }}>
       <Header data={headerData} />
       <h3 className='top-gap'>订单列表    
        <Alert message="若包含返税订单，返税订单的Costwithfee请输入（返税金额/1.06），Cost请输入（Costwithfee金额/1.04）" type="warning" showIcon style={{display:'inline-block',marginLeft:'10px'}}/>

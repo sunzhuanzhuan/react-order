@@ -57,7 +57,7 @@ export default Form.create()(class extends React.Component {
     const history_title_info = {
       price_id: 'price id',
       price_name: '价格名称',
-      created_at: '确定时间',
+      created_at: '修改时间',
     }
     const isShowHistory = Array.isArray(priceIdHistoryInfo) && priceIdHistoryInfo.length;
     const history_cls = isShowHistory ? 'history_comp' : 'empty_history_comp';
