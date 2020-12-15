@@ -62,8 +62,7 @@ class EditOrder extends React.Component {
       showQuickJumper: true,
       size: 'small'
     };
-    const winHeight = document.documentElement.clientHeight - 80 + 'px';
-    return <div className='splotplan-edit-container' style={{ height: winHeight, overflowY: 'scroll', overflowX: 'hidden' }}>
+    return <div className='splotplan-edit-container'>
       <Header data={headerData} />
       <h3 className='top-gap'>订单列表    
        <Alert message="若包含返税订单，返税订单的Costwithfee请输入（返税金额/1.06），Cost请输入（Costwithfee金额/1.04）" type="warning" showIcon style={{display:'inline-block',marginLeft:'10px'}}/>
@@ -72,7 +71,7 @@ class EditOrder extends React.Component {
         <Form>
           <ScrollTable scrollClassName='.ant-table-body' widthScroll={3060}>
             <Table
-              className='edit-table'
+              className='edit-table edit-table-fixed-width'
               rowKey='id'
               columns={EditOrderCols}
               dataSource={data && data.list || []}
