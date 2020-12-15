@@ -660,6 +660,7 @@ class SpotPlanDetail extends React.Component {
         <FormPO wrappedComponentRef={this.saveFormRef} spInfo={spotplanPoInfo} />
       </Modal> : null}
       <Modal
+        destroyOnClose
         visible={isShowPriceIdModal}
         wrapClassName='price_id_modal'
         maskClosable={false}

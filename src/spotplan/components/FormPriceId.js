@@ -59,6 +59,7 @@ export default Form.create()(class extends React.Component {
       price_name: '价格名称',
       created_at: '修改时间',
     }
+    console.log('lskdjflskjdflj', initialValue)
     const isShowHistory = Array.isArray(priceIdHistoryInfo) && priceIdHistoryInfo.length;
     const history_cls = isShowHistory ? 'history_comp' : 'empty_history_comp';
     return <Spin spinning={Boolean(loading)}>
