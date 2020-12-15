@@ -70,6 +70,7 @@ export default Form.create()(class extends React.Component {
             initialValue
           })(
               <Select 
+                onChange={this.props.handlePriceIdChange}
                 dropdownClassName='price_id_select_comp' 
                 dropdownRender={node => (
                   <>

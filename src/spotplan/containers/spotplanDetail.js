@@ -206,7 +206,8 @@ class SpotPlanDetail extends React.Component {
       isShowPriceIdModal: !isShowPriceIdModal, 
       price_id,
       price_name,
-      order_id
+      order_id,
+      new_price_id: undefined
     })
   }
   getPriceNameById = price_id => {
@@ -235,6 +236,9 @@ class SpotPlanDetail extends React.Component {
       this.queryData({ ...search.keys, spotplan_id: search.spotplan_id, type: type === 'all' ? undefined : type });
       this.handlePriceIdVisible();
     });
+  }
+  handlePriceIdChange = new_price_id => {
+    this.setState({ new_price_id })
   }
   //批量-新增账号
   handleAddAccount = order_id => {
@@ -518,8 +522,18 @@ class SpotPlanDetail extends React.Component {
   }
   render() {
     const search = qs.parse(this.props.location.search.substring(1));
-    const { historyVisible, editVisible, updateArticalVisible, changeVisible, quitVisible, updateVisible, selectedRowKeys, type, loading, record, addVisible, rows, isShowPriceIdModal, price_id, priceLoading } = this.state;
-    const { spotplanExecutor, spotplanPlatform, spotplanPoInfo, spotplanAmount, spotplanEditList, basicSpotplanOrderInfo, updateSpotplanOrder: { before_order = [], after_order = [] }, updateSpotplanOrderLog, serviceRateAmount, priceIdInfo = {}, priceIdHistoryInfo = [] } = this.props;
+    const { 
+      historyVisible, editVisible, updateArticalVisible, changeVisible, quitVisible, 
+      updateVisible, selectedRowKeys, type, loading, record, addVisible, rows, 
+      isShowPriceIdModal, price_id, priceLoading, new_price_id 
+    } = this.state;
+    const { 
+      spotplanExecutor, spotplanPlatform, spotplanPoInfo, spotplanAmount, 
+      spotplanEditList, basicSpotplanOrderInfo, 
+      updateSpotplanOrder: { before_order = [], after_order = [] }, 
+      updateSpotplanOrderLog, serviceRateAmount, priceIdInfo = {}, priceIdHistoryInfo = [] 
+    } = this.props;
+    const priceIdBtnStatus = price_id == new_price_id || !new_price_id;
     const list = spotplanEditList[type] && spotplanEditList[type].list || [];
     // const checkList = list.reduce((data, current) => {
     //   const flag = ([12, 21, 25, 31].includes(parseInt(current.customer_confirmation_status)) && [0, 3, 4].includes(parseInt(current.last_apply_status))) ? true : false;
@@ -649,6 +663,7 @@ class SpotPlanDetail extends React.Component {
         visible={isShowPriceIdModal}
         wrapClassName='price_id_modal'
         maskClosable={false}
+        okButtonProps={{disabled: priceIdBtnStatus}}
         onOk={this.handleEditPriceIdOk}
         onCancel={() => {this.handlePriceIdVisible()}}
       >
@@ -658,6 +673,7 @@ class SpotPlanDetail extends React.Component {
           priceIdInfo={priceIdInfo} 
           priceIdHistoryInfo={priceIdHistoryInfo}
           initialValue={price_id}
+          handlePriceIdChange={this.handlePriceIdChange}
         />
       </Modal>
     </div>
