@@ -62,7 +62,7 @@ class EditOrder extends React.Component {
       showQuickJumper: true,
       size: 'small'
     };
-    const winHeight = document.documentElement.clientHeight - 80 + 'px';
+    const winHeight = document.documentElement.clientHeight - 171 + 'px';
     return <div className='splotplan-edit-container' style={{ height: winHeight, overflowY: 'scroll', overflowX: 'hidden' }}>
       <Header data={headerData} />
       <h3 className='top-gap'>订单列表    
@@ -72,7 +72,7 @@ class EditOrder extends React.Component {
         <Form>
           <ScrollTable scrollClassName='.ant-table-body' widthScroll={3060}>
             <Table
-              className='edit-table'
+              className='edit-table edit-table-fixed-width'
               rowKey='id'
               columns={EditOrderCols}
               dataSource={data && data.list || []}

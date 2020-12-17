@@ -172,4 +172,24 @@ export const restServiceRateAmount = (params) => (dispatch) => {
   })
 }
 
+export const {
+  getSpotplanPriceIdInfo,
+  getSpotplanPriceIdInfo_success
+} = createHttpAction('getSpotplanPriceIdInfo', Interface.getSpotplanPriceIdInfo, {
+  method: 'get'
+});
+
+export const {
+  getSpotplanPriceIdHistoryInfo,
+  getSpotplanPriceIdHistoryInfo_success
+} = createHttpAction('getSpotplanPriceIdHistoryInfo', Interface.getSpotplanPriceIdHistoryInfo, {
+  method: 'get'
+});
+
+export const {
+  editSpotplanPriceId,
+  editSpotplanPriceId_success
+} = createHttpAction('editSpotplanPriceId', Interface.editSpotplanPriceId, {
+  method: 'post'
+});
 

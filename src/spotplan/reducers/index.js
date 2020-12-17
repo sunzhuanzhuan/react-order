@@ -15,6 +15,8 @@ import {
   getBasicSpotplanOrderInfo_success,
   getUpdateSpotplanOrder_success,
   getUpdateSpotplanOrderLog_success,
+  getSpotplanPriceIdInfo_success,
+  getSpotplanPriceIdHistoryInfo_success
 } from '../actions';
 
 export const spotplanCompanyInfo = handleActions({
@@ -117,6 +119,18 @@ export const serviceRateAmount = (state = {}, action) => {
   }
 }
 
+export const priceIdInfo = handleActions({
+  [getSpotplanPriceIdInfo_success]: (state, action) => {
+    return {...action.payload.data}
+  }
+}, {})
+
+export const priceIdHistoryInfo = handleActions({
+  [getSpotplanPriceIdHistoryInfo_success]: (state, action) => {
+    return [...action.payload.data]
+  }
+}, [])
+
 export default combineReducers({
   spotplanCompanyInfo,
   spotplanExecutor,
@@ -132,5 +146,7 @@ export default combineReducers({
   basicSpotplanOrderInfo,
   updateSpotplanOrder,
   updateSpotplanOrderLog,
-  serviceRateAmount
+  serviceRateAmount,
+  priceIdInfo,
+  priceIdHistoryInfo
 })

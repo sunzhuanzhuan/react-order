@@ -17,6 +17,7 @@ import './spotplan.less'
 import qs from 'qs'
 import numeral from 'numeral'
 import FormPO from '../components/poCheck'
+import FormPriceId from '../components/FormPriceId'
 
 const TabPane = Tabs.TabPane;
 const tabPaneList = [
@@ -182,6 +183,62 @@ class SpotPlanDetail extends React.Component {
     this.props.actions.getBasicSpotplanOrderInfo({ spotplan_id: search.spotplan_id, order_id }).then(() => {
       this.setState({ order_id, updateArticalVisible: true });
     })
+  }
+  handlePriceIdVisible = (price_id, price_name, order_id) => {
+    const { isShowPriceIdModal } = this.state;
+    const { actions } = this.props;
+    if(!isShowPriceIdModal) {
+      const queryObj = {
+        settle_type: 1,
+        order_id
+      };
+      this.setState({ priceLoading: true });
+      const actionArr = [
+        actions.getSpotplanPriceIdInfo(queryObj),
+        actions.getSpotplanPriceIdHistoryInfo({order_id}),
+      ];
+      Promise.all(actionArr).finally(() => {
+        this.setState({ priceLoading: false })
+      });
+    }
+    
+    this.setState({
+      isShowPriceIdModal: !isShowPriceIdModal, 
+      price_id,
+      price_name,
+      order_id,
+      new_price_id: undefined
+    })
+  }
+  getPriceNameById = price_id => {
+    const { priceIdInfo = {} } = this.props;
+    const { rows = []} = priceIdInfo;
+    const { price = [] } = rows[0] || {};
+    if(!(Array.isArray(price) && price.length && price_id)) {
+      return;
+    }
+    const priceItem = price.find(item => item.price_id === price_id) || {};
+    return priceItem.price_name;
+  }
+  handleEditPriceIdOk = () => {
+    const {price_id, price_name, order_id, type} = this.state;
+    const new_price_id = this.formRef.props.form.getFieldValue('price_id');
+    const new_price_name = this.getPriceNameById(new_price_id);
+    const submitObj = {
+      order_id,
+      price_id, 
+      price_name, 
+      new_price_id,
+      new_price_name
+    }
+    this.props.actions.editSpotplanPriceId(submitObj).then(() => {
+      const search = qs.parse(this.props.location.search.substring(1));
+      this.queryData({ ...search.keys, spotplan_id: search.spotplan_id, type: type === 'all' ? undefined : type });
+      this.handlePriceIdVisible();
+    });
+  }
+  handlePriceIdChange = new_price_id => {
+    this.setState({ new_price_id })
   }
   //批量-新增账号
   handleAddAccount = order_id => {
@@ -452,7 +509,6 @@ class SpotPlanDetail extends React.Component {
           })
         }
       }
-
     })
   }
 
@@ -466,15 +522,25 @@ class SpotPlanDetail extends React.Component {
   }
   render() {
     const search = qs.parse(this.props.location.search.substring(1));
-    const { historyVisible, editVisible, updateArticalVisible, changeVisible, quitVisible, updateVisible, selectedRowKeys, type, loading, record, addVisible, rows } = this.state;
-    const { spotplanExecutor, spotplanPlatform, spotplanPoInfo, spotplanAmount, spotplanEditList, basicSpotplanOrderInfo, updateSpotplanOrder: { before_order = [], after_order = [] }, updateSpotplanOrderLog, serviceRateAmount } = this.props;
+    const { 
+      historyVisible, editVisible, updateArticalVisible, changeVisible, quitVisible, 
+      updateVisible, selectedRowKeys, type, loading, record, addVisible, rows, 
+      isShowPriceIdModal, price_id, priceLoading, new_price_id 
+    } = this.state;
+    const { 
+      spotplanExecutor, spotplanPlatform, spotplanPoInfo, spotplanAmount, 
+      spotplanEditList, basicSpotplanOrderInfo, 
+      updateSpotplanOrder: { before_order = [], after_order = [] }, 
+      updateSpotplanOrderLog, serviceRateAmount, priceIdInfo = {}, priceIdHistoryInfo = [] 
+    } = this.props;
+    const priceIdBtnStatus = price_id == new_price_id || !new_price_id;
     const list = spotplanEditList[type] && spotplanEditList[type].list || [];
     // const checkList = list.reduce((data, current) => {
     //   const flag = ([12, 21, 25, 31].includes(parseInt(current.customer_confirmation_status)) && [0, 3, 4].includes(parseInt(current.last_apply_status))) ? true : false;
     //   return flag ? [...data, current] : data
     // }, []);
     const checked = list.every(item => selectedRowKeys.includes(item.order_id.toString()));
-    const DetailTableCols = DetailTableFunc(this.handleChangeNumber, this.handleQuitOrder, this.handleUpdateOrder, this.handleEditOrder, this.handleDelete, this.handleHistory, this.handleAddNumber, this.handleUpdateArtical);
+    const DetailTableCols = DetailTableFunc(this.handleChangeNumber, this.handleQuitOrder, this.handleUpdateOrder, this.handleEditOrder, this.handleDelete, this.handleHistory, this.handleAddNumber, this.handleUpdateArtical, this.handlePriceIdVisible);
     const rowSelection = {
       selectedRowKeys: selectedRowKeys,
       onChange: this.handleSelectChange,
@@ -593,6 +659,24 @@ class SpotPlanDetail extends React.Component {
       >
         <FormPO wrappedComponentRef={this.saveFormRef} spInfo={spotplanPoInfo} />
       </Modal> : null}
+      <Modal
+        destroyOnClose
+        visible={isShowPriceIdModal}
+        wrapClassName='price_id_modal'
+        maskClosable={false}
+        okButtonProps={{disabled: priceIdBtnStatus}}
+        onOk={this.handleEditPriceIdOk}
+        onCancel={() => {this.handlePriceIdVisible()}}
+      >
+        <FormPriceId 
+          wrappedComponentRef={this.saveFormRef} 
+          loading={priceLoading}
+          priceIdInfo={priceIdInfo} 
+          priceIdHistoryInfo={priceIdHistoryInfo}
+          initialValue={price_id}
+          handlePriceIdChange={this.handlePriceIdChange}
+        />
+      </Modal>
     </div>
   }
 }
@@ -607,6 +691,8 @@ const mapStateToProps = (state) => {
     updateSpotplanOrder: state.spotplanReducers.updateSpotplanOrder,
     updateSpotplanOrderLog: state.spotplanReducers.updateSpotplanOrderLog,
     serviceRateAmount: state.spotplanReducers.serviceRateAmount,
+    priceIdInfo: state.spotplanReducers.priceIdInfo,
+    priceIdHistoryInfo: state.spotplanReducers.priceIdHistoryInfo,
   }
 }
 const mapDispatchToProps = dispatch => ({

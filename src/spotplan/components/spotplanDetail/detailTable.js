@@ -39,6 +39,7 @@ class DetailTable extends React.Component {
     };
     return <ScrollTable scrollClassName='ant-table-body' widthScroll={2400} num={num}>
       <Table
+        className='spotplan_table_wrapper'
         rowSelection={rowSelection}
         rowKey={record => { return record.order_id ? record.order_id.toString() : '' }}
         columns={columns}
