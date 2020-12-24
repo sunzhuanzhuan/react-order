@@ -29,6 +29,7 @@ const ClosingReport = lazyLoadComponent(() => import( './closingReport'))
 const SpotPlan = lazyLoadComponent(() => import( './spotplan'))
 const Business = lazyLoadComponent(() => import( './business'))
 const Task = lazyLoadComponent(() => import( './taskPool'))
+const KocOrder = lazyLoadComponent(() => import( './kocOrder'))
 
 // 设置语言包
 numeral.locale('chs');
@@ -50,6 +51,7 @@ const routes = () => (
         <Route path="/order/business" component={Business} />
         <Route path="/order/spotplan" component={SpotPlan} />
         <Route path="/order/task" component={Task} />
+        <Route path="/order/koc" component={KocOrder} />
         <Route render={() => linkTo('/error')} />
       </Switch>
     </ConfigProvider>
@@ -64,7 +66,7 @@ render(
           {
             process.env.NODE_ENV === 'development' ?
               <Route exact path="/" render={() =>
-                <Redirect to="/order/task/tasks-manage" />} /> : null
+                <Redirect to="/order/koc/list" />} /> : null
           }
           <Route path="/order" render={routes} />
           <Route render={redirectToOtherProjects} />
