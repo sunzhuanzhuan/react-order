@@ -1,5 +1,8 @@
 import React from 'react'
 import { Breadcrumb, Table, Divider, Descriptions } from 'antd';
+import * as actionKoc from "../actions";
+import { bindActionCreators } from "redux";
+import { connect } from 'react-redux';
 
 const columns = [{
   title: '公司简称',
@@ -64,8 +67,8 @@ class KocDetail extends React.Component {
 
     }
   }
-  componentDidMount = () => {
-
+  componentDidMount() {
+    this.props.actionKoc.getKocOrderInfo()
   }
   render() {
     return <div>
@@ -97,5 +100,12 @@ class KocDetail extends React.Component {
     </div>
   }
 }
-
-export default KocDetail
+const mapStateToProps = (state) => {
+  return {
+    commonReducers: state.commonReducers,
+  }
+}
+const mapDispatchToProps = dispatch => ({
+  actionKoc: bindActionCreators({ ...actionKoc }, dispatch)
+});
+export default connect(mapStateToProps, mapDispatchToProps)(KocDetail)

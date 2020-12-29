@@ -8,3 +8,9 @@ export const {
 } = createHttpAction('getKocOrderInfo', Interface.getKocOrderInfo, {
   method: 'get'
 });
+export const {
+  postSearchList,
+  postSearchList_success
+} = createHttpAction('postSearchList', Interface.postSearchList, {
+  method: 'post'
+});

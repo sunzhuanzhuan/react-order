@@ -5,9 +5,8 @@ import moment from 'moment';
 import 'moment/locale/zh-cn';
 
 const { RangePicker } = DatePicker;
-const FormItem = Form.Item;
 const Option = Select.Option;
-const dateFormat = 'YYYY-MM-DD HH:mm:ss'
+const dateFormat = 'YYYY-MM-DD'
 
 
 class FilterForm extends React.Component {
@@ -17,7 +16,27 @@ class FilterForm extends React.Component {
 
     }
   }
+  validatorLength = (rule, value, callback) => {
+    if (!value) {
+      callback()
+    } else if (value.toString().split(',').length > 200) {
+      callback('最多能输入200个订单')
+      return
+    } else {
+      callback()
+    }
+  }
+  handleSubmit = e => {
+    e.preventDefault();
+    this.props.form.validateFields((err, values) => {
+      if (!err) {
+        console.log('Received values of form: ', values);
+        this.props.postSearchList()
+      }
+    });
+  }
   render() {
+    let { platforms } = this.props
     const { getFieldDecorator } = this.props.form;
     const formItemLayout = {
       labelCol: {
@@ -29,68 +48,84 @@ class FilterForm extends React.Component {
         sm: { span: 10 },
       },
     };
-    return <Form {...formItemLayout}>
+    return <Form {...formItemLayout} onSubmit={this.handleSubmit}>
       <Row>
         <Col span={6}>
-          <FormItem label='wby订单号'>
-            {getFieldDecorator('settle_type')(
-              <Input style={{ width: 140 }} allowClear placeholder='请输入订单ID ，多个空格隔开；最多能输入200个订单' />
+          <Form.Item label='wby订单号'>
+            {getFieldDecorator('settle_type', {
+              rules: [{
+                validator: this.validatorLength
+              }]
+            })(
+              <Input style={{ width: 220 }} allowClear placeholder='请输入订单ID ，多个空格隔开' />
             )}
-          </FormItem>
+          </Form.Item>
         </Col>
         <Col span={6}>
-          <FormItem label='koc订单号'>
-            {getFieldDecorator('spotplan_name')(
-              <Input placeholder='请输入spotplan名称' style={{ width: 140 }} allowClear />
+          <Form.Item label='koc订单号'>
+            {getFieldDecorator('spotplan_name', {
+              rules: [{
+                validator: this.validatorLength
+              }]
+            })(
+              <Input placeholder='请输入订单ID ，多个空格隔开' style={{ width: 220 }} allowClear />
             )}
-          </FormItem>
+          </Form.Item>
         </Col>
         <Col span={6}>
-          <FormItem label='需求ID'>
-            {getFieldDecorator('brand_id')(
-              <Select style={{ width: 140 }} >
-                <Option value="jack">123</Option>
-              </Select>
+          <Form.Item label='需求ID'>
+            {getFieldDecorator('brand_id', {
+              rules: [{
+                validator: this.validatorLength
+              }]
+            })(
+              <Input placeholder='请输入订单ID ，多个空格隔开' style={{ width: 220 }} allowClear />
             )}
-          </FormItem>
+          </Form.Item>
         </Col>
         <Col span={6}>
-          <FormItem label='PO'>
+          <Form.Item label='PO'>
             {getFieldDecorator('creator_id')(
-              <Input placeholder='请输入spotplan名称' style={{ width: 140 }} allowClear />
+              <Input placeholder='请输入PO号' style={{ width: 220 }} allowClear />
             )}
-          </FormItem>
+          </Form.Item>
         </Col>
       </Row>
       <Row>
         <Col span={6}>
-          <FormItem label='平台'>
-            {getFieldDecorator('1')(
-              <Select style={{ width: 140 }} >
-                <Option value="jack">123</Option>
+          <Form.Item label='平台'>
+            {getFieldDecorator('platform')(
+              <Select style={{ width: 220 }} >
+                <Option value="">请选择</Option>
+                {platforms.map(d =>
+                  <Option value={d.pid} key={d.pid}>{d.platform_name}</Option>
+                )}
               </Select>
             )}
-          </FormItem>
+          </Form.Item>
         </Col>
         <Col span={6}>
-          <FormItem label='订单状态'>
-            {getFieldDecorator('2')(
-              <Select style={{ width: 140 }} >
-                <Option value="jack">123</Option>
+          <Form.Item label='订单状态'>
+            {getFieldDecorator('name')(
+              <Select style={{ width: 220 }} >
+                <Option value="1">请选择</Option>
+                <Option value="2">已确认</Option>
+                <Option value="3">已执行</Option>
               </Select>
             )}
-          </FormItem>
+          </Form.Item>
         </Col>
         <Col span={6}>
-          <FormItem label='创建时间'>
+          <Form.Item label='创建时间'>
             {getFieldDecorator('created_at')(
-              <RangePicker showTime style={{ width: 250 }} format={dateFormat} />
+              <RangePicker style={{ width: 220 }} format={dateFormat} />
             )}
-          </FormItem>
+          </Form.Item>
         </Col>
         <Col span={6} style={{ textAlign: 'center' }}>
-          <Button onClick={this.handleReset}>重置</Button>
-          <Button style={{ marginLeft: '20px' }} type='primary' onClick={this.handleSearch}>搜索</Button>
+          <Form.Item>
+            <Button htmlType="submit" type='primary'>搜索</Button>
+          </Form.Item>
         </Col>
       </Row>
     </Form>

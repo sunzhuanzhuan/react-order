@@ -1,3 +1,4 @@
 export default {
-  getKocOrderInfo: '',
+  getKocOrderInfo: 'api/',
+  postSearchList: 'api/'
 }
