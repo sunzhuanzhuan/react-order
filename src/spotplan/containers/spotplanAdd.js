@@ -86,6 +86,7 @@ class SpotplanAdd extends React.Component {
 
   }
   handleCheck = (type, order_id, item) => {
+    console.log(12222)
     const { orderMaps } = this.state;
     let obj = { ...orderMaps };
     if (type == 1) {
@@ -97,6 +98,9 @@ class SpotplanAdd extends React.Component {
       delete obj[order_id];
     }
     this.setState({ orderMaps: obj })
+  }
+  handleChangeKocOrKolTab = () => {
+    this.setState({ orderMaps: {} })
   }
   handleSettleDelCheck = order_ids => {
     const { orderMaps } = this.state;
@@ -221,7 +225,7 @@ class SpotplanAdd extends React.Component {
         </div>
         <div className='spotplan-add-container'>
           {step == 1 && <BasicInfo ref={this.basicInfo} search={search} queryData={this.queryData} data={spotplanCompanyInfo} wrappedComponentRef={(form) => this.form = form} />}
-          {step == 2 && <CheckOrder queryData={this.queryData} handleCheck={this.handleCheck}
+          {step == 2 && <CheckOrder queryData={this.queryData} handleCheck={this.handleCheck} handleChangeKocOrKolTab={this.handleChangeKocOrKolTab}
             orderMaps={orderMaps} location={this.props.location} history={this.props.history} queryBasicInfo={this.queryBasicInfo} loading={loading} />}
           {step == 3 && <EditOrder ref={this.editOrder} search={search} queryData={this.queryData} data={spotplanEditList['all']} handleUpdate={this.handleUpdate} queryBasicInfo={this.queryBasicInfo} headerData={spotplanPoInfo} loading={loading} handleDelete={this.handleDelete} />}
         </div>

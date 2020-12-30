@@ -187,7 +187,7 @@ class SpotPlanDetail extends React.Component {
   handlePriceIdVisible = (price_id, price_name, order_id) => {
     const { isShowPriceIdModal } = this.state;
     const { actions } = this.props;
-    if(!isShowPriceIdModal) {
+    if (!isShowPriceIdModal) {
       const queryObj = {
         settle_type: 1,
         order_id
@@ -195,15 +195,15 @@ class SpotPlanDetail extends React.Component {
       this.setState({ priceLoading: true });
       const actionArr = [
         actions.getSpotplanPriceIdInfo(queryObj),
-        actions.getSpotplanPriceIdHistoryInfo({order_id}),
+        actions.getSpotplanPriceIdHistoryInfo({ order_id }),
       ];
       Promise.all(actionArr).finally(() => {
         this.setState({ priceLoading: false })
       });
     }
-    
+
     this.setState({
-      isShowPriceIdModal: !isShowPriceIdModal, 
+      isShowPriceIdModal: !isShowPriceIdModal,
       price_id,
       price_name,
       order_id,
@@ -212,22 +212,22 @@ class SpotPlanDetail extends React.Component {
   }
   getPriceNameById = price_id => {
     const { priceIdInfo = {} } = this.props;
-    const { rows = []} = priceIdInfo;
+    const { rows = [] } = priceIdInfo;
     const { price = [] } = rows[0] || {};
-    if(!(Array.isArray(price) && price.length && price_id)) {
+    if (!(Array.isArray(price) && price.length && price_id)) {
       return;
     }
     const priceItem = price.find(item => item.price_id === price_id) || {};
     return priceItem.price_name;
   }
   handleEditPriceIdOk = () => {
-    const {price_id, price_name, order_id, type} = this.state;
+    const { price_id, price_name, order_id, type } = this.state;
     const new_price_id = this.formRef.props.form.getFieldValue('price_id');
     const new_price_name = this.getPriceNameById(new_price_id);
     const submitObj = {
       order_id,
-      price_id, 
-      price_name, 
+      price_id,
+      price_name,
       new_price_id,
       new_price_name
     }
@@ -522,16 +522,16 @@ class SpotPlanDetail extends React.Component {
   }
   render() {
     const search = qs.parse(this.props.location.search.substring(1));
-    const { 
-      historyVisible, editVisible, updateArticalVisible, changeVisible, quitVisible, 
-      updateVisible, selectedRowKeys, type, loading, record, addVisible, rows, 
-      isShowPriceIdModal, price_id, priceLoading, new_price_id 
+    const {
+      historyVisible, editVisible, updateArticalVisible, changeVisible, quitVisible,
+      updateVisible, selectedRowKeys, type, loading, record, addVisible, rows,
+      isShowPriceIdModal, price_id, priceLoading, new_price_id
     } = this.state;
-    const { 
-      spotplanExecutor, spotplanPlatform, spotplanPoInfo, spotplanAmount, 
-      spotplanEditList, basicSpotplanOrderInfo, 
-      updateSpotplanOrder: { before_order = [], after_order = [] }, 
-      updateSpotplanOrderLog, serviceRateAmount, priceIdInfo = {}, priceIdHistoryInfo = [] 
+    const {
+      spotplanExecutor, spotplanPlatform, spotplanPoInfo, spotplanAmount,
+      spotplanEditList, basicSpotplanOrderInfo,
+      updateSpotplanOrder: { before_order = [], after_order = [] },
+      updateSpotplanOrderLog, serviceRateAmount, priceIdInfo = {}, priceIdHistoryInfo = []
     } = this.props;
     const priceIdBtnStatus = price_id == new_price_id || !new_price_id;
     const list = spotplanEditList[type] && spotplanEditList[type].list || [];
@@ -577,7 +577,7 @@ class SpotPlanDetail extends React.Component {
         spotplan_executor={spotplanExecutor}
         spotplan_platform={spotplanPlatform}
       />
-      <Tabs onChange={this.handleTabsChange} type="card">
+      <Tabs onChange={this.handleTabsChange} type="card" style={{ marginTop: '20px' }}>
         {tabPaneList.map(item => (<TabPane tab={`${item.title}（${spotplanEditList[item.type] && spotplanEditList[item.type].total || 0}）`} key={item.key} forceRender={true}>
           <DetailTable loading={loading} columns={DetailTableCols} dataSource={list} rowSelection={rowSelection}
             type={item.type}
@@ -664,14 +664,14 @@ class SpotPlanDetail extends React.Component {
         visible={isShowPriceIdModal}
         wrapClassName='price_id_modal'
         maskClosable={false}
-        okButtonProps={{disabled: priceIdBtnStatus}}
+        okButtonProps={{ disabled: priceIdBtnStatus }}
         onOk={this.handleEditPriceIdOk}
-        onCancel={() => {this.handlePriceIdVisible()}}
+        onCancel={() => { this.handlePriceIdVisible() }}
       >
-        <FormPriceId 
-          wrappedComponentRef={this.saveFormRef} 
+        <FormPriceId
+          wrappedComponentRef={this.saveFormRef}
           loading={priceLoading}
-          priceIdInfo={priceIdInfo} 
+          priceIdInfo={priceIdInfo}
           priceIdHistoryInfo={priceIdHistoryInfo}
           initialValue={price_id}
           handlePriceIdChange={this.handlePriceIdChange}
@@ -746,7 +746,7 @@ function Statistics({ data, flag }) {
 
       <Col style={{ display: 'inline-block', marginLeft: '10px' }}>
         Costwithfee总计: <span style={{ color: 'red' }}> {numeral(data.costwithfee).format('0,0.00')}元</span>
-        <span style={{marginLeft:'20px'}}>（已包含返税金额+服务费 </span><span style={{ color: 'red', }}> {numeral(data.rebatecostwithfee).format('0,0.00')}元</span>）
+        <span style={{ marginLeft: '20px' }}>（已包含返税金额+服务费 </span><span style={{ color: 'red', }}> {numeral(data.rebatecostwithfee).format('0,0.00')}元</span>）
       </Col>
 
 

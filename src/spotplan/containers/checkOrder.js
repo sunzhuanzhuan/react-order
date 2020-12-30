@@ -4,7 +4,9 @@ import { bindActionCreators } from "redux";
 import * as spotplanAction from "../actions";
 import { Pagination, Empty, Skeleton, Button } from 'antd';
 import CheckQuery from '../components/checkQuery'
+import CheckKocQuery from '../components/checkKocQuery'
 import OrderItem from '../components/orderItem'
+import OrderKocItem from '../components/orderKocItem'
 import Header from '../components/header'
 import { STATUS_CUSTOMER, STATUS_RESERVATION } from '../constants'
 import qs from 'qs'
@@ -36,12 +38,14 @@ class CheckOrder extends React.Component {
       kolVisible: true,
       kocVisible: false
     })
+    this.props.handleChangeKocOrKolTab()
   }
   selectKoc = () => {
     this.setState({
       kolVisible: false,
       kocVisible: true
     })
+    this.props.handleChangeKocOrKolTab()
   }
   render() {
     const { spotplanExecutor, spotplanPlatform, spotplanProject, spotplanOrderList: { page, pageSize, total, rows = [] }, spotplanPoInfo, handleCheck, orderMaps, loading } = this.props;
@@ -87,6 +91,37 @@ class CheckOrder extends React.Component {
           </Skeleton>
         </div>
       </div>}
+
+      {
+        kocVisible && <div className='check-table-container'>
+          <CheckKocQuery
+            location={this.props.location}
+            history={this.props.history}
+            queryData={this.props.queryData}
+            spotplan_executor={spotplanExecutor}
+            spotplan_platform={spotplanPlatform}
+            spotplan_project={spotplanProject}
+            project_id={spotplanPoInfo && spotplanPoInfo.project_id}
+            project_name={spotplanPoInfo && spotplanPoInfo.project_name}
+            getProject={this.props.actions.getSpotplanProject}
+          />
+          <Skeleton active loading={loading}>
+            {rows.length == 0 && <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />}
+            {rows.map((item, index) => (<OrderKocItem key={index} data={item} handleCheck={handleCheck} orderMaps={orderMaps} />))}
+            {total > 50 && <Pagination className='pagination'
+              current={page}
+              pageSize={pageSize}
+              onChange={this.handlePageChange}
+              // onShowSizeChange={this.hanldeSizeChange}
+              size="small"
+              total={total}
+              // showSizeChanger
+              showQuickJumper
+            // pageSizeOptions={['50', '100', '200']}
+            />}
+          </Skeleton>
+        </div>
+      }
     </div>
   }
 }
