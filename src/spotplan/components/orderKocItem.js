@@ -2,7 +2,7 @@ import React from 'react'
 import { Col, Checkbox, Tooltip } from 'antd'
 import numeral from 'numeral'
 
-export default class OrderItem extends React.Component {
+export default class OrderKocItem extends React.Component {
   constructor() {
     super();
     this.state = {
@@ -20,13 +20,13 @@ export default class OrderItem extends React.Component {
       weibo_name: data.weibo_name,
     };
     if (e.target.checked) {
-      this.props.handleCheck(1, data.order_id, params);
+      this.props.handleCheckKoc(1, data.order_id, params);
     } else {
-      this.props.handleCheck(2, data.order_id, params);
+      this.props.handleCheckKoc(2, data.order_id, params);
     }
   }
   render() {
-    const { data, orderMaps } = this.props;
+    const { data, orderMapsKoc } = this.props;
     return <div className='check-order-item'>
       <div className='order-item-title'>
         <div className='title-info'>
@@ -45,7 +45,7 @@ export default class OrderItem extends React.Component {
         </div>}
       </div>
       {data && data.price.map((item, index) => (<Checkbox
-        checked={(data && orderMaps[data.order_id] && (orderMaps[data.order_id].price_id == item.price_id)) || false}
+        checked={(data && orderMapsKoc[data.order_id] && (orderMapsKoc[data.order_id].price_id == item.price_id)) || false}
         key={index} value={item.price_id}
         disabled={!(data && data.flag == 1)} onChange={this.handleChange}
       >

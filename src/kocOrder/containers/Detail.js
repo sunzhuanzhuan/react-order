@@ -5,7 +5,7 @@ import { bindActionCreators } from "redux";
 import { connect } from 'react-redux';
 
 const columns = [{
-  title: '公司简称',
+  title: '公司名称',
   dataIndex: 'address111',
   key: 'address111',
   width: 100

@@ -26,6 +26,7 @@ class SpotplanAdd extends React.Component {
     super();
     this.state = {
       orderMaps: {},
+      orderMapsKoc: {},
       loading: false,
       visible: false
     }
@@ -86,7 +87,6 @@ class SpotplanAdd extends React.Component {
 
   }
   handleCheck = (type, order_id, item) => {
-    console.log(12222)
     const { orderMaps } = this.state;
     let obj = { ...orderMaps };
     if (type == 1) {
@@ -98,6 +98,19 @@ class SpotplanAdd extends React.Component {
       delete obj[order_id];
     }
     this.setState({ orderMaps: obj })
+  }
+  handleCheckKoc = (type, order_id, item) => {
+    const { orderMapsKoc } = this.state;
+    let obj = { ...orderMapsKoc };
+    if (type == 1) {
+      //勾选
+      obj[order_id] = item;
+    }
+    if (type == 2) {
+      //取消勾选
+      delete obj[order_id];
+    }
+    this.setState({ orderMapsKoc: obj })
   }
   handleChangeKocOrKolTab = () => {
     this.setState({ orderMaps: {} })
@@ -213,7 +226,7 @@ class SpotplanAdd extends React.Component {
   render() {
     const search = qs.parse(this.props.location.search.substring(1));
     const step = parseInt(search.step);
-    const { orderMaps, loading } = this.state;
+    const { orderMaps, loading, orderMapsKoc } = this.state;
     const { spotplanCompanyInfo, spotplanEditList, spotplanPoInfo } = this.props;
     return <>
       <div className='spotplan-add'>
@@ -225,13 +238,14 @@ class SpotplanAdd extends React.Component {
         </div>
         <div className='spotplan-add-container'>
           {step == 1 && <BasicInfo ref={this.basicInfo} search={search} queryData={this.queryData} data={spotplanCompanyInfo} wrappedComponentRef={(form) => this.form = form} />}
-          {step == 2 && <CheckOrder queryData={this.queryData} handleCheck={this.handleCheck} handleChangeKocOrKolTab={this.handleChangeKocOrKolTab}
-            orderMaps={orderMaps} location={this.props.location} history={this.props.history} queryBasicInfo={this.queryBasicInfo} loading={loading} />}
+          {step == 2 && <CheckOrder queryData={this.queryData} handleCheckKoc={this.handleCheckKoc} handleCheck={this.handleCheck} handleChangeKocOrKolTab={this.handleChangeKocOrKolTab}
+            orderMaps={orderMaps} orderMapsKoc={orderMapsKoc} location={this.props.location} history={this.props.history} queryBasicInfo={this.queryBasicInfo} loading={loading} />}
           {step == 3 && <EditOrder ref={this.editOrder} search={search} queryData={this.queryData} data={spotplanEditList['all']} handleUpdate={this.handleUpdate} queryBasicInfo={this.queryBasicInfo} headerData={spotplanPoInfo} loading={loading} handleDelete={this.handleDelete} />}
         </div>
       </div>
       <BottomBlock current={step} handleSteps={this.handleSteps} orderMaps={orderMaps}
-        handlDel={this.handleCheck} data={spotplanEditList} search={search} />
+        orderMapsKoc={orderMapsKoc}
+        handlDel={this.handleCheck} handlDelKoc={this.handleCheckKoc} data={spotplanEditList} search={search} />
       {this.state.visible ? <Modal
         title="提示信息"
         visible={this.state.visible}

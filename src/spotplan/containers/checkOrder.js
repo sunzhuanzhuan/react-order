@@ -38,17 +38,17 @@ class CheckOrder extends React.Component {
       kolVisible: true,
       kocVisible: false
     })
-    this.props.handleChangeKocOrKolTab()
   }
   selectKoc = () => {
     this.setState({
       kolVisible: false,
       kocVisible: true
     })
-    this.props.handleChangeKocOrKolTab()
   }
   render() {
-    const { spotplanExecutor, spotplanPlatform, spotplanProject, spotplanOrderList: { page, pageSize, total, rows = [] }, spotplanPoInfo, handleCheck, orderMaps, loading } = this.props;
+    const { spotplanExecutor, spotplanPlatform, spotplanProject,
+      spotplanOrderList: { page, pageSize, total, rows = [] },
+      spotplanPoInfo, handleCheck, handleCheckKoc, orderMaps, loading, orderMapsKoc } = this.props;
     const winHeight = document.documentElement.clientHeight - 120 + 'px';
     let { kolVisible, kocVisible } = this.state
     return <div className='splotplan-check-container' style={{ height: winHeight, overflowY: 'scroll', overflowX: 'hidden' }}>
@@ -59,7 +59,7 @@ class CheckOrder extends React.Component {
         <Button style={{ borderRadius: 0 }} onClick={this.selectKoc}>koc订单</Button>
       </div>
       {kolVisible && <div>
-        <h3 style={{ marginTop: '20px' }}>订单列表23</h3>
+        <h3 style={{ marginTop: '20px' }}>订单列表</h3>
         <div className='check-table-container'>
           <CheckQuery
             location={this.props.location}
@@ -93,33 +93,36 @@ class CheckOrder extends React.Component {
       </div>}
 
       {
-        kocVisible && <div className='check-table-container'>
-          <CheckKocQuery
-            location={this.props.location}
-            history={this.props.history}
-            queryData={this.props.queryData}
-            spotplan_executor={spotplanExecutor}
-            spotplan_platform={spotplanPlatform}
-            spotplan_project={spotplanProject}
-            project_id={spotplanPoInfo && spotplanPoInfo.project_id}
-            project_name={spotplanPoInfo && spotplanPoInfo.project_name}
-            getProject={this.props.actions.getSpotplanProject}
-          />
-          <Skeleton active loading={loading}>
-            {rows.length == 0 && <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />}
-            {rows.map((item, index) => (<OrderKocItem key={index} data={item} handleCheck={handleCheck} orderMaps={orderMaps} />))}
-            {total > 50 && <Pagination className='pagination'
-              current={page}
-              pageSize={pageSize}
-              onChange={this.handlePageChange}
-              // onShowSizeChange={this.hanldeSizeChange}
-              size="small"
-              total={total}
-              // showSizeChanger
-              showQuickJumper
-            // pageSizeOptions={['50', '100', '200']}
-            />}
-          </Skeleton>
+        kocVisible && <div>
+          <h3 style={{ marginTop: '20px' }}>koc订单列表</h3>
+          <div className='check-table-container'>
+            <CheckKocQuery
+              location={this.props.location}
+              history={this.props.history}
+              queryData={this.props.queryData}
+              spotplan_executor={spotplanExecutor}
+              spotplan_platform={spotplanPlatform}
+              spotplan_project={spotplanProject}
+              project_id={spotplanPoInfo && spotplanPoInfo.project_id}
+              project_name={spotplanPoInfo && spotplanPoInfo.project_name}
+              getProject={this.props.actions.getSpotplanProject}
+            />
+            <Skeleton active loading={loading}>
+              {rows.length == 0 && <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />}
+              {rows.map((item, index) => (<OrderKocItem key={index} data={item} handleCheckKoc={handleCheckKoc} orderMapsKoc={orderMapsKoc} />))}
+              {total > 50 && <Pagination className='pagination'
+                current={page}
+                pageSize={pageSize}
+                onChange={this.handlePageChange}
+                // onShowSizeChange={this.hanldeSizeChange}
+                size="small"
+                total={total}
+                // showSizeChanger
+                showQuickJumper
+              // pageSizeOptions={['50', '100', '200']}
+              />}
+            </Skeleton>
+          </div>
         </div>
       }
     </div>

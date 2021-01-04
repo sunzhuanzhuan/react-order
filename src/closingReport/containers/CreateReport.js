@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Steps, Button, message, Modal, Input, Form } from 'antd'
 import './CreateReport.less'
 import SelectOrders from './SelectOrders'
+import SelectKocOrders from './SelectKocOrders'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import * as actions from '../actions'
@@ -44,7 +45,9 @@ export default class CreateReport extends Component {
       summaryName: summary_name,
       validateStatus: '',
       selectedRowKeys: [],
-      visible: !summary_name
+      visible: !summary_name,
+      kolVisible: true,
+      kocVisible: false
     }
     const { actions } = this.props
     // 获取公司信息接口
@@ -166,14 +169,25 @@ export default class CreateReport extends Component {
     const current = this.state.current - 1
     this.setState({ current })
   }
-
+  selectKol = () => {
+    this.setState({
+      kolVisible: true,
+      kocVisible: false
+    })
+  }
+  selectKoc = () => {
+    this.setState({
+      kolVisible: false,
+      kocVisible: true
+    })
+  }
   render() {
     const { closingReport: { companySource: { summaryId, companyName, companyPath, beSalesRealName } } } = this.props
     // 参数错误跳到error
     if (!this.state.companyId) {
       this.handleCancel('/error')
     }
-    const { current, selectedRowKeys, summaryName, companyId } = this.state
+    const { current, selectedRowKeys, summaryName, companyId, kolVisible, kocVisible } = this.state
     const C = steps[current].content
     const footerWidth = this.props.common.ui.sliderMenuCollapse ? 40 : 200
     const store = {
@@ -200,9 +214,16 @@ export default class CreateReport extends Component {
             <b>公司简称</b><span><a target='_blank' href={companyPath}>{companyName || '-'}</a></span>
             <b>所属销售</b><span>{beSalesRealName || '-'}</span>
           </div>
-          <div className="steps-content">
-            <C {...select} {...store} />
+          <div style={{ marginTop: '20px' }}>
+            <Button style={{ borderRadius: 0 }} onClick={this.selectKol}>预约订单</Button>
+            <Button style={{ borderRadius: 0 }} onClick={this.selectKoc}>koc订单</Button>
           </div>
+          {kolVisible && <div className="steps-content">
+            <C {...select} {...store} />
+          </div>}
+          {kocVisible && <div className="steps-content">
+            <C {...select} {...store} />
+          </div>}
         </main>
         <footer className='create-page-action' style={{ width: `calc(100% - ${footerWidth}px)` }}>
           <div className="steps-action">

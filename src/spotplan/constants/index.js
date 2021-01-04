@@ -43,7 +43,7 @@ let clientName = {
   7: '七条',
   8: '线下',
 }
-export const CheckModalFunc = handleDel => [
+export const CheckModalFunc = (handleDel, handlDelKoc) => [
   {
     title: '订单ID',
     dataIndex: 'order_id',
@@ -101,7 +101,8 @@ export const CheckModalFunc = handleDel => [
           title: '',
           content: `是否确认删除该订单？`,
           onOk: () => {
-            handleDel(2, record.order_id)
+            // handleDel(2, record.order_id)
+            handlDelKoc(2, record.order_id)
           }
         })
       }}>删除</a>
