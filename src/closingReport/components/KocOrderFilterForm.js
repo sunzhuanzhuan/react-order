@@ -11,7 +11,7 @@ const Option = Select.Option
 @Form.create()
 export default class KocOrderFilterForm extends Component {
   state = {
-    expand: false,
+    // expand: false,
     batchKey: 'order_id',
     timeType: 'time_type_1'
   }
@@ -37,10 +37,10 @@ export default class KocOrderFilterForm extends Component {
   handleReset = () => {
     this.props.form.resetFields()
   }
-  toggle = () => {
-    const { expand } = this.state
-    this.setState({ expand: !expand })
-  }
+  // toggle = () => {
+  //   const { expand } = this.state
+  //   this.setState({ expand: !expand })
+  // }
   validatorBatchId = (rule, value, callback) => {
     if (value && value.trim().split(/\s+/g).length > 200) {
       return callback('不能超过200个')
@@ -143,24 +143,14 @@ export default class KocOrderFilterForm extends Component {
           </Form.Item>
         </Col>
         <Col span={6}>
-          <Form.Item label="订单执行状态">
+          <Form.Item label="订单状态">
             {getFieldDecorator('execution_status', {
-              initialValue: ['21', '22', '26', '27', '28', '32', '33', '34', '35']
             })(
-              <Select
-                allowClear
-                mode="multiple"
-                style={{ width: '100%' }}
-                placeholder="请选择"
-                maxTagCount={0}
-                optionFilterProp='children'
-                getPopupContainer={() => document.querySelector('.closing-report-filter-container')}
-                maxTagPlaceholder={(omittedValues) => {
-                  return `已选${omittedValues.length}项`
-                }}
-              >
-                {source.executionStatus.map(option =>
-                  <Option key={option.value}>{option.label}</Option>)}
+              <Select>
+
+                <Option key={0}>全部</Option>
+                <Option key={1}>已确认</Option>
+                <Option key={2}>已执行</Option>
               </Select>
             )}
           </Form.Item>
@@ -169,31 +159,8 @@ export default class KocOrderFilterForm extends Component {
           <div style={{ lineHeight: '40px', textAlign: 'left' }}>
             <Button type='primary' style={{ marginLeft: '20px' }} htmlType='submit' loading={loading}>查询</Button>
             <Button style={{ margin: '0 20px 0 10px' }} onClick={this.handleReset}>重置</Button>
-            <a style={{ fontSize: 12 }} onClick={this.toggle}>
-              更多 <Icon type={this.state.expand ? 'up' : 'down'} />
-            </a>
           </div>
         </Col>
-        {this.state.expand ? <Col span={12}>
-          <Form.Item label={<EmSpan length={4}>时间</EmSpan>}>
-            <InputGroup compact>
-              <Select
-                style={{ width: '150px' }}
-                value={this.state.timeType}
-                getPopupContainer={() => document.querySelector('.closing-report-filter-container')}
-                onChange={(key) => this.setState({ timeType: key })}
-              >
-                <Option value="time_type_1">回填执行链接时间</Option>
-                <Option value="time_type_2">执行时间</Option>
-                <Option value="time_type_3">提交时间</Option>
-                <Option value="time_type_4">结算时间</Option>
-              </Select>
-              {getFieldDecorator(this.state.timeType, {})(
-                <RangePicker showTime style={{ width: 'calc(100% - 150px)' }} />
-              )}
-            </InputGroup>
-          </Form.Item>
-        </Col> : null}
       </Row>
     </Form>
   }

@@ -22,6 +22,13 @@ const steps = [{
   title: '完善订单数据',
   content: OrderList
 }]
+const stepsKoc = [{
+  title: '选择订单',
+  content: SelectKocOrders
+}, {
+  title: '完善订单数据',
+  content: OrderList
+}]
 
 const mapStateToProps = (state) => ({
   common: state.commonReducers,
@@ -45,9 +52,10 @@ export default class CreateReport extends Component {
       summaryName: summary_name,
       validateStatus: '',
       selectedRowKeys: [],
+      selectedRowKeysKoc: [],
       visible: !summary_name,
-      kolVisible: true,
-      kocVisible: false
+      kolVisible: false,
+      kocVisible: true
     }
     const { actions } = this.props
     // 获取公司信息接口
@@ -94,6 +102,9 @@ export default class CreateReport extends Component {
 
   onSelectChange = selectedRowKeys => {
     this.setState({ selectedRowKeys })
+  }
+  onSelectChangeKoc = selectedRowKeys => {
+    this.setState({ selectedRowKeysKoc: selectedRowKeys })
   }
   validateName = (summaryName) => {
     return summaryName.length > 0 && summaryName.length <= 30
@@ -187,8 +198,9 @@ export default class CreateReport extends Component {
     if (!this.state.companyId) {
       this.handleCancel('/error')
     }
-    const { current, selectedRowKeys, summaryName, companyId, kolVisible, kocVisible } = this.state
+    const { current, selectedRowKeys, summaryName, companyId, kolVisible, kocVisible, selectedRowKeysKoc } = this.state
     const C = steps[current].content
+    const K = stepsKoc[current].content
     const footerWidth = this.props.common.ui.sliderMenuCollapse ? 40 : 200
     const store = {
       common: this.props.common,
@@ -200,11 +212,17 @@ export default class CreateReport extends Component {
       companyId,
       onSelectChange: this.onSelectChange
     }
+    const selectKoc = {
+      selectedRowKeysKoc: selectedRowKeysKoc,
+      companyId,
+      onSelectChangeKoc: this.onSelectChangeKoc
+    }
     return (
       <div className='closing-report-pages create-page'>
         <header className='create-page-steps'>
           <Steps current={current}>
-            {steps.map(item => <Step key={item.title} title={item.title} />)}
+            {kolVisible ? steps.map(item => <Step key={item.title} title={item.title} />) :
+              stepsKoc.map(item => <Step key={item.title} title={item.title} />)}
           </Steps>
         </header>
         <main className='create-page-content'>
@@ -222,7 +240,7 @@ export default class CreateReport extends Component {
             <C {...select} {...store} />
           </div>}
           {kocVisible && <div className="steps-content">
-            <C {...select} {...store} />
+            <K {...selectKoc} {...store} />
           </div>}
         </main>
         <footer className='create-page-action' style={{ width: `calc(100% - ${footerWidth}px)` }}>

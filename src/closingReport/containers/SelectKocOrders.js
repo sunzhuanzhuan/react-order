@@ -63,10 +63,7 @@ const columns = [
     title: '状态',
     dataIndex: 'execution_status_name',
     render: (name, record) => {
-      return <div>
-        <div>订单状态：{record.status_name || '-'}</div>
-        <div>执行状态：{name || '-'}</div>
-      </div>
+      return <div>{record.status_name || '-'}</div>
     }
   }, {
     title: '执行人',
@@ -117,8 +114,8 @@ export default class SelectOrders extends Component {
     const { closingReport } = this.props
     const { selectOrderList: { list, source, total, page, pageSize } } = closingReport
     const rowSelection = {
-      onChange: this.props.onSelectChange,
-      selectedRowKeys: this.props.selectedRowKeys,
+      onChange: this.props.onSelectChangeKoc,
+      selectedRowKeys: this.props.selectedRowKeysKoc,
       getCheckboxProps: record => {
         return {
           disabled: record.flag > 1
@@ -135,7 +132,7 @@ export default class SelectOrders extends Component {
       showQuickJumper: true
     }
     return <div className='select-orders flex-form-layout'>
-      <SH2 title='订单列表' />
+      <SH2 title='koc订单列表' />
       <div style={{ padding: '20px 0' }} className='closing-report-filter-container'>
         <KocOrderFilterForm
           loading={this.state.listLoading}
