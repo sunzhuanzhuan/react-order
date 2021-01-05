@@ -140,7 +140,7 @@ export default class CreateReport extends Component {
 
   coreSave(callback) {
     const { closingReport: { companySource: { summaryId } } } = this.props
-    const { selectedRowKeys, companyId, summaryName } = this.state
+    const { selectedRowKeys, companyId, summaryName, selectedRowKeysKoc } = this.state
     if (!selectedRowKeys.length) {
       if (summaryId) {
         callback(summaryId)
@@ -156,7 +156,7 @@ export default class CreateReport extends Component {
       company_id: companyId,
       summary_id: summaryId,
       summary_name: summaryName,
-      order_ids: selectedRowKeys
+      order_ids: selectedRowKeys.concat(selectedRowKeysKoc)
     }).then(({ data }) => {
       if (data.order_ids) {
         this.setState({ selectedRowKeys: difference(this.state.selectedRowKeys, data.order_ids) })
@@ -172,7 +172,7 @@ export default class CreateReport extends Component {
   next() {
     this.coreSave(() => {
       const current = this.state.current + 1
-      this.setState({ current, selectedRowKeys: [] })
+      this.setState({ current, selectedRowKeys: [], selectedRowKeysKoc: [] })
     })
   }
 
@@ -232,10 +232,10 @@ export default class CreateReport extends Component {
             <b>公司简称</b><span><a target='_blank' href={companyPath}>{companyName || '-'}</a></span>
             <b>所属销售</b><span>{beSalesRealName || '-'}</span>
           </div>
-          <div style={{ marginTop: '20px' }}>
+          {current == 0 && <div style={{ marginTop: '20px' }}>
             <Button style={{ borderRadius: 0 }} onClick={this.selectKol}>预约订单</Button>
             <Button style={{ borderRadius: 0 }} onClick={this.selectKoc}>koc订单</Button>
-          </div>
+          </div>}
           {kolVisible && <div className="steps-content">
             <C {...select} {...store} />
           </div>}

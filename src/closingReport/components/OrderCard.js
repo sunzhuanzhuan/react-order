@@ -7,7 +7,8 @@ import {
   Modal,
   message,
   Popconfirm,
-  Checkbox
+  Checkbox,
+  Button
 } from 'antd'
 import './OrderCard.less'
 import IconText from '../base/IconText'
@@ -129,7 +130,7 @@ export default class OrderCard extends Component {
   removeOrder = (id, order_id, summary_id = this.props.companySource.summaryId) => {
     const hide = message.loading('删除中...', 0)
     this.props.actions.deleteSummaryOrder({
-      order_id : [order_id], summary_id
+      order_id: [order_id], summary_id
     }).then(() => {
       this.props.actions.removeSummaryOrder({ id })
     }).finally(hide)
@@ -164,20 +165,20 @@ export default class OrderCard extends Component {
     return <div className='order-card-container'>
       <header className='order-card-head'>
         {checkbox && <div className='check-wrap'>
-          <Checkbox disabled={checkbox.disabled} value={data.key}/>
+          <Checkbox disabled={checkbox.disabled} value={data.key} />
         </div>}
         {display.orderStatus &&
-        <OrderSummaryStatus status={data.summary_status} reason={data.externa_reason} />}
+          <OrderSummaryStatus status={data.summary_status} reason={data.externa_reason} />}
         <ul className='head-center'>
-          <li>订单ID：{data.order_id}</li>
+          <li>订单ID：{data.order_id}<Button type="primary">Primary</Button></li>
           {data.execution_evidence_code && <li>PO单号：{data.execution_evidence_code}</li>}
           <li>需求名：{data.requirement_name}</li>
           {display.dateTimeRecord && datetimeValidate(data.submitter_at) &&
-          <li>{data.submitter_name} 提交于 {data.submitter_at}</li>}
+            <li>{data.submitter_name} 提交于 {data.submitter_at}</li>}
           {display.dateTimeRecord && datetimeValidate(data.internal_check_at) &&
-          <li>内审于 {data.internal_check_at}</li>}
+            <li>内审于 {data.internal_check_at}</li>}
           {display.dateTimeRecord && datetimeValidate(data.external_check_at) &&
-          <li>品牌 审核于 {data.external_check_at}</li>}
+            <li>品牌 审核于 {data.external_check_at}</li>}
         </ul>
         <div className='head-right'>
           {
@@ -225,9 +226,9 @@ export default class OrderCard extends Component {
                 <IconText platform={item.platform_id} text={item.weibo_name || '-'} />
               </div>
               {datetimeValidate(item.update_at) &&
-              <div className='card-item-info'>
-                {item.modify_name} 提交于{item.update_at}
-              </div>}
+                <div className='card-item-info'>
+                  {item.modify_name} 提交于{item.update_at}
+                </div>}
               <div className='card-item-status'>
                 {props ? <Badge {...props} /> : null}
               </div>
