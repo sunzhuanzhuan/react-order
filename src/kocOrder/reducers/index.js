@@ -8,7 +8,7 @@ import {
 // 详情
 export const kocOrderInfo = handleActions({
   [getKocOrderInfo_success]: (state, action) => {
-    return { ...action.payload.info }
+    return { ...action.payload.data }
   }
 }, {})
 // 获取列表
