@@ -30,8 +30,9 @@ class FilterForm extends React.Component {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        console.log('Received values of form: ', values);
-        this.props.postSearchList()
+        console.log('Received values of form: ', values.created_at);
+
+        this.props.getList(values)
       }
     });
   }
@@ -41,11 +42,11 @@ class FilterForm extends React.Component {
     const formItemLayout = {
       labelCol: {
         xs: { span: 24 },
-        sm: { span: 8 },
+        sm: { span: 6 },
       },
       wrapperCol: {
         xs: { span: 24 },
-        sm: { span: 10 },
+        sm: { span: 12 },
       },
     };
     return <Form {...formItemLayout} onSubmit={this.handleSubmit}>
@@ -57,13 +58,13 @@ class FilterForm extends React.Component {
                 validator: this.validatorLength
               }]
             })(
-              <Input style={{ width: 220 }} allowClear placeholder='请输入订单ID ，多个空格隔开' />
+              <Input style={{ width: 200 }} allowClear placeholder='请输入订单ID ，多个空格隔开' />
             )}
           </Form.Item>
         </Col>
         <Col span={6}>
           <Form.Item label='koc订单号'>
-            {getFieldDecorator('wby_order_id', {
+            {getFieldDecorator('koc_order_id', {
               rules: [{
                 validator: this.validatorLength
               }]
@@ -95,7 +96,7 @@ class FilterForm extends React.Component {
         <Col span={6}>
           <Form.Item label='平台'>
             {getFieldDecorator('platform_id')(
-              <Select style={{ width: 220 }} >
+              <Select style={{ width: 200 }} >
                 <Option value="">请选择</Option>
                 {platforms.map(d =>
                   <Option value={d.pid} key={d.pid}>{d.platform_name}</Option>
@@ -106,22 +107,26 @@ class FilterForm extends React.Component {
         </Col>
         <Col span={6}>
           <Form.Item label='订单状态'>
-            {getFieldDecorator('platform_id')(
-              <Select style={{ width: 220 }} >、
+            {getFieldDecorator('status')(
+              <Select style={{ width: 220 }} >
                 <Option value="1">已确认</Option>
                 <Option value="2">已执行</Option>
               </Select>
             )}
           </Form.Item>
         </Col>
-        <Col span={6}>
-          <Form.Item label='创建时间'>
-            {getFieldDecorator('created_at')(
-              <RangePicker style={{ width: 220 }} format={dateFormat} />
+        <Col span={8} style={{ whiteSpace: 'nowrap' }}>
+          <Form.Item label="任务开始时间" {...formItemLayout}>
+            {getFieldDecorator('created_start')(
+              <DatePicker format="YYYY-MM-DD" placeholder='开始日期' />
+            )}
+            ~
+						{getFieldDecorator('created_end')(
+              <DatePicker format="YYYY-MM-DD " placeholder='结束日期' />
             )}
           </Form.Item>
         </Col>
-        <Col span={6} style={{ textAlign: 'center' }}>
+        <Col span={1} style={{ textAlign: 'center', marginLeft: '40px' }}>
           <Form.Item>
             <Button htmlType="submit" type='primary'>搜索</Button>
           </Form.Item>

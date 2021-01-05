@@ -13,8 +13,8 @@ const Cookie = require('js-cookie');
 const columns = [
   {
     title: '需求ID',
-    dataIndex: 'requirement_name',
-    key: 'requirement_name',
+    dataIndex: 'requirement_id',
+    key: 'requirement_id',
     width: 100
   },
   {
@@ -30,8 +30,8 @@ const columns = [
     width: 100
   }, {
     title: '所属项目',
-    dataIndex: 'brand_name',
-    key: 'brand_name',
+    dataIndex: 'project_name',
+    key: 'project_name',
     width: 100
   },
   {
@@ -101,7 +101,7 @@ const columns = [
     key: 'address14',
     fixed: 'right',
     render: (val, record) => {
-      return <Link to={`/order/koc/detail?id=${record.id}`}><a>查看详情</a> </Link>
+      return <Link to={`/order/koc/detail?id=${record.requirement_id}`}><a>查看详情</a> </Link>
     }
   },
 ];
@@ -125,7 +125,9 @@ class KocList extends React.Component {
   constructor() {
     super();
     this.state = {
-      visible: false
+      visible: false,
+      page: 1,
+      pageSize: 50,
     }
   }
   exportExcel = () => {
@@ -151,7 +153,8 @@ class KocList extends React.Component {
   render() {
     let that = this
     let { platforms } = this.props.commonReducers
-    let { postSearchList } = this.props.actionKoc
+    let { getList } = this.props.actionKoc
+    let { list: { page, pageSize, rows = [], total } } = this.props
     const props = {
       name: 'file',
       action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
@@ -172,9 +175,18 @@ class KocList extends React.Component {
         }
       },
     }
+    const pagination = {
+      total,
+      pageSize,
+      current: page,
+      onChange: (current) => {
+        this.props.actionKoc.getList({ page: current })
+      },
+      showQuickJumper: true
+    }
     return <div>
       <FilterForm
-        postSearchList={postSearchList}
+        getList={getList}
         platforms={platforms} />
       <Alert message={
         <div style={{ height: '20px', lineHeight: '20px' }}>
@@ -209,8 +221,9 @@ class KocList extends React.Component {
       >
         <p>
           <Table
-            dataSource={[]}
+            dataSource={rows}
             rowKey={record => record.id}
+            pagination={pagination}
             columns={columnsReason} />
         </p>
       </Modal>
