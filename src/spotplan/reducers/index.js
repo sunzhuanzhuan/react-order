@@ -7,6 +7,7 @@ import {
   getSpotplanPlatform_success,
   getSpotplanProject_success,
   getSpotplanOrderList_success,
+  getSpotplanKocOrderList_success,
   getSpotplanEditOrder_success,
   getSpotplanBrand_success,
   getSpotplanList_success,
@@ -51,6 +52,12 @@ export const spotplanProject = handleActions({
 
 export const spotplanOrderList = handleActions({
   [getSpotplanOrderList_success]: (state, action) => {
+    return { ...action.payload.data }
+  }
+}, {})
+// 获取koc订单的reducer
+export const spotplanKocOrderList = handleActions({
+  [getSpotplanKocOrderList_success]: (state, action) => {
     return { ...action.payload.data }
   }
 }, {})
@@ -121,7 +128,7 @@ export const serviceRateAmount = (state = {}, action) => {
 
 export const priceIdInfo = handleActions({
   [getSpotplanPriceIdInfo_success]: (state, action) => {
-    return {...action.payload.data}
+    return { ...action.payload.data }
   }
 }, {})
 
@@ -138,6 +145,7 @@ export default combineReducers({
   spotplanPlatform,
   spotplanProject,
   spotplanOrderList,
+  spotplanKocOrderList,
   spotplanEditList,
   spotplanBrand,
   spotplanList,

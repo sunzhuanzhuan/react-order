@@ -25,6 +25,7 @@ class CheckOrder extends React.Component {
     const { getSpotplanExecutor, getSpotplanPlatform } = this.props.actions;
     this.props.queryBasicInfo().then(() => {
       this.props.queryData(2, { spotplan_id: search.spotplan_id, project_id: [this.props.spotplanPoInfo.project_id], reservation_status: 2, ...search.keys });
+      this.props.actions.getSpotplanKocOrderList({ spotplan_id: search.spotplan_id })
     })
     getSpotplanExecutor();
     getSpotplanPlatform();
@@ -48,6 +49,7 @@ class CheckOrder extends React.Component {
   render() {
     const { spotplanExecutor, spotplanPlatform, spotplanProject,
       spotplanOrderList: { page, pageSize, total, rows = [] },
+      spotplanKocOrderList: { page: pageKoc, pageSize: pageSizeKoc, total: totalKoc, rows: rowsKoc = [] },
       spotplanPoInfo, handleCheck, handleCheckKoc, orderMaps, loading, orderMapsKoc } = this.props;
     const winHeight = document.documentElement.clientHeight - 120 + 'px';
     let { kolVisible, kocVisible } = this.state
@@ -108,15 +110,15 @@ class CheckOrder extends React.Component {
               getProject={this.props.actions.getSpotplanProject}
             />
             <Skeleton active loading={loading}>
-              {rows.length == 0 && <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />}
-              {rows.map((item, index) => (<OrderKocItem key={index} data={item} handleCheckKoc={handleCheckKoc} orderMapsKoc={orderMapsKoc} />))}
-              {total > 50 && <Pagination className='pagination'
-                current={page}
-                pageSize={pageSize}
+              {rowsKoc.length == 0 && <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />}
+              {rowsKoc.map((item, index) => (<OrderKocItem key={index} data={item} handleCheckKoc={handleCheckKoc} orderMapsKoc={orderMapsKoc} />))}
+              {totalKoc > 50 && <Pagination className='pagination'
+                current={pageKoc}
+                pageSize={pageSizeKoc}
                 onChange={this.handlePageChange}
                 // onShowSizeChange={this.hanldeSizeChange}
                 size="small"
-                total={total}
+                total={totalKoc}
                 // showSizeChanger
                 showQuickJumper
               // pageSizeOptions={['50', '100', '200']}
@@ -134,6 +136,7 @@ const mapStateToProps = (state) => {
     spotplanPlatform: state.spotplanReducers.spotplanPlatform,
     spotplanProject: state.spotplanReducers.spotplanProject,
     spotplanOrderList: state.spotplanReducers.spotplanOrderList,
+    spotplanKocOrderList: state.spotplanReducers.spotplanKocOrderList,
     spotplanPoInfo: state.spotplanReducers.spotplanPoInfo,
   }
 }

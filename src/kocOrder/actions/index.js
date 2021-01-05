@@ -9,8 +9,8 @@ export const {
   method: 'get'
 });
 export const {
-  postSearchList,
-  postSearchList_success
-} = createHttpAction('postSearchList', Interface.postSearchList, {
-  method: 'post'
+  getList,
+  getList_success
+} = createHttpAction('getList', Interface.getList, {
+  method: 'get'
 });

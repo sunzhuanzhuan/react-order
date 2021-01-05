@@ -31,26 +31,26 @@ export default class OrderKocItem extends React.Component {
       <div className='order-item-title'>
         <div className='title-info'>
           <span>订单ID:</span><span className='primary-font'>{data && data.order_id}</span>
-          <span>订单状态:</span><span>{data && data.status_name}</span>
+          <span>订单状态:</span><span>{data && data.status == 1 ? '已确认' : '已执行'}</span>
           <span>需求名称:</span><span><a target='_blank' href={data && data.requirement_path}>{data && data.requirement_name}</a></span>
           <span>账号名称:</span><span>{data && data.weibo_name}</span>
           <span>平台:</span><span>{data && data.weibo_type_name}</span>
           <span>执行人:</span><span>{data && data.executor_admin_name}</span>
           <span>项目:</span><span><a target='_blank' href={data && data.project_path}>{data && data.project_name}</a></span>
         </div>
-        {data && (data.flag == 2 || data.flag == 3) && <div className='disabled-reason'>
+        {/* {data && (data.flag == 2 || data.flag == 3) && <div className='disabled-reason'>
           <Tooltip
             getPopupContainer={() => document.querySelector('.order-item-title')}
             title={data.flag == 2 ? `账号尚未应约` : `订单已经被Spotplan（ID：${data.binding_id}）绑定了`}>不可选原因</Tooltip>
-        </div>}
+        </div>} */}
       </div>
-      {data && data.price.map((item, index) => (<Checkbox
+      {/* {data && data.price.map((item, index) => (<Checkbox
         checked={(data && orderMapsKoc[data.order_id] && (orderMapsKoc[data.order_id].price_id == item.price_id)) || false}
         key={index} value={item.price_id}
         disabled={!(data && data.flag == 1)} onChange={this.handleChange}
       >
         <Item data={item} />
-      </Checkbox>))}
+      </Checkbox>))} */}
     </div>
   }
 }

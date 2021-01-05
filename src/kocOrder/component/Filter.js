@@ -52,7 +52,7 @@ class FilterForm extends React.Component {
       <Row>
         <Col span={6}>
           <Form.Item label='wby订单号'>
-            {getFieldDecorator('settle_type', {
+            {getFieldDecorator('wby_order_id', {
               rules: [{
                 validator: this.validatorLength
               }]
@@ -63,7 +63,7 @@ class FilterForm extends React.Component {
         </Col>
         <Col span={6}>
           <Form.Item label='koc订单号'>
-            {getFieldDecorator('spotplan_name', {
+            {getFieldDecorator('wby_order_id', {
               rules: [{
                 validator: this.validatorLength
               }]
@@ -74,7 +74,7 @@ class FilterForm extends React.Component {
         </Col>
         <Col span={6}>
           <Form.Item label='需求ID'>
-            {getFieldDecorator('brand_id', {
+            {getFieldDecorator('requirement_id', {
               rules: [{
                 validator: this.validatorLength
               }]
@@ -85,7 +85,7 @@ class FilterForm extends React.Component {
         </Col>
         <Col span={6}>
           <Form.Item label='PO'>
-            {getFieldDecorator('creator_id')(
+            {getFieldDecorator('po_code')(
               <Input placeholder='请输入PO号' style={{ width: 220 }} allowClear />
             )}
           </Form.Item>
@@ -94,7 +94,7 @@ class FilterForm extends React.Component {
       <Row>
         <Col span={6}>
           <Form.Item label='平台'>
-            {getFieldDecorator('platform')(
+            {getFieldDecorator('platform_id')(
               <Select style={{ width: 220 }} >
                 <Option value="">请选择</Option>
                 {platforms.map(d =>
@@ -106,11 +106,10 @@ class FilterForm extends React.Component {
         </Col>
         <Col span={6}>
           <Form.Item label='订单状态'>
-            {getFieldDecorator('name')(
-              <Select style={{ width: 220 }} >
-                <Option value="1">请选择</Option>
-                <Option value="2">已确认</Option>
-                <Option value="3">已执行</Option>
+            {getFieldDecorator('platform_id')(
+              <Select style={{ width: 220 }} >、
+                <Option value="1">已确认</Option>
+                <Option value="2">已执行</Option>
               </Select>
             )}
           </Form.Item>

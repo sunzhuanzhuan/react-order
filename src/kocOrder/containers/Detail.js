@@ -6,58 +6,58 @@ import { connect } from 'react-redux';
 
 const columns = [{
   title: '公司名称',
-  dataIndex: 'address111',
-  key: 'address111',
+  dataIndex: 'company_name',
+  key: 'company_name',
   width: 100
 }, {
   title: '需求ID',
-  dataIndex: 'address112',
-  key: 'address112',
+  dataIndex: 'requirement_id',
+  key: 'requirement_id',
   width: 100
 }, {
   title: '需求名称',
-  dataIndex: 'address113',
-  key: 'address113',
+  dataIndex: 'requirement_name',
+  key: 'requirement_name',
   width: 100
 }, {
   title: '所属品牌',
-  dataIndex: 'address1111',
-  key: 'address1111',
+  dataIndex: 'brand_name',
+  key: 'brand_name',
   width: 100
 }, {
   title: '所属项目',
-  dataIndex: 'address1122',
-  key: 'address1122',
+  dataIndex: 'project_name',
+  key: 'project_name',
   width: 100
 }, {
   title: 'WBY订单号',
-  dataIndex: 'address1133',
-  key: 'address1133',
+  dataIndex: 'wby_order_id',
+  key: 'wby_order_id',
   width: 100
 }, {
   title: '外部订单号',
-  dataIndex: 'address1114',
-  key: 'address1114',
+  dataIndex: 'koc_order_id',
+  key: 'koc_order_id',
   width: 100
 }, {
   title: '平台',
-  dataIndex: 'address1125',
-  key: 'address1125',
+  dataIndex: 'platform_name',
+  key: 'platform_name',
   width: 100
 }, {
   title: 'PO',
-  dataIndex: 'address1136',
-  key: 'address1136',
+  dataIndex: 'po_code',
+  key: 'po_code',
   width: 100
 }, {
   title: '所属销售',
-  dataIndex: 'address1117',
-  key: 'address1117',
+  dataIndex: 'sale_name',
+  key: 'sale_name',
   width: 100
 }, {
   title: '执行人',
-  dataIndex: 'address11266',
-  key: 'address11266',
+  dataIndex: 'executor_name',
+  key: 'executor_name',
   width: 100
 },]
 class KocDetail extends React.Component {
@@ -71,6 +71,7 @@ class KocDetail extends React.Component {
     this.props.actionKoc.getKocOrderInfo()
   }
   render() {
+    let { data } = this.props
     return <div>
       <Breadcrumb>
         <Breadcrumb.Item> <a href="/order/koc/list">订单列表</a></Breadcrumb.Item>
@@ -84,18 +85,18 @@ class KocDetail extends React.Component {
         rowKey={record => record.id}
         columns={columns} dataSource={[{ 'address111': '张大妈' }]} />
       <Descriptions title="账号信息" bordered style={{ marginTop: '50px' }}>
-        <Descriptions.Item label="账号名称">Zhou Maomao</Descriptions.Item>
-        <Descriptions.Item label="账号ID">1810000000</Descriptions.Item>
+        <Descriptions.Item label="账号名称">{data.weibo_name}</Descriptions.Item>
+        <Descriptions.Item label="账号ID">{data.weibo_id}</Descriptions.Item>
         <Descriptions.Item label="账号分类">Hangzhou, Zhejiang</Descriptions.Item>
       </Descriptions>
       <Descriptions title="价格信息" bordered style={{ marginTop: '50px' }}>
         <Descriptions.Item label="价格名称">Cloud Database</Descriptions.Item>
         <Descriptions.Item label="PriceID">Prepaid</Descriptions.Item>
         <Descriptions.Item label="采购价">YES</Descriptions.Item>
-        <Descriptions.Item label="采购价＋服务费">2018-04-24</Descriptions.Item>
+        <Descriptions.Item label="采购价＋服务费">{data.cost_with_fee}</Descriptions.Item>
         <Descriptions.Item label="位置／直发or转发"></Descriptions.Item>
-        <Descriptions.Item label="发文位置">2018-04-24</Descriptions.Item>
-        <Descriptions.Item label="发文时间">2018-04-24</Descriptions.Item>
+        <Descriptions.Item label="发文位置">{data.post_location}</Descriptions.Item>
+        <Descriptions.Item label="发文时间">{data.post_time}</Descriptions.Item>
       </Descriptions>
     </div>
   }

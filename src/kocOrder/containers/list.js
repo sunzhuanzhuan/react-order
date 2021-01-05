@@ -13,87 +13,87 @@ const Cookie = require('js-cookie');
 const columns = [
   {
     title: '需求ID',
-    dataIndex: 'id',
-    key: 'id',
+    dataIndex: 'requirement_name',
+    key: 'requirement_name',
     width: 100
   },
   {
     title: '需求名称',
-    dataIndex: 'age',
-    key: 'age',
+    dataIndex: 'requirement_name',
+    key: 'requirement_name',
     width: 100
   },
   {
     title: '所属品牌',
-    dataIndex: 'address',
-    key: 'address',
+    dataIndex: 'brand_name',
+    key: 'brand_name',
     width: 100
   }, {
     title: '所属项目',
-    dataIndex: 'name1',
-    key: 'name1',
+    dataIndex: 'brand_name',
+    key: 'brand_name',
     width: 100
   },
   {
     title: 'wby订单号',
-    dataIndex: '账号名称2',
-    key: 'age2',
+    dataIndex: 'wby_order_id',
+    key: 'wby_order_id',
     width: 100
   },
   {
     title: '外部订单号',
-    dataIndex: 'address3',
-    key: 'address3',
+    dataIndex: 'koc_order_id',
+    key: 'koc_order_id',
     width: 100
   }, {
     title: '订单状态',
-    dataIndex: 'address4',
-    key: 'address4',
+    dataIndex: 'status_name',
+    key: 'status_name',
     width: 100
   }, {
     title: 'PO',
-    dataIndex: 'name5',
-    key: 'name5',
+    dataIndex: 'po_code',
+    key: 'po_code',
     width: 100
   },
   {
     title: '所属销售',
-    dataIndex: '账号名称6',
-    key: 'age6',
+    dataIndex: 'sale_name',
+    key: 'sale_name',
     width: 100
   },
   {
     title: '执行人',
-    dataIndex: 'address7',
-    key: 'address7',
+    dataIndex: 'executor_name',
+    key: 'executor_name',
     width: 100
   }, {
     title: '平台',
-    dataIndex: '账号名称8',
-    key: 'age8',
+    dataIndex: 'platform_name',
+    key: 'platform_name',
     width: 100
   },
   {
     title: '账号名称',
-    dataIndex: 'address9',
-    key: 'address9',
+    dataIndex: 'weibo_name',
+    key: 'weibo_name',
     width: 100
   },
   {
     title: '账号ID',
-    dataIndex: 'address12',
-    key: 'address12',
+    dataIndex: 'weibo_id',
+    key: 'weibo_id',
     width: 100
   }, {
     title: '创建人',
-    dataIndex: '账号名称13',
-    key: 'age13',
+    dataIndex: 'creator_name',
+    key: 'creator_name',
     width: 100
   },
   {
     title: '创建时间',
-    dataIndex: 'address11',
-    key: 'address11',
+    dataIndex: 'created_at',
+    key: 'created_at',
     width: 100
   }, {
     title: '操作',
@@ -146,7 +146,7 @@ class KocList extends React.Component {
   }
   componentDidMount() {
     this.props.actions.getAllPlatform()
-    // this.props.actionKoc.postSearchList()
+    this.props.actionKoc.getList()
   }
   render() {
     let that = this
@@ -220,6 +220,7 @@ class KocList extends React.Component {
 const mapStateToProps = (state) => {
   return {
     commonReducers: state.commonReducers,
+    list: state.kocReducers.list
   }
 }
 const mapDispatchToProps = dispatch => ({
