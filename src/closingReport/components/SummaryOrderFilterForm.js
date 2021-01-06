@@ -213,6 +213,19 @@ export default class SummaryOrderFilterForm extends Component {
           </Form.Item>
         </Col>
         <Col span={6}>
+          <Form.Item label="订单类型">
+            {getFieldDecorator('type', {
+              initialValue: '1'
+            })(
+              <Select
+              >
+                <Option value='1'>预约订单</Option>
+                <Option value='2'>koc订单</Option>
+              </Select>
+            )}
+          </Form.Item>
+        </Col>
+        <Col span={6}>
           <div style={{ lineHeight: '40px', textAlign: 'left' }}>
             <Button type='primary' style={{ marginLeft: '20px' }} htmlType='submit' loading={loading}>查询</Button>
             <Button style={{ margin: '0 20px 0 10px' }} onClick={this.handleReset}>重置</Button>

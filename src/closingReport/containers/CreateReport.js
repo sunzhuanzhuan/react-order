@@ -233,8 +233,8 @@ export default class CreateReport extends Component {
             <b>所属销售</b><span>{beSalesRealName || '-'}</span>
           </div>
           {current == 0 && <div style={{ marginTop: '20px' }}>
-            <Button style={{ borderRadius: 0 }} onClick={this.selectKol}>预约订单</Button>
-            <Button style={{ borderRadius: 0 }} onClick={this.selectKoc}>koc订单</Button>
+            <Button style={{ borderRadius: 0 }} className={kolVisible && 'selected'} onClick={this.selectKol}>预约订单</Button>
+            <Button style={{ borderRadius: 0 }} className={kocVisible && 'selected'} onClick={this.selectKoc}>koc订单</Button>
           </div>}
           {kolVisible && <div className="steps-content">
             <C {...select} {...store} />

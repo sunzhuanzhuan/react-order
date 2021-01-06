@@ -176,11 +176,12 @@ class DetailQuery extends React.Component {
           )}
         </FormItem>
         <FormItem label='订单类型'>
-          {getFieldDecorator('executor_order')(
+          {getFieldDecorator('item_type', {
+            initialValue: 1
+          })(
             <Select style={{ width: 140 }}
               placeholder='请选择'
             >
-              <Option value={0}>全部</Option>
               <Option value={1}>预约订单</Option>
               <Option value={3}>koc订单</Option>
             </Select>

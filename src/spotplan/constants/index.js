@@ -571,7 +571,7 @@ export const SpotplanListFunc = () => [
     align: 'center',
     width: 100,
     render: text => {
-      return <a href={`/order/spotplan/detail?spotplan_id=${text}`} target="_blank">{text}</a>
+      return <a href={`/order/spotplan/detail?spotplan_id=${text}&item_type=1`} target="_blank">{text}</a>
     }
   },
   {
@@ -645,7 +645,7 @@ export const SpotplanListFunc = () => [
     align: 'center',
     width: 100,
     render: (text, record) => {
-      return <a href={`/order/spotplan/detail?spotplan_id=${record.spotplan_id}`} target='_blank'>查看详情</a>
+      return <a href={`/order/spotplan/detail?spotplan_id=${record.spotplan_id}&item_type=1`} target='_blank'>查看详情</a>
     }
   }
 ];

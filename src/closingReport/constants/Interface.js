@@ -6,6 +6,7 @@ export default {
   companyProjects: prefix + '/getCompanyProject',
   companyPlatforms: prefix + '/getCompanyPlatforms',
   order: prefix + '/getOrder',
+  orderKoc: prefix + '/getOrderKoc',
   addOrUpdateSummary: prefix + '/addSummaryData',
   getSummaryOrderInfo: prefix + '/getSummaryOrderInfo',
   getPlatformDataInfo: prefix + '/getPlatformDataInfo',

@@ -220,11 +220,11 @@ class SpotplanAdd extends React.Component {
       if (type && type == 'submit') {
         this.editOrder.current.validateFields((err) => {
           if (!err) {
-            this.props.history.push('/order/spotplan/detail?spotplan_id=' + search.spotplan_id);
+            this.props.history.push('/order/spotplan/detail?item_type=1&spotplan_id=' + search.spotplan_id);
           }
         })
       } else {
-        this.props.history.push('/order/spotplan/detail?spotplan_id=' + search.spotplan_id);
+        this.props.history.push('/order/spotplan/detail?item_type=1&spotplan_id=' + search.spotplan_id);
       }
     }
   }
