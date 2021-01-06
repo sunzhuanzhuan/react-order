@@ -96,6 +96,7 @@ export const CheckModalFunc = (handleDel, handlDelKoc) => [
     align: 'center',
     width: 100,
     render: (text, record) => {
+      console.log(record)
       return <a href='javascript:;' onClick={() => {
         Modal.confirm({
           title: '',

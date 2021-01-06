@@ -3,6 +3,7 @@ import FilterForm from '../component/Filter'
 import { Alert, Divider, Upload, Table, message, Modal, Button } from 'antd';
 import * as commonAction from "../../actions";
 import * as actionKoc from "../actions";
+import Interface from '../constants/Interface';
 import { bindActionCreators } from "redux";
 import { connect } from 'react-redux';
 import { Link } from "react-router-dom";
@@ -107,18 +108,18 @@ const columns = [
 ];
 const columnsReason = [{
   title: '平台',
-  dataIndex: 'address111',
-  key: 'address111',
+  dataIndex: 'platform_name',
+  key: 'platform_name',
   width: 100
 }, {
   title: '账号名称',
-  dataIndex: 'address112',
-  key: 'address112',
+  dataIndex: 'weibo_name',
+  key: 'weibo_name',
   width: 100
 }, {
   title: '失败原因',
-  dataIndex: 'address113',
-  key: 'address113',
+  dataIndex: 'error_msg',
+  key: 'error_msg',
   width: 100
 }]
 class KocList extends React.Component {
@@ -128,7 +129,11 @@ class KocList extends React.Component {
       visible: false,
       page: 1,
       pageSize: 50,
+      successCount: 0,
+      errorCount: 0,
+      errorList: []
     }
+    this.uploadMessage = null
   }
   exportExcel = () => {
     this.setState({
@@ -152,12 +157,13 @@ class KocList extends React.Component {
   }
   render() {
     let that = this
+    let { successCount, errorCount, errorList } = this.state
     let { platforms } = this.props.commonReducers
     let { getList } = this.props.actionKoc
     let { list: { page, pageSize, rows = [], total } } = this.props
     const props = {
       name: 'file',
-      action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
+      action: Interface.uploadExcle,
       headers: {
         "X-Access-Token": Cookie.get('token') || '',
       },
@@ -165,13 +171,28 @@ class KocList extends React.Component {
         that.setState({
           visible: false
         })
-        if (info.file.status !== 'uploading') {
-          console.log(info.file, info.fileList);
+        if (info.file.status === 'uploading') {
+          message.loading('Loading...')
+          console.log('111', info)
         }
         if (info.file.status === 'done') {
-          message.success(`${info.file.name} file uploaded successfully`);
+          let res = info.file.response
+          console.log('222', res)
+          if (res.code == 200 && res.data.errorCount == 0) {
+            message.success(`上传成功!`);
+          } else if (res.code == 200 && res.data.errorCount > 0) {
+            that.setState({
+              visible: true,
+              successCount: res.data.successCount,
+              errorCount: res.data.errorCount,
+              errorList: res.data.errorList
+            })
+          } else {
+            message.error(info.file.response.msg || '上传失败');
+          }
         } else if (info.file.status === 'error') {
-          message.error(`${info.file.name} file upload failed.`);
+          console.log('333', info)
+          message.error(`上传失败`);
         }
       },
     }
@@ -191,10 +212,10 @@ class KocList extends React.Component {
       <Alert message={
         <div style={{ height: '20px', lineHeight: '20px' }}>
           <span style={{ float: 'right', display: 'block' }}>
-            {/* <Upload {...props} showUploadList={false}>
+            <Upload {...props} showUploadList={false}>
               <a style={{ margin: "0 10px", display: 'block' }}>导入koc订单</a>
-            </Upload> */}
-            <a onClick={this.exportExcel} style={{ float: 'right' }} >导入koc订单</a>
+            </Upload>
+            {/* <a onClick={this.exportExcel} style={{ float: 'right' }} >导入koc订单</a> */}
           </span>
           <a style={{ float: 'right' }} >下载模板</a>
         </div>
@@ -206,7 +227,7 @@ class KocList extends React.Component {
         rowKey={record => record.id}
         columns={columns} />
       <Modal
-        title={<span>导入结果-成功4条，失败0条</span>}
+        title={<span>导入结果-成功{successCount}条，失败{errorCount}条</span>}
         closable={false}
         visible={this.state.visible}
         footer={
@@ -221,7 +242,7 @@ class KocList extends React.Component {
       >
         <p>
           <Table
-            dataSource={rows}
+            dataSource={errorList}
             rowKey={record => record.id}
             pagination={pagination}
             columns={columnsReason} />

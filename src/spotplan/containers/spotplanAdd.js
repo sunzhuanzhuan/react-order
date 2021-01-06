@@ -164,8 +164,8 @@ class SpotplanAdd extends React.Component {
       this.props.history.push(url);
     }
     if (num == 3) {
-      const { orderMaps } = this.state;
-      if (!Object.values(orderMaps).length) {
+      const { orderMaps, orderMapsKoc } = this.state;
+      if (!Object.values(orderMaps).length && !Object.values(orderMapsKoc).length) {
         this.setState({ orderMaps: {} }, () => {
           if (search.noback) {
             this.props.history.push(`/order/spotplan/add?step=3&spotplan_id=${search.spotplan_id}&noback=true`);
@@ -177,10 +177,20 @@ class SpotplanAdd extends React.Component {
       }
       const hide = message.loading('操作中，请稍候...');
       let spotplan_order = [];
+      let spotplan_orderKoc = [];
       for (let key in orderMaps) {
         spotplan_order.push({ order_id: key, ...orderMaps[key] })
       }
-      this.props.actions.postAddSpotplanOrder({ spotplan_id: search.spotplan_id, spotplan_order }).then((res) => {
+      for (let key in orderMapsKoc) {
+        spotplan_orderKoc.push({ order_id: key, ...orderMapsKoc[key] })
+      }
+      let value = {
+        spotplan_id: search.spotplan_id,
+        spotplan_order: spotplan_order,
+        spotplan_order_koc: spotplan_orderKoc,
+      }
+      console.log(value)
+      this.props.actions.postAddSpotplanOrder(value).then((res) => {
         const array = res.data.order_ids;
         const type = res.data.type;
         hide();

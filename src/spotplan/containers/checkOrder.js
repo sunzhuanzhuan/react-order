@@ -10,7 +10,7 @@ import OrderKocItem from '../components/orderKocItem'
 import Header from '../components/header'
 import { STATUS_CUSTOMER, STATUS_RESERVATION } from '../constants'
 import qs from 'qs'
-
+import './checkOrder.less'
 class CheckOrder extends React.Component {
   constructor() {
     super();
@@ -57,8 +57,8 @@ class CheckOrder extends React.Component {
       <Header data={spotplanPoInfo} />
 
       <div style={{ marginTop: '20px' }}>
-        <Button style={{ borderRadius: 0 }} onClick={this.selectKol}>预约订单</Button>
-        <Button style={{ borderRadius: 0 }} onClick={this.selectKoc}>koc订单</Button>
+        <Button style={{ borderRadius: 0 }} className={kolVisible && 'selected'} onClick={this.selectKol}>预约订单</Button>
+        <Button style={{ borderRadius: 0 }} className={kocVisible && 'selected'} onClick={this.selectKoc}>koc订单</Button>
       </div>
       {kolVisible && <div>
         <h3 style={{ marginTop: '20px' }}>订单列表</h3>
