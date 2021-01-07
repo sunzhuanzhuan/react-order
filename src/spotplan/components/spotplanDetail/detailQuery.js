@@ -183,7 +183,7 @@ class DetailQuery extends React.Component {
               placeholder='请选择'
             >
               <Option value={1}>预约订单</Option>
-              <Option value={3}>koc订单</Option>
+              <Option value={2}>koc订单</Option>
             </Select>
           )}
         </FormItem>
