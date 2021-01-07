@@ -55,6 +55,7 @@ class Detail extends React.Component {
     </div>
   }
 }
+
 const mapStateToProps = (state) => {
   return {
     commonReducers: state.commonReducers,
