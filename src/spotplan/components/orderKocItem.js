@@ -20,6 +20,8 @@ export default class OrderKocItem extends React.Component {
       position: data.position,
       category_name: data.category_name,
       post_location: data.post_location,
+      weibo_id: data.weibo_id,
+      platform_id: data.platform_id
     };
     if (e.target.checked) {
       this.props.handleCheckKoc(1, data.order_id, params);

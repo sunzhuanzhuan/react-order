@@ -51,18 +51,18 @@ class FilterForm extends React.Component {
     };
     return <Form {...formItemLayout} onSubmit={this.handleSubmit}>
       <Row>
-        <Col span={6}>
+        <Col span={8}>
           <Form.Item label='wby订单号'>
             {getFieldDecorator('wby_order_id', {
               rules: [{
                 validator: this.validatorLength
               }]
             })(
-              <Input style={{ width: 200 }} allowClear placeholder='请输入订单ID ，多个空格隔开' />
+              <Input style={{ width: 220 }} allowClear placeholder='请输入订单ID ，多个空格隔开' />
             )}
           </Form.Item>
         </Col>
-        <Col span={6}>
+        <Col span={8}>
           <Form.Item label='koc订单号'>
             {getFieldDecorator('koc_order_id', {
               rules: [{
@@ -73,7 +73,7 @@ class FilterForm extends React.Component {
             )}
           </Form.Item>
         </Col>
-        <Col span={6}>
+        <Col span={8}>
           <Form.Item label='需求ID'>
             {getFieldDecorator('requirement_id', {
               rules: [{
@@ -84,19 +84,19 @@ class FilterForm extends React.Component {
             )}
           </Form.Item>
         </Col>
-        <Col span={6}>
+      </Row>
+      <Row>
+        <Col span={8}>
           <Form.Item label='PO'>
             {getFieldDecorator('po_code')(
               <Input placeholder='请输入PO号' style={{ width: 220 }} allowClear />
             )}
           </Form.Item>
         </Col>
-      </Row>
-      <Row>
-        <Col span={6}>
+        <Col span={8}>
           <Form.Item label='平台'>
             {getFieldDecorator('platform_id')(
-              <Select style={{ width: 200 }} >
+              <Select style={{ width: 220 }} >
                 <Option value="">请选择</Option>
                 {platforms.map(d =>
                   <Option value={d.pid} key={d.pid}>{d.platform_name}</Option>
@@ -105,7 +105,7 @@ class FilterForm extends React.Component {
             )}
           </Form.Item>
         </Col>
-        <Col span={6}>
+        <Col span={8}>
           <Form.Item label='订单状态'>
             {getFieldDecorator('status')(
               <Select style={{ width: 220 }} >
@@ -115,6 +115,8 @@ class FilterForm extends React.Component {
             )}
           </Form.Item>
         </Col>
+      </Row>
+      <Row>
         <Col span={8} style={{ whiteSpace: 'nowrap' }}>
           <Form.Item label="任务开始时间" {...formItemLayout}>
             {getFieldDecorator('created_start')(
@@ -126,7 +128,7 @@ class FilterForm extends React.Component {
             )}
           </Form.Item>
         </Col>
-        <Col span={1} style={{ textAlign: 'center', marginLeft: '40px' }}>
+        <Col span={8} style={{ textAlign: 'center', marginLeft: '40px' }}>
           <Form.Item>
             <Button htmlType="submit" type='primary'>搜索</Button>
           </Form.Item>

@@ -172,7 +172,7 @@ class KocList extends React.Component {
           visible: false
         })
         if (info.file.status === 'uploading') {
-          message.loading('Loading...')
+          // message.loading('Loading...')
           console.log('111', info)
         }
         if (info.file.status === 'done') {
@@ -195,15 +195,6 @@ class KocList extends React.Component {
           message.error(`上传失败`);
         }
       },
-    }
-    const pagination = {
-      total,
-      pageSize,
-      current: page,
-      onChange: (current) => {
-        this.props.actionKoc.getList({ page: current })
-      },
-      showQuickJumper: true
     }
     return <div>
       <FilterForm
@@ -244,7 +235,7 @@ class KocList extends React.Component {
           <Table
             dataSource={errorList}
             rowKey={record => record.id}
-            pagination={pagination}
+            pagination={false}
             columns={columnsReason} />
         </p>
       </Modal>
