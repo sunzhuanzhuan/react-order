@@ -3,7 +3,7 @@ import { Route, Switch } from 'react-router-dom'
 import lazyLoadComponent from '@/components/LazyLoadComponent'
 
 const List = lazyLoadComponent(() => import("./containers/list"))
-const Detail = lazyLoadComponent(() => import("./containers/detail"))
+const Detail = lazyLoadComponent(() => import("./containers/detailKoc"))
 
 class KocOrder extends Component {
   state = {}
