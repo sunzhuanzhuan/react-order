@@ -4,7 +4,7 @@ import * as actionKoc from "../actions";
 import { bindActionCreators } from "redux";
 import { connect } from 'react-redux';
 
-class KocDetail extends React.Component {
+class Detail extends React.Component {
   constructor() {
     super();
     this.state = {
@@ -64,4 +64,4 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = dispatch => ({
   actionKoc: bindActionCreators({ ...actionKoc }, dispatch)
 });
-export default connect(mapStateToProps, mapDispatchToProps)(KocDetail)
+export default connect(mapStateToProps, mapDispatchToProps)(Detail)

@@ -2,8 +2,8 @@ import React, { Component } from 'react'
 import { Route, Switch } from 'react-router-dom'
 import lazyLoadComponent from '@/components/LazyLoadComponent'
 
-const KocList = lazyLoadComponent(() => import("./containers/list"))
-const KocDetail = lazyLoadComponent(() => import("./containers/detail"))
+const List = lazyLoadComponent(() => import("./containers/list"))
+const Detail = lazyLoadComponent(() => import("./containers/detail"))
 
 class KocOrder extends Component {
   state = {}
@@ -11,8 +11,8 @@ class KocOrder extends Component {
     return (
       <div>
         <Switch>
-          <Route path="/order/koc/list" component={KocList} />
-          <Route path="/order/koc/detail" component={KocDetail} />
+          <Route path="/order/koc/list" component={List} />
+          <Route path="/order/koc/detail" component={Detail} />
         </Switch>
       </div>
     );

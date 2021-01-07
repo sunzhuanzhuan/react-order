@@ -122,7 +122,7 @@ const columnsReason = [{
   key: 'error_msg',
   width: 100
 }]
-class KocList extends React.Component {
+class List extends React.Component {
   constructor() {
     super();
     this.state = {
@@ -252,4 +252,4 @@ const mapDispatchToProps = dispatch => ({
   actions: bindActionCreators({ ...commonAction }, dispatch),
   actionKoc: bindActionCreators({ ...actionKoc }, dispatch)
 });
-export default connect(mapStateToProps, mapDispatchToProps)(KocList)
+export default connect(mapStateToProps, mapDispatchToProps)(List)

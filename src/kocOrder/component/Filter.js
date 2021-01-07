@@ -9,7 +9,7 @@ const Option = Select.Option;
 const dateFormat = 'YYYY-MM-DD'
 
 
-class FilterForm extends React.Component {
+class Filter extends React.Component {
   constructor() {
     super();
     this.state = {
@@ -138,4 +138,4 @@ class FilterForm extends React.Component {
   }
 }
 
-export default Form.create()(FilterForm)
+export default Form.create()(Filter)
