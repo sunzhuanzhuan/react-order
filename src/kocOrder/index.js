@@ -1,9 +1,9 @@
-import React,{Component} from 'react'
+import React, { Component } from 'react'
 import { Route, Switch } from 'react-router-dom'
 import lazyLoadComponent from '@/components/LazyLoadComponent'
 
-const KocList = lazyLoadComponent(() => import("./containers/List"))
-const KocDetail = lazyLoadComponent(() => import("./containers/Detail"))
+const KocList = lazyLoadComponent(() => import("./containers/list"))
+const KocDetail = lazyLoadComponent(() => import("./containers/detail"))
 
 class KocOrder extends Component {
   state = {}

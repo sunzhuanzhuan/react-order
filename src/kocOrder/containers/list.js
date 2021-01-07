@@ -1,5 +1,5 @@
 import React from 'react'
-import FilterForm from '../component/Filter'
+import FilterForm from '../component/filter'
 import { Alert, Divider, Upload, Table, message, Modal, Button } from 'antd';
 import * as commonAction from "../../actions";
 import * as actionKoc from "../actions";
