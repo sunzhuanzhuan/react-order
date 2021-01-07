@@ -2,6 +2,7 @@ import React from 'react'
 import { Modal, Input, Form, Select, Tooltip, DatePicker, InputNumber, Button } from 'antd'
 import numeral from 'numeral'
 import moment from 'moment'
+import qs from 'qs'
 
 import '../containers/index.less'
 const { TextArea } = Input;
@@ -124,8 +125,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
     fixed: 'left',
     render: (text, record) => {
       return <div>
-        <a href={record.order_info_path} target="_blank">{text}</a><br />
-        <span><Button type="primary">koc</Button></span>
+        <a href={record.order_info_path} target="_blank">{text}</a>
       </div>
     }
   },
@@ -567,15 +567,16 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
     }
   }
 ];
-export const SpotplanListFunc = () => [
+
+export const SpotplanListFunc = (handleJump) => [
   {
     title: 'ID',
     dataIndex: 'spotplan_id',
     key: 'spotplan_id',
     align: 'center',
     width: 100,
-    render: text => {
-      return <a href={`/order/spotplan/detail?spotplan_id=${text}&item_type=1`} target="_blank">{text}</a>
+    render: (text, record) => {
+      return <a onClick={() => handleJump(record)}>{text}</a>
     }
   },
   {
@@ -649,7 +650,7 @@ export const SpotplanListFunc = () => [
     align: 'center',
     width: 100,
     render: (text, record) => {
-      return <a href={`/order/spotplan/detail?spotplan_id=${record.spotplan_id}&item_type=1`} target='_blank'>查看详情</a>
+      return <a onClick={() => handleJump(record)}>查看详情</a>
     }
   }
 ];
@@ -665,7 +666,7 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     render: (text, record) => {
       return <div>
         <a href={record.order_info_path} target="_blank">{text}</a><br />
-        <span><Button type="primary">koc</Button></span>
+        {record.item_type == 2 && <span><Button type="primary">koc</Button></span>}
       </div>
     }
   },

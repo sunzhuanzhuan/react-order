@@ -177,13 +177,15 @@ class DetailQuery extends React.Component {
         </FormItem>
         <FormItem label='订单类型'>
           {getFieldDecorator('item_type', {
-            initialValue: 1
+            initialValue: { label: '预约订单', key: 1 }
           })(
             <Select style={{ width: 140 }}
               placeholder='请选择'
+              getPopupContainer={() => document.querySelector('.spotplan-check-form')}
+              labelInValue
             >
-              <Option value={1}>预约订单</Option>
-              <Option value={2}>koc订单</Option>
+              <Option value={1} key={1}>预约订单</Option>
+              <Option value={2} key={2}>koc订单</Option>
             </Select>
           )}
         </FormItem>

@@ -189,7 +189,6 @@ class SpotplanAdd extends React.Component {
         spotplan_order: spotplan_order,
         spotplan_order_koc: spotplan_orderKoc,
       }
-      console.log(value)
       this.props.actions.postAddSpotplanOrder(value).then((res) => {
         const array = res.data.order_ids;
         const type = res.data.type;
@@ -220,11 +219,25 @@ class SpotplanAdd extends React.Component {
       if (type && type == 'submit') {
         this.editOrder.current.validateFields((err) => {
           if (!err) {
-            this.props.history.push('/order/spotplan/detail?item_type=1&spotplan_id=' + search.spotplan_id);
+            const params = {
+              keys: { item_type: 1 },
+              labels: { item_type: "预约订单" },
+            };
+            this.props.history.replace({
+              pathname: '/order/spotplan/detail',
+              search: `?${qs.stringify({ spotplan_id: search.spotplan_id, ...params })}`,
+            })
           }
         })
       } else {
-        this.props.history.push('/order/spotplan/detail?item_type=1&spotplan_id=' + search.spotplan_id);
+        const params = {
+          keys: { item_type: 1 },
+          labels: { item_type: "预约订单" },
+        };
+        this.props.history.replace({
+          pathname: '/order/spotplan/detail',
+          search: `?${qs.stringify({ spotplan_id: search.spotplan_id, ...params })}`,
+        })
       }
     }
   }
