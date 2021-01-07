@@ -102,8 +102,12 @@ export const CheckModalFunc = (handleDel, handlDelKoc) => [
           title: '',
           content: `是否确认删除该订单？`,
           onOk: () => {
-            // handleDel(2, record.order_id)
-            handlDelKoc(2, record.order_id)
+            if (record.order_id.indexOf('koc') > -1) {
+              handlDelKoc(2, record.order_id)
+            } else {
+              handleDel(2, record.order_id)
+
+            }
           }
         })
       }}>删除</a>
