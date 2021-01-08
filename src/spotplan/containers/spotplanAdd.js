@@ -204,7 +204,7 @@ class SpotplanAdd extends React.Component {
             }
           })
         } else {
-          this.setState({ orderMaps: {} }, () => {
+          this.setState({ orderMaps: {}, orderMapsKoc: {} }, () => {
             this.props.history.push('/order/spotplan/add?step=3&spotplan_id=' + search.spotplan_id);
           })
         }

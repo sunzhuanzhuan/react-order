@@ -55,15 +55,15 @@ class EditOrder extends React.Component {
       // }, 0);
     })
   }
-  handleDelete = order_id => {
+  handleDelete = obj => {
     const { search, handleDelete } = this.props;
     Modal.confirm({
       title: '',
       content: '是否确认将该订单从本spotplan删除？',
       onOk: () => {
-        handleDelete({ spotplan_id: search.spotplan_id, order_id: [order_id] }).then(() => {
+        handleDelete({ spotplan_id: search.spotplan_id, order_id: [obj.order_id], item_type: obj.item_type }).then(() => {
           message.success('操作成功');
-          this.props.queryData(3, { spotplan_id: search.spotplan_id }, this.handleEditTable);
+          this.props.queryData(3, { spotplan_id: search.spotplan_id, item_type: obj.item_type }, this.handleEditTable);
         })
       }
     })

@@ -253,10 +253,10 @@ class SpotPlanDetail extends React.Component {
       this.setState({ order_id, updateVisible: true });
     })
   }
-  handleEditOrder = order_id => {
+  handleEditOrder = obj => {
     const search = qs.parse(this.props.location.search.substring(1));
-    this.props.actions.getBasicSpotplanOrderInfo({ spotplan_id: search.spotplan_id, order_id }).then(() => {
-      this.setState({ order_id, editVisible: true });
+    this.props.actions.getBasicSpotplanOrderInfo({ spotplan_id: search.spotplan_id, order_id: obj.order_id, item_type: obj.item_type }).then(() => {
+      this.setState({ order_id: obj.order_id, editVisible: true });
     })
   }
   handleUpdate = obj => {
