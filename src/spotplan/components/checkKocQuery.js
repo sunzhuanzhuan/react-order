@@ -184,6 +184,10 @@ class CheckKocQuery extends React.Component {
           )}
         </FormItem>}
       </Row>
+      <Row style={{ textAlign: 'center', marginBottom: '20px' }}>
+        <Button className='left-gap' onClick={this.handleReset}>重置</Button>
+        <Button className='left-gap' type='primary' onClick={this.handleSearch}>查询</Button>
+      </Row>
     </Form>
   }
 }
