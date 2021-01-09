@@ -715,8 +715,8 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     key: 'status_name',
     align: 'center',
     width: 100,
-    render: text => {
-      return <div>{text || '-'}</div>
+    render: (text, record) => {
+      return <div>{record.item_type == 1 ? text || '-' : record.status == 1 ? '已确认' : '已执行'}</div>
     }
   }, {
     title: 'Spotplan下发状态',
@@ -806,7 +806,7 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     align: 'center',
     width: 120,
     render: (text, record) => {
-      return record.is_tax_rebate_account == 2 ? <div>{text && numeral(text).format('0,0.00') || '-'}</div> : <div>{text && numeral(text).format('0,0.00') || '-'}<br />
+      return record.is_tax_rebate_account == 2 || !record.is_tax_rebate_account ? <div>{text && numeral(text).format('0,0.00') || '-'}</div> : <div>{text && numeral(text).format('0,0.00') || '-'}<br />
         <span style={{ color: 'red' }}>返税专用</span>
       </div>
     }
@@ -818,7 +818,7 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     align: 'center',
     width: 120,
     render: (text, record) => {
-      return record.is_tax_rebate_account == 2 ? <div>{text && numeral(text).format('0,0.00') || '-'}</div> : <div>{text && numeral(text).format('0,0.00') || '-'}<br />
+      return record.is_tax_rebate_account == 2 || !record.is_tax_rebate_account ? <div>{text && numeral(text).format('0,0.00') || '-'}</div> : <div>{text && numeral(text).format('0,0.00') || '-'}<br />
         <span style={{ color: 'red' }}>返税专用</span>
       </div>
     }
@@ -905,36 +905,36 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     render: (text, record) => {
       return <>
         {record.added == 1 ? <div> <a href='javascript:;' onClick={() => {
-          handleAddNumber(record.order_id)
+          handleAddNumber(record)
         }}>申请新增账号</a> </div> : null}
         {
           record.change == 1 ? <div> <a href='javascript:;' onClick={() => {
-            handleChangeNumber(record.order_id)
+            handleChangeNumber(record)
           }}>申请换号</a></div> : null
         }
         {
           record.stopAndUpdate == 1 ? <div>  <a href='javascript:;' onClick={() => {
-            handleQuitOrder(record.order_id)
+            handleQuitOrder(record)
           }}>申请终止合作</a> </div> : null
         }
         {
           record.stopAndUpdate == 1 ?
             <div> <a href='javascript:;' onClick={() => {
-              handleUpdateOrder(record.order_id)
+              handleUpdateOrder(record)
             }}>申请更新信息</a> </div> : null
         }
         {
           record.stopAndUpdate == 1 ?
             <div> <a href='javascript:;' onClick={() => {
-              handleUpdateArtical(record.order_id)
+              handleUpdateArtical(record)
             }}>修改订单信息</a> </div> : null
         }
         {
-          record.stopAndUpdate == 1 ?
+          record.item_type == 1 ? record.stopAndUpdate == 1 ?
             <div> <a href='javascript:;' onClick={() => {
               const { price_id, order_id, price_name } = record;
               handlePriceIdVisible(price_id, price_name, order_id)
-            }}>修改price id</a> </div> : null
+            }}>修改price id</a> </div> : null : null
         }
         {
           record.is_inward_send == 1 || record.last_apply_status == 1 || record.last_apply_status == 2 ? null : <div><a href='javascript:;' onClick={() => {
