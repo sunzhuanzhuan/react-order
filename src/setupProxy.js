@@ -8,9 +8,6 @@ module.exports = function (app) {
   // app.use(proxy('/api/koc/getKocOrderListForSummary',
   //   { target: 'http://yapi.ops.tst-weiboyi.com/project/257/', changeOrigin: true }
   // ));
-  app.use(proxy('/koc/getKocOrderList',
-    { target: process.env.REACT_APP_TRUNK_BENTLEY_ADDRESS, changeOrigin: true }
-  ));
   app.use(proxy('/api',
     { target: process.env.REACT_APP_TRUNK_BENTLEY_ADDRESS, changeOrigin: true }
   ));

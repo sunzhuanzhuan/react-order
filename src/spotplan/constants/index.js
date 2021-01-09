@@ -187,7 +187,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
             }
           }} onBlur={(e) => {
             if (e.target.value != record.weibo_id) {
-              handleUpdate({ order_id: record.order_id, price_id: record.price_id, weibo_id: e.target.value })
+              handleUpdate({ item_type: record.item_type, order_id: record.order_id, price_id: record.price_id, weibo_id: e.target.value })
             }
           }} />
         )
@@ -216,7 +216,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
         })(
           <TextArea autosize={false} style={{ width: 140, height: 86, resize: 'none' }} placeholder='请填写名称' onBlur={(e) => {
             if (e.target.value != record.price_name) {
-              handleUpdate({ order_id: record.order_id, price_id: record.price_id, price_name: e.target.value })
+              handleUpdate({ item_type: record.item_type, order_id: record.order_id, price_id: record.price_id, price_name: e.target.value })
             }
           }} />
         )
@@ -267,7 +267,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
                 validateFields([`${record.order_id}.cost`], (errors, values) => {
                   if (!errors) {
                     if (e.target.value != '' && e.target.value != record.cost) {
-                      handleUpdate({ order_id: record.order_id, price_id: record.price_id, cost: e.target.value }).then((res) => {
+                      handleUpdate({ item_type: record.item_type, order_id: record.order_id, price_id: record.price_id, cost: e.target.value }).then((res) => {
                         if (record.costwithfee) {
                           let newAt = `${record.order_id}.costwithfee`;
                           setFieldsValue({ [newAt]: res.data.costwithfee });
@@ -291,7 +291,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
                 validateFields([`${record.order_id}.cost`], (errors, values) => {
                   if (!errors) {
                     if (e.target.value != '' && e.target.value != record.cost) {
-                      handleUpdate({ order_id: record.order_id, price_id: record.price_id, cost: e.target.value }).then((res) => {
+                      handleUpdate({ item_type: record.item_type, order_id: record.order_id, price_id: record.price_id, cost: e.target.value }).then((res) => {
                         if (record.costwithfee) {
                           let newAt = `${record.order_id}.costwithfee`;
                           setFieldsValue({ [newAt]: res.data.costwithfee });
@@ -352,7 +352,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
                 validateFields([`${record.order_id}.costwithfee`], (errors, values) => {
                   if (!errors) {
                     if (e.target.value != '' && e.target.value != record.costwithfee) {
-                      handleUpdate({ order_id: record.order_id, price_id: record.price_id, costwithfee: e.target.value })
+                      handleUpdate({ item_type: record.item_type, order_id: record.order_id, price_id: record.price_id, costwithfee: e.target.value })
                     }
                   }
                 })
@@ -370,7 +370,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
               <InputNumber precision={2} style={{ width: 250, backgroundColor: '#fffce5' }} className='tax-costwithfee' onBlur={(e) => {
                 validateFields([`${record.order_id}.costwithfee`], (errors, values) => {
                   if (!errors) {
-                    handleUpdate({ order_id: record.order_id, price_id: record.price_id, costwithfee: e.target.value }).then((res) => {
+                    handleUpdate({ item_type: record.item_type, order_id: record.order_id, price_id: record.price_id, costwithfee: e.target.value }).then((res) => {
                       if (record.cost) {
                         let newAt = `${record.order_id}.cost`;
                         setFieldsValue({ [newAt]: res.data.cost });
@@ -403,7 +403,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
         })(
           <Input onBlur={(e) => {
             if (e.target.value != record.account_category_name) {
-              handleUpdate({ order_id: record.order_id, price_id: record.price_id, account_category_name: e.target.value })
+              handleUpdate({ item_type: record.item_type, order_id: record.order_id, price_id: record.price_id, account_category_name: e.target.value })
             }
           }} />
         )
@@ -425,7 +425,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
         })(
           <TextArea autosize={false} style={{ width: 140, height: 86, resize: 'none' }} onBlur={(e) => {
             if (e.target.value != record.release_form) {
-              handleUpdate({ order_id: record.order_id, price_id: record.price_id, release_form: e.target.value })
+              handleUpdate({ item_type: record.item_type, order_id: record.order_id, price_id: record.price_id, release_form: e.target.value })
             }
           }} />
         )
@@ -451,7 +451,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
             }]
         })(
           <Select placeholder="请选择" style={{ width: 120 }} onChange={(value) => {
-            handleUpdate({ order_id: record.order_id, price_id: record.price_id, publish_articles_address: value || '' })
+            handleUpdate({ item_type: record.item_type, order_id: record.order_id, price_id: record.price_id, publish_articles_address: value || '' })
           }} allowClear>
             <Option value={1}>头条</Option>
             <Option value={2}>次条</Option>
@@ -484,7 +484,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
             }]
         })(
           <DatePicker dropdownClassName="sp-calendar" allowClear={record.publish_articles_at == null ? true : false} showTime={{ defaultValue: moment('00:00:00', 'HH:mm:ss') }} format="YYYY-MM-DD HH:mm:ss" placeholder="请输入" style={{ width: 130 }} onOk={(value) => {
-            handleUpdate({ order_id: record.order_id, price_id: record.price_id, publish_articles_at: value.format("YYYY-MM-DD HH:mm:ss") })
+            handleUpdate({ item_type: record.item_type, order_id: record.order_id, price_id: record.price_id, publish_articles_at: value.format("YYYY-MM-DD HH:mm:ss") })
           }} onBlur={() => {
             let newAt = `${record.order_id}.publish_articles_at`;
             console.log(record.publish_articles_at)
@@ -496,7 +496,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
                 }
               }
             } else if (record.publish_articles_at != getFieldValue(`${record.order_id}.publish_articles_at`).format("YYYY-MM-DD HH:mm:ss")) {
-              handleUpdate({ order_id: record.order_id, price_id: record.price_id, publish_articles_at: getFieldValue(`${record.order_id}.publish_articles_at`).format("YYYY-MM-DD HH:mm:ss") })
+              handleUpdate({ item_type: record.item_type, order_id: record.order_id, price_id: record.price_id, publish_articles_at: getFieldValue(`${record.order_id}.publish_articles_at`).format("YYYY-MM-DD HH:mm:ss") })
             }
           }} />
         )}
@@ -512,7 +512,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
       return record.is_inward_send == 1 || record.last_apply_status == 1 || record.last_apply_status == 2 ? position[text] : <FormItem>
         {getFieldDecorator(`${record.order_id}.client`)(
           <Select placeholder="请选择" style={{ width: 120 }} onChange={(value) => {
-            handleUpdate({ order_id: record.order_id, price_id: record.price_id, client: value || '' })
+            handleUpdate({ item_type: record.item_type, order_id: record.order_id, price_id: record.price_id, client: value || '' })
           }} allowClear>
             <Option value={1}>天猫</Option>
             <Option value={2}>京东</Option>
@@ -544,7 +544,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
           })(
             <TextArea autosize={false} style={{ width: 140, height: 86, resize: 'none', marginRight: '20px' }} placeholder='请填写内容类型' onBlur={(e) => {
               if (e.target.value != record.content_type) {
-                handleUpdate({ order_id: record.order_id, price_id: record.price_id, content_type: e.target.value })
+                handleUpdate({ item_type: record.item_type, order_id: record.order_id, price_id: record.price_id, content_type: e.target.value })
               }
             }} />
           )
@@ -571,7 +571,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
           })(
             <TextArea autosize={false} style={{ width: 140, height: 86, resize: 'none', marginRight: '20px' }} placeholder='填写备注信息' onBlur={(e) => {
               if (e.target.value != record.content) {
-                handleUpdate({ order_id: record.order_id, price_id: record.price_id, content: e.target.value })
+                handleUpdate({ item_type: record.item_type, order_id: record.order_id, price_id: record.price_id, content: e.target.value })
               }
             }} />
           )
@@ -1068,7 +1068,10 @@ export const AddOrderCols = [
     dataIndex: 'status_name',
     key: 'status_name',
     align: 'center',
-    width: 100
+    width: 100,
+    render: (text, record) => {
+      return record.item_type == 1 ? text : record.status == 1 ? '已确认' : '已执行'
+    }
   },
   {
     title: '需求名称',
@@ -1139,7 +1142,10 @@ export const OrderCols = [
     dataIndex: 'status_name',
     key: 'status_name',
     align: 'center',
-    width: 100
+    width: 100,
+    render: (text, record) => {
+      return record.item_type == 1 ? text : record.status == 1 ? '已确认' : '已执行'
+    }
   },
   {
     title: '需求名称',
@@ -1210,6 +1216,9 @@ export const ArticalCols = [
     key: 'status_name',
     align: 'center',
     className: "columns",
+    render: (text, record) => {
+      return record.item_type == 1 ? text : record.status == 1 ? '已确认' : '已执行'
+    }
   },
   {
     title: '需求名称',
@@ -1319,7 +1328,10 @@ export const UpdateCols = [
     dataIndex: 'status_name',
     key: 'status_name',
     align: 'center',
-    width: 100
+    width: 100,
+    render: (text, record) => {
+      return record.item_type == 1 ? text : record.status == 1 ? '已确认' : '已执行'
+    }
   },
   {
     title: '需求名称',

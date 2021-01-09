@@ -153,7 +153,7 @@ class List extends React.Component {
   }
   componentDidMount() {
     this.props.actions.getAllPlatform()
-    this.props.actionKoc.getList()
+    this.props.actionKoc.getList({ page: 1, pageSize: 50 })
   }
   render() {
     let that = this
@@ -187,6 +187,8 @@ class List extends React.Component {
               errorCount: res.data.errorCount,
               errorList: res.data.errorList
             })
+
+            that.props.actionKoc.getList({ page: 1, pageSize: 50 })
           } else {
             message.error(info.file.response.msg || '上传失败');
           }
