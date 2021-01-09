@@ -19,8 +19,9 @@ export default class KocOrderFilterForm extends Component {
     e.preventDefault()
     this.props.form.validateFields((err, values) => {
       if (!err) {
+        console.log(this.props)
         // reset select
-        this.props.onSelectChange([])
+        this.props.onSelectChangeKoc([])
         // 处理params
         values['order_id'] = batchText2Array(values['order_id'])
         values['execution_evidence_code'] = batchText2Array(values['execution_evidence_code'], true)

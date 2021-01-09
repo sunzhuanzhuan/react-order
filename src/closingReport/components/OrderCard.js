@@ -170,7 +170,7 @@ export default class OrderCard extends Component {
         {display.orderStatus &&
           <OrderSummaryStatus status={data.summary_status} reason={data.externa_reason} />}
         <ul className='head-center'>
-          <li>订单ID：{data.order_id}<Button type="primary">Primary</Button></li>
+          <li>订单ID：{data.order_id}{data.order_type == 2 && <Button type="primary">Primary</Button>}</li>
           {data.execution_evidence_code && <li>PO单号：{data.execution_evidence_code}</li>}
           <li>需求名：{data.requirement_name}</li>
           {display.dateTimeRecord && datetimeValidate(data.submitter_at) &&

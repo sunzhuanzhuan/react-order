@@ -6,7 +6,7 @@ export default {
   companyProjects: prefix + '/getCompanyProject',
   companyPlatforms: prefix + '/getCompanyPlatforms',
   order: prefix + '/getOrder',
-  orderKoc: prefix + '/getOrderKoc',
+  orderKoc: 'http://yapi.ops.tst-weiboyi.com/mock/257/api/koc/getKocOrderListForSummary',
   addOrUpdateSummary: prefix + '/addSummaryData',
   getSummaryOrderInfo: prefix + '/getSummaryOrderInfo',
   getPlatformDataInfo: prefix + '/getPlatformDataInfo',

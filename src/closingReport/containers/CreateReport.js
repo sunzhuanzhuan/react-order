@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Steps, Button, message, Modal, Input, Form } from 'antd'
+import { Steps, Button, message, Modal, Input, Form, Alert } from 'antd'
 import './CreateReport.less'
 import SelectOrders from './SelectOrders'
 import SelectKocOrders from './SelectKocOrders'
@@ -54,8 +54,8 @@ export default class CreateReport extends Component {
       selectedRowKeys: [],
       selectedRowKeysKoc: [],
       visible: !summary_name,
-      kolVisible: false,
-      kocVisible: true
+      kolVisible: true,
+      kocVisible: false
     }
     const { actions } = this.props
     // 获取公司信息接口
@@ -141,7 +141,7 @@ export default class CreateReport extends Component {
   coreSave(callback) {
     const { closingReport: { companySource: { summaryId } } } = this.props
     const { selectedRowKeys, companyId, summaryName, selectedRowKeysKoc } = this.state
-    if (!selectedRowKeys.length) {
+    if (!selectedRowKeys.length && !selectedRowKeysKoc.length) {
       if (summaryId) {
         callback(summaryId)
         return Promise.resolve()
@@ -156,7 +156,8 @@ export default class CreateReport extends Component {
       company_id: companyId,
       summary_id: summaryId,
       summary_name: summaryName,
-      order_ids: selectedRowKeys.concat(selectedRowKeysKoc)
+      order_ids: selectedRowKeys,
+      other_order_ids: selectedRowKeysKoc
     }).then(({ data }) => {
       if (data.order_ids) {
         this.setState({ selectedRowKeys: difference(this.state.selectedRowKeys, data.order_ids) })
@@ -217,6 +218,7 @@ export default class CreateReport extends Component {
       companyId,
       onSelectChangeKoc: this.onSelectChangeKoc
     }
+    let selectedRowKeysAndKoc = selectedRowKeys.concat(selectedRowKeysKoc)
     return (
       <div className='closing-report-pages create-page'>
         <header className='create-page-steps'>
@@ -236,6 +238,15 @@ export default class CreateReport extends Component {
             <Button style={{ borderRadius: 0 }} className={kolVisible && 'selected'} onClick={this.selectKol}>预约订单</Button>
             <Button style={{ borderRadius: 0 }} className={kocVisible && 'selected'} onClick={this.selectKoc}>koc订单</Button>
           </div>}
+          {current === steps.length - 1 && <Alert style={{ marginTop: '20px' }} message={
+            <div style={{ height: '20px', lineHeight: '20px', }}>
+              <span style={{ float: 'right', display: 'block', marginLeft: '20px' }}>
+
+                <a onClick={this.exportExcel} style={{ float: 'right' }} >导出koc订单</a>
+              </span>
+              <a style={{ float: 'right' }} >导入koc订单数据</a>
+            </div>}
+          />}
           {kolVisible && <div className="steps-content">
             <C {...select} {...store} />
           </div>}
@@ -248,7 +259,7 @@ export default class CreateReport extends Component {
             {
               current < steps.length - 1
               && [
-                <span className='action-item' key={1}>已选订单：<b>{selectedRowKeys.length}</b>个</span>,
+                <span className='action-item' key={1}>已选订单：<b>{selectedRowKeysAndKoc.length}</b>个</span>,
                 <Button className='action-item' key={2} onClick={() => this.temporarySave()}>存草稿</Button>,
                 <Button className='action-item' key={3} type="primary" onClick={() => this.next()}>下一步</Button>
               ]

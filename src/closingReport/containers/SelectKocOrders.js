@@ -15,7 +15,7 @@ const disabledReason = {
 const columns = [
   {
     title: '订单ID',
-    dataIndex: 'order_id',
+    dataIndex: 'koc_order_id',
     render: (id, record) => {
       return <div>
         <a target="_blank" href={record.order_info_path}>{id}</a>
@@ -30,7 +30,7 @@ const columns = [
     }
   }, {
     title: 'PO单号',
-    dataIndex: 'execution_evidence_code',
+    dataIndex: 'po_code',
     render: (po, record) => {
       return <div>
         {po ? <a target="_blank" href={record.po_path}>{po}</a> : '-'}
@@ -61,9 +61,9 @@ const columns = [
     }
   }, {
     title: '状态',
-    dataIndex: 'execution_status_name',
+    dataIndex: 'execustatustion_status_name',
     render: (name, record) => {
-      return <div>{record.status_name || '-'}</div>
+      return <div>{record.status_name == 1 ? '已确认' : '代执行'}</div>
     }
   }, {
     title: '执行人',
@@ -97,7 +97,7 @@ export default class SelectOrders extends Component {
     const { actions } = this.props
     let search = { ...this.state.search, ...params }
     this.setState({ listLoading: true, search })
-    actions.getOrders(search).finally(() => {
+    actions.getKocOrders(search).finally(() => {
       this.setState({ listLoading: false })
     })
   }
@@ -112,7 +112,7 @@ export default class SelectOrders extends Component {
 
   render() {
     const { closingReport } = this.props
-    const { selectOrderList: { list, source, total, page, pageSize } } = closingReport
+    const { selectKocOrderList: { list, source, total, page, pageSize } } = closingReport
     const rowSelection = {
       onChange: this.props.onSelectChangeKoc,
       selectedRowKeys: this.props.selectedRowKeysKoc,
@@ -139,7 +139,7 @@ export default class SelectOrders extends Component {
           source={{ ...closingReport.publicSource, ...closingReport.companySource }}
           search={this.state.search}
           getList={this.getList}
-          onSelectChange={this.props.onSelectChange}
+          onSelectChangeKoc={this.props.onSelectChangeKoc}
         />
       </div>
       <Table
