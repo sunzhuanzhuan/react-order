@@ -76,7 +76,7 @@ const columns = [
     }
   }]
 
-export default class SelectOrders extends Component {
+export default class SelectKocOrders extends Component {
   constructor(props, context) {
     super(props, context)
     this.state = {

@@ -18,6 +18,7 @@ import * as actions from '../actions'
 import { connect } from 'react-redux'
 import DetailModal from '../base/DetailModal'
 import SelectOrders from './SelectOrders'
+import SelectKocOrders from './SelectKocOrders'
 import difference from 'lodash/difference'
 import Loading from '../base/Loading'
 import { judgeSPStatus } from "@/closingReport/util";
@@ -50,10 +51,13 @@ export default class Test extends Component {
         type: ''
       },
       selectedRowKeys: [],
+      selectedRowKeysKoc: [],
       addModal: false,
       cardChecked: [],
       indeterminate: false,
-      checkAll: false
+      checkAll: false,
+      kolVisible: true,
+      kocVisible: false
     }
     this.canExport = true;
     this.cardConfig = {
@@ -163,8 +167,8 @@ export default class Test extends Component {
 
   addOrders = () => {
     const { closingReport: { companySource: { companyId, summaryName } } } = this.props
-    const { selectedRowKeys, summaryId } = this.state
-    if (!selectedRowKeys.length) {
+    const { selectedRowKeys, summaryId, selectedRowKeysKoc } = this.state
+    if (!selectedRowKeys.length && !selectedRowKeysKoc.length) {
       return message.info('请选择订单')
     }
     let _msg = message.loading('保存中...')
@@ -173,7 +177,8 @@ export default class Test extends Component {
       company_id: companyId,
       summary_id: summaryId,
       summary_name: summaryName,
-      order_ids: selectedRowKeys
+      order_ids: selectedRowKeys,
+      other_order_ids: selectedRowKeysKoc
     }).then(({ data }) => {
       if (data.order_ids) {
         this.setState({ selectedRowKeys: difference(this.state.selectedRowKeys, data.order_ids) })
@@ -260,6 +265,18 @@ export default class Test extends Component {
       hide()
     })
   }
+  selectKol = () => {
+    this.setState({
+      kolVisible: true,
+      kocVisible: false
+    })
+  }
+  selectKoc = () => {
+    this.setState({
+      kolVisible: false,
+      kocVisible: true
+    })
+  }
 
   render() {
     if (!this.state.summaryId) {
@@ -268,7 +285,8 @@ export default class Test extends Component {
     const { closingReport: { companySource, summaryOrders, platformData }, actions, common } = this.props
     const { list = [], source = {} } = summaryOrders
     const { summaryName, creatorName, companyId } = companySource
-    const { loading, detailModal, tableActive, selectedRowKeys, addModal, summaryId, indeterminate, cardChecked, checkAll } = this.state
+    const { loading, detailModal, tableActive, selectedRowKeys, addModal, summaryId,
+      indeterminate, cardChecked, checkAll, kolVisible, kocVisible } = this.state
     const connect = {
       actions,
       platformData,
@@ -302,6 +320,16 @@ export default class Test extends Component {
       companyId,
       onSelectChange: selectedRowKeys => {
         this.setState({ selectedRowKeys })
+      }
+    }
+    const selectKocOrderProps = {
+      common,
+      closingReport: this.props.closingReport,
+      actions,
+      selectedRowKeys,
+      companyId,
+      onSelectChangeKoc: selectedRowKeys => {
+        this.setState({ selectedRowKeysKoc: selectedRowKeys })
       }
     }
     return <div>
@@ -402,7 +430,13 @@ export default class Test extends Component {
         onCancel={() => this.setState({ addModal: false })}
         onOk={this.addOrders}
       >
-        <SelectOrders {...selectOrderProps} />
+        <div style={{ marginBottom: '20px' }}>
+          <Button style={{ borderRadius: 0 }} className={kolVisible && 'selected'} onClick={this.selectKol}>预约订单</Button>
+          <Button style={{ borderRadius: 0 }} className={kocVisible && 'selected'} onClick={this.selectKoc}>koc订单</Button>
+        </div>
+        {kolVisible && <SelectOrders {...selectOrderProps} />}
+        {kocVisible && <SelectKocOrders {...selectKocOrderProps} />}
+
       </Modal>}
     </div>
   }
