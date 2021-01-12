@@ -85,7 +85,7 @@ class CheckQuery extends React.Component {
         };
         Object.keys(params['keys']).forEach(item => { !params['keys'][item] && params['keys'][item] !== 0 ? delete params['keys'][item] : null });
         const hide = message.loading('查询中，请稍候...');
-        this.props.queryData(2, { spotplan_id: search.spotplan_id, ...params.keys }).then(() => {
+        this.props.queryData(2, { item_type: 1, spotplan_id: search.spotplan_id, ...params.keys }).then(() => {
           this.props.history.replace({
             pathname: this.props.location.pathname,
             search: `?${qs.stringify({ step: 2, spotplan_id: search.spotplan_id, ...params })}`,
