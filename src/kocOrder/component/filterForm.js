@@ -31,6 +31,8 @@ class Filter extends React.Component {
     this.props.form.validateFields((err, values) => {
       if (!err) {
         console.log('Received values of form: ', values.created_at);
+        values.page = 1
+        values.pageSize = 50
 
         this.props.getList(values)
       }

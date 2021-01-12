@@ -56,7 +56,7 @@ class CheckKocQuery extends React.Component {
               return current ? [...data, current] : [...data]
             }, []);
             const ary = array.reduce((data, current) => {
-              const flag = /^[0-9]+$/.test(current);
+              const flag = /^koc[0-9]+$/.test(current);
               return flag ? [...data, current] : [...data]
             }, []);
             if (array.length > 200) {
