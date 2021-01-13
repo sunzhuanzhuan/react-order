@@ -21,7 +21,8 @@ export default class DataDetailsModalCheck extends Component {
     // 请求数据
     actions.getPlatformDataInfo({
       order_id: data.order_id,
-      platform_id: data.current.platform_id
+      platform_id: data.current.platform_id,
+      order_type: data.order_type
     }).catch((err) => {
       this.setState({ error: true, errorMsg: '错误:' + err.errorMsg || '未知错误!' })
     }).finally(() => {
@@ -61,7 +62,7 @@ export default class DataDetailsModalCheck extends Component {
           'execution_screenshot_status': 1,
           'execution_data_status': 1
         }
-        this.showConfirm({...defaultValue, ...values}, this.props.successCallback)
+        this.showConfirm({ ...defaultValue, ...values }, this.props.successCallback)
       }
     })
   }
@@ -111,14 +112,14 @@ export default class DataDetailsModalCheck extends Component {
               }
               {
                 execution_screenshot.data.length ? <DataDetailsReviewWrap {...props} field='execution_screenshot'>
-                <ExecutionPic.View data={execution_screenshot} />
-              </DataDetailsReviewWrap> : null
+                  <ExecutionPic.View data={execution_screenshot} />
+                </DataDetailsReviewWrap> : null
               }
               <DataDetailsReviewWrap {...props} field='execution_data'>
                 <ExecutionData.View data={execution_data} />
               </DataDetailsReviewWrap>
               <DataDetailsReviewWrap {...props} field='ecom_tracking_data'>
-                <PostBuyData.View data={ecom_tracking_data}/>
+                <PostBuyData.View data={ecom_tracking_data} />
               </DataDetailsReviewWrap>
             </Form>
         }

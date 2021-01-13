@@ -28,7 +28,8 @@ export default class DataDetailsModalEdit extends Component {
     // 请求数据
     actions.getPlatformDataInfo({
       order_id: data.order_id,
-      platform_id: data.current.platform_id
+      platform_id: data.current.platform_id,
+      order_type: data.order_type
     }).catch((err) => {
       this.setState({ error: true, errorMsg: '错误:' + err.errorMsg || '未知错误!' })
     }).finally(() => {
@@ -36,7 +37,7 @@ export default class DataDetailsModalEdit extends Component {
     })
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     this.props.actions.clearPlatformData()
   }
 
@@ -135,7 +136,7 @@ export default class DataDetailsModalEdit extends Component {
     })
   }
 
-  render () {
+  render() {
     const { form, data, platformData } = this.props
     const {
       total, // outline
