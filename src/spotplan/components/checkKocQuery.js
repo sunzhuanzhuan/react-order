@@ -56,8 +56,8 @@ class CheckKocQuery extends React.Component {
               return current ? [...data, current] : [...data]
             }, []);
             const ary = array.reduce((data, current) => {
-              const flag = /^koc[0-9]+$/.test(current);
-              return flag ? [...data, current] : [...data]
+              // const flag = /^koc[0-9]+$/.test(current);
+              return [...data, current]
             }, []);
             if (array.length > 200) {
               message.error('最多能输入200个订单', 3);

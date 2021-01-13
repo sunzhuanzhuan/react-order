@@ -102,7 +102,7 @@ const columns = [
     key: 'address14',
     fixed: 'right',
     render: (val, record) => {
-      return <Link to={`/order/koc/detail?id=${record.requirement_id}`}><a>查看详情</a> </Link>
+      return <Link to={`/order/koc/detail?id=${record.id}`}><a>查看详情</a> </Link>
     }
   },
 ];
@@ -216,7 +216,7 @@ class List extends React.Component {
       <Divider orientation="left">订单列表</Divider>
       <Table
         scroll={{ x: 1560 }}
-        dataSource={[{ id: 1, age: 12 }]}
+        dataSource={rows}
         rowKey={record => record.id}
         columns={columns} />
       <Modal

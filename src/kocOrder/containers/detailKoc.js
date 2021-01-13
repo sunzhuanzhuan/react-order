@@ -3,6 +3,7 @@ import { Breadcrumb, Table, Divider, Descriptions } from 'antd';
 import * as actionKoc from "../actions";
 import { bindActionCreators } from "redux";
 import { connect } from 'react-redux';
+import qs from 'qs'
 
 class Detail extends React.Component {
   constructor() {
@@ -12,7 +13,8 @@ class Detail extends React.Component {
     }
   }
   componentDidMount() {
-    this.props.actionKoc.getKocOrderInfo()
+    const search = qs.parse(this.props.location.search.substring(1));
+    this.props.actionKoc.getKocOrderInfo({ id: search.id })
   }
   render() {
     let { kocOrderInfo: data } = this.props
