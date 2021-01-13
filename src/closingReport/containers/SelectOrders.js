@@ -98,7 +98,7 @@ export default class SelectOrders extends Component {
 
   getList = (params = {}) => {
     const { actions } = this.props
-    let search = { ...this.state.search, ...params }
+    let search = { ...this.state.search, ...params ,order_type:1}
     this.setState({ listLoading: true, search })
     actions.getOrders(search).finally(() => {
       this.setState({ listLoading: false })

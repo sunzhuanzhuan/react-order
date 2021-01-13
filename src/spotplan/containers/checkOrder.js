@@ -25,17 +25,13 @@ class CheckOrder extends React.Component {
     const { getSpotplanExecutor, getSpotplanPlatform } = this.props.actions;
     if (search.item_type == 2) {
       this.setState({ kocVisible: true })
-      this.props.queryBasicInfo().then(() => {
-        this.props.queryData(2, { item_type: 2, spotplan_id: search.spotplan_id, project_id: [this.props.spotplanPoInfo.project_id], reservation_status: 2, ...search.keys });
-        this.props.actions.getSpotplanKocOrderList({ spotplan_id: search.spotplan_id })
-      })
     } else {
       this.setState({ kolVisible: true })
-      this.props.queryBasicInfo().then(() => {
-        this.props.queryData(2, { item_type: 1, spotplan_id: search.spotplan_id, project_id: [this.props.spotplanPoInfo.project_id], reservation_status: 2, ...search.keys });
-        this.props.actions.getSpotplanKocOrderList({ spotplan_id: search.spotplan_id })
-      })
     }
+    this.props.queryBasicInfo().then(() => {
+      this.props.queryData(2, { spotplan_id: search.spotplan_id, project_id: [this.props.spotplanPoInfo.project_id], reservation_status: 2, ...search.keys });
+      this.props.actions.getSpotplanKocOrderList({ spotplan_id: search.spotplan_id })
+    })
     getSpotplanExecutor();
     getSpotplanPlatform();
   }
@@ -114,6 +110,7 @@ class CheckOrder extends React.Component {
               spotplan_executor={spotplanExecutor}
               spotplan_platform={spotplanPlatform}
               spotplan_project={spotplanProject}
+              getSpotplanKocOrderList={this.props.actions.getSpotplanKocOrderList}
               project_id={spotplanPoInfo && spotplanPoInfo.project_id}
               project_name={spotplanPoInfo && spotplanPoInfo.project_name}
               getProject={this.props.actions.getSpotplanProject}

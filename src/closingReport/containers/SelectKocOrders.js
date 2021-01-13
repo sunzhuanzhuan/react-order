@@ -95,7 +95,7 @@ export default class SelectKocOrders extends Component {
 
   getList = (params = {}) => {
     const { actions } = this.props
-    let search = { ...this.state.search, ...params }
+    let search = { ...this.state.search, ...params, order_type: 2 }
     this.setState({ listLoading: true, search })
     actions.getKocOrders(search).finally(() => {
       this.setState({ listLoading: false })

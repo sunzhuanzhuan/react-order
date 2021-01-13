@@ -214,7 +214,7 @@ export default class SummaryOrderFilterForm extends Component {
         </Col>
         <Col span={6}>
           <Form.Item label="订单类型">
-            {getFieldDecorator('type', {
+            {getFieldDecorator('order_type', {
               initialValue: '1'
             })(
               <Select

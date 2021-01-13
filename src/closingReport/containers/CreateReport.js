@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Steps, Button, message, Modal, Input, Form, Alert } from 'antd'
+import { Steps, Button, message, Modal, Input, Form, Alert, Upload } from 'antd'
 import './CreateReport.less'
 import SelectOrders from './SelectOrders'
 import SelectKocOrders from './SelectKocOrders'
@@ -11,8 +11,11 @@ import { parseUrlQuery } from '@/util/parseUrl'
 import difference from 'lodash/difference'
 import { linkTo } from '../../util/linkTo';
 import { judgeSPStatus } from "@/closingReport/util";
+import Interface from '../constants/Interface'
+const Cookie = require('js-cookie');
 
 
+console.log('00000', Interface)
 const Step = Steps.Step
 
 const steps = [{
@@ -219,6 +222,44 @@ export default class CreateReport extends Component {
       onSelectChangeKoc: this.onSelectChangeKoc
     }
     let selectedRowKeysAndKoc = selectedRowKeys.concat(selectedRowKeysKoc)
+    let that = this;
+    const props = {
+      name: 'file',
+      action: Interface.uploadExcle,
+      headers: {
+        "X-Access-Token": Cookie.get('token') || '',
+      },
+      onChange(info) {
+        that.setState({
+          visible: false
+        })
+        if (info.file.status === 'uploading') {
+          // message.loading('Loading...')
+          console.log('111', info)
+        }
+        if (info.file.status === 'done') {
+          let res = info.file.response
+          console.log('222', res)
+          if (res.code == 200 && res.data.errorCount == 0) {
+            message.success(`上传成功!`);
+          } else if (res.code == 200 && res.data.errorCount > 0) {
+            that.setState({
+              visible: true,
+              successCount: res.data.successCount,
+              errorCount: res.data.errorCount,
+              errorList: res.data.errorList
+            })
+
+            that.props.actionKoc.getList({ page: 1, pageSize: 50 })
+          } else {
+            message.error(info.file.response.msg || '上传失败');
+          }
+        } else if (info.file.status === 'error') {
+          console.log('333', info)
+          message.error(`上传失败`);
+        }
+      },
+    }
     return (
       <div className='closing-report-pages create-page'>
         <header className='create-page-steps'>
@@ -241,10 +282,11 @@ export default class CreateReport extends Component {
           {current === steps.length - 1 && <Alert style={{ marginTop: '20px' }} message={
             <div style={{ height: '20px', lineHeight: '20px', }}>
               <span style={{ float: 'right', display: 'block', marginLeft: '20px' }}>
-
                 <a onClick={this.exportExcel} style={{ float: 'right' }} >导出koc订单</a>
               </span>
-              <a style={{ float: 'right' }} >导入koc订单数据</a>
+              <Upload {...props} showUploadList={false}>
+                <a style={{ float: 'right' }} >导入koc订单数据</a>
+              </Upload>
             </div>}
           />}
           {kolVisible && <div className="steps-content">

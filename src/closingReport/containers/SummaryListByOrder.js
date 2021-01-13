@@ -105,9 +105,9 @@ export default class SummaryListByOrder extends Component {
           return datetimeValidate(date) ? <div>
             <div>提交：{date}</div>
             {datetimeValidate(record.internal_check_at) &&
-            <div>内审：{record.internal_check_at}</div>}
+              <div>内审：{record.internal_check_at}</div>}
             {datetimeValidate(record.external_check_at) &&
-            <div>品牌审核：{record.external_check_at}</div>}
+              <div>品牌审核：{record.external_check_at}</div>}
           </div> : '-'
         }
       }, {
@@ -123,7 +123,7 @@ export default class SummaryListByOrder extends Component {
                 <a target='_blank' href={`/order/closing-report/detail/order?summary_id=${summary_id}&order_id=${order_id}`}>查看</a>}
             </div>
             {[1].includes(summary_status) &&
-            <div><a onClick={() => this.submitCheck(order_id)}>提交审核</a></div>}
+              <div><a onClick={() => this.submitCheck(order_id)}>提交审核</a></div>}
             {/*{[1].includes(summary_status) && <div>
               <Popconfirm
                 getPopupContainer={() => document.querySelector('.closing-report-container')}
@@ -139,8 +139,8 @@ export default class SummaryListByOrder extends Component {
               </Popconfirm>
             </div>}*/}
             {[4, 6].includes(summary_status) &&
-            <div><a onClick={() => this.submitCheck(order_id, true)}>提交审核</a>
-            </div>}
+              <div><a onClick={() => this.submitCheck(order_id, true)}>提交审核</a>
+              </div>}
           </div>
         }
       }]
@@ -214,7 +214,7 @@ export default class SummaryListByOrder extends Component {
   }
   getList = (params = {}) => {
     const { actions } = this.props
-    let search = { ...this.state.search, ...params }
+    let search = { ...this.state.search, ...params, order_type: 1 }
     this.setState({ listLoading: true, search })
     actions.getSummaryListByOrder(search).finally(() => {
       this.setState({ listLoading: false })
