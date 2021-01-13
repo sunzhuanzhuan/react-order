@@ -198,6 +198,15 @@ class List extends React.Component {
         }
       },
     }
+    const pagination = {
+      total,
+      pageSize: 2,
+      current: page,
+      showQuickJumper: true,
+      onChange: (current) => {
+        getList({ page: current, pageSize: 50 })
+      },
+    }
     return <div>
       <FilterForm
         getList={getList}
@@ -218,6 +227,7 @@ class List extends React.Component {
         scroll={{ x: 1560 }}
         dataSource={rows}
         rowKey={record => record.id}
+        pagination={pagination}
         columns={columns} />
       <Modal
         title={<span>导入结果-成功{successCount}条，失败{errorCount}条</span>}

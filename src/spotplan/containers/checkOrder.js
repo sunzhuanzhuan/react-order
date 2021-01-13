@@ -16,17 +16,26 @@ class CheckOrder extends React.Component {
     super();
     this.state = {
       orderMaps: {},
-      kolVisible: true,
+      kolVisible: false,
       kocVisible: false
     }
   }
   componentDidMount() {
     const search = qs.parse(this.props.location.search.substring(1));
     const { getSpotplanExecutor, getSpotplanPlatform } = this.props.actions;
-    this.props.queryBasicInfo().then(() => {
-      this.props.queryData(2, { spotplan_id: search.spotplan_id, project_id: [this.props.spotplanPoInfo.project_id], reservation_status: 2, ...search.keys });
-      this.props.actions.getSpotplanKocOrderList({ spotplan_id: search.spotplan_id })
-    })
+    if (search.item_type == 2) {
+      this.setState({ kocVisible: true })
+      this.props.queryBasicInfo().then(() => {
+        this.props.queryData(2, { item_type: 2, spotplan_id: search.spotplan_id, project_id: [this.props.spotplanPoInfo.project_id], reservation_status: 2, ...search.keys });
+        this.props.actions.getSpotplanKocOrderList({ spotplan_id: search.spotplan_id })
+      })
+    } else {
+      this.setState({ kolVisible: true })
+      this.props.queryBasicInfo().then(() => {
+        this.props.queryData(2, { item_type: 1, spotplan_id: search.spotplan_id, project_id: [this.props.spotplanPoInfo.project_id], reservation_status: 2, ...search.keys });
+        this.props.actions.getSpotplanKocOrderList({ spotplan_id: search.spotplan_id })
+      })
+    }
     getSpotplanExecutor();
     getSpotplanPlatform();
   }
@@ -57,8 +66,8 @@ class CheckOrder extends React.Component {
       <Header data={spotplanPoInfo} />
 
       <div style={{ marginTop: '20px' }}>
-        <Button style={{ borderRadius: 0 }} className={kolVisible && 'selected'} onClick={this.selectKol}>预约订单</Button>
-        <Button style={{ borderRadius: 0 }} className={kocVisible && 'selected'} onClick={this.selectKoc}>koc订单</Button>
+        <Button style={{ borderRadius: 0 }} className={kolVisible ? 'selected' : ''} onClick={this.selectKol}>预约订单</Button>
+        <Button style={{ borderRadius: 0 }} className={kocVisible ? 'selected' : ''} onClick={this.selectKoc}>koc订单</Button>
       </div>
       {kolVisible && <div>
         <h3 style={{ marginTop: '20px' }}>订单列表</h3>
