@@ -180,6 +180,7 @@ class List extends React.Component {
           console.log('222', res)
           if (res.code == 200 && res.data.errorCount == 0) {
             message.success(`上传成功!`);
+            that.props.actionKoc.getList({ page: 1, pageSize: 50 })
           } else if (res.code == 200 && res.data.errorCount > 0) {
             that.setState({
               visible: true,
