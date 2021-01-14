@@ -21,7 +21,7 @@ export default class OrderKocItem extends React.Component {
       category_name: data.category_name,
       post_location: data.post_location,
       weibo_id: data.weibo_id,
-      platform_id: data.platform_id,
+      weibo_type: data.weibo_type,
       content_type: data.content_type,
       client: data.client,
       comment: data.comment
