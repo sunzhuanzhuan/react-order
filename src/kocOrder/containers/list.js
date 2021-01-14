@@ -78,7 +78,7 @@ const columns = [
     title: '账号名称',
     dataIndex: 'weibo_name',
     key: 'weibo_name',
-    width: 100
+    width: 150
   },
   {
     title: '账号ID',
@@ -89,13 +89,13 @@ const columns = [
     title: '创建人',
     dataIndex: 'creator_name',
     key: 'creator_name',
-    width: 100
+    width: 150
   },
   {
     title: '创建时间',
     dataIndex: 'created_at',
     key: 'created_at',
-    width: 100
+    width: 200
   }, {
     title: '操作',
     dataIndex: 'address14',
@@ -200,7 +200,7 @@ class List extends React.Component {
     }
     const pagination = {
       total,
-      pageSize: 2,
+      pageSize: 50,
       current: page,
       showQuickJumper: true,
       onChange: (current) => {
@@ -224,7 +224,7 @@ class List extends React.Component {
       } />
       <Divider orientation="left">订单列表</Divider>
       <Table
-        scroll={{ x: 1560 }}
+        scroll={{ x: 1700 }}
         dataSource={rows}
         rowKey={record => record.id}
         pagination={pagination}

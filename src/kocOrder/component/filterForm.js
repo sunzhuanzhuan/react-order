@@ -71,7 +71,7 @@ class Filter extends React.Component {
                 validator: this.validatorLength
               }]
             })(
-              <Input placeholder='请输入订单ID ，多个空格隔开' style={{ width: 220 }} allowClear />
+              <Input placeholder='请输入koc订单ID ，多个空格隔开' style={{ width: 220 }} allowClear />
             )}
           </Form.Item>
         </Col>
