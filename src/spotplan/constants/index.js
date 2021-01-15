@@ -594,7 +594,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
   }
 ];
 
-export const SpotplanListFunc = (handleJump) => [
+export const SpotplanListFunc = () => [
   {
     title: 'ID',
     dataIndex: 'spotplan_id',
@@ -602,7 +602,8 @@ export const SpotplanListFunc = (handleJump) => [
     align: 'center',
     width: 100,
     render: (text, record) => {
-      return <a onClick={() => handleJump(record)}>{text}</a>
+      const url = 'detail?spotplan_id=' + record.spotplan_id + '&keys%5Bitem_type%5D=1&labels%5Bitem_type%5D=%E9%A2%84%E7%BA%A6%E8%AE%A2%E5%8D%95'
+      return <a target="_blank" href={url}>{text}</a>
     }
   },
   {
@@ -676,7 +677,8 @@ export const SpotplanListFunc = (handleJump) => [
     align: 'center',
     width: 100,
     render: (text, record) => {
-      return <a onClick={() => handleJump(record)}>查看详情</a>
+      const url = 'detail?spotplan_id=' + record.spotplan_id + '&keys%5Bitem_type%5D=1&labels%5Bitem_type%5D=%E9%A2%84%E7%BA%A6%E8%AE%A2%E5%8D%95'
+      return <a target="_blank" href={url}>查看详情</a>
     }
   }
 ];

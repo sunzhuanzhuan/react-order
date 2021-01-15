@@ -19,10 +19,14 @@ class CheckOrder extends React.Component {
       kolVisible: false,
       kocVisible: false
     }
+    this.checkQuery = React.createRef();
+    this.checkKocQuery = React.createRef();
   }
   componentDidMount() {
     const search = qs.parse(this.props.location.search.substring(1));
     const { getSpotplanExecutor, getSpotplanPlatform } = this.props.actions;
+
+    // 需要修改默认值的问题 item_type 1是kol,2是koc
     if (search.item_type == 2) {
       this.setState({ kocVisible: true })
     } else {
@@ -30,7 +34,7 @@ class CheckOrder extends React.Component {
     }
     this.props.queryBasicInfo().then(() => {
       this.props.queryData(2, { spotplan_id: search.spotplan_id, project_id: [this.props.spotplanPoInfo.project_id], reservation_status: 2, ...search.keys });
-      this.props.actions.getSpotplanKocOrderList({ spotplan_id: search.spotplan_id })
+      this.props.actions.getSpotplanKocOrderList({ spotplan_id: search.spotplan_id, project_id: [this.props.spotplanPoInfo.project_id], ...search.keys })
     })
     getSpotplanExecutor();
     getSpotplanPlatform();
@@ -43,12 +47,17 @@ class CheckOrder extends React.Component {
     this.setState({
       kolVisible: true,
       kocVisible: false
+    }, () => {
+      this.checkQuery.current.resetFields()
     })
+
   }
   selectKoc = () => {
     this.setState({
       kolVisible: false,
       kocVisible: true
+    }, () => {
+      this.checkKocQuery.current.resetFields()
     })
   }
   render() {
@@ -80,6 +89,7 @@ class CheckOrder extends React.Component {
             project_id={spotplanPoInfo && spotplanPoInfo.project_id}
             project_name={spotplanPoInfo && spotplanPoInfo.project_name}
             getProject={this.props.actions.getSpotplanProject}
+            ref={this.checkQuery}
           />
           <Skeleton active loading={loading}>
             {rows.length == 0 && <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />}
@@ -114,6 +124,7 @@ class CheckOrder extends React.Component {
               project_id={spotplanPoInfo && spotplanPoInfo.project_id}
               project_name={spotplanPoInfo && spotplanPoInfo.project_name}
               getProject={this.props.actions.getSpotplanProject}
+              ref={this.checkKocQuery}
             />
             <Skeleton active loading={loading}>
               {rowsKoc.length == 0 && <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />}

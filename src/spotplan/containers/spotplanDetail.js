@@ -366,7 +366,12 @@ class SpotPlanDetail extends React.Component {
       });
       return;
     }
-    this.handleChangeNumber(selectedRowKeys)
+    const search = qs.parse(this.props.location.search.substring(1));
+    const obj = {
+      order_id: selectedRowKeys,
+      item_type: search.keys.item_type
+    }
+    this.handleChangeNumber(obj)
   }
   handleSettleQuit = () => {
     const { selectedRowKeys, rows } = this.state;
@@ -383,7 +388,12 @@ class SpotPlanDetail extends React.Component {
       });
       return;
     }
-    this.handleQuitOrder(selectedRowKeys);
+    const search = qs.parse(this.props.location.search.substring(1));
+    const obj = {
+      order_id: selectedRowKeys,
+      item_type: search.keys.item_type
+    }
+    this.handleQuitOrder(obj);
   }
   handleSettleAddAccount = () => {
     const { selectedRowKeys, rows } = this.state;
@@ -399,7 +409,12 @@ class SpotPlanDetail extends React.Component {
       });
       return;
     }
-    this.handleAddAccount(selectedRowKeys)
+    const search = qs.parse(this.props.location.search.substring(1));
+    const obj = {
+      order_id: selectedRowKeys,
+      item_type: search.keys.item_type
+    }
+    this.handleAddAccount(obj)
   }
   handleSettleUpdateArtical = () => {
     const { selectedRowKeys, rows } = this.state;
@@ -415,7 +430,12 @@ class SpotPlanDetail extends React.Component {
       });
       return;
     }
-    this.handleUpdateArtical(selectedRowKeys)
+    const search = qs.parse(this.props.location.search.substring(1));
+    const obj = {
+      order_id: selectedRowKeys,
+      item_type: search.keys.item_type
+    }
+    this.handleUpdateArtical(obj)
   }
   handleSettleDeleteOrder = () => {
 

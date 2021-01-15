@@ -212,9 +212,9 @@ export default class SummaryListByOrder extends Component {
       hide()
     })
   }
-  getList = (params = {}) => {
+  getList = (params = { order_type: 1 }) => {
     const { actions } = this.props
-    let search = { ...this.state.search, ...params, order_type: 1 }
+    let search = { ...this.state.search, ...params }
     this.setState({ listLoading: true, search })
     actions.getSummaryListByOrder(search).finally(() => {
       this.setState({ listLoading: false })
