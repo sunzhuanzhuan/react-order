@@ -51,10 +51,19 @@ class DetailQuery extends React.Component {
             const array = values[key].trim().split(' ').reduce((data, current) => {
               return current ? [...data, current] : [...data]
             }, []);
-            const ary = array.reduce((data, current) => {
-              const flag = /^[0-9]+$/.test(current);
-              return flag ? [...data, current] : [...data]
-            }, []);
+            let ary = []
+            if (values['item_type'].key == 1) {
+              ary = array.reduce((data, current) => {
+                const flag = /^[0-9]+$/.test(current);
+                return flag ? [...data, current] : [...data]
+              }, []);
+            } else {
+              ary = array.reduce((data, current) => {
+                return [...data, current]
+              }, []);
+            }
+
+
             if (array.length > 200) {
               message.error('最多能输入200个订单', 3);
               return
