@@ -224,6 +224,7 @@ export default class CreateReport extends Component {
     const props = {
       name: 'file',
       action: Interface.uploadExcle,
+      data: { summary_id: summaryId },
       headers: {
         "X-Access-Token": Cookie.get('token') || '',
       },

@@ -5,9 +5,9 @@
  */
 const proxy = require('http-proxy-middleware');
 module.exports = function (app) {
-  // app.use(proxy('/api/koc/getKocOrderListForSummary',
-  //   { target: 'http://yapi.ops.tst-weiboyi.com/project/257/', changeOrigin: true }
-  // ));
+  app.use(proxy('/api/summaryData/importKocSummaryData',
+    { target: 'http://192.168.100.118:30004/', changeOrigin: true }
+  ));
   app.use(proxy('/api',
     { target: process.env.REACT_APP_TRUNK_BENTLEY_ADDRESS, changeOrigin: true }
   ));

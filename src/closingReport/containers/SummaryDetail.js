@@ -335,9 +335,12 @@ export default class Test extends Component {
       }
     }
     let that = this;
+
+    let { summary_id } = parseUrlQuery()
     const props = {
       name: 'file',
       action: Interface.uploadExcle,
+      data: { summary_id: summary_id },
       headers: {
         "X-Access-Token": Cookie.get('token') || '',
       },
@@ -390,7 +393,7 @@ export default class Test extends Component {
       </PageHeader>
       <Alert style={{ marginTop: '20px' }} message={
         <div style={{ height: '20px', lineHeight: '20px', }}>
-          <a onClick={this.exportExcel} style={{ float: 'right', marginLeft: '20px' }} >导出koc订单</a>
+          <a onClick={this.exportExcel} style={{ float: 'right', marginLeft: '20px' }} >11导出koc订单</a>
           <span style={{ float: 'right' }} >
             <Upload {...props} showUploadList={false} >
               <a >导入koc订单数据</a>

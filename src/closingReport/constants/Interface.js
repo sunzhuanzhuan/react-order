@@ -26,5 +26,5 @@ export default {
   submitCheckSummaryByOrder: prefix + '/checkOrder',
   submitCheckSummary: prefix + '/checkSummaryOrder',
   exportPlatformDataInfoExcel: prefix + '/exportPlatformDataInfoExcel',
-  uploadExcle: '/api/summaryData/importKocSummaryData'
+  uploadExcle: '/api/summaryData/exportKocSummaryDataBySummaryId'
 }

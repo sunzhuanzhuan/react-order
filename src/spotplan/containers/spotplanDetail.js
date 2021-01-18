@@ -161,6 +161,7 @@ class SpotPlanDetail extends React.Component {
   //表格操作按钮-新增账号
   handleAddNumber = obj => {
     const search = qs.parse(this.props.location.search.substring(1));
+    console.log(search)
     this.props.actions.getBasicSpotplanOrderInfo({ spotplan_id: search.spotplan_id, order_id: obj.order_id, item_type: obj.item_type }).then(() => {
       this.setState({ order_id: obj.order_id, addVisible: true });
     })

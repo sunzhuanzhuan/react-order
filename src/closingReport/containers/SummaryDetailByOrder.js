@@ -147,6 +147,7 @@ export default class Test extends Component {
     const props = {
       name: 'file',
       action: Interface.uploadExcle,
+      data: { summary_id: that.state.summary_id },
       headers: {
         "X-Access-Token": Cookie.get('token') || '',
       },

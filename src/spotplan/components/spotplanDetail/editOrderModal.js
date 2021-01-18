@@ -120,7 +120,7 @@ class EditOrderModal extends React.Component {
             <Input style={{ width: 240 }} />
           )}
         </FormItem>
-        {data[0].is_tax_rebate_account == 2 && <FormItem label='cost' {...formItemLayout}>
+        {(data[0].is_tax_rebate_account == 2 || !data[0].is_tax_rebate_account) && <FormItem label='cost' {...formItemLayout}>
           {getFieldDecorator('cost', {
             initialValue: data && data[0].cost || '',
             validateTrigger: ['onChange'],
@@ -144,7 +144,7 @@ class EditOrderModal extends React.Component {
           }} />
           )}
         </FormItem>}
-        {data[0].is_tax_rebate_account == 2 && <FormItem label='costwithfee' {...formItemLayout}>
+        {(data[0].is_tax_rebate_account == 2 || !data[0].is_tax_rebate_account) && <FormItem label='costwithfee' {...formItemLayout}>
           {getFieldDecorator('costwithfee', {
             initialValue: data && data[0].costwithfee || '',
             validateTrigger: ['onChange'],

@@ -111,6 +111,7 @@ class Filter extends React.Component {
           <Form.Item label='订单状态'>
             {getFieldDecorator('status')(
               <Select style={{ width: 220 }} >
+                <Option key={0}>全部</Option>
                 <Option value="1">已确认</Option>
                 <Option value="2">已执行</Option>
               </Select>
