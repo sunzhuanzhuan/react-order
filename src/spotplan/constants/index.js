@@ -41,8 +41,7 @@ let clientName = {
   4: '考拉',
   5: '苏宁易购',
   6: '线上（其他）',
-  7: '七条',
-  8: '线下',
+  7: '线下',
 }
 export const CheckModalFunc = (handleDel, handlDelKoc) => [
   {
