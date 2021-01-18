@@ -290,6 +290,7 @@ class SpotPlanDetail extends React.Component {
     } else {
       order_id = Array.isArray(order_id) ? order_id : [order_id];
     }
+    obj.item_type = search.keys.item_type
 
     return this.props.actions.postChangeNumberSpotplanOrder({ spotplan_id: search.spotplan_id, order_ids: order_id, ...obj }).then((res) => {
       hide();

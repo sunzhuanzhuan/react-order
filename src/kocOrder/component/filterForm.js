@@ -19,7 +19,7 @@ class Filter extends React.Component {
   validatorLength = (rule, value, callback) => {
     if (!value) {
       callback()
-    } else if (value.toString().split(',').length > 200) {
+    } else if (value.toString().split(' ').length > 200) {
       callback('最多能输入200个订单')
       return
     } else {
@@ -33,7 +33,9 @@ class Filter extends React.Component {
         console.log('Received values of form: ', values.created_at);
         values.page = 1
         values.pageSize = 50
-
+        values.koc_order_id = values.koc_order_id && values.koc_order_id.split(' ')
+        values.wby_order_id = values.wby_order_id && values.wby_order_id.split(' ')
+        values.requirement_id = values.requirement_id && values.requirement_id.split(' ')
         this.props.getList(values)
       }
     });
