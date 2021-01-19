@@ -12,7 +12,7 @@ class KocOrder extends Component {
       <div>
         <Switch>
           <Route path="/order/koc/list" component={List} />
-          <Route path="/order/koc/detail" component={Detail} />
+          <Route path="/order/koc/detail/id/:id" component={Detail} />
         </Switch>
       </div>
     );

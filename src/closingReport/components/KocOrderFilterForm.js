@@ -149,7 +149,7 @@ export default class KocOrderFilterForm extends Component {
             })(
               <Select>
 
-                <Option key={0}>全部</Option>
+                <Option key={0}>请选择</Option>
                 <Option key={1}>已确认</Option>
                 <Option key={2}>已执行</Option>
               </Select>

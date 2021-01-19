@@ -102,7 +102,7 @@ const columns = [
     key: 'address14',
     fixed: 'right',
     render: (val, record) => {
-      return <Link to={`/order/koc/detail?id=${record.id}`}><a>查看详情</a> </Link>
+      return <Link to={`/order/koc/detail/id/${record.id}`} target='_blank'><a>查看详情</a> </Link>
     }
   },
 ];

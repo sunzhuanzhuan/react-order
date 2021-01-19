@@ -1,9 +1,10 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Breadcrumb, Table, Divider, Descriptions } from 'antd';
 import * as actionKoc from "../actions";
 import { bindActionCreators } from "redux";
 import { connect } from 'react-redux';
 import qs from 'qs'
+import { useParams, useHistory } from 'react-router-dom'
 // const getColum = (company_name, requirement_id, requirement_name, brand_name, project_name, wby_order_id, koc_order_id, platform_name, po_code, sale_name, executor_name) => {
 //   return [
 
@@ -56,7 +57,7 @@ const columns = [
       return text || '-'
     }
   }, {
-    title: '外部订单号',
+    title: 'KOC订单号',
     dataIndex: 'koc_order_id',
     key: 'koc_order_id',
     render: (text) => {
@@ -95,47 +96,44 @@ const columns = [
     }
   },
 ]
-class Detail extends React.Component {
-  constructor() {
-    super();
-    this.state = {
+const Detail = (props) => {
+  const { id } = useParams()
 
-    }
+  useEffect(() => {
+    getDetail()
+  }, [])
+
+  const getDetail = () => {
+
+    props.actionKoc.getKocOrderInfo({ id })
   }
-  componentDidMount() {
-    const search = qs.parse(this.props.location.search.substring(1));
-    this.props.actionKoc.getKocOrderInfo({ id: search.id })
-  }
-  render() {
-    let { kocOrderInfo: data = {} } = this.props
-    // const colum = getColum(data.company_name, data.requirement_id, data.requirement_name, data.brand_name, data.project_name, data.wby_order_id,
-    // data.koc_order_id, data.platform_name, data.po_code, data.sale_name, data.executor_name)
-    // console.log(kocOrderInfo)
-    return <div>
-      <Breadcrumb>
-        <Breadcrumb.Item> <a href="/order/koc/list">订单列表</a></Breadcrumb.Item>
-        <Breadcrumb.Item>
-          <a href="">订单详情</a>
-        </Breadcrumb.Item>
-      </Breadcrumb>
-      <Divider orientation="left">订单列表</Divider>
-      <Table columns={columns} dataSource={[data]} pagination={false} />
-      <Descriptions title="账号信息" bordered style={{ marginTop: '50px' }}>
-        <Descriptions.Item label="账号名称">{data.weibo_name || '-'}</Descriptions.Item>
-        <Descriptions.Item label="账号ID">{data.weibo_id || '-'}</Descriptions.Item>
-        <Descriptions.Item label="账号分类">{data.category_name || '-'}</Descriptions.Item>
-      </Descriptions>
-      <Descriptions title="价格信息" bordered style={{ marginTop: '50px' }}>
-        <Descriptions.Item label="价格名称">{data.price_name || '-'}</Descriptions.Item>
-        <Descriptions.Item label="PriceID">{data.price_id || '-'}</Descriptions.Item>
-        <Descriptions.Item label="采购价">{data.cost || '-'}</Descriptions.Item>
-        <Descriptions.Item label="采购价＋服务费">{data.cost_with_fee || '-'}</Descriptions.Item>
-        <Descriptions.Item label="位置／直发or转发">{data.position || '-'}</Descriptions.Item>
-        <Descriptions.Item label="发文位置">{data.post_location || '-'}</Descriptions.Item>
-        <Descriptions.Item label="发文时间">{data.post_time || '-'}</Descriptions.Item>
-      </Descriptions>
-    </div>
-  }
+
+  let { kocOrderInfo: data = {} } = props
+
+  return <div>
+    <Breadcrumb>
+      <Breadcrumb.Item> <a href="/order/koc/list">订单列表</a></Breadcrumb.Item>
+      <Breadcrumb.Item>
+        <a href="">订单详情</a>
+      </Breadcrumb.Item>
+    </Breadcrumb>
+    <Divider orientation="left">订单列表</Divider>
+    <Table columns={columns} dataSource={[data]} pagination={false} />
+    <Descriptions title="账号信息" bordered style={{ marginTop: '50px' }}>
+      <Descriptions.Item label="账号名称">{data.weibo_name || '-'}</Descriptions.Item>
+      <Descriptions.Item label="账号ID">{data.weibo_id || '-'}</Descriptions.Item>
+      <Descriptions.Item label="账号分类">{data.category_name || '-'}</Descriptions.Item>
+    </Descriptions>
+    <Descriptions title="价格信息" bordered style={{ marginTop: '50px' }}>
+      <Descriptions.Item label="价格名称">{data.price_name || '-'}</Descriptions.Item>
+      <Descriptions.Item label="PriceID">{data.price_id || '-'}</Descriptions.Item>
+      <Descriptions.Item label="采购价">{data.cost || '-'}</Descriptions.Item>
+      <Descriptions.Item label="采购价＋服务费">{data.cost_with_fee || '-'}</Descriptions.Item>
+      <Descriptions.Item label="位置／直发or转发">{data.position || '-'}</Descriptions.Item>
+      <Descriptions.Item label="发文位置">{data.post_location || '-'}</Descriptions.Item>
+      <Descriptions.Item label="发文时间">{data.post_time || '-'}</Descriptions.Item>
+    </Descriptions>
+  </div>
 }
 
 const mapStateToProps = (state) => {

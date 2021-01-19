@@ -33,6 +33,8 @@ class Filter extends React.Component {
         console.log('Received values of form: ', values.created_at);
         values.page = 1
         values.pageSize = 50
+        values.created_start = values.created_start && values.created_start.format("YYYY-MM-DD HH:mm:ss")
+        values.created_end = values.created_end && values.created_end.format("YYYY-MM-DD HH:mm:ss")
         values.koc_order_id = values.koc_order_id && values.koc_order_id.split(' ')
         values.wby_order_id = values.wby_order_id && values.wby_order_id.split(' ')
         values.requirement_id = values.requirement_id && values.requirement_id.split(' ')
@@ -99,9 +101,11 @@ class Filter extends React.Component {
         </Col>
         <Col span={8}>
           <Form.Item label='平台'>
-            {getFieldDecorator('platform_id')(
+            {getFieldDecorator('platform_id', {
+              initialValue: ''
+            })(
               <Select style={{ width: 220 }} >
-                <Option value="">请选择</Option>
+                <Option value={''}>请选择</Option>
                 {platforms.map(d =>
                   <Option value={d.pid} key={d.pid}>{d.platform_name}</Option>
                 )}
@@ -111,9 +115,11 @@ class Filter extends React.Component {
         </Col>
         <Col span={8}>
           <Form.Item label='订单状态'>
-            {getFieldDecorator('status')(
+            {getFieldDecorator('status', {
+              initialValue: ''
+            })(
               <Select style={{ width: 220 }} >
-                <Option key={0}>全部</Option>
+                <Option value={''}>请选择</Option>
                 <Option value="1">已确认</Option>
                 <Option value="2">已执行</Option>
               </Select>
@@ -123,13 +129,13 @@ class Filter extends React.Component {
       </Row>
       <Row>
         <Col span={8} style={{ whiteSpace: 'nowrap' }}>
-          <Form.Item label="任务开始时间" {...formItemLayout}>
+          <Form.Item label="创建时间" {...formItemLayout}>
             {getFieldDecorator('created_start')(
-              <DatePicker format="YYYY-MM-DD" placeholder='开始日期' />
+              <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" placeholder='开始日期' />
             )}
             ~
 						{getFieldDecorator('created_end')(
-              <DatePicker format="YYYY-MM-DD " placeholder='结束日期' />
+              <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" placeholder='结束日期' />
             )}
           </Form.Item>
         </Col>

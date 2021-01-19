@@ -5,7 +5,7 @@
  */
 const proxy = require('http-proxy-middleware');
 module.exports = function (app) {
-  app.use(proxy('/api/summaryData/importKocSummaryData',
+  app.use(proxy('/api/summaryData/exportKocSummaryDataBySummaryId',
     { target: 'http://192.168.100.118:30004/', changeOrigin: true }
   ));
   app.use(proxy('/api',
