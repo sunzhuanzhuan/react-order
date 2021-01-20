@@ -595,6 +595,7 @@ class SpotPlanDetail extends React.Component {
       <h3 className='top-gap'>订单列表</h3>
       <Statistics data={spotplanAmount} flag={(spotplanPoInfo && spotplanPoInfo.customer_po_amount) ? true : false} />
       <DetailQuery location={this.props.location} history={this.props.history}
+        getSpotplanAmount={this.props.actions.getSpotplanAmount}
         queryData={this.queryData}
         spotplan_executor={spotplanExecutor}
         spotplan_platform={spotplanPlatform}
