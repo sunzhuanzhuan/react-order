@@ -125,6 +125,9 @@ class SpotPlanDetail extends React.Component {
 
     this.setState({ selectedRowKeys, rows });
   }
+  clearSelectedRowKeys = () => {
+    this.setState({ selectedRowKeys: [] })
+  }
   handleCheckAll = (e) => {
     const { spotplanEditList } = this.props;
     const { rows, type } = this.state;
@@ -596,6 +599,7 @@ class SpotPlanDetail extends React.Component {
       <Statistics data={spotplanAmount} flag={(spotplanPoInfo && spotplanPoInfo.customer_po_amount) ? true : false} />
       <DetailQuery location={this.props.location} history={this.props.history}
         getSpotplanAmount={this.props.actions.getSpotplanAmount}
+        clearSelectedRowKeys={this.clearSelectedRowKeys}
         queryData={this.queryData}
         spotplan_executor={spotplanExecutor}
         spotplan_platform={spotplanPlatform}

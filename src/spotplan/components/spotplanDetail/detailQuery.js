@@ -96,6 +96,9 @@ class DetailQuery extends React.Component {
         this.props.queryData({ type: 3, spotplan_id: search.spotplan_id, ...params.keys });
         this.props.queryData({ type: 4, spotplan_id: search.spotplan_id, ...params.keys });
         this.props.getSpotplanAmount({ spotplan_id: search.spotplan_id, item_type: values['item_type']['key'] })
+        if (search.keys['item_type'] != values['item_type']['key']) {
+          this.props.clearSelectedRowKeys()
+        }
       }
     });
   }
