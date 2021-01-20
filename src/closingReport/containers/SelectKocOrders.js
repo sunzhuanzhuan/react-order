@@ -63,7 +63,7 @@ const columns = [
     title: '状态',
     dataIndex: 'status',
     render: (name, record) => {
-      return <div>{record.status_name == 1 ? '已确认' : '已执行'}</div>
+      return <div>{record.status == 1 ? '已确认' : '已执行'}</div>
     }
   }, {
     title: '执行人',
