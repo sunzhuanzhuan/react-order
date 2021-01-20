@@ -65,8 +65,8 @@ const columns = [
   },
   {
     title: '执行人',
-    dataIndex: 'executor_name',
-    key: 'executor_name',
+    dataIndex: 'executor_admin_name',
+    key: 'executor_admin_name',
     width: 100
   }, {
     title: '平台',

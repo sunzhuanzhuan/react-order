@@ -132,6 +132,7 @@ class SpotPlanDetail extends React.Component {
     const { spotplanEditList } = this.props;
     const { rows, type } = this.state;
     const list = spotplanEditList[type] && spotplanEditList[type].list;
+    console.log('spotplanEditList', list)
     // const { rows, type } = this.state;
     // const { spotplanEditList } = this.props;
     // const list = spotplanEditList[type] && spotplanEditList[type].list && spotplanEditList[type].list.reduce((data, current) => {

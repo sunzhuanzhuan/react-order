@@ -288,7 +288,7 @@ export default class Test extends Component {
     const { list = [], source = {} } = summaryOrders
     const { summaryName, creatorName, companyId } = companySource
     const { loading, detailModal, tableActive, selectedRowKeys, addModal, summaryId,
-      indeterminate, cardChecked, checkAll, kolVisible, kocVisible } = this.state
+      indeterminate, cardChecked, checkAll, kolVisible, kocVisible, selectedRowKeysKoc } = this.state
     const connect = {
       actions,
       platformData,
@@ -328,7 +328,7 @@ export default class Test extends Component {
       common,
       closingReport: this.props.closingReport,
       actions,
-      selectedRowKeys,
+      selectedRowKeysKoc,
       companyId,
       onSelectChangeKoc: selectedRowKeys => {
         this.setState({ selectedRowKeysKoc: selectedRowKeys })
