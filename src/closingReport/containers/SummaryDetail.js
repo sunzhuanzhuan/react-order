@@ -393,7 +393,7 @@ export default class Test extends Component {
       </PageHeader>
       <Alert style={{ marginTop: '20px' }} message={
         <div style={{ height: '20px', lineHeight: '20px', }}>
-          <a onClick={this.exportExcel} style={{ float: 'right', marginLeft: '20px' }} >11导出koc订单</a>
+          <a href={`/api/summaryData/exportKocSummaryDataBySummaryId?summary_id=${summary_id}`} style={{ float: 'right', marginLeft: '20px' }} >导出koc订单</a>
           <span style={{ float: 'right' }} >
             <Upload {...props} showUploadList={false} >
               <a >导入koc订单数据</a>

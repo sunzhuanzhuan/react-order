@@ -145,13 +145,13 @@ export default class KocOrderFilterForm extends Component {
         </Col>
         <Col span={6}>
           <Form.Item label="订单状态">
-            {getFieldDecorator('execution_status', {
+            {getFieldDecorator('status', {
+              initialValue: 0
             })(
               <Select>
-
-                <Option key={0}>请选择</Option>
-                <Option key={1}>已确认</Option>
-                <Option key={2}>已执行</Option>
+                <Option key={0} value={0}>请选择</Option>
+                <Option key={1} value={1}>已确认</Option>
+                <Option key={2} value={2}>已执行</Option>
               </Select>
             )}
           </Form.Item>
