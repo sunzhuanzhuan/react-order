@@ -74,7 +74,7 @@ class SpotPlanDetail extends React.Component {
     getSpotplanPoInfo({ spotplan_id: search.spotplan_id }).then((res) => {
       this.setState({ customer_po_code: res.data.customer_po_code || '-' })
     });
-    getSpotplanAmount({ spotplan_id: search.spotplan_id });
+    getSpotplanAmount({ spotplan_id: search.spotplan_id, item_type: search.keys['item_type'] });
     getSpotplanPlatform();
     getSpotplanExecutor();
     this.queryData({ spotplan_id: search.spotplan_id, ...search.keys });
