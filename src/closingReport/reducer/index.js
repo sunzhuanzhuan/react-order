@@ -179,7 +179,7 @@ export const selectOrderList = handleActions({
 }, initList())
 // koc可以筛选的订单
 export const selectKocOrderList = handleActions({
-  [combineActions(getKocOrders_success)]: handleResponseList('order_id'),
+  [combineActions(getKocOrders_success)]: handleResponseList('koc_order_id'),
   [combineActions('clearAllOrderList')]: () => {
     return initList()
   }

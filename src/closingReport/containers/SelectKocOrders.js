@@ -31,9 +31,9 @@ const columns = [
   }, {
     title: 'PO单号',
     dataIndex: 'po_code',
-    render: (po, record) => {
+    render: (text, record) => {
       return <div>
-        {po ? <a target="_blank" href={record.po_path}>{po}</a> : '-'}
+        {text ? <a target="_blank" href={record.po_path}>{text}</a> : '-'}
       </div>
     }
   }, {
@@ -61,9 +61,9 @@ const columns = [
     }
   }, {
     title: '状态',
-    dataIndex: 'execustatustion_status_name',
+    dataIndex: 'status',
     render: (name, record) => {
-      return <div>{record.status_name == 1 ? '已确认' : '代执行'}</div>
+      return <div>{record.status_name == 1 ? '已确认' : '已执行'}</div>
     }
   }, {
     title: '执行人',
@@ -84,7 +84,6 @@ export default class SelectKocOrders extends Component {
         page: 1,
         pageSize: 50,
         company_id: props.companyId,
-        execution_status: ['21', '22', '26', '27', '28', '32', '33', '34', '35']
       }
     }
     const { actions } = props
