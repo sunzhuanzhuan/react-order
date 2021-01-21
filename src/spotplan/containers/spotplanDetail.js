@@ -123,7 +123,7 @@ class SpotPlanDetail extends React.Component {
       rows = {}
     }
 
-    this.setState({ selectedRowKeys, rows });
+    this.setState({ selectedRowKeys, rows: {} });
   }
   clearSelectedRowKeys = () => {
     this.setState({ selectedRowKeys: [] })

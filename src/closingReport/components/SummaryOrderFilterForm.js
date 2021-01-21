@@ -9,7 +9,7 @@ const InputGroup = Input.Group
 const Option = Select.Option
 
 function handleValue(values) {
-  values['order_id'] = batchText2Array(values['order_id'])
+  values['order_id'] = values.order_type == 1 ? batchText2Array(values['order_id']) : values['order_id']
   values['execution_evidence_code'] = batchText2Array(values['execution_evidence_code'], true)
   values['summary_id'] = batchText2Array(values['summary_id'])
   values['requirement_id'] = batchText2Array(values['requirement_id'])
