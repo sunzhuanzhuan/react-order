@@ -99,11 +99,11 @@ class SpotPlanDetail extends React.Component {
     const search = qs.parse(this.props.location.search.substring(1));
     if (value - 1) {
       this.queryData({ ...search.keys, spotplan_id: search.spotplan_id, type: value - 1, page: 1 });
-      this.props.actions.getSpotplanAmount({ spotplan_id: search.spotplan_id, type: value - 1 });
+      this.props.actions.getSpotplanAmount({ spotplan_id: search.spotplan_id, type: value - 1, item_type: search.keys['item_type'] });
       this.setState({ type: (value - 1).toString(), rows: {}, selectedRowKeys: [] });
       return
     }
-    this.props.actions.getSpotplanAmount({ spotplan_id: search.spotplan_id });
+    this.props.actions.getSpotplanAmount({ spotplan_id: search.spotplan_id, item_type: search.keys['item_type'] });
     this.queryData({ ...search.keys, spotplan_id: search.spotplan_id, page: 1 });
     this.setState({ type: 'all', rows: {}, selectedRowKeys: [] });
   }

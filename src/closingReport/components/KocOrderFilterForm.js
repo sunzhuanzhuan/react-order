@@ -23,7 +23,7 @@ export default class KocOrderFilterForm extends Component {
         // reset select
         this.props.onSelectChangeKoc([])
         // 处理params
-        values['order_id'] = batchText2Array(values['order_id'])
+        values['order_id'] = values['order_id'].split(' ')
         values['execution_evidence_code'] = batchText2Array(values['execution_evidence_code'], true)
         values['requirement_id'] = batchText2Array(values['requirement_id'])
 
