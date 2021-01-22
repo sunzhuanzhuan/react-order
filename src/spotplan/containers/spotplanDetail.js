@@ -126,7 +126,7 @@ class SpotPlanDetail extends React.Component {
     this.setState({ selectedRowKeys, rows });
   }
   clearSelectedRowKeys = () => {
-    this.setState({ selectedRowKeys: [] })
+    this.setState({ selectedRowKeys: [], rows: {} })
   }
   handleCheckAll = (e) => {
     const { spotplanEditList } = this.props;
