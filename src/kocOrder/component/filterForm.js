@@ -128,7 +128,7 @@ class Filter extends React.Component {
         </Col>
       </Row>
       <Row>
-        <Col span={8} style={{ whiteSpace: 'nowrap' }}>
+        <Col span={10} style={{ whiteSpace: 'nowrap' }}>
           <Form.Item label="创建时间" {...formItemLayout}>
             {getFieldDecorator('created_start')(
               <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" placeholder='开始日期' />
@@ -139,7 +139,7 @@ class Filter extends React.Component {
             )}
           </Form.Item>
         </Col>
-        <Col span={8} style={{ textAlign: 'center', marginLeft: '40px' }}>
+        <Col span={6} style={{ textAlign: 'center', marginLeft: '40px' }}>
           <Form.Item>
             <Button htmlType="submit" type='primary'>搜索</Button>
           </Form.Item>
