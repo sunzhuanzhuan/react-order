@@ -115,7 +115,7 @@ export default class SummaryListByOrder extends Component {
         fixed: 'right',
         width: 70,
         dataIndex: 'actions',
-        render: (date, { summary_status, order_id, summary_id }) => {
+        render: (date, { summary_status, order_id, summary_id, order_type }) => {
           return <div>
             <div>
               {[1, 4, 6].includes(summary_status) ?
@@ -123,7 +123,7 @@ export default class SummaryListByOrder extends Component {
                 <a target='_blank' href={`/order/closing-report/detail/order?summary_id=${summary_id}&order_id=${order_id}`}>查看</a>}
             </div>
             {[1].includes(summary_status) &&
-              <div><a onClick={() => this.submitCheck(order_id)}>提交审核</a></div>}
+              <div><a onClick={() => this.submitCheck(order_id, undefined, order_type)}>提交审核</a></div>}
             {/*{[1].includes(summary_status) && <div>
               <Popconfirm
                 getPopupContainer={() => document.querySelector('.closing-report-container')}
@@ -139,7 +139,7 @@ export default class SummaryListByOrder extends Component {
               </Popconfirm>
             </div>}*/}
             {[4, 6].includes(summary_status) &&
-              <div><a onClick={() => this.submitCheck(order_id, true)}>提交审核</a>
+              <div><a onClick={() => this.submitCheck(order_id, true, order_type)}>提交审核</a>
               </div>}
           </div>
         }
@@ -151,7 +151,7 @@ export default class SummaryListByOrder extends Component {
     actions.getExecutor()
   }
 
-  submitCheck = (order_id, isRecheck) => {
+  submitCheck = (order_id, isRecheck, order_type) => {
     const { actions } = this.props
     if (isRecheck) {
       // 重新检查
@@ -164,7 +164,7 @@ export default class SummaryListByOrder extends Component {
               return judgeSPStatus(check)
             }
             message.success('提交审核成功!')
-            this.getList()
+            this.getList({ order_type: order_type })
           }).finally(hide)
         }
       })
@@ -187,7 +187,7 @@ export default class SummaryListByOrder extends Component {
                   return judgeSPStatus(check)
                 }
                 message.success('提交审核成功!')
-                this.getList()
+                this.getList({ order_type: order_type })
               }).finally(hide)
             }
           })

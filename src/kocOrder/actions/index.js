@@ -14,3 +14,9 @@ export const {
 } = createHttpAction('getList', Interface.getList, {
   method: 'get'
 });
+export const {
+  downloadExcel,
+  downloadExcel_success
+} = createHttpAction('downloadExcel', Interface.downloadExcel, {
+  method: 'get'
+});

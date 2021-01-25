@@ -131,7 +131,8 @@ class List extends React.Component {
       pageSize: 50,
       successCount: 0,
       errorCount: 0,
-      errorList: []
+      errorList: [],
+      url: ''
     }
     this.uploadMessage = null
   }
@@ -154,6 +155,9 @@ class List extends React.Component {
   componentDidMount() {
     this.props.actions.getAllPlatform()
     this.props.actionKoc.getList({ page: 1, pageSize: 50 })
+    this.props.actionKoc.downloadExcel().then((res) => {
+      this.setState({ url: res.data })
+    })
   }
   render() {
     let that = this
@@ -220,7 +224,7 @@ class List extends React.Component {
             </Upload>
             {/* <a onClick={this.exportExcel} style={{ float: 'right' }} >导入koc订单</a> */}
           </span>
-          <a style={{ float: 'right' }} >下载模板</a>
+          <a style={{ float: 'right' }} href={this.state.url} target='_blank'>下载模板</a>
         </div>
       } />
       <Divider orientation="left">订单列表</Divider>
