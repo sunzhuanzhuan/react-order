@@ -7,7 +7,7 @@ import Interface from '../constants/Interface';
 import { bindActionCreators } from "redux";
 import { connect } from 'react-redux';
 import { Link } from "react-router-dom";
-import ScrollTable from './Scrolltable'
+import ScrollTable from '../../components/Scolltable/Scolltable'
 
 const Cookie = require('js-cookie');
 
@@ -213,7 +213,7 @@ class List extends React.Component {
         getList({ page: current, pageSize: 50 })
       },
     }
-    return <div>
+    return <div className='w'>
       <FilterForm
         getList={getList}
         platforms={platforms} />
@@ -229,7 +229,7 @@ class List extends React.Component {
         </div>
       } />
       <Divider orientation="left">订单列表</Divider>
-      <ScrollTable scrollClassName='ant-table-body' widthScroll={2400}>
+      <ScrollTable scrollClassName='ant-table-body' widthScroll={1800}>
         <Table
           scroll={{ x: 1700 }}
           dataSource={rows}
@@ -237,7 +237,7 @@ class List extends React.Component {
           pagination={pagination}
           columns={columns} />
       </ScrollTable>
-      <Modal
+      {/* <Modal
         title={<span>导入结果-成功{successCount}条，失败{errorCount}条</span>}
         closable={false}
         visible={this.state.visible}
@@ -258,7 +258,7 @@ class List extends React.Component {
             pagination={false}
             columns={columnsReason} />
         </p>
-      </Modal>
+      </Modal> */}
     </div>
   }
 }
