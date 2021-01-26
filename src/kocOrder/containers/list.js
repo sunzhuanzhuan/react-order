@@ -213,7 +213,7 @@ class List extends React.Component {
         getList({ page: current, pageSize: 50 })
       },
     }
-    return <div className='w'>
+    return <div>
       <FilterForm
         getList={getList}
         platforms={platforms} />
