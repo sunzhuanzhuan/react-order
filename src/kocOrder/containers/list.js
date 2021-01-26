@@ -237,7 +237,7 @@ class List extends React.Component {
           pagination={pagination}
           columns={columns} />
       </ScrollTable>
-      {/* <Modal
+      <Modal
         title={<span>导入结果-成功{successCount}条，失败{errorCount}条</span>}
         closable={false}
         visible={this.state.visible}
@@ -258,7 +258,7 @@ class List extends React.Component {
             pagination={false}
             columns={columnsReason} />
         </p>
-      </Modal> */}
+      </Modal>
     </div>
   }
 }
