@@ -356,6 +356,15 @@ export default class Test extends Component {
           let res = info.file.response
           if (res.code == 200) {
             message.success(`上传成功!`);
+            const { actions } = that.props
+            // 获取投放数据汇总单信息
+            actions.getSummaryTotalInfo({ summary_id }).then(({ data }) => {
+              data = data || {}
+              actions.getCompanyPlatforms({ company_id: data.company_id })
+            })
+            actions.getSummaryOrderInfo({ summary_id }).then(() => {
+              that.setState({ loading: false })
+            })
           } else {
             message.error(info.file.response.msg || '上传失败');
           }

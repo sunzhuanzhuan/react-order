@@ -147,7 +147,7 @@ export default class Test extends Component {
     const props = {
       name: 'file',
       action: Interface.uploadExcle,
-      data: { summary_id: that.state.summary_id },
+      data: { summary_id: that.state.summaryId },
       headers: {
         "X-Access-Token": Cookie.get('token') || '',
       },
@@ -163,6 +163,14 @@ export default class Test extends Component {
           let res = info.file.response
           if (res.code == 200) {
             message.success(`上传成功!`);
+            const { actions } = that.props
+            // 获取投放数据汇总单信息
+            actions.getSummaryTotalInfo({ summary_id: that.state.summaryId }).then(({ data }) => {
+              data && actions.getCompanyPlatforms({ company_id: data.company_id })
+            })
+            actions.getSummaryOrderInfo({ summary_id: that.state.summaryId, order_id: that.state.orderId }).then(() => {
+              that.setState({ loading: false })
+            })
           } else {
             message.error(info.file.response.msg || '上传失败');
           }

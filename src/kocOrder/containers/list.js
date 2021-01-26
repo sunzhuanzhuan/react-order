@@ -7,6 +7,7 @@ import Interface from '../constants/Interface';
 import { bindActionCreators } from "redux";
 import { connect } from 'react-redux';
 import { Link } from "react-router-dom";
+import ScrollTable from './Scrolltable'
 
 const Cookie = require('js-cookie');
 
@@ -228,12 +229,14 @@ class List extends React.Component {
         </div>
       } />
       <Divider orientation="left">订单列表</Divider>
-      <Table
-        scroll={{ x: 1700 }}
-        dataSource={rows}
-        rowKey={record => record.id}
-        pagination={pagination}
-        columns={columns} />
+      <ScrollTable scrollClassName='ant-table-body' widthScroll={2400}>
+        <Table
+          scroll={{ x: 1700 }}
+          dataSource={rows}
+          rowKey={record => record.id}
+          pagination={pagination}
+          columns={columns} />
+      </ScrollTable>
       <Modal
         title={<span>导入结果-成功{successCount}条，失败{errorCount}条</span>}
         closable={false}

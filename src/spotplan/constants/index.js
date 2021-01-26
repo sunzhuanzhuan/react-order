@@ -508,7 +508,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
     align: 'center',
     width: 210,
     render: (text, record) => {
-      return record.is_inward_send == 1 || record.last_apply_status == 1 || record.last_apply_status == 2 ? position[text] : <FormItem>
+      return record.is_inward_send == 1 || record.last_apply_status == 1 || record.last_apply_status == 2 ? clientName[text] : <FormItem>
         {getFieldDecorator(`${record.order_id}.client`)(
           <Select placeholder="请选择" style={{ width: 120 }} onChange={(value) => {
             handleUpdate({ item_type: record.item_type, order_id: record.order_id, price_id: record.price_id, client: value || '' })

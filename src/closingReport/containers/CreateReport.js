@@ -240,6 +240,11 @@ export default class CreateReport extends Component {
           let res = info.file.response
           if (res.code == 200) {
             message.success(`导入成功!`);
+            const { actions } = that.props
+            actions.getCompanyPlatforms({ company_id: companyId })
+            actions.getSummaryOrderInfo({ summary_id: summaryId }).then(() => {
+              that.setState({ loading: false })
+            })
           } else {
             message.error(info.file.response.msg || '上传失败');
           }
