@@ -292,11 +292,18 @@ export default class OrderCard extends Component {
             }))}
             value={addModal.platformKey}
           >
-            {optional.map(option =>
+            {data.order_type == 1 ? optional.map(option =>
               <Option
                 disabled={!!platform.find(({ platform_id: id }) => id == option.platform_id)}
                 key={option.platform_id}
-              >{option.platform_name}</Option>)}
+              >{option.platform_name}</Option>) :
+              // koc的一直播，哔哩哔哩动画，花椒是不能选择的平台
+              optional.map(option =>
+                <Option
+                  disabled={!!platform.find(({ platform_id: id }) => id == option.platform_id || option.platform_id == 106 || option.platform_id == 110 || option.platform_id == 108)}
+                  key={option.platform_id}
+                >{option.platform_name}</Option>)
+            }
           </Select>
           <div style={{ color: '#999', lineHeight: '32px' }}>如果平台已经存在则不能再次添加</div>
         </div>
