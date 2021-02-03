@@ -8,31 +8,15 @@ import './checkOrder.less'
 class EditOrder extends React.Component {
   constructor() {
     super();
-    this.state = {
-      kolVisible: true,
-      kocVisible: false
-    }
+    // this.state = {
+    //   kolVisible: true,
+    //   kocVisible: false
+    // }
   }
   componentDidMount() {
     const { search } = this.props;
     this.props.queryBasicInfo({ spotplan_id: search.spotplan_id });
-    this.props.queryData(3, { spotplan_id: search.spotplan_id, item_type: 1 }, this.handleEditTable);
-  }
-  selectKol = () => {
-    const { search } = this.props;
-    this.setState({
-      kolVisible: true,
-      kocVisible: false
-    })
-    this.props.queryData(3, { spotplan_id: search.spotplan_id, item_type: 1 }, this.handleEditTable);
-  }
-  selectKoc = () => {
-    const { search } = this.props;
-    this.setState({
-      kolVisible: false,
-      kocVisible: true
-    })
-    this.props.queryData(3, { spotplan_id: search.spotplan_id, item_type: 2 }, this.handleEditTable);
+    this.props.queryData(3, { spotplan_id: search.spotplan_id, item_type: 'all' }, this.handleEditTable);
   }
   handleEditTable = data => {
     const { setFieldsValue } = this.props.form;
@@ -71,7 +55,6 @@ class EditOrder extends React.Component {
   render() {
     const { getFieldDecorator, getFieldValue, setFieldsValue, validateFields } = this.props.form;
     const { data, handleUpdate, headerData, loading, search } = this.props;
-    const { kolVisible, kocVisible } = this.state
     const EditOrderCols = EditOrderFunc(getFieldDecorator, handleUpdate, this.handleDelete, getFieldValue, setFieldsValue, validateFields);
     const paginationObj = {
       onChange: (page) => {
@@ -86,17 +69,9 @@ class EditOrder extends React.Component {
     const winHeight = document.documentElement.clientHeight - 171 + 'px';
     return <div className='splotplan-edit-container' style={{ height: winHeight, overflowY: 'scroll', overflowX: 'hidden' }}>
       <Header data={headerData} />
-      <div style={{ marginTop: '20px' }}>
-        <Button style={{ borderRadius: 0 }} className={kolVisible && 'selected'} onClick={this.selectKol}>预约订单</Button>
-        <Button style={{ borderRadius: 0 }} className={kocVisible && 'selected'} onClick={this.selectKoc}>koc订单</Button>
-      </div>
-      <div>
-        {kolVisible && <h3 className='top-gap'>预约列表
+      <div><h3 className='top-gap'>列表
        <Alert message="若包含返税订单，返税订单的Costwithfee请输入（返税金额/1.06），Cost请输入（Costwithfee金额/1.04）" type="warning" showIcon style={{ display: 'inline-block', marginLeft: '10px' }} />
-        </h3>}
-        {kocVisible && <h3 className='top-gap'>koc列表
-<Alert message="若包含返税订单，返税订单的Costwithfee请输入（返税金额/1.06），Cost请输入（Costwithfee金额/1.04）" type="warning" showIcon style={{ display: 'inline-block', marginLeft: '10px' }} />
-        </h3>}
+      </h3>
       </div>
       <div className='edit-table-container top-gap'>
         <Form>
