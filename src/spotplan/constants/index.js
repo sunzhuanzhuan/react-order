@@ -1,7 +1,8 @@
 import React from 'react'
-import { Modal, Input, Form, Select, Tooltip, DatePicker, InputNumber } from 'antd'
+import { Modal, Input, Form, Select, Tooltip, DatePicker, InputNumber, Button } from 'antd'
 import numeral from 'numeral'
 import moment from 'moment'
+import qs from 'qs'
 
 import '../containers/index.less'
 const { TextArea } = Input;
@@ -40,10 +41,9 @@ let clientName = {
   4: '考拉',
   5: '苏宁易购',
   6: '线上（其他）',
-  7: '七条',
-  8: '线下',
+  7: '线下',
 }
-export const CheckModalFunc = handleDel => [
+export const CheckModalFunc = (handleDel, handlDelKoc) => [
   {
     title: '订单ID',
     dataIndex: 'order_id',
@@ -96,12 +96,18 @@ export const CheckModalFunc = handleDel => [
     align: 'center',
     width: 100,
     render: (text, record) => {
+      console.log(record)
       return <a href='javascript:;' onClick={() => {
         Modal.confirm({
           title: '',
           content: `是否确认删除该订单？`,
           onOk: () => {
-            handleDel(2, record.order_id)
+            if (record.order_id.indexOf('koc') > -1) {
+              handlDelKoc(2, record.order_id)
+            } else {
+              handleDel(2, record.order_id)
+
+            }
           }
         })
       }}>删除</a>
@@ -117,7 +123,9 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
     width: 110,
     fixed: 'left',
     render: (text, record) => {
-      return <a href={record.order_info_path} target="_blank">{text}</a>
+      return <div>
+        <a href={record.order_info_path} target="_blank">{text}</a>
+      </div>
     }
   },
   {
@@ -178,7 +186,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
             }
           }} onBlur={(e) => {
             if (e.target.value != record.weibo_id) {
-              handleUpdate({ order_id: record.order_id, price_id: record.price_id, weibo_id: e.target.value })
+              handleUpdate({ item_type: record.item_type, order_id: record.order_id, price_id: record.price_id, weibo_id: e.target.value })
             }
           }} />
         )
@@ -207,7 +215,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
         })(
           <TextArea autosize={false} style={{ width: 140, height: 86, resize: 'none' }} placeholder='请填写名称' onBlur={(e) => {
             if (e.target.value != record.price_name) {
-              handleUpdate({ order_id: record.order_id, price_id: record.price_id, price_name: e.target.value })
+              handleUpdate({ item_type: record.item_type, order_id: record.order_id, price_id: record.price_id, price_name: e.target.value })
             }
           }} />
         )
@@ -222,70 +230,83 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
     align: 'center',
     width: 180,
     render: (text, record) => {
-      return record.is_inward_send == 1 || record.last_apply_status == 1 || record.last_apply_status == 2 ? record.is_tax_rebate_account ==1?<div>{text && numeral(text).format('0,0.00') || '-'}<br/><span style={{color:'red'}}>返税专用</span> </div>:<div>{text && numeral(text).format('0,0.00') || '-'} </div>:
-       //  是否返税账号 1是，2否
-      record.is_tax_rebate_account ==2?<FormItem>
-        {getFieldDecorator(`${record.order_id}.cost`, {
-          validateTrigger: ['onChange'],
-          validateFirst: true,
-          rules: [{ required: true, message: '请填写cost金额' }
-          , {
-            validator: (rule, value, callback) => {
-              if (value.toString().split('.')[0].length > 8) {
-                callback('最多输入8位数')
-                return
-              } else if (value <= 0) {
-                callback('请输入大于0的数')
-                return
-              } else {
-                callback()
+      // sp下发成功是is_inward_send == 1的状态
+      const sp_success = record.is_inward_send == 1 || record.last_apply_status == 1 || record.last_apply_status == 2
+      if (sp_success) {
+        //  是否返税账号 1是，2否
+        if (record.is_tax_rebate_account == 1) {
+          return <div>{text && numeral(text).format('0,0.00') || '-'}<br /><span style={{ color: 'red' }}>返税专用</span> </div>
+        } else {
+          return <div>{text && numeral(text).format('0,0.00') || '-'} </div>
+        }
+      } else {
+        // //  是否返税账号 1是，2否
+        if (!record.is_tax_rebate_account || record.is_tax_rebate_account == 2) {
+          return <FormItem>
+            {getFieldDecorator(`${record.order_id}.cost`, {
+              validateTrigger: ['onChange'],
+              validateFirst: true,
+              rules: [{ required: true, message: '请填写cost金额' }
+                , {
+                validator: (rule, value, callback) => {
+                  if (value.toString().split('.')[0].length > 8) {
+                    callback('最多输入8位数')
+                    return
+                  } else if (value <= 0) {
+                    callback('请输入大于0的数')
+                    return
+                  } else {
+                    callback()
+                  }
+                }
               }
+              ]
+            })(
+              <InputNumber precision={2} style={{ width: 150 }} onBlur={(e) => {
+                validateFields([`${record.order_id}.cost`], (errors, values) => {
+                  if (!errors) {
+                    if (e.target.value != '' && e.target.value != record.cost) {
+                      handleUpdate({ item_type: record.item_type, order_id: record.order_id, price_id: record.price_id, cost: e.target.value }).then((res) => {
+                        if (record.costwithfee) {
+                          let newAt = `${record.order_id}.costwithfee`;
+                          setFieldsValue({ [newAt]: res.data.costwithfee });
+                          validateFields([`${record.order_id}.costwithfee`])
+                        }
+                      })
+                    }
+                  }
+                })
+
+              }} />
+            )
             }
-          }
-        ]
-        })(
-          <InputNumber precision={2} style={{ width: 150 }} onBlur={(e) => {
-            validateFields([`${record.order_id}.cost`], (errors, values) => {
-              if (!errors) {
-                if (e.target.value != '' && e.target.value != record.cost) {
-                  handleUpdate({ order_id: record.order_id, price_id: record.price_id, cost: e.target.value }).then((res) => {
-                    if (record.costwithfee) {
-                      let newAt = `${record.order_id}.costwithfee`;
-                      setFieldsValue({ [newAt]: res.data.costwithfee });
-                      validateFields([`${record.order_id}.costwithfee`])
+          </FormItem>
+        } else {
+          return <FormItem className='tax-cost' label={<span>返税专用</span>}>
+            {getFieldDecorator(`${record.order_id}.cost`, {
+              rules: [{ required: true, message: '请填写cost金额' }]
+            })(
+              <InputNumber precision={2} style={{ width: 150 }} onBlur={(e) => {
+                validateFields([`${record.order_id}.cost`], (errors, values) => {
+                  if (!errors) {
+                    if (e.target.value != '' && e.target.value != record.cost) {
+                      handleUpdate({ item_type: record.item_type, order_id: record.order_id, price_id: record.price_id, cost: e.target.value }).then((res) => {
+                        if (record.costwithfee) {
+                          let newAt = `${record.order_id}.costwithfee`;
+                          setFieldsValue({ [newAt]: res.data.costwithfee });
+                          validateFields([`${record.order_id}.costwithfee`])
+                        }
+                      })
                     }
-                  })
-                }
-              }
-            })
+                  }
+                })
 
-          }} />
-        )
+              }} />
+            )
+            }
+          </FormItem>
         }
-      </FormItem>:
-    <FormItem className='tax-cost' label={<span>返税专用</span>}>
-        {getFieldDecorator(`${record.order_id}.cost`, {
-          rules: [{ required: true, message: '请填写cost金额' }]
-        })(
-          <InputNumber precision={2} style={{ width: 150 }} onBlur={(e) => {
-            validateFields([`${record.order_id}.cost`], (errors, values) => {
-              if (!errors) {
-                if (e.target.value != '' && e.target.value != record.cost) {
-                  handleUpdate({ order_id: record.order_id, price_id: record.price_id, cost: e.target.value }).then((res)=>{
-                    if (record.costwithfee) {
-                      let newAt = `${record.order_id}.costwithfee`;
-                      setFieldsValue({ [newAt]: res.data.costwithfee });
-                      validateFields([`${record.order_id}.costwithfee`])
-                    }
-                  })
-                }
-              }
-            })
-
-          }} />
-        )
-        }
-      </FormItem>
+      }
     }
   },
   {
@@ -295,63 +316,76 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
     align: 'center',
     width: 300,
     render: (text, record) => {
-      return record.is_inward_send == 1 || record.last_apply_status == 1 || record.last_apply_status == 2 ? record.is_tax_rebate_account ==1?<div>{text && numeral(text).format('0,0.00') || '-'}<br/><span style={{color:'red'}}>返税专用</span> </div>:<div>{text && numeral(text).format('0,0.00') || '-'} </div>: 
-    //  是否返税账号 1是，2否
-     record.is_tax_rebate_account ==2?<FormItem>
-        {getFieldDecorator(`${record.order_id}.costwithfee`, {
-          validateTrigger: ['onChange'],
-          validateFirst: true,
-          rules: [{ required: true, message: '请填写costwithfee金额' }
-          , {
-            validator: (rule, value, callback) => {
-              if (value.toString().split('.')[0].length > 9) {
-                callback('最多输入9位数')
-                return
-              }else if (value <= 0) {
-                callback('请输入大于0的数')
-                return
-              }else {
-                callback()
-              }
-            }
-          }
-        ]
-        })(
-          <InputNumber precision={2} max={999999999} min={1} style={{ width: 250 }} onBlur={(e) => {
-            validateFields([`${record.order_id}.costwithfee`], (errors, values) => {
-              if (!errors) {
-                if (e.target.value != '' && e.target.value != record.costwithfee) {
-                  handleUpdate({ order_id: record.order_id, price_id: record.price_id, costwithfee: e.target.value })
+      // sp下发成功是is_inward_send == 1的状态
+      const sp_success = record.is_inward_send == 1 || record.last_apply_status == 1 || record.last_apply_status == 2
+      if (sp_success) {
+        //  是否返税账号 1是，2否
+        if (record.is_tax_rebate_account == 1) {
+          return <div>{text && numeral(text).format('0,0.00') || '-'}<br /><span style={{ color: 'red' }}>返税专用</span> </div>
+        } else {
+          return <div>{text && numeral(text).format('0,0.00') || '-'} </div>
+        }
+      } else {
+        if (!record.is_tax_rebate_account || record.is_tax_rebate_account == 2) {
+          return <FormItem>
+            {getFieldDecorator(`${record.order_id}.costwithfee`, {
+              validateTrigger: ['onChange'],
+              validateFirst: true,
+              rules: [{ required: true, message: '请填写costwithfee金额' }
+                , {
+                validator: (rule, value, callback) => {
+                  if (value.toString().split('.')[0].length > 9) {
+                    callback('最多输入9位数')
+                    return
+                  } else if (value <= 0) {
+                    callback('请输入大于0的数')
+                    return
+                  } else {
+                    callback()
+                  }
                 }
               }
-            })
-          }} />
-        )
-        }
-      </FormItem> : <FormItem  className='tax-costwithfee' label={<span>返税专用，请输入负值且返税金额÷1.06</span>}>
-        {getFieldDecorator(`${record.order_id}.costwithfee`, {
-          validateTrigger: ['onChange'],
-          validateFirst: true,
-          rules: [{ required: true, message: '请填写costwithfee金额' }]
-        })(
-          <InputNumber precision={2} style={{ width: 250 ,backgroundColor:'#fffce5'}} className='tax-costwithfee' onBlur={(e) => {
-            validateFields([`${record.order_id}.costwithfee`], (errors, values) => {
-              if (!errors) {
-                  handleUpdate({ order_id: record.order_id, price_id: record.price_id, costwithfee: e.target.value }).then((res)=>{
-                    if (record.cost) {
-                      let newAt = `${record.order_id}.cost`;
-                      setFieldsValue({ [newAt]: res.data.cost });
-                      validateFields([`${record.order_id}.cost`])
+              ]
+            })(
+              <InputNumber precision={2} max={999999999} min={1} style={{ width: 250 }} onBlur={(e) => {
+                validateFields([`${record.order_id}.costwithfee`], (errors, values) => {
+                  if (!errors) {
+                    if (e.target.value != '' && e.target.value != record.costwithfee) {
+                      handleUpdate({ item_type: record.item_type, order_id: record.order_id, price_id: record.price_id, costwithfee: e.target.value })
                     }
-                  })
-              
-              }
-            })
-          }} />
-        
-        )
+                  }
+                })
+              }} />
+            )
+            }
+          </FormItem>
+        } else {
+          return <FormItem className='tax-costwithfee' label={<span>返税专用，请输入负值且返税金额÷1.06</span>}>
+            {getFieldDecorator(`${record.order_id}.costwithfee`, {
+              validateTrigger: ['onChange'],
+              validateFirst: true,
+              rules: [{ required: true, message: '请填写costwithfee金额' }]
+            })(
+              <InputNumber precision={2} style={{ width: 250, backgroundColor: '#fffce5' }} className='tax-costwithfee' onBlur={(e) => {
+                validateFields([`${record.order_id}.costwithfee`], (errors, values) => {
+                  if (!errors) {
+                    handleUpdate({ item_type: record.item_type, order_id: record.order_id, price_id: record.price_id, costwithfee: e.target.value }).then((res) => {
+                      if (record.cost) {
+                        let newAt = `${record.order_id}.cost`;
+                        setFieldsValue({ [newAt]: res.data.cost });
+                        validateFields([`${record.order_id}.cost`])
+                      }
+                    })
+
+                  }
+                })
+              }} />
+
+            )
+            }
+          </FormItem>
         }
-      </FormItem>
+      }
     }
   },
   {
@@ -368,7 +402,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
         })(
           <Input onBlur={(e) => {
             if (e.target.value != record.account_category_name) {
-              handleUpdate({ order_id: record.order_id, price_id: record.price_id, account_category_name: e.target.value })
+              handleUpdate({ item_type: record.item_type, order_id: record.order_id, price_id: record.price_id, account_category_name: e.target.value })
             }
           }} />
         )
@@ -390,7 +424,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
         })(
           <TextArea autosize={false} style={{ width: 140, height: 86, resize: 'none' }} onBlur={(e) => {
             if (e.target.value != record.release_form) {
-              handleUpdate({ order_id: record.order_id, price_id: record.price_id, release_form: e.target.value })
+              handleUpdate({ item_type: record.item_type, order_id: record.order_id, price_id: record.price_id, release_form: e.target.value })
             }
           }} />
         )
@@ -416,7 +450,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
             }]
         })(
           <Select placeholder="请选择" style={{ width: 120 }} onChange={(value) => {
-            handleUpdate({ order_id: record.order_id, price_id: record.price_id, publish_articles_address: value || '' })
+            handleUpdate({ item_type: record.item_type, order_id: record.order_id, price_id: record.price_id, publish_articles_address: value || '' })
           }} allowClear>
             <Option value={1}>头条</Option>
             <Option value={2}>次条</Option>
@@ -449,7 +483,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
             }]
         })(
           <DatePicker dropdownClassName="sp-calendar" allowClear={record.publish_articles_at == null ? true : false} showTime={{ defaultValue: moment('00:00:00', 'HH:mm:ss') }} format="YYYY-MM-DD HH:mm:ss" placeholder="请输入" style={{ width: 130 }} onOk={(value) => {
-            handleUpdate({ order_id: record.order_id, price_id: record.price_id, publish_articles_at: value.format("YYYY-MM-DD HH:mm:ss") })
+            handleUpdate({ item_type: record.item_type, order_id: record.order_id, price_id: record.price_id, publish_articles_at: value.format("YYYY-MM-DD HH:mm:ss") })
           }} onBlur={() => {
             let newAt = `${record.order_id}.publish_articles_at`;
             console.log(record.publish_articles_at)
@@ -461,7 +495,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
                 }
               }
             } else if (record.publish_articles_at != getFieldValue(`${record.order_id}.publish_articles_at`).format("YYYY-MM-DD HH:mm:ss")) {
-              handleUpdate({ order_id: record.order_id, price_id: record.price_id, publish_articles_at: getFieldValue(`${record.order_id}.publish_articles_at`).format("YYYY-MM-DD HH:mm:ss") })
+              handleUpdate({ item_type: record.item_type, order_id: record.order_id, price_id: record.price_id, publish_articles_at: getFieldValue(`${record.order_id}.publish_articles_at`).format("YYYY-MM-DD HH:mm:ss") })
             }
           }} />
         )}
@@ -474,10 +508,10 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
     align: 'center',
     width: 210,
     render: (text, record) => {
-      return record.is_inward_send == 1 || record.last_apply_status == 1 || record.last_apply_status == 2 ? position[text] : <FormItem>
+      return record.is_inward_send == 1 || record.last_apply_status == 1 || record.last_apply_status == 2 ? clientName[text] : <FormItem>
         {getFieldDecorator(`${record.order_id}.client`)(
           <Select placeholder="请选择" style={{ width: 120 }} onChange={(value) => {
-            handleUpdate({ order_id: record.order_id, price_id: record.price_id, client: value || '' })
+            handleUpdate({ item_type: record.item_type, order_id: record.order_id, price_id: record.price_id, client: value || '' })
           }} allowClear>
             <Option value={1}>天猫</Option>
             <Option value={2}>京东</Option>
@@ -509,7 +543,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
           })(
             <TextArea autosize={false} style={{ width: 140, height: 86, resize: 'none', marginRight: '20px' }} placeholder='请填写内容类型' onBlur={(e) => {
               if (e.target.value != record.content_type) {
-                handleUpdate({ order_id: record.order_id, price_id: record.price_id, content_type: e.target.value })
+                handleUpdate({ item_type: record.item_type, order_id: record.order_id, price_id: record.price_id, content_type: e.target.value })
               }
             }} />
           )
@@ -536,7 +570,7 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
           })(
             <TextArea autosize={false} style={{ width: 140, height: 86, resize: 'none', marginRight: '20px' }} placeholder='填写备注信息' onBlur={(e) => {
               if (e.target.value != record.content) {
-                handleUpdate({ order_id: record.order_id, price_id: record.price_id, content: e.target.value })
+                handleUpdate({ item_type: record.item_type, order_id: record.order_id, price_id: record.price_id, content: e.target.value })
               }
             }} />
           )
@@ -553,11 +587,12 @@ export const EditOrderFunc = (getFieldDecorator, handleUpdate, handleDelete, get
     width: 100,
     render: (text, record) => {
       return record.is_inward_send == 1 || record.last_apply_status == 1 || record.last_apply_status == 2 ? null : <div><a href='javascript:;' onClick={() => {
-        handleDelete(record.order_id)
+        handleDelete(record)
       }}>删除订单</a></div>
     }
   }
 ];
+
 export const SpotplanListFunc = () => [
   {
     title: 'ID',
@@ -565,8 +600,9 @@ export const SpotplanListFunc = () => [
     key: 'spotplan_id',
     align: 'center',
     width: 100,
-    render: text => {
-      return <a href={`/order/spotplan/detail?spotplan_id=${text}`} target="_blank">{text}</a>
+    render: (text, record) => {
+      const url = 'detail?spotplan_id=' + record.spotplan_id + '&keys%5Bitem_type%5D=1&labels%5Bitem_type%5D=%E9%A2%84%E7%BA%A6%E8%AE%A2%E5%8D%95'
+      return <a target="_blank" href={url}>{text}</a>
     }
   },
   {
@@ -640,7 +676,8 @@ export const SpotplanListFunc = () => [
     align: 'center',
     width: 100,
     render: (text, record) => {
-      return <a href={`/order/spotplan/detail?spotplan_id=${record.spotplan_id}`} target='_blank'>查看详情</a>
+      const url = 'detail?spotplan_id=' + record.spotplan_id + '&keys%5Bitem_type%5D=1&labels%5Bitem_type%5D=%E9%A2%84%E7%BA%A6%E8%AE%A2%E5%8D%95'
+      return <a target="_blank" href={url}>查看详情</a>
     }
   }
 ];
@@ -654,7 +691,10 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     width: 80,
     fixed: 'left',
     render: (text, record) => {
-      return <a href={record.order_info_path} target="_blank">{text}</a>
+      return <div>
+        <a href={record.order_info_path} target="_blank">{text}</a><br />
+        {record.item_type == 2 && <span><Button type="primary">koc</Button></span>}
+      </div>
     }
   },
   {
@@ -676,8 +716,8 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     key: 'status_name',
     align: 'center',
     width: 100,
-    render: text => {
-      return <div>{text || '-'}</div>
+    render: (text, record) => {
+      return <div>{record.item_type == 1 ? text || '-' : record.status == 1 ? '已确认' : '已执行'}</div>
     }
   }, {
     title: 'Spotplan下发状态',
@@ -766,9 +806,9 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     key: 'cost',
     align: 'center',
     width: 120,
-    render: (text,record) => {
-      return record.is_tax_rebate_account ==2?<div>{text && numeral(text).format('0,0.00') || '-'}</div>:<div>{text && numeral(text).format('0,0.00') || '-'}<br/>
-      <span style={{color:'red'}}>返税专用</span>
+    render: (text, record) => {
+      return record.is_tax_rebate_account == 2 || !record.is_tax_rebate_account ? <div>{text && numeral(text).format('0,0.00') || '-'}</div> : <div>{text && numeral(text).format('0,0.00') || '-'}<br />
+        <span style={{ color: 'red' }}>返税专用</span>
       </div>
     }
   },
@@ -778,9 +818,9 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     key: 'costwithfee',
     align: 'center',
     width: 120,
-    render:(text,record) => {
-      return record.is_tax_rebate_account ==2?<div>{text && numeral(text).format('0,0.00') || '-'}</div>:<div>{text && numeral(text).format('0,0.00') || '-'}<br/>
-      <span style={{color:'red'}}>返税专用</span>
+    render: (text, record) => {
+      return record.is_tax_rebate_account == 2 || !record.is_tax_rebate_account ? <div>{text && numeral(text).format('0,0.00') || '-'}</div> : <div>{text && numeral(text).format('0,0.00') || '-'}<br />
+        <span style={{ color: 'red' }}>返税专用</span>
       </div>
     }
   },
@@ -866,40 +906,40 @@ export const DetailTableFunc = (handleChangeNumber, handleQuitOrder, handleUpdat
     render: (text, record) => {
       return <>
         {record.added == 1 ? <div> <a href='javascript:;' onClick={() => {
-          handleAddNumber(record.order_id)
+          handleAddNumber(record)
         }}>申请新增账号</a> </div> : null}
         {
           record.change == 1 ? <div> <a href='javascript:;' onClick={() => {
-            handleChangeNumber(record.order_id)
+            handleChangeNumber(record)
           }}>申请换号</a></div> : null
         }
         {
           record.stopAndUpdate == 1 ? <div>  <a href='javascript:;' onClick={() => {
-            handleQuitOrder(record.order_id)
+            handleQuitOrder(record)
           }}>申请终止合作</a> </div> : null
         }
         {
           record.stopAndUpdate == 1 ?
             <div> <a href='javascript:;' onClick={() => {
-              handleUpdateOrder(record.order_id)
+              handleUpdateOrder(record)
             }}>申请更新信息</a> </div> : null
         }
         {
           record.stopAndUpdate == 1 ?
             <div> <a href='javascript:;' onClick={() => {
-              handleUpdateArtical(record.order_id)
+              handleUpdateArtical(record)
             }}>修改订单信息</a> </div> : null
         }
         {
-          record.stopAndUpdate == 1 ?
+          record.item_type == 1 ? record.stopAndUpdate == 1 ?
             <div> <a href='javascript:;' onClick={() => {
               const { price_id, order_id, price_name } = record;
               handlePriceIdVisible(price_id, price_name, order_id)
-            }}>修改price id</a> </div> : null
+            }}>修改price id</a> </div> : null : null
         }
         {
           record.is_inward_send == 1 || record.last_apply_status == 1 || record.last_apply_status == 2 ? null : <div><a href='javascript:;' onClick={() => {
-            handleEditOrder(record.order_id)
+            handleEditOrder(record)
           }}>编辑信息</a></div>
         }
         {
@@ -1029,7 +1069,10 @@ export const AddOrderCols = [
     dataIndex: 'status_name',
     key: 'status_name',
     align: 'center',
-    width: 100
+    width: 100,
+    render: (text, record) => {
+      return record.item_type == 1 ? text : record.status == 1 ? '已确认' : '已执行'
+    }
   },
   {
     title: '需求名称',
@@ -1100,7 +1143,10 @@ export const OrderCols = [
     dataIndex: 'status_name',
     key: 'status_name',
     align: 'center',
-    width: 100
+    width: 100,
+    render: (text, record) => {
+      return record.item_type == 1 ? text : record.status == 1 ? '已确认' : '已执行'
+    }
   },
   {
     title: '需求名称',
@@ -1171,6 +1217,9 @@ export const ArticalCols = [
     key: 'status_name',
     align: 'center',
     className: "columns",
+    render: (text, record) => {
+      return record.item_type == 1 ? text : record.status == 1 ? '已确认' : '已执行'
+    }
   },
   {
     title: '需求名称',
@@ -1280,7 +1329,10 @@ export const UpdateCols = [
     dataIndex: 'status_name',
     key: 'status_name',
     align: 'center',
-    width: 100
+    width: 100,
+    render: (text, record) => {
+      return record.item_type == 1 ? text : record.status == 1 ? '已确认' : '已执行'
+    }
   },
   {
     title: '需求名称',

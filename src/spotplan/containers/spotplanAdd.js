@@ -26,6 +26,7 @@ class SpotplanAdd extends React.Component {
     super();
     this.state = {
       orderMaps: {},
+      orderMapsKoc: {},
       loading: false,
       visible: false
     }
@@ -98,6 +99,22 @@ class SpotplanAdd extends React.Component {
     }
     this.setState({ orderMaps: obj })
   }
+  handleCheckKoc = (type, order_id, item) => {
+    const { orderMapsKoc } = this.state;
+    let obj = { ...orderMapsKoc };
+    if (type == 1) {
+      //勾选
+      obj[order_id] = item;
+    }
+    if (type == 2) {
+      //取消勾选
+      delete obj[order_id];
+    }
+    this.setState({ orderMapsKoc: obj })
+  }
+  handleChangeKocOrKolTab = () => {
+    this.setState({ orderMaps: {} })
+  }
   handleSettleDelCheck = order_ids => {
     const { orderMaps } = this.state;
     let obj = { ...orderMaps };
@@ -147,8 +164,8 @@ class SpotplanAdd extends React.Component {
       this.props.history.push(url);
     }
     if (num == 3) {
-      const { orderMaps } = this.state;
-      if (!Object.values(orderMaps).length) {
+      const { orderMaps, orderMapsKoc } = this.state;
+      if (!Object.values(orderMaps).length && !Object.values(orderMapsKoc).length) {
         this.setState({ orderMaps: {} }, () => {
           if (search.noback) {
             this.props.history.push(`/order/spotplan/add?step=3&spotplan_id=${search.spotplan_id}&noback=true`);
@@ -160,10 +177,19 @@ class SpotplanAdd extends React.Component {
       }
       const hide = message.loading('操作中，请稍候...');
       let spotplan_order = [];
+      let spotplan_orderKoc = [];
       for (let key in orderMaps) {
         spotplan_order.push({ order_id: key, ...orderMaps[key] })
       }
-      this.props.actions.postAddSpotplanOrder({ spotplan_id: search.spotplan_id, spotplan_order }).then((res) => {
+      for (let key in orderMapsKoc) {
+        spotplan_orderKoc.push({ order_id: key, ...orderMapsKoc[key] })
+      }
+      let value = {
+        spotplan_id: search.spotplan_id,
+        spotplan_order: spotplan_order,
+        spotplan_order_koc: spotplan_orderKoc,
+      }
+      this.props.actions.postAddSpotplanOrder(value).then((res) => {
         const array = res.data.order_ids;
         const type = res.data.type;
         hide();
@@ -178,7 +204,7 @@ class SpotplanAdd extends React.Component {
             }
           })
         } else {
-          this.setState({ orderMaps: {} }, () => {
+          this.setState({ orderMaps: {}, orderMapsKoc: {} }, () => {
             this.props.history.push('/order/spotplan/add?step=3&spotplan_id=' + search.spotplan_id);
           })
         }
@@ -193,11 +219,25 @@ class SpotplanAdd extends React.Component {
       if (type && type == 'submit') {
         this.editOrder.current.validateFields((err) => {
           if (!err) {
-            this.props.history.push('/order/spotplan/detail?spotplan_id=' + search.spotplan_id);
+            const params = {
+              keys: { item_type: 1 },
+              labels: { item_type: "预约订单" },
+            };
+            this.props.history.replace({
+              pathname: '/order/spotplan/detail',
+              search: `?${qs.stringify({ spotplan_id: search.spotplan_id, ...params })}`,
+            })
           }
         })
       } else {
-        this.props.history.push('/order/spotplan/detail?spotplan_id=' + search.spotplan_id);
+        const params = {
+          keys: { item_type: 1 },
+          labels: { item_type: "预约订单" },
+        };
+        this.props.history.replace({
+          pathname: '/order/spotplan/detail',
+          search: `?${qs.stringify({ spotplan_id: search.spotplan_id, ...params })}`,
+        })
       }
     }
   }
@@ -209,7 +249,7 @@ class SpotplanAdd extends React.Component {
   render() {
     const search = qs.parse(this.props.location.search.substring(1));
     const step = parseInt(search.step);
-    const { orderMaps, loading } = this.state;
+    const { orderMaps, loading, orderMapsKoc } = this.state;
     const { spotplanCompanyInfo, spotplanEditList, spotplanPoInfo } = this.props;
     return <>
       <div className='spotplan-add'>
@@ -221,13 +261,14 @@ class SpotplanAdd extends React.Component {
         </div>
         <div className='spotplan-add-container'>
           {step == 1 && <BasicInfo ref={this.basicInfo} search={search} queryData={this.queryData} data={spotplanCompanyInfo} wrappedComponentRef={(form) => this.form = form} />}
-          {step == 2 && <CheckOrder queryData={this.queryData} handleCheck={this.handleCheck}
-            orderMaps={orderMaps} location={this.props.location} history={this.props.history} queryBasicInfo={this.queryBasicInfo} loading={loading} />}
+          {step == 2 && <CheckOrder queryData={this.queryData} handleCheckKoc={this.handleCheckKoc} handleCheck={this.handleCheck} handleChangeKocOrKolTab={this.handleChangeKocOrKolTab}
+            orderMaps={orderMaps} orderMapsKoc={orderMapsKoc} location={this.props.location} history={this.props.history} queryBasicInfo={this.queryBasicInfo} loading={loading} />}
           {step == 3 && <EditOrder ref={this.editOrder} search={search} queryData={this.queryData} data={spotplanEditList['all']} handleUpdate={this.handleUpdate} queryBasicInfo={this.queryBasicInfo} headerData={spotplanPoInfo} loading={loading} handleDelete={this.handleDelete} />}
         </div>
       </div>
       <BottomBlock current={step} handleSteps={this.handleSteps} orderMaps={orderMaps}
-        handlDel={this.handleCheck} data={spotplanEditList} search={search} />
+        orderMapsKoc={orderMapsKoc}
+        handlDel={this.handleCheck} handlDelKoc={this.handleCheckKoc} data={spotplanEditList} search={search} />
       {this.state.visible ? <Modal
         title="提示信息"
         visible={this.state.visible}

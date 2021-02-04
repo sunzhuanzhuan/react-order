@@ -51,10 +51,19 @@ class DetailQuery extends React.Component {
             const array = values[key].trim().split(' ').reduce((data, current) => {
               return current ? [...data, current] : [...data]
             }, []);
-            const ary = array.reduce((data, current) => {
-              const flag = /^[0-9]+$/.test(current);
-              return flag ? [...data, current] : [...data]
-            }, []);
+            let ary = []
+            if (values['item_type'].key == 1) {
+              ary = array.reduce((data, current) => {
+                const flag = /^[0-9]+$/.test(current);
+                return flag ? [...data, current] : [...data]
+              }, []);
+            } else {
+              ary = array.reduce((data, current) => {
+                return [...data, current]
+              }, []);
+            }
+
+
             if (array.length > 200) {
               message.error('最多能输入200个订单', 3);
               return
@@ -86,6 +95,10 @@ class DetailQuery extends React.Component {
         this.props.queryData({ type: 2, spotplan_id: search.spotplan_id, ...params.keys });
         this.props.queryData({ type: 3, spotplan_id: search.spotplan_id, ...params.keys });
         this.props.queryData({ type: 4, spotplan_id: search.spotplan_id, ...params.keys });
+        this.props.getSpotplanAmount({ spotplan_id: search.spotplan_id, item_type: values['item_type']['key'] })
+        if (search.keys['item_type'] != values['item_type']['key']) {
+          this.props.clearSelectedRowKeys()
+        }
       }
     });
   }
@@ -175,6 +188,22 @@ class DetailQuery extends React.Component {
             </Select>
           )}
         </FormItem>
+        <FormItem label='订单类型'>
+          {getFieldDecorator('item_type', {
+            initialValue: { label: '预约订单', key: 1 }
+          })(
+            <Select style={{ width: 140 }}
+              placeholder='请选择'
+              getPopupContainer={() => document.querySelector('.spotplan-check-form')}
+              labelInValue
+            >
+              <Option value={1} key={1}>预约订单</Option>
+              <Option value={2} key={2}>koc订单</Option>
+            </Select>
+          )}
+        </FormItem>
+      </Row>
+      <Row>
         <Button className='left-gap' onClick={this.handleReset}>重置</Button>
         <Button className='left-gap' type='primary' onClick={this.handleSearch}>查询</Button>
       </Row>

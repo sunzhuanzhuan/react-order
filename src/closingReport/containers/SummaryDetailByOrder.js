@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { PageHeader, Divider, Empty } from 'antd'
+import { PageHeader, Divider, Empty, Upload, Alert, message } from 'antd'
 import OrderCard from '../components/OrderCard'
 import { SH2 } from '@/base/SectionHeader'
 import { linkTo } from '../../util/linkTo'
@@ -9,6 +9,8 @@ import * as actions from '../actions'
 import { connect } from 'react-redux'
 import DetailModal from '../base/DetailModal'
 import Loading from '../base/Loading'
+import Interface from '../constants/Interface'
+const Cookie = require('js-cookie');
 
 const mapStateToProps = (state) => ({
   common: state.commonReducers,
@@ -141,6 +143,43 @@ export default class Test extends Component {
       platformData,
       companySource
     }
+    let that = this;
+    const props = {
+      name: 'file',
+      action: Interface.uploadExcle,
+      data: { summary_id: that.state.summaryId },
+      headers: {
+        "X-Access-Token": Cookie.get('token') || '',
+      },
+      onChange(info) {
+        that.setState({
+          visible: false
+        })
+        if (info.file.status === 'uploading') {
+          // message.loading('Loading...')
+          console.log('111', info)
+        }
+        if (info.file.status === 'done') {
+          let res = info.file.response
+          if (res.code == 200) {
+            message.success(`上传成功!`);
+            const { actions } = that.props
+            // 获取投放数据汇总单信息
+            actions.getSummaryTotalInfo({ summary_id: that.state.summaryId }).then(({ data }) => {
+              data && actions.getCompanyPlatforms({ company_id: data.company_id })
+            })
+            actions.getSummaryOrderInfo({ summary_id: that.state.summaryId, order_id: that.state.orderId }).then(() => {
+              that.setState({ loading: false })
+            })
+          } else {
+            message.error(info.file.response.msg || '上传失败');
+          }
+        } else if (info.file.status === 'error') {
+          console.log('333', info)
+          message.error(`上传失败`);
+        }
+      },
+    }
     return <div>
       <PageHeader
         onBack={() => this.props.history.push('/order/closing-report/list/summary-order')}
@@ -161,6 +200,16 @@ export default class Test extends Component {
         </div>
         <SH2 />
       </PageHeader>
+      <Alert style={{ marginTop: '20px' }} message={
+        <div style={{ height: '20px', lineHeight: '20px', }}>
+          <a href={`/api/summaryData/exportKocSummaryDataBySummaryId?summary_id=${summaryId}`} style={{ float: 'right', marginLeft: '20px' }} >导出koc订单</a>
+          <span style={{ float: 'right' }} >
+            <Upload {...props} showUploadList={false} >
+              <a >导入koc订单数据</a>
+            </Upload>
+          </span>
+        </div>}
+      />
       {loading ? <Loading /> : <div style={{ marginTop: '20px' }}>
         {
           list.length ? list.map(key => {

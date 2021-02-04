@@ -56,7 +56,14 @@ export const {
   method: 'get',
   ignoreToast: true,
 });
-
+// 勾选订单获取koc的订单列表
+export const {
+  getSpotplanKocOrderList,
+  getSpotplanKocOrderList_success
+} = createHttpAction('getSpotplanKocOrderList', Interface.getSpotplanKocOrderList, {
+  method: 'get',
+  ignoreToast: true,
+});
 export const {
   postAddSpotplanOrder,
   postAddSpotplanOrder_success

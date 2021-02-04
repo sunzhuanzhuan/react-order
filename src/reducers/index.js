@@ -12,18 +12,20 @@ import closingReportReducers from '../closingReport/reducer'
 import spotplanReducers from '../spotplan/reducers'
 import business from '../business/reducers'
 import taskPoolReducers from '../taskPool/reducers'
+import kocReducers from '../kocOrder/reducers'
 export default combineReducers({
-	commonReducers,
-	routing: routerReducer,
-	auth: authReducers,
-	loginReducer,
-	siderMenuReducer,
-	authorizationsReducers,
+  commonReducers,
+  routing: routerReducer,
+  auth: authReducers,
+  loginReducer,
+  siderMenuReducer,
+  authorizationsReducers,
   trinityReconciliationsReducers,
   statement,
   closingReportReducers,
   business,
   spotplanReducers,
   publicOrderListReducer,
-  taskPoolReducers
+  taskPoolReducers,
+  kocReducers
 });

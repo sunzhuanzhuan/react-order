@@ -17,7 +17,8 @@ import {
   getBrands_success,
   getSummaryList_success,
   getProjects_success,
-  getOrders_success
+  getOrders_success,
+  getKocOrders_success
 } from '../actions'
 
 // 处理列表数据为map表
@@ -176,6 +177,13 @@ export const selectOrderList = handleActions({
     return initList()
   }
 }, initList())
+// koc可以筛选的订单
+export const selectKocOrderList = handleActions({
+  [combineActions(getKocOrders_success)]: handleResponseList('koc_order_id'),
+  [combineActions('clearAllOrderList')]: () => {
+    return initList()
+  }
+}, initList())
 
 // 数据单订单信息(列表)
 export const summaryOrders = handleActions({
@@ -247,10 +255,10 @@ export const summaryOrders = handleActions({
     }
   }
 }, {
-  list: [],
-  source: {},
-  response: {}
-})
+    list: [],
+    source: {},
+    response: {}
+  })
 
 // 平台数据信息
 export const platformData = handleActions({
@@ -278,12 +286,12 @@ export const platformData = handleActions({
     }
   }
 }, {
-  total: {},
-  basic_information: {},
-  execution_link: {},
-  execution_screenshot: {},
-  execution_data: {}
-})
+    total: {},
+    basic_information: {},
+    execution_link: {},
+    execution_screenshot: {},
+    execution_data: {}
+  })
 
 // 订单投放数据汇总列表
 export const summaryListByOrder = handleActions({
@@ -299,6 +307,7 @@ export default combineReducers({
   publicSource,
   companySource,
   selectOrderList,
+  selectKocOrderList,
   summaryOrders,
   platformData,
   summaryListByOrder,

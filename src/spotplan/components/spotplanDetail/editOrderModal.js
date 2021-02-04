@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux';
 import { bindActionCreators } from "redux";
 import * as spotplanAction from "../../actions";
-import { Modal, Button, Select, Input, Form, message, DatePicker, InputNumber,Alert,Icon,Tooltip } from 'antd';
+import { Modal, Button, Select, Input, Form, message, DatePicker, InputNumber, Alert, Icon, Tooltip } from 'antd';
 import moment from 'moment'
 import './editOrderModal.less'
 const FormItem = Form.Item;
@@ -21,7 +21,10 @@ class EditOrderModal extends React.Component {
         if (!values.publish_articles_address) {
           values.publish_articles_address = ''
         }
-        this.props.actions.postUpdateSpotplanOrder({ ...values, spotplan_id, order_id: data[0].order_id, flag: 2 }).then((res) => {
+        this.props.actions.postUpdateSpotplanOrder({
+          ...values, spotplan_id, order_id: data[0].order_id, flag: 2,
+          item_type: data[0].item_type, weibo_type: data[0].weibo_type
+        }).then((res) => {
           if (!res.data.type) {
             message.success('操作成功！', 2);
             this.props.onCancel();
@@ -67,7 +70,7 @@ class EditOrderModal extends React.Component {
     const { getFieldDecorator } = this.props.form;
     const { visible, onCancel, data, handleUpdate } = this.props;
     console.log(data);
-    
+
     const formItemLayout = {
       labelCol: { span: 8 },
       wrapperCol: { span: 16 }
@@ -86,7 +89,7 @@ class EditOrderModal extends React.Component {
         ]}
     >
       <Form>
-      <Alert message="若包含返税订单，返税订单的Costwithfee请输入（返税金额/1.06），Cost请输入（Costwithfee金额/1.04）" type="warning" showIcon/>
+        <Alert message="若包含返税订单，返税订单的Costwithfee请输入（返税金额/1.06），Cost请输入（Costwithfee金额/1.04）" type="warning" showIcon />
         <FormItem label='订单ID' {...formItemLayout}>{data && data[0].order_id}</FormItem>
         <FormItem label='需求名称' {...formItemLayout}>{data && data[0].requirement_name}</FormItem>
         <FormItem label='平台' {...formItemLayout}>{data && data[0].weibo_type_name}</FormItem>
@@ -117,7 +120,7 @@ class EditOrderModal extends React.Component {
             <Input style={{ width: 240 }} />
           )}
         </FormItem>
-        {data[0].is_tax_rebate_account == 2&& <FormItem label='cost' {...formItemLayout}>
+        {(data[0].is_tax_rebate_account == 2 || !data[0].is_tax_rebate_account) && <FormItem label='cost' {...formItemLayout}>
           {getFieldDecorator('cost', {
             initialValue: data && data[0].cost || '',
             validateTrigger: ['onChange'],
@@ -126,7 +129,7 @@ class EditOrderModal extends React.Component {
             {
               validator: this.checkCost
             }
-          ]
+            ]
           })(<InputNumber precision={2} style={{ width: 200 }} onChange={(value) => {
             if (value != data && data[0].cost) {
               if (data && data[0].service_rate) {
@@ -141,7 +144,7 @@ class EditOrderModal extends React.Component {
           }} />
           )}
         </FormItem>}
-        {data[0].is_tax_rebate_account == 2 && <FormItem label='costwithfee' {...formItemLayout}>
+        {(data[0].is_tax_rebate_account == 2 || !data[0].is_tax_rebate_account) && <FormItem label='costwithfee' {...formItemLayout}>
           {getFieldDecorator('costwithfee', {
             initialValue: data && data[0].costwithfee || '',
             validateTrigger: ['onChange'],
@@ -150,7 +153,7 @@ class EditOrderModal extends React.Component {
             {
               validator: this.checkCostfee
             }
-          ]
+            ]
           })(<InputNumber precision={2} style={{ width: 200 }} />
           )}
         </FormItem>}
@@ -171,26 +174,26 @@ class EditOrderModal extends React.Component {
               }
 
             }
-          }}/>
+          }} />
           )}
         </FormItem>}
-        {data[0].is_tax_rebate_account == 1 && <FormItem label='costwithfee' {...formItemLayout} style={{float:'left',marginLeft:'100px'}}>
+        {data[0].is_tax_rebate_account == 1 && <FormItem label='costwithfee' {...formItemLayout} style={{ float: 'left', marginLeft: '100px' }}>
           {getFieldDecorator('costwithfee', {
             initialValue: data && data[0].costwithfee || '',
             rules: [{ required: true, message: '请填costwithfee金额' }]
           })(<InputNumber precision={2}
-            style={{ width: 200 ,backgroundColor:'#fffce4'}}  onChange={(value) => {
-            if (value != data && data[0].costwithfee) {
-                let num =Number(value) / (1 + (Number(data[0].service_rate) / 100)).toString()
+            style={{ width: 200, backgroundColor: '#fffce4' }} onChange={(value) => {
+              if (value != data && data[0].costwithfee) {
+                let num = Number(value) / (1 + (Number(data[0].service_rate) / 100)).toString()
                 this.props.form.setFieldsValue({
                   'cost': num.toFixed(2)
                 })
-            }
-          }}/>
+              }
+            }} />
           )}
         </FormItem>}
-        {data[0].is_tax_rebate_account == 1 ?<Tooltip title="若为返税订单，请输入负值且返税金额÷1.06"><div className='edit-icon'><Icon type="question-circle" /></div></Tooltip>:null}
-        <FormItem label='账号分类' {...formItemLayout} style={{clear:'both'}}>
+        {data[0].is_tax_rebate_account == 1 ? <Tooltip title="若为返税订单，请输入负值且返税金额÷1.06"><div className='edit-icon'><Icon type="question-circle" /></div></Tooltip> : null}
+        <FormItem label='账号分类' {...formItemLayout} style={{ clear: 'both' }}>
           {getFieldDecorator('account_category_name', {
             initialValue: data && data[0].account_category_name || '',
             rules: [{ required: true, message: '请填写分类' }]

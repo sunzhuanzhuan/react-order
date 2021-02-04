@@ -74,7 +74,7 @@ class SpotPlanDetail extends React.Component {
     getSpotplanPoInfo({ spotplan_id: search.spotplan_id }).then((res) => {
       this.setState({ customer_po_code: res.data.customer_po_code || '-' })
     });
-    getSpotplanAmount({ spotplan_id: search.spotplan_id });
+    getSpotplanAmount({ spotplan_id: search.spotplan_id, item_type: search.keys['item_type'] });
     getSpotplanPlatform();
     getSpotplanExecutor();
     this.queryData({ spotplan_id: search.spotplan_id, ...search.keys });
@@ -99,11 +99,11 @@ class SpotPlanDetail extends React.Component {
     const search = qs.parse(this.props.location.search.substring(1));
     if (value - 1) {
       this.queryData({ ...search.keys, spotplan_id: search.spotplan_id, type: value - 1, page: 1 });
-      this.props.actions.getSpotplanAmount({ spotplan_id: search.spotplan_id, type: value - 1 });
+      this.props.actions.getSpotplanAmount({ spotplan_id: search.spotplan_id, type: value - 1, item_type: search.keys['item_type'] });
       this.setState({ type: (value - 1).toString(), rows: {}, selectedRowKeys: [] });
       return
     }
-    this.props.actions.getSpotplanAmount({ spotplan_id: search.spotplan_id });
+    this.props.actions.getSpotplanAmount({ spotplan_id: search.spotplan_id, item_type: search.keys['item_type'] });
     this.queryData({ ...search.keys, spotplan_id: search.spotplan_id, page: 1 });
     this.setState({ type: 'all', rows: {}, selectedRowKeys: [] });
   }
@@ -125,10 +125,14 @@ class SpotPlanDetail extends React.Component {
 
     this.setState({ selectedRowKeys, rows });
   }
+  clearSelectedRowKeys = () => {
+    this.setState({ selectedRowKeys: [], rows: {} })
+  }
   handleCheckAll = (e) => {
     const { spotplanEditList } = this.props;
     const { rows, type } = this.state;
     const list = spotplanEditList[type] && spotplanEditList[type].list;
+    console.log('spotplanEditList', list)
     // const { rows, type } = this.state;
     // const { spotplanEditList } = this.props;
     // const list = spotplanEditList[type] && spotplanEditList[type].list && spotplanEditList[type].list.reduce((data, current) => {
@@ -159,35 +163,36 @@ class SpotPlanDetail extends React.Component {
 
   }
   //表格操作按钮-新增账号
-  handleAddNumber = order_id => {
+  handleAddNumber = obj => {
     const search = qs.parse(this.props.location.search.substring(1));
-    this.props.actions.getBasicSpotplanOrderInfo({ spotplan_id: search.spotplan_id, order_id }).then(() => {
-      this.setState({ order_id, addVisible: true });
+    console.log(search)
+    this.props.actions.getBasicSpotplanOrderInfo({ spotplan_id: search.spotplan_id, order_id: obj.order_id, item_type: obj.item_type }).then(() => {
+      this.setState({ order_id: obj.order_id, addVisible: true });
     })
 
   }
-  handleChangeNumber = order_id => {
+  handleChangeNumber = obj => {
     const search = qs.parse(this.props.location.search.substring(1));
-    this.props.actions.getUpdateSpotplanOrder({ spotplan_id: search.spotplan_id, order_id }).then(() => {
-      this.setState({ order_id, changeVisible: true });
+    this.props.actions.getUpdateSpotplanOrder({ spotplan_id: search.spotplan_id, order_id: obj.order_id, item_type: obj.item_type }).then(() => {
+      this.setState({ order_id: obj.order_id, changeVisible: true });
     })
   }
-  handleQuitOrder = order_id => {
+  handleQuitOrder = obj => {
     const search = qs.parse(this.props.location.search.substring(1));
-    this.props.actions.getBasicSpotplanOrderInfo({ spotplan_id: search.spotplan_id, order_id }).then(() => {
-      this.setState({ order_id, quitVisible: true });
+    this.props.actions.getBasicSpotplanOrderInfo({ spotplan_id: search.spotplan_id, order_id: obj.order_id, item_type: obj.item_type }).then(() => {
+      this.setState({ order_id: obj.order_id, quitVisible: true });
     })
   }
-  handleUpdateArtical = order_id => {
+  handleUpdateArtical = obj => {
     const search = qs.parse(this.props.location.search.substring(1));
-    this.props.actions.getBasicSpotplanOrderInfo({ spotplan_id: search.spotplan_id, order_id }).then(() => {
-      this.setState({ order_id, updateArticalVisible: true });
+    this.props.actions.getBasicSpotplanOrderInfo({ spotplan_id: search.spotplan_id, order_id: obj.order_id, item_type: obj.item_type }).then(() => {
+      this.setState({ order_id: obj.order_id, updateArticalVisible: true });
     })
   }
   handlePriceIdVisible = (price_id, price_name, order_id) => {
     const { isShowPriceIdModal } = this.state;
     const { actions } = this.props;
-    if(!isShowPriceIdModal) {
+    if (!isShowPriceIdModal) {
       const queryObj = {
         settle_type: 1,
         order_id
@@ -195,15 +200,15 @@ class SpotPlanDetail extends React.Component {
       this.setState({ priceLoading: true });
       const actionArr = [
         actions.getSpotplanPriceIdInfo(queryObj),
-        actions.getSpotplanPriceIdHistoryInfo({order_id}),
+        actions.getSpotplanPriceIdHistoryInfo({ order_id }),
       ];
       Promise.all(actionArr).finally(() => {
         this.setState({ priceLoading: false })
       });
     }
-    
+
     this.setState({
-      isShowPriceIdModal: !isShowPriceIdModal, 
+      isShowPriceIdModal: !isShowPriceIdModal,
       price_id,
       price_name,
       order_id,
@@ -212,22 +217,22 @@ class SpotPlanDetail extends React.Component {
   }
   getPriceNameById = price_id => {
     const { priceIdInfo = {} } = this.props;
-    const { rows = []} = priceIdInfo;
+    const { rows = [] } = priceIdInfo;
     const { price = [] } = rows[0] || {};
-    if(!(Array.isArray(price) && price.length && price_id)) {
+    if (!(Array.isArray(price) && price.length && price_id)) {
       return;
     }
     const priceItem = price.find(item => item.price_id === price_id) || {};
     return priceItem.price_name;
   }
   handleEditPriceIdOk = () => {
-    const {price_id, price_name, order_id, type} = this.state;
+    const { price_id, price_name, order_id, type } = this.state;
     const new_price_id = this.formRef.props.form.getFieldValue('price_id');
     const new_price_name = this.getPriceNameById(new_price_id);
     const submitObj = {
       order_id,
-      price_id, 
-      price_name, 
+      price_id,
+      price_name,
       new_price_id,
       new_price_name
     }
@@ -241,22 +246,22 @@ class SpotPlanDetail extends React.Component {
     this.setState({ new_price_id })
   }
   //批量-新增账号
-  handleAddAccount = order_id => {
+  handleAddAccount = obj => {
     const search = qs.parse(this.props.location.search.substring(1));
-    this.props.actions.getBasicSpotplanOrderInfo({ spotplan_id: search.spotplan_id, order_id }).then(() => {
-      this.setState({ order_id, addVisible: true });
+    this.props.actions.getBasicSpotplanOrderInfo({ spotplan_id: search.spotplan_id, order_id: obj.order_id, item_type: obj.item_type }).then(() => {
+      this.setState({ order_id: obj.order_id, addVisible: true });
     })
   }
-  handleUpdateOrder = order_id => {
+  handleUpdateOrder = obj => {
     const search = qs.parse(this.props.location.search.substring(1));
-    this.props.actions.getBasicSpotplanOrderInfo({ spotplan_id: search.spotplan_id, order_id }).then(() => {
-      this.setState({ order_id, updateVisible: true });
+    this.props.actions.getBasicSpotplanOrderInfo({ spotplan_id: search.spotplan_id, order_id: obj.order_id, item_type: obj.item_type }).then(() => {
+      this.setState({ order_id: obj.order_id, updateVisible: true });
     })
   }
-  handleEditOrder = order_id => {
+  handleEditOrder = obj => {
     const search = qs.parse(this.props.location.search.substring(1));
-    this.props.actions.getBasicSpotplanOrderInfo({ spotplan_id: search.spotplan_id, order_id }).then(() => {
-      this.setState({ order_id, editVisible: true });
+    this.props.actions.getBasicSpotplanOrderInfo({ spotplan_id: search.spotplan_id, order_id: obj.order_id, item_type: obj.item_type }).then(() => {
+      this.setState({ order_id: obj.order_id, editVisible: true });
     })
   }
   handleUpdate = obj => {
@@ -289,6 +294,7 @@ class SpotPlanDetail extends React.Component {
     } else {
       order_id = Array.isArray(order_id) ? order_id : [order_id];
     }
+    obj.item_type = search.keys.item_type
 
     return this.props.actions.postChangeNumberSpotplanOrder({ spotplan_id: search.spotplan_id, order_ids: order_id, ...obj }).then((res) => {
       hide();
@@ -366,7 +372,12 @@ class SpotPlanDetail extends React.Component {
       });
       return;
     }
-    this.handleChangeNumber(selectedRowKeys)
+    const search = qs.parse(this.props.location.search.substring(1));
+    const obj = {
+      order_id: selectedRowKeys,
+      item_type: search.keys.item_type
+    }
+    this.handleChangeNumber(obj)
   }
   handleSettleQuit = () => {
     const { selectedRowKeys, rows } = this.state;
@@ -383,7 +394,12 @@ class SpotPlanDetail extends React.Component {
       });
       return;
     }
-    this.handleQuitOrder(selectedRowKeys);
+    const search = qs.parse(this.props.location.search.substring(1));
+    const obj = {
+      order_id: selectedRowKeys,
+      item_type: search.keys.item_type
+    }
+    this.handleQuitOrder(obj);
   }
   handleSettleAddAccount = () => {
     const { selectedRowKeys, rows } = this.state;
@@ -399,7 +415,12 @@ class SpotPlanDetail extends React.Component {
       });
       return;
     }
-    this.handleAddAccount(selectedRowKeys)
+    const search = qs.parse(this.props.location.search.substring(1));
+    const obj = {
+      order_id: selectedRowKeys,
+      item_type: search.keys.item_type
+    }
+    this.handleAddAccount(obj)
   }
   handleSettleUpdateArtical = () => {
     const { selectedRowKeys, rows } = this.state;
@@ -415,7 +436,12 @@ class SpotPlanDetail extends React.Component {
       });
       return;
     }
-    this.handleUpdateArtical(selectedRowKeys)
+    const search = qs.parse(this.props.location.search.substring(1));
+    const obj = {
+      order_id: selectedRowKeys,
+      item_type: search.keys.item_type
+    }
+    this.handleUpdateArtical(obj)
   }
   handleSettleDeleteOrder = () => {
 
@@ -522,16 +548,16 @@ class SpotPlanDetail extends React.Component {
   }
   render() {
     const search = qs.parse(this.props.location.search.substring(1));
-    const { 
-      historyVisible, editVisible, updateArticalVisible, changeVisible, quitVisible, 
-      updateVisible, selectedRowKeys, type, loading, record, addVisible, rows, 
-      isShowPriceIdModal, price_id, priceLoading, new_price_id 
+    const {
+      historyVisible, editVisible, updateArticalVisible, changeVisible, quitVisible,
+      updateVisible, selectedRowKeys, type, loading, record, addVisible, rows,
+      isShowPriceIdModal, price_id, priceLoading, new_price_id
     } = this.state;
-    const { 
-      spotplanExecutor, spotplanPlatform, spotplanPoInfo, spotplanAmount, 
-      spotplanEditList, basicSpotplanOrderInfo, 
-      updateSpotplanOrder: { before_order = [], after_order = [] }, 
-      updateSpotplanOrderLog, serviceRateAmount, priceIdInfo = {}, priceIdHistoryInfo = [] 
+    const {
+      spotplanExecutor, spotplanPlatform, spotplanPoInfo, spotplanAmount,
+      spotplanEditList, basicSpotplanOrderInfo,
+      updateSpotplanOrder: { before_order = [], after_order = [] },
+      updateSpotplanOrderLog, serviceRateAmount, priceIdInfo = {}, priceIdHistoryInfo = []
     } = this.props;
     const priceIdBtnStatus = price_id == new_price_id || !new_price_id;
     const list = spotplanEditList[type] && spotplanEditList[type].list || [];
@@ -573,11 +599,13 @@ class SpotPlanDetail extends React.Component {
       <h3 className='top-gap'>订单列表</h3>
       <Statistics data={spotplanAmount} flag={(spotplanPoInfo && spotplanPoInfo.customer_po_amount) ? true : false} />
       <DetailQuery location={this.props.location} history={this.props.history}
+        getSpotplanAmount={this.props.actions.getSpotplanAmount}
+        clearSelectedRowKeys={this.clearSelectedRowKeys}
         queryData={this.queryData}
         spotplan_executor={spotplanExecutor}
         spotplan_platform={spotplanPlatform}
       />
-      <Tabs onChange={this.handleTabsChange} type="card">
+      <Tabs onChange={this.handleTabsChange} type="card" style={{ marginTop: '20px' }}>
         {tabPaneList.map(item => (<TabPane tab={`${item.title}（${spotplanEditList[item.type] && spotplanEditList[item.type].total || 0}）`} key={item.key} forceRender={true}>
           <DetailTable loading={loading} columns={DetailTableCols} dataSource={list} rowSelection={rowSelection}
             type={item.type}
@@ -664,14 +692,14 @@ class SpotPlanDetail extends React.Component {
         visible={isShowPriceIdModal}
         wrapClassName='price_id_modal'
         maskClosable={false}
-        okButtonProps={{disabled: priceIdBtnStatus}}
+        okButtonProps={{ disabled: priceIdBtnStatus }}
         onOk={this.handleEditPriceIdOk}
-        onCancel={() => {this.handlePriceIdVisible()}}
+        onCancel={() => { this.handlePriceIdVisible() }}
       >
-        <FormPriceId 
-          wrappedComponentRef={this.saveFormRef} 
+        <FormPriceId
+          wrappedComponentRef={this.saveFormRef}
           loading={priceLoading}
-          priceIdInfo={priceIdInfo} 
+          priceIdInfo={priceIdInfo}
           priceIdHistoryInfo={priceIdHistoryInfo}
           initialValue={price_id}
           handlePriceIdChange={this.handlePriceIdChange}
@@ -746,7 +774,7 @@ function Statistics({ data, flag }) {
 
       <Col style={{ display: 'inline-block', marginLeft: '10px' }}>
         Costwithfee总计: <span style={{ color: 'red' }}> {numeral(data.costwithfee).format('0,0.00')}元</span>
-        <span style={{marginLeft:'20px'}}>（已包含返税金额+服务费 </span><span style={{ color: 'red', }}> {numeral(data.rebatecostwithfee).format('0,0.00')}元</span>）
+        <span style={{ marginLeft: '20px' }}>（已包含返税金额+服务费 </span><span style={{ color: 'red', }}> {numeral(data.rebatecostwithfee).format('0,0.00')}元</span>）
       </Col>
 
 

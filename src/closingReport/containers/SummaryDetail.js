@@ -7,7 +7,7 @@ import {
   Modal,
   message,
   Empty,
-  Checkbox
+  Checkbox, Alert, Upload
 } from 'antd'
 import OrderCard from '../components/OrderCard'
 import { SH2 } from '@/base/SectionHeader'
@@ -18,9 +18,12 @@ import * as actions from '../actions'
 import { connect } from 'react-redux'
 import DetailModal from '../base/DetailModal'
 import SelectOrders from './SelectOrders'
+import SelectKocOrders from './SelectKocOrders'
 import difference from 'lodash/difference'
 import Loading from '../base/Loading'
 import { judgeSPStatus } from "@/closingReport/util";
+import Interface from '../constants/Interface'
+const Cookie = require('js-cookie');
 
 
 const TabPane = Tabs.TabPane
@@ -50,10 +53,13 @@ export default class Test extends Component {
         type: ''
       },
       selectedRowKeys: [],
+      selectedRowKeysKoc: [],
       addModal: false,
       cardChecked: [],
       indeterminate: false,
-      checkAll: false
+      checkAll: false,
+      kolVisible: true,
+      kocVisible: false
     }
     this.canExport = true;
     this.cardConfig = {
@@ -163,8 +169,8 @@ export default class Test extends Component {
 
   addOrders = () => {
     const { closingReport: { companySource: { companyId, summaryName } } } = this.props
-    const { selectedRowKeys, summaryId } = this.state
-    if (!selectedRowKeys.length) {
+    const { selectedRowKeys, summaryId, selectedRowKeysKoc } = this.state
+    if (!selectedRowKeys.length && !selectedRowKeysKoc.length) {
       return message.info('请选择订单')
     }
     let _msg = message.loading('保存中...')
@@ -173,7 +179,8 @@ export default class Test extends Component {
       company_id: companyId,
       summary_id: summaryId,
       summary_name: summaryName,
-      order_ids: selectedRowKeys
+      order_ids: selectedRowKeys,
+      other_order_ids: selectedRowKeysKoc
     }).then(({ data }) => {
       if (data.order_ids) {
         this.setState({ selectedRowKeys: difference(this.state.selectedRowKeys, data.order_ids) })
@@ -260,6 +267,18 @@ export default class Test extends Component {
       hide()
     })
   }
+  selectKol = () => {
+    this.setState({
+      kolVisible: true,
+      kocVisible: false
+    })
+  }
+  selectKoc = () => {
+    this.setState({
+      kolVisible: false,
+      kocVisible: true
+    })
+  }
 
   render() {
     if (!this.state.summaryId) {
@@ -268,7 +287,8 @@ export default class Test extends Component {
     const { closingReport: { companySource, summaryOrders, platformData }, actions, common } = this.props
     const { list = [], source = {} } = summaryOrders
     const { summaryName, creatorName, companyId } = companySource
-    const { loading, detailModal, tableActive, selectedRowKeys, addModal, summaryId, indeterminate, cardChecked, checkAll } = this.state
+    const { loading, detailModal, tableActive, selectedRowKeys, addModal, summaryId,
+      indeterminate, cardChecked, checkAll, kolVisible, kocVisible, selectedRowKeysKoc } = this.state
     const connect = {
       actions,
       platformData,
@@ -304,6 +324,56 @@ export default class Test extends Component {
         this.setState({ selectedRowKeys })
       }
     }
+    const selectKocOrderProps = {
+      common,
+      closingReport: this.props.closingReport,
+      actions,
+      selectedRowKeysKoc,
+      companyId,
+      onSelectChangeKoc: selectedRowKeys => {
+        this.setState({ selectedRowKeysKoc: selectedRowKeys })
+      }
+    }
+    let that = this;
+
+    let { summary_id } = parseUrlQuery()
+    const props = {
+      name: 'file',
+      action: Interface.uploadExcle,
+      data: { summary_id: summary_id },
+      headers: {
+        "X-Access-Token": Cookie.get('token') || '',
+      },
+      onChange(info) {
+        that.setState({
+          visible: false
+        })
+        if (info.file.status === 'uploading') {
+          // message.loading('Loading...')
+          console.log('111', info)
+        }
+        if (info.file.status === 'done') {
+          let res = info.file.response
+          if (res.code == 200) {
+            message.success(`上传成功!`);
+            const { actions } = that.props
+            // 获取投放数据汇总单信息
+            actions.getSummaryTotalInfo({ summary_id }).then(({ data }) => {
+              data = data || {}
+              actions.getCompanyPlatforms({ company_id: data.company_id })
+            })
+            actions.getSummaryOrderInfo({ summary_id }).then(() => {
+              that.setState({ loading: false })
+            })
+          } else {
+            message.error(info.file.response.msg || '上传失败');
+          }
+        } else if (info.file.status === 'error') {
+          console.log('333', info)
+          message.error(`上传失败`);
+        }
+      },
+    }
     return <div>
       <PageHeader
         onBack={() => this.props.history.push('/order/closing-report/list/summary-order')}
@@ -330,6 +400,16 @@ export default class Test extends Component {
         </div>
         <SH2 />
       </PageHeader>
+      <Alert style={{ marginTop: '20px' }} message={
+        <div style={{ height: '20px', lineHeight: '20px', }}>
+          <a href={`/api/summaryData/exportKocSummaryDataBySummaryId?summary_id=${summary_id}`} style={{ float: 'right', marginLeft: '20px' }} >导出koc订单</a>
+          <span style={{ float: 'right' }} >
+            <Upload {...props} showUploadList={false} >
+              <a >导入koc订单数据</a>
+            </Upload>
+          </span>
+        </div>}
+      />
       {loading ? <Loading /> : <div>
         <Tabs
           animated={{ tabPane: false }}
@@ -402,7 +482,13 @@ export default class Test extends Component {
         onCancel={() => this.setState({ addModal: false })}
         onOk={this.addOrders}
       >
-        <SelectOrders {...selectOrderProps} />
+        <div style={{ marginBottom: '20px' }}>
+          <Button style={{ borderRadius: 0 }} className={kolVisible && 'selected'} onClick={this.selectKol}>预约订单</Button>
+          <Button style={{ borderRadius: 0 }} className={kocVisible && 'selected'} onClick={this.selectKoc}>koc订单</Button>
+        </div>
+        {kolVisible && <SelectOrders {...selectOrderProps} />}
+        {kocVisible && <SelectKocOrders {...selectKocOrderProps} />}
+
       </Modal>}
     </div>
   }

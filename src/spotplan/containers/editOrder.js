@@ -1,18 +1,22 @@
 import React from 'react'
-import { Table, Form, Modal, message,Alert } from 'antd'
+import { Table, Form, Modal, message, Alert, Button } from 'antd'
 import { EditOrderFunc } from '../constants'
 import Header from '../components/header'
 import ScrollTable from '../../components/Scolltable'
 import moment from 'moment'
+import './checkOrder.less'
 class EditOrder extends React.Component {
   constructor() {
     super();
-    this.state = {}
+    // this.state = {
+    //   kolVisible: true,
+    //   kocVisible: false
+    // }
   }
   componentDidMount() {
     const { search } = this.props;
     this.props.queryBasicInfo({ spotplan_id: search.spotplan_id });
-    this.props.queryData(3, { spotplan_id: search.spotplan_id }, this.handleEditTable);
+    this.props.queryData(3, { spotplan_id: search.spotplan_id, item_type: 'all' }, this.handleEditTable);
   }
   handleEditTable = data => {
     const { setFieldsValue } = this.props.form;
@@ -35,15 +39,15 @@ class EditOrder extends React.Component {
       // }, 0);
     })
   }
-  handleDelete = order_id => {
+  handleDelete = obj => {
     const { search, handleDelete } = this.props;
     Modal.confirm({
       title: '',
       content: '是否确认将该订单从本spotplan删除？',
       onOk: () => {
-        handleDelete({ spotplan_id: search.spotplan_id, order_id: [order_id] }).then(() => {
+        handleDelete({ spotplan_id: search.spotplan_id, order_id: [obj.order_id], item_type: obj.item_type }).then(() => {
           message.success('操作成功');
-          this.props.queryData(3, { spotplan_id: search.spotplan_id }, this.handleEditTable);
+          this.props.queryData(3, { spotplan_id: search.spotplan_id, item_type: obj.item_type }, this.handleEditTable);
         })
       }
     })
@@ -65,9 +69,10 @@ class EditOrder extends React.Component {
     const winHeight = document.documentElement.clientHeight - 171 + 'px';
     return <div className='splotplan-edit-container' style={{ height: winHeight, overflowY: 'scroll', overflowX: 'hidden' }}>
       <Header data={headerData} />
-      <h3 className='top-gap'>订单列表    
-       <Alert message="若包含返税订单，返税订单的Costwithfee请输入（返税金额/1.06），Cost请输入（Costwithfee金额/1.04）" type="warning" showIcon style={{display:'inline-block',marginLeft:'10px'}}/>
-       </h3>
+      <div><h3 className='top-gap'>列表
+       <Alert message="若包含返税订单，返税订单的Costwithfee请输入（返税金额/1.06），Cost请输入（Costwithfee金额/1.04）" type="warning" showIcon style={{ display: 'inline-block', marginLeft: '10px' }} />
+      </h3>
+      </div>
       <div className='edit-table-container top-gap'>
         <Form>
           <ScrollTable scrollClassName='.ant-table-body' widthScroll={3060}>
@@ -85,6 +90,8 @@ class EditOrder extends React.Component {
         </Form>
       </div>
     </div>
+
+
   }
 }
 export default Form.create()(EditOrder)

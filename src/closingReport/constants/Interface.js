@@ -6,6 +6,7 @@ export default {
   companyProjects: prefix + '/getCompanyProject',
   companyPlatforms: prefix + '/getCompanyPlatforms',
   order: prefix + '/getOrder',
+  orderKoc: '/koc/getKocOrderListForSummary',
   addOrUpdateSummary: prefix + '/addSummaryData',
   getSummaryOrderInfo: prefix + '/getSummaryOrderInfo',
   getPlatformDataInfo: prefix + '/getPlatformDataInfo',
@@ -24,5 +25,6 @@ export default {
   getSummaryTotalInfo: prefix + '/getSummaryTotalInfo',
   submitCheckSummaryByOrder: prefix + '/checkOrder',
   submitCheckSummary: prefix + '/checkSummaryOrder',
-  exportPlatformDataInfoExcel: prefix + '/exportPlatformDataInfoExcel'
+  exportPlatformDataInfoExcel: prefix + '/exportPlatformDataInfoExcel',
+  uploadExcle: '/api/summaryData/importKocSummaryData'
 }

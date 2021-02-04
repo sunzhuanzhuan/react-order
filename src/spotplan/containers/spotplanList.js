@@ -21,6 +21,16 @@ class SpotPlanList extends React.Component {
     getSpotplanExecutor();
     this.queryData({ ...search.keys })
   }
+  // handleJump = (record) => {
+  //   const params = {
+  //     keys: { item_type: 1 },
+  //     labels: { item_type: "预约订单" },
+  //   };
+  //   this.props.history.replace({
+  //     pathname: '/order/spotplan/detail',
+  //     search: `?${qs.stringify({ spotplan_id: record.spotplan_id, ...params })}`,
+  //   })
+  // }
   queryData = (obj, func) => {
     this.setState({ loading: true });
     return this.props.actions.getSpotplanList({ ...obj }).then((res) => {
@@ -40,7 +50,7 @@ class SpotPlanList extends React.Component {
     const search = qs.parse(this.props.location.search.substring(1));
     const { loading } = this.state;
     const { spotplanProject, spotplanBrand, spotplanExecutor, spotplanList: { total, page, pageSize, rows } } = this.props;
-    const SpotplanListCols = SpotplanListFunc(this.hanldeJump);
+    const SpotplanListCols = SpotplanListFunc();
     const paginationObj = {
       onChange: (current) => {
         this.queryData({ ...search.keys, page: current }).then(() => {

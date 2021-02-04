@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
-import { Steps, Button, message, Modal, Input, Form } from 'antd'
+import { Steps, Button, message, Modal, Input, Form, Alert, Upload } from 'antd'
 import './CreateReport.less'
 import SelectOrders from './SelectOrders'
+import SelectKocOrders from './SelectKocOrders'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import * as actions from '../actions'
@@ -10,13 +11,21 @@ import { parseUrlQuery } from '@/util/parseUrl'
 import difference from 'lodash/difference'
 import { linkTo } from '../../util/linkTo';
 import { judgeSPStatus } from "@/closingReport/util";
-
+import Interface from '../constants/Interface'
+const Cookie = require('js-cookie');
 
 const Step = Steps.Step
 
 const steps = [{
   title: '选择订单',
   content: SelectOrders
+}, {
+  title: '完善订单数据',
+  content: OrderList
+}]
+const stepsKoc = [{
+  title: '选择订单',
+  content: SelectKocOrders
 }, {
   title: '完善订单数据',
   content: OrderList
@@ -44,7 +53,10 @@ export default class CreateReport extends Component {
       summaryName: summary_name,
       validateStatus: '',
       selectedRowKeys: [],
-      visible: !summary_name
+      selectedRowKeysKoc: [],
+      visible: !summary_name,
+      kolVisible: true,
+      kocVisible: false
     }
     const { actions } = this.props
     // 获取公司信息接口
@@ -92,6 +104,9 @@ export default class CreateReport extends Component {
   onSelectChange = selectedRowKeys => {
     this.setState({ selectedRowKeys })
   }
+  onSelectChangeKoc = selectedRowKeys => {
+    this.setState({ selectedRowKeysKoc: selectedRowKeys })
+  }
   validateName = (summaryName) => {
     return summaryName.length > 0 && summaryName.length <= 30
   }
@@ -126,8 +141,8 @@ export default class CreateReport extends Component {
 
   coreSave(callback) {
     const { closingReport: { companySource: { summaryId } } } = this.props
-    const { selectedRowKeys, companyId, summaryName } = this.state
-    if (!selectedRowKeys.length) {
+    const { selectedRowKeys, companyId, summaryName, selectedRowKeysKoc } = this.state
+    if (!selectedRowKeys.length && !selectedRowKeysKoc.length) {
       if (summaryId) {
         callback(summaryId)
         return Promise.resolve()
@@ -142,7 +157,8 @@ export default class CreateReport extends Component {
       company_id: companyId,
       summary_id: summaryId,
       summary_name: summaryName,
-      order_ids: selectedRowKeys
+      order_ids: selectedRowKeys,
+      other_order_ids: selectedRowKeysKoc
     }).then(({ data }) => {
       if (data.order_ids) {
         this.setState({ selectedRowKeys: difference(this.state.selectedRowKeys, data.order_ids) })
@@ -158,7 +174,7 @@ export default class CreateReport extends Component {
   next() {
     this.coreSave(() => {
       const current = this.state.current + 1
-      this.setState({ current, selectedRowKeys: [] })
+      this.setState({ current, selectedRowKeys: [], selectedRowKeysKoc: [] })
     })
   }
 
@@ -166,15 +182,27 @@ export default class CreateReport extends Component {
     const current = this.state.current - 1
     this.setState({ current })
   }
-
+  selectKol = () => {
+    this.setState({
+      kolVisible: true,
+      kocVisible: false
+    })
+  }
+  selectKoc = () => {
+    this.setState({
+      kolVisible: false,
+      kocVisible: true
+    })
+  }
   render() {
     const { closingReport: { companySource: { summaryId, companyName, companyPath, beSalesRealName } } } = this.props
     // 参数错误跳到error
     if (!this.state.companyId) {
       this.handleCancel('/error')
     }
-    const { current, selectedRowKeys, summaryName, companyId } = this.state
+    const { current, selectedRowKeys, summaryName, companyId, kolVisible, kocVisible, selectedRowKeysKoc } = this.state
     const C = steps[current].content
+    const K = stepsKoc[current].content
     const footerWidth = this.props.common.ui.sliderMenuCollapse ? 40 : 200
     const store = {
       common: this.props.common,
@@ -186,11 +214,52 @@ export default class CreateReport extends Component {
       companyId,
       onSelectChange: this.onSelectChange
     }
+    const selectKoc = {
+      selectedRowKeysKoc: selectedRowKeysKoc,
+      companyId,
+      onSelectChangeKoc: this.onSelectChangeKoc
+    }
+    let selectedRowKeysAndKoc = selectedRowKeys.concat(selectedRowKeysKoc)
+    let that = this;
+    const props = {
+      name: 'file',
+      action: Interface.uploadExcle,
+      data: { summary_id: summaryId },
+      headers: {
+        "X-Access-Token": Cookie.get('token') || '',
+      },
+      onChange(info) {
+        that.setState({
+          visible: false
+        })
+        if (info.file.status === 'uploading') {
+          // message.loading('Loading...')
+          console.log('111', info)
+        }
+        if (info.file.status === 'done') {
+          let res = info.file.response
+          if (res.code == 200) {
+            message.success(`导入成功!`);
+            const { actions } = that.props
+            actions.getCompanyPlatforms({ company_id: companyId })
+            actions.getSummaryOrderInfo({ summary_id: summaryId }).then(() => {
+              that.setState({ loading: false })
+            })
+          } else {
+            message.error(info.file.response.msg || '上传失败');
+          }
+        } else if (info.file.status === 'error') {
+          console.log('333', info)
+          message.error(`上传失败`);
+        }
+      },
+    }
     return (
       <div className='closing-report-pages create-page'>
         <header className='create-page-steps'>
           <Steps current={current}>
-            {steps.map(item => <Step key={item.title} title={item.title} />)}
+            {kolVisible ? steps.map(item => <Step key={item.title} title={item.title} />) :
+              stepsKoc.map(item => <Step key={item.title} title={item.title} />)}
           </Steps>
         </header>
         <main className='create-page-content'>
@@ -200,16 +269,33 @@ export default class CreateReport extends Component {
             <b>公司简称</b><span><a target='_blank' href={companyPath}>{companyName || '-'}</a></span>
             <b>所属销售</b><span>{beSalesRealName || '-'}</span>
           </div>
-          <div className="steps-content">
+          {current == 0 && <div style={{ marginTop: '20px' }}>
+            <Button style={{ borderRadius: 0 }} className={kolVisible && 'selected'} onClick={this.selectKol}>预约订单</Button>
+            <Button style={{ borderRadius: 0 }} className={kocVisible && 'selected'} onClick={this.selectKoc}>koc订单</Button>
+          </div>}
+          {current === steps.length - 1 && <Alert style={{ marginTop: '20px' }} message={
+            <div style={{ height: '20px', lineHeight: '20px', }}>
+              <a href={`/api/summaryData/exportKocSummaryDataBySummaryId?summary_id=${summaryId}`} style={{ float: 'right', marginLeft: '20px' }} >导出koc订单</a>
+              <span style={{ float: 'right' }} >
+                <Upload {...props} showUploadList={false} >
+                  <a >导入koc订单数据</a>
+                </Upload>
+              </span>
+            </div>}
+          />}
+          {kolVisible && <div className="steps-content">
             <C {...select} {...store} />
-          </div>
+          </div>}
+          {kocVisible && <div className="steps-content">
+            <K {...selectKoc} {...store} />
+          </div>}
         </main>
         <footer className='create-page-action' style={{ width: `calc(100% - ${footerWidth}px)` }}>
           <div className="steps-action">
             {
               current < steps.length - 1
               && [
-                <span className='action-item' key={1}>已选订单：<b>{selectedRowKeys.length}</b>个</span>,
+                <span className='action-item' key={1}>已选订单：<b>{selectedRowKeysAndKoc.length}</b>个</span>,
                 <Button className='action-item' key={2} onClick={() => this.temporarySave()}>存草稿</Button>,
                 <Button className='action-item' key={3} type="primary" onClick={() => this.next()}>下一步</Button>
               ]

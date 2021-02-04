@@ -5,13 +5,13 @@ import { createAction } from 'redux-actions'
 /**
  * 订单列表选择
  */
-  // 公司基本信息
+// 公司基本信息
 export const {
-    getCompanyTotalInfo,
-    getCompanyTotalInfo_success
-  } = createHttpAction('getCompanyTotalInfo', Interface.getCompanyTotalInfo, {
-    method: 'get'
-  })
+  getCompanyTotalInfo,
+  getCompanyTotalInfo_success
+} = createHttpAction('getCompanyTotalInfo', Interface.getCompanyTotalInfo, {
+  method: 'get'
+})
 // 获取执行人
 export const {
   getExecutor,
@@ -54,18 +54,25 @@ export const {
 } = createHttpAction('getOrders', Interface.order, {
   method: 'get'
 })
+// 获取Koc订单列表
+export const {
+  getKocOrders,
+  getKocOrders_success
+} = createHttpAction('getKocOrders', Interface.orderKoc, {
+  method: 'get'
+})
 // 清空列表数据
 
 /**
  * 数据单操作
  */
-  // 数据单基本信息
+// 数据单基本信息
 export const {
-    getSummaryTotalInfo,
-    getSummaryTotalInfo_success
-  } = createHttpAction('getSummaryTotalInfo', Interface.getSummaryTotalInfo, {
-    method: 'get'
-  })
+  getSummaryTotalInfo,
+  getSummaryTotalInfo_success
+} = createHttpAction('getSummaryTotalInfo', Interface.getSummaryTotalInfo, {
+  method: 'get'
+})
 // 新建或修改数据单信息
 export const {
   addOrUpdateSummary,
@@ -179,12 +186,12 @@ export const clearAllOrderList = createAction('clearAllOrderList', (data) => {
  * 订单投放数据汇总列表
  */
 
-  // 获取个人下公司简称
+// 获取个人下公司简称
 export const {
-    getCompanyNames
-  } = createHttpAction('getCompanyNames', Interface.getCompanyNames, {
-    method: 'get'
-  })
+  getCompanyNames
+} = createHttpAction('getCompanyNames', Interface.getCompanyNames, {
+  method: 'get'
+})
 // 获取个人下品牌
 export const {
   getBrands,

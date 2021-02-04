@@ -15,8 +15,9 @@ class BottomBlock extends React.Component {
     this.setState({ visible: boolean })
   }
   render() {
-    const { current, handleSteps, orderMaps = {}, handlDel, data, search } = this.props;
+    const { current, handleSteps, orderMaps = {}, orderMapsKoc = {}, handlDel, data, search, handlDelKoc } = this.props;
     const { visible } = this.state;
+    let totalOrderMaps = Object.assign({ ...orderMaps }, { ...orderMapsKoc })
     return <div className='bottom-block'>
       {current == 1 && <div className='right-block'><Button type='primary' onClick={() => {
         handleSteps(2, 'go')
@@ -31,7 +32,7 @@ class BottomBlock extends React.Component {
         <div className='right-block'>
           <span style={{ paddingRight: '20px' }}>已选订单：<a href='javascript:;' onClick={() => {
             this.toggleVisible(true);
-          }}>{Object.values(orderMaps).length || 0}个</a></span>
+          }}>{Object.values(totalOrderMaps).length || 0}个</a></span>
           <Button type='primary' onClick={() => {
             handleSteps(3)
           }}>下一步</Button>
@@ -53,7 +54,9 @@ class BottomBlock extends React.Component {
             handleSteps(4, 'submit')
           }}>提交</Button>
         </div></>}
-      {visible && <CheckModal visible={visible} data={orderMaps} handlDel={handlDel}
+      {visible && <CheckModal visible={visible} data={totalOrderMaps}
+        handlDelKoc={handlDelKoc}
+        handlDel={handlDel}
         onCancel={() => {
           this.toggleVisible(false)
         }} />}
@@ -63,9 +66,9 @@ class BottomBlock extends React.Component {
 
 class CheckModal extends React.PureComponent {
   render() {
-    const { visible, onCancel, data = {}, handlDel } = this.props;
+    const { visible, onCancel, data = {}, handlDel, handlDelKoc } = this.props;
     const dataAry = Object.values(data);
-    const CheckModalCols = CheckModalFunc(handlDel);
+    const CheckModalCols = CheckModalFunc(handlDel, handlDelKoc);
     return <Modal
       wrapClassName='checkOrder-modal'
       key='checkOrder'

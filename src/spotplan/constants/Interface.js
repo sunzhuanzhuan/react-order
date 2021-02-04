@@ -7,6 +7,7 @@ export default {
   getSpotplanPlatform: '/spotplan/getPlatform',
   getSpotplanProject: '/spotplan/getProject',
   getSpotplanOrderList: '/spotplan/getOrderList',
+  getSpotplanKocOrderList: '/spotplan/getExternalOrderList',
   postAddSpotplanOrder: '/spotplan/addSpotplanOrder',
   getSpotplanEditOrder: '/spotplan/getSpotplanOrder',
   postUpdateSpotplanOrder: '/spotplan/updateSpotplanOrder',

@@ -5,7 +5,7 @@ import qs from 'qs'
 
 const FormItem = Form.Item;
 const Option = Select.Option;
-class CheckQuery extends React.Component {
+class CheckKocQuery extends React.Component {
   constructor() {
     super();
     this.state = {
@@ -37,6 +37,7 @@ class CheckQuery extends React.Component {
     }
     setFieldsValue({ ...keys, ...obj });
   }
+
   handleReset = () => {
     this.setState({ resetFlag: true });
     this.props.form.resetFields();
@@ -56,8 +57,8 @@ class CheckQuery extends React.Component {
               return current ? [...data, current] : [...data]
             }, []);
             const ary = array.reduce((data, current) => {
-              const flag = /^[0-9]+$/.test(current);
-              return flag ? [...data, current] : [...data]
+              // const flag = /^koc[0-9]+$/.test(current);
+              return [...data, current]
             }, []);
             if (array.length > 200) {
               message.error('最多能输入200个订单', 3);
@@ -85,7 +86,7 @@ class CheckQuery extends React.Component {
         };
         Object.keys(params['keys']).forEach(item => { !params['keys'][item] && params['keys'][item] !== 0 ? delete params['keys'][item] : null });
         const hide = message.loading('查询中，请稍候...');
-        this.props.queryData(2, { spotplan_id: search.spotplan_id, ...params.keys }).then(() => {
+        this.props.getSpotplanKocOrderList({ spotplan_id: search.spotplan_id, ...params.keys }).then(() => {
           this.props.history.replace({
             pathname: this.props.location.pathname,
             search: `?${qs.stringify({ step: 2, item_type: 2, spotplan_id: search.spotplan_id, ...params })}`,
@@ -105,19 +106,19 @@ class CheckQuery extends React.Component {
       <Row>
         <FormItem label='批量查询'>
           {getFieldDecorator('settle_type', {
-            initialValue: { key: 1, label: '订单ID' }
+            initialValue: { key: 1, label: 'koc订单ID' }
           })(
             <Select style={{ width: 100 }}
               placeholder='请选择'
               getPopupContainer={() => document.querySelector('.spotplan-check-form')}
               labelInValue
             >
-              <Option value={1} key={1}>订单ID</Option>
+              <Option value={1} key={1}>koc订单ID</Option>
               <Option value={2} key={2}>需求ID</Option>
             </Select>
           )}
           {getFieldDecorator('settle_id')(
-            <Input placeholder='请输入订单ID/需求ID，多个空格隔开' className='left-little-gap' style={{ width: 260 }} allowClear />
+            <Input placeholder='请输入koc订单ID/需求ID，多个空格隔开' className='left-little-gap' style={{ width: 260 }} allowClear />
           )}
         </FormItem>
         <FormItem label='执行人'>
@@ -184,45 +185,11 @@ class CheckQuery extends React.Component {
           )}
         </FormItem>}
       </Row>
-      <Row>
-        <FormItem label='订单预约状态'>
-          {getFieldDecorator('reservation_status', {
-            initialValue: { key: 2, label: '应约' }
-          })(
-            <Select style={{ width: 140 }}
-              placeholder='请选择'
-              getPopupContainer={() => document.querySelector('.spotplan-check-form')}
-              labelInValue
-              allowClear
-              showSearch
-              filterOption={(input, option) => (
-                option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-              )}
-            >
-              {reservation_status && reservation_status.map(item => (<Option value={item.value} key={item.value}>{item.key}</Option>))}
-            </Select>
-          )}
-        </FormItem>
-        <FormItem label='客户确认状态'>
-          {getFieldDecorator('customer_confirmation_status')(
-            <Select style={{ width: 140 }}
-              placeholder='请选择'
-              getPopupContainer={() => document.querySelector('.spotplan-check-form')}
-              labelInValue
-              allowClear
-              showSearch
-              filterOption={(input, option) => (
-                option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-              )}
-            >
-              {customer_status && customer_status.map(item => (<Option value={item.value} key={item.value}>{item.key}</Option>))}
-            </Select>
-          )}
-        </FormItem>
+      <Row style={{ textAlign: 'center', marginBottom: '20px' }}>
         <Button className='left-gap' onClick={this.handleReset}>重置</Button>
         <Button className='left-gap' type='primary' onClick={this.handleSearch}>查询</Button>
       </Row>
     </Form>
   }
 }
-export default Form.create()(CheckQuery)
+export default Form.create()(CheckKocQuery)

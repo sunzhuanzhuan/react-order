@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Table, Tooltip } from 'antd'
-import OrderFilterForm from '../components/OrderFilterForm'
+import KocOrderFilterForm from '../components/KocOrderFilterForm'
 import { SH2 } from '../../base/SectionHeader'
 import './SelectOrders.less'
 import IconText from '../base/IconText'
@@ -15,7 +15,7 @@ const disabledReason = {
 const columns = [
   {
     title: '订单ID',
-    dataIndex: 'order_id',
+    dataIndex: 'koc_order_id',
     render: (id, record) => {
       return <div>
         <a target="_blank" href={record.order_info_path}>{id}</a>
@@ -30,10 +30,10 @@ const columns = [
     }
   }, {
     title: 'PO单号',
-    dataIndex: 'execution_evidence_code',
-    render: (po, record) => {
+    dataIndex: 'po_code',
+    render: (text, record) => {
       return <div>
-        {po ? <a target="_blank" href={record.po_path}>{po}</a> : '-'}
+        {text ? <a target="_blank" href={record.po_path}>{text}</a> : '-'}
       </div>
     }
   }, {
@@ -61,12 +61,9 @@ const columns = [
     }
   }, {
     title: '状态',
-    dataIndex: 'execution_status_name',
+    dataIndex: 'status',
     render: (name, record) => {
-      return <div>
-        <div>订单状态：{record.status_name || '-'}</div>
-        <div>执行状态：{name || '-'}</div>
-      </div>
+      return <div>{record.status == 1 ? '已确认' : '已执行'}</div>
     }
   }, {
     title: '执行人',
@@ -79,7 +76,7 @@ const columns = [
     }
   }]
 
-export default class SelectOrders extends Component {
+export default class SelectKocOrders extends Component {
   constructor(props, context) {
     super(props, context)
     this.state = {
@@ -87,7 +84,6 @@ export default class SelectOrders extends Component {
         page: 1,
         pageSize: 50,
         company_id: props.companyId,
-        execution_status: ['21', '22', '26', '27', '28', '32', '33', '34', '35']
       }
     }
     const { actions } = props
@@ -98,9 +94,9 @@ export default class SelectOrders extends Component {
 
   getList = (params = {}) => {
     const { actions } = this.props
-    let search = { ...this.state.search, ...params ,order_type:1}
+    let search = { ...this.state.search, ...params, order_type: 2 }
     this.setState({ listLoading: true, search })
-    actions.getOrders(search).finally(() => {
+    actions.getKocOrders(search).finally(() => {
       this.setState({ listLoading: false })
     })
   }
@@ -115,10 +111,10 @@ export default class SelectOrders extends Component {
 
   render() {
     const { closingReport } = this.props
-    const { selectOrderList: { list, source, total, page, pageSize } } = closingReport
+    const { selectKocOrderList: { list, source, total, page, pageSize } } = closingReport
     const rowSelection = {
-      onChange: this.props.onSelectChange,
-      selectedRowKeys: this.props.selectedRowKeys,
+      onChange: this.props.onSelectChangeKoc,
+      selectedRowKeys: this.props.selectedRowKeysKoc,
       getCheckboxProps: record => {
         return {
           disabled: record.flag > 1
@@ -135,14 +131,14 @@ export default class SelectOrders extends Component {
       showQuickJumper: true
     }
     return <div className='select-orders flex-form-layout'>
-      <SH2 title='订单列表' />
+      <SH2 title='koc订单列表' />
       <div style={{ padding: '20px 0' }} className='closing-report-filter-container'>
-        <OrderFilterForm
+        <KocOrderFilterForm
           loading={this.state.listLoading}
           source={{ ...closingReport.publicSource, ...closingReport.companySource }}
           search={this.state.search}
           getList={this.getList}
-          onSelectChange={this.props.onSelectChange}
+          onSelectChangeKoc={this.props.onSelectChangeKoc}
         />
       </div>
       <Table
